@@ -1,0 +1,5 @@
+server/node_modules
+client/node_modules
+client/dist/
+.idea
+npm-debug.log

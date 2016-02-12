@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "extends": "eslint:recommended",
+  "ecmaFeatures": {
+    "jsx": true,
+    "blockBindings": true,
+    "modules": true,
+    "arrowFunctions": true,
+    "defaultParams": true,
+    "destructuring": true,
+    "templateStrings": true,
+    "spread": true,
+    "restParams": true,
+    "classes": true
+  },
+  "rules": {
+    "eqeqeq": 2,
+    "quotes": [
+      2,
+      "single"
+    ],
+    "curly": [
+      2,
+      "all"
+    ],
+    "no-use-before-define": 0,
+    "react/jsx-no-undef": 1,
+    "react/jsx-uses-react": 1
+  }
+}

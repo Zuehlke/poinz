@@ -1,0 +1,108 @@
+$zuehlkePurple = #985b9c
+
+#app-root {
+  position absolute
+  top 0
+  left 0
+  bottom 0
+  right 0
+}
+
+.pure-button.pure-button-primary {
+  background-color $zuehlkePurple
+}
+
+.landing {
+  background #1f8dd6
+  z-index 1
+  overflow hidden
+  width 100%
+  height 100%
+  top 0
+  left 0
+  position fixed !important
+  background url('./landing_bg.jpg')
+  background-repeat no-repeat
+  background-position left top
+  background-attachment fixed
+  background-size cover
+
+  .eyecatcher {
+    width 80%
+    height 50%
+    margin auto
+    display flex
+    justify-content center
+    align-items center
+
+    .room-id-wrapper {
+      background #fff
+      padding 8px
+      border 1px solid #ccc
+      width 300px
+      display flex
+      align-items stretch
+      border-radius 5px
+
+      input {
+        width 80%
+        border none
+        outline none
+      }
+    }
+  }
+}
+
+$backlogWidth = 300px
+
+.board {
+
+  transition all 0.2s ease-out
+  position relative
+  height 100%
+
+  .menu-link {
+    position: fixed;
+    display: block;
+    top: 0;
+    left: 0;
+    background: #000;
+    background: rgba(0, 0, 0, 0.7);
+    font-size: 10px;
+    z-index: 10;
+    width: 2em;
+    height: auto;
+    padding: 2.1em 1.6em;
+  }
+
+  .backlog {
+    transition all 0.2s ease-out
+    margin-left $backlogWidth * -1
+    width $backlogWidth
+    position fixed
+    top 0
+    left 0
+    bottom 0
+    z-index 1000
+    background #191818
+    overflow-y auto
+    -webkit-overflow-scrolling touch
+  }
+}
+
+@media (min-width 48em) {
+  .board {
+    padding-left $backlogWidth
+    left 0
+
+    .menu-link {
+      position: fixed;
+      left: $backlogWidth
+      display: none;
+    }
+
+    .backlog {
+      left $backlogWidth
+    }
+  }
+}

@@ -1,4 +1,20 @@
 $zuehlkePurple = #985b9c
+$zuehlkeOrange = #ff820a
+$zuehlkeDarkGrey = #4b5054
+$zuehlkeLightGrey = #575d62
+$zuehlkeLighterGrey = #e8e8e8
+$zuehlkeFontGrey = #484e54
+
+@font-face {
+  font-family: 'aa_zuehlke_otpsregular';
+  src: url('./aazuotps_30.12.13-webfont.woff2') format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  color $zuehlkeFontGrey
+}
 
 #app-root {
   position absolute
@@ -10,6 +26,11 @@ $zuehlkePurple = #985b9c
 
 .pure-button.pure-button-primary {
   background-color $zuehlkePurple
+  border-radius 1px
+}
+
+a {
+  color $zuehlkeOrange
 }
 
 .landing {
@@ -21,11 +42,9 @@ $zuehlkePurple = #985b9c
   top 0
   left 0
   position fixed !important
-  background url('./landing_bg.jpg')
+  background url('./landing_bg_z.jpg')
   background-repeat no-repeat
   background-position left top
-  background-attachment fixed
-  background-size cover
 
   .eyecatcher {
     width 80%
@@ -44,6 +63,10 @@ $zuehlkePurple = #985b9c
       align-items stretch
       border-radius 5px
 
+      span {
+        padding 8px 0
+      }
+
       input {
         width 80%
         border none
@@ -53,26 +76,112 @@ $zuehlkePurple = #985b9c
   }
 }
 
+.pure-form .pure-group {
+  inputfirst-child, textareafirst-child {
+    border-radius 2px
+  }
+}
+
+.users {
+  padding 16px
+  padding-top 40px
+
+  .user {
+    padding 0 8px
+    display inline-block
+    position relative
+
+    .avatar {
+      border 2px solid $zuehlkeLightGrey
+      border-radius 50%
+      background white
+      width 100px
+      height 100px
+      padding 4px
+    }
+
+    .moderator-badge {
+      position absolute
+      top 2
+      right 8px
+      color $zuehlkeOrange
+    }
+
+    .user-estimation {
+      height 100px
+      width 60px
+      margin 0 auto
+      text-align center
+      padding 28px 0
+      border-radius 12px
+      box-sizing border-box
+      font-size 28px
+      border 2px dashed $zuehlkeDarkGrey
+      background transparent
+      color $zuehlkeLighterGrey
+
+      font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
+
+      &.user-estimation-given {
+        // user has given estimation, but value is not yet shown
+        border 2px solid $zuehlkeDarkGrey
+        background $zuehlkeLightGrey
+      }
+
+      &.all-given {
+        // all estimations are shown
+        background white
+        color $zuehlkeLightGrey
+        border 2px solid $zuehlkeLightGrey
+      }
+    }
+
+    &.user-own {
+      .avatar {
+        border 2px solid $zuehlkeOrange
+      }
+    }
+
+    &.user-moderator {
+      .user-name {
+        color $zuehlkeOrange
+      }
+    }
+  }
+}
+
+.top-bar {
+  background-color $zuehlkeLightGrey
+  color white
+  z-index 1003
+  position absolute
+  top 0
+  left 0
+  right 0
+  padding 8px
+  box-sizing border-box
+  text-align right
+}
+
 $backlogWidth = 300px
-
 .board {
-
   transition all 0.2s ease-out
   position relative
   height 100%
+  background $zuehlkeLighterGrey
 
   .menu-link {
-    position: fixed;
-    display: block;
-    top: 0;
-    left: 0;
-    background: #000;
-    background: rgba(0, 0, 0, 0.7);
-    font-size: 10px;
-    z-index: 10;
-    width: 2em;
-    height: auto;
-    padding: 2.1em 1.6em;
+    position fixed
+    display block
+    top 0
+    left 0
+    background #000
+    background rgba(0, 0, 0, 0.7)
+    font-size 10px
+    z-index 10
+    width 2em
+    height auto
+    padding 2.1em 1.6em
   }
 
   .backlog {
@@ -84,10 +193,84 @@ $backlogWidth = 300px
     left 0
     bottom 0
     z-index 1000
-    background #191818
+    background $zuehlkeLightGrey
     overflow-y auto
     -webkit-overflow-scrolling touch
+    box-sizing border-box
+    padding 8px
+    padding-top 40px
+
+    .story {
+      color white
+      background $zuehlkeDarkGrey
+      background #4b5054
+      padding 8px 16px 16px 16px
+      margin-bottom 16px
+      box-sizing border-box
+      cursor pointer
+      border-radius 2px
+
+      &.story-selected {
+        border 1px solid $zuehlkeOrange
+      }
+
+      h4 {
+        margin-top 8px
+      }
+    }
   }
+
+  .estimation {
+    padding 16px
+
+    .selected-story {
+      background $zuehlkeDarkGrey
+      color white
+      padding 8px
+
+      h4 {
+        margin-top 8px
+      }
+    }
+
+    .cards {
+
+      .card {
+        text-align center
+        height 100px
+        box-sizing border-box
+        font-size 28px
+        padding 8px
+        cursor pointer
+        font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
+
+        .card-inner {
+          background #fff
+          padding 28px 0
+          box-sizing border-box
+          border-radius 12px
+          border 2px solid $zuehlkeLightGrey
+
+          &hover {
+            border 2px solid $zuehlkeOrange
+          }
+        }
+
+        &.card-selected {
+          .card-inner {
+            border 2px solid $zuehlkeOrange
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.logo-wrapper {
+  position absolute
+  bottom 8px
+  left 8px
 }
 
 @media (min-width 48em) {
@@ -96,9 +279,9 @@ $backlogWidth = 300px
     left 0
 
     .menu-link {
-      position: fixed;
-      left: $backlogWidth
-      display: none;
+      position fixed
+      left $backlogWidth
+      display none
     }
 
     .backlog {

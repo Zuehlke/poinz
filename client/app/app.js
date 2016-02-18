@@ -1,20 +1,24 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { bindActionCreators } from 'redux'
 import log from 'loglevel';
 
 import normalizeCss from 'normalize.css';
 import pureCss from 'purecss';
+import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
 import splushStyles from './assets/splush.styl';
 
-import store, { ACTIONS } from './services/store';
-import hub from './services/hub';
+import store from './services/store';
+import * as splushActions from './services/actions'
 
-import Landing from './views/landing';
-import Board from './views/board';
-
+import Landing from './views/Landing';
+import Board from './views/Board';
+import TopBar from './components/TopBar';
 
 log.setLevel('debug'); // set our splush client loglevel
 localStorage.debug = 'socket.io-client:socket*'; // enable socket.io debugging
+
+const actions = bindActionCreators(splushActions, store.dispatch);
 
 class App extends React.Component {
 
@@ -24,7 +28,7 @@ class App extends React.Component {
     // if our url already contains a hash, request room for that hash
     const roomIdFromUrl = location.hash.substr(1);
     if (roomIdFromUrl) {
-      ACTIONS.requestRoom(roomIdFromUrl);
+      actions.joinRoom(roomIdFromUrl);
     }
 
     this.state = {};
@@ -34,8 +38,7 @@ class App extends React.Component {
       log.debug('storeState', storeState.toJS());
 
       this.setState({
-        roomId: storeState.get('roomId'),
-        people: storeState.get('people')
+        room: storeState
       });
     });
 
@@ -44,15 +47,21 @@ class App extends React.Component {
 
   render() {
 
-    const { roomId, people } = this.state;
+    const { room } = this.state;
 
-    if (roomId && people) {
-      return <Board {...this.state} />;
+    if (room && room.get('roomId') && room.get('users') && room.get('users').size > 0) {
+      return (
+        <div style={{height:'100%'}}>
+          <TopBar room={room} actions={actions}/>
+          <Board room={room} actions={actions}/>
+        </div>
+      );
     }
 
-    return <Landing />;
+    return <Landing actions={actions}/>;
 
   }
 }
+
 
 render(React.createElement(App), document.getElementById('app-root'));

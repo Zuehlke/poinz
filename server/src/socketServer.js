@@ -1,0 +1,100 @@
+var
+  http = require('http'),
+  uuid = require('node-uuid').v4,
+  socketIo = require('socket.io'),
+  log = require('loglevel'),
+  interfaceMsgs = require('../../interfaceMessageNames.js');
+
+var LOGGER = log.getLogger('socketServer');
+
+var io;
+var socketToUserIdMap = {};
+var socketToRoomMap = {};
+var commandProcessor;
+
+function init(app, cmdProcessor) {
+  var server = http.createServer(app);
+  io = socketIo(server);
+  io.on(interfaceMsgs.CONNECT, handleNewConnection);
+  commandProcessor = cmdProcessor;
+  return server;
+}
+
+function handleNewConnection(socket) {
+  socket.on(interfaceMsgs.DISCONNECT, onSocketDisconnect.bind(undefined, socket));
+  socket.on(interfaceMsgs.COMMAND, (msg) => handleIncomingCommand(socket, msg));
+}
+
+function handleIncomingCommand(socket, msg) {
+  LOGGER.debug('incoming command', msg);
+
+  var producedEvents;
+  var userId = socketToUserIdMap[socket.id];
+
+  try {
+    producedEvents = commandProcessor(msg, userId);
+  } catch (commandProcessingError) {
+    LOGGER.error(commandProcessingError.stack);
+    var commandRejectedEvent = {
+      name: 'commandRejected',
+      id: uuid(),
+      payload: {
+        command: msg,
+        reason: commandProcessingError.message
+      }
+    };
+
+    LOGGER.debug('outgoing event', commandRejectedEvent);
+
+    // command rejected event is only sent to the one socket that sent the command
+    socket.emit(interfaceMsgs.EVENT, commandRejectedEvent);
+    return;
+  }
+
+  // TODO: for these next few lines, we need to "know" a lot about the commandHandler for "joinRoom".
+  // how to improve that?
+  if (msg.name === 'joinRoom') {
+    // special case of "JoinRoom" command
+    // at this point, we know that join was successful -> put socket into socket.io room with given id
+    socket.join(msg.roomId, function () {
+      LOGGER.debug('socket with id ' + socket.id + ' joined room ' + msg.roomId);
+
+      // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
+      // on socket disconnect.
+      socketToRoomMap[socket.id] = msg.roomId;
+      socketToUserIdMap[socket.id] = producedEvents[producedEvents.length - 1].payload.userId;
+    });
+
+  }
+
+  // send produced events to all sockets in room
+  producedEvents.forEach(producedEvent => {
+    io.to(msg.roomId).emit(interfaceMsgs.EVENT, producedEvent);
+    LOGGER.debug('outgoing event', producedEvent);
+  });
+}
+
+function onSocketDisconnect(socket) {
+
+  var userId = socketToUserIdMap[socket.id];
+  var roomId = socketToRoomMap[socket.id]; // socket.rooms is at this moment already emptied. so we have to use our own map
+
+  if (!userId || !roomId) {
+    // this can happen if the server was restarted, and a client re-connected!
+    LOGGER.warn('could not send leaveRoom command for ' + userId + ' in ' + roomId);
+    return;
+  }
+
+  // "manually" send a "leaveRoom" command
+  handleIncomingCommand(socket, {
+    id: uuid(),
+    roomId: roomId,
+    name: 'leaveRoom',
+    payload: {
+      userId: userId
+    }
+  });
+
+}
+
+module.exports.init = init;

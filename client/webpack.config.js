@@ -25,7 +25,7 @@ module.exports = {
         loader: 'babel'
       },
       {
-        test: /\.(png|jpg|gif)$/,
+        test: /\.(woff2|woff|png|jpg|gif)$/,
         loader: 'url?limit=8192'
       },
       {

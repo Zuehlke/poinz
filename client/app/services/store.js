@@ -1,57 +1,29 @@
-import { createStore } from 'redux';
+import { createStore, bindActionCreators } from 'redux';
 import Immutable from 'immutable';
 import log from 'loglevel';
-import { createHistory } from 'history';
-import hub from './hub';
+import _ from 'lodash';
+import * as splushActions from './actions'
+import hubFactory from './hub';
+import commandReducerFactory from './commandReducer';
+import eventReducerFactory from './eventReducer';
 
-let history = createHistory();
+const LOGGER = log.getLogger('store');
 
-//history.listen(location => {
-//  console.dir(location);
-//});
+let commandReducer = _.noop;
+let eventReducer = _.noop;
 
-const DEFAULT_STATE = Immutable.fromJS({});
-
-const ACTION_TYPES = {};
-export const ACTIONS = {};
-['requestRoom', 'personJoinedRoom', 'roomCreated', 'joinedRoom'].forEach(actionType => {
-  ACTION_TYPES[actionType] = actionType;
-  ACTIONS[actionType] = payload => store.dispatch({type: actionType, payload});
-});
-log.debug(ACTIONS);
-
-function rootReducer(state = DEFAULT_STATE, action = undefined) {
-
-  log.debug('reducing action', action);
-
-  switch (action.type) {
-    case ACTION_TYPES.requestRoom:
-      const roomId = action.payload;
-      log.info('requesting room ', roomId);
-
-      history.push({
-        hash: `#${roomId}`
-      });
-
-      hub.requestRoom(roomId);
-
-      return state.set('requestedRoomId', roomId);
-    case ACTION_TYPES.roomCreated:
-      return state.set('roomId', action.payload.roomId);
-    case ACTION_TYPES.joinedRoom:
-      return state
-        .set('roomId', action.payload.roomId)
-        .set('personId', action.payload.personId);
-    case ACTION_TYPES.personJoinedRoom:
-      return state.update('people', new Immutable.List(), people => people.push(action.payload.personId));
-    default:
-      log.warn('unknown action', action);
-      return state
+function rootReducer(state = Immutable.fromJS({}), action = {}) {
+  LOGGER.debug('reducing action', action);
+  if (action.event) {
+    return eventReducer(state, action);
+  } else {
+    return commandReducer(state, action);
   }
-
 }
 
 let store = createStore(rootReducer);
-
+const actions = bindActionCreators(splushActions, store.dispatch);
+commandReducer = commandReducerFactory(hubFactory(actions));
+eventReducer = eventReducerFactory();
 
 export default store;

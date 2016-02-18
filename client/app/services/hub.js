@@ -1,22 +1,34 @@
 import socketIo from 'socket.io-client';
 import log from 'loglevel';
-import store, { ACTIONS } from './store';
 import interfaceMsgs from '../../../interfaceMessageNames';
+import { v4 as uuid } from 'node-uuid';
+const LOGGER = log.getLogger('hub');
 
 const io = socketIo('http://localhost:3000');
 
-io.on('connect', () => log.info('socket to server connected'));
-io.on(interfaceMsgs.DISCONNECT, () => log.info('socket from server disconnected'));
-io.on(interfaceMsgs.PERSON_JOINED_ROOM, payload => ACTIONS.personJoinedRoom(payload));
-io.on(interfaceMsgs.JOINED_ROOM, payload => ACTIONS.joinedRoom(payload));
-io.on(interfaceMsgs.ROOM_CREATED, payload => ACTIONS.roomCreated(payload));
-
-const hub = {
-  requestRoom
-};
-
-function requestRoom(roomId) {
-  io.emit(interfaceMsgs.ROOM_REQUESTED, roomId);
+function sendCommand(cmd) {
+  cmd.id = uuid();
+  io.emit(interfaceMsgs.COMMAND, cmd);
 }
 
-export default hub;
+function hubFactory(actions) {
+
+  io.on('connect', () => log.info('socket to server connected'));
+  io.on(interfaceMsgs.DISCONNECT, () => log.info('socket from server disconnected'));
+  io.on(interfaceMsgs.EVENT, handleIncomingEvent);
+
+  function handleIncomingEvent(event) {
+    const eventHandler = actions[event.name];
+    if (!eventHandler) {
+      LOGGER.error('No handler for event ' + event.name);
+      return;
+    }
+    eventHandler(event);
+  }
+
+  return {
+    sendCommand
+  };
+}
+
+export default hubFactory;

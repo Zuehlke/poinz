@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import avatarIcons from '../assets/avatars';
 
-const User = ({user, index, ownId, moderatorId, selectedStory}) => {
+const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
   const isModerator = user.get('id') === moderatorId;
 
@@ -18,13 +18,13 @@ const User = ({user, index, ownId, moderatorId, selectedStory}) => {
     'all-given': selectedStory && selectedStory.get('allEstimatesGiven')
   });
 
-  const estimationValueToDisplay = userEstimation && selectedStory.get('allEstimatesGiven') ? userEstimation : 'Z';
+  const estimationValueToDisplay = userEstimation && selectedStory.get('allEstimatesGiven') ? cardConfig.find(cc => cc.get('value') === userEstimation).get('label') : 'Z';
 
   return (
     <div className={classes}>
       {isModerator && <span className='moderator-badge'>M</span>}
       <img className='avatar' src={avatarIcons[index % avatarIcons.length]}/>
-      <div className='user-name'>{user.get('username')}</div>
+      <div className='user-name'>{user.get('username') || '-'}</div>
       <div
         className={estimationClasses}>{estimationValueToDisplay}</div>
     </div>
@@ -32,10 +32,11 @@ const User = ({user, index, ownId, moderatorId, selectedStory}) => {
 
 };
 
-const Users = ({ ownId, users, moderatorId, selectedStory }) => (
+const Users = ({ ownId, cardConfig, users, moderatorId, selectedStory }) => (
   <div className='users'>
     {users.toList().map((user, index) => (
       <User
+        cardConfig={cardConfig}
         key={user.get('id')}
         index={index}
         user={user}

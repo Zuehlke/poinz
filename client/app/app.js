@@ -53,7 +53,7 @@ class App extends React.Component {
     if (room && room.get('roomId') && room.get('users') && room.get('users').size > 0) {
       return (
         <div style={{height:'100%'}}>
-          <TopBar room={room}/>
+          <TopBar room={room} actions={actions}/>
           <Board room={room} actions={actions}/>
         </div>
       );

@@ -20,6 +20,16 @@ const actionToCommandMap = {
       }
     });
   },
+  [types.SET_USERNAME]: (hub, state, action) => {
+    hub.sendCommand({
+      name: 'setUsername',
+      roomId: state.get('roomId'),
+      payload: {
+        userId: state.get('userId'),
+        username: action.username
+      }
+    });
+  },
   [types.ADD_STORY]: (hub, state, action) => {
     hub.sendCommand({
       name: 'addStory',

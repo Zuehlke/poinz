@@ -2,7 +2,7 @@ import React from 'react';
 import Anchorify from 'react-anchorify-text'
 import Cards from './Cards'
 
-const Estimation = ({ selectedStory, ownId, moderatorId, actions }) => {
+const Estimation = ({ selectedStory, cardConfig, ownId, moderatorId, actions }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', ownId]);
 
@@ -24,6 +24,7 @@ const Estimation = ({ selectedStory, ownId, moderatorId, actions }) => {
       {
         isEstimationChangeAllowed &&
         <Cards
+          cardConfig={cardConfig}
           ownEstimate={ownEstimate}
           onCardSelected={selectedCard => actions.giveStoryEstimate(selectedStory.get('id'), selectedCard.get('value')) }/>
       }

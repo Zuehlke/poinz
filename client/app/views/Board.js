@@ -11,6 +11,7 @@ const Board = ({ room, actions }) => {
   return (
     <div className='board' id={room.get('roomId')}>
       <Users
+        cardConfig={room.get('cardConfig')}
         ownId={room.get('userId')}
         users={room.get('users')}
         moderatorId={room.get('moderatorId')}
@@ -29,6 +30,7 @@ const Board = ({ room, actions }) => {
       {
         selectedStory &&
         <Estimation
+          cardConfig={room.get('cardConfig')}
           moderatorId={room.get('moderatorId')}
           ownId={room.get('userId')}
           actions={actions}

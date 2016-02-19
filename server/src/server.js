@@ -1,13 +1,12 @@
+var log = require('loglevel');
+log.setLevel('debug');
+
 var
   path = require('path'),
-  log = require('loglevel'),
   glob = require('glob'),
   express = require('express'),
   socketServer = require('./socketServer'),
   commandProcessorFactory = require('./commandProcessor');
-
-log.setLevel('debug');
-
 
 var app = express();
 

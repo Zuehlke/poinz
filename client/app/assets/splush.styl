@@ -26,7 +26,7 @@ body {
 
 .pure-button.pure-button-primary {
   background-color $zuehlkePurple
-  border-radius 1px
+  border-radius 2px
 }
 
 a {
@@ -45,6 +45,7 @@ a {
   background url('./landing_bg_z.jpg')
   background-repeat no-repeat
   background-position left top
+  background-size contain
 
   .eyecatcher {
     width 80%
@@ -84,7 +85,7 @@ a {
 
 .users {
   padding 16px
-  padding-top 40px
+  padding-top 48px
 
   .user {
     padding 0 8px
@@ -100,11 +101,9 @@ a {
       padding 4px
     }
 
-    .moderator-badge {
-      position absolute
-      top 2
-      right 8px
-      color $zuehlkeOrange
+    .user-name {
+      text-align center
+      margin 4px 0
     }
 
     .user-estimation {
@@ -136,7 +135,14 @@ a {
       }
     }
 
+    .moderator-badge {
+      position absolute
+      top 2
+      right 8px
+    }
+
     &.user-own {
+      color $zuehlkeOrange
       .avatar {
         border 2px solid $zuehlkeOrange
       }
@@ -144,7 +150,7 @@ a {
 
     &.user-moderator {
       .user-name {
-        color $zuehlkeOrange
+
       }
     }
   }
@@ -161,6 +167,12 @@ a {
   padding 8px
   box-sizing border-box
   text-align right
+
+  .username-input {
+    color $zuehlkeFontGrey
+    border-radius 4px
+    border 1px solid #ccc;
+  }
 }
 
 $backlogWidth = 300px
@@ -211,7 +223,7 @@ $backlogWidth = 300px
       border-radius 2px
 
       &.story-selected {
-        border 1px solid $zuehlkeOrange
+        border-left 2px solid $zuehlkeOrange
       }
 
       h4 {
@@ -231,6 +243,10 @@ $backlogWidth = 300px
       h4 {
         margin-top 8px
       }
+    }
+
+    .moderator-actions {
+      margin-top 16px
     }
 
     .cards {

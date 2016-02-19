@@ -23,6 +23,9 @@ export function giveStoryEstimate(storyId, value) {
 export function newEstimationRound(storyId) {
   return {type: types.NEW_ESTIMATION_ROUND, storyId};
 }
+export function setUsername(username) {
+  return {type: types.SET_USERNAME, username};
+}
 
 
 // redux actions for incoming backend events (these usually update our client state during reduction)

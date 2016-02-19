@@ -22,7 +22,7 @@ function eventReducerFactory() {
 
         if (state.get('userId')) {
           // someone else joined
-          return state.set('users', Immutable.fromJS(payload.users || {}));
+          return state.setIn(['users', payload.userId], Immutable.fromJS(payload.users[payload.userId]));
         } else {
           // you joined
           // server sends current room state (users, stories, etc.)

@@ -1,8 +1,16 @@
+/**
+ * Action types for commands
+ */
 export const JOIN_ROOM = 'JOIN_ROOM';
 export const ADD_STORY = 'ADD_STORY';
 export const SELECT_STORY = 'SELECT_STORY';
 export const GIVE_STORY_ESTIMATE = 'GIVE_STORY_ESTIMATE';
+export const NEW_ESTIMATION_ROUND = 'NEW_ESTIMATION_ROUND';
 
+
+/**
+ * Action types for events
+ */
 export const ROOM_CREATED = 'ROOM_CREATED';
 export const JOINED_ROOM = 'JOINED_ROOM';
 export const LEFT_ROOM = 'LEFT_ROOM';
@@ -14,3 +22,4 @@ export const STORY_ESTIMATE_GIVEN = 'STORY_ESTIMATE_GIVEN';
 export const STORY_ESTIMATE_CLEARED = 'STORY_ESTIMATE_CLEARED';
 export const MODERATOR_SET = 'MODERATOR_SET';
 export const ALL_ESTIMATES_GIVEN = 'ALL_ESTIMATES_GIVEN';
+export const NEW_ESTIMATION_ROUND_STARTED = 'NEW_ESTIMATION_ROUND_STARTED';

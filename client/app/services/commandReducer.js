@@ -19,7 +19,6 @@ const actionToCommandMap = {
         username: username
       }
     });
-    return state;
   },
   [types.ADD_STORY]: (hub, state, action) => {
     hub.sendCommand({
@@ -30,10 +29,8 @@ const actionToCommandMap = {
         description: action.description
       }
     });
-    return state;
   },
-  [types.GIVE_STORY_ESTIMATE]: (hub, state, action)=> {
-
+  [types.GIVE_STORY_ESTIMATE]: (hub, state, action) => {
     if (state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]) === action.value) {
       hub.sendCommand({
         name: 'clearStoryEstimate',
@@ -54,11 +51,17 @@ const actionToCommandMap = {
         }
       });
     }
-
-    return state;
+  },
+  [types.NEW_ESTIMATION_ROUND]: (hub, state, action) => {
+    hub.sendCommand({
+      name: 'newEstimationRound',
+      roomId: state.get('roomId'),
+      payload: {
+        storyId: action.storyId
+      }
+    });
   },
   [types.SELECT_STORY]: (hub, state, action) => {
-
     hub.sendCommand({
       name: 'selectStory',
       roomId: state.get('roomId'),
@@ -66,7 +69,6 @@ const actionToCommandMap = {
         id: action.storyId
       }
     });
-    return state;
   }
 
 };
@@ -75,7 +77,8 @@ const actionToCommandMap = {
 function commandReducerFactory(hub) {
   return function commandReducer(state, action) {
     if (actionToCommandMap[action.type]) {
-      return actionToCommandMap[action.type](hub, state, action);
+      const modifiedState = actionToCommandMap[action.type](hub, state, action);
+      return modifiedState || state;
     } else {
       LOGGER.warn('unknown action', action);
       return state

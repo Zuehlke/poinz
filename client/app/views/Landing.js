@@ -9,7 +9,7 @@ const Landing = ({ actions })=> {
 
       <div className='eyecatcher'>
         <div className="room-id-wrapper">
-          <input placeholder='room' type='text' ref={ref => roomIdInputField = ref} onKeyPress={handleKeyPress}/>
+          <input placeholder='Please enter a room name...' type='text' ref={ref => roomIdInputField = ref} onKeyPress={handleKeyPress}/>
           <button type='button' className='pure-button pure-button-primary' onClick={joinRoom}>Start</button>
         </div>
       </div>

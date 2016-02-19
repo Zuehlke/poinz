@@ -13,17 +13,18 @@ function sendCommand(cmd) {
 
 function hubFactory(actions) {
 
-  io.on('connect', () => log.info('socket to server connected'));
+  io.on(interfaceMsgs.CONNECT, () => log.info('socket to server connected'));
   io.on(interfaceMsgs.DISCONNECT, () => log.info('socket from server disconnected'));
   io.on(interfaceMsgs.EVENT, handleIncomingEvent);
 
   function handleIncomingEvent(event) {
-    const eventHandler = actions[event.name];
-    if (!eventHandler) {
-      LOGGER.error('No handler for event ' + event.name);
+    // for every incoming event, there must be a redux action to handle it
+    const eventHandlerAction = actions[event.name];
+    if (!eventHandlerAction) {
+      LOGGER.error('No handler action for event ' + event.name);
       return;
     }
-    eventHandler(event);
+    eventHandlerAction(event);
   }
 
   return {

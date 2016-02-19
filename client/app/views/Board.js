@@ -29,6 +29,7 @@ const Board = ({ room, actions }) => {
       {
         selectedStory &&
         <Estimation
+          moderatorId={room.get('moderatorId')}
           ownId={room.get('userId')}
           actions={actions}
           selectedStory={selectedStory}

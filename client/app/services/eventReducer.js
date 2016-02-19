@@ -5,6 +5,9 @@ import * as types from './actionTypes';
 const LOGGER = log.getLogger('eventReducer');
 
 function eventReducerFactory() {
+  /**
+   * redux reducer for incoming backend events
+   */
   return function eventReducer(state, action) {
 
     const { event } = action;
@@ -52,6 +55,10 @@ function eventReducerFactory() {
         return state.removeIn(['stories', payload.storyId, 'estimations', payload.userId]);
       case types.ALL_ESTIMATES_GIVEN:
         return state.setIn(['stories', payload.storyId, 'allEstimatesGiven'], true);
+      case types.NEW_ESTIMATION_ROUND_STARTED:
+        return state
+          .setIn(['stories', payload.storyId, 'estimations'], new Immutable.Map())
+          .setIn(['stories', payload.storyId, 'allEstimatesGiven'], false);
       case types.COMMAND_REJECTED:
         LOGGER.error(event);
         return state;

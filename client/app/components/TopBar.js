@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const TopBar = ({ room }) => {
 
   const username = room.getIn(['users', room.get('userId'), 'username']) || '-';

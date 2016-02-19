@@ -1,6 +1,9 @@
 import * as types from './actionTypes'
 
-// actions that are triggered from our views (these might also trigger commands to the backend during reduction)
+// actions that are triggered from our views
+// these often trigger commands to the backend during reduction
+// still implemented as redux actions -> views have a consistent api & we could store some additional data
+// when sending commands
 export function joinRoom(roomId, username) {
   return {type: types.JOIN_ROOM, roomId, username};
 }
@@ -15,6 +18,10 @@ export function selectStory(storyId) {
 
 export function giveStoryEstimate(storyId, value) {
   return {type: types.GIVE_STORY_ESTIMATE, storyId, value};
+}
+
+export function newEstimationRound(storyId) {
+  return {type: types.NEW_ESTIMATION_ROUND, storyId};
 }
 
 
@@ -51,4 +58,7 @@ export function moderatorSet(event) {
 }
 export function allEstimatesGiven(event) {
   return {type: types.ALL_ESTIMATES_GIVEN, event};
+}
+export function newEstimationRoundStarted(event) {
+  return {type: types.NEW_ESTIMATION_ROUND_STARTED, event};
 }

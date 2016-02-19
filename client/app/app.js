@@ -33,6 +33,8 @@ class App extends React.Component {
 
     this.state = {};
 
+    // subscribe to the redux store
+    // set the store state to the state of our app -> rerender
     store.subscribe(() => {
       const storeState = store.getState();
       log.debug('storeState', storeState.toJS());
@@ -44,7 +46,6 @@ class App extends React.Component {
 
   }
 
-
   render() {
 
     const { room } = this.state;
@@ -52,7 +53,7 @@ class App extends React.Component {
     if (room && room.get('roomId') && room.get('users') && room.get('users').size > 0) {
       return (
         <div style={{height:'100%'}}>
-          <TopBar room={room} actions={actions}/>
+          <TopBar room={room}/>
           <Board room={room} actions={actions}/>
         </div>
       );

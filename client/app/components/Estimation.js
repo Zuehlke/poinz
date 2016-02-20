@@ -1,5 +1,7 @@
 import React from 'react';
 import Anchorify from 'react-anchorify-text';
+import { pure } from 'recompose';
+
 import Cards from './Cards';
 
 const Estimation = ({ selectedStory, cardConfig, ownId, moderatorId, actions }) => {
@@ -43,4 +45,4 @@ const Estimation = ({ selectedStory, cardConfig, ownId, moderatorId, actions }) 
   );
 };
 
-export default Estimation;
+export default pure(Estimation);

@@ -1,4 +1,6 @@
 import React from 'react';
+import { pure } from 'recompose';
+
 import Card from './Card';
 
 /**
@@ -20,4 +22,4 @@ const Cards = ({onCardSelected, ownEstimate, cardConfig})=> {
   );
 };
 
-export default Cards;
+export default pure(Cards);

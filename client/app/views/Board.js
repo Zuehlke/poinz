@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 
 import Backlog from '../components/Backlog';
 import Users from '../components/Users';
@@ -39,4 +40,4 @@ const Board = ({ room, actions }) => {
   );
 };
 
-export default Board;
+export default pure(Board);

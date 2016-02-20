@@ -1,11 +1,12 @@
 import React from 'react';
+import { pure } from 'recompose';
 import classnames from 'classnames';
+
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
 import zuehlkeLogo from '../assets/logo-zuehlke-small.png';
 
 const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
-
 
   const hasStories = stories && !!stories.size;
 
@@ -36,4 +37,4 @@ const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
 };
 
 
-export default Backlog;
+export default pure(Backlog);

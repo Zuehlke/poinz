@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 
 const StoryAddForm = ({onAddStory}) => {
 
@@ -33,4 +34,4 @@ const StoryAddForm = ({onAddStory}) => {
 
 };
 
-export default StoryAddForm;
+export default pure(StoryAddForm);

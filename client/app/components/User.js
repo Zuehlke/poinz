@@ -1,7 +1,9 @@
 import React from 'react';
 import classnames from 'classnames';
-import avatarIcons from '../assets/avatars';
 import _ from 'lodash';
+import { pure } from 'recompose';
+
+import avatarIcons from '../assets/avatars';
 
 const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
@@ -37,4 +39,4 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
 };
 
-export default User;
+export default pure(User);

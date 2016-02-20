@@ -1,7 +1,8 @@
 import React from 'react';
+import { pure } from 'recompose';
 
 
-const RoomJoinForm = ({actions, presetUsername}) => {
+const RoomJoinForm = pure(({actions, presetUsername}) => {
 
   let roomIdInputField;
 
@@ -25,7 +26,7 @@ const RoomJoinForm = ({actions, presetUsername}) => {
       joinRoom();
     }
   }
-};
+});
 
 const Loader = () => (
   <div className='eyecatcher loading'>
@@ -43,4 +44,4 @@ const Landing = ({ actions, presetUsername, waitingForJoin })=> {
 };
 
 
-export default Landing;
+export default pure(Landing);

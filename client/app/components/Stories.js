@@ -1,4 +1,6 @@
 import React from 'react';
+import { pure } from 'recompose';
+
 import Story from './Story';
 
 const Stories = ({ stories, selectedStory, actions }) => (
@@ -9,4 +11,4 @@ const Stories = ({ stories, selectedStory, actions }) => (
 );
 
 
-export default Stories;
+export default pure(Stories);

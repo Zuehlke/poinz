@@ -1,4 +1,6 @@
 import React from 'react';
+import { pure } from 'recompose';
+
 import User from './User';
 
 const Users = ({ ownId, cardConfig, users, moderatorId, selectedStory }) => (
@@ -18,4 +20,4 @@ const Users = ({ ownId, cardConfig, users, moderatorId, selectedStory }) => (
 );
 
 
-export default Users;
+export default pure(Users);

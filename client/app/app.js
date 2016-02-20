@@ -1,12 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux';
 import log from 'loglevel';
 
+/*eslint-disable no-unused-vars */
 import normalizeCss from 'normalize.css';
 import pureCss from 'purecss';
 import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
 import splushStyles from './assets/splush.styl';
+/*eslint-enable no-unused-vars */
 
 import store from './services/store';
 import * as splushActions from './services/actions';

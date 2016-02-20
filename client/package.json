@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "private": true,
-  "author":"xeronimus@gmail.com",
+  "author": "xeronimus@gmail.com",
   "repository": {
     "type": "git",
     "url": "https://bitbucket.org/xeronimus/tagi.git"
@@ -38,6 +38,7 @@
     "react": "0.14.7",
     "react-anchorify-text": "^1.0.1",
     "react-dom": "0.14.7",
+    "recompose": "0.15.0",
     "redux": "3.3.1",
     "socket.io-client": "1.4.5",
     "style-loader": "0.13.0",

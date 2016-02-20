@@ -1,11 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
+import { pure } from 'recompose';
 import Anchorify from 'react-anchorify-text';
 
 const Story = ({story, selectedStory, onSelect}) => {
-  var classes = classnames('story', {'story-selected': selectedStory === story.get('id')});
+  const classes = classnames('story', {'story-selected': selectedStory === story.get('id')});
+  const onClick = onSelect.bind(undefined, story.get('id'));
+
   return (
-    <div className={classes} onClick={onSelect.bind(undefined, story.get('id'))}>
+    <div className={classes} onClick={onClick}>
       <h4>
         {story.get('title')}
       </h4>
@@ -16,4 +19,4 @@ const Story = ({story, selectedStory, onSelect}) => {
   );
 };
 
-export default Story;
+export default pure(Story);

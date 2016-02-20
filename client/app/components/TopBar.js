@@ -1,4 +1,5 @@
 import React from 'react';
+import { pure } from 'recompose';
 
 const TopBar = ({ room, actions }) => {
 
@@ -38,6 +39,6 @@ const TopBar = ({ room, actions }) => {
 };
 
 
-export default TopBar;
+export default pure(TopBar);
 
 

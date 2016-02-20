@@ -15,8 +15,14 @@ import Landing from './views/Landing';
 import Board from './views/Board';
 import TopBar from './components/TopBar';
 
-log.setLevel('debug'); // set our splush client loglevel
-localStorage.debug = 'socket.io-client:*'; // enable socket.io debugging
+const appConfig = __SPLUSH_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
+
+if (appConfig.env === 'dev') {
+  log.setLevel('debug');
+  localStorage.debug = 'socket.io-client:*'; // enable socket.io debugging
+} else {
+  log.setLevel('error');
+}
 
 const actions = bindActionCreators(splushActions, store.dispatch);
 

@@ -1,21 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
-
-
-// TODO: mark your selected estimation card
-// TODO: on click of selected card -> unselect
-const Card = ({card, cardGridWitdh, ownEstimate, onCardSelected}) => {
-
-  const classes = classnames(`card pure-u-1 pure-u-md-${cardGridWitdh}-24`, {
-    'card-selected': card.get('value') === ownEstimate
-  });
-
-  return <div className={classes}
-              onClick={() => onCardSelected(card)}>
-    <div className='card-inner'>{card.get('label')}</div>
-  </div>
-};
+import Card from './Card';
 
 /**
  *
@@ -36,6 +22,5 @@ const Cards = ({onCardSelected, ownEstimate, cardConfig})=> {
     </div>
   );
 };
-
 
 export default Cards;

@@ -19,7 +19,7 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 
 var commandProcessor = commandProcessorFactory(gatherCommandHandlers(), gatherEventHandlers());
 var server = socketServer.init(app, commandProcessor);
-server.listen(serverHost, serverPort, function () {
+server.listen(serverPort, serverHost, function () {
   log.info('-- SERVER STARTED -- (' + serverHost + ':' + serverPort + ')');
 });
 

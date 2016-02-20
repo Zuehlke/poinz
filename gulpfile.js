@@ -32,7 +32,7 @@ gulp.task('packForDeployment', ['cleanDeploymentFolder', 'cleanClientDist'], fun
 
   // start client packaging
   gutil.log('Packing client...');
-  exec('npm run build', {cwd: path.resolve(__dirname, './client')}, function (err, stdout) {
+  exec('npm run build', {cwd: path.resolve(__dirname, './client')}, function (err) {
     if (err) {
       done(err);
     }

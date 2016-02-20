@@ -5,7 +5,8 @@
   "private": true,
   "main": "src/server.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint src/*"
+    "test": "./node_modules/.bin/eslint src/*",
+    "start": "node src/server.js"
   },
   "author": "xeronimus@gmail.com",
   "license": "ISC",

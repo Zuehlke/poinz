@@ -2,8 +2,7 @@ var
   http = require('http'),
   uuid = require('node-uuid').v4,
   socketIo = require('socket.io'),
-  log = require('loglevel'),
-  interfaceMsgs = require('../../interfaceMessageNames.js');
+  log = require('loglevel');
 
 var LOGGER = log.getLogger('socketServer');
 
@@ -15,14 +14,14 @@ var commandProcessor;
 function init(app, cmdProcessor) {
   var server = http.createServer(app);
   io = socketIo(server);
-  io.on(interfaceMsgs.CONNECT, handleNewConnection);
+  io.on('connect', handleNewConnection);
   commandProcessor = cmdProcessor;
   return server;
 }
 
 function handleNewConnection(socket) {
-  socket.on(interfaceMsgs.DISCONNECT, onSocketDisconnect.bind(undefined, socket));
-  socket.on(interfaceMsgs.COMMAND, (msg) => handleIncomingCommand(socket, msg));
+  socket.on('disconnect', onSocketDisconnect.bind(undefined, socket));
+  socket.on('command', (msg) => handleIncomingCommand(socket, msg));
 }
 
 function handleIncomingCommand(socket, msg) {
@@ -47,7 +46,7 @@ function handleIncomingCommand(socket, msg) {
     LOGGER.debug('outgoing event', commandRejectedEvent);
 
     // command rejected event is only sent to the one socket that sent the command
-    socket.emit(interfaceMsgs.EVENT, commandRejectedEvent);
+    socket.emit('event', commandRejectedEvent);
     return;
   }
 
@@ -69,7 +68,7 @@ function handleIncomingCommand(socket, msg) {
 
   // send produced events to all sockets in room
   producedEvents.forEach(producedEvent => {
-    io.to(msg.roomId).emit(interfaceMsgs.EVENT, producedEvent);
+    io.to(msg.roomId).emit('event', producedEvent);
     LOGGER.debug('outgoing event', producedEvent);
   });
 }

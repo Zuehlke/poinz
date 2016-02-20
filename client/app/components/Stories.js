@@ -1,5 +1,4 @@
 import React from 'react';
-import classnames from 'classnames';
 import Story from './Story';
 
 const Stories = ({ stories, selectedStory, actions }) => (

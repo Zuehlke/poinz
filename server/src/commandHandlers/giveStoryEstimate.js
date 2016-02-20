@@ -1,5 +1,9 @@
 var _ = require('lodash');
 
+/**
+ * A user gives his estimation for a certain story.
+ * Users may only give estimations for the currently selected story.
+ */
 module.exports = {
   existingRoom: true,
   preCondition: function (room, command) {

@@ -17,11 +17,9 @@ const Board = ({ room, actions }) => {
         moderatorId={room.get('moderatorId')}
         selectedStory={selectedStory}
       />
-      <a href='#menu' className='menu-link'>
-        <span></span>
-      </a>
 
       <Backlog
+        showMenu={room.get('menuShown')}
         actions={actions}
         stories={room.get('stories')}
         selectedStory={room.get('selectedStory')}

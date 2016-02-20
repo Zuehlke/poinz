@@ -1,3 +1,6 @@
+/**
+ * A user sets his username
+ */
 module.exports = {
   existingRoom: true,
   preCondition: function (room, command, userId) {

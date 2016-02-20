@@ -1,3 +1,9 @@
+/**
+ * A user clears his estimation value for a certain story.
+ * Users may only clear estimation for the currently selected story.
+ * As soon as all users in the room estimated the current story, this story is "locked" (marked as "allEstimatesGiven").
+ * Only the room moderator can then "unlock" the story for a new round
+ */
 module.exports = {
   existingRoom: true,
   preCondition: function (room, command) {

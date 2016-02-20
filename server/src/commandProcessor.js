@@ -6,9 +6,24 @@ var
 
 var LOGGER = log.getLogger('commandProcessor');
 
+module.exports = commandProcessorFactory;
+
 function commandProcessorFactory(commandHandlers, eventHandlers) {
 
   /**
+   *  The command processor handles incoming commands.
+   *  For every command the following steps are done.
+   *
+   *  1. Validate incoming command (syntactically, agains schema)
+   *  2. Find command handler (for command.name)
+   *  3. Get Room object (for command.roomId)
+   *  4. Run command preconditions (defined in commandHandler)
+   *  5. Handle the command
+   *  6. Apply events
+   *  7. Store modified room object
+   *
+   *  Every step can throw an error which will lead to a command rejection.
+   *
    *  @param {object} command
    *  @param {string} userId The id of the user that send the command. if command is "joinRoom" user id is not yet given and will be undefined!
    */
@@ -113,6 +128,9 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
 
 }
 
+
+/**  some custom errors **/
+
 function CommandValidationError(err, cmd) {
   this.stack = err.stack;
   this.name = this.constructor.name;
@@ -127,4 +145,4 @@ function PreconditionError(err, cmd) {
 }
 util.inherits(PreconditionError, Error);
 
-module.exports = commandProcessorFactory;
+

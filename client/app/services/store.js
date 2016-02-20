@@ -2,7 +2,8 @@ import { createStore, bindActionCreators } from 'redux';
 import Immutable from 'immutable';
 import log from 'loglevel';
 import _ from 'lodash';
-import * as splushActions from './actions'
+import * as splushActions from './actions';
+import * as types from './actionTypes';
 import hubFactory from './hub';
 import commandReducerFactory from './commandReducer';
 import eventReducerFactory from './eventReducer';
@@ -26,6 +27,9 @@ const INITIAL_STATE = Immutable.fromJS({
     {label: '5', value: 5},
     {label: '8', value: 8},
     {label: '13', value: 13},
+    {label: '21', value: 13},
+    {label: '34', value: 13},
+    {label: '55', value: 13},
     {label: '?', value: -1},
     {label: 'Coffee', value: -2}
   ],
@@ -33,12 +37,27 @@ const INITIAL_STATE = Immutable.fromJS({
   presetUserId: clientSettingsStore.getPresetUserId()
 });
 
+/**
+ * the root redux reducer that decides if
+ * - the action should be handled by an event reducer (backend event gets applied to our state)
+ * - the action should be handled by a command reducer (command gets sent to the backend)
+ * - the action is a UI-only action (some state changes in the client only)
+ *
+ */
 function rootReducer(state = INITIAL_STATE, action = {}) {
   LOGGER.debug('reducing action', action);
   if (action.event) {
     return eventReducer(state, action);
-  } else {
+  } else if (action.command) {
     return commandReducer(state, action);
+  } else {
+    switch (action.type) {
+      case types.TOGGLE_MENU:
+        return state.set('menuShown', !state.get('menuShown'));
+      default :
+        LOGGER.warn('unknown command action', action);
+        return state;
+    }
   }
 }
 

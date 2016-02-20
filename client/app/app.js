@@ -9,7 +9,7 @@ import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-mi
 import splushStyles from './assets/splush.styl';
 
 import store from './services/store';
-import * as splushActions from './services/actions'
+import * as splushActions from './services/actions';
 
 import Landing from './views/Landing';
 import Board from './views/Board';
@@ -25,7 +25,6 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-
     // if our url already contains a hash, request room for that hash
     const roomIdFromUrl = location.hash.substr(1);
     if (roomIdFromUrl) {
@@ -37,7 +36,7 @@ class App extends React.Component {
     };
 
     // subscribe to the redux store
-    // set the store state to the state of our app -> rerender
+    // set the store state to the state of our app -> triggers rerender
     store.subscribe(() => {
       const storeState = store.getState();
       log.debug('storeState', storeState.toJS());
@@ -69,6 +68,5 @@ class App extends React.Component {
 
   }
 }
-
 
 render(React.createElement(App), document.getElementById('app-root'));

@@ -40,10 +40,22 @@ function eventReducerFactory() {
         }
         break;
       case types.LEFT_ROOM:
-        // someone lef the room
-        return state
-          .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove leaving user's estimations from all stories
-          .removeIn(['users', payload.userId]); // then remove user from room
+        if (state.get('userId') === payload.userId) {
+          // you left the room, let's clear some state
+          return state
+            .remove('userId')
+            .remove('roomId')
+            .remove('stories')
+            .remove('users')
+            .remove('selectedStory')
+            .remove('moderatorId');
+        } else {
+          // someone lef the room
+          return state
+            .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove leaving user's estimations from all stories
+            .removeIn(['users', payload.userId]); // then remove user from room
+        }
+        break;
       case types.STORY_ADDED:
         const newStory = Immutable.fromJS(Object.assign(event.payload, {
           estimations: {}
@@ -71,7 +83,7 @@ function eventReducerFactory() {
         return state;
       default:
         LOGGER.warn('unknown action (backend event)', action);
-        return state
+        return state;
     }
   };
 }

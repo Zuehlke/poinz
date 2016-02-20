@@ -17,6 +17,10 @@
   },
   "rules": {
     "strict": 2,
+    "semi": [
+      2,
+      "always"
+    ],
     "eqeqeq": 2,
     "quotes": [
       2,

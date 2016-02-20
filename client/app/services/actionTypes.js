@@ -7,7 +7,12 @@ export const SELECT_STORY = 'SELECT_STORY';
 export const GIVE_STORY_ESTIMATE = 'GIVE_STORY_ESTIMATE';
 export const NEW_ESTIMATION_ROUND = 'NEW_ESTIMATION_ROUND';
 export const SET_USERNAME = 'SET_USERNAME';
+export const LEAVE_ROOM = 'LEAVE_ROOM';
 
+/**
+ *  UI-only
+ */
+export const TOGGLE_MENU = 'TOGGLE_MENU';
 
 /**
  * Action types for events

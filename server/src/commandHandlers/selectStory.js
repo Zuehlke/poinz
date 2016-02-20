@@ -12,6 +12,12 @@ module.exports = {
     }
   },
   fn: function selectStory(room, command) {
+
+    if (room.attributes.get('selectedStory') === command.payload.id) {
+      // no change, no need to apply event
+      return;
+    }
+
     room.applyEvent('storySelected', {id: command.payload.id});
   }
 };

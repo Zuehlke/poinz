@@ -28,34 +28,46 @@ const actionToCommandMap = {
       payload: joinCommandPayload
     });
   },
-  [types.SET_USERNAME]: (hub, state, action) => {
+  [types.LEAVE_ROOM]: (hub, state) => {
+    history.push({
+      hash: ''
+    });
+    hub.sendCommand({
+      name: 'leaveRoom',
+      roomId: state.get('roomId'),
+      payload: {
+        userId: state.get('userId')
+      }
+    });
+  },
+  [types.SET_USERNAME]: (hub, state, commandPayload) => {
     hub.sendCommand({
       name: 'setUsername',
       roomId: state.get('roomId'),
       payload: {
         userId: state.get('userId'),
-        username: action.username
+        username: commandPayload.username
       }
     });
   },
-  [types.ADD_STORY]: (hub, state, action) => {
+  [types.ADD_STORY]: (hub, state, commandPayload) => {
     hub.sendCommand({
       name: 'addStory',
       roomId: state.get('roomId'),
       payload: {
-        title: action.title,
-        description: action.description
+        title: commandPayload.title,
+        description: commandPayload.description
       }
     });
   },
-  [types.GIVE_STORY_ESTIMATE]: (hub, state, action) => {
-    if (state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]) === action.value) {
+  [types.GIVE_STORY_ESTIMATE]: (hub, state, commandPayload) => {
+    if (state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]) === commandPayload.value) {
       hub.sendCommand({
         name: 'clearStoryEstimate',
         roomId: state.get('roomId'),
         payload: {
           userId: state.get('userId'),
-          storyId: action.storyId
+          storyId: commandPayload.storyId
         }
       });
     } else {
@@ -63,28 +75,28 @@ const actionToCommandMap = {
         name: 'giveStoryEstimate',
         roomId: state.get('roomId'),
         payload: {
-          value: action.value,
+          value: commandPayload.value,
           userId: state.get('userId'),
-          storyId: action.storyId
+          storyId: commandPayload.storyId
         }
       });
     }
   },
-  [types.NEW_ESTIMATION_ROUND]: (hub, state, action) => {
+  [types.NEW_ESTIMATION_ROUND]: (hub, state, commandPayload) => {
     hub.sendCommand({
       name: 'newEstimationRound',
       roomId: state.get('roomId'),
       payload: {
-        storyId: action.storyId
+        storyId: commandPayload.storyId
       }
     });
   },
-  [types.SELECT_STORY]: (hub, state, action) => {
+  [types.SELECT_STORY]: (hub, state, commandPayload) => {
     hub.sendCommand({
       name: 'selectStory',
       roomId: state.get('roomId'),
       payload: {
-        id: action.storyId
+        id: commandPayload.storyId
       }
     });
   }
@@ -95,11 +107,11 @@ const actionToCommandMap = {
 function commandReducerFactory(hub) {
   return function commandReducer(state, action) {
     if (actionToCommandMap[action.type]) {
-      const modifiedState = actionToCommandMap[action.type](hub, state, action);
+      const modifiedState = actionToCommandMap[action.type](hub, state, action.command);
       return modifiedState || state;
     } else {
-      LOGGER.warn('unknown action', action);
-      return state
+      LOGGER.warn('unknown command action', action);
+      return state;
     }
   };
 }

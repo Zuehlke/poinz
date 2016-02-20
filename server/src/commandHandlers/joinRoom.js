@@ -1,5 +1,10 @@
 var uuid = require('node-uuid').v4;
 
+/**
+ * A user joins a room.
+ * If the room does not yet exist, the room is created and the user becomes moderator.
+ *
+ */
 module.exports = {
   existingRoom: false,
   fn: function joinRoom(room, command) {

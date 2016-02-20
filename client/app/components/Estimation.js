@@ -1,6 +1,6 @@
 import React from 'react';
-import Anchorify from 'react-anchorify-text'
-import Cards from './Cards'
+import Anchorify from 'react-anchorify-text';
+import Cards from './Cards';
 
 const Estimation = ({ selectedStory, cardConfig, ownId, moderatorId, actions }) => {
 

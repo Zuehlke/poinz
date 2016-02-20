@@ -6,10 +6,10 @@ $zuehlkeLighterGrey = #e8e8e8
 $zuehlkeFontGrey = #484e54
 
 @font-face {
-  font-family: 'aa_zuehlke_otpsregular';
-  src: url('./aazuotps_30.12.13-webfont.woff2') format("woff2");
-  font-weight: normal;
-  font-style: normal;
+  font-family 'aa_zuehlke_otpsregular'
+  src url('./aazuotps_30.12.13-webfont.woff2') format("woff2")
+  font-weight normal
+  font-style normal
 }
 
 body {
@@ -48,13 +48,17 @@ a {
   background-size contain
 
   .eyecatcher {
-    width 80%
-    height 50%
     margin auto
     display flex
     justify-content center
     align-items center
     flex-direction column
+    width: 400px;
+    max-width 85%;
+    margin-top: 20%;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 32px;
+    border-radius: 4px;
 
     .preset-user-name {
       margin-top 16px
@@ -102,8 +106,8 @@ a {
       border 2px solid $zuehlkeLightGrey
       border-radius 50%
       background white
-      width 100px
-      height 100px
+      width 60px
+      height 60px
       padding 4px
     }
 
@@ -143,8 +147,8 @@ a {
 
     .moderator-badge {
       position absolute
-      top 2
-      right 8px
+      top 0
+      right 0
     }
 
     &.user-own {
@@ -170,15 +174,66 @@ a {
   top 0
   left 0
   right 0
-  padding 8px
+  height 34px
+  padding 8px 8px 8px 0
   box-sizing border-box
-  text-align right
 
-  .username-input {
-    color $zuehlkeFontGrey
-    border-radius 4px
-    border 1px solid #ccc;
+  .whoami {
+    text-align right
+
+    .username-input {
+      color $zuehlkeFontGrey
+      border-radius 4px
+      border 1px solid #ccc
+    }
+
+    .pure-button {
+      display inline-block
+      margin-left 8px
+      font-size 65%
+    }
   }
+
+}
+
+// hamburger icon
+.menu-link {
+  position fixed
+  display block
+  top 0
+  left 0
+  background $zuehlkeDarkGrey
+  font-size 10px
+  z-index 10
+  width 34px
+  height 34px
+
+  .menu-link-inner {
+    position relative
+    display inline-block
+    box-sizing border-box
+    padding 8px
+    height 100%
+    width 100%
+
+    span, span:before, span:after {
+      background-color #fff
+      width 17px
+      height 0.2em
+      display inline-block
+    }
+
+    span:before, span:after {
+      position absolute
+      margin-top -0.6em
+      content " "
+    }
+
+    span:after {
+      margin-top 0.6em
+    }
+  }
+
 }
 
 $backlogWidth = 300px
@@ -187,20 +242,6 @@ $backlogWidth = 300px
   position relative
   height 100%
   background $zuehlkeLighterGrey
-
-  .menu-link {
-    position fixed
-    display block
-    top 0
-    left 0
-    background #000
-    background rgba(0, 0, 0, 0.7)
-    font-size 10px
-    z-index 10
-    width 2em
-    height auto
-    padding 2.1em 1.6em
-  }
 
   .backlog {
     transition all 0.2s ease-out
@@ -217,6 +258,11 @@ $backlogWidth = 300px
     box-sizing border-box
     padding 8px
     padding-top 40px
+
+    .story-hint {
+      color white
+      text-align center
+    }
 
     .story {
       color white
@@ -295,19 +341,26 @@ $backlogWidth = 300px
   left 8px
 }
 
+// on screens bigger than 48em width
 @media (min-width 48em) {
+
+  .menu-link {
+    position fixed
+    left $backlogWidth
+    display none
+  }
+
   .board {
     padding-left $backlogWidth
     left 0
-
-    .menu-link {
-      position fixed
-      left $backlogWidth
-      display none
-    }
 
     .backlog {
       left $backlogWidth
     }
   }
+}
+
+// in every screen-size, if backlog-active class is set, show menu
+.board .backlog.backlog-active {
+  left $backlogWidth
 }

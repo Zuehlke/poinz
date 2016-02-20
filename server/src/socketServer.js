@@ -11,6 +11,8 @@ var socketToUserIdMap = {};
 var socketToRoomMap = {};
 var commandProcessor;
 
+module.exports.init = init;
+
 function init(app, cmdProcessor) {
   var server = http.createServer(app);
   io = socketIo(server);
@@ -89,11 +91,8 @@ function onSocketDisconnect(socket) {
     id: uuid(),
     roomId: roomId,
     name: 'leaveRoom',
-    payload: {
-      userId: userId
-    }
+    payload: {userId}
   });
 
 }
 
-module.exports.init = init;

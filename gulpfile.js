@@ -15,6 +15,12 @@ gulp.task('cleanClientDist', function () {
 });
 
 
+/**
+ * This will pack the client and the backend into a deployable folder.
+ * Result can be pushed to openshift redhat.
+ *
+ * Note: make sure to install node-modules in client beforehand...
+ */
 gulp.task('packForDeployment', ['cleanDeploymentFolder', 'cleanClientDist'], function (done) {
 
   // first copy server into deploy folder
@@ -26,7 +32,7 @@ gulp.task('packForDeployment', ['cleanDeploymentFolder', 'cleanClientDist'], fun
 
   // start client packaging
   gutil.log('Packing client...');
-  exec('npm run build', {cwd: path.resolve(__dirname, './client')}, function (err) {
+  exec('npm run build', {cwd: path.resolve(__dirname, './client')}, function (err, stdout) {
     if (err) {
       done(err);
     }

@@ -63,7 +63,7 @@ function eventReducerFactory() {
         }));
         return state.update('stories', stories => stories.set(payload.id, newStory));
       case types.STORY_SELECTED:
-        return state.set('selectedStory', payload.id);
+        return state.set('selectedStory', payload.storyId);
       case types.USERNAME_SET:
         if (payload.userId === state.get('userId')) {
           clientSettingsStore.setPresetUsername(payload.username);

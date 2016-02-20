@@ -5,7 +5,7 @@
   "private": true,
   "main": "src/server.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint src/*",
+    "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha test/*",
     "start": "node src/server.js"
   },
   "author": "xeronimus@gmail.com",
@@ -15,9 +15,13 @@
     "glob": "7.0.0",
     "immutable": "3.7.6",
     "lodash": "4.3.0",
-    "eslint": "1.10.3",
     "loglevel": "1.4.0",
     "node-uuid": "1.4.7",
-    "socket.io": "1.4.5"
+    "socket.io": "1.4.5",
+    "tv4": "1.2.7"
+  },
+  "devDependencies": {
+    "eslint": "1.10.3",
+    "mocha": "2.4.5"
   }
 }

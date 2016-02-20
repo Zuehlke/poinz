@@ -2,6 +2,7 @@ var
   util = require('util'),
   log = require('loglevel'),
   uuid = require('node-uuid').v4,
+  commandSchemaValidator = require('./commandSchemaValidator'),
   roomStore = require('./roomsStore');
 
 var LOGGER = log.getLogger('commandProcessor');
@@ -34,18 +35,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
     // TODO: this might get asynchronous sometime...
     // e.g. when roomStore gets persistent -> asynchronous db access?
     var queue = [
-      function schemaValidation(cmd) {
-        // TODO:  json schema validation tv4
-        if (!cmd.name) {
-          throw new CommandValidationError(new Error('Command must contain a name'), cmd);
-        }
-        if (!cmd.roomId) {
-          throw new CommandValidationError(new Error('Command must contain roomId'), cmd);
-        }
-        if (!cmd.id) {
-          throw new CommandValidationError(new Error('Command must contain id'), cmd);
-        }
-      },
+      commandSchemaValidator,
       function getCommandHandler(cmd, ctx) {
         var handler = commandHandlers[cmd.name];
         if (!handler) {
@@ -130,14 +120,6 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
 
 
 /**  some custom errors **/
-
-function CommandValidationError(err, cmd) {
-  this.stack = err.stack;
-  this.name = this.constructor.name;
-  this.message = 'Command validation Error during "' + cmd.name + '": ' + err.message;
-}
-util.inherits(CommandValidationError, Error);
-
 function PreconditionError(err, cmd) {
   this.stack = err.stack;
   this.name = this.constructor.name;

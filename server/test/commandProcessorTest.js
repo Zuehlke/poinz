@@ -9,13 +9,13 @@ describe('commandProcessor', () => {
   it('process a dummy command successfully', () => {
 
     var processor = processorFactory({
-      takeOverWorld: {
-        fn: function (room) {
-          room.applyEvent('worldTaken', {});
+      setUsername: {
+        fn: function (room, command) {
+          room.applyEvent('usernameSet', command.payload);
         }
       }
     }, {
-      worldTaken: function () {
+      usernameSet: function () {
         return new Immutable.Map();
       }
     });
@@ -23,13 +23,13 @@ describe('commandProcessor', () => {
     var producedEvents = processor({
       id: uuid(),
       roomId: 'my-test-room',
-      name: 'takeOverWorld',
-      payload: {}
+      name: 'setUsername',
+      payload: {userId: 'abc', username: 'john'}
     });
 
     assert(producedEvents);
     assert.equal(producedEvents.length, 1);
-    assert.equal(producedEvents[0].name, 'worldTaken');
+    assert.equal(producedEvents[0].name, 'usernameSet');
   });
 
   it('process a dummy command with No Handler', () => {
@@ -43,16 +43,16 @@ describe('commandProcessor', () => {
     assert.throws(() => processor({
       id: uuid(),
       roomId: 'my-test-room',
-      name: 'takeOverWorld',
-      payload: {}
-    }), /No handler found for takeOverWorld/);
+      name: 'setUsername',
+      payload: {userId: 'abc', username: 'john'}
+    }), /No handler found for setUsername/);
 
   });
 
   it('process a dummy command where command handler produced unknown event', () => {
 
     var processor = processorFactory({
-      takeOverWorld: {
+      setUsername: {
         fn: function (room) {
           room.applyEvent('unknownEvent', {});
         }
@@ -64,8 +64,8 @@ describe('commandProcessor', () => {
     assert.throws(() => processor({
       id: uuid(),
       roomId: 'my-test-room',
-      name: 'takeOverWorld',
-      payload: {}
+      name: 'setUsername',
+      payload: {userId: 'abc', username: 'john'}
     }), /Cannot apply unknown event unknownEvent/);
 
   });
@@ -73,7 +73,7 @@ describe('commandProcessor', () => {
   it('process a dummy command where command precondition throws', () => {
 
     var processor = processorFactory({
-      takeOverWorld: {
+      setUsername: {
         preCondition: function () {
           throw new Error('Uh-uh. nono!');
         }
@@ -85,25 +85,34 @@ describe('commandProcessor', () => {
     assert.throws(() => processor({
       id: uuid(),
       roomId: 'my-test-room',
-      name: 'takeOverWorld',
-      payload: {}
-    }), /Precondition Error during "takeOverWorld": Uh-uh. nono!/);
+      name: 'setUsername',
+      payload: {userId: 'abc', username: 'john'}
+    }), /Precondition Error during "setUsername": Uh-uh. nono!/);
   });
 
   it('process a dummy command where command validation fails', () => {
 
-    var processor = processorFactory({
-      takeOverWorld: {}
-    }, {
-      // no event handlers
-    });
+    var processor = processorFactory({}, {});
 
     assert.throws(() => processor({
-      // does not contain id
+      id: uuid(),
       roomId: 'my-test-room',
-      name: 'takeOverWorld',
+      // no name -> cannot load appropriate schema
       payload: {}
-    }), /Command validation Error during "takeOverWorld": Command must contain id/);
+    }), /Command validation Error during "undefined": Command must contain a name/);
+
+  });
+
+  it('process a dummy command where command validation fails (schema)', () => {
+
+    var processor = processorFactory({}, {});
+
+    assert.throws(() => processor({
+      id: uuid(),
+      roomId: 'my-test-room',
+      name: 'setUsername',
+      payload: {}
+    }), /Missing required property/);
 
   });
 

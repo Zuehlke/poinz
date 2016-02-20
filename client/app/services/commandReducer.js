@@ -99,7 +99,7 @@ const actionToCommandMap = {
       name: 'selectStory',
       roomId: state.get('roomId'),
       payload: {
-        id: commandPayload.storyId
+        storyId: commandPayload.storyId
       }
     });
   }

@@ -1,0 +1,9 @@
+{
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "it": false,
+    "describe": false
+  }
+}

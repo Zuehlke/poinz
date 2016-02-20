@@ -6,7 +6,11 @@ var _ = require('lodash');
  */
 module.exports = {
   existingRoom: true,
-  preCondition: function (room, command) {
+  preCondition: function (room, command, userId) {
+    if (command.payload.userId !== userId) {
+      throw new Error('Can only give estimate if userId in command payload matches!');
+    }
+
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only give estimation for currently selected story!');
     }

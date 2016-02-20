@@ -17,7 +17,6 @@ let eventReducer = _.noop;
 const INITIAL_STATE = Immutable.fromJS({
 // TODO: creator of room can choose card values
 // TODO: store creator's selection to local storage and use as default
-// for the moment, this is fixed.
   cardConfig: [
     {label: '0', value: 0},
     {label: '1/2', value: 0.5},

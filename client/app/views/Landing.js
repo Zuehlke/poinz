@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Landing = ({ actions })=> {
+const Landing = ({ actions, presetUsername })=> {
 
   let roomIdInputField;
 
@@ -9,9 +9,12 @@ const Landing = ({ actions })=> {
 
       <div className='eyecatcher'>
         <div className="room-id-wrapper">
-          <input placeholder='Please enter a room name...' type='text' ref={ref => roomIdInputField = ref} onKeyPress={handleKeyPress}/>
-          <button type='button' className='pure-button pure-button-primary' onClick={joinRoom}>Start</button>
+          <input placeholder='Please enter a room name...' type='text' ref={ref => roomIdInputField = ref}
+                 onKeyPress={handleKeyPress}/>
+          <button type='button' className='pure-button pure-button-primary' onClick={joinRoom}>Join</button>
         </div>
+
+        <div className='preset-user-name'>{presetUsername}</div>
       </div>
 
     </div>

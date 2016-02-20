@@ -4,8 +4,8 @@ import * as types from './actionTypes'
 // these often trigger commands to the backend during reduction
 // still implemented as redux actions -> views have a consistent api & we could store some additional data
 // when sending commands
-export function joinRoom(roomId, username) {
-  return {type: types.JOIN_ROOM, roomId, username};
+export function joinRoom(roomId) {
+  return {type: types.JOIN_ROOM, roomId};
 }
 
 export function addStory(storyTitle, storyDescription) {

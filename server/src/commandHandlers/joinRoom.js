@@ -2,12 +2,19 @@ var uuid = require('node-uuid').v4;
 
 module.exports = {
   existingRoom: false,
-  preCondition: undefined,
   fn: function joinRoom(room, command) {
 
+    // if user joins an existing room with a preset userId -> make sure that such a user does not already exist in store.
+    // this could happen, if the same user opens two browser windows and joins with the same userId (from localStorage)
+    if (room.attributes && command.payload.userId) {
+      if (room.attributes.getIn(['users', command.payload.userId])) {
+        command.payload.userId = undefined; // <-- remove userId from commandPayload, user get's a new id.
+      }
+    }
+
     var newUser = {
-      id: uuid(), // here we produce the userId for the new colleague
-      username: command.payload.username
+      id: command.payload.userId || uuid(), // client can cache/store userId and send it already with "joinRoom" command
+      username: command.payload.username // client can cache/store username and send it already with "joinRoom" command
     };
 
     if (!room.attributes) {

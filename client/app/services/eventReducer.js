@@ -1,6 +1,7 @@
 import log from 'loglevel';
 import Immutable from 'immutable';
 import * as types from './actionTypes';
+import clientSettingsStore from './clientSettingsStore';
 
 const LOGGER = log.getLogger('eventReducer');
 
@@ -25,6 +26,9 @@ function eventReducerFactory() {
           return state.setIn(['users', payload.userId], Immutable.fromJS(payload.users[payload.userId]));
         } else {
           // you joined
+
+          clientSettingsStore.setPresetUserId(payload.userId);
+
           // server sends current room state (users, stories, etc.)
           return state
             .set('roomId', event.roomId)
@@ -48,6 +52,9 @@ function eventReducerFactory() {
       case types.STORY_SELECTED:
         return state.set('selectedStory', payload.id);
       case types.USERNAME_SET:
+        if (payload.userId === state.get('userId')) {
+          clientSettingsStore.setPresetUsername(payload.username);
+        }
         return state.updateIn(['users', payload.userId], person => person.set('username', payload.username));
       case types.STORY_ESTIMATE_GIVEN:
         return state.setIn(['stories', payload.storyId, 'estimations', payload.userId], payload.value);

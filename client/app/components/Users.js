@@ -1,6 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import avatarIcons from '../assets/avatars';
+import _ from 'lodash';
 
 const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
@@ -18,7 +19,7 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
     'all-given': selectedStory && selectedStory.get('allEstimatesGiven')
   });
 
-  const estimationValueToDisplay = userEstimation && selectedStory.get('allEstimatesGiven') ? cardConfig.find(cc => cc.get('value') === userEstimation).get('label') : 'Z';
+  const estimationValueToDisplay = !_.isUndefined(userEstimation) && selectedStory.get('allEstimatesGiven') ? cardConfig.find(cc => cc.get('value') === userEstimation).get('label') : 'Z';
 
   return (
     <div className={classes}>

@@ -6,13 +6,14 @@ import * as splushActions from './actions'
 import hubFactory from './hub';
 import commandReducerFactory from './commandReducer';
 import eventReducerFactory from './eventReducer';
+import clientSettingsStore from './clientSettingsStore';
 
 const LOGGER = log.getLogger('store');
 
 let commandReducer = _.noop;
 let eventReducer = _.noop;
 
-const START_STATE = Immutable.fromJS({
+const INITIAL_STATE = Immutable.fromJS({
 // TODO: creator of room can choose card values
 // TODO: store creator's selection to local storage and use as default
 // for the moment, this is fixed.
@@ -27,10 +28,12 @@ const START_STATE = Immutable.fromJS({
     {label: '13', value: 13},
     {label: '?', value: -1},
     {label: 'Coffee', value: -2}
-  ]
+  ],
+  presetUsername: clientSettingsStore.getPresetUsername(),
+  presetUserId: clientSettingsStore.getPresetUserId()
 });
 
-function rootReducer(state = START_STATE, action = {}) {
+function rootReducer(state = INITIAL_STATE, action = {}) {
   LOGGER.debug('reducing action', action);
   if (action.event) {
     return eventReducer(state, action);
@@ -43,5 +46,7 @@ let store = createStore(rootReducer);
 const actions = bindActionCreators(splushActions, store.dispatch);
 commandReducer = commandReducerFactory(hubFactory(actions));
 eventReducer = eventReducerFactory();
+
+store.getInitialState = () => INITIAL_STATE;
 
 export default store;

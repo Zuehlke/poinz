@@ -8,16 +8,24 @@ const LOGGER = log.getLogger('commandReducer');
 
 const actionToCommandMap = {
   [types.JOIN_ROOM]: (hub, state, action) => {
-    const { roomId, username } = action;
+    const { roomId } = action;
     history.push({
       hash: `#${roomId}`
     });
+
+    const joinCommandPayload = {};
+
+    if (state.get('presetUserId')) {
+      joinCommandPayload.userId = state.get('presetUserId');
+    }
+    if (state.get('presetUsername')) {
+      joinCommandPayload.username = state.get('presetUsername');
+    }
+
     hub.sendCommand({
       name: 'joinRoom',
       roomId: roomId,
-      payload: {
-        username: username
-      }
+      payload: joinCommandPayload
     });
   },
   [types.SET_USERNAME]: (hub, state, action) => {

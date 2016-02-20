@@ -25,13 +25,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
+
     // if our url already contains a hash, request room for that hash
     const roomIdFromUrl = location.hash.substr(1);
     if (roomIdFromUrl) {
       actions.joinRoom(roomIdFromUrl);
     }
 
-    this.state = {};
+    this.state = {
+      room: store.getInitialState()
+    };
 
     // subscribe to the redux store
     // set the store state to the state of our app -> rerender
@@ -50,7 +53,11 @@ class App extends React.Component {
 
     const { room } = this.state;
 
-    if (room && room.get('roomId') && room.get('users') && room.get('users').size > 0) {
+    if (!room) {
+      return null;
+    }
+
+    if (room.get('roomId') && room.get('users') && room.get('users').size > 0) {
       return (
         <div style={{height:'100%'}}>
           <TopBar room={room} actions={actions}/>
@@ -58,8 +65,7 @@ class App extends React.Component {
         </div>
       );
     }
-
-    return <Landing actions={actions}/>;
+    return <Landing actions={actions} presetUsername={room.get('presetUsername')}/>;
 
   }
 }

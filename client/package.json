@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "private": true,
+  "author":"xeronimus@gmail.com",
   "repository": {
     "type": "git",
     "url": "https://bitbucket.org/xeronimus/tagi.git"

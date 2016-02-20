@@ -8,18 +8,19 @@ var
   socketServer = require('./socketServer'),
   commandProcessorFactory = require('./commandProcessor');
 
+// if deployed on redhat openshift, use env settings
+var serverHost = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
+var serverPort = process.env.OPENSHIFT_NODEJS_PORT || 3000;
+
 var app = express();
 
 // routes setup
-app.get('/', function (req, res) {
-  res.send('Hello World')
-});
-// TODO: add static serve of built client (for production)
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 var commandProcessor = commandProcessorFactory(gatherCommandHandlers(), gatherEventHandlers());
 var server = socketServer.init(app, commandProcessor);
-server.listen(3000, function () {
-  log.info('-- SERVER STARTED --');
+server.listen(serverHost, serverPort, function () {
+  log.info('-- SERVER STARTED -- (' + serverHost + ':' + serverPort + ')');
 });
 
 function gatherCommandHandlers() {

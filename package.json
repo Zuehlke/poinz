@@ -1,0 +1,21 @@
+{
+  "name": "splush",
+  "version": "0.0.1",
+  "description": "Distributed Planning Poker",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/xeronimus/splush.git"
+  },
+  "author": "xeronimus@gmail.com",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/xeronimus/splush#readme",
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-util": "^3.0.7"
+  }
+}

@@ -1,13 +1,13 @@
 {
   "name": "splush-server",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
-  "private": "true",
-  "main": "index.js",
+  "private": true,
+  "main": "src/server.js",
   "scripts": {
     "test": "./node_modules/.bin/eslint src/*"
   },
-  "author": "",
+  "author": "xeronimus@gmail.com",
   "license": "ISC",
   "dependencies": {
     "express": "4.13.4",

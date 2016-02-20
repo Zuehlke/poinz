@@ -31,6 +31,7 @@ function eventReducerFactory() {
 
           // server sends current room state (users, stories, etc.)
           return state
+            .set('waitingForJoin', false)
             .set('roomId', event.roomId)
             .set('moderatorId', payload.moderatorId)
             .set('userId', payload.userId)

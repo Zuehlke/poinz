@@ -27,6 +27,9 @@ const actionToCommandMap = {
       roomId: roomId,
       payload: joinCommandPayload
     });
+
+    // set flag on state, so that app view can display "loading"
+    return state.set('waitingForJoin', true);
   },
   [types.LEAVE_ROOM]: (hub, state) => {
     history.push({

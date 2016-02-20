@@ -17,7 +17,7 @@
               "minLength": 1
             },
             "value": {
-              "type": "integer"
+              "type": "number"
             }
           },
           "required": [

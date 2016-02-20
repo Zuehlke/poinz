@@ -17,6 +17,10 @@ var app = express();
 
 // routes setup
 app.use(express.static(path.resolve(__dirname, '../public')));
+// enable html5 history mode
+app.get('*', function (request, response) {
+  response.sendFile(path.resolve(__dirname, '../public/index.html'));
+});
 
 var commandProcessor = commandProcessorFactory(gatherCommandHandlers(), gatherEventHandlers());
 var server = socketServer.init(app, commandProcessor);

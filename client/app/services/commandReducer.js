@@ -10,7 +10,7 @@ const actionToCommandMap = {
   [types.JOIN_ROOM]: (hub, state, action) => {
     const { roomId } = action;
     history.push({
-      hash: `#${roomId}`
+      pathname: `/${roomId}`
     });
 
     const joinCommandPayload = {};
@@ -30,7 +30,7 @@ const actionToCommandMap = {
   },
   [types.LEAVE_ROOM]: (hub, state) => {
     history.push({
-      hash: ''
+      pathname: ''
     });
     hub.sendCommand({
       name: 'leaveRoom',

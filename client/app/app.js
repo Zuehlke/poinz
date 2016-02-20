@@ -26,7 +26,7 @@ class App extends React.Component {
     super(props);
 
     // if our url already contains a hash, request room for that hash
-    const roomIdFromUrl = location.hash.substr(1);
+    const roomIdFromUrl = location.pathname ? location.pathname.substr(1) : '';
     if (roomIdFromUrl) {
       actions.joinRoom(roomIdFromUrl);
     }

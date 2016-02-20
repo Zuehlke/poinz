@@ -36,5 +36,8 @@
     "no-use-before-define": 0,
     "react/jsx-no-undef": 1,
     "react/jsx-uses-react": 1
+  },
+  "globals": {
+    "__SPLUSH_CONFIG__": false
   }
 }

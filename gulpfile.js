@@ -7,7 +7,7 @@ var
 
 
 gulp.task('cleanDeploymentFolder', function () {
-  return del('./deploy/');
+  return del(['./deploy/src/', './deploy/public', './deploy/package.json']);
 });
 
 gulp.task('cleanClientDist', function () {
@@ -32,11 +32,11 @@ gulp.task('packForDeployment', ['cleanDeploymentFolder', 'cleanClientDist'], fun
 
   // start client packaging
   gutil.log('Packing client...');
-  exec('npm run build', {cwd: path.resolve(__dirname, './client')}, function (err) {
+  exec('./node_modules/.bin/webpack --progress --colors --bail --config webpack.production.config.js', {cwd: path.resolve(__dirname, './client')}, function (err, stdout) {
     if (err) {
       done(err);
     }
-    gutil.log('Client packed');
+    gutil.log(stdout);
 
     gulp.src(['./client/dist/**/*'])
       .pipe(gulp.dest('deploy/public/assets/'));
@@ -44,6 +44,7 @@ gulp.task('packForDeployment', ['cleanDeploymentFolder', 'cleanClientDist'], fun
     gulp.src(['./client/index.html'])
       .pipe(gulp.dest('deploy/public/'));
 
+    done();
   });
 
 });

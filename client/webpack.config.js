@@ -1,4 +1,12 @@
-var path = require('path');
+var
+  path = require('path'),
+  webpack = require('webpack');
+
+var definePlugin = new webpack.DefinePlugin({
+  __SPLUSH_CONFIG__: JSON.stringify({
+    env: 'dev'
+  })
+});
 
 module.exports = {
   entry: './app/app.js',
@@ -33,5 +41,10 @@ module.exports = {
         loader: path.resolve(__dirname, './json-loader')
       }
     ]
+  },
+  plugins: [definePlugin],
+  devServer: {
+    historyApiFallback: true
   }
+
 };

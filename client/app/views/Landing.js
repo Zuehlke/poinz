@@ -1,7 +1,6 @@
 import React from 'react';
 import { pure } from 'recompose';
 
-
 const RoomJoinForm = pure(({actions, presetUsername}) => {
 
   let roomIdInputField;

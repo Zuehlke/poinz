@@ -1,7 +1,13 @@
 # Distributed Planning Poker
 
 
-# Redhat Openshift deployment
+# Client
+
+
+# Server
+
+
+## Redhat Openshift deployment
 
 Distributed Planning Poker can be deployed on redhat openshift.
 Since the default nodeJS cartridge only supports nodejs 0.10.x, I used a custom one that can be found here https://github.com/icflorescu/openshift-cartridge-nodejs

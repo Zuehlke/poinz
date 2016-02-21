@@ -32,7 +32,7 @@ gulp.task('packForDeployment', ['cleanDeploymentFolder', 'cleanClientDist'], fun
 
   // start client packaging
   gutil.log('Packing client...');
-  exec('./node_modules/.bin/webpack --progress --colors --bail --config webpack.production.config.js', {cwd: path.resolve(__dirname, './client')}, function (err, stdout) {
+  exec('./node_modules/.bin/webpack -p --progress --colors --bail --config webpack.production.config.js', {cwd: path.resolve(__dirname, './client')}, function (err, stdout) {
     if (err) {
       done(err);
     }

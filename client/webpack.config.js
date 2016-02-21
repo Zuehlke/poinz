@@ -35,10 +35,6 @@ module.exports = {
       {
         test: /\.(woff2|woff|png|jpg|gif)$/,
         loader: 'url?limit=8192'
-      },
-      {
-        test: /\.json$/,
-        loader: path.resolve(__dirname, './json-loader')
       }
     ]
   },

@@ -4,7 +4,7 @@
   "description": "Distributed Planning Poker",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cd client/ && npm test &&  cd ../server && npm test"
   },
   "repository": {
     "type": "git",

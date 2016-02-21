@@ -29,6 +29,10 @@ export function setUsername(username) {
   return {type: types.SET_USERNAME, command: {username}};
 }
 
+export function toggleVisitor() {
+  return {type: types.TOGGLE_VISITOR, command: {}};
+}
+
 export function leaveRoom() {
   return {type: types.LEAVE_ROOM, command: {}};
 }
@@ -74,6 +78,12 @@ export function allEstimatesGiven(event) {
 }
 export function newEstimationRoundStarted(event) {
   return {type: types.NEW_ESTIMATION_ROUND_STARTED, event};
+}
+export function visitorSet(event) {
+  return {type: types.VISITOR_SET, event};
+}
+export function visitorUnset(event) {
+  return {type: types.VISITOR_UNSET, event};
 }
 
 

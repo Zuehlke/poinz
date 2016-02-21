@@ -8,10 +8,12 @@ import avatarIcons from '../assets/avatars';
 const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
   const isModerator = user.get('id') === moderatorId;
+  const isVisitor = user.get('visitor');
 
   const classes = classnames('user user-' + user.get('id'), {
     'user-own': user.get('id') === ownId,
-    'user-moderator': isModerator
+    'user-moderator': isModerator,
+    'user-visitor': isVisitor
   });
 
   const userEstimationValue = selectedStory && selectedStory.getIn(['estimations', user.get('id')]);
@@ -27,6 +29,7 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
   return (
     <div className={classes}>
       {isModerator && <span className='moderator-badge'>M</span>}
+      {isVisitor && <span className='visitor-badge'>V</span>}
       <img className='avatar' src={avatarIcons[index % avatarIcons.length]}/>
       <div className='user-name'>{user.get('username') || '-'}</div>
 
@@ -34,6 +37,7 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
       <div
         className={estimationClasses}>{estimationValueToDisplay}</div>
       }
+
     </div>
   );
 

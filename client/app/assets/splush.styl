@@ -58,7 +58,7 @@ a {
     margin-top: 20%;
     background: rgba(0, 0, 0, 0.2);
     padding: 32px;
-    border-radius: 4px;
+    border-radius: 2px;
 
     &.loading {
       color white
@@ -77,7 +77,7 @@ a {
       width 300px
       display flex
       align-items stretch
-      border-radius 5px
+      border-radius 2px
 
       span {
         padding 8px 0
@@ -122,6 +122,7 @@ a {
     }
 
     .user-estimation {
+      transition all 0.2s ease-out
       height 100px
       width 60px
       margin 0 auto
@@ -150,7 +151,7 @@ a {
       }
     }
 
-    .moderator-badge {
+    .moderator-badge, .visitor-badge {
       position absolute
       top 0
       right 0
@@ -163,9 +164,11 @@ a {
       }
     }
 
-    &.user-moderator {
-      .user-name {
-
+    &.user-visitor {
+      .user-estimation {
+        border 2px solid transparent
+        background transparent
+        color transparent
       }
     }
   }
@@ -180,22 +183,44 @@ a {
   left 0
   right 0
   height 34px
-  padding 8px 8px 8px 0
+  padding 0
   box-sizing border-box
 
   .whoami {
-    text-align right
+    position absolute
+    right 0
+
+    .pure-menu-children {
+      right 0
+    }
 
     .username-input {
       color $zuehlkeFontGrey
-      border-radius 4px
-      border 1px solid #ccc
+      padding .5em 1em
+      border none
+      width 100%
+      box-sizing border-box
     }
 
     .pure-button {
       display inline-block
       margin-left 8px
       font-size 65%
+    }
+
+    .menu-item-visitor {
+      a {
+        position relative
+      }
+
+      a:before {
+        content " "
+        border-left 2px solid $zuehlkeOrange
+        position absolute
+        right 0
+        top 0
+        bottom 0
+      }
     }
   }
 
@@ -262,29 +287,40 @@ $backlogWidth = 300px
     -webkit-overflow-scrolling touch
     box-sizing border-box
     padding 8px
-    padding-top 40px
+    padding-top 27px
+
+    .pure-form .pure-group {
+      textarea, input {
+        border-radius 0
+      }
+    }
 
     .story-hint {
+      margin-top 16px
       color white
       text-align center
     }
 
-    .story {
-      color white
-      background $zuehlkeDarkGrey
-      background #4b5054
-      padding 8px 16px 16px 16px
-      margin-bottom 16px
-      box-sizing border-box
-      cursor pointer
-      border-radius 2px
+    .stories {
+      margin-top 16px
 
-      &.story-selected {
-        border-left 2px solid $zuehlkeOrange
-      }
+      .story {
+        color white
+        background $zuehlkeDarkGrey
+        background #4b5054
+        padding 8px 16px 16px 16px
+        margin-bottom 16px
+        box-sizing border-box
+        cursor pointer
+        border-radius 2px
 
-      h4 {
-        margin-top 8px
+        &.story-selected {
+          border-left 2px solid $zuehlkeOrange
+        }
+
+        h4 {
+          margin-top 8px
+        }
       }
     }
   }

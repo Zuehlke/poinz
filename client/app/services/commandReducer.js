@@ -53,6 +53,16 @@ const actionToCommandMap = {
       }
     });
   },
+  [types.TOGGLE_VISITOR]: (hub, state) => {
+    hub.sendCommand({
+      name: 'setVisitor',
+      roomId: state.get('roomId'),
+      payload: {
+        userId: state.get('userId'),
+        isVisitor: !state.getIn(['users', state.get('userId'), 'visitor'])
+      }
+    });
+  },
   [types.ADD_STORY]: (hub, state, commandPayload) => {
     hub.sendCommand({
       name: 'addStory',

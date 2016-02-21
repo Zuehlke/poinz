@@ -17,6 +17,8 @@ const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
   return (
     <div className={backlogClasses}>
 
+      <StoryAddForm onAddStory={actions.addStory}/>
+
       {
         hasStories &&
         <Stories stories={stories} selectedStory={selectedStory} actions={actions}/>
@@ -26,8 +28,6 @@ const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
         !hasStories &&
         <div className='story-hint'>You don't have any stories in your estimation backlog...</div>
       }
-
-      <StoryAddForm onAddStory={actions.addStory}/>
 
       <div className='logo-wrapper'>
         <img src={zuehlkeLogo}/>

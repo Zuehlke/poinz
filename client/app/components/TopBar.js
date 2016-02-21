@@ -1,16 +1,11 @@
 import React from 'react';
 import { pure } from 'recompose';
 
+import UserMenu from './UserMenu';
+
 const TopBar = ({ room, actions }) => {
 
-  const username = room.getIn(['users', room.get('userId'), 'username']);
-
-  const usernameComponent = username
-    ? <span>{username}</span>
-    : <input type="text" className='username-input' placeholder='Username...' ref={ref => usernameInputField = ref}
-             onKeyPress={handleKeyPress}/>;
-
-  let usernameInputField;
+  const user = room.getIn(['users', room.get('userId')]);
 
   return (
     <div className='top-bar'>
@@ -20,22 +15,15 @@ const TopBar = ({ room, actions }) => {
         </span>
       </a>
       <div className='whoami'>
-        {usernameComponent}
-        {`@${room.get('roomId')}`}
-        <button className="button-small pure-button pure-button-primary" type="button" onClick={actions.leaveRoom}>Leave Room</button>
+        <UserMenu
+          user={user}
+          roomId={room.get('roomId')}
+          actions={actions}
+        />
       </div>
     </div>
   );
 
-  function setUsername() {
-    actions.setUsername(usernameInputField.value);
-  }
-
-  function handleKeyPress(e) {
-    if (e.key === 'Enter') {
-      setUsername();
-    }
-  }
 };
 
 

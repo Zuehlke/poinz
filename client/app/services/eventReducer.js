@@ -69,6 +69,10 @@ function eventReducerFactory() {
           clientSettingsStore.setPresetUsername(payload.username);
         }
         return state.updateIn(['users', payload.userId], person => person.set('username', payload.username));
+      case types.VISITOR_SET:
+        return state.updateIn(['users', payload.userId], person => person.set('visitor', true));
+      case types.VISITOR_UNSET:
+        return state.updateIn(['users', payload.userId], person => person.set('visitor', false));
       case types.STORY_ESTIMATE_GIVEN:
         return state.setIn(['stories', payload.storyId, 'estimations', payload.userId], payload.value);
       case types.STORY_ESTIMATE_CLEARED:

@@ -51,10 +51,11 @@ class UserMenu extends React.Component {
 
   render() {
 
-    const { user, roomId, actions } = this.props;
+    const { user, roomId, moderatorId, actions } = this.props;
 
     const username = user.get('username');
     const isVisitor = user.get('visitor');
+    const isModerator = user.get('id') === moderatorId;
 
     const dropDownClasses = classnames('pure-menu-item pure-menu-has-children', {
       'pure-menu-active': this.state.menuOpen
@@ -68,21 +69,23 @@ class UserMenu extends React.Component {
       <div className="pure-menu pure-menu-horizontal">
         <ul className="pure-menu-list">
           <li className={dropDownClasses}>
-            <a href="#" id="menuLink1" className="pure-menu-link"
+            <a href="#" className="pure-menu-link pure-menu-toggle"
                onClick={this.toggleMenu }>{(username || '-') + '@' + roomId}</a>
             <ul className="pure-menu-children">
               <li className='pure-menu-item'>
                 <input className='username-input'
-                       placeholder='Username...'
+                       placeholder='Your Username...'
                        defaultValue={username}
                        type='text'
                        ref={ref => this.usernameInputField = ref}
                        onKeyPress={this.handleUsernameInputKeyPress}/>
               </li>
-              <li className={visitorItemClasses}>
-                <a href="#" className="pure-menu-link"
-                   onClick={actions.toggleVisitor}>Visitor</a>
-              </li>
+              {!isModerator &&
+                <li className={visitorItemClasses}>
+                  <a href="#" className="pure-menu-link"
+                     onClick={actions.toggleVisitor}>Visitor</a>
+                </li>
+              }
               <li className="pure-menu-item">
                 <a href="#" className="pure-menu-link"
                    onClick={actions.leaveRoom}>Leave Room</a>

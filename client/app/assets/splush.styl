@@ -56,7 +56,7 @@ a {
     width: 400px;
     max-width 85%;
     margin-top: 20%;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.5);
     padding: 32px;
     border-radius: 2px;
 
@@ -190,8 +190,24 @@ a {
     position absolute
     right 0
 
+    color $zuehlkeFontGrey
+    .pure-menu-toggle {
+      color white
+
+      &:hover {
+        background $zuehlkeDarkGrey
+      }
+    }
+
+    .pure-menu-active .pure-menu-toggle {
+      background $zuehlkeDarkGrey
+    }
+    .pure-menu-list {
+      min-width 200px
+    }
     .pure-menu-children {
       right 0
+      min-width 200px
     }
 
     .username-input {

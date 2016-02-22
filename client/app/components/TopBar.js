@@ -16,6 +16,7 @@ const TopBar = ({ room, actions }) => {
       </a>
       <div className='whoami'>
         <UserMenu
+          moderatorId={room.get('moderatorId')}
           user={user}
           roomId={room.get('roomId')}
           actions={actions}

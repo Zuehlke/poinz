@@ -6,7 +6,7 @@ const StoryAddForm = ({onAddStory}) => {
   let titleInputField, descriptionInputField;
 
   return (
-    <form className='pure-form'>
+    <div className='pure-form'>
 
       <fieldset className='pure-group'>
         <input type='text' className='pure-input-1'
@@ -22,7 +22,7 @@ const StoryAddForm = ({onAddStory}) => {
               onClick={triggerAddAndClearForm}>Add Story
       </button>
 
-    </form>
+    </div>
   );
 
 

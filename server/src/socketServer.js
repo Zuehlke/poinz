@@ -52,20 +52,18 @@ function handleIncomingCommand(socket, msg) {
     return;
   }
 
-  // TODO: for these next few lines, we need to "know" a lot about the commandHandler for "joinRoom".
-  // how to improve that?
+  // TODO: for these next few lines, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
   if (msg.name === 'joinRoom') {
-    // special case of "JoinRoom" command
-    // at this point, we know that join was successful -> put socket into socket.io room with given id
+    // at this point, we know that join was successful
+    // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
+    // on socket disconnect.
+    socketToRoomMap[socket.id] = msg.roomId;
+    socketToUserIdMap[socket.id] = producedEvents[producedEvents.length - 1].payload.userId;
+
+    // put socket into socket.io room with given id
     socket.join(msg.roomId, function () {
       LOGGER.debug('socket with id ' + socket.id + ' joined room ' + msg.roomId);
-
-      // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
-      // on socket disconnect.
-      socketToRoomMap[socket.id] = msg.roomId;
-      socketToUserIdMap[socket.id] = producedEvents[producedEvents.length - 1].payload.userId;
     });
-
   }
 
   // send produced events to all sockets in room

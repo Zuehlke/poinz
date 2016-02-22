@@ -9,7 +9,7 @@
     "url": "https://bitbucket.org/xeronimus/tagi.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/eslint app/*",
+    "test": "./node_modules/.bin/eslint app/* && ./node_modules/.bin/mocha --compilers js:babel-register test/*",
     "serve": "./node_modules/.bin/webpack-dev-server --progress --colors --port 9000",
     "build": "./node_modules/.bin/webpack --progress --colors --bail"
   },
@@ -33,6 +33,7 @@
     "node-uuid": "1.4.7",
     "normalize.css": "3.0.3",
     "npm-check-updates": "2.5.8",
+    "mocha": "2.4.5",
     "purecss": "0.6.0",
     "q": "1.4.1",
     "react": "0.14.7",

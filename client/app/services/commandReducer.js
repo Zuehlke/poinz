@@ -6,7 +6,7 @@ let history = createHistory();
 
 const LOGGER = log.getLogger('commandReducer');
 
-const actionToCommandMap = {
+const commandActionHandlers = {
   [types.JOIN_ROOM]: (hub, state, action) => {
     const { roomId } = action;
     history.push({
@@ -116,11 +116,10 @@ const actionToCommandMap = {
 
 };
 
-
 function commandReducerFactory(hub) {
   return function commandReducer(state, action) {
-    if (actionToCommandMap[action.type]) {
-      const modifiedState = actionToCommandMap[action.type](hub, state, action.command);
+    if (commandActionHandlers[action.type]) {
+      const modifiedState = commandActionHandlers[action.type](hub, state, action.command);
       return modifiedState || state;
     } else {
       LOGGER.warn('unknown command action', action);

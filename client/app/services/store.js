@@ -6,13 +6,12 @@ import * as splushActions from './actions';
 import * as types from './actionTypes';
 import hubFactory from './hub';
 import commandReducerFactory from './commandReducer';
-import eventReducerFactory from './eventReducer';
+import eventReducer from './eventReducer';
 import clientSettingsStore from './clientSettingsStore';
 
 const LOGGER = log.getLogger('store');
 
 let commandReducer = _.noop;
-let eventReducer = _.noop;
 
 const INITIAL_STATE = Immutable.fromJS({
 // TODO: creator of room can choose card values
@@ -63,7 +62,6 @@ function rootReducer(state = INITIAL_STATE, action = {}) {
 let store = createStore(rootReducer);
 const actions = bindActionCreators(splushActions, store.dispatch);
 commandReducer = commandReducerFactory(hubFactory(actions));
-eventReducer = eventReducerFactory();
 
 store.getInitialState = () => INITIAL_STATE;
 

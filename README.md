@@ -7,7 +7,7 @@
 # Server
 
 
-## Redhat Openshift deployment
+## Redhat Openshift deployment (legacy)
 
 Distributed Planning Poker can be deployed on redhat openshift.
 Since the default nodeJS cartridge only supports nodejs 0.10.x, I used a custom one that can be found here https://github.com/icflorescu/openshift-cartridge-nodejs
@@ -39,7 +39,6 @@ $ git clone ssh://56c8223f89f5cf9c9e00004f@poker-xeronimus.rhcloud.com/~/git/pok
 - commit everything (master branch)
 - push master branch
 
-
 For more information, see https://blog.openshift.com/run-your-nodejs-projects-on-openshift-in-two-simple-steps/
 
 
@@ -51,15 +50,19 @@ I did setup a free-tier ubuntu EC2 instance and installed nodejs
 - connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
 - https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 - sudo apt-get install git
-- port forwarding etc : http://www.lauradhamilton.com/how-to-set-up-a-nodejs-web-server-on-amazon-ec2
+- port forwarding (see below)
 
 1. & 2. same as for Openshift
 
-3. zip deploy/ folder and upload to EC2 with scp
+3. push new version to orphan branch "deployment"
 
-4. 
+4. checkout new version of "deployment" branch on EC2 instance (/home/ubuntu/git/splush)
+
+5. restart app (pm2 ) https://www.npmjs.com/package/pm2
 
 ### port forwarding:
+
+(see also https://gist.github.com/kentbrew/776580)
 
 list routing chains in iptable
 `sudo iptables -t nat -L`

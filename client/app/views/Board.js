@@ -8,6 +8,7 @@ import Estimation from '../components/Estimation';
 const Board = ({ room, actions }) => {
 
   const selectedStory = room.getIn(['stories', room.get('selectedStory')]);
+  const user = room.getIn(['users', room.get('userId')]);
 
   return (
     <div className='board' id={room.get('roomId')}>
@@ -31,7 +32,7 @@ const Board = ({ room, actions }) => {
         <Estimation
           cardConfig={room.get('cardConfig')}
           moderatorId={room.get('moderatorId')}
-          user={room.getIn(['users', room.get('userId')])}
+          user={user}
           actions={actions}
           selectedStory={selectedStory}
         />

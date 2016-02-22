@@ -105,6 +105,12 @@ const commandActionHandlers = {
     });
   },
   [types.SELECT_STORY]: (hub, state, commandPayload) => {
+
+    if (state.get('userId') !== state.get('moderatorId')) {
+      // if current user is not the moderator, do not even try to send command, backend will not allow it anyways.
+      return;
+    }
+
     hub.sendCommand({
       name: 'selectStory',
       roomId: state.get('roomId'),

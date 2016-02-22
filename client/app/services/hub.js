@@ -6,7 +6,7 @@ const LOGGER = log.getLogger('hub');
 function hubFactory(actions) {
 
   const appConfig = __SPLUSH_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
-  const io = (appConfig.env === 'production') ? socketIo(appConfig.wsUrl) : socketIo('http://localhost:3000');
+  const io = (appConfig.wsUrl) ? socketIo(appConfig.wsUrl) : socketIo();
 
   io.on('connect', () => log.info('socket to server connected'));
   io.on('disconnect', () => log.info('socket from server disconnected'));

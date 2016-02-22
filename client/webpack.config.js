@@ -4,7 +4,8 @@ var
 
 var definePlugin = new webpack.DefinePlugin({
   __SPLUSH_CONFIG__: JSON.stringify({
-    env: 'dev'
+    env: 'dev',
+    wsUrl: 'http://localhost:3000'
   })
 });
 

@@ -10,7 +10,7 @@ var
   commandProcessorFactory = require('./commandProcessor');
 
 // if deployed on redhat openshift, use env settings
-var serverHost = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
+var serverHost = process.env.OPENSHIFT_NODEJS_IP || '0.0.0.0';
 var serverPort = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 
 var app = express();

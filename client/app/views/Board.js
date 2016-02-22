@@ -31,7 +31,7 @@ const Board = ({ room, actions }) => {
         <Estimation
           cardConfig={room.get('cardConfig')}
           moderatorId={room.get('moderatorId')}
-          ownId={room.get('userId')}
+          user={room.getIn(['users', room.get('userId')])}
           actions={actions}
           selectedStory={selectedStory}
         />

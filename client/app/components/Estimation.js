@@ -4,12 +4,13 @@ import { pure } from 'recompose';
 
 import Cards from './Cards';
 
-const Estimation = ({ selectedStory, cardConfig, ownId, moderatorId, actions }) => {
+const Estimation = ({ selectedStory, cardConfig, user, moderatorId, actions }) => {
 
-  const ownEstimate = selectedStory.getIn(['estimations', ownId]);
+  const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
   const isEstimationChangeAllowed = !selectedStory.get('allEstimatesGiven');
-  const isModerator = ownId === moderatorId;
+  const isVisitor = user.get('visitor');
+  const isModerator = user.get('id') === moderatorId;
 
   return (
     <div className='estimation'>
@@ -24,7 +25,7 @@ const Estimation = ({ selectedStory, cardConfig, ownId, moderatorId, actions }) 
       </div>
 
       {
-        isEstimationChangeAllowed &&
+        isEstimationChangeAllowed && !isVisitor &&
         <Cards
           cardConfig={cardConfig}
           ownEstimate={ownEstimate}

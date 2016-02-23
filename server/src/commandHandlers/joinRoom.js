@@ -9,13 +9,10 @@ module.exports = {
   existingRoom: false,
   fn: function joinRoom(room, command) {
 
-    // if user joins an existing room with a preset userId -> make sure that such a user does not already exist in store.
-    // this could happen, if the same user opens two browser windows and joins with the same userId (from localStorage)
-    if (room.attributes && command.payload.userId) {
-      if (room.attributes.getIn(['users', command.payload.userId])) {
-        command.payload.userId = undefined; // <-- remove userId from commandPayload, user get's a new id.
-      }
-    }
+    // if user joins an existing room with a preset userId, the userId is handled like a "session" token.
+    // Since we do not handle any sensitive data, it is known and accepted, that with a known userId one user can highjack the "session" of
+    // another user
+    // so we do not check if another socket/userId pair is already connected/present in that room
 
     var newUser = {
       id: command.payload.userId || uuid(), // client can cache/store userId and send it already with "joinRoom" command

@@ -4,7 +4,6 @@ import classnames from 'classnames';
 
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
-import zuehlkeLogo from '../assets/logo-zuehlke-small.png';
 
 const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
 
@@ -29,9 +28,6 @@ const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
         <div className='story-hint'>You don't have any stories in your estimation backlog...</div>
       }
 
-      <div className='logo-wrapper'>
-        <img src={zuehlkeLogo}/>
-      </div>
     </div>
   );
 };

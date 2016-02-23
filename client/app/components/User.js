@@ -9,11 +9,13 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
   const isModerator = user.get('id') === moderatorId;
   const isVisitor = user.get('visitor');
+  const isDisconnected = user.get('disconnected');
 
   const classes = classnames('user user-' + user.get('id'), {
     'user-own': user.get('id') === ownId,
     'user-moderator': isModerator,
-    'user-visitor': isVisitor
+    'user-visitor': isVisitor,
+    'user-disconnected': isDisconnected
   });
 
   const userEstimationValue = selectedStory && selectedStory.getIn(['estimations', user.get('id')]);
@@ -28,8 +30,9 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
   return (
     <div className={classes}>
-      {isModerator && <span className='moderator-badge'>M</span>}
-      {isVisitor && <span className='visitor-badge'>V</span>}
+      {!isDisconnected && isModerator && <span className='moderator-badge'>M</span>}
+      {!isDisconnected && isVisitor && <span className='visitor-badge'>V</span>}
+      {isDisconnected && <span className='disconnected-badge'>X</span>}
       <img className='avatar' src={avatarIcons[index % avatarIcons.length]}/>
       <div className='user-name'>{user.get('username') || '-'}</div>
 

@@ -21,6 +21,7 @@ export const TOGGLE_MENU = 'TOGGLE_MENU';
 export const ROOM_CREATED = 'ROOM_CREATED';
 export const JOINED_ROOM = 'JOINED_ROOM';
 export const LEFT_ROOM = 'LEFT_ROOM';
+export const CONNECTION_LOST = 'CONNECTION_LOST';
 export const COMMAND_REJECTED = 'COMMAND_REJECTED';
 export const STORY_ADDED = 'STORY_ADDED';
 export const STORY_SELECTED = 'STORY_SELECTED';

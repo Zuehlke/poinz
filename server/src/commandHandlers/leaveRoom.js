@@ -8,7 +8,12 @@ module.exports = {
     }
   },
   fn: function leaveRoom(room, command) {
-    room.applyEvent('leftRoom', command.payload);
+
+    if (command.payload.connectionLost) {
+      room.applyEvent('connectionLost', {userId: command.payload.userId});
+    } else {
+      room.applyEvent('leftRoom', {userId: command.payload.userId});
+    }
 
     if (room.attributes.get('moderatorId') === command.payload.userId) {
 

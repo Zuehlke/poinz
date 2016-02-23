@@ -23,6 +23,7 @@ describe('eventReducer', () => {
     const modifiedState = eventReducer(startingState, {
       type: types.ROOM_CREATED,
       event: {
+        roomId: 'myRoom',
         payload: {}
       }
     });
@@ -30,10 +31,13 @@ describe('eventReducer', () => {
   });
 
   it(types.MODERATOR_SET, () => {
-    const startingState = new Immutable.Map();
+    const startingState = new Immutable.Map({
+      roomId: 'someRoom'
+    });
     const modifiedState = eventReducer(startingState, {
       type: types.MODERATOR_SET,
       event: {
+        roomId: 'someRoom',
         payload: {
           moderatorId: 'some-moderator-user-id'
         }
@@ -44,15 +48,18 @@ describe('eventReducer', () => {
 
   it(types.STORY_ADDED, () => {
     const startingState = Immutable.fromJS({
+      roomId: 'someRoom',
       stories: {}
     });
     const modifiedState = eventReducer(startingState, {
       type: types.STORY_ADDED,
       event: {
+        roomId: 'someRoom',
         payload: {
           id: 'story334',
           title: 'the new feature x',
-          description: 'will be great!'
+          description: 'will be great!',
+          estimations: {}
         }
       }
     });
@@ -71,6 +78,7 @@ describe('eventReducer', () => {
 
       const startingState = Immutable.fromJS({
         userId: 'myUserId',
+        roomId: 'ourRoom',
         users: {
           myUserId: {
             username: 'tester1'
@@ -81,6 +89,7 @@ describe('eventReducer', () => {
       const modifiedState = eventReducer(startingState, {
         type: types.JOINED_ROOM,
         event: {
+          roomId: 'ourRoom',
           payload: {
             userId: 'theNewUser',
             users: {
@@ -99,7 +108,8 @@ describe('eventReducer', () => {
     it('you joined', () => {
 
       const startingState = Immutable.fromJS({
-        // state has no userId set
+        roomId: 'myRoom',
+        waitingForJoin: true
       });
 
       const modifiedState = eventReducer(startingState, {
@@ -136,5 +146,31 @@ describe('eventReducer', () => {
     });
   });
 
+  describe(types.LEFT_ROOM, () => {
+    it('someone else left', () => {
+
+      const startingState = Immutable.fromJS({
+        userId: 'myUser',
+        roomId: 'myRoom',
+        users: {
+          myUser: {},
+          someoneElse: {}
+        },
+        stories: {}
+      });
+
+      const modifiedState = eventReducer(startingState, {
+        type: types.LEFT_ROOM,
+        event: {
+          roomId: 'myRoom',
+          payload: {
+            userId: 'someoneElse'
+          }
+        }
+      });
+
+      assert.deepEqual(modifiedState.get('users').toJS(), {myUser: {}});
+    });
+  });
 
 });

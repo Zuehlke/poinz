@@ -10,6 +10,9 @@
           "properties": {
             "userId": {
               "type": "string"
+            },
+            "connectionLost": {
+              "type": "boolean"
             }
           },
           "required": [

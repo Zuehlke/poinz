@@ -71,6 +71,9 @@ class App extends React.Component {
         <div style={{height:'100%'}}>
           <TopBar room={room} actions={actions}/>
           <Board room={room} actions={actions}/>
+          <div className='version-info'>
+            {__SPLUSH_CONFIG__.version}
+          </div>
         </div>
       );
     } else {

@@ -29,7 +29,10 @@ const commandActionHandlers = {
     });
 
     // set flag on state, so that app view can display "loading"
-    return state.set('waitingForJoin', true);
+    // set requested roomId prematurely so that incoming "roomJoined" event is not filtered out
+    return state
+      .set('waitingForJoin', true)
+      .set('roomId', roomId);
   },
   [types.LEAVE_ROOM]: (hub, state) => {
     history.push({

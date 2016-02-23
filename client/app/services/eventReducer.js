@@ -29,8 +29,12 @@ const eventActionHandlers = {
     }
   },
   [types.LEFT_ROOM]: (state, payload) => {
-    if (state.get('userId') === payload.userId) {
-      // you left the room, let's clear some state
+
+    const isOwnUser = state.get('userId') === payload.userId;
+
+    if (isOwnUser) {
+      // you (or you in another browser) left the room
+      // let's clear some state
       return state
         .remove('userId')
         .remove('roomId')
@@ -38,17 +42,19 @@ const eventActionHandlers = {
         .remove('users')
         .remove('selectedStory')
         .remove('moderatorId');
+
     } else {
-      // someone left the room
+      // someone else left the room
       return state
         .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove leaving user's estimations from all stories
         .removeIn(['users', payload.userId]); // then remove user from room
     }
   },
+  [types.CONNECTION_LOST]: (state, payload) => {
+    return state.updateIn(['users', payload.userId], user => user.set('disconnected', true));
+  },
   [types.STORY_ADDED]: (state, payload) => {
-    const newStory = Immutable.fromJS(Object.assign(payload, {
-      estimations: {}
-    }));
+    const newStory = Immutable.fromJS(payload);
     return state.update('stories', stories => stories.set(payload.id, newStory));
   },
   [types.STORY_SELECTED]: (state, payload) => state.set('selectedStory', payload.storyId),
@@ -56,7 +62,7 @@ const eventActionHandlers = {
     if (payload.userId === state.get('userId')) {
       clientSettingsStore.setPresetUsername(payload.username);
     }
-    return state.updateIn(['users', payload.userId], person => person.set('username', payload.username));
+    return state.updateIn(['users', payload.userId], user => user.set('username', payload.username));
   },
   [types.VISITOR_SET]: (state, payload) => state.updateIn(['users', payload.userId], person => person.set('visitor', true)),
   [types.VISITOR_UNSET]: (state, payload) => state.updateIn(['users', payload.userId], person => person.set('visitor', false)),
@@ -73,6 +79,13 @@ const eventActionHandlers = {
 function eventReducer(state, action) {
 
   const { event } = action;
+
+  // currently, events from other rooms do not affect us (backend should not send such events in the first place)
+  // so we do not modify our client-side state in any way
+  if (state.get('roomId') !== event.roomId) {
+    LOGGER.warn('Event with different roomId received');
+    return state;
+  }
 
   if (eventActionHandlers[action.type]) {
     const modifiedState = eventActionHandlers[action.type](state, event.payload, event);

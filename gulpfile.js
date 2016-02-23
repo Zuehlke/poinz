@@ -17,7 +17,6 @@ gulp.task('cleanClientDist', function () {
 
 /**
  * This will pack the client and the backend into a deployable folder.
- * Result can be pushed to openshift redhat.
  *
  * Note: make sure to install node-modules in client beforehand...
  */

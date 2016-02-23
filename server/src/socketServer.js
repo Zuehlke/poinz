@@ -58,7 +58,13 @@ function handleIncomingCommand(socket, msg) {
     // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
     // on socket disconnect.
     socketToRoomMap[socket.id] = msg.roomId;
-    socketToUserIdMap[socket.id] = producedEvents[producedEvents.length - 1].payload.userId;
+    var userIdToStore = producedEvents[producedEvents.length - 1].payload.userId;
+    if (!userIdToStore) {
+      var noUserIdAfterJoinErr = new Error('Why is there no userId!');
+      LOGGER.error(noUserIdAfterJoinErr);
+      throw noUserIdAfterJoinErr;
+    }
+    socketToUserIdMap[socket.id] = userIdToStore;
 
     // put socket into socket.io room with given id
     socket.join(msg.roomId, function () {
@@ -89,7 +95,10 @@ function onSocketDisconnect(socket) {
     id: uuid(),
     roomId: roomId,
     name: 'leaveRoom',
-    payload: {userId}
+    payload: {
+      userId,
+      connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
+    }
   });
 
 }

@@ -45,6 +45,9 @@ export function joinedRoom(event) {
 export function leftRoom(event) {
   return {type: types.LEFT_ROOM, event};
 }
+export function connectionLost(event) {
+  return {type: types.CONNECTION_LOST, event};
+}
 export function commandRejected(event) {
   return {type: types.COMMAND_REJECTED, event};
 }

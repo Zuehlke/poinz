@@ -7,6 +7,6 @@ module.exports = {
   existingRoom: true,
   preCondition: undefined,
   fn: function addStory(room, command) {
-    room.applyEvent('storyAdded', Object.assign({id: uuid()}, command.payload));
+    room.applyEvent('storyAdded', Object.assign({id: uuid(), estimations: {}}, command.payload));
   }
 };

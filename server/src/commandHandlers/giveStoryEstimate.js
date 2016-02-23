@@ -30,10 +30,13 @@ module.exports = {
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "allEstimatesGiven" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
-    // now check if every user in the room (that is not marked as visitor)  did estimate the current story
+    // now check if every user in the room (that is not marked as visitor and is not disconnected)  did estimate the current story
     var usersThatHaveEstimateGiven = room.attributes.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().toJS();
     usersThatHaveEstimateGiven.push(command.payload.userId);
-    var allUsersThatCanEstimate = room.attributes.get('users').filter(usr => !usr.get('visitor')).keySeq().toJS();
+    var allUsersThatCanEstimate = room.attributes.get('users')
+      .filter(usr => !usr.get('visitor'))
+      .filter(usr => !usr.get('disconnected'))
+      .keySeq().toJS();
 
     if (usersThatHaveEstimateGiven.length <= allUsersThatCanEstimate.length && _.isEqual(usersThatHaveEstimateGiven.sort(), allUsersThatCanEstimate.sort())) {
       room.applyEvent('allEstimatesGiven', {

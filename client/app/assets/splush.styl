@@ -151,7 +151,7 @@ a {
       }
     }
 
-    .moderator-badge, .visitor-badge {
+    .moderator-badge, .visitor-badge, .disconnected-badge {
       position absolute
       top 0
       right 0
@@ -169,6 +169,14 @@ a {
         border 2px solid transparent
         background transparent
         color transparent
+      }
+    }
+
+    &.user-disconnected {
+      color $zuehlkeLightGrey
+      .avatar {
+        -webkit-filter: grayscale(100%);
+        filter: gray;
       }
     }
   }
@@ -287,7 +295,7 @@ $backlogWidth = 300px
   transition all 0.2s ease-out
   position relative
   height 100%
-  background $zuehlkeLighterGrey
+  background $zuehlkeLighterGrey url('../assets/logo-zuehlke-small.png') no-repeat bottom right
 
   .backlog {
     transition all 0.2s ease-out
@@ -392,10 +400,12 @@ $backlogWidth = 300px
 
 }
 
-.logo-wrapper {
-  position absolute
+.version-info {
+  position fixed
   bottom 8px
-  left 8px
+  right 8px
+  font-size 9px
+  color white
 }
 
 // on screens bigger than 48em width

@@ -2,10 +2,13 @@ var
   path = require('path'),
   webpack = require('webpack');
 
+var packageInformation = require('./package.json');
+
 var definePlugin = new webpack.DefinePlugin({
   __SPLUSH_CONFIG__: JSON.stringify({
     env: 'dev',
-    wsUrl: 'http://localhost:3000'
+    wsUrl: 'http://localhost:3000',
+    version: packageInformation.version + '-dev'
   })
 });
 

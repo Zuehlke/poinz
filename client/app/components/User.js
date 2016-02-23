@@ -10,6 +10,7 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
   const isModerator = user.get('id') === moderatorId;
   const isVisitor = user.get('visitor');
   const isDisconnected = user.get('disconnected');
+  const revealed = selectedStory && selectedStory.get('allEstimatesGiven');
 
   const classes = classnames('user user-' + user.get('id'), {
     'user-own': user.get('id') === ownId,
@@ -23,11 +24,13 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
   const estimationClasses = classnames('user-estimation', {
     'user-estimation-given': userHasEstimation,
-    'all-given': selectedStory && selectedStory.get('allEstimatesGiven')
+    'revealed': revealed
   });
 
-  const estimationValueToDisplay = userHasEstimation && selectedStory.get('allEstimatesGiven') ? cardConfig.find(cc => cc.get('value') === userEstimationValue).get('label') : 'Z';
+  const matchingCardConfig = cardConfig.find(cc => cc.get('value') === userEstimationValue);
+  const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.get('label') : 'Z';
 
+  const customCardStyle = userHasEstimation && revealed && matchingCardConfig.get('color') ? {background: matchingCardConfig.get('color'), color: 'white'}:{};
   return (
     <div className={classes}>
       {!isDisconnected && isModerator && <span className='moderator-badge'>M</span>}
@@ -38,7 +41,7 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
       {selectedStory &&
       <div
-        className={estimationClasses}>{estimationValueToDisplay}</div>
+        className={estimationClasses} style={customCardStyle}>{estimationValueToDisplay}</div>
       }
 
     </div>

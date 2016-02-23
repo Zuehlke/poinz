@@ -131,7 +131,7 @@ a {
       border-radius 12px
       box-sizing border-box
       font-size 28px
-      border 2px dashed $zuehlkeDarkGrey
+      border 4px dashed white
       background transparent
       color $zuehlkeLighterGrey
 
@@ -139,15 +139,15 @@ a {
 
       &.user-estimation-given {
         // user has given estimation, but value is not yet shown
-        border 2px solid $zuehlkeDarkGrey
+        border 4px solid white
         background $zuehlkeLightGrey
       }
 
-      &.all-given {
+      &.revealed {
         // all estimations are shown
         background white
         color $zuehlkeLightGrey
-        border 2px solid $zuehlkeLightGrey
+        border 4px solid white
       }
     }
 
@@ -166,9 +166,10 @@ a {
 
     &.user-visitor {
       .user-estimation {
-        border 2px solid transparent
-        background transparent
-        color transparent
+        // set attributes !important to override custom card color styles
+        border 4px solid transparent  !important
+        background transparent !important
+        color transparent  !important
       }
     }
 
@@ -241,7 +242,7 @@ a {
         content " "
         border-left 3px solid $zuehlkeOrange
         position absolute
-        right 0
+        left 0
         top 0
         bottom 0
       }
@@ -335,7 +336,6 @@ $backlogWidth = 300px
         padding 8px 16px 16px 16px
         margin-bottom 16px
         box-sizing border-box
-        cursor pointer
         border-radius 2px
 
         &.story-selected {
@@ -347,6 +347,10 @@ $backlogWidth = 300px
         }
       }
     }
+  }
+
+  &.board-moderator .backlog .stories .story {
+    cursor pointer
   }
 
   .estimation {
@@ -382,7 +386,7 @@ $backlogWidth = 300px
           padding 28px 0
           box-sizing border-box
           border-radius 12px
-          border 2px solid $zuehlkeLightGrey
+          border 4px solid white
 
           &hover {
             border 2px solid $zuehlkeOrange

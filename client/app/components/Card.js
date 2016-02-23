@@ -10,9 +10,10 @@ const Card = ({card, ownEstimate, onCardSelected}) => {
 
   const onClick = onCardSelected.bind(undefined, card);
 
+  const customCardStyle = card.get('color') ? {background: card.get('color'), color: 'white'} : {};
   return (
     <div className={classes} onClick={onClick}>
-      <div className='card-inner'>{card.get('label')}</div>
+      <div className='card-inner' style={customCardStyle}>{card.get('label')}</div>
     </div>
   );
 };

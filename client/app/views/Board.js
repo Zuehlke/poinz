@@ -1,5 +1,6 @@
 import React from 'react';
 import { pure } from 'recompose';
+import classnames from 'classnames';
 
 import Backlog from '../components/Backlog';
 import Users from '../components/Users';
@@ -9,9 +10,14 @@ const Board = ({ room, actions }) => {
 
   const selectedStory = room.getIn(['stories', room.get('selectedStory')]);
   const user = room.getIn(['users', room.get('userId')]);
+  const isModerator = room.get('userId') === room.get('moderatorId');
+
+  const boardClasses = classnames('board', {
+    'board-moderator': isModerator
+  });
 
   return (
-    <div className='board' id={room.get('roomId')}>
+    <div className={boardClasses} id={room.get('roomId')}>
       <Users
         cardConfig={room.get('cardConfig')}
         ownId={room.get('userId')}

@@ -1,21 +1,29 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-const Card = ({card, ownEstimate, onCardSelected}) => {
+import { giveStoryEstimate } from '../services/actions';
+
+const Card = ({card, selectedStoryId, ownEstimate, giveStoryEstimate}) => {
 
   const classes = classnames(`card pure-u-1 pure-u-md-2-24`, {
     'card-selected': card.get('value') === ownEstimate
   });
 
-  const onClick = onCardSelected.bind(undefined, card);
 
   const customCardStyle = card.get('color') ? {background: card.get('color'), color: 'white'} : {};
   return (
-    <div className={classes} onClick={onClick}>
+    <div className={classes} onClick={() => giveStoryEstimate(selectedStoryId,card.get('value'))}>
       <div className='card-inner' style={customCardStyle}>{card.get('label')}</div>
     </div>
   );
 };
 
-export default pure(Card);
+export default connect(
+  state =>({
+    selectedStoryId: state.get('selectedStory'),
+    ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')])
+  }),
+  dispatch => bindActionCreators({giveStoryEstimate}, dispatch)
+)(Card);

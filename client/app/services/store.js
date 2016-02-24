@@ -43,6 +43,12 @@ const INITIAL_STATE = Immutable.fromJS({
  */
 function rootReducer(state = INITIAL_STATE, action = {}) {
   LOGGER.debug('reducing action', action);
+  const modifiedState = triage(state, action);
+  LOGGER.debug('modified state ', modifiedState.toJS());
+  return modifiedState;
+}
+
+function triage(state, action) {
   if (action.event) {
     return eventReducer(state, action);
   } else if (action.command) {

@@ -1,10 +1,13 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Anchorify from 'react-anchorify-text';
-import { pure } from 'recompose';
+
+import { newEstimationRound } from '../services/actions';
 
 import Cards from './Cards';
 
-const Estimation = ({ selectedStory, cardConfig, user, moderatorId, actions }) => {
+const Estimation = ({ selectedStory,  user, moderatorId,  newEstimationRound }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
@@ -26,10 +29,7 @@ const Estimation = ({ selectedStory, cardConfig, user, moderatorId, actions }) =
 
       {
         isEstimationChangeAllowed && !isVisitor &&
-        <Cards
-          cardConfig={cardConfig}
-          ownEstimate={ownEstimate}
-          onCardSelected={selectedCard => actions.giveStoryEstimate(selectedStory.get('id'), selectedCard.get('value')) }/>
+        <Cards ownEstimate={ownEstimate}/>
       }
 
       {
@@ -37,7 +37,7 @@ const Estimation = ({ selectedStory, cardConfig, user, moderatorId, actions }) =
 
         <div className="moderator-actions">
           <button type="button" className='pure-button pure-button-primary'
-                  onClick={() => actions.newEstimationRound(selectedStory.get('id'))}>New Round
+                  onClick={() => newEstimationRound(selectedStory.get('id'))}>New Round
           </button>
         </div>
 
@@ -46,4 +46,12 @@ const Estimation = ({ selectedStory, cardConfig, user, moderatorId, actions }) =
   );
 };
 
-export default pure(Estimation);
+export default connect(
+  state => ({
+    selectedStory: state.getIn(['stories', state.get('selectedStory')]),
+    cardConfig: state.get('cardConfig'),
+    user: state.getIn(['users', state.get('userId')]),
+    moderatorId: state.get('moderatorId')
+  }),
+  dispatch => bindActionCreators({newEstimationRound}, dispatch)
+)(Estimation);

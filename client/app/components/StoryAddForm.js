@@ -1,7 +1,10 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-const StoryAddForm = ({onAddStory}) => {
+import { addStory } from '../services/actions';
+
+const StoryAddForm = ({addStory}) => {
 
   let titleInputField, descriptionInputField;
 
@@ -27,11 +30,14 @@ const StoryAddForm = ({onAddStory}) => {
 
 
   function triggerAddAndClearForm() {
-    onAddStory(titleInputField.value, descriptionInputField.value);
+    addStory(titleInputField.value, descriptionInputField.value);
     titleInputField.value = '';
     descriptionInputField.value = '';
   }
 
 };
 
-export default pure(StoryAddForm);
+export default connect(
+  undefined,
+  dispatch => bindActionCreators({addStory}, dispatch)
+)(StoryAddForm);

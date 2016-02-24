@@ -1,19 +1,20 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { connect } from 'react-redux';
 
 import Story from './Story';
 
-const Stories = ({ stories, selectedStory, actions }) => (
+const Stories = ({ stories }) => (
   <div className='stories'>
     { stories.toList().map(story => (
       <Story key={story.get('id')}
-             story={story}
-             selectedStory={selectedStory}
-             onSelect={actions.selectStory}
-      />
+             story={story}/>
     )) }
   </div>
 );
 
 
-export default pure(Stories);
+export default connect(
+  state => ({
+    stories: state.get('stories')
+  })
+)(Stories);

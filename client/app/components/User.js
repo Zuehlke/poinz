@@ -1,11 +1,11 @@
 import React from 'react';
 import classnames from 'classnames';
 import _ from 'lodash';
-import { pure } from 'recompose';
+import { connect } from 'react-redux';
 
 import avatarIcons from '../assets/avatars';
 
-const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
+const User = ({user, index, moderatorId, selectedStory, ownUserId, cardConfig }) => {
 
   const isModerator = user.get('id') === moderatorId;
   const isVisitor = user.get('visitor');
@@ -13,7 +13,7 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
   const revealed = selectedStory && selectedStory.get('allEstimatesGiven');
 
   const classes = classnames('user user-' + user.get('id'), {
-    'user-own': user.get('id') === ownId,
+    'user-own': user.get('id') === ownUserId,
     'user-moderator': isModerator,
     'user-visitor': isVisitor,
     'user-disconnected': isDisconnected
@@ -30,7 +30,10 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
   const matchingCardConfig = cardConfig.find(cc => cc.get('value') === userEstimationValue);
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.get('label') : 'Z';
 
-  const customCardStyle = userHasEstimation && revealed && matchingCardConfig.get('color') ? {background: matchingCardConfig.get('color'), color: 'white'}:{};
+  const customCardStyle = userHasEstimation && revealed && matchingCardConfig.get('color') ? {
+    background: matchingCardConfig.get('color'),
+    color: 'white'
+  } : {};
   return (
     <div className={classes}>
       {!isDisconnected && isModerator && <span className='moderator-badge'>M</span>}
@@ -49,4 +52,11 @@ const User = ({user, index, cardConfig, ownId, moderatorId, selectedStory}) => {
 
 };
 
-export default pure(User);
+export default connect(
+  state => ({
+    cardConfig: state.get('cardConfig'),
+    ownUserId: state.get('userId'),
+    moderatorId: state.get('moderatorId'),
+    selectedStory: state.getIn(['stories', state.get('selectedStory')])
+  }))
+(User);

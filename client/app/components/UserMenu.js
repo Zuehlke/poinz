@@ -1,6 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
+
+import { toggleVisitor, setUsername, leaveRoom } from '../services/actions';
 
 /**
  * This component has own react state.
@@ -45,13 +49,13 @@ class UserMenu extends React.Component {
 
   handleUsernameInputKeyPress(e) {
     if (e.key === 'Enter') {
-      this.props.actions.setUsername(this.usernameInputField.value);
+      this.props.setUsername(this.usernameInputField.value);
     }
   }
 
   render() {
 
-    const { user, roomId, moderatorId, actions } = this.props;
+    const { user, roomId, moderatorId, toggleVisitor, leaveRoom } = this.props;
 
     const username = user.get('username');
     const isVisitor = user.get('visitor');
@@ -81,14 +85,14 @@ class UserMenu extends React.Component {
                        onKeyPress={this.handleUsernameInputKeyPress}/>
               </li>
               {!isModerator &&
-                <li className={visitorItemClasses}>
-                  <a href="#" className="pure-menu-link"
-                     onClick={actions.toggleVisitor}>Visitor</a>
-                </li>
+              <li className={visitorItemClasses}>
+                <a href="#" className="pure-menu-link"
+                   onClick={toggleVisitor}>Visitor</a>
+              </li>
               }
               <li className="pure-menu-item">
                 <a href="#" className="pure-menu-link"
-                   onClick={actions.leaveRoom}>Leave Room</a>
+                   onClick={leaveRoom}>Leave Room</a>
               </li>
             </ul>
           </li>
@@ -98,4 +102,15 @@ class UserMenu extends React.Component {
   }
 }
 
-export default UserMenu;
+export default connect(
+  state => ({
+    roomId: state.get('roomId'),
+    user: state.getIn(['users', state.get('userId')]),
+    moderatorId: state.get('moderatorId')
+  }),
+  dispatch => bindActionCreators({
+    toggleVisitor,
+    leaveRoom,
+    setUsername
+  }, dispatch)
+)(UserMenu);

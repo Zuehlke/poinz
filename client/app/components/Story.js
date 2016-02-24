@@ -1,14 +1,16 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
-import { pure } from 'recompose';
 import Anchorify from 'react-anchorify-text';
 
-const Story = ({story, selectedStory, onSelect}) => {
-  const classes = classnames('story', {'story-selected': selectedStory === story.get('id')});
-  const onClick = onSelect.bind(undefined, story.get('id'));
+import { selectStory } from '../services/actions';
+
+const Story = ({story, selectedStoryId, selectStory}) => {
+  const classes = classnames('story', {'story-selected': selectedStoryId === story.get('id')});
 
   return (
-    <div className={classes} onClick={onClick}>
+    <div className={classes} onClick={() => selectStory(story.get('id'))}>
       <h4>
         {story.get('title')}
       </h4>
@@ -19,4 +21,9 @@ const Story = ({story, selectedStory, onSelect}) => {
   );
 };
 
-export default pure(Story);
+export default connect(
+  state => ({
+    selectedStoryId: state.get('selectedStory')
+  }),
+  dispatch => bindActionCreators({selectStory}, dispatch)
+)(Story);

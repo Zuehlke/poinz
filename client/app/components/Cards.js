@@ -1,25 +1,27 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { connect } from 'react-redux';
 
 import Card from './Card';
 
-/**
- *
- * @param onCardSelected
- * @param {number} ownEstimate the estimation value the user did select
- */
-const Cards = ({onCardSelected, ownEstimate, cardConfig})=> {
-
-  const totalCardCount = cardConfig.size;
+const Cards = ({ cardConfig })=> {
 
   return (
-    <div className={`pure-g cards cards-${totalCardCount}`}>
+    <div className='pure-g cards'>
       {
-        cardConfig.map((config, index) => <Card key={'card_'+index} card={config} onCardSelected={onCardSelected}
-                                                totalCardCount={totalCardCount} ownEstimate={ownEstimate}/>)
+        cardConfig.map((config, index) => (
+            <Card
+              key={'card_'+index}
+              card={config}
+            />
+          )
+        )
       }
     </div>
   );
 };
 
-export default pure(Cards);
+export default connect(
+  state =>({
+    cardConfig: state.get('cardConfig')
+  })
+)(Cards);

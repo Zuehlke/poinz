@@ -1,23 +1,23 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { connect } from 'react-redux';
 
 import User from './User';
 
-const Users = ({ ownId, cardConfig, users, moderatorId, selectedStory }) => (
+const Users = ({ users }) => (
   <div className='users'>
     {users.toList().map((user, index) => (
       <User
-        cardConfig={cardConfig}
         key={user.get('id')}
         index={index}
         user={user}
-        ownId={ownId}
-        moderatorId={moderatorId}
-        selectedStory={selectedStory}
       />
     ))}
   </div>
 );
 
 
-export default pure(Users);
+export default connect(
+  state => ({
+    users: state.get('users')
+  })
+)(Users);

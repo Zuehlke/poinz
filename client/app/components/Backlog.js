@@ -1,26 +1,26 @@
 import React from 'react';
-import { pure } from 'recompose';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
 
-const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
+const Backlog = ({ stories, menuShown }) => {
 
   const hasStories = stories && !!stories.size;
 
   const backlogClasses = classnames('backlog', {
-    'backlog-active': showMenu // if true, show menu also in small screens (menu toggle)
+    'backlog-active': menuShown // if true, show menu also in small screens (menu toggle)
   });
 
   return (
     <div className={backlogClasses}>
 
-      <StoryAddForm onAddStory={actions.addStory}/>
+      <StoryAddForm />
 
       {
         hasStories &&
-        <Stories stories={stories} selectedStory={selectedStory} actions={actions}/>
+        <Stories />
       }
 
       {
@@ -33,4 +33,9 @@ const Backlog = ({ stories, selectedStory, showMenu, actions }) => {
 };
 
 
-export default pure(Backlog);
+export default connect(
+  state => ({
+    stories: state.get('stories'),
+    menuShown: state.get('menuShown')
+  })
+)(Backlog);

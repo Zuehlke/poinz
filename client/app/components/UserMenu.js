@@ -55,11 +55,10 @@ class UserMenu extends React.Component {
 
   render() {
 
-    const { user, roomId, moderatorId, toggleVisitor, leaveRoom } = this.props;
+    const { user, roomId, toggleVisitor, leaveRoom } = this.props;
 
     const username = user.get('username');
     const isVisitor = user.get('visitor');
-    const isModerator = user.get('id') === moderatorId;
 
     const dropDownClasses = classnames('pure-menu-item pure-menu-has-children', {
       'pure-menu-active': this.state.menuOpen
@@ -84,12 +83,10 @@ class UserMenu extends React.Component {
                        ref={ref => this.usernameInputField = ref}
                        onKeyPress={this.handleUsernameInputKeyPress}/>
               </li>
-              {!isModerator &&
               <li className={visitorItemClasses}>
                 <a href="#" className="pure-menu-link"
                    onClick={toggleVisitor}>Visitor</a>
               </li>
-              }
               <li className="pure-menu-item">
                 <a href="#" className="pure-menu-link"
                    onClick={leaveRoom}>Leave Room</a>
@@ -105,8 +102,7 @@ class UserMenu extends React.Component {
 export default connect(
   state => ({
     roomId: state.get('roomId'),
-    user: state.getIn(['users', state.get('userId')]),
-    moderatorId: state.get('moderatorId')
+    user: state.getIn(['users', state.get('userId')])
   }),
   dispatch => bindActionCreators({
     toggleVisitor,

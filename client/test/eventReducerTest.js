@@ -30,22 +30,6 @@ describe('eventReducer', () => {
     assert.deepEqual(modifiedState.toJS(), startingState.toJS());
   });
 
-  it(types.MODERATOR_SET, () => {
-    const startingState = new Immutable.Map({
-      roomId: 'someRoom'
-    });
-    const modifiedState = eventReducer(startingState, {
-      type: types.MODERATOR_SET,
-      event: {
-        roomId: 'someRoom',
-        payload: {
-          moderatorId: 'some-moderator-user-id'
-        }
-      }
-    });
-    assert.equal(modifiedState.get('moderatorId'), 'some-moderator-user-id');
-  });
-
   it(types.STORY_ADDED, () => {
     const startingState = Immutable.fromJS({
       roomId: 'someRoom',
@@ -118,7 +102,6 @@ describe('eventReducer', () => {
           roomId: 'myRoom',
           payload: {
             userId: 'myUserId',
-            moderatorId: 'someModeratorId',
             selectedStory: 'storyOne',
             stories: {
               storyOne: {}
@@ -133,7 +116,6 @@ describe('eventReducer', () => {
       assert.deepEqual(modifiedState.toJS(), {
         roomId: 'myRoom',
         userId: 'myUserId',
-        moderatorId: 'someModeratorId',
         selectedStory: 'storyOne',
         stories: {
           storyOne: {}

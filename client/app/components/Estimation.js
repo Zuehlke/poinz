@@ -7,13 +7,12 @@ import { newEstimationRound } from '../services/actions';
 
 import Cards from './Cards';
 
-const Estimation = ({ selectedStory,  user, moderatorId,  newEstimationRound }) => {
+const Estimation = ({ selectedStory,  user, newEstimationRound }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
   const isEstimationChangeAllowed = !selectedStory.get('allEstimatesGiven');
   const isVisitor = user.get('visitor');
-  const isModerator = user.get('id') === moderatorId;
 
   return (
     <div className='estimation'>
@@ -33,9 +32,9 @@ const Estimation = ({ selectedStory,  user, moderatorId,  newEstimationRound }) 
       }
 
       {
-        !isEstimationChangeAllowed && isModerator &&
+        !isEstimationChangeAllowed &&
 
-        <div className="moderator-actions">
+        <div className="board-actions">
           <button type="button" className='pure-button pure-button-primary'
                   onClick={() => newEstimationRound(selectedStory.get('id'))}>New Round
           </button>
@@ -50,8 +49,7 @@ export default connect(
   state => ({
     selectedStory: state.getIn(['stories', state.get('selectedStory')]),
     cardConfig: state.get('cardConfig'),
-    user: state.getIn(['users', state.get('userId')]),
-    moderatorId: state.get('moderatorId')
+    user: state.getIn(['users', state.get('userId')])
   }),
   dispatch => bindActionCreators({newEstimationRound}, dispatch)
 )(Estimation);

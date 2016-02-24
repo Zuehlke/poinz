@@ -151,7 +151,7 @@ a {
       }
     }
 
-    .moderator-badge, .visitor-badge, .disconnected-badge {
+    .visitor-badge, .disconnected-badge {
       position absolute
       top 0
       right 0
@@ -330,6 +330,7 @@ $backlogWidth = 300px
       margin-top 16px
 
       .story {
+        cursor pointer
         color white
         background $zuehlkeDarkGrey
         background #4b5054
@@ -349,10 +350,6 @@ $backlogWidth = 300px
     }
   }
 
-  &.board-moderator .backlog .stories .story {
-    cursor pointer
-  }
-
   .estimation {
     padding 16px
 
@@ -366,7 +363,7 @@ $backlogWidth = 300px
       }
     }
 
-    .moderator-actions {
+    .board-actions {
       margin-top 16px
     }
 

@@ -7,9 +7,6 @@ module.exports = {
     if (userId !== command.payload.userId) {
       throw new Error('Can only set visitor flag for own user!');
     }
-    if (room.get('moderatorId') === userId) {
-      throw new Error('Cannot mark the moderator as visitor!');
-    }
   },
   fn: function setUsername(room, command) {
     if (command.payload.isVisitor) {

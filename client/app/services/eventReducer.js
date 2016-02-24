@@ -7,7 +7,6 @@ const LOGGER = log.getLogger('eventReducer');
 
 const eventActionHandlers = {
   [types.ROOM_CREATED]: (state) => state,
-  [types.MODERATOR_SET]: (state, payload) => state.set('moderatorId', payload.moderatorId),
   [types.JOINED_ROOM]: (state, payload, event) => {
     if (state.get('userId')) {
       // someone else joined
@@ -21,7 +20,6 @@ const eventActionHandlers = {
       return state
         .set('waitingForJoin', false)
         .set('roomId', event.roomId)
-        .set('moderatorId', payload.moderatorId)
         .set('userId', payload.userId)
         .set('selectedStory', payload.selectedStory)
         .set('users', Immutable.fromJS(payload.users || {}))
@@ -40,8 +38,7 @@ const eventActionHandlers = {
         .remove('roomId')
         .remove('stories')
         .remove('users')
-        .remove('selectedStory')
-        .remove('moderatorId');
+        .remove('selectedStory');
 
     } else {
       // someone else left the room

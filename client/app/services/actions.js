@@ -66,9 +66,6 @@ export function storyEstimateGiven(event) {
 export function storyEstimateCleared(event) {
   return {type: types.STORY_ESTIMATE_CLEARED, event};
 }
-export function moderatorSet(event) {
-  return {type: types.MODERATOR_SET, event};
-}
 export function allEstimatesGiven(event) {
   return {type: types.ALL_ESTIMATES_GIVEN, event};
 }

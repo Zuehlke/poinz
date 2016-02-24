@@ -5,16 +5,14 @@ import { connect } from 'react-redux';
 
 import avatarIcons from '../assets/avatars';
 
-const User = ({user, index, moderatorId, selectedStory, ownUserId, cardConfig }) => {
+const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
 
-  const isModerator = user.get('id') === moderatorId;
   const isVisitor = user.get('visitor');
   const isDisconnected = user.get('disconnected');
   const revealed = selectedStory && selectedStory.get('allEstimatesGiven');
 
   const classes = classnames('user user-' + user.get('id'), {
     'user-own': user.get('id') === ownUserId,
-    'user-moderator': isModerator,
     'user-visitor': isVisitor,
     'user-disconnected': isDisconnected
   });
@@ -36,7 +34,6 @@ const User = ({user, index, moderatorId, selectedStory, ownUserId, cardConfig })
   } : {};
   return (
     <div className={classes}>
-      {!isDisconnected && isModerator && <span className='moderator-badge'>M</span>}
       {!isDisconnected && isVisitor && <span className='visitor-badge'>V</span>}
       {isDisconnected && <span className='disconnected-badge'>X</span>}
       <img className='avatar' src={avatarIcons[index % avatarIcons.length]}/>
@@ -56,7 +53,6 @@ export default connect(
   state => ({
     cardConfig: state.get('cardConfig'),
     ownUserId: state.get('userId'),
-    moderatorId: state.get('moderatorId'),
     selectedStory: state.getIn(['stories', state.get('selectedStory')])
   }))
 (User);

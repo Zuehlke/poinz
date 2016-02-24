@@ -1,5 +1,5 @@
 {
-  "name": "splush",
+  "name": "poinz",
   "version": "0.0.1",
   "description": "Distributed Planning Poker",
   "private": true,
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/xeronimus/splush.git"
+    "url": "https://github.com/Zuehlke/poinz.git"
   },
   "author": "xeronimus@gmail.com",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/xeronimus/splush#readme",
+  "homepage": "https://github.com/Zuehlke/poinz",
   "devDependencies": {
-    "del": "^2.2.0",
-    "gulp": "^3.9.1",
-    "gulp-util": "^3.0.7"
+    "del": "2.2.0",
+    "gulp": "3.9.1",
+    "gulp-util": "3.0.7"
   }
 }

@@ -38,6 +38,6 @@
     "react/jsx-uses-react": 1
   },
   "globals": {
-    "__SPLUSH_CONFIG__": false
+    "__POINZ_CONFIG__": false
   }
 }

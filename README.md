@@ -30,12 +30,12 @@ $ gulp packForDeployment
 3. clone openshift repo 
 ```
 $ cd my/gitrepos/
-$ git clone ssh://56c8223f89f5cf9c9e00004f@poker-xeronimus.rhcloud.com/~/git/poker.git/ splush-openshift
+$ git clone ssh://56c8223f89f5cf9c9e00004f@poker-xeronimus.rhcloud.com/~/git/poker.git/ poinz-openshift
 ```
 
-4. copy contents of splush/deploy and push
+4. copy contents of deploy/ and push
 
-- Copy all files in splush/deploy to the splush-openshift folder.
+- Copy all files in deploy/ to the poinz-openshift folder.
 - commit everything (master branch)
 - push master branch
 
@@ -56,7 +56,7 @@ I did setup a free-tier ubuntu EC2 instance and installed nodejs
 
 3. push new version to orphan branch "deployment"
 
-4. checkout new version of "deployment" branch on EC2 instance (/home/ubuntu/git/splush)
+4. checkout new version of "deployment" branch on EC2 instance (/home/ubuntu/git/poinz)
 
 5. restart app (pm2 ) https://www.npmjs.com/package/pm2
 

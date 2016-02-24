@@ -2,7 +2,7 @@ import { createStore, bindActionCreators } from 'redux';
 import Immutable from 'immutable';
 import log from 'loglevel';
 import _ from 'lodash';
-import * as splushActions from './actions';
+import * as actionCreators from './actions';
 import * as types from './actionTypes';
 import hubFactory from './hub';
 import commandReducerFactory from './commandReducer';
@@ -59,7 +59,7 @@ function rootReducer(state = INITIAL_STATE, action = {}) {
 }
 
 let store = createStore(rootReducer);
-const actions = bindActionCreators(splushActions, store.dispatch);
+const actions = bindActionCreators(actionCreators, store.dispatch);
 commandReducer = commandReducerFactory(hubFactory(actions));
 
 store.getInitialState = () => INITIAL_STATE;

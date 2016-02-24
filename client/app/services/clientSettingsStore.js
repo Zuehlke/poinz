@@ -1,11 +1,11 @@
-const SPLUSH_NS = 'splush_';
+const POINZ_NS = 'poinz_';
 
 function getItem(key) {
-  return localStorage.getItem(SPLUSH_NS + key);
+  return localStorage.getItem(POINZ_NS + key);
 }
 
 function setItem(key, value) {
-  localStorage.setItem(SPLUSH_NS + key, value);
+  localStorage.setItem(POINZ_NS + key, value);
 }
 
 function getPresetUsername() {

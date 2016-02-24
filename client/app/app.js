@@ -7,17 +7,17 @@ import log from 'loglevel';
 import normalizeCss from 'normalize.css';
 import pureCss from 'purecss';
 import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
-import splushStyles from './assets/splush.styl';
+import poinzStyles from './assets/poinz.styl';
 /*eslint-enable no-unused-vars */
 
 import store from './services/store';
-import * as splushActions from './services/actions';
+import * as actionCreators from './services/actions';
 
 import Landing from './views/Landing';
 import Board from './views/Board';
 import TopBar from './components/TopBar';
 
-const appConfig = __SPLUSH_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
+const appConfig = __POINZ_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
 
 if (appConfig.env === 'dev') {
   log.setLevel('debug');
@@ -26,7 +26,7 @@ if (appConfig.env === 'dev') {
   log.setLevel('error');
 }
 
-const actions = bindActionCreators(splushActions, store.dispatch);
+const actions = bindActionCreators(actionCreators, store.dispatch);
 
 class App extends React.Component {
 
@@ -72,7 +72,7 @@ class App extends React.Component {
           <TopBar room={room} actions={actions}/>
           <Board room={room} actions={actions}/>
           <div className='version-info'>
-            {__SPLUSH_CONFIG__.version}
+            {__POINZ_CONFIG__.version}
           </div>
         </div>
       );

@@ -7,6 +7,7 @@ import log from 'loglevel';
 import normalizeCss from 'normalize.css';
 import pureCss from 'purecss';
 import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
+import fontAwesome from '../node_modules/font-awesome/css/font-awesome.min.css';
 import poinzStyles from './assets/poinz.styl';
 /*eslint-enable no-unused-vars */
 

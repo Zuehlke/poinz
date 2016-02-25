@@ -49,8 +49,9 @@ const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) 
         <ActionLog />
       </div>
 
-      <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>Leave
-        Room
+      <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>
+        Leave Room
+        <i className="fa fa-sign-out"></i>
       </button>
     </div>
   );

@@ -37,8 +37,30 @@ module.exports = {
         loader: 'babel'
       },
       {
-        test: /\.(woff2|woff|png|jpg|gif)$/,
+        test: /\.(|png|jpg|gif)$/,
         loader: 'url?limit=8192'
+      },
+
+      // now some font loaders (needed for zuehlke font and font-awesome icons)
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=image/svg+xml"
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/octet-stream"
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file"
       }
     ]
   },

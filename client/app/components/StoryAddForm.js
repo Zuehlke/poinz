@@ -21,8 +21,11 @@ const StoryAddForm = ({addStory}) => {
                   ref={ref => descriptionInputField = ref}/>
       </fieldset>
 
-      <button type='button' className='pure-button pure-input-1 pure-button-primary'
-              onClick={triggerAddAndClearForm}>Add Story
+      <button type='button'
+              className='pure-button pure-input-1 pure-button-primary'
+              onClick={triggerAddAndClearForm}>
+        Add Story
+        <i className="fa fa-plus"></i>
       </button>
 
     </div>

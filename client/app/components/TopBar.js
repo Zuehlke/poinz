@@ -12,9 +12,7 @@ const TopBar = ({ toggleBacklog, toggleUserMenu }) => {
         </span>
       </a>
       <a href='#menu' className='user-menu-toggle' onClick={toggleUserMenu}>
-        <span className='menu-link-inner'>
-          <span></span>
-        </span>
+        <i className='fa fa-cog'></i>
       </a>
     </div>
   );

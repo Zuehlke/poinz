@@ -92,6 +92,8 @@ const eventActionHandlers = {
           .remove('stories')
           .remove('users')
           .remove('selectedStory')
+          .remove('userMenuShown')
+          .remove('backlogShown')
           .set('actionLog', new Immutable.List());
 
       } else {

@@ -34,8 +34,8 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
   } : {};
   return (
     <div className={classes}>
-      {!isDisconnected && isVisitor && <span className='visitor-badge'>V</span>}
-      {isDisconnected && <span className='disconnected-badge'>X</span>}
+      {!isDisconnected && isVisitor && <span className='visitor-badge'><i className="fa fa-eye"></i></span>}
+      {isDisconnected && <span className='disconnected-badge'><i className="fa fa-flash"></i></span>}
       <img className='avatar' src={avatarIcons[index % avatarIcons.length]}/>
       <div className='user-name'>{user.get('username') || '-'}</div>
 

@@ -1,108 +1,71 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import { toggleVisitor, setUsername, leaveRoom } from '../services/actions';
+import ActionLog from '../components/ActionLog';
 
 /**
  * This component has own react state.
  * Local state like menuOpen does not belong into our app-state (redux store)
  */
-class UserMenu extends React.Component {
+const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) => {
 
-  constructor(props) {
-    super(props);
+  const username = user.get('username');
+  const isVisitor = user.get('isVisitor');
 
-    this.state = {
-      menuOpen: false
-    };
+  const menuClasses = classnames('user-menu', {
+    'user-menu-active': userMenuShown
+  });
 
-    this.toggleMenu = this.toggleMenu.bind(this);
-    this.handleClickOutside = this.handleClickOutside.bind(this);
-    this.handleUsernameInputKeyPress = this.handleUsernameInputKeyPress.bind(this);
-  }
+  let usernameInputField;
 
-  toggleMenu() {
-    this.setState({
-      menuOpen: !this.state.menuOpen
-    });
-  }
+  return (
 
-  componentDidMount() {
-    document.addEventListener('click', this.handleClickOutside, true);
-  }
+    <div className={menuClasses}>
 
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClickOutside, true);
-  }
+      <div className="pure-form pure-form-stacked">
+        <h5>Settings</h5>
 
-  handleClickOutside(e) {
-    const domNode = ReactDOM.findDOMNode(this);
-    if (!domNode || !domNode.contains(e.target)) {
-      this.setState({
-        menuOpen: false
-      });
-    }
-  }
+        <label htmlFor="username">Username</label>
+        <input type="text"
+               id="username"
+               placeholder="Username..."
+               defaultValue={username}
+               ref={ref => usernameInputField = ref}
+               onKeyPress={handleUsernameKeyPress}/>
 
-  handleUsernameInputKeyPress(e) {
-    if (e.key === 'Enter') {
-      this.props.setUsername(this.usernameInputField.value);
-    }
-  }
-
-  render() {
-
-    const { user, roomId, toggleVisitor, leaveRoom } = this.props;
-
-    const username = user.get('username');
-    const isVisitor = user.get('visitor');
-
-    const dropDownClasses = classnames('pure-menu-item pure-menu-has-children', {
-      'pure-menu-active': this.state.menuOpen
-    });
-
-    const visitorItemClasses = classnames('pure-menu-item', {
-      'menu-item-visitor': isVisitor
-    });
-
-    return (
-      <div className="pure-menu pure-menu-horizontal">
-        <ul className="pure-menu-list">
-          <li className={dropDownClasses}>
-            <a href="#" className="pure-menu-link pure-menu-toggle"
-               onClick={this.toggleMenu }>{(username || '-') + '@' + roomId}</a>
-            <ul className="pure-menu-children">
-              <li className='pure-menu-item'>
-                <input className='username-input'
-                       placeholder='Your Username...'
-                       defaultValue={username}
-                       type='text'
-                       ref={ref => this.usernameInputField = ref}
-                       onKeyPress={this.handleUsernameInputKeyPress}/>
-              </li>
-              <li className={visitorItemClasses}>
-                <a href="#" className="pure-menu-link"
-                   onClick={toggleVisitor}>Visitor</a>
-              </li>
-              <li className="pure-menu-item">
-                <a href="#" className="pure-menu-link"
-                   onClick={leaveRoom}>Leave Room</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <label htmlFor="visitor">
+          <input type="checkbox"
+                 id="visitor"
+                 checked={isVisitor}
+                 onClick={toggleVisitor}/> Visitor
+        </label>
       </div>
-    );
+
+      <div className="action-log-wrapper">
+        <h5>Log</h5>
+        <ActionLog />
+      </div>
+
+      <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>Leave
+        Room
+      </button>
+    </div>
+  );
+
+  function handleUsernameKeyPress(e) {
+    if (e.key === 'Enter') {
+      setUsername(usernameInputField.value);
+    }
   }
-}
+};
 
 export default connect(
   state => ({
-    roomId: state.get('roomId'),
-    user: state.getIn(['users', state.get('userId')])
+    user: state.getIn(['users', state.get('userId')]),
+    userMenuShown: state.get('userMenuShown')
   }),
   dispatch => bindActionCreators({
     toggleVisitor,

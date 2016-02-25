@@ -1,22 +1,21 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { toggleMenu } from '../services/actions';
+import { toggleBacklog, toggleUserMenu } from '../services/actions';
 
-
-import UserMenu from './UserMenu';
-
-const TopBar = ({ toggleMenu }) => {
+const TopBar = ({ toggleBacklog, toggleUserMenu }) => {
   return (
     <div className='top-bar'>
-      <a href='#menu' className='menu-link' onClick={toggleMenu}>
+      <a href='#menu' className='backlog-toggle' onClick={toggleBacklog}>
         <span className='menu-link-inner'>
           <span></span>
         </span>
       </a>
-      <div className='whoami'>
-        <UserMenu  />
-      </div>
+      <a href='#menu' className='user-menu-toggle' onClick={toggleUserMenu}>
+        <span className='menu-link-inner'>
+          <span></span>
+        </span>
+      </a>
     </div>
   );
 
@@ -25,7 +24,7 @@ const TopBar = ({ toggleMenu }) => {
 
 export default connect(
   undefined,
-  dispatch => bindActionCreators({toggleMenu}, dispatch)
+  dispatch => bindActionCreators({toggleBacklog, toggleUserMenu}, dispatch)
 )(TopBar);
 
 

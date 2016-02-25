@@ -13,7 +13,8 @@ export const TOGGLE_VISITOR = 'TOGGLE_VISITOR';
 /**
  *  UI-only
  */
-export const TOGGLE_MENU = 'TOGGLE_MENU';
+export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG';
+export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
 
 /**
  * Action types for events

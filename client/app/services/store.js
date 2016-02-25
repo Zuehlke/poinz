@@ -2,7 +2,7 @@ import { createStore } from 'redux';
 import Immutable from 'immutable';
 import log from 'loglevel';
 import _ from 'lodash';
-import { TOGGLE_MENU } from './actionTypes';
+import { TOGGLE_BACKLOG, TOGGLE_USER_MENU } from './actionTypes';
 import hubFactory from './hub';
 import commandReducerFactory from './commandReducer';
 import eventReducer from './eventReducer';
@@ -56,10 +56,12 @@ function triage(state, action) {
   } else {
     // ui-only action reducer
     switch (action.type) {
-      case TOGGLE_MENU:
-        return state.set('menuShown', !state.get('menuShown'));
+      case TOGGLE_BACKLOG:
+        return state.set('backlogShown', !state.get('backlogShown'));
+      case TOGGLE_USER_MENU:
+        return state.set('userMenuShown', !state.get('userMenuShown'));
       default :
-        LOGGER.warn('unknown command action', action);
+        LOGGER.warn('unknown UI action', action);
         return state;
     }
   }

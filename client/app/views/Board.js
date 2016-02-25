@@ -2,19 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Backlog from '../components/Backlog';
+import UserMenu from '../components/UserMenu';
 import Users from '../components/Users';
 import Estimation from '../components/Estimation';
-import ActionLog from '../components/ActionLog';
 
 const Board = ({ roomId, selectedStory }) => (
   <div className='board' id={roomId}>
     <Users />
+    <UserMenu />
     <Backlog />
     {
       selectedStory &&
       <Estimation />
     }
-    <ActionLog />
+
   </div>
 );
 

@@ -14,7 +14,7 @@ const RoomJoinForm = ({presetUsername, joinRoom}) => {
         <input placeholder='Please enter a room name...' type='text' ref={ref => roomIdInputField = ref}
                onKeyPress={handleKeyPress}/>
         <button type='button' className='pure-button pure-button-primary'
-                onClick={() => joinRoom(roomIdInputField.value) }>Join
+                onClick={joinIfRoomIdNotEmpty}>Join
         </button>
       </div>
       <div className='preset-user-name'>{presetUsername}</div>
@@ -23,6 +23,12 @@ const RoomJoinForm = ({presetUsername, joinRoom}) => {
 
   function handleKeyPress(e) {
     if (e.key === 'Enter') {
+      joinIfRoomIdNotEmpty();
+    }
+  }
+
+  function joinIfRoomIdNotEmpty() {
+    if (roomIdInputField.value) {
       joinRoom(roomIdInputField.value);
     }
   }

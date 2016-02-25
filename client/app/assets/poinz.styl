@@ -194,65 +194,10 @@ a {
   height 34px
   padding 0
   box-sizing border-box
-
-  .whoami {
-    position absolute
-    right 0
-
-    color $zuehlkeFontGrey
-    .pure-menu-toggle {
-      color white
-
-      &:hover {
-        background $zuehlkeDarkGrey
-      }
-    }
-
-    .pure-menu-active .pure-menu-toggle {
-      background $zuehlkeDarkGrey
-    }
-    .pure-menu-list {
-      min-width 200px
-    }
-    .pure-menu-children {
-      right 0
-      min-width 200px
-    }
-
-    .username-input {
-      color $zuehlkeFontGrey
-      padding .5em 1em
-      border none
-      width 100%
-      box-sizing border-box
-    }
-
-    .pure-button {
-      display inline-block
-      margin-left 8px
-      font-size 65%
-    }
-
-    .menu-item-visitor {
-      a {
-        position relative
-      }
-
-      a:before {
-        content " "
-        border-left 3px solid $zuehlkeOrange
-        position absolute
-        left 0
-        top 0
-        bottom 0
-      }
-    }
-  }
-
 }
 
-// hamburger icon
-.menu-link {
+// hamburger icon to toggle backlog on small screens
+.backlog-toggle {
   position fixed
   display block
   top 0
@@ -291,6 +236,87 @@ a {
 
 }
 
+// wheel icon to toggle user menu
+.user-menu-toggle {
+  position fixed
+  display block
+  top 0
+  right 0
+  background $zuehlkeDarkGrey
+  font-size 10px
+  z-index 10
+  width 34px
+  height 34px
+}
+
+$userMenuWidth = 300px
+.user-menu {
+  z-index 10
+  position fixed
+  width $userMenuWidth
+  top 0
+  bottom 0
+  right $userMenuWidth * -1
+  transition all 0.2s ease-out
+  background $zuehlkeLightGrey
+  -webkit-overflow-scrolling touch
+  box-sizing border-box
+  padding 8px
+  padding-top 27px
+  color white
+
+  &.user-menu-active {
+    right 0
+  }
+
+  h5 {
+    color $zuehlkeOrange
+    font-weight 700
+  }
+}
+
+.action-log-wrapper {
+  width 100%
+
+  .action-log {
+    top 230px
+    bottom 50px
+    position absolute
+    overflow-x hidden
+    overflow-y auto
+    ul {
+      margin 0
+      padding 0
+      list-style-type none
+    }
+  }
+}
+
+.leave-room-button {
+  bottom 8px
+  position absolute
+  right 8px
+}
+
+// tedious to overwrite all pure-css form styles. use !important
+// am I lazy or what?
+.pure-form {
+  textarea, input {
+    color $zuehlkeFontGrey !important
+    border-radius 0 !important
+    border 1px solid $zuehlkeDarkGrey !important
+    box-shadow none !important
+
+    &:focus {
+      border 1px solid $zuehlkeOrange !important
+    }
+  }
+
+  &.pure-form-stacked label {
+    margin-top 16px
+  }
+}
+
 $backlogWidth = 300px
 .board {
   transition all 0.2s ease-out
@@ -313,12 +339,6 @@ $backlogWidth = 300px
     box-sizing border-box
     padding 8px
     padding-top 27px
-
-    .pure-form .pure-group {
-      textarea, input {
-        border-radius 0
-      }
-    }
 
     .story-hint {
       margin-top 16px
@@ -399,16 +419,6 @@ $backlogWidth = 300px
     }
   }
 
-  .action-log {
-    position absolute
-    bottom 0
-    height 100px
-    overflow-x hidden
-    overflow-y auto
-    ul {
-      list-style-type none
-    }
-  }
 }
 
 .version-info {
@@ -422,7 +432,7 @@ $backlogWidth = 300px
 // on screens bigger than 48em width
 @media (min-width 48em) {
 
-  .menu-link {
+  .backlog-toggle {
     position fixed
     left $backlogWidth
     display none

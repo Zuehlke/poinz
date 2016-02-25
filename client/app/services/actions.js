@@ -31,6 +31,10 @@ export function leaveRoom() {
 }
 
 // ui-only actions (client-side application state)
-export function toggleMenu() {
-  return {type: types.TOGGLE_MENU};
+export function toggleBacklog() {
+  return {type: types.TOGGLE_BACKLOG};
 }
+export function toggleUserMenu() {
+  return {type: types.TOGGLE_USER_MENU};
+}
+

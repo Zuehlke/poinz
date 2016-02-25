@@ -167,9 +167,9 @@ a {
     &.user-visitor {
       .user-estimation {
         // set attributes !important to override custom card color styles
-        border 4px solid transparent  !important
+        border 4px solid transparent !important
         background transparent !important
-        color transparent  !important
+        color transparent !important
       }
     }
 
@@ -399,6 +399,16 @@ $backlogWidth = 300px
     }
   }
 
+  .action-log {
+    position absolute
+    bottom 0
+    height 100px
+    overflow-x hidden
+    overflow-y auto
+    ul {
+      list-style-type none
+    }
+  }
 }
 
 .version-info {

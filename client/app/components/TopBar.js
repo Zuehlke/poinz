@@ -6,10 +6,10 @@ import { toggleMenu } from '../services/actions';
 
 import UserMenu from './UserMenu';
 
-const TopBar = ({ onToggleMenu }) => {
+const TopBar = ({ toggleMenu }) => {
   return (
     <div className='top-bar'>
-      <a href='#menu' className='menu-link' onClick={onToggleMenu}>
+      <a href='#menu' className='menu-link' onClick={toggleMenu}>
         <span className='menu-link-inner'>
           <span></span>
         </span>

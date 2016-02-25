@@ -18,17 +18,19 @@ export const TOGGLE_MENU = 'TOGGLE_MENU';
 /**
  * Action types for events
  */
-export const ROOM_CREATED = 'ROOM_CREATED';
-export const JOINED_ROOM = 'JOINED_ROOM';
-export const LEFT_ROOM = 'LEFT_ROOM';
-export const CONNECTION_LOST = 'CONNECTION_LOST';
-export const COMMAND_REJECTED = 'COMMAND_REJECTED';
-export const STORY_ADDED = 'STORY_ADDED';
-export const STORY_SELECTED = 'STORY_SELECTED';
-export const USERNAME_SET = 'USERNAME_SET';
-export const STORY_ESTIMATE_GIVEN = 'STORY_ESTIMATE_GIVEN';
-export const STORY_ESTIMATE_CLEARED = 'STORY_ESTIMATE_CLEARED';
-export const ALL_ESTIMATES_GIVEN = 'ALL_ESTIMATES_GIVEN';
-export const NEW_ESTIMATION_ROUND_STARTED = 'NEW_ESTIMATION_ROUND_STARTED';
-export const VISITOR_SET = 'VISITOR_SET';
-export const VISITOR_UNSET = 'VISITOR_UNSET';
+export const EVENT_ACTION_TYPES = {
+  roomCreated: 'ROOM_CREATED',
+  joinedRoom: 'JOINED_ROOM',
+  leftRoom: 'LEFT_ROOM',
+  connectionLost: 'CONNECTION_LOST',
+  commandRejected: 'COMMAND_REJECTED',
+  storyAdded: 'STORY_ADDED',
+  storySelected: 'STORY_SELECTED',
+  usernameSet: 'USERNAME_SET',
+  storyEstimateGiven: 'STORY_ESTIMATE_GIVEN',
+  storyEstimateCleared: 'STORY_ESTIMATE_CLEARED',
+  allEstimatesGiven: 'ALL_ESTIMATES_GIVEN',
+  newEstimationRoundStarted: 'NEW_ESTIMATION_ROUND_STARTED',
+  visitorSet: 'VISITOR_SET',
+  visitorUnset: 'VISITOR_UNSET'
+};

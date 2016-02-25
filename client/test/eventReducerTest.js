@@ -2,8 +2,7 @@ import assert from 'assert';
 import Immutable from 'immutable';
 import _ from 'lodash';
 import eventReducer from '../app/services/eventReducer';
-import * as types from '../app/services/actionTypes';
-import * as actions from '../app/services/actions';
+import { EVENT_ACTION_TYPES } from '../app/services/actionTypes';
 
 /**
  * Tests the event reducing functions for various events.
@@ -18,10 +17,10 @@ describe('eventReducer', () => {
     global.localStorage = {setItem: _.noop, getItem: _.noop};
   });
 
-  it(types.ROOM_CREATED, () => {
+  it(EVENT_ACTION_TYPES.roomCreated, () => {
     const startingState = new Immutable.Map();
     const modifiedState = eventReducer(startingState, {
-      type: types.ROOM_CREATED,
+      type: EVENT_ACTION_TYPES.roomCreated,
       event: {
         roomId: 'myRoom',
         payload: {}
@@ -30,13 +29,13 @@ describe('eventReducer', () => {
     assert.deepEqual(modifiedState.toJS(), startingState.toJS());
   });
 
-  it(types.STORY_ADDED, () => {
+  it(EVENT_ACTION_TYPES.storyAdded, () => {
     const startingState = Immutable.fromJS({
       roomId: 'someRoom',
       stories: {}
     });
     const modifiedState = eventReducer(startingState, {
-      type: types.STORY_ADDED,
+      type: EVENT_ACTION_TYPES.storyAdded,
       event: {
         roomId: 'someRoom',
         payload: {
@@ -57,7 +56,7 @@ describe('eventReducer', () => {
     });
   });
 
-  describe(types.JOINED_ROOM, () => {
+  describe(EVENT_ACTION_TYPES.joinedRoom, () => {
     it('someone else joined', () => {
 
       const startingState = Immutable.fromJS({
@@ -71,7 +70,7 @@ describe('eventReducer', () => {
       });
 
       const modifiedState = eventReducer(startingState, {
-        type: types.JOINED_ROOM,
+        type: EVENT_ACTION_TYPES.joinedRoom,
         event: {
           roomId: 'ourRoom',
           payload: {
@@ -97,7 +96,7 @@ describe('eventReducer', () => {
       });
 
       const modifiedState = eventReducer(startingState, {
-        type: types.JOINED_ROOM,
+        type: EVENT_ACTION_TYPES.joinedRoom,
         event: {
           roomId: 'myRoom',
           payload: {
@@ -113,22 +112,22 @@ describe('eventReducer', () => {
         }
       });
 
-      assert.deepEqual(modifiedState.toJS(), {
-        roomId: 'myRoom',
-        userId: 'myUserId',
-        selectedStory: 'storyOne',
-        stories: {
-          storyOne: {}
-        },
-        users: {
-          myUserId: {}
-        },
-        waitingForJoin: false
-      }, '');
+      assert.equal(modifiedState.get('roomId'), 'myRoom');
+      assert.equal(modifiedState.get('userId'), 'myUserId');
+      assert.equal(modifiedState.get('selectedStory'), 'storyOne');
+      assert.equal(modifiedState.get('waitingForJoin'), false);
+      assert.deepEqual(modifiedState.get('stories').toJS(), {
+        storyOne: {}
+      });
+      assert.deepEqual(modifiedState.get('users').toJS(), {
+        myUserId: {}
+      });
+
     });
+
   });
 
-  describe(types.LEFT_ROOM, () => {
+  describe(EVENT_ACTION_TYPES.leftRoom, () => {
     it('someone else left', () => {
 
       const startingState = Immutable.fromJS({
@@ -142,7 +141,7 @@ describe('eventReducer', () => {
       });
 
       const modifiedState = eventReducer(startingState, {
-        type: types.LEFT_ROOM,
+        type: EVENT_ACTION_TYPES.leftRoom,
         event: {
           roomId: 'myRoom',
           payload: {

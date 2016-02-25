@@ -70,7 +70,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
            * @param eventPayload
            */
           applyEvent: function (eventName, eventPayload) {
-            var handlerFunction = getEventHandlerFunction(ctx, cmd.id, eventName, eventPayload);
+            var handlerFunction = getEventHandlerFunction(ctx, userId, cmd.id, eventName, eventPayload);
             ctx.eventHandlingQueue.push(handlerFunction);
           }
         }, cmd);
@@ -95,7 +95,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
     return context.eventsToSend;
   };
 
-  function getEventHandlerFunction(context, correlationId, eventName, eventPayload) {
+  function getEventHandlerFunction(context, userId, correlationId, eventName, eventPayload) {
     var eventHandler = eventHandlers[eventName];
     if (!eventHandler) {
       throw new Error('Cannot apply unknown event ' + eventName);
@@ -105,6 +105,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
       LOGGER.debug('applied ' + eventName + ' to room ', updatedRoom.toJS());
       var evt = {
         id: uuid(),
+        userId: userId, // which user triggered the command -> thus is "responsible" for the event
         correlationId: correlationId,
         name: eventName,
         roomId: updatedRoom.get('id'),

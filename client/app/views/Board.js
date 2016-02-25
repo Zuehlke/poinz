@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Backlog from '../components/Backlog';
 import Users from '../components/Users';
 import Estimation from '../components/Estimation';
+import ActionLog from '../components/ActionLog';
 
 const Board = ({ roomId, selectedStory }) => (
   <div className='board' id={roomId}>
@@ -13,6 +14,7 @@ const Board = ({ roomId, selectedStory }) => (
       selectedStory &&
       <Estimation />
     }
+    <ActionLog />
   </div>
 );
 

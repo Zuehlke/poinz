@@ -1,9 +1,8 @@
-import { createStore, bindActionCreators } from 'redux';
+import { createStore } from 'redux';
 import Immutable from 'immutable';
 import log from 'loglevel';
 import _ from 'lodash';
-import * as actionCreators from './actions';
-import * as types from './actionTypes';
+import { TOGGLE_MENU } from './actionTypes';
 import hubFactory from './hub';
 import commandReducerFactory from './commandReducer';
 import eventReducer from './eventReducer';
@@ -31,7 +30,8 @@ const INITIAL_STATE = Immutable.fromJS({
     {label: 'BIG', value: -1, color: '#1d508f'}
   ],
   presetUsername: clientSettingsStore.getPresetUsername(),
-  presetUserId: clientSettingsStore.getPresetUserId()
+  presetUserId: clientSettingsStore.getPresetUserId(),
+  actionLog: []
 });
 
 /**
@@ -54,8 +54,9 @@ function triage(state, action) {
   } else if (action.command) {
     return commandReducer(state, action);
   } else {
+    // ui-only action reducer
     switch (action.type) {
-      case types.TOGGLE_MENU:
+      case TOGGLE_MENU:
         return state.set('menuShown', !state.get('menuShown'));
       default :
         LOGGER.warn('unknown command action', action);
@@ -65,8 +66,7 @@ function triage(state, action) {
 }
 
 let store = createStore(rootReducer);
-const actions = bindActionCreators(actionCreators, store.dispatch);
-commandReducer = commandReducerFactory(hubFactory(actions));
+commandReducer = commandReducerFactory(hubFactory(store.dispatch));
 
 store.getInitialState = () => INITIAL_STATE;
 

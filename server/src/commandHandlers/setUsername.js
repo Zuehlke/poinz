@@ -1,5 +1,5 @@
 /**
- * A user sets his username
+ * A user sets his username.
  */
 module.exports = {
   existingRoom: true,

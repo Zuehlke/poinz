@@ -1,5 +1,8 @@
 /**
- * A user sets or unsets himself as visitor (payload contains flag)
+ * A user sets or unsets himself as visitor (payload contains flag).
+ *
+ * Visitors cannot estimate stories.
+ *
  */
 module.exports = {
   existingRoom: true,

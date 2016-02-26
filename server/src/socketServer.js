@@ -29,53 +29,59 @@ function handleNewConnection(socket) {
 function handleIncomingCommand(socket, msg) {
   LOGGER.debug('incoming command', msg);
 
-  var producedEvents;
-  var userId = socketToUserIdMap[socket.id];
-
   try {
-    producedEvents = commandProcessor(msg, userId);
-  } catch (commandProcessingError) {
-    LOGGER.error(commandProcessingError.stack);
-    var commandRejectedEvent = {
-      name: 'commandRejected',
-      id: uuid(),
-      payload: {
-        command: msg,
-        reason: commandProcessingError.message
-      }
-    };
+    var userId = socketToUserIdMap[socket.id];
 
-    LOGGER.debug('outgoing event', commandRejectedEvent);
+    var producedEvents = commandProcessor(msg, userId);
 
-    // command rejected event is only sent to the one socket that sent the command
-    socket.emit('event', commandRejectedEvent);
-    return;
-  }
-
-  // TODO: for these next few lines, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
-  if (msg.name === 'joinRoom') {
-    // at this point, we know that join was successful
-    // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
-    // on socket disconnect.
-    socketToRoomMap[socket.id] = msg.roomId;
-    var userIdToStore = producedEvents[producedEvents.length - 1].payload.userId;
-    if (!userIdToStore) {
-      var noUserIdAfterJoinErr = new Error('Why is there no userId!');
-      LOGGER.error(noUserIdAfterJoinErr);
-      throw noUserIdAfterJoinErr;
+    if (msg.name === 'joinRoom') {
+      // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
+      registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
     }
-    socketToUserIdMap[socket.id] = userIdToStore;
 
-    // put socket into socket.io room with given id
-    socket.join(msg.roomId, function () {
-      LOGGER.debug('socket with id ' + socket.id + ' joined room ' + msg.roomId);
+    // send produced events to all sockets in room
+    producedEvents.forEach(producedEvent => {
+      io.to(msg.roomId).emit('event', producedEvent);
+      LOGGER.debug('outgoing event', producedEvent);
     });
+  } catch (commandProcessingError) {
+    handleCommandProcessingError(commandProcessingError, msg, socket);
   }
 
-  // send produced events to all sockets in room
-  producedEvents.forEach(producedEvent => {
-    io.to(msg.roomId).emit('event', producedEvent);
-    LOGGER.debug('outgoing event', producedEvent);
+}
+
+function handleCommandProcessingError(error, command, socket) {
+  LOGGER.error(error.stack);
+  var commandRejectedEvent = {
+    name: 'commandRejected',
+    id: uuid(),
+    payload: {
+      command: command,
+      reason: error.message
+    }
+  };
+
+  LOGGER.debug('outgoing event', commandRejectedEvent);
+
+  // command rejected event is only sent to the one socket that sent the command
+  socket.emit('event', commandRejectedEvent);
+}
+
+function registerUserWithSocket(msg, socket, userIdToStore) {
+  // at this point, we know that join was successful
+  // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
+  // on socket disconnect.
+  socketToRoomMap[socket.id] = msg.roomId;
+  if (!userIdToStore) {
+    var noUserIdAfterJoinErr = new Error('Why is there no userId!');
+    LOGGER.error(noUserIdAfterJoinErr);
+    throw noUserIdAfterJoinErr;
+  }
+  socketToUserIdMap[socket.id] = userIdToStore;
+
+  // put socket into socket.io room with given id
+  socket.join(msg.roomId, function () {
+    LOGGER.debug('socket with id ' + socket.id + ' joined room ' + msg.roomId);
   });
 }
 

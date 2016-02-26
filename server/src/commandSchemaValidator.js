@@ -13,6 +13,9 @@ module.exports = validate;
 
 /**
  * Validates the given command against its schema.
+ * for every command (command.name) there must be a json schema with a matching file name.
+ *
+ * (see json schema, tv4)
  **/
 function validate(cmd) {
   if (!cmd.name) {
@@ -37,6 +40,9 @@ function serializeErrors(tv4Errors) {
   return errs.join('\n');
 }
 
+/**
+ * loads all json schemas
+ */
 function gatherSchemas() {
   LOGGER.info('loading command schemas..');
 

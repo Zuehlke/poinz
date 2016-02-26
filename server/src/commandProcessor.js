@@ -15,25 +15,25 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
    *  The command processor handles incoming commands.
    *  For every command the following steps are done.
    *
-   *  1. Validate incoming command (syntactically, agains schema)
+   *  1. Validate incoming command (syntactically, against schema)
    *  2. Find command handler (for command.name)
-   *  3. Get Room object (for command.roomId)
+   *  3. Get Room object by command.roomId (currently in-memory store only)
    *  4. Run command preconditions (defined in commandHandler)
-   *  5. Handle the command
-   *  6. Apply events
+   *  5. Handle the command (command handler decides which events are produced)
+   *  6. Apply events (events modify the room)
    *  7. Store modified room object
    *
-   *  Every step can throw an error which will lead to a command rejection.
+   *  Every step can throw an error which will lead to a command rejection event.
    *
    *  @param {object} command
-   *  @param {string} userId The id of the user that send the command. if command is "joinRoom" user id is not yet given and will be undefined!
+   *  @param {string} userId The id of the user that sent the command. if command is "joinRoom" user id is not yet given and will be undefined!
    */
   return function processCommand(command, userId) {
 
     LOGGER.debug(command);
 
     // TODO: this might get asynchronous sometime...
-    // e.g. when roomStore gets persistent -> asynchronous db access?
+    // e.g. when roomStore gets persistent -> asynchronous cache/db access?
     var queue = [
       commandSchemaValidator,
       function getCommandHandler(cmd, ctx) {
@@ -101,17 +101,20 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
       throw new Error('Cannot apply unknown event ' + eventName);
     }
     return function (currentRoom) {
+      // call the handler that applies the event to the room
       var updatedRoom = eventHandler(currentRoom, eventPayload);
       LOGGER.debug('applied ' + eventName + ' to room ', updatedRoom.toJS());
-      var evt = {
+
+      // construct the event object that is sent back to clients
+      context.eventsToSend.push({
         id: uuid(),
         userId: userId, // which user triggered the command -> thus is "responsible" for the event
         correlationId: correlationId,
         name: eventName,
         roomId: updatedRoom.get('id'),
         payload: eventPayload
-      };
-      context.eventsToSend.push(evt);
+      });
+
       return updatedRoom;
     };
 

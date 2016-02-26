@@ -1,18 +1,42 @@
-# Distributed Planning Poker
+# PoinZ - Distributed Planning Poker
 
+## Technologies and Frameworks
 
-# Client
+The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
+[Webpack](https://webpack.github.io/) serves as bundling tool.
 
+The Poinz Backend is a nodeJS [express](http://expressjs.com/) server.
+ 
+ 
+## Development
 
-# Server
+Make sure you have nodeJS (4.x or 5.x) + npm installed on  your machine.
 
+Checkout the repository and install all npm dependencies.
 
-## Redhat Openshift deployment (legacy)
+`$ npm install`
 
-Distributed Planning Poker can be deployed on redhat openshift.
-Since the default nodeJS cartridge only supports nodejs 0.10.x, I used a custom one that can be found here https://github.com/icflorescu/openshift-cartridge-nodejs
+`$ cd client/ && npm install`
 
-1. Install npm dependencies
+`$ cd server/ && npm install`
+
+Start the backend
+
+`$ cd server/ && npm start`
+ 
+Start the client-serving in dev mode via webpack-dev-server
+
+`$ cd client/ && npm run server`
+ 
+Then you can open the app at http://localhost:9000/webpack-dev-server/
+ 
+ 
+## Build
+
+1. Install client npm dependencies
+
+Since we bundle our client, we need all dependencies installed.
+
 ```
 $ npm i
 $ cd client
@@ -27,32 +51,14 @@ $ gulp packForDeployment
 ```
 
 
-3. clone openshift repo 
-```
-$ cd my/gitrepos/
-$ git clone ssh://56c8223f89f5cf9c9e00004f@poker-xeronimus.rhcloud.com/~/git/poker.git/ poinz-openshift
-```
-
-4. copy contents of deploy/ and push
-
-- Copy all files in deploy/ to the poinz-openshift folder.
-- commit everything (master branch)
-- push master branch
-
-For more information, see https://blog.openshift.com/run-your-nodejs-projects-on-openshift-in-two-simple-steps/
-
-
-## Amazon EC2 deployment
-
-
+### Amazaon EC2 deployment 
+  
 I did setup a free-tier ubuntu EC2 instance and installed nodejs 
 
 - connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
 - https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
 - sudo apt-get install git
 - port forwarding (see below)
-
-1. & 2. same as for Openshift
 
 3. push new version to orphan branch "deployment"
 

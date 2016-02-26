@@ -3,6 +3,9 @@ var uuid = require('node-uuid').v4;
 /**
  * A user joins a room.
  *
+ * If the room does not yet exist, a "roomCreated" event is produced.
+ * Produces also a "roomJoined" event (which contains the room state)
+ *
  */
 module.exports = {
   existingRoom: false,

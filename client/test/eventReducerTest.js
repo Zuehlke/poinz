@@ -18,7 +18,9 @@ describe('eventReducer', () => {
   });
 
   it(EVENT_ACTION_TYPES.roomCreated, () => {
-    const startingState = new Immutable.Map();
+    const startingState = new Immutable.Map({
+      roomId: 'myRoom'
+    });
     const modifiedState = eventReducer(startingState, {
       type: EVENT_ACTION_TYPES.roomCreated,
       event: {
@@ -26,7 +28,7 @@ describe('eventReducer', () => {
         payload: {}
       }
     });
-    assert.deepEqual(modifiedState.toJS(), startingState.toJS());
+    assert.deepEqual(modifiedState.get('roomId'), startingState.get('roomId'));
   });
 
   it(EVENT_ACTION_TYPES.storyAdded, () => {

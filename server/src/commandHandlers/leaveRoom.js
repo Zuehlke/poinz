@@ -1,3 +1,8 @@
+/**
+ * A user want's to leave the room.
+ * Is also produced by the socketServer itself on connection lost!
+ *
+ */
 module.exports = {
   existingRoom: true,
   preCondition: function (room, command, userId) {
@@ -6,7 +11,6 @@ module.exports = {
     }
   },
   fn: function leaveRoom(room, command) {
-
     if (command.payload.connectionLost) {
       room.applyEvent('connectionLost', {userId: command.payload.userId});
     } else {

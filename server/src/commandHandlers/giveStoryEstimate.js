@@ -4,6 +4,7 @@ var _ = require('lodash');
  * A user gives his estimation for a certain story.
  * Users may only give estimations for the currently selected story.
  * A user that is marked as visitor cannot give estimations
+ * As soon as all users (that can estimate) estimated the story, a "allEstimatesGiven" event is produced
  */
 module.exports = {
   existingRoom: true,

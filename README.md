@@ -16,11 +16,21 @@ The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and 
 The Poinz Backend is a nodeJS [express](http://expressjs.com/) server.
 
 
-## Development
+## Contribute
 
-Make sure you have nodeJS (4.x or 5.x) + npm installed on  your machine.
+### Prerequisites
 
-Checkout the repository and install all npm dependencies.
+* You have `node` installed at v4.0.0+ and `npm` at v2.0.0+.
+* You are familiar with `npm`
+* You are familiar with `git`
+* You know JavaScript (duh :-) )
+* You are familiar with- or eager to learn react
+* You are familiar with- or eager to learn redux
+
+
+### Development
+
+Fork & checkout the repository then install all npm dependencies.
 
 `$ npm install`
 
@@ -37,6 +47,7 @@ Start the client-serving in dev mode via webpack-dev-server
 `$ cd client/ && npm run serve`
 
 Then you can open the app at http://localhost:9000/webpack-dev-server/
+
 
 
 ## Build
@@ -59,7 +70,7 @@ In project root, run
 $ gulp packForDeployment
 ```
 
-### Amazaon EC2 deployment
+### Amazon EC2 deployment
 
 I did setup a free-tier ubuntu EC2 instance and installed nodejs
 

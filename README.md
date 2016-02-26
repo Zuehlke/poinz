@@ -13,7 +13,7 @@ Similar tools are : https://www.pointingpoker.com/ or https://www.planningpoker.
 The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
 [Webpack](https://webpack.github.io/) serves as bundling tool.
 
-The Poinz Backend is a nodeJS [express](http://expressjs.com/) server.
+The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
 
 
 ## Contribute
@@ -24,9 +24,8 @@ The Poinz Backend is a nodeJS [express](http://expressjs.com/) server.
 * You are familiar with `npm`
 * You are familiar with `git`
 * You know JavaScript (duh :-) )
-* You are familiar with- or eager to learn react
-* You are familiar with- or eager to learn redux
-
+* You are familiar with- or eager to learn `react`
+* You are familiar with- or eager to learn `redux`
 
 ### Development
 
@@ -57,7 +56,7 @@ Then you can open the app at http://localhost:9000/webpack-dev-server/
 Since we bundle our client, we need all dependencies installed.
 
 ```
- npm i
+$ npm i
 $ cd client
 $ npm i
 ```
@@ -70,30 +69,6 @@ In project root, run
 $ gulp packForDeployment
 ```
 
-### Amazon EC2 deployment
+This will copy all backend and client files to `deploy/`.
 
-I did setup a free-tier ubuntu EC2 instance and installed nodejs
-
-- connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
-- https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
-- sudo apt-get install git
-- port forwarding (see below)
-
-3. push new version to orphan branch "deployment"
-
-4. checkout new version of "deployment" branch on EC2 instance (/home/ubuntu/git/poinz)
-
-5. restart app (pm2 ) https://www.npmjs.com/package/pm2
-
-### port forwarding:
-
-(see also https://gist.github.com/kentbrew/776580)
-
-list routing chains in iptable
-`sudo iptables -t nat -L`
-
-remove routing from iptable
-`sudo iptables -t nat -D PREROUTING 1`
-
-add correct forward from 80 to 8080
-`sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000`
+See [Deployment](DEPLYOMENT.md) for more information.

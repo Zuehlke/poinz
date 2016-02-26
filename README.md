@@ -1,13 +1,21 @@
 # PoinZ - Distributed Planning Poker
 
+PoinZ (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. It allows to easily estimate items of interest (e.g. "stories").
+
+The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.
+
+![poinz_screenshot](https://cloud.githubusercontent.com/assets/1777143/13347877/846c4630-dc70-11e5-8c04-e5a03d18645d.png)
+
+Similar tools are : https://www.pointingpoker.com/ or https://www.planningpoker.com/
+
 ## Technologies and Frameworks
 
 The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
 [Webpack](https://webpack.github.io/) serves as bundling tool.
 
 The Poinz Backend is a nodeJS [express](http://expressjs.com/) server.
- 
- 
+
+
 ## Development
 
 Make sure you have nodeJS (4.x or 5.x) + npm installed on  your machine.
@@ -23,37 +31,37 @@ Checkout the repository and install all npm dependencies.
 Start the backend
 
 `$ cd server/ && npm start`
- 
+
 Start the client-serving in dev mode via webpack-dev-server
 
-`$ cd client/ && npm run server`
- 
+`$ cd client/ && npm run serve`
+
 Then you can open the app at http://localhost:9000/webpack-dev-server/
- 
- 
+
+
 ## Build
 
-1. Install client npm dependencies
+### 1. Install client npm dependencies
 
 Since we bundle our client, we need all dependencies installed.
 
 ```
-$ npm i
+ npm i
 $ cd client
 $ npm i
 ```
 
-2. Build & Pack for deployment
+### 2. Build & Pack for deployment
 
 In project root, run
+
 ```
 $ gulp packForDeployment
 ```
 
+### Amazaon EC2 deployment
 
-### Amazaon EC2 deployment 
-  
-I did setup a free-tier ubuntu EC2 instance and installed nodejs 
+I did setup a free-tier ubuntu EC2 instance and installed nodejs
 
 - connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
 - https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions

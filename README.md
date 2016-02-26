@@ -71,4 +71,4 @@ $ gulp packForDeployment
 
 This will copy all backend and client files to `deploy/`.
 
-See [Deployment](DEPLYOMENT.md) for more information.
+See [Deployment](DEPLOYMENT.md) for more information.

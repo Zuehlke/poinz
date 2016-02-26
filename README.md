@@ -4,6 +4,8 @@ PoinZ (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. 
 
 The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.
 
+Checkout the demo at [http://52.37.30.226/](http://52.37.30.226/)
+
 ![poinz_screenshot](https://cloud.githubusercontent.com/assets/1777143/13347877/846c4630-dc70-11e5-8c04-e5a03d18645d.png)
 
 Similar tools are : https://www.pointingpoker.com/ or https://www.planningpoker.com/

@@ -3,25 +3,28 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { toggleBacklog, toggleUserMenu } from '../services/actions';
 
-const TopBar = ({ toggleBacklog, toggleUserMenu }) => {
+const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu }) => {
   return (
     <div className='top-bar'>
-      <a href='#menu' className='backlog-toggle' onClick={toggleBacklog}>
+      <div className='poinz-logo'>PoinZ</div>
+      <a className='backlog-toggle' onClick={toggleBacklog}>
         <span className='menu-link-inner'>
           <span></span>
         </span>
       </a>
-      <a href='#menu' className='user-menu-toggle' onClick={toggleUserMenu}>
+      <span className='whoami'>{username + '@' + roomId}</span>
+      <a className='user-menu-toggle' onClick={toggleUserMenu}>
         <i className='fa fa-cog'></i>
       </a>
     </div>
   );
-
 };
 
-
 export default connect(
-  undefined,
+  state => ({
+    roomId: state.get('roomId'),
+    username: state.getIn(['users', state.get('userId'), 'username']) || '-'
+  }),
   dispatch => bindActionCreators({toggleBacklog, toggleUserMenu}, dispatch)
 )(TopBar);
 

@@ -12,7 +12,7 @@ function eventReducer(state, action) {
   // currently, events from other rooms do not affect us (backend should not send such events in the first place)
   // so we do not modify our client-side state in any way
   if (state.get('roomId') !== event.roomId) {
-    LOGGER.warn('Event with different roomId received');
+    LOGGER.warn(`Event with different roomId received. localRoomId=${state.get('roomId')}, eventRoomId=${event.roomId} (${event.name})`);
     return state;
   }
 

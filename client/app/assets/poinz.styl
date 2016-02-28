@@ -4,6 +4,7 @@ $zuehlkeDarkGrey = #4b5054
 $zuehlkeLightGrey = #575d62
 $zuehlkeLighterGrey = #e8e8e8
 $zuehlkeFontGrey = #484e54
+$zuehlkeFont = "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 @font-face {
   font-family 'aa_zuehlke_otpsregular'
@@ -57,12 +58,12 @@ a {
     justify-content center
     align-items center
     flex-direction column
-    width: 400px;
-    max-width 85%;
-    margin-top: 20%;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 32px;
-    border-radius: 2px;
+    width 400px
+    max-width 85%
+    margin-top 20%
+    background rgba(0, 0, 0, 0.5)
+    padding 32px
+    border-radius 2px
 
     &.loading {
       color white
@@ -180,8 +181,8 @@ a {
     &.user-disconnected {
       color $zuehlkeLightGrey
       .avatar {
-        -webkit-filter: grayscale(100%);
-        filter: gray;
+        -webkit-filter grayscale(100%)
+        filter gray;
       }
     }
   }
@@ -191,13 +192,31 @@ a {
   background-color $zuehlkeLightGrey
   color white
   z-index 1003
-  position absolute
+  position fixed
   top 0
   left 0
   right 0
   height 34px
   padding 0
   box-sizing border-box
+
+  .poinz-logo {
+    position fixed
+    display block
+    top 0
+    left 39px
+    font-family $zuehlkeFont
+    font-size 29px
+    color $zuehlkePurple
+  }
+
+  .whoami {
+    position fixed
+    display block
+    top 0
+    right 34px
+    padding 8px
+  }
 }
 
 // hamburger icon to toggle backlog on small screens
@@ -403,7 +422,7 @@ $backlogWidth = 300px
         font-size 28px
         padding 8px
         cursor pointer
-        font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
+        font-family $zuehlkeFont
 
         .card-inner {
           background #fff
@@ -443,6 +462,10 @@ $backlogWidth = 300px
     position fixed
     left $backlogWidth
     display none
+  }
+
+  .top-bar .poinz-logo {
+    left 8px
   }
 
   .board {

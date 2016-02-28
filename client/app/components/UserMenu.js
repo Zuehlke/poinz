@@ -13,7 +13,7 @@ import ActionLog from '../components/ActionLog';
 const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) => {
 
   const username = user.get('username');
-  const isVisitor = user.get('isVisitor');
+  const isVisitor = user.get('visitor');
 
   const menuClasses = classnames('user-menu', {
     'user-menu-active': userMenuShown
@@ -39,7 +39,7 @@ const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) 
         <label htmlFor="visitor">
           <input type="checkbox"
                  id="visitor"
-                 checked={isVisitor}
+                 defaultChecked={isVisitor}
                  onClick={toggleVisitor}/> Visitor
         </label>
       </div>

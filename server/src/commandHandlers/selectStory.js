@@ -11,7 +11,7 @@ module.exports = {
   },
   fn: function selectStory(room, command) {
 
-    if (room.attributes.get('selectedStory') === command.payload.storyId) {
+    if (room.get('selectedStory') === command.payload.storyId) {
       // command payload matches the already selected story. No need to apply event
       return;
     }

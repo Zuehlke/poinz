@@ -116,4 +116,24 @@ describe('commandProcessor', () => {
 
   });
 
+
+  it('process a dummy command where room must exist', () => {
+
+    var processor = processorFactory({
+      setUsername: {
+        existingRoom: true, // This command handler expect an existing room
+        fn: function () {
+        }
+      }
+    }, {});
+
+    assert.throws(() => processor({
+      id: uuid(),
+      roomId: 'room-' + uuid(),
+      name: 'setUsername',
+      payload: {userId: 'abc', username: 'john'}
+    }), /Command setUsername only want's to get handled for an existing room/);
+
+  });
+
 });

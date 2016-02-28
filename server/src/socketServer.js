@@ -50,11 +50,17 @@ function handleIncomingCommand(socket, msg) {
 
 }
 
+/**
+ * If command processing failed, we send a "commandRejected" event to the client that issued the command.
+ * (not sent to all sockets in the room)
+ *
+ */
 function handleCommandProcessingError(error, command, socket) {
   LOGGER.error(error.stack);
   var commandRejectedEvent = {
     name: 'commandRejected',
     id: uuid(),
+    roomId: command.roomId,
     payload: {
       command: command,
       reason: error.message

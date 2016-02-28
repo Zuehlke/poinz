@@ -1,5 +1,6 @@
 var
   util = require('util'),
+  Immutable = require('immutable'),
   log = require('loglevel'),
   uuid = require('node-uuid').v4,
   commandSchemaValidator = require('./commandSchemaValidator'),
@@ -45,8 +46,17 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
       },
       function getRoom(cmd, ctx) {
         ctx.room = roomStore.getRoomById(cmd.roomId);
+
         if (!ctx.room && ctx.handler.existingRoom) {
           throw new Error('Command ' + cmd.name + ' only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
+        }
+
+        if (ctx.room) {
+          // mark rooms that were loaded from store as "existing"
+          ctx.room.existing = true;
+        } else {
+          // make sure that command handlers always receive a room object
+          ctx.room = new Immutable.Map();
         }
       },
       function preConditions(cmd, ctx) {
@@ -62,18 +72,18 @@ function commandProcessorFactory(commandHandlers, eventHandlers) {
       function handle(cmd, ctx) {
         ctx.eventHandlingQueue = [];
         ctx.eventsToSend = [];
-        ctx.handler.fn({
-          attributes: context.room,
-          /**
-           * called from command handlers: room.apply('someEvent', payload)
-           * @param eventName
-           * @param eventPayload
-           */
-          applyEvent: function (eventName, eventPayload) {
-            var handlerFunction = getEventHandlerFunction(ctx, userId, cmd.id, eventName, eventPayload);
-            ctx.eventHandlingQueue.push(handlerFunction);
-          }
-        }, cmd);
+
+        /**
+         * called from command handlers: room.apply('someEvent', payload)
+         * @param eventName
+         * @param eventPayload
+         */
+        ctx.room.applyEvent = function (eventName, eventPayload) {
+          var handlerFunction = getEventHandlerFunction(ctx, userId, cmd.id, eventName, eventPayload);
+          ctx.eventHandlingQueue.push(handlerFunction);
+        };
+
+        ctx.handler.fn(ctx.room, cmd);
       },
       function applyEvents(cmd, ctx) {
         context.eventHandlingQueue.forEach(eh => ctx.room = eh(ctx.room));

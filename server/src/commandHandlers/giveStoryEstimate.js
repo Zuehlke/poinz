@@ -32,9 +32,9 @@ module.exports = {
     room.applyEvent('storyEstimateGiven', command.payload);
 
     // now check if every user in the room (that is not marked as visitor and is not disconnected)  did estimate the current story
-    var usersThatHaveEstimateGiven = room.attributes.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().toJS();
+    var usersThatHaveEstimateGiven = room.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().toJS();
     usersThatHaveEstimateGiven.push(command.payload.userId);
-    var allUsersThatCanEstimate = room.attributes.get('users')
+    var allUsersThatCanEstimate = room.get('users')
       .filter(usr => !usr.get('visitor'))
       .filter(usr => !usr.get('disconnected'))
       .keySeq().toJS();

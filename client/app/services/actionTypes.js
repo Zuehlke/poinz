@@ -30,7 +30,7 @@ export const EVENT_ACTION_TYPES = {
   usernameSet: 'USERNAME_SET',
   storyEstimateGiven: 'STORY_ESTIMATE_GIVEN',
   storyEstimateCleared: 'STORY_ESTIMATE_CLEARED',
-  allEstimatesGiven: 'ALL_ESTIMATES_GIVEN',
+  revealed: 'REVEALED',
   newEstimationRoundStarted: 'NEW_ESTIMATION_ROUND_STARTED',
   visitorSet: 'VISITOR_SET',
   visitorUnset: 'VISITOR_UNSET'

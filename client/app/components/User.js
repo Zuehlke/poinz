@@ -9,7 +9,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
 
   const isVisitor = user.get('visitor');
   const isDisconnected = user.get('disconnected');
-  const revealed = selectedStory && selectedStory.get('allEstimatesGiven');
+  const revealed = selectedStory && selectedStory.get('revealed');
 
   const classes = classnames('user user-' + user.get('id'), {
     'user-own': user.get('id') === ownUserId,

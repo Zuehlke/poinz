@@ -11,7 +11,7 @@ const Estimation = ({ selectedStory,  user, newEstimationRound }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
-  const isEstimationChangeAllowed = !selectedStory.get('allEstimatesGiven');
+  const isEstimationChangeAllowed = !selectedStory.get('revealed');
   const isVisitor = user.get('visitor');
 
   return (

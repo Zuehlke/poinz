@@ -153,15 +153,15 @@ const eventActionHandlers = {
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues
   },
 
-  [EVENT_ACTION_TYPES.allEstimatesGiven]: {
-    fn: (state, payload) => state.setIn(['stories', payload.storyId, 'allEstimatesGiven'], true),
-    log: 'All users estimated the current story'
+  [EVENT_ACTION_TYPES.revealed]: {
+    fn: (state, payload) => state.setIn(['stories', payload.storyId, 'revealed'], true),
+    log: (username, payload) => payload.manually ? `${username} manually revealed estimates for the current story` : `Estimates were automatically revealed for the current story`
   },
 
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {
     fn: (state, payload) => state
       .setIn(['stories', payload.storyId, 'estimations'], new Immutable.Map())
-      .setIn(['stories', payload.storyId, 'allEstimatesGiven'], false),
+      .setIn(['stories', payload.storyId, 'revealed'], false),
     log: username => `${username} started a new estimation round for the current story`
   },
 

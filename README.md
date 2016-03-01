@@ -29,6 +29,10 @@ The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
 * You are familiar with- or eager to learn `react`
 * You are familiar with- or eager to learn `redux`
 
+### Style
+
+Try to adhere to the [airbnb style guide](https://github.com/airbnb/javascript).
+
 ### Development
 
 Fork & checkout the repository then install all npm dependencies.

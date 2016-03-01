@@ -29,7 +29,11 @@ body {
   background-color $zuehlkePurple
   border-radius 2px
 
-  i {
+  i.button-icon-left {
+    padding-right 8px
+  }
+
+  i.button-icon-right {
     padding-left 8px
   }
 }
@@ -230,6 +234,7 @@ a {
   z-index 10
   width 34px
   height 34px
+  cursor pointer
 
   .menu-link-inner {
     position relative
@@ -273,6 +278,7 @@ a {
   padding 4px 8px
   box-sizing border-box
   color white
+  cursor pointer
 }
 
 $userMenuWidth = 300px
@@ -438,7 +444,7 @@ $backlogWidth = 300px
 
         &.card-selected {
           .card-inner {
-            border 2px solid $zuehlkeOrange
+            border 4px solid $zuehlkeOrange
           }
         }
       }

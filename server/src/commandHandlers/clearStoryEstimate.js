@@ -9,8 +9,8 @@ module.exports = {
       throw new Error('Can only clear estimation for currently selected story!');
     }
 
-    if (room.getIn(['stories', command.payload.storyId, 'allEstimatesGiven'])) {
-      throw new Error('You cannot clear your estimate for a story with "allEstimatesGiven" set!');
+    if (room.getIn(['stories', command.payload.storyId, 'revealed'])) {
+      throw new Error('You cannot clear your estimate for a story that was revealed!');
     }
   },
   fn: function clearStoryEstimate(room, command) {

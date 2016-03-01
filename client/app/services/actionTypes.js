@@ -6,6 +6,7 @@ export const ADD_STORY = 'ADD_STORY';
 export const SELECT_STORY = 'SELECT_STORY';
 export const GIVE_STORY_ESTIMATE = 'GIVE_STORY_ESTIMATE';
 export const NEW_ESTIMATION_ROUND = 'NEW_ESTIMATION_ROUND';
+export const REVEAL = 'REVEAL';
 export const SET_USERNAME = 'SET_USERNAME';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const TOGGLE_VISITOR = 'TOGGLE_VISITOR';
@@ -30,7 +31,7 @@ export const EVENT_ACTION_TYPES = {
   usernameSet: 'USERNAME_SET',
   storyEstimateGiven: 'STORY_ESTIMATE_GIVEN',
   storyEstimateCleared: 'STORY_ESTIMATE_CLEARED',
-  allEstimatesGiven: 'ALL_ESTIMATES_GIVEN',
+  revealed: 'REVEALED',
   newEstimationRoundStarted: 'NEW_ESTIMATION_ROUND_STARTED',
   visitorSet: 'VISITOR_SET',
   visitorUnset: 'VISITOR_UNSET'

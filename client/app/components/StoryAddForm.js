@@ -25,7 +25,7 @@ const StoryAddForm = ({addStory}) => {
               className='pure-button pure-input-1 pure-button-primary'
               onClick={triggerAddAndClearForm}>
         Add Story
-        <i className="fa fa-plus"></i>
+        <i className='fa fa-plus  button-icon-right'></i>
       </button>
 
     </div>

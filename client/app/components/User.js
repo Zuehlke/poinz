@@ -9,7 +9,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
 
   const isVisitor = user.get('visitor');
   const isDisconnected = user.get('disconnected');
-  const revealed = selectedStory && selectedStory.get('allEstimatesGiven');
+  const revealed = selectedStory && selectedStory.get('revealed');
 
   const classes = classnames('user user-' + user.get('id'), {
     'user-own': user.get('id') === ownUserId,
@@ -34,8 +34,8 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
   } : {};
   return (
     <div className={classes}>
-      {!isDisconnected && isVisitor && <span className='visitor-badge'><i className="fa fa-eye"></i></span>}
-      {isDisconnected && <span className='disconnected-badge'><i className="fa fa-flash"></i></span>}
+      {!isDisconnected && isVisitor && <span className='visitor-badge'><i className='fa fa-eye'></i></span>}
+      {isDisconnected && <span className='disconnected-badge'><i className='fa fa-flash'></i></span>}
       <img className='avatar' src={avatarIcons[index % avatarIcons.length]}/>
       <div className='user-name'>{user.get('username') || '-'}</div>
 

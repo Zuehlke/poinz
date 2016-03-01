@@ -3,15 +3,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 
-import { newEstimationRound } from '../services/actions';
+import { newEstimationRound, reveal } from '../services/actions';
 
 import Cards from './Cards';
 
-const Estimation = ({ selectedStory,  user, newEstimationRound }) => {
+const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
-  const isEstimationChangeAllowed = !selectedStory.get('allEstimatesGiven');
+  const isEstimationChangeAllowed = !selectedStory.get('revealed');
   const isVisitor = user.get('visitor');
 
   return (
@@ -29,14 +29,28 @@ const Estimation = ({ selectedStory,  user, newEstimationRound }) => {
       {
         isEstimationChangeAllowed && !isVisitor &&
         <Cards ownEstimate={ownEstimate}/>
+
+      }
+
+      {
+        isEstimationChangeAllowed && !isVisitor &&
+        <div className='board-actions'>
+          <button type='button' className='pure-button pure-button-primary'
+                  onClick={() => reveal(selectedStory.get('id'))}>
+            <i className='fa fa-hand-paper-o button-icon-left'></i>
+            Reveal manually
+          </button>
+        </div>
       }
 
       {
         !isEstimationChangeAllowed &&
 
-        <div className="board-actions">
-          <button type="button" className='pure-button pure-button-primary'
-                  onClick={() => newEstimationRound(selectedStory.get('id'))}>New Round
+        <div className='board-actions'>
+          <button type='button' className='pure-button pure-button-primary'
+                  onClick={() => newEstimationRound(selectedStory.get('id'))}>
+            <i className='fa fa-undo  button-icon-left'></i>
+            New Round
           </button>
         </div>
 
@@ -51,5 +65,5 @@ export default connect(
     cardConfig: state.get('cardConfig'),
     user: state.getIn(['users', state.get('userId')])
   }),
-  dispatch => bindActionCreators({newEstimationRound}, dispatch)
+  dispatch => bindActionCreators({newEstimationRound, reveal}, dispatch)
 )(Estimation);

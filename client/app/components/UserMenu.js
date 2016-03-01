@@ -25,33 +25,33 @@ const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) 
 
     <div className={menuClasses}>
 
-      <div className="pure-form pure-form-stacked">
+      <div className='pure-form pure-form-stacked'>
         <h5>Settings</h5>
 
-        <label htmlFor="username">Username</label>
-        <input type="text"
-               id="username"
-               placeholder="Username..."
+        <label htmlFor='username'>Username</label>
+        <input type='text'
+               id='username'
+               placeholder='Username...'
                defaultValue={username}
                ref={ref => usernameInputField = ref}
                onKeyPress={handleUsernameKeyPress}/>
 
-        <label htmlFor="visitor">
-          <input type="checkbox"
-                 id="visitor"
+        <label htmlFor='visitor'>
+          <input type='checkbox'
+                 id='visitor'
                  defaultChecked={isVisitor}
                  onClick={toggleVisitor}/> Visitor
         </label>
       </div>
 
-      <div className="action-log-wrapper">
+      <div className='action-log-wrapper'>
         <h5>Log</h5>
         <ActionLog />
       </div>
 
-      <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>
+      <button className='leave-room-button pure-button pure-button-primary" type="button' onClick={leaveRoom}>
         Leave Room
-        <i className="fa fa-sign-out"></i>
+        <i className='fa fa-sign-out'></i>
       </button>
     </div>
   );

@@ -115,6 +115,15 @@ const commandActionHandlers = {
         storyId: commandPayload.storyId
       }
     });
+  },
+  [types.REVEAL]: (hub, state, commandPayload) => {
+    hub.sendCommand({
+      name: 'reveal',
+      roomId: state.get('roomId'),
+      payload: {
+        storyId: commandPayload.storyId
+      }
+    });
   }
 
 };

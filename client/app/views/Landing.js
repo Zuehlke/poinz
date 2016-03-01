@@ -10,7 +10,7 @@ const RoomJoinForm = ({presetUsername, joinRoom}) => {
 
   return (
     <div className='eyecatcher'>
-      <div className="room-id-wrapper">
+      <div className='room-id-wrapper'>
         <input placeholder='Please enter a room name...' type='text' ref={ref => roomIdInputField = ref}
                onKeyPress={handleKeyPress}/>
         <button type='button' className='pure-button pure-button-primary'

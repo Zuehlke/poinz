@@ -1,0 +1,29 @@
+{
+  "allOf": [
+    {
+      "$ref": "command"
+    },
+    {
+      "properties": {
+        "payload": {
+          "type": "object",
+          "properties": {
+            "storyId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "userId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "storyId",
+            "userId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

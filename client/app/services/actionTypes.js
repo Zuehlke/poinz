@@ -6,6 +6,7 @@ export const ADD_STORY = 'ADD_STORY';
 export const SELECT_STORY = 'SELECT_STORY';
 export const GIVE_STORY_ESTIMATE = 'GIVE_STORY_ESTIMATE';
 export const NEW_ESTIMATION_ROUND = 'NEW_ESTIMATION_ROUND';
+export const REVEAL = 'REVEAL';
 export const SET_USERNAME = 'SET_USERNAME';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const TOGGLE_VISITOR = 'TOGGLE_VISITOR';

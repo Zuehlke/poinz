@@ -20,6 +20,9 @@ export function giveStoryEstimate(storyId, value) {
 export function newEstimationRound(storyId) {
   return {type: types.NEW_ESTIMATION_ROUND, command: {storyId}};
 }
+export function reveal(storyId) {
+  return {type: types.REVEAL, command: {storyId}};
+}
 export function setUsername(username) {
   return {type: types.SET_USERNAME, command: {username}};
 }

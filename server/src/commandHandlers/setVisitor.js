@@ -1,5 +1,6 @@
 /**
  * A user sets or unsets himself as visitor (payload contains flag).
+ * Emits event only if visitor state changed
  *
  * Visitors cannot estimate stories.
  *
@@ -12,9 +13,11 @@ module.exports = {
     }
   },
   fn: function setUsername(room, command) {
-    if (command.payload.isVisitor) {
+    const isCurrentlyVisitor = room.getIn(['users', command.payload.userId, 'visitor']);
+
+    if (command.payload.isVisitor && !isCurrentlyVisitor) {
       room.applyEvent('visitorSet', {userId: command.payload.userId});
-    } else {
+    } else if (!command.payload.isVisitor && isCurrentlyVisitor) {
       room.applyEvent('visitorUnset', {userId: command.payload.userId});
     }
   }

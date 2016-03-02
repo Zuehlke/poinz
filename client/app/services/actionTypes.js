@@ -9,7 +9,7 @@ export const NEW_ESTIMATION_ROUND = 'NEW_ESTIMATION_ROUND';
 export const REVEAL = 'REVEAL';
 export const SET_USERNAME = 'SET_USERNAME';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
-export const TOGGLE_VISITOR = 'TOGGLE_VISITOR';
+export const SET_VISITOR = 'SET_VISITOR';
 
 /**
  *  UI-only

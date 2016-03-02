@@ -5,7 +5,7 @@ import {
   GIVE_STORY_ESTIMATE,
   NEW_ESTIMATION_ROUND,
   REVEAL, SET_USERNAME,
-  TOGGLE_VISITOR,
+  SET_VISITOR,
   LEAVE_ROOM,
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU
@@ -37,8 +37,8 @@ export function reveal(storyId) {
 export function setUsername(username) {
   return {type: SET_USERNAME, command: {username}};
 }
-export function toggleVisitor() {
-  return {type: TOGGLE_VISITOR, command: {}};
+export function setVisitor(isVisitor) {
+  return {type: SET_VISITOR, command: {isVisitor}};
 }
 export function leaveRoom() {
   return {type: LEAVE_ROOM, command: {}};

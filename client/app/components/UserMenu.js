@@ -3,14 +3,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { toggleVisitor, setUsername, leaveRoom } from '../services/actions';
+import { setVisitor, setUsername, leaveRoom } from '../services/actions';
 import ActionLog from '../components/ActionLog';
 
 /**
  * This component has own react state.
  * Local state like menuOpen does not belong into our app-state (redux store)
  */
-const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) => {
+const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => {
 
   const username = user.get('username');
   const isVisitor = user.get('visitor');
@@ -20,6 +20,7 @@ const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) 
   });
 
   let usernameInputField;
+  let visitorCheckbox;
 
   return (
 
@@ -40,8 +41,11 @@ const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) 
           <input type='checkbox'
                  id='visitor'
                  defaultChecked={isVisitor}
-                 onClick={toggleVisitor}/> Visitor
+                 ref={ref => visitorCheckbox = ref}
+          /> Visitor
         </label>
+
+        <button className='pure-button pure-button-primary' onClick={save}>Save</button>
       </div>
 
       <div className='action-log-wrapper'>
@@ -61,6 +65,12 @@ const UserMenu = ({user, setUsername, leaveRoom, toggleVisitor, userMenuShown}) 
       setUsername(usernameInputField.value);
     }
   }
+
+  function save() {
+    setUsername(usernameInputField.value);
+    setVisitor(visitorCheckbox.checked);
+  }
+
 };
 
 export default connect(
@@ -69,7 +79,7 @@ export default connect(
     userMenuShown: state.get('userMenuShown')
   }),
   dispatch => bindActionCreators({
-    toggleVisitor,
+    setVisitor,
     leaveRoom,
     setUsername
   }, dispatch)

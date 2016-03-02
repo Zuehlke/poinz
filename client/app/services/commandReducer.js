@@ -7,7 +7,7 @@ import {
   GIVE_STORY_ESTIMATE,
   NEW_ESTIMATION_ROUND,
   REVEAL, SET_USERNAME,
-  TOGGLE_VISITOR,
+  SET_VISITOR,
   LEAVE_ROOM
 } from './actionTypes';
 
@@ -65,13 +65,13 @@ const commandActionHandlers = {
       }
     });
   },
-  [TOGGLE_VISITOR]: (hub, state) => {
+  [SET_VISITOR]: (hub, state, commandPayload) => {
     hub.sendCommand({
       name: 'setVisitor',
       roomId: state.get('roomId'),
       payload: {
         userId: state.get('userId'),
-        isVisitor: !state.getIn(['users', state.get('userId'), 'visitor'])
+        isVisitor: commandPayload.isVisitor
       }
     });
   },

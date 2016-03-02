@@ -62,13 +62,20 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
 
   function handleUsernameKeyPress(e) {
     if (e.key === 'Enter') {
-      setUsername(usernameInputField.value);
+      saveUsername();
     }
   }
 
   function save() {
-    setUsername(usernameInputField.value);
+    saveUsername();
     setVisitor(visitorCheckbox.checked);
+  }
+
+  function saveUsername() {
+    // username length minimum is 2 characters
+    if (usernameInputField.value && usernameInputField.value.length > 1) {
+      setUsername(usernameInputField.value);
+    }
   }
 
 };

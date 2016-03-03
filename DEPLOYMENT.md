@@ -1,5 +1,5 @@
 
-PoinZ is currently deployed on a free-tier EC2 instance for testing purposes.
+PoinZ is currently deployed on a free-tier EC2 instance for testing purposes. (no docker!)
 
 A more suitable deployment might be needed in the future.
 

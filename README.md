@@ -57,6 +57,9 @@ Then you can open the app at http://localhost:9000/webpack-dev-server/
 
 ## Build
 
+Our build produces a docker image that contains nodejs and our poinz server.
+Make sure you have docker installed on your machine and your user is in the "docker" usergroup.
+
 ### 1. Install client npm dependencies
 
 Since we bundle our client, we need all dependencies installed.
@@ -72,9 +75,10 @@ $ npm i
 In project root, run
 
 ```
-$ gulp packForDeployment
+$ npm run build
 ```
 
-This will copy all backend and client files to `deploy/`.
+This will copy all backend and client files to `deploy/`. 
+And then start the docker build.
 
 See [Deployment](DEPLOYMENT.md) for more information.

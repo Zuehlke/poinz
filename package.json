@@ -4,7 +4,8 @@
   "description": "Distributed Planning Poker",
   "private": true,
   "scripts": {
-    "test": "cd client/ && npm test &&  cd ../server && npm test"
+    "test": "cd client/ && npm test &&  cd ../server && npm test",
+    "build": "node build.js"
   },
   "repository": {
     "type": "git",
@@ -15,7 +16,7 @@
   "homepage": "https://github.com/Zuehlke/poinz",
   "devDependencies": {
     "del": "2.2.0",
-    "gulp": "3.9.1",
-    "gulp-util": "3.0.7"
+    "fs-extra": "0.26.5",
+    "q": "1.4.1"
   }
 }

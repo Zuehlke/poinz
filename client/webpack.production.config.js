@@ -9,10 +9,13 @@ var definePlugin = new webpack.DefinePlugin({
   __POINZ_CONFIG__: JSON.stringify({
     env: 'production',
     version: packageInformation.version
-    //wsUrl: 'http://poker-xeronimus.rhcloud.com:8000'
+    //wsUrl: '' //  do not set wsUrl -> hub will use socketIO default (which is: same host as the app is served)
   })
 });
 
+// override our default webpack config
 defaultConfig.plugins = [definePlugin];
+defaultConfig.debug = false;
+defaultConfig.devtool = undefined;
 
 module.exports = defaultConfig;

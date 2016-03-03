@@ -1,5 +1,7 @@
 import log from 'loglevel';
 import { createHistory } from 'history';
+import hub from './hub';
+
 import {
   JOIN_ROOM,
   ADD_STORY,
@@ -16,7 +18,7 @@ let history = createHistory();
 const LOGGER = log.getLogger('commandReducer');
 
 const commandActionHandlers = {
-  [JOIN_ROOM]: (hub, state, action) => {
+  [JOIN_ROOM]: (state, action) => {
     const { roomId } = action;
     history.push({
       pathname: `/${roomId}`
@@ -43,7 +45,7 @@ const commandActionHandlers = {
       .set('waitingForJoin', true)
       .set('roomId', roomId);
   },
-  [LEAVE_ROOM]: (hub, state) => {
+  [LEAVE_ROOM]: (state) => {
     history.push({
       pathname: ''
     });
@@ -55,7 +57,7 @@ const commandActionHandlers = {
       }
     });
   },
-  [SET_USERNAME]: (hub, state, commandPayload) => {
+  [SET_USERNAME]: (state, commandPayload) => {
     hub.sendCommand({
       name: 'setUsername',
       roomId: state.get('roomId'),
@@ -65,7 +67,7 @@ const commandActionHandlers = {
       }
     });
   },
-  [SET_VISITOR]: (hub, state, commandPayload) => {
+  [SET_VISITOR]: (state, commandPayload) => {
     hub.sendCommand({
       name: 'setVisitor',
       roomId: state.get('roomId'),
@@ -75,7 +77,7 @@ const commandActionHandlers = {
       }
     });
   },
-  [ADD_STORY]: (hub, state, commandPayload) => {
+  [ADD_STORY]: (state, commandPayload) => {
     hub.sendCommand({
       name: 'addStory',
       roomId: state.get('roomId'),
@@ -85,7 +87,7 @@ const commandActionHandlers = {
       }
     });
   },
-  [GIVE_STORY_ESTIMATE]: (hub, state, commandPayload) => {
+  [GIVE_STORY_ESTIMATE]: (state, commandPayload) => {
     if (state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]) === commandPayload.value) {
       hub.sendCommand({
         name: 'clearStoryEstimate',
@@ -107,7 +109,7 @@ const commandActionHandlers = {
       });
     }
   },
-  [NEW_ESTIMATION_ROUND]: (hub, state, commandPayload) => {
+  [NEW_ESTIMATION_ROUND]: (state, commandPayload) => {
     hub.sendCommand({
       name: 'newEstimationRound',
       roomId: state.get('roomId'),
@@ -116,7 +118,7 @@ const commandActionHandlers = {
       }
     });
   },
-  [SELECT_STORY]: (hub, state, commandPayload) => {
+  [SELECT_STORY]: (state, commandPayload) => {
     hub.sendCommand({
       name: 'selectStory',
       roomId: state.get('roomId'),
@@ -125,7 +127,7 @@ const commandActionHandlers = {
       }
     });
   },
-  [REVEAL]: (hub, state, commandPayload) => {
+  [REVEAL]: (state, commandPayload) => {
     hub.sendCommand({
       name: 'reveal',
       roomId: state.get('roomId'),
@@ -137,17 +139,14 @@ const commandActionHandlers = {
 
 };
 
-function commandReducerFactory(hub) {
-  return function commandReducer(state, action) {
-    if (commandActionHandlers[action.type]) {
-      const modifiedState = commandActionHandlers[action.type](hub, state, action.command);
-      return modifiedState || state;
-    } else {
-      LOGGER.warn('unknown command action', action);
-      return state;
-    }
-  };
+function commandReducer(state, action) {
+  if (commandActionHandlers[action.type]) {
+    const modifiedState = commandActionHandlers[action.type](state, action.command);
+    return modifiedState || state;
+  } else {
+    LOGGER.warn('unknown command action', action);
+    return state;
+  }
 }
 
-
-export default commandReducerFactory;
+export default commandReducer;

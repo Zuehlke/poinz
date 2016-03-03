@@ -1,16 +1,14 @@
 import { createStore } from 'redux';
 import Immutable from 'immutable';
 import log from 'loglevel';
-import _ from 'lodash';
-import { TOGGLE_BACKLOG, TOGGLE_USER_MENU } from './actionTypes';
-import hubFactory from './hub';
-import commandReducerFactory from './commandReducer';
+
+import commandReducer from './commandReducer';
 import eventReducer from './eventReducer';
+import hub from './hub';
 import clientSettingsStore from './clientSettingsStore';
+import { TOGGLE_BACKLOG, TOGGLE_USER_MENU, EVENT_ACTION_TYPES } from './actionTypes';
 
 const LOGGER = log.getLogger('store');
-
-let commandReducer = _.noop;
 
 const INITIAL_STATE = Immutable.fromJS({
 // TODO: creator of room can choose card values
@@ -68,7 +66,22 @@ function triage(state, action) {
 }
 
 let store = createStore(rootReducer);
-commandReducer = commandReducerFactory(hubFactory(store.dispatch));
+
+/**
+ * Backend events that are received by the hub are dispatched to our redux store
+ * if we "know" the event (i.e. eventName is a defined event type)
+ */
+hub.on('event', event => {
+  const matchingType = EVENT_ACTION_TYPES[event.name];
+  if (matchingType) {
+    store.dispatch({
+      event,
+      type: matchingType
+    });
+  } else {
+    LOGGER.error('Unknown event type' + event.name);
+  }
+});
 
 store.getInitialState = () => INITIAL_STATE;
 

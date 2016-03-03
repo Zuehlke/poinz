@@ -14,9 +14,9 @@ const Card = ({card, selectedStoryId, ownEstimate, giveStoryEstimate}) => {
 
   const customCardStyle = card.get('color') ? {background: card.get('color'), color: 'white'} : {};
   return (
-    <div className={classes} onClick={() => giveStoryEstimate(selectedStoryId,card.get('value'))}>
+    <button className={classes} onClick={() => giveStoryEstimate(selectedStoryId, card.get('value'))}>
       <div className='card-inner' style={customCardStyle}>{card.get('label')}</div>
-    </div>
+    </button>
   );
 };
 

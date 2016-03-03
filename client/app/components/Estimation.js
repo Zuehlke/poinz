@@ -29,7 +29,6 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
       {
         isEstimationChangeAllowed && !isVisitor &&
         <Cards ownEstimate={ownEstimate}/>
-
       }
 
       {

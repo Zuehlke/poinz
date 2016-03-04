@@ -53,12 +53,12 @@ del([
 
 /**
  * spawns a child process (nodejs' child_process.spawn)
- * and pipes stdout and stderr to the node process
+ * and pipes stdout and stderr to the node process.
  *
  * @param command
  * @param arguments
  * @param options
- * @returns {promise}
+ * @returns {Promise} Returns a promise that will reject if childprocess does not exit with code 0.
  */
 function spawnAndPrint(command, arguments, options) {
   var deferred = Q.defer();

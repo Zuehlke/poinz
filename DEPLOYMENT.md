@@ -1,22 +1,25 @@
 
-PoinZ is currently deployed on a free-tier EC2 instance for testing purposes. (no docker!)
+PoinZ is currently deployed on a free-tier EC2 instance for testing purposes.
 
 A more suitable deployment might be needed in the future.
 
 ### Amazon EC2 deployment
 
-I did setup a free-tier ubuntu EC2 instance and installed nodejs
+I did setup a free-tier ubuntu EC2 instance and installed docker
+
 
 - connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
-- https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions
-- sudo apt-get install git
+- install docker `curl -fsSL https://get.docker.com/ | sh`
+- add user *ubuntu* to *docker* group `sudo gpasswd -a ubuntu docker`
 - port forwarding (see below)
 
-3. push new version to orphan branch "deployment"
+3. push new version to upstream github repo (zuehlke)
 
-4. checkout new version of "deployment" branch on EC2 instance (/home/ubuntu/git/poinz)
+4. checkout new version of *master* branch on EC2 instance (/home/ubuntu/git/poinz)
 
-5. restart app (pm2 ) https://www.npmjs.com/package/pm2
+5. build docker image `npm run build` (our image is not pushed to a repo, so we build on the EC2 instance for now)
+
+6. Start container `docker run -p 8080:3000 -d xeronimus/poinz`
 
 ### port forwarding:
 

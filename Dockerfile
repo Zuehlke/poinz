@@ -25,7 +25,7 @@ COPY deploy/src /usr/src/poinz/src
 COPY deploy/package.json /usr/src/poinz/
 
 # install app dependencies
-RUN npm install
+RUN npm install --production
 
 # expose port 3000
 EXPOSE 3000

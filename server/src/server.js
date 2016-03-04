@@ -1,17 +1,18 @@
-var log = require('loglevel');
+const log = require('loglevel');
 log.setLevel('info');
 
-var
+const
   path = require('path'),
   express = require('express'),
   socketServer = require('./socketServer'),
   handlerGatherer = require('./handlerGatherer'),
-  commandProcessorFactory = require('./commandProcessor');
+  commandProcessorFactory = require('./commandProcessor'),
+  roomsStore = require('./roomsStore');
 
-var serverHost = '0.0.0.0';
-var serverPort = 3000;
+const serverHost = '0.0.0.0';
+const serverPort = 3000;
 
-var app = express();
+const app = express();
 
 // routes setup
 app.use(express.static(path.resolve(__dirname, '../public')));
@@ -20,8 +21,12 @@ app.get('*', function (request, response) {
   response.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
-var commandProcessor = commandProcessorFactory(handlerGatherer.gatherCommandHandlers(), handlerGatherer.gatherEventHandlers());
-var server = socketServer.init(app, commandProcessor);
+const commandProcessor = commandProcessorFactory(
+  handlerGatherer.gatherCommandHandlers(),
+  handlerGatherer.gatherEventHandlers(),
+  roomsStore
+);
+const server = socketServer.init(app, commandProcessor);
 server.listen(serverPort, serverHost, function () {
   log.info('-- SERVER STARTED -- (' + serverHost + ':' + serverPort + ')');
 });

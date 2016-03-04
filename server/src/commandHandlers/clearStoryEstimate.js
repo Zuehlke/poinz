@@ -4,7 +4,7 @@
  */
 module.exports = {
   existingRoom: true,
-  preCondition: function (room, command) {
+  preCondition: (room, command) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only clear estimation for currently selected story!');
     }
@@ -13,7 +13,7 @@ module.exports = {
       throw new Error('You cannot clear your estimate for a story that was revealed!');
     }
   },
-  fn: function clearStoryEstimate(room, command) {
+  fn: (room, command) => {
     room.applyEvent('storyEstimateCleared', command.payload);
   }
 };

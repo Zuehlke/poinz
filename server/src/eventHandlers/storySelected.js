@@ -1,3 +1,1 @@
-module.exports = function (room, eventPayload) {
-  return room.set('selectedStory', eventPayload.storyId);
-};
+module.exports = (room, eventPayload) => room.set('selectedStory', eventPayload.storyId);

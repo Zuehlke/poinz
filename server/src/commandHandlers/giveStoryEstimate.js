@@ -1,4 +1,4 @@
-var _ = require('lodash');
+const _ = require('lodash');
 
 /**
  * A user gives his estimation for a certain story.
@@ -8,7 +8,7 @@ var _ = require('lodash');
  */
 module.exports = {
   existingRoom: true,
-  preCondition: function (room, command, userId) {
+  preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
       throw new Error('Can only give estimate if userId in command payload matches!');
     }
@@ -25,16 +25,16 @@ module.exports = {
       throw new Error('Visitors cannot give estimations!');
     }
   },
-  fn: function giveStoryEstimate(room, command) {
+  fn: (room, command) => {
     // currently estimation value is also sent to clients (hidden there)
     // user could "sniff" network traffic and see estimations of colleagues...
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
     // now check if every user in the room (that is not marked as visitor and is not disconnected)  did estimate the current story
-    var usersThatHaveEstimateGiven = room.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().toJS();
+    const usersThatHaveEstimateGiven = room.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().toJS();
     usersThatHaveEstimateGiven.push(command.payload.userId);
-    var allUsersThatCanEstimate = room.get('users')
+    const allUsersThatCanEstimate = room.get('users')
       .filter(usr => !usr.get('visitor'))
       .filter(usr => !usr.get('disconnected'))
       .keySeq().toJS();

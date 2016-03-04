@@ -1,10 +1,16 @@
 var
   assert = require('assert'),
+  _ = require('lodash'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
   processorFactory = require('../src/commandProcessor');
 
 describe('commandProcessor', () => {
+
+  const mockRoomsStore = {
+    getRoomById: _.noop,
+    saveRoom: _.noop
+  };
 
   it('process a dummy command successfully', () => {
 
@@ -18,7 +24,7 @@ describe('commandProcessor', () => {
       usernameSet: function () {
         return new Immutable.Map();
       }
-    });
+    }, mockRoomsStore);
 
     var producedEvents = processor({
       id: uuid(),
@@ -38,7 +44,7 @@ describe('commandProcessor', () => {
       // no command handlers
     }, {
       // no event handlers
-    });
+    }, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -59,7 +65,7 @@ describe('commandProcessor', () => {
       }
     }, {
       // no event handlers
-    });
+    }, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -80,7 +86,7 @@ describe('commandProcessor', () => {
       }
     }, {
       // no event handlers
-    });
+    }, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -92,7 +98,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command validation fails', () => {
 
-    var processor = processorFactory({}, {});
+    var processor = processorFactory({}, {}, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -105,7 +111,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command validation fails (schema)', () => {
 
-    var processor = processorFactory({}, {});
+    var processor = processorFactory({}, {}, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -125,7 +131,7 @@ describe('commandProcessor', () => {
         fn: function () {
         }
       }
-    }, {});
+    }, {}, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),

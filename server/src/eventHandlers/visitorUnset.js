@@ -1,3 +1,1 @@
-module.exports = function (room, eventPayload) {
-  return room.updateIn(['users', eventPayload.userId], user => user.set('visitor', false));
-};
+module.exports = (room, eventPayload) => room.updateIn(['users', eventPayload.userId], user => user.set('visitor', false));

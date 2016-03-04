@@ -1,4 +1,4 @@
-var uuid = require('node-uuid').v4;
+const uuid = require('node-uuid').v4;
 
 /**
  * A user joins a room.
@@ -9,19 +9,19 @@ var uuid = require('node-uuid').v4;
  */
 module.exports = {
   existingRoom: false,
-  fn: function joinRoom(room, command) {
+  fn: (room, command) => {
 
     // if user joins an existing room with a preset userId, the userId is handled like a "session" token.
     // Since we do not handle any sensitive data, it is known and accepted, that with a known userId one user can hijack the "session" of
     // another user
     // so we do not check if another socket/userId pair is already connected/present in that room
 
-    var newUser = {
+    const newUser = {
       id: command.payload.userId || uuid(), // client can cache/store userId and send it already with "joinRoom" command
       username: command.payload.username // client can cache/store username and send it already with "joinRoom" command
     };
 
-    if (!room.existing) {
+    if (!room.get('id')) {
       handleNewRoom(room, command, newUser);
     } else {
       handleExistingRoom(room, newUser);
@@ -54,7 +54,7 @@ function handleNewRoom(room, command, newUser) {
 function handleExistingRoom(room, newUser) {
 
   // maybe user already exists in room (clients can reconnect with their userId)
-  var matchingExistingUser = room.getIn(['users', newUser.id]);
+  const matchingExistingUser = room.getIn(['users', newUser.id]);
   if (matchingExistingUser) {
     // use the already matching user (re-use already existing state like "visitor" flag etc.)
     // override the username if the "joinRoom" command contained a username.

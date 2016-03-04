@@ -1,20 +1,21 @@
-var
+const
   http = require('http'),
   uuid = require('node-uuid').v4,
   socketIo = require('socket.io'),
   log = require('loglevel');
 
-var LOGGER = log.getLogger('socketServer');
+const LOGGER = log.getLogger('socketServer');
 
-var io;
-var socketToUserIdMap = {};
-var socketToRoomMap = {};
-var commandProcessor;
+let io, commandProcessor;
+
+const
+  socketToUserIdMap = {},
+  socketToRoomMap = {};
 
 module.exports.init = init;
 
 function init(app, cmdProcessor) {
-  var server = http.createServer(app);
+  const server = http.createServer(app);
   io = socketIo(server);
   io.on('connect', handleNewConnection);
   commandProcessor = cmdProcessor;
@@ -30,9 +31,9 @@ function handleIncomingCommand(socket, msg) {
   LOGGER.debug('incoming command', msg);
 
   try {
-    var userId = socketToUserIdMap[socket.id];
+    const userId = socketToUserIdMap[socket.id];
 
-    var producedEvents = commandProcessor(msg, userId);
+    const producedEvents = commandProcessor(msg, userId);
 
     if (msg.name === 'joinRoom') {
       // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
@@ -57,7 +58,7 @@ function handleIncomingCommand(socket, msg) {
  */
 function handleCommandProcessingError(error, command, socket) {
   LOGGER.error(error.stack);
-  var commandRejectedEvent = {
+  const commandRejectedEvent = {
     name: 'commandRejected',
     id: uuid(),
     roomId: command.roomId,
@@ -79,7 +80,7 @@ function registerUserWithSocket(msg, socket, userIdToStore) {
   // on socket disconnect.
   socketToRoomMap[socket.id] = msg.roomId;
   if (!userIdToStore) {
-    var noUserIdAfterJoinErr = new Error('Why is there no userId!');
+    const noUserIdAfterJoinErr = new Error('Why is there no userId!');
     LOGGER.error(noUserIdAfterJoinErr);
     throw noUserIdAfterJoinErr;
   }
@@ -93,8 +94,8 @@ function registerUserWithSocket(msg, socket, userIdToStore) {
 
 function onSocketDisconnect(socket) {
 
-  var userId = socketToUserIdMap[socket.id];
-  var roomId = socketToRoomMap[socket.id]; // socket.rooms is at this moment already emptied. so we have to use our own map
+  const userId = socketToUserIdMap[socket.id];
+  const roomId = socketToRoomMap[socket.id]; // socket.rooms is at this moment already emptied. so we have to use our own map
 
   if (!userId || !roomId) {
     // this can happen if the server was restarted, and a client re-connected!

@@ -1,5 +1,3 @@
-var Immutable = require('immutable');
+const Immutable = require('immutable');
 
-module.exports = function joinedRoom(room, eventPayload) {
-  return room.setIn(['users', eventPayload.userId], new Immutable.Map({id: eventPayload.userId}));
-};
+module.exports = (room, eventPayload) => room.setIn(['users', eventPayload.userId], new Immutable.Map({id: eventPayload.userId}));

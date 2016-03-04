@@ -1,7 +1,7 @@
-var Immutable = require('immutable');
+const Immutable = require('immutable');
 
-module.exports = function (room, eventPayload) {
-  return room
+module.exports = (room, eventPayload) => (
+  room
     .setIn(['stories', eventPayload.storyId, 'estimations'], new Immutable.Map())
-    .setIn(['stories', eventPayload.storyId, 'revealed'], false);
-};
+    .setIn(['stories', eventPayload.storyId, 'revealed'], false)
+);

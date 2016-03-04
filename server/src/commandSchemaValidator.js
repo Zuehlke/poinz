@@ -1,13 +1,13 @@
-var
+const
   path = require('path'),
   util = require('util'),
   glob = require('glob'),
   log = require('loglevel'),
   tv4 = require('tv4');
 
-var LOGGER = log.getLogger('commandSchemaValidator');
+const LOGGER = log.getLogger('commandSchemaValidator');
 
-var schemas = gatherSchemas();
+const schemas = gatherSchemas();
 
 module.exports = validate;
 
@@ -15,28 +15,28 @@ module.exports = validate;
  * Validates the given command against its schema.
  * for every command (command.name) there must be a json schema with a matching file name.
  *
- * (see json schema, tv4)
+ * (see http://json-schema.org/, https://www.npmjs.com/package/tv4)
  **/
 function validate(cmd) {
   if (!cmd.name) {
     // without a name we can't even load the right schema
-    throw new CommandValidationError(new Error('Command must contain a name'), cmd);
+    throw new CommandValidationError(new Error('Command must contain a name!'), cmd);
   }
 
-  var schema = schemas[cmd.name];
+  const schema = schemas[cmd.name];
 
   if (!schema) {
-    throw new CommandValidationError(new Error('Cannot validate command'), cmd);
+    throw new CommandValidationError(new Error('Cannot validate command, no matching schema found!'), cmd);
   }
 
-  var result = tv4.validateMultiple(cmd, schema);
+  const result = tv4.validateMultiple(cmd, schema);
   if (!result.valid) {
-    throw new CommandValidationError(new Error('Command validation failed.\n' + serializeErrors(result.errors)), cmd);
+    throw new CommandValidationError(new Error('Command validation failed!\n' + serializeErrors(result.errors)), cmd);
   }
 }
 
 function serializeErrors(tv4Errors) {
-  var errs = tv4Errors.map(tv4Err => tv4Err.message + ' in ' + tv4Err.dataPath);
+  const errs = tv4Errors.map(tv4Err => tv4Err.message + ' in ' + tv4Err.dataPath);
   return errs.join('\n');
 }
 
@@ -46,8 +46,8 @@ function serializeErrors(tv4Errors) {
 function gatherSchemas() {
   LOGGER.info('loading command schemas..');
 
-  var schemaMap = {};
-  var schemaFiles = glob.sync(path.resolve(__dirname, './validationSchemas/**/*.json'));
+  const schemaMap = {};
+  const schemaFiles = glob.sync(path.resolve(__dirname, './validationSchemas/**/*.json'));
   schemaFiles.map(schemaFile => {
     schemaMap[path.basename(schemaFile, '.json')] = require(schemaFile);
   });

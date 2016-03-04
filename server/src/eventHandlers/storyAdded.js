@@ -1,8 +1,8 @@
-var Immutable = require('immutable');
+const Immutable = require('immutable');
 
-module.exports = function (room, eventPayload) {
+module.exports = (room, eventPayload) => {
 
-  var newStory = Immutable.fromJS(Object.assign(eventPayload, {
+  const newStory = Immutable.fromJS(Object.assign(eventPayload, {
     estimations: {}
   }));
 

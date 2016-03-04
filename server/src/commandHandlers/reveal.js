@@ -5,7 +5,7 @@
  */
 module.exports = {
   existingRoom: true,
-  preCondition: function (room, command, userId) {
+  preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only reveal currently selected story!');
     }
@@ -18,7 +18,7 @@ module.exports = {
       throw new Error('Visitors cannot reveal stories!');
     }
   },
-  fn: function giveStoryEstimate(room, command) {
+  fn: (room, command) => {
     room.applyEvent('revealed', {
       storyId: command.payload.storyId,
       manually: true

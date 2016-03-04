@@ -1,4 +1,4 @@
-var uuid = require('node-uuid').v4;
+const uuid = require('node-uuid').v4;
 
 /**
  * A user adds a story to the estimation backlog of the room
@@ -6,7 +6,7 @@ var uuid = require('node-uuid').v4;
 module.exports = {
   existingRoom: true,
   preCondition: undefined,
-  fn: function addStory(room, command) {
+  fn: (room, command) => {
     room.applyEvent('storyAdded', Object.assign({
       id: uuid(),
       estimations: {}

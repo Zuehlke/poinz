@@ -1,10 +1,10 @@
-var Immutable = require('immutable');
+const Immutable = require('immutable');
 
-module.exports = function roomCreated(room, eventPayload) {
-  // here we create the room object
-  return Immutable.fromJS({
+// here we create the room object
+module.exports = (room, eventPayload) => (
+  Immutable.fromJS({
     id: eventPayload.id,
     users: {},
     stories: {}
-  });
-};
+  })
+);

@@ -1,12 +1,14 @@
 {
   "name": "poinz-client",
   "version": "0.0.2",
-  "description": "",
+  "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
+  "license": "MIT",
+  "homepage": "https://github.com/Zuehlke/poinz",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/xeronimus/tagi.git"
+    "url": "https://github.com/Zuehlke/poinz.git"
   },
   "scripts": {
     "test": "./node_modules/.bin/eslint app/* test/* && ./node_modules/.bin/mocha --compilers js:babel-register test/unit/*",

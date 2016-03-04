@@ -3,17 +3,17 @@
   "version": "0.0.2",
   "description": "Distributed Planning Poker",
   "private": true,
-  "scripts": {
-    "test": "cd client/ && npm test &&  cd ../server && npm test",
-    "build": "node build.js"
-  },
+  "author": "xeronimus@gmail.com",
+  "license": "MIT",
+  "homepage": "https://github.com/Zuehlke/poinz",
   "repository": {
     "type": "git",
     "url": "https://github.com/Zuehlke/poinz.git"
   },
-  "author": "xeronimus@gmail.com",
-  "license": "ISC",
-  "homepage": "https://github.com/Zuehlke/poinz",
+  "scripts": {
+    "test": "cd client/ && npm test &&  cd ../server && npm test",
+    "build": "node build.js"
+  },
   "devDependencies": {
     "del": "2.2.0",
     "fs-extra": "0.26.5",

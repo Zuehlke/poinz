@@ -1,23 +1,18 @@
 {
   "env": {
-    "browser": true
+    "browser": true,
+    "es6": true
   },
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
   "plugins": [
     "react"
   ],
-  "extends": "eslint:recommended",
-  "ecmaFeatures": {
-    "jsx": true,
-    "blockBindings": true,
-    "modules": true,
-    "arrowFunctions": true,
-    "defaultParams": true,
-    "destructuring": true,
-    "templateStrings": true,
-    "spread": true,
-    "restParams": true,
-    "classes": true,
-    "objectLiteralComputedProperties": true
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
   "rules": {
     "eqeqeq": 2,
@@ -33,9 +28,7 @@
       2,
       "all"
     ],
-    "no-use-before-define": 0,
-    "react/jsx-no-undef": 1,
-    "react/jsx-uses-react": 1
+    "no-use-before-define": 0
   },
   "globals": {
     "__POINZ_CONFIG__": false

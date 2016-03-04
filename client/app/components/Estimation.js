@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Anchorify from 'react-anchorify-text';
@@ -58,10 +59,16 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
   );
 };
 
+Estimation.propTypes = {
+  selectedStory: React.PropTypes.instanceOf(Immutable.Map),
+  user: React.PropTypes.instanceOf(Immutable.Map),
+  newEstimationRound: React.PropTypes.func,
+  reveal: React.PropTypes.func
+};
+
 export default connect(
   state => ({
     selectedStory: state.getIn(['stories', state.get('selectedStory')]),
-    cardConfig: state.get('cardConfig'),
     user: state.getIn(['users', state.get('userId')])
   }),
   dispatch => bindActionCreators({newEstimationRound, reveal}, dispatch)

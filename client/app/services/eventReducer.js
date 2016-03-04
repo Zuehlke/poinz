@@ -176,7 +176,7 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.revealed]: {
     fn: (state, payload) => state.setIn(['stories', payload.storyId, 'revealed'], true),
-    log: (username, payload) => payload.manually ? `${username} manually revealed estimates for the current story` : `Estimates were automatically revealed for the current story`
+    log: (username, payload) => payload.manually ? `${username} manually revealed estimates for the current story` : 'Estimates were automatically revealed for the current story'
   },
 
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {

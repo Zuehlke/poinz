@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { addStory } from '../services/actions';
 
-const StoryAddForm = ({addStory}) => {
+const StoryAddForm = ({ addStory }) => {
 
   let titleInputField, descriptionInputField;
 
@@ -38,6 +38,10 @@ const StoryAddForm = ({addStory}) => {
     descriptionInputField.value = '';
   }
 
+};
+
+StoryAddForm.propTypes = {
+  addStory: React.PropTypes.func
 };
 
 export default connect(

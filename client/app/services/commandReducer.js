@@ -19,7 +19,7 @@ const LOGGER = log.getLogger('commandReducer');
 
 const commandActionHandlers = {
   [JOIN_ROOM]: (state, action) => {
-    const { roomId } = action;
+    const roomId = action.roomId.toLowerCase();
     history.push({
       pathname: `/${roomId}`
     });

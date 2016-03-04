@@ -6,22 +6,28 @@ import UserMenu from '../components/UserMenu';
 import Users from '../components/Users';
 import Estimation from '../components/Estimation';
 
-const Board = ({ roomId, selectedStory }) => (
+const Board = ({ roomId, isAStorySelected }) => (
   <div className='board' id={roomId}>
     <Users />
     <UserMenu />
     <Backlog />
     {
-      selectedStory &&
+      isAStorySelected &&
       <Estimation />
     }
 
   </div>
 );
 
+Board.propTypes = {
+  roomId: React.PropTypes.string,
+  isAStorySelected: React.PropTypes.bool
+};
+
+
 export default connect(
   state => ({
     roomId: state.get('roomId'),
-    selectedStory: state.getIn(['stories', state.get('selectedStory')])
+    isAStorySelected: !!state.getIn(['stories', state.get('selectedStory')])
   })
 )(Board);

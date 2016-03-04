@@ -20,6 +20,13 @@ const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu }) => {
   );
 };
 
+TopBar.propTypes = {
+  roomId: React.PropTypes.string,
+  username: React.PropTypes.string,
+  toggleBacklog: React.PropTypes.func,
+  toggleUserMenu: React.PropTypes.func
+};
+
 export default connect(
   state => ({
     roomId: state.get('roomId'),

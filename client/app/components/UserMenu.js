@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -78,6 +79,14 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
     }
   }
 
+};
+
+UserMenu.propTypes = {
+  user: React.PropTypes.instanceOf(Immutable.Map),
+  userMenuShown: React.PropTypes.bool,
+  setVisitor: React.PropTypes.func,
+  leaveRoom: React.PropTypes.func,
+  setUsername: React.PropTypes.func
 };
 
 export default connect(

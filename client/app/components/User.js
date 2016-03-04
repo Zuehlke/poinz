@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import classnames from 'classnames';
 import _ from 'lodash';
 import { connect } from 'react-redux';
@@ -49,10 +50,17 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
 
 };
 
+User.propTypes = {
+  user: React.PropTypes.instanceOf(Immutable.Map),
+  index: React.PropTypes.number,
+  selectedStory: React.PropTypes.instanceOf(Immutable.Map),
+  ownUserId: React.PropTypes.string,
+  cardConfig: React.PropTypes.instanceOf(Immutable.List)
+};
+
 export default connect(
   state => ({
     cardConfig: state.get('cardConfig'),
     ownUserId: state.get('userId'),
     selectedStory: state.getIn(['stories', state.get('selectedStory')])
-  }))
-(User);
+  }))(User);

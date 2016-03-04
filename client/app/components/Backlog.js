@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
@@ -30,6 +31,11 @@ const Backlog = ({ stories, backlogShown }) => {
 
     </div>
   );
+};
+
+Backlog.propTypes = {
+  stories: React.PropTypes.instanceOf(Immutable.Map),
+  backlogShown: React.PropTypes.bool
 };
 
 

@@ -1,13 +1,14 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import { giveStoryEstimate } from '../services/actions';
 
-const Card = ({card, selectedStoryId, ownEstimate, giveStoryEstimate}) => {
+const Card = ({ card, selectedStoryId, ownEstimate, giveStoryEstimate }) => {
 
-  const classes = classnames(`card pure-u-1 pure-u-md-2-24`, {
+  const classes = classnames('card pure-u-1 pure-u-md-2-24', {
     'card-selected': card.get('value') === ownEstimate
   });
 
@@ -18,6 +19,13 @@ const Card = ({card, selectedStoryId, ownEstimate, giveStoryEstimate}) => {
       <div className='card-inner' style={customCardStyle}>{card.get('label')}</div>
     </button>
   );
+};
+
+Card.propTypes = {
+  card: React.PropTypes.instanceOf(Immutable.Map),
+  selectedStoryId: React.PropTypes.string,
+  ownEstimate: React.PropTypes.number,
+  giveStoryEstimate: React.PropTypes.func
 };
 
 export default connect(

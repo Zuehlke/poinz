@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -20,7 +21,7 @@ class Main extends React.Component {
 
   render() {
 
-    const {roomId, users, presetUsername, waitingForJoin} = this.props;
+    const { roomId, users } = this.props;
 
     if (roomId && users && users.size > 0) {
       return (
@@ -34,14 +35,19 @@ class Main extends React.Component {
       );
     } else {
       return (
-        <Landing
-          waitingForJoin={waitingForJoin}
-          presetUsername={presetUsername}
-        />
+        <Landing  />
       );
     }
   }
 }
+
+Main.propTypes = {
+  joinRoom: React.PropTypes.func,
+  roomId: React.PropTypes.string,
+  users: React.PropTypes.instanceOf(Immutable.Map),
+  presetUsername: React.PropTypes.string,
+  waitingForJoin: React.PropTypes.bool
+};
 
 export default connect(
   state => ({

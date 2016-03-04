@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
@@ -6,7 +7,7 @@ import Anchorify from 'react-anchorify-text';
 
 import { selectStory } from '../services/actions';
 
-const Story = ({story, selectedStoryId, selectStory}) => {
+const Story = ({ story, selectedStoryId, selectStory }) => {
   const classes = classnames('story', {'story-selected': selectedStoryId === story.get('id')});
 
   return (
@@ -19,6 +20,12 @@ const Story = ({story, selectedStoryId, selectStory}) => {
       </div>
     </div>
   );
+};
+
+Story.propTypes = {
+  story: React.PropTypes.instanceOf(Immutable.Map),
+  selectedStoryId: React.PropTypes.string,
+  selectStory: React.PropTypes.func
 };
 
 export default connect(

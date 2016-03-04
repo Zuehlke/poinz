@@ -1,4 +1,5 @@
 import React from 'react';
+import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
 import User from './User';
@@ -15,6 +16,9 @@ const Users = ({ users }) => (
   </div>
 );
 
+Users.propTypes = {
+  users: React.PropTypes.instanceOf(Immutable.Map)
+};
 
 export default connect(
   state => ({

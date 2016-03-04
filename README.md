@@ -1,5 +1,7 @@
 # PoinZ - Distributed Planning Poker
 
+[![Build Status](https://travis-ci.org/Zuehlke/poinz.svg?branch=master)](https://travis-ci.org/Zuehlke/poinz)
+
 PoinZ (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. It allows to easily estimate items of interest (e.g. "stories").
 
 The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.

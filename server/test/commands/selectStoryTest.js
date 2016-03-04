@@ -5,13 +5,7 @@ var
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
-/**
- * Can serve as a sample for command testing.
- *
- * Can test whether a given command produces expected events (validation + preconditions + event production)
- * Can test whether the produced events modify the room as expected (event handler functions)
- */
-describe('addStory', () => {
+describe('selectStory', () => {
 
   const cmdHandlers = handlerGatherer.gatherCommandHandlers();
   const evtHandlers = handlerGatherer.gatherEventHandlers();
@@ -31,17 +25,29 @@ describe('addStory', () => {
     room = new Immutable.Map({id: this.roomId});
 
     this.processor = processorFactory(cmdHandlers, evtHandlers, mockRoomsStore);
-  });
 
-  it('Should produce storyAdded event', function () {
-
+    // prepare the state with a story
     const producedEvents = this.processor({
       id: this.commandId,
       roomId: this.roomId,
       name: 'addStory',
       payload: {
-        title: 'SuperStory 232',
+        title: 'SuperStory 444',
         description: 'This will be awesome'
+      }
+    }, this.userId);
+
+    this.storyId = producedEvents[0].payload.id;
+  });
+
+  it('Should produce storySelected event', function () {
+
+    const producedEvents = this.processor({
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'selectStory',
+      payload: {
+        storyId: this.storyId
       }
     }, this.userId);
 
@@ -50,28 +56,42 @@ describe('addStory', () => {
 
     const storyAddedEvent = producedEvents[0];
     assert.equal(storyAddedEvent.correlationId, this.commandId);
-    assert.equal(storyAddedEvent.name, 'storyAdded');
+    assert.equal(storyAddedEvent.name, 'storySelected');
     assert.equal(storyAddedEvent.roomId, this.roomId);
     assert.equal(storyAddedEvent.userId, this.userId);
-    assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
-    assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
-    assert.deepEqual(storyAddedEvent.payload.estimations, {});
 
   });
 
-  it('Should store new story in room', function () {
+  it('Should store id of selectedStory', function () {
 
-    const producedEvents = this.processor({
+    this.processor({
       id: this.commandId,
       roomId: this.roomId,
-      name: 'addStory',
+      name: 'selectStory',
       payload: {
-        title: 'SuperStory 232',
-        description: 'This will be awesome'
+        storyId: this.storyId
       }
     }, this.userId);
 
-    assert(room.getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story');
+    assert(room.get('selectedStory'), this.storyId);
+  });
+
+  describe('preconditions', ()=> {
+
+    it('Should throw if story is not in room', function () {
+
+      assert.throws(() => (
+        this.processor({
+          id: this.commandId,
+          roomId: this.roomId,
+          name: 'selectStory',
+          payload: {
+            storyId: 'story-not-in-room'
+          }
+        }, this.userId)
+      ), /Precondition Error during "selectStory": Story story-not-in-room cannot be selected. It is not part of room/);
+
+    });
   });
 
 });

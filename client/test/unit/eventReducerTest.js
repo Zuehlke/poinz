@@ -1,8 +1,8 @@
 import assert from 'assert';
 import Immutable from 'immutable';
 import _ from 'lodash';
-import eventReducer from '../app/services/eventReducer';
-import { EVENT_ACTION_TYPES } from '../app/services/actionTypes';
+import eventReducer from '../../app/services/eventReducer';
+import { EVENT_ACTION_TYPES } from '../../app/services/actionTypes';
 
 /**
  * Tests the event reducing functions for various events.
@@ -15,6 +15,7 @@ describe('eventReducer', () => {
 
   before(() => {
     global.localStorage = {setItem: _.noop, getItem: _.noop};
+    global.document = {};
   });
 
   it(EVENT_ACTION_TYPES.roomCreated, () => {

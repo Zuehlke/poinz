@@ -9,7 +9,7 @@
     "url": "https://bitbucket.org/xeronimus/tagi.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/eslint app/* && ./node_modules/.bin/mocha --compilers js:babel-register test/*",
+    "test": "./node_modules/.bin/eslint app/* test/* && ./node_modules/.bin/mocha --compilers js:babel-register test/unit/*",
     "teste2e": "./node_modules/.bin/protractor protractor.conf.js",
     "serve": "./node_modules/.bin/webpack-dev-server --progress --colors --port 9000",
     "build": "./node_modules/.bin/webpack --progress --colors --bail"

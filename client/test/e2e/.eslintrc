@@ -1,0 +1,8 @@
+{
+  "globals": {
+    "element": false,
+    "by": false,
+    "browser": false,
+    "expect": false
+  }
+}

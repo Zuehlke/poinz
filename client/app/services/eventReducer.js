@@ -19,7 +19,7 @@ function eventReducer(state, action) {
   const matchingHandler = eventActionHandlers[action.type];
   if (matchingHandler) {
     let modifiedState = matchingHandler.fn(state, event.payload, event) || state;
-    modifiedState = updateActionLog(matchingHandler, state, modifiedState, event);
+    modifiedState = updateActionLog(matchingHandler.log, state, modifiedState, event);
     return modifiedState;
   } else {
     LOGGER.warn('unknown event action', action);
@@ -27,14 +27,23 @@ function eventReducer(state, action) {
   }
 }
 
-function updateActionLog(handler, oldState, modifiedState, event) {
-  if (!handler.log) {
+/**
+ * adds a log message for a backend event to the state.
+ *
+ * @param {undefined | string | function} logObject defined in event handlers. If this is a function, username, eventPayload, oldState and newState will be passed.
+ * @param {Immutable.Map} oldState The state before the action was reduced
+ * @param {Immutable.Map}  modifiedState The state after the action was reduced
+ * @param {object} event
+ * @returns {Immutable.Map} The new state containing updated actionLog
+ */
+function updateActionLog(logObject, oldState, modifiedState, event) {
+  if (!logObject) {
     return modifiedState;
   }
 
   const matchingUser = modifiedState.getIn(['users', event.userId]);
   const username = matchingUser ? matchingUser.get('username') || '' : '';
-  const message = (typeof handler.log === 'function') ? handler.log(username, event.payload, oldState, modifiedState) : handler.log;
+  const message = (typeof logObject === 'function') ? logObject(username, event.payload, oldState, modifiedState) : logObject;
   return modifiedState.update('actionLog', new Immutable.List(), log => log.push(new Immutable.Map({
     tstamp: new Date(),
     message
@@ -44,7 +53,11 @@ function updateActionLog(handler, oldState, modifiedState, event) {
 
 /**
  * Map of event handlers.
- * // TODO:  decide/discuss whether we should split these up into seperate files (similar to backend)
+ *
+ * Defines the modification (application/reduction) a backend event performs on our state.
+ * Also defines an optional log function or string (this is separated intentionally - even though it is technically also a modification to the state).
+ *
+ * TODO:  decide/discuss whether we should split these up into separate files (similar to backend)
  */
 const eventActionHandlers = {
   [EVENT_ACTION_TYPES.roomCreated]: {
@@ -59,6 +72,9 @@ const eventActionHandlers = {
         return state.setIn(['users', payload.userId], Immutable.fromJS(payload.users[payload.userId]));
       } else {
         // you joined
+
+        // set the page title
+        document.title = `PoinZ - ${event.roomId}`;
 
         clientSettingsStore.setPresetUserId(payload.userId);
 
@@ -85,6 +101,10 @@ const eventActionHandlers = {
 
       if (isOwnUser) {
         // you (or you in another browser) left the room
+
+        // set the page title
+        document.title = 'PoinZ';
+
         // let's clear some state
         return state
           .remove('userId')
@@ -148,6 +168,7 @@ const eventActionHandlers = {
     fn: (state, payload) => state.setIn(['stories', payload.storyId, 'estimations', payload.userId], payload.value)
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues
   },
+
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {
     fn: (state, payload) => state.removeIn(['stories', payload.storyId, 'estimations', payload.userId])
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues

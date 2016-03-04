@@ -10,6 +10,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/eslint app/* && ./node_modules/.bin/mocha --compilers js:babel-register test/*",
+    "teste2e": "./node_modules/.bin/protractor protractor.conf.js",
     "serve": "./node_modules/.bin/webpack-dev-server --progress --colors --port 9000",
     "build": "./node_modules/.bin/webpack --progress --colors --bail"
   },
@@ -35,10 +36,11 @@
     "node-uuid": "1.4.7",
     "normalize.css": "3.0.3",
     "npm-check-updates": "2.5.8",
+    "protractor": "3.1.1",
     "purecss": "0.6.0",
     "q": "1.4.1",
     "react": "0.14.7",
-    "react-anchorify-text": "^1.0.1",
+    "react-anchorify-text": "1.0.1",
     "react-dom": "0.14.7",
     "react-redux": "4.4.0",
     "redux": "3.3.1",

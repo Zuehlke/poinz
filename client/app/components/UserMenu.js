@@ -45,7 +45,7 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
           /> Visitor
         </label>
 
-        <button className='pure-button pure-button-primary' onClick={save}>Save</button>
+        <button className='pure-button pure-button-primary button-save' onClick={save}>Save</button>
       </div>
 
       <div className='action-log-wrapper'>

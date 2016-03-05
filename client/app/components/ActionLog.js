@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 
 // we do not use momentjs, since we only need one function "format(..)" . momentjs is 15Kb, fecha is 2Kb
 // https://github.com/taylorhakes/fecha
+// see https://www.npmjs.com/package/fecha#formatting-tokens for format
 import fecha from 'fecha';
 
 const LogLine = ({ entry }) => (
-  <li>{fecha.format(entry.get('tstamp'), 'hh:mm')} {entry.get('message')}</li>
+  <li>{fecha.format(entry.get('tstamp'), 'HH:mm')} {entry.get('message')}</li>
 );
 
 LogLine.propTypes = {

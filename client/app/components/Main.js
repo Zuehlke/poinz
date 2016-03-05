@@ -31,7 +31,7 @@ class Main extends React.Component {
           <Board />
           <div className='version-info'>
             {__POINZ_CONFIG__.version}
-            {fecha.format(__POINZ_CONFIG__.buildTime, ' DD.MM.YY hh:mm')}
+            {fecha.format(__POINZ_CONFIG__.buildTime, ' DD.MM.YY HH:mm')}
           </div>
         </div>
       );

@@ -1,4 +1,4 @@
-var
+const
   assert = require('assert'),
   uuid = require('node-uuid').v4,
   commandSchemaValidator = require('../src/commandSchemaValidator');

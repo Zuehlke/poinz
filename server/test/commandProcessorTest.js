@@ -1,4 +1,4 @@
-var
+const
   assert = require('assert'),
   _ = require('lodash'),
   Immutable = require('immutable'),
@@ -14,7 +14,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command successfully', () => {
 
-    var processor = processorFactory({
+    const processor = processorFactory({
       setUsername: {
         fn: function (room, command) {
           room.applyEvent('usernameSet', command.payload);
@@ -26,7 +26,7 @@ describe('commandProcessor', () => {
       }
     }, mockRoomsStore);
 
-    var producedEvents = processor({
+    const producedEvents = processor({
       id: uuid(),
       roomId: 'my-test-room',
       name: 'setUsername',
@@ -40,7 +40,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command with No Handler', () => {
 
-    var processor = processorFactory({
+    const processor = processorFactory({
       // no command handlers
     }, {
       // no event handlers
@@ -57,7 +57,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command handler produced unknown event', () => {
 
-    var processor = processorFactory({
+    const processor = processorFactory({
       setUsername: {
         fn: function (room) {
           room.applyEvent('unknownEvent', {});
@@ -78,7 +78,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command precondition throws', () => {
 
-    var processor = processorFactory({
+    const processor = processorFactory({
       setUsername: {
         preCondition: function () {
           throw new Error('Uh-uh. nono!');
@@ -98,7 +98,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command validation fails', () => {
 
-    var processor = processorFactory({}, {}, mockRoomsStore);
+    const processor = processorFactory({}, {}, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -111,7 +111,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command validation fails (schema)', () => {
 
-    var processor = processorFactory({}, {}, mockRoomsStore);
+    const processor = processorFactory({}, {}, mockRoomsStore);
 
     assert.throws(() => processor({
       id: uuid(),
@@ -125,7 +125,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where room must exist', () => {
 
-    var processor = processorFactory({
+    const processor = processorFactory({
       setUsername: {
         existingRoom: true, // This command handler expect an existing room
         fn: function () {

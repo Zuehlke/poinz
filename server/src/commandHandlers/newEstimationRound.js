@@ -6,9 +6,13 @@
  */
 module.exports = {
   existingRoom: true,
-  preCondition: (room, command) => {
+  preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only start a new round for currently selected story!');
+    }
+
+    if (room.getIn(['users', userId, 'visitor'])) {
+      throw new Error('Visitors cannot give estimations!');
     }
   },
   fn: (room, command) => {

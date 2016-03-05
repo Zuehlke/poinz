@@ -1,7 +1,8 @@
-var
+const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
+  commandTestUtils = require('./commandTestUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -13,24 +14,21 @@ var
  */
 describe('addStory', () => {
 
-  const cmdHandlers = handlerGatherer.gatherCommandHandlers();
-  const evtHandlers = handlerGatherer.gatherEventHandlers();
-
-  var room;
-
-  const mockRoomsStore = {
-    getRoomById: () => room,
-    saveRoom: rm => room = rm
-  };
-
   beforeEach(function () {
+    // we want to test with real command- and event handlers!
+    const cmdHandlers = handlerGatherer.gatherCommandHandlers();
+    const evtHandlers = handlerGatherer.gatherEventHandlers();
+
     this.userId = uuid();
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    room = new Immutable.Map({id: this.roomId});
+    // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
+    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(new Immutable.Map({
+      id: this.roomId
+    }));
 
-    this.processor = processorFactory(cmdHandlers, evtHandlers, mockRoomsStore);
+    this.processor = processorFactory(cmdHandlers, evtHandlers, this.mockRoomsStore);
   });
 
   it('Should produce storyAdded event', function () {
@@ -49,10 +47,7 @@ describe('addStory', () => {
     assert.equal(producedEvents.length, 1);
 
     const storyAddedEvent = producedEvents[0];
-    assert.equal(storyAddedEvent.correlationId, this.commandId);
-    assert.equal(storyAddedEvent.name, 'storyAdded');
-    assert.equal(storyAddedEvent.roomId, this.roomId);
-    assert.equal(storyAddedEvent.userId, this.userId);
+    commandTestUtils.assertValidEvent(storyAddedEvent, this.commandId, this.roomId, this.userId, 'storyAdded');
     assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
     assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
     assert.deepEqual(storyAddedEvent.payload.estimations, {});
@@ -71,7 +66,7 @@ describe('addStory', () => {
       }
     }, this.userId);
 
-    assert(room.getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story');
+    assert(this.mockRoomsStore.getRoomById().getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story');
   });
 
 });

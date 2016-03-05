@@ -10,15 +10,16 @@ module.exports = {
       throw new Error('Can only reveal currently selected story!');
     }
 
-    if (room.getIn(['stories', command.payload.storyId, 'revealed'])) {
-      throw new Error('Story was already revealed!');
-    }
-
     if (room.getIn(['users', userId, 'visitor'])) {
       throw new Error('Visitors cannot reveal stories!');
     }
   },
   fn: (room, command) => {
+
+    if (room.getIn(['stories', command.payload.storyId, 'revealed'])) {
+      return;
+    }
+
     room.applyEvent('revealed', {
       storyId: command.payload.storyId,
       manually: true

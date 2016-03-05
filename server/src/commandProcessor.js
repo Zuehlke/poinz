@@ -1,11 +1,8 @@
 const
   util = require('util'),
   Immutable = require('immutable'),
-  log = require('loglevel'),
   uuid = require('node-uuid').v4,
   commandSchemaValidator = require('./commandSchemaValidator');
-
-const LOGGER = log.getLogger('commandProcessor');
 
 module.exports = commandProcessorFactory;
 
@@ -39,7 +36,6 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    *  @returns {object[]} List of events that were produced by this command. (they are already applied to the room state)
    */
   return function processCommand(command, userId) {
-    LOGGER.debug(command);
 
     const context = {
       userId: userId
@@ -84,7 +80,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
     if (!ctx.room && ctx.handler.existingRoom) {
       // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
-      throw new Error('Command ' + cmd.name + ' only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
+      throw new Error('Command "' + cmd.name + '" only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
     }
 
     if (!ctx.room) {

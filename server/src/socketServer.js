@@ -2,9 +2,9 @@ const
   http = require('http'),
   uuid = require('node-uuid').v4,
   socketIo = require('socket.io'),
-  log = require('loglevel');
+  logging = require('./logging');
 
-const LOGGER = log.getLogger('socketServer');
+const LOGGER = logging.getLogger('socketServer');
 
 var io, commandProcessor;
 
@@ -99,6 +99,7 @@ function onSocketDisconnect(socket) {
 
   if (!userId || !roomId) {
     // this can happen if the server was restarted, and a client re-connected!
+    // TODO:  maybe use .debug here?
     LOGGER.warn('could not send leaveRoom command for ' + userId + ' in ' + roomId);
     return;
   }

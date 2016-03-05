@@ -2,10 +2,10 @@ const
   path = require('path'),
   util = require('util'),
   glob = require('glob'),
-  log = require('loglevel'),
+  logging = require('./logging'),
   tv4 = require('tv4');
 
-const LOGGER = log.getLogger('commandSchemaValidator');
+const LOGGER = logging.getLogger('commandSchemaValidator');
 
 const schemas = gatherSchemas();
 

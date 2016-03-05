@@ -20,10 +20,11 @@
     "glob": "7.0.0",
     "immutable": "3.7.6",
     "lodash": "4.3.0",
-    "loglevel": "1.4.0",
     "node-uuid": "1.4.7",
     "socket.io": "1.4.5",
-    "tv4": "1.2.7"
+    "tv4": "1.2.7",
+    "winston": "2.2.0",
+    "winston-daily-rotate-file": "1.0.1"
   },
   "devDependencies": {
     "eslint": "1.10.3",

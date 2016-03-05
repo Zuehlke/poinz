@@ -1,20 +1,19 @@
-const log = require('loglevel');
-log.setLevel('info');
-
 const
   path = require('path'),
   express = require('express'),
   socketServer = require('./socketServer'),
   handlerGatherer = require('./handlerGatherer'),
   commandProcessorFactory = require('./commandProcessor'),
+  logging = require('./logging'),
   roomsStore = require('./roomsStore');
 
+const LOGGER = logging.getLogger('server');
 const serverHost = '0.0.0.0';
 const serverPort = 3000;
 
 const app = express();
 
-// routes setup
+// serve static client files
 app.use(express.static(path.resolve(__dirname, '../public')));
 // enable html5 history mode
 app.get('*', function (request, response) {
@@ -26,7 +25,9 @@ const commandProcessor = commandProcessorFactory(
   handlerGatherer.gatherEventHandlers(),
   roomsStore
 );
-const server = socketServer.init(app, commandProcessor);
-server.listen(serverPort, serverHost, function () {
-  log.info('-- SERVER STARTED -- (' + serverHost + ':' + serverPort + ')');
-});
+
+socketServer
+  .init(app, commandProcessor)
+  .listen(serverPort, serverHost, function () {
+    LOGGER.info('-- SERVER STARTED -- (' + serverHost + ':' + serverPort + ')');
+  });

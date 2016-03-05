@@ -11,8 +11,9 @@ var packageInformation = require('./package.json');
 var definePlugin = new webpack.DefinePlugin({
   __POINZ_CONFIG__: JSON.stringify({
     env: 'dev',
-    wsUrl: 'http://localhost:3000', // backend websocket endpoint
-    version: packageInformation.version + '-dev' // PoinZ version that is displayed in the ui
+    version: packageInformation.version + '-dev', // PoinZ version that is displayed in the ui
+    buildTime: new Date().getTime(),
+    wsUrl: 'http://localhost:3000' // backend websocket endpoint
   })
 });
 

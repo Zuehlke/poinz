@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import fecha from 'fecha';
 
 import Landing from './Landing';
 import Board from './Board';
@@ -30,6 +31,7 @@ class Main extends React.Component {
           <Board />
           <div className='version-info'>
             {__POINZ_CONFIG__.version}
+            {fecha.format(__POINZ_CONFIG__.buildTime, ' DD.MM.YY hh:mm')}
           </div>
         </div>
       );

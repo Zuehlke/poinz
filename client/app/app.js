@@ -13,7 +13,7 @@ import poinzStyles from './assets/poinz.styl';
 
 import store from './services/store';
 
-import Main from './views/Main';
+import Main from './components/Main';
 
 const appConfig = __POINZ_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
 

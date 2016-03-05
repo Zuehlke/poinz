@@ -7,7 +7,6 @@ module.exports = {
   newMockRoomsStore
 };
 
-
 function assertValidEvent(actualEvent, correlationId, roomId, userId, eventName) {
   assert.equal(actualEvent.correlationId, correlationId);
   assert.equal(actualEvent.name, eventName);

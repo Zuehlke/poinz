@@ -6,7 +6,7 @@ const
 
 const LOGGER = log.getLogger('socketServer');
 
-let io, commandProcessor;
+var io, commandProcessor;
 
 const
   socketToUserIdMap = {},

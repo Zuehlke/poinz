@@ -32,4 +32,4 @@ remove routing from iptable
 `sudo iptables -t nat -D PREROUTING 1`
 
 add correct forward from 80 to 8080
-`sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8000`
+`sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080`

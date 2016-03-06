@@ -1,6 +1,7 @@
 const
   path = require('path'),
   express = require('express'),
+  settings = require('./settings'),
   socketServer = require('./socketServer'),
   handlerGatherer = require('./handlerGatherer'),
   commandProcessorFactory = require('./commandProcessor'),
@@ -8,8 +9,6 @@ const
   roomsStore = require('./roomsStore');
 
 const LOGGER = logging.getLogger('server');
-const serverHost = '0.0.0.0';
-const serverPort = 3000;
 
 const app = express();
 
@@ -28,6 +27,6 @@ const commandProcessor = commandProcessorFactory(
 
 socketServer
   .init(app, commandProcessor)
-  .listen(serverPort, serverHost, function () {
-    LOGGER.info('-- SERVER STARTED -- (' + serverHost + ':' + serverPort + ')');
+  .listen(settings.serverPort, settings.serverHost, function () {
+    LOGGER.info('-- SERVER STARTED -- (' + settings.serverHost + ':' + settings.serverPort + ')');
   });

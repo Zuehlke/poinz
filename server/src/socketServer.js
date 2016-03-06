@@ -2,6 +2,7 @@ const
   http = require('http'),
   uuid = require('node-uuid').v4,
   socketIo = require('socket.io'),
+  settings = require('./settings'),
   logging = require('./logging');
 
 const LOGGER = logging.getLogger('socketServer');
@@ -31,24 +32,35 @@ function handleIncomingCommand(socket, msg) {
   LOGGER.debug('incoming command', msg);
 
   try {
-    const userId = socketToUserIdMap[socket.id];
-
-    const producedEvents = commandProcessor(msg, userId);
+    const producedEvents = commandProcessor(msg, socketToUserIdMap[socket.id]);
 
     if (msg.name === 'joinRoom') {
       // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
       registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
     }
 
-    // send produced events to all sockets in room
-    producedEvents.forEach(producedEvent => {
-      io.to(msg.roomId).emit('event', producedEvent);
-      LOGGER.debug('outgoing event', producedEvent);
-    });
+    if (settings.eventDelay) {
+      setTimeout(() => sendEvents(producedEvents, msg.roomId), settings.eventDelay);
+    } else {
+      sendEvents(producedEvents, msg.roomId);
+    }
+
   } catch (commandProcessingError) {
     handleCommandProcessingError(commandProcessingError, msg, socket);
   }
 
+}
+
+/**
+ * send produced events to all sockets in room
+ * @param producedEvents
+ * @param roomId
+ */
+function sendEvents(producedEvents, roomId) {
+  producedEvents.forEach(producedEvent => {
+    io.to(roomId).emit('event', producedEvent);
+    LOGGER.debug('outgoing event', producedEvent);
+  });
 }
 
 /**

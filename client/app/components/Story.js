@@ -8,7 +8,10 @@ import Anchorify from 'react-anchorify-text';
 import { selectStory } from '../services/actions';
 
 const Story = ({ story, selectedStoryId, selectStory }) => {
-  const classes = classnames('story', {'story-selected': selectedStoryId === story.get('id')});
+  const classes = classnames('story', {
+    'story-selected': selectedStoryId === story.get('id'),
+    'waiting': story.get('waitingForSelect')
+  });
 
   return (
     <div className={classes} onClick={() => selectStory(story.get('id'))}>

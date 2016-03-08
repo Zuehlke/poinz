@@ -31,11 +31,12 @@ const StoryAddForm = ({ addStory }) => {
     </div>
   );
 
-
   function triggerAddAndClearForm() {
-    addStory(titleInputField.value, descriptionInputField.value);
-    titleInputField.value = '';
-    descriptionInputField.value = '';
+    if (titleInputField.value) {
+      addStory(titleInputField.value, descriptionInputField.value);
+      titleInputField.value = '';
+      descriptionInputField.value = '';
+    }
   }
 
 };

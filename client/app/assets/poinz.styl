@@ -349,6 +349,37 @@ $userMenuWidth = 300px
   }
 }
 
+.waiting {
+  // this is needed, so that we can position the gray overlay accordingly
+  position relative
+
+  &:before {
+    display inline-block
+    position absolute
+    width 100%
+    height 100%
+    background rgba(0, 0, 0, 0.3)
+    left 0
+    top 0
+    content " "
+  }
+
+  &:after {
+    -webkit-animation fa-spin 2s infinite linear
+    animation fa-spin 2s infinite linear
+    font normal normal normal 14px / 1 FontAwesome
+    text-rendering auto
+    -webkit-font-smoothing antialiased
+    content "\F110"
+    position absolute
+    left 50%
+    top 50%
+    font-size 26px
+    margin-left -13px
+    margin-top -13px
+  }
+}
+
 $backlogWidth = 300px
 .board {
   transition all 0.2s ease-out
@@ -385,6 +416,7 @@ $backlogWidth = 300px
       margin-top 16px
 
       .story {
+        position relative
         cursor pointer
         color white
         background $zuehlkeDarkGrey
@@ -396,6 +428,15 @@ $backlogWidth = 300px
 
         &.story-selected {
           border-left 2px solid $zuehlkeOrange
+        }
+
+        &.story-waiting {
+
+          > i {
+            position absolute
+            top 4px
+            right 4px
+          }
         }
 
         h4 {
@@ -437,6 +478,7 @@ $backlogWidth = 300px
         font-family $zuehlkeFont
 
         .card-inner {
+          position relative
           background #fff
           padding 28px 0
           box-sizing border-box

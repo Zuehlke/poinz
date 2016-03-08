@@ -6,17 +6,20 @@ import classnames from 'classnames';
 
 import { giveStoryEstimate } from '../services/actions';
 
-const Card = ({ card, selectedStoryId, ownEstimate, giveStoryEstimate }) => {
+const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate }) => {
 
-  const classes = classnames('card pure-u-1 pure-u-md-2-24', {
+  const cardClasses = classnames('card pure-u-1 pure-u-md-2-24', {
     'card-selected': card.get('value') === ownEstimate
+  });
+  const cardInnerClasses = classnames('card-inner', {
+    'waiting': card.get('value') === estimationWaiting
   });
 
 
   const customCardStyle = card.get('color') ? {background: card.get('color'), color: 'white'} : {};
   return (
-    <button className={classes} onClick={() => giveStoryEstimate(selectedStoryId, card.get('value'))}>
-      <div className='card-inner' style={customCardStyle}>{card.get('label')}</div>
+    <button className={cardClasses} onClick={() => giveStoryEstimate(selectedStoryId, card.get('value'))}>
+      <div className={cardInnerClasses} style={customCardStyle}>{card.get('label')}</div>
     </button>
   );
 };
@@ -25,13 +28,15 @@ Card.propTypes = {
   card: React.PropTypes.instanceOf(Immutable.Map),
   selectedStoryId: React.PropTypes.string,
   ownEstimate: React.PropTypes.number,
+  estimationWaiting: React.PropTypes.number,
   giveStoryEstimate: React.PropTypes.func
 };
 
 export default connect(
   state =>({
     selectedStoryId: state.get('selectedStory'),
-    ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')])
+    ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]),
+    estimationWaiting: state.getIn(['stories', state.get('selectedStory'), 'estimationWaiting'])
   }),
   dispatch => bindActionCreators({giveStoryEstimate}, dispatch)
 )(Card);

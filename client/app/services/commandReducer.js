@@ -88,7 +88,7 @@ const commandActionHandlers = {
     });
   },
   [GIVE_STORY_ESTIMATE]: (state, commandPayload) => {
-    if (state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]) === commandPayload.value) {
+    if (state.getIn(['stories', commandPayload.storyId, 'estimations', state.get('userId')]) === commandPayload.value) {
       hub.sendCommand({
         name: 'clearStoryEstimate',
         roomId: state.get('roomId'),
@@ -108,6 +108,9 @@ const commandActionHandlers = {
         }
       });
     }
+
+    // mark value in current story for user feedback
+    return state.setIn(['stories', commandPayload.storyId, 'estimationWaiting'], commandPayload.value);
   },
   [NEW_ESTIMATION_ROUND]: (state, commandPayload) => {
     hub.sendCommand({
@@ -119,6 +122,10 @@ const commandActionHandlers = {
     });
   },
   [SELECT_STORY]: (state, commandPayload) => {
+    if (state.get('selectedStory') === commandPayload.storyId) {
+      return;
+    }
+
     hub.sendCommand({
       name: 'selectStory',
       roomId: state.get('roomId'),
@@ -126,6 +133,9 @@ const commandActionHandlers = {
         storyId: commandPayload.storyId
       }
     });
+
+    // mark story for visual user feedback
+    return state.setIn(['stories', commandPayload.storyId, 'waitingForSelect'], true);
   },
   [REVEAL]: (state, commandPayload) => {
     hub.sendCommand({

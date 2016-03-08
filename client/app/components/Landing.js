@@ -22,9 +22,8 @@ Landing.propTypes = {
   waitingForJoin: React.PropTypes.bool
 };
 
-
 export default connect(
   state => ({
-    waitingForJoin: state.get('waitingForJoin')
+    waitingForJoin: false // TODO
   })
 )(Landing);

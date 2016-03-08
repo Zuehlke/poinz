@@ -1,47 +1,170 @@
+import { createHistory } from 'history';
+import hub from './hub';
 import {
-  JOIN_ROOM,
-  ADD_STORY,
-  SELECT_STORY,
-  GIVE_STORY_ESTIMATE,
-  NEW_ESTIMATION_ROUND,
-  REVEAL, SET_USERNAME,
-  SET_VISITOR,
-  LEAVE_ROOM,
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU
 } from './actionTypes';
 
 
-// actions that are triggered from our views
-// these often trigger commands to the backend during reduction
-// still implemented as redux actions -> views have a consistent api & we could store some information on the client
-// when sending commands
+let history = createHistory();
+
 export function joinRoom(roomId) {
-  return {type: JOIN_ROOM, command: {roomId}};
+  return (dispatch, getState) => {
+    const normalizedRoomId = roomId.toLowerCase();
+    history.push({
+      pathname: `/${normalizedRoomId}`
+    });
+
+    const joinCommandPayload = {};
+    const state = getState();
+
+    if (state.get('presetUserId')) {
+      joinCommandPayload.userId = state.get('presetUserId');
+    }
+    if (state.get('presetUsername')) {
+      joinCommandPayload.username = state.get('presetUsername');
+    }
+
+    dispatch({
+      type: 'SET_ROOMID',
+      roomId: normalizedRoomId
+    });
+
+    hub.sendCommand({
+      name: 'joinRoom',
+      roomId: normalizedRoomId,
+      payload: joinCommandPayload
+    }, dispatch);
+  };
 }
 export function addStory(storyTitle, storyDescription) {
-  return {type: ADD_STORY, command: {title: storyTitle, description: storyDescription}};
+  return (dispatch, getState)=> {
+    const state = getState();
+    hub.sendCommand({
+      name: 'addStory',
+      roomId: state.get('roomId'),
+      payload: {
+        title: storyTitle,
+        description: storyDescription
+      }
+    }, dispatch);
+  };
 }
+
 export function selectStory(storyId) {
-  return {type: SELECT_STORY, command: {storyId}};
+  return (dispatch, getState) => {
+    const state = getState();
+    if (state.get('selectedStory') === storyId) {
+      return;
+    }
+
+    hub.sendCommand({
+      name: 'selectStory',
+      roomId: state.get('roomId'),
+      payload: {
+        storyId
+      }
+    }, dispatch);
+  };
 }
+
 export function giveStoryEstimate(storyId, value) {
-  return {type: GIVE_STORY_ESTIMATE, command: {storyId, value}};
+  return (dispatch, getState)=> {
+    const state = getState();
+    let command;
+    if (state.getIn(['stories', storyId, 'estimations', state.get('userId')]) === value) {
+      command = {
+        name: 'clearStoryEstimate',
+        roomId: state.get('roomId'),
+        payload: {
+          userId: state.get('userId'),
+          storyId: storyId
+        }
+      };
+    } else {
+      command = {
+        name: 'giveStoryEstimate',
+        roomId: state.get('roomId'),
+        payload: {
+          value: value,
+          userId: state.get('userId'),
+          storyId: storyId
+        }
+      };
+    }
+
+    hub.sendCommand(command, dispatch);
+  };
 }
+
 export function newEstimationRound(storyId) {
-  return {type: NEW_ESTIMATION_ROUND, command: {storyId}};
+  return (dispatch, getState)=> {
+    const state = getState();
+    hub.sendCommand({
+      name: 'newEstimationRound',
+      roomId: state.get('roomId'),
+      payload: {
+        storyId: storyId
+      }
+    }, dispatch);
+  };
 }
+
 export function reveal(storyId) {
-  return {type: REVEAL, command: {storyId}};
+  return (dispatch, getState) => {
+    const state = getState();
+    hub.sendCommand({
+      name: 'reveal',
+      roomId: state.get('roomId'),
+      payload: {
+        storyId: storyId
+      }
+    }, dispatch);
+  };
 }
+
 export function setUsername(username) {
-  return {type: SET_USERNAME, command: {username}};
+  return (dispatch, getState) => {
+    const state = getState();
+    hub.sendCommand({
+      name: 'setUsername',
+      roomId: state.get('roomId'),
+      payload: {
+        userId: state.get('userId'),
+        username: username
+      }
+    }, dispatch);
+  };
 }
+
 export function setVisitor(isVisitor) {
-  return {type: SET_VISITOR, command: {isVisitor}};
+  return (dispatch, getState) => {
+    const state = getState();
+    hub.sendCommand({
+      name: 'setVisitor',
+      roomId: state.get('roomId'),
+      payload: {
+        isVisitor,
+        userId: state.get('userId')
+      }
+    }, dispatch);
+  };
 }
+
 export function leaveRoom() {
-  return {type: LEAVE_ROOM, command: {}};
+  return (dispatch, getState) => {
+    history.push({
+      pathname: ''
+    });
+    const state = getState();
+    hub.sendCommand({
+      name: 'leaveRoom',
+      roomId: state.get('roomId'),
+      payload: {
+        userId: state.get('userId')
+      }
+    }, dispatch);
+  };
 }
 
 // ui-only actions (client-side application state)

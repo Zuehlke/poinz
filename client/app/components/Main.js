@@ -47,16 +47,14 @@ Main.propTypes = {
   joinRoom: React.PropTypes.func,
   roomId: React.PropTypes.string,
   users: React.PropTypes.instanceOf(Immutable.Map),
-  presetUsername: React.PropTypes.string,
-  waitingForJoin: React.PropTypes.bool
+  presetUsername: React.PropTypes.string
 };
 
 export default connect(
   state => ({
     roomId: state.get('roomId'),
     users: state.get('users'),
-    presetUsername: state.get('presetUsername'),
-    waitingForJoin: state.get('waitingForJoin')
+    presetUsername: state.get('presetUsername')
   }),
   dispatch => bindActionCreators({joinRoom}, dispatch)
 )(Main);

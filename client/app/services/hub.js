@@ -19,17 +19,24 @@ function Hub() {
 
   this.io.on('connect', () => log.info('socket to server connected'));
   this.io.on('disconnect', () => log.info('socket from server disconnected'));
-  this.io.on('event', this.emit.bind(this, 'event')); // emit a event named "event"
+  this.io.on('event', this.emit.bind(this, 'event'));
 }
 inherits(Hub, EventEmitter);
 
 /**
  * Sends a given command to the backend over the websocket connection
- * @param cmd
+ * @param {object} command the command to send
+ * @param {function} dispatch
  */
-Hub.prototype.sendCommand = function sendCommand(cmd) {
-  cmd.id = uuid();
-  this.io.emit('command', cmd);
+Hub.prototype.sendCommand = function sendCommand(command, dispatch) {
+  command.id = uuid();
+
+  this.io.emit('command', command);
+
+  dispatch({
+    type: 'COMMAND_SENT',
+    command
+  });
 };
 
 const hubInstance = new Hub();

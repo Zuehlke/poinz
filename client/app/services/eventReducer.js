@@ -80,7 +80,6 @@ const eventActionHandlers = {
 
         // server sends current room state (users, stories, etc.)
         return state
-          .set('waitingForJoin', false)
           .set('roomId', event.roomId)
           .set('userId', payload.userId)
           .set('selectedStory', payload.selectedStory)
@@ -140,9 +139,7 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.storySelected]: {
-    fn: (state, payload) => state
-      .set('selectedStory', payload.storyId)
-      .setIn(['stories', payload.storyId, 'waitingForSelect'], false),
+    fn: (state, payload) => state.set('selectedStory', payload.storyId),
     log: (username, payload, oldState, newState) => `${username} selected current story "${newState.getIn(['stories', payload.storyId]).get('title')}"`
   },
 
@@ -167,13 +164,7 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.storyEstimateGiven]: {
-    fn: (state, payload) => {
-      state = state.setIn(['stories', payload.storyId, 'estimations', payload.userId], payload.value);
-      if (state.get('userId') === payload.userId) {
-        state = state.removeIn(['stories', payload.storyId, 'estimationWaiting']);
-      }
-      return state;
-    }
+    fn: (state, payload) => state.setIn(['stories', payload.storyId, 'estimations', payload.userId], payload.value)
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues
   },
 
@@ -184,32 +175,19 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.revealed]: {
     fn: (state, payload) => state.setIn(['stories', payload.storyId, 'revealed'], true),
-    log: (username, payload) => payload.manually ? `${username}
- manually revealed estimates for the current story
-` : 'Estimates were automatically revealed for the current story'
+    log: (username, payload) => payload.manually ? `${username} manually revealed estimates for the current story` : 'Estimates were automatically revealed for the current story'
   },
 
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {
     fn: (state, payload) => state
       .setIn(['stories', payload.storyId, 'estimations'], new Immutable.Map())
       .setIn(['stories', payload.storyId, 'revealed'], false),
-    log: username => `
-$
-{
-  username
-}
- started a new estimation round for the current story
-`
+    log: username => `${username} started a new estimation round for the current story`
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {
     fn: (state, payload, event) => LOGGER.error(event),
-    log: (username, payload) => `
-An error occurred: $
-{
-  JSON.stringify(payload)
-}
-`
+    log: (username, payload) => `An error occurred: ${JSON.stringify(payload)}`
   }
 };
 

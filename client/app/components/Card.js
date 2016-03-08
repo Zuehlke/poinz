@@ -36,7 +36,7 @@ export default connect(
   state =>({
     selectedStoryId: state.get('selectedStory'),
     ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]),
-    estimationWaiting: state.getIn(['stories', state.get('selectedStory'), 'estimationWaiting'])
+    estimationWaiting: false // TODO
   }),
   dispatch => bindActionCreators({giveStoryEstimate}, dispatch)
 )(Card);

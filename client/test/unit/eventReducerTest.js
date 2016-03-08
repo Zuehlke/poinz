@@ -118,7 +118,6 @@ describe('eventReducer', () => {
       assert.equal(modifiedState.get('roomId'), 'myRoom');
       assert.equal(modifiedState.get('userId'), 'myUserId');
       assert.equal(modifiedState.get('selectedStory'), 'storyOne');
-      assert.equal(modifiedState.get('waitingForJoin'), false);
       assert.deepEqual(modifiedState.get('stories').toJS(), {
         storyOne: {}
       });

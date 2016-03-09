@@ -13,11 +13,9 @@ module.exports = {
     }
   },
   fn: (room, command) => {
-    const isCurrentlyVisitor = room.getIn(['users', command.payload.userId, 'visitor']);
-
-    if (command.payload.isVisitor && !isCurrentlyVisitor) {
+    if (command.payload.isVisitor) {
       room.applyEvent('visitorSet', {userId: command.payload.userId});
-    } else if (!command.payload.isVisitor && isCurrentlyVisitor) {
+    } else {
       room.applyEvent('visitorUnset', {userId: command.payload.userId});
     }
   }

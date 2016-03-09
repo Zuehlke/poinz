@@ -30,85 +30,73 @@ describe('setVisitor', () => {
 
   });
 
-  it('Should produce visitorSet event', function () {
+  describe('visitorSet', function () {
 
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'setVisitor',
-      payload: {
-        userId: this.userId,
-        isVisitor: true
-      }
-    }, this.userId);
+    it('Should produce visitorSet event', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], false));
+      handleCommandAndAssert.call(this);
+    });
 
-    assert(producedEvents);
-    assert.equal(producedEvents.length, 1);
+    it('Should also produce event if already set (event is idempotent anyways)', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
+      handleCommandAndAssert.call(this);
+    });
 
-    const visitorSetEvent = producedEvents[0];
-    commandTestUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorSet');
-    assert.equal(visitorSetEvent.payload.userId, this.userId);
+    function handleCommandAndAssert() {
+      const producedEvents = this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'setVisitor',
+        payload: {
+          userId: this.userId,
+          isVisitor: true
+        }
+      }, this.userId);
+
+      assert(producedEvents);
+      assert.equal(producedEvents.length, 1);
+
+      const visitorSetEvent = producedEvents[0];
+      commandTestUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorSet');
+      assert.equal(visitorSetEvent.payload.userId, this.userId);
+    }
+  });
+
+
+  describe('visitorUnset', function () {
+
+    it('Should produce visitorUnset event', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
+      handleCommandAndAssert.call(this);
+    });
+
+    it('Should also produce event if already unset (event is idempotent anyways)', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], false));
+      handleCommandAndAssert.call(this);
+    });
+
+    function handleCommandAndAssert() {
+      const producedEvents = this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'setVisitor',
+        payload: {
+          userId: this.userId,
+          isVisitor: false
+        }
+      }, this.userId);
+
+      assert(producedEvents);
+      assert.equal(producedEvents.length, 1);
+
+      const visitorSetEvent = producedEvents[0];
+      commandTestUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorUnset');
+      assert.equal(visitorSetEvent.payload.userId, this.userId);
+
+    }
 
   });
 
-  it('Should not produce event if already set', function () {
-
-    this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
-
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'setVisitor',
-      payload: {
-        userId: this.userId,
-        isVisitor: true
-      }
-    }, this.userId);
-
-    assert(producedEvents);
-    assert.equal(producedEvents.length, 0);
-
-  });
-
-  it('Should produce visitorUnset event', function () {
-
-    this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
-
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'setVisitor',
-      payload: {
-        userId: this.userId,
-        isVisitor: false
-      }
-    }, this.userId);
-
-    assert(producedEvents);
-    assert.equal(producedEvents.length, 1);
-
-    const visitorSetEvent = producedEvents[0];
-    commandTestUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorUnset');
-    assert.equal(visitorSetEvent.payload.userId, this.userId);
-
-  });
-
-  it('Should not produce event if already unset', function () {
-
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'setVisitor',
-      payload: {
-        userId: this.userId,
-        isVisitor: false
-      }
-    }, this.userId);
-
-    assert(producedEvents);
-    assert.equal(producedEvents.length, 0);
-
-  });
 
   it('Should store flag on set', function () {
 

@@ -1,5 +1,5 @@
 /**
- *  Build Script
+ *  Build Script for Docker Image
  *
  *  1. cleanup output directories
  *  2. build poinz client (webpack)
@@ -26,7 +26,7 @@ del([
     console.log('POINZ: building client with webpack...');
     return spawnAndPrint(
       './node_modules/.bin/webpack', '-p --colors --bail --config webpack.production.config.js'.split(' '),
-      {cwd: path.resolve(__dirname, './client')});
+      {cwd: path.resolve(__dirname, '../client')});
   })
   .then(function () {
     console.log('POINZ: copying sources...');
@@ -43,7 +43,8 @@ del([
   })
   .then(function () {
     console.log('POINZ: building docker container...');
-    return spawnAndPrint('docker', 'build -t xeronimus/poinz .'.split(' '));
+    return spawnAndPrint('docker', 'build -t xeronimus/poinz .'.split(' '),
+      {cwd: path.resolve(__dirname, '..')});
   })
   .catch(function (error) {
     console.error(error);

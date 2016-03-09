@@ -12,11 +12,14 @@
   },
   "scripts": {
     "test": "cd client/ && npm test &&  cd ../server && npm test",
-    "build": "node build.js"
+    "build": "node build/dockerImage.js",
+    "checkDependencies": "node ./build/dependencyCheck.js ./package.json && node ./build/dependencyCheck.js ./client/package.json && node ./build/dependencyCheck.js ./server/package.json"
   },
   "devDependencies": {
     "del": "2.2.0",
     "fs-extra": "0.26.5",
+    "lodash": "^4.6.1",
+    "npm-check-updates": "^2.5.8",
     "q": "1.4.1"
   },
   "engines": {

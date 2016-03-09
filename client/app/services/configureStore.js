@@ -21,7 +21,7 @@ const loggerMiddleware = store => next => action => {
 /**
  * configures and sets up the redux store.
  *
- * @param {Immutable.Map} initialState
+ * @param {Immutable.Map} [initialState]
  * @param {object} the redux store
  */
 export default function configureStore(initialState) {
@@ -46,12 +46,13 @@ export default function configureStore(initialState) {
       return;
     }
 
-    // dispatch a generic action "event_received"
+    // dispatch a generic action
     store.dispatch({
       type: EVENT_RECEIVED,
       correlationId: event.correlationId
     });
 
+    // dispatch the specific event action
     store.dispatch({
       event,
       type: matchingType

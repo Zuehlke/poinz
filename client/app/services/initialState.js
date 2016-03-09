@@ -2,9 +2,11 @@ import Immutable from 'immutable';
 
 import clientSettingsStore from './clientSettingsStore';
 
+/**
+ * The initial state that is loaded into the redux store on (client) application load.
+ */
 const INITIAL_STATE = Immutable.fromJS({
-// TODO: creator of room can choose card values
-// TODO: store creator's selection to local storage and use as default
+// TODO: evaluate if creator of room must be able to choose card values. store creator's selection to local storage and use as default
   cardConfig: [
     {label: '?', value: -2, color: '#bdbfbf'},
     {label: '1/2', value: 0.5, color: '#667a66'},
@@ -21,7 +23,7 @@ const INITIAL_STATE = Immutable.fromJS({
   ],
   presetUsername: clientSettingsStore.getPresetUsername(),
   presetUserId: clientSettingsStore.getPresetUserId(),
-  actionLog: [],
+  actionLog: [], // will contain human readable "log messages" of actions that did take place in the current room
   pendingCommands: {} // will contain pending commands (commands for which no event is received yet)
 });
 

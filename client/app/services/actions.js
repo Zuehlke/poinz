@@ -76,26 +76,21 @@ export const selectStory = storyId => (dispatch, getState) => {
 
 export const giveStoryEstimate = (storyId, value) => (dispatch, getState)=> {
   const state = getState();
-  let command;
+
+  const command = {
+    roomId: state.get('roomId'),
+    payload: {
+      value: value,
+      userId: state.get('userId'),
+      storyId: storyId
+    }
+  };
+
   if (state.getIn(['stories', storyId, 'estimations', state.get('userId')]) === value) {
-    command = {
-      name: 'clearStoryEstimate',
-      roomId: state.get('roomId'),
-      payload: {
-        userId: state.get('userId'),
-        storyId: storyId
-      }
-    };
+    command.name = 'clearStoryEstimate';
   } else {
-    command = {
-      name: 'giveStoryEstimate',
-      roomId: state.get('roomId'),
-      payload: {
-        value: value,
-        userId: state.get('userId'),
-        storyId: storyId
-      }
-    };
+    command.name = 'giveStoryEstimate';
+    command.payload.value = value;
   }
 
   hub.sendCommand(command, dispatch);

@@ -9,7 +9,7 @@ import { EVENT_ACTION_TYPES } from '../../app/services/actionTypes';
  *
  * Ensures that events modify the client app state as expected.
  *
- * // TODO: test every incoming event
+ * // TODO: test every incoming event?
  **/
 describe('eventReducer', () => {
 

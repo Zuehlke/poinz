@@ -11,16 +11,15 @@ import fontAwesome from '../node_modules/font-awesome/css/font-awesome.min.css';
 import poinzStyles from './assets/poinz.styl';
 /*eslint-enable no-unused-vars */
 
+import appConfig from './services/appConfig';
 import initialState from './services/initialState';
 import configureStore from './services/configureStore';
 
 import Main from './components/Main';
 
-const appConfig = __POINZ_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
-
 if (appConfig.env === 'dev') {
   log.setLevel('debug');
-  //localStorage.debug = 'socket.io-client:*'; // enable socket.io debugging
+  localStorage.debug = 'socket.io-client:*'; // enable socket.io debugging
 } else {
   log.setLevel('error');
 }

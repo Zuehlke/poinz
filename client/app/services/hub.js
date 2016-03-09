@@ -4,6 +4,8 @@ import { inherits } from 'util';
 import socketIo from 'socket.io-client';
 import log from 'loglevel';
 import { v4 as uuid } from 'node-uuid';
+
+import appConfig from './appConfig';
 import { COMMAND_SENT } from './actionTypes';
 
 /**
@@ -15,7 +17,11 @@ import { COMMAND_SENT } from './actionTypes';
 function Hub() {
   EventEmitter.call(this);
 
-  const appConfig = __POINZ_CONFIG__; // this is set via webpack (see webpack.config.js and webpack.production.config.js)
+  if (appConfig.env === 'test') {
+    // during test, there is no browser. thus we cannot instantiate socket.io!
+    return;
+  }
+
   this.io = (appConfig.wsUrl) ? socketIo(appConfig.wsUrl) : socketIo();
 
   this.io.on('connect', () => log.info('socket to server connected'));

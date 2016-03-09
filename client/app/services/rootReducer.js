@@ -15,8 +15,12 @@ const LOGGER = log.getLogger('rootReducer');
  * the root redux reducer that decides if
  * - the action should be handled by an event reducer (backend event gets applied to our state)
  * - the action is a client-only action (some state changes in the client only, i.e. view state)
+ *
+ * @param state
+ * @param {object} action the redux action
+ * @returns {Immutable.Map} the modified state
  */
-export function rootReducer(state = {}, action = {}) {
+export default function rootReducer(state = {}, action = {}) {
   if (action.event) {
     return eventReducer(state, action);
   } else {

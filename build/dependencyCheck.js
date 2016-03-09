@@ -35,7 +35,9 @@ function runCheck() {
       'error-level': 1 // we don't want to fail CI... we write a report file
     })
     .then(function (upgraded) {
-      const tmpl = '# NPM DependencyCheck Report for <%- name %>\nThe following dependencies are out-of-date:\n\n<% _.forEach(upgraded, function(version, dependency) { %>* <%- dependency %>: <%- currentDependencies[dependency]%> -> <%- version%>\n<% }); %>';
+      const tmpl = _.size(upgraded)
+        ? '# NPM DependencyCheck Report for <%- name %>\nThe following dependencies are out-of-date:\n\n<% _.forEach(upgraded, function(version, dependency) { %>* <%- dependency %>: <%- currentDependencies[dependency]%> -> <%- version%>\n<% }); %>'
+        : '# NPM DependencyCheck Report for <%- name %>\nNo dependencies are out-of-date :-)';
       return _.template(tmpl)(_.merge({
         upgraded: upgraded
       }, pkg));

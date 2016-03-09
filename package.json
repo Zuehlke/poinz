@@ -13,7 +13,7 @@
   "scripts": {
     "test": "cd client/ && npm test &&  cd ../server && npm test",
     "build": "node build/dockerImage.js",
-    "checkDependencies": "node ./build/dependencyCheck.js ./package.json && node ./build/dependencyCheck.js ./client/package.json && node ./build/dependencyCheck.js ./server/package.json"
+    "dependencyCheck": "node ./build/dependencyCheck.js ./package.json && node ./build/dependencyCheck.js ./client/package.json && node ./build/dependencyCheck.js ./server/package.json"
   },
   "devDependencies": {
     "del": "2.2.0",

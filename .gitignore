@@ -6,3 +6,4 @@ node_modules/
 .idea
 npm-debug.log
 *.log.*
+npm_dependencies_report.*.md

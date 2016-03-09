@@ -3,20 +3,10 @@
     "node": true
   },
   "extends": "eslint:recommended",
-  "ecmaFeatures": {
-    "blockBindings": true,
-    "modules": true,
-    "arrowFunctions": true,
-    "defaultParams": true,
-    "destructuring": true,
-    "templateStrings": true,
-    "spread": true,
-    "restParams": true,
-    "classes": true,
-    "objectLiteralComputedProperties": true
+  "parserOptions": {
+    "ecmaVersion": 6
   },
   "rules": {
-    "strict": 2,
     "semi": [
       2,
       "always"

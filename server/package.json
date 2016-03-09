@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "express": "4.13.4",
-    "glob": "7.0.0",
+    "glob": "7.0.3",
     "immutable": "3.7.6",
-    "lodash": "4.3.0",
+    "lodash": "4.6.1",
     "node-uuid": "1.4.7",
     "socket.io": "1.4.5",
     "tv4": "1.2.7",
@@ -27,7 +27,7 @@
     "winston-daily-rotate-file": "1.0.1"
   },
   "devDependencies": {
-    "eslint": "1.10.3",
+    "eslint": "2.3.0",
     "mocha": "2.4.5"
   },
   "engines": {

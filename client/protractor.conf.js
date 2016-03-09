@@ -1,7 +1,7 @@
 'use strict';
 
 // either start Poinz from your "deploy" folder, or start a docker container
-// ( do not use the webdack-devserser, since it displayes the app within an iframe )
+// ( do not use the webdack-dev-server, since it displays the app within an iframe )
 var e2eBaseUrl = 'http://localhost:3000';
 
 var exportsConfig = {

@@ -33,10 +33,13 @@ Card.propTypes = {
 };
 
 export default connect(
-  state =>({
-    selectedStoryId: state.get('selectedStory'),
-    ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]),
-    estimationWaiting: false // TODO
-  }),
+  state => {
+    const pendingEstimationCommand = state.get('pendingCommands').find(cmd => cmd.name === 'giveStoryEstimate');
+    return {
+      selectedStoryId: state.get('selectedStory'),
+      ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]),
+      estimationWaiting: pendingEstimationCommand ? pendingEstimationCommand.payload.value : undefined
+    };
+  },
   dispatch => bindActionCreators({giveStoryEstimate}, dispatch)
 )(Card);

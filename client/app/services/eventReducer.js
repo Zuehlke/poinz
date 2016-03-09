@@ -5,6 +5,14 @@ import clientSettingsStore from './clientSettingsStore';
 
 const LOGGER = log.getLogger('eventReducer');
 
+/**
+ * The event reducer handles backend-event actions.
+ * These are equivalent to the event handlers in the backend as they modify the room state.
+ *
+ * @param {Immutable.Map} state
+ * @param {object} action
+ * @returns {Immutable.Map} the modified state
+ */
 function eventReducer(state, action) {
 
   const { event } = action;
@@ -17,22 +25,22 @@ function eventReducer(state, action) {
   }
 
   const matchingHandler = eventActionHandlers[action.type];
-  if (matchingHandler) {
-    let modifiedState = matchingHandler.fn(state, event.payload, event) || state;
-    modifiedState = updateActionLog(matchingHandler.log, state, modifiedState, event);
-    return modifiedState;
-  } else {
+  if (!matchingHandler) {
     LOGGER.warn('unknown event action', action);
     return state;
   }
+
+  let modifiedState = matchingHandler.fn(state, event.payload, event) || state;
+  modifiedState = updateActionLog(matchingHandler.log, state, modifiedState, event);
+  return modifiedState;
 }
 
 /**
  * adds a log message for a backend event to the state.
  *
- * @param {undefined | string | function} logObject defined in event handlers. If this is a function, username, eventPayload, oldState and newState will be passed.
+ * @param {undefined | string | function} logObject defined in event handlers. If this is a function: username, eventPayload, oldState and newState will be passed.
  * @param {Immutable.Map} oldState The state before the action was reduced
- * @param {Immutable.Map}  modifiedState The state after the action was reduced
+ * @param {Immutable.Map} modifiedState The state after the action was reduced
  * @param {object} event
  * @returns {Immutable.Map} The new state containing updated actionLog
  */
@@ -126,7 +134,7 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.connectionLost]: {
-    fn: (state, payload) => state.updateIn(['users', payload.userId], user => user.set('disconnected', true)),
+    fn: (state, payload) => state.updateIn(['users', payload.userId], user => user ? user.set('disconnected', true) : undefined),
     log: (username) =>`${username} lost the connection`
   },
 

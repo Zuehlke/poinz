@@ -7,10 +7,10 @@ import Anchorify from 'react-anchorify-text';
 
 import { selectStory } from '../services/actions';
 
-const Story = ({ story, selectedStoryId, selectStory }) => {
+const Story = ({ story, selectedStoryId, selectStory, pendingSelectCommands }) => {
   const classes = classnames('story', {
     'story-selected': selectedStoryId === story.get('id'),
-    'waiting': story.get('waitingForSelect')
+    'waiting': pendingSelectCommands.find(cmd => cmd.payload.storyId === story.get('id'))
   });
 
   return (
@@ -28,12 +28,14 @@ const Story = ({ story, selectedStoryId, selectStory }) => {
 Story.propTypes = {
   story: React.PropTypes.instanceOf(Immutable.Map),
   selectedStoryId: React.PropTypes.string,
-  selectStory: React.PropTypes.func
+  selectStory: React.PropTypes.func,
+  pendingSelectCommands: React.PropTypes.instanceOf(Immutable.Map)
 };
 
 export default connect(
   state => ({
-    selectedStoryId: state.get('selectedStory')
+    selectedStoryId: state.get('selectedStory'),
+    pendingSelectCommands: state.get('pendingCommands').filter(cmd => cmd.name === 'selectStory')
   }),
   dispatch => bindActionCreators({selectStory}, dispatch)
 )(Story);

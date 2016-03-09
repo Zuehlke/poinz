@@ -1,0 +1,45 @@
+import log from 'loglevel';
+
+import eventReducer from './eventReducer';
+import {
+  TOGGLE_BACKLOG,
+  TOGGLE_USER_MENU,
+  COMMAND_SENT,
+  EVENT_RECEIVED,
+  SET_ROOMID
+} from './actionTypes';
+
+const LOGGER = log.getLogger('rootReducer');
+
+/**
+ * the root redux reducer that decides if
+ * - the action should be handled by an event reducer (backend event gets applied to our state)
+ * - the action is a client-only action (some state changes in the client only, i.e. view state)
+ */
+export function rootReducer(state = {}, action = {}) {
+  if (action.event) {
+    return eventReducer(state, action);
+  } else {
+    switch (action.type) {
+      case COMMAND_SENT:
+        // for every command we send, let's store it in our state. various view component
+        // are then able to display "spinners" when waiting for the corresponding backend event.
+        // limitations:
+        // - the first event produced by a command will again remove (consider that the backend might produce N events for a single command that is processed)
+        // - if the backend does not produce an event for a command, the command will remain in the client state.
+        return state.setIn(['pendingCommands', action.command.id], action.command);
+      case EVENT_RECEIVED:
+        // for every event that we receive, we remove the corresponding command if any. (i.e. the command that triggerd that event in the backend)
+        return state.removeIn(['pendingCommands', action.correlationId]);
+      case SET_ROOMID:
+        return state.set('roomId', action.roomId);
+      case TOGGLE_BACKLOG:
+        return state.set('backlogShown', !state.get('backlogShown'));
+      case TOGGLE_USER_MENU:
+        return state.set('userMenuShown', !state.get('userMenuShown'));
+      default :
+        LOGGER.warn('unknown action', action);
+        return state;
+    }
+  }
+}

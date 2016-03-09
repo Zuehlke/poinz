@@ -4,6 +4,7 @@ import { inherits } from 'util';
 import socketIo from 'socket.io-client';
 import log from 'loglevel';
 import { v4 as uuid } from 'node-uuid';
+import { COMMAND_SENT } from './actionTypes';
 
 /**
  * The Hub  is our interface between the websocket connection and the app.
@@ -30,11 +31,10 @@ inherits(Hub, EventEmitter);
  */
 Hub.prototype.sendCommand = function sendCommand(command, dispatch) {
   command.id = uuid();
-
   this.io.emit('command', command);
 
   dispatch({
-    type: 'COMMAND_SENT',
+    type: COMMAND_SENT,
     command
   });
 };

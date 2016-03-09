@@ -24,6 +24,6 @@ Landing.propTypes = {
 
 export default connect(
   state => ({
-    waitingForJoin: false // TODO
+    waitingForJoin: !!state.get('pendingCommands').find(cmd => cmd.name === 'joinRoom')
   })
 )(Landing);

@@ -469,15 +469,23 @@ $backlogWidth = 300px
         box-sizing border-box
         border-radius 2px
 
+        // story edit icon (pencil)
         > i.story-edit {
-          display none
+          transition opacity 0.12s ease-out
+          opacity 0 // do not show by default
           position absolute
+          display block
           top 4px
           right 4px
         }
 
+        // show the pencil when story is hovered
         &:hover > i.story-edit {
-          display block
+          opacity 0.6
+
+          &:hover {
+            opacity 1 // show the pencil with full opacity when icon is hovered
+          }
         }
 
         &.story-selected {

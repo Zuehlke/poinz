@@ -8,7 +8,7 @@ import Anchorify from 'react-anchorify-text';
 import { selectStory, editStory } from '../services/actions';
 
 const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCommands }) => {
-  const classes = classnames('story', {
+  const classes = classnames('story clickable', {
     'story-selected': selectedStoryId === story.get('id'),
     'waiting': pendingSelectCommands.find(cmd => cmd.payload.storyId === story.get('id'))
   });

@@ -12,7 +12,7 @@ module.exports = {
     }
 
     if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot give estimations!');
+      throw new Error('Visitors cannot start new estimation round!');
     }
   },
   fn: (room, command) => {

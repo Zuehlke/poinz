@@ -73,6 +73,7 @@ function handleCommandProcessingError(error, command, socket) {
   const commandRejectedEvent = {
     name: 'commandRejected',
     id: uuid(),
+    correlationId: command.id,
     roomId: command.roomId,
     payload: {
       command: command,

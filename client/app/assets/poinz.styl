@@ -25,6 +25,10 @@ body {
   right 0
 }
 
+.clickable {
+  cursor pointer
+}
+
 .pure-button {
   border-radius 2px
 
@@ -231,7 +235,6 @@ a {
   z-index 10
   width 34px
   height 34px
-  cursor pointer
 
   .menu-link-inner {
     position relative
@@ -275,7 +278,6 @@ a {
   padding 4px 8px
   box-sizing border-box
   color white
-  cursor pointer
 }
 
 $userMenuWidth = 300px
@@ -305,6 +307,19 @@ $userMenuWidth = 300px
   }
 
   .pure-form {
+
+    .username-wrapper {
+      display: flex;
+      align-items: stretch;
+      padding 4px
+      border-bottom 1px solid white
+
+      input {
+        width 80%
+        border none
+        padding 1px 0
+      }
+    }
     input, textarea {
       background transparent
       color white
@@ -319,7 +334,7 @@ $userMenuWidth = 300px
   width 100%
 
   .action-log {
-    top 264px
+    top 282px
     bottom 50px
     position absolute
     overflow-x hidden
@@ -434,6 +449,7 @@ $backlogWidth = 300px
 
     .pure-form {
       input, textarea {
+        resize vertical
         background transparent
         color white
         border none
@@ -446,7 +462,6 @@ $backlogWidth = 300px
 
       .story {
         position relative
-        cursor pointer
         color white
         background $zuehlkeDarkGrey
         padding 8px 16px 16px 16px
@@ -512,7 +527,6 @@ $backlogWidth = 300px
         box-sizing border-box
         font-size 28px
         padding 8px
-        cursor pointer
         font-family $zuehlkeFont
 
         .card-inner {

@@ -210,7 +210,7 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.commandRejected]: {
     fn: (state, payload, event) => LOGGER.error(event),
-    log: (username, payload) => `An error occurred: ${JSON.stringify(payload)}`
+    log: (username, payload) => `An error occurred: ${payload.reason}`
   }
 };
 

@@ -1,15 +1,20 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
+import Immutable from 'immutable';
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 
 import { addStory } from '../services/actions';
 
-const StoryAddForm = ({ addStory }) => {
+const StoryAddForm = ({ addStory, pendingAddCommands }) => {
 
+  const classes = classnames('pure-form story-add-form', {
+    'waiting': pendingAddCommands
+  });
   let titleInputField, descriptionInputField;
 
   return (
-    <div className='pure-form story-add-form'>
+    <div className={classes}>
 
       <fieldset className='pure-group'>
         <input type='text' className='pure-input-1'
@@ -42,10 +47,13 @@ const StoryAddForm = ({ addStory }) => {
 };
 
 StoryAddForm.propTypes = {
-  addStory: React.PropTypes.func
+  addStory: React.PropTypes.func,
+  pendingAddCommands: React.PropTypes.instanceOf(Immutable.Map)
 };
 
 export default connect(
-  undefined,
+  state => ({
+    pendingAddCommands: state.get('pendingCommands').find(cmd => cmd.name === 'addStory')
+  }),
   dispatch => bindActionCreators({addStory}, dispatch)
 )(StoryAddForm);

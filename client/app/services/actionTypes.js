@@ -1,10 +1,10 @@
-
-
 /**
  *  UI-only
  */
 export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG';
 export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
+export const EDIT_STORY = 'EDIT_STORY';
+export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
 
 
 /**
@@ -24,7 +24,8 @@ export const EVENT_ACTION_TYPES = {
   revealed: 'REVEALED',
   newEstimationRoundStarted: 'NEW_ESTIMATION_ROUND_STARTED',
   visitorSet: 'VISITOR_SET',
-  visitorUnset: 'VISITOR_UNSET'
+  visitorUnset: 'VISITOR_UNSET',
+  storyChanged: 'STORY_CHANGED'
 };
 
 

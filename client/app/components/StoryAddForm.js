@@ -9,7 +9,7 @@ const StoryAddForm = ({ addStory }) => {
   let titleInputField, descriptionInputField;
 
   return (
-    <div className='pure-form'>
+    <div className='pure-form story-add-form'>
 
       <fieldset className='pure-group'>
         <input type='text' className='pure-input-1'

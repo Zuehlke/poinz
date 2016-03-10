@@ -146,6 +146,21 @@ const eventActionHandlers = {
     log: (username, payload) => `${username} added new story "${payload.title}"`
   },
 
+  [EVENT_ACTION_TYPES.storyChanged]: {
+    fn: (state, payload, event) => {
+      state = state
+        .setIn(['stories', payload.storyId, 'title'], payload.title)
+        .setIn(['stories', payload.storyId, 'description'], payload.description);
+
+      if (state.get('userId') === event.userId) {
+        // if you yourself changed the story, disable edit mode
+        state = state.setIn(['stories', payload.storyId, 'editMode'], false);
+      }
+      return state;
+    },
+    log: (username, payload) => `${username} changed story "${payload.title}"`
+  },
+
   [EVENT_ACTION_TYPES.storySelected]: {
     fn: (state, payload) => state.set('selectedStory', payload.storyId),
     log: (username, payload, oldState, newState) => `${username} selected current story "${newState.getIn(['stories', payload.storyId]).get('title')}"`

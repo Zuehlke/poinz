@@ -103,6 +103,22 @@ describe('changeStory', () => {
 
     });
 
+    it('Should throw if user is a visitor', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
+
+      assert.throws(() => this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'changeStory',
+        payload: {
+          storyId: this.storyId,
+          title: 'SuperStory 232',
+          description: 'This will be awesome'
+        }
+      }, this.userId), /Visitors cannot change stories!/);
+
+    });
+
 
   });
 

@@ -37,8 +37,8 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
         <div className='board-actions'>
           <button type='button' className='pure-button pure-button-primary'
                   onClick={() => reveal(selectedStory.get('id'))}>
-            <i className='fa fa-hand-paper-o button-icon-left'></i>
             Reveal manually
+            <i className='fa fa-hand-paper-o button-icon-right'></i>
           </button>
         </div>
       }
@@ -49,12 +49,12 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
         <div className='board-actions'>
           <button type='button' className='pure-button pure-button-primary'
                   onClick={() => newEstimationRound(selectedStory.get('id'))}>
-            <i className='fa fa-undo  button-icon-left'></i>
             New Round
+            <i className='fa fa-undo  button-icon-right'></i>
           </button>
         </div>
-
       }
+
     </div>
   );
 };

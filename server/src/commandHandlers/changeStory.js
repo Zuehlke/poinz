@@ -4,7 +4,11 @@
  */
 module.exports = {
   existingRoom: true,
-  preCondition: (room, command) => {
+  preCondition: (room, command, userId) => {
+    if (room.getIn(['users', userId, 'visitor'])) {
+      throw new Error('Visitors cannot change stories!');
+    }
+
     if (!room.getIn(['stories', command.payload.storyId])) {
       throw new Error('Cannot change unknown story ' + command.payload.storyId);
     }

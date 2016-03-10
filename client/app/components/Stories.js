@@ -3,13 +3,23 @@ import Immutable from 'immutable';
 import { connect } from 'react-redux';
 
 import Story from './Story';
+import StoryEditForm from './StoryEditForm';
 
 const Stories = ({ stories }) => (
   <div className='stories'>
-    { stories.toList().map(story => (
-      <Story key={story.get('id')}
-             story={story}/>
-    )) }
+    { stories.toList().map(story => {
+      if (story.get('editMode')) {
+        return (
+          <StoryEditForm key={story.get('id')}
+                 story={story}/>
+        );
+      } else {
+        return (
+          <Story key={story.get('id')}
+                 story={story}/>
+        );
+      }
+    }) }
   </div>
 );
 

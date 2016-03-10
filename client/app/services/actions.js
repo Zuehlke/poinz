@@ -4,6 +4,8 @@ import hub from './hub';
 import {
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU,
+  EDIT_STORY,
+  CANCEL_EDIT_STORY,
   SET_ROOMID
 } from './actionTypes';
 
@@ -13,7 +15,6 @@ let history = createHistory();
  * Our actions contain our client-side business logic. (when to send which command).
  * They produce commands and pass them to the hub for sending.
  */
-
 
 export const joinRoom = roomId => (dispatch, getState) => {
   const normalizedRoomId = roomId.toLowerCase();
@@ -156,7 +157,22 @@ export const leaveRoom = () => (dispatch, getState) => {
   }, dispatch);
 };
 
+export const changeStory = (storyId, title, description) => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand({
+    name: 'changeStory',
+    roomId: state.get('roomId'),
+    payload: {
+      storyId,
+      title,
+      description
+    }
+  }, dispatch);
+};
+
 // ui-only actions (client-side view state)
 export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
 export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
+export const editStory = storyId => ({type: EDIT_STORY, storyId});
+export const cancelEditStory = storyId => ({type: CANCEL_EDIT_STORY, storyId});
 

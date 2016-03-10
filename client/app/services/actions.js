@@ -116,7 +116,7 @@ export const reveal = storyId => (dispatch, getState) => {
     payload: {
       storyId: storyId
     }
-  });
+  }, dispatch);
 };
 
 export const setUsername = username => (dispatch, getState) => {

@@ -25,7 +25,7 @@ function init(app, cmdProcessor) {
 
 function handleNewConnection(socket) {
   socket.on('disconnect', onSocketDisconnect.bind(undefined, socket));
-  socket.on('command', (msg) => handleIncomingCommand(socket, msg));
+  socket.on('command', msg => handleIncomingCommand(socket, msg));
 }
 
 function handleIncomingCommand(socket, msg) {
@@ -105,6 +105,10 @@ function registerUserWithSocket(msg, socket, userIdToStore) {
   });
 }
 
+/**
+ * if the socket is disconnected (e.g. user closed browser tab), manually produce and handle
+ * a "leaveRoom" command that will mark the user.
+ */
 function onSocketDisconnect(socket) {
 
   const userId = socketToUserIdMap[socket.id];
@@ -112,12 +116,10 @@ function onSocketDisconnect(socket) {
 
   if (!userId || !roomId) {
     // this can happen if the server was restarted, and a client re-connected!
-    // TODO:  maybe use .debug here?
-    LOGGER.warn('could not send leaveRoom command for ' + userId + ' in ' + roomId);
+    LOGGER.debug('could not send leaveRoom command for ' + userId + ' in ' + roomId);
     return;
   }
 
-  // "manually" send a "leaveRoom" command
   handleIncomingCommand(socket, {
     id: uuid(),
     roomId: roomId,
@@ -129,4 +131,3 @@ function onSocketDisconnect(socket) {
   });
 
 }
-

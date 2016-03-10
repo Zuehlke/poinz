@@ -11,7 +11,8 @@ var rooms = new Immutable.Map();
 
 module.exports = {
   getRoomById,
-  saveRoom
+  saveRoom,
+  getAllRooms
 };
 
 function getRoomById(roomId) {
@@ -22,4 +23,7 @@ function saveRoom(room) {
   rooms = rooms.set(room.get('id'), room);
 }
 
+function getAllRooms() {
+  return rooms;
+}
 

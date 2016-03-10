@@ -162,6 +162,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    */
   function saveRoomBackToStore(ctx) {
     // TODO: can eventHandlers "delete" the room? then ctx.room would be undefined here?
+    ctx.room = ctx.room.set('lastActivity', new Date().getTime());
     store.saveRoom(ctx.room);
   }
 

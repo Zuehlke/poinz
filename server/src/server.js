@@ -6,15 +6,19 @@ const
   handlerGatherer = require('./handlerGatherer'),
   commandProcessorFactory = require('./commandProcessor'),
   logging = require('./logging'),
+  rest = require('./rest'),
   roomsStore = require('./roomsStore');
 
 const LOGGER = logging.getLogger('server');
 
 const app = express();
 
+// setup REST api
+rest.init(app);
+
 // serve static client files
 app.use(express.static(path.resolve(__dirname, '../public')));
-// enable html5 history mode
+// enable html5 history mode by "forwarding" every unmatched route to the index.html file
 app.get('*', function (request, response) {
   response.sendFile(path.resolve(__dirname, '../public/index.html'));
 });

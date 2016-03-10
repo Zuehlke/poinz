@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
-import _ from 'lodash';
+import {isUndefined} from 'lodash';
 import { connect } from 'react-redux';
 
 import avatarIcons from '../assets/avatars';
@@ -19,7 +19,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
   });
 
   const userEstimationValue = selectedStory && selectedStory.getIn(['estimations', user.get('id')]);
-  const userHasEstimation = !_.isUndefined(userEstimationValue); // value could be "0" which is falsy, check for undefined
+  const userHasEstimation = !isUndefined(userEstimationValue); // value could be "0" which is falsy, check for undefined
 
   const estimationClasses = classnames('user-estimation', {
     'user-estimation-given': userHasEstimation,

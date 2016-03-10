@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import { addStory } from '../services/actions';
 
+/**
+ * Form for adding stories to the backlog
+ */
 const StoryAddForm = ({ addStory, pendingAddCommands }) => {
 
   const classes = classnames('pure-form story-add-form', {

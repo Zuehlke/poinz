@@ -4,22 +4,23 @@ import { connect } from 'react-redux';
 
 import Card from './Card';
 
-const Cards = ({ cardConfig })=> {
-
-  return (
-    <div className='pure-g cards'>
-      {
-        cardConfig.map((config, index) => (
-            <Card
-              key={'card_'+index}
-              card={config}
-            />
-          )
+/**
+ * All estimation cards on the board.
+ * (number of available cards and their value is set in cardConfig)
+ */
+const Cards = ({ cardConfig })=> (
+  <div className='pure-g cards'>
+    {
+      cardConfig.map((config, index) => (
+          <Card
+            key={'card_'+index}
+            card={config}
+          />
         )
-      }
-    </div>
-  );
-};
+      )
+    }
+  </div>
+);
 
 Cards.propTypes = {
   cardConfig: React.PropTypes.instanceOf(Immutable.List)

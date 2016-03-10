@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 
 import { joinRoom } from '../services/actions';
 
+/**
+ * The form on the landing page where the user can enter a room to join
+ */
 const RoomJoinForm = ({ presetUsername, joinRoom }) => {
 
   let roomIdInputField;
@@ -33,7 +36,6 @@ const RoomJoinForm = ({ presetUsername, joinRoom }) => {
     }
   }
 };
-
 
 RoomJoinForm.propTypes = {
   presetUsername: React.PropTypes.string,

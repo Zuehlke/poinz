@@ -5,21 +5,12 @@ import { connect } from 'react-redux';
 import Story from './Story';
 import StoryEditForm from './StoryEditForm';
 
+/**
+ * A list of stories (in the backlog)
+ */
 const Stories = ({ stories }) => (
   <div className='stories'>
-    { stories.toList().map(story => {
-      if (story.get('editMode')) {
-        return (
-          <StoryEditForm key={story.get('id')}
-                 story={story}/>
-        );
-      } else {
-        return (
-          <Story key={story.get('id')}
-                 story={story}/>
-        );
-      }
-    }) }
+    { stories.toList().map(story => <StoriesItem key={story.get('id')} story={story}/>) }
   </div>
 );
 
@@ -32,3 +23,18 @@ export default connect(
     stories: state.get('stories')
   })
 )(Stories);
+
+
+/**
+ * if story is in edit mode, display form.
+ */
+const StoriesItem = ({story}) => {
+  return (story.get('editMode'))
+    ? <StoryEditForm story={story}/>
+    : <Story story={story}/>;
+};
+
+StoriesItem.propTypes = {
+  story: React.PropTypes.instanceOf(Immutable.Map)
+};
+

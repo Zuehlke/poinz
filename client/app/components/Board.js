@@ -6,6 +6,10 @@ import UserMenu from '../components/UserMenu';
 import Users from '../components/Users';
 import Estimation from '../components/Estimation';
 
+/**
+ * the board is the main working area that displays a list of users,
+ * the current story, estimations and cards
+ */
 const Board = ({ roomId, isAStorySelected }) => (
   <div className='board' id={roomId}>
     <Users />
@@ -15,7 +19,6 @@ const Board = ({ roomId, isAStorySelected }) => (
       isAStorySelected &&
       <Estimation />
     }
-
   </div>
 );
 
@@ -23,7 +26,6 @@ Board.propTypes = {
   roomId: React.PropTypes.string,
   isAStorySelected: React.PropTypes.bool
 };
-
 
 export default connect(
   state => ({

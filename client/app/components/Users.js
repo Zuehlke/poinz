@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 
 import User from './User';
 
+/**
+ * The list of users (avatars) and their estimations.
+ */
 const Users = ({ users }) => (
   <div className='users'>
     {users.toList().map((user, index) => (

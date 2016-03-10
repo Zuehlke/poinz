@@ -6,11 +6,13 @@ import classnames from 'classnames';
 
 import { changeStory, cancelEditStory } from '../services/actions';
 
+/**
+ * If a story is in "editMode" this form is displayed (in the backlog)
+ */
 const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeCommands }) => {
   const classes = classnames('story', {
     'waiting': pendingChangeCommands.find(cmd => cmd.payload.storyId === story.get('id'))
   });
-
 
   let titleInputField, descriptionInputField;
 

@@ -7,22 +7,16 @@ import { connect } from 'react-redux';
 // see https://www.npmjs.com/package/fecha#formatting-tokens for format
 import fecha from 'fecha';
 
-const LogLine = ({ entry }) => (
-  <li>{fecha.format(entry.get('tstamp'), 'HH:mm')} {entry.get('message')}</li>
-);
-
-LogLine.propTypes = {
-  entry: React.PropTypes.instanceOf(Immutable.Map)
-};
-
+/**
+ * The ActionLog displays a chronological list of "actions" (backend events)
+ */
 const ActionLog = ({ actionLog }) => (
   <div className='action-log'>
     <ul>
       {actionLog.map((entry, index) => (
-        <LogLine
-          key={`logline_${index}`}
-          entry={entry}
-        />
+        <li key={`logline_${index}`}>
+          {fecha.format(entry.get('tstamp'), 'HH:mm')} {entry.get('message')}
+        </li>
       ))}
     </ul>
 

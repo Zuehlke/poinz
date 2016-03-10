@@ -6,6 +6,9 @@ import classnames from 'classnames';
 
 import { giveStoryEstimate } from '../services/actions';
 
+/**
+ * One estimation card on the board.
+ */
 const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate }) => {
 
   const cardClasses = classnames('card clickable pure-u-1 pure-u-md-2-24', {

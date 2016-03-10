@@ -8,13 +8,21 @@ import { newEstimationRound, reveal } from '../services/actions';
 
 import Cards from './Cards';
 
+/**
+ * Displays
+ * - the currently selected story
+ * - a list of available cards if the user can currently give estimations.
+ * - action buttons ("reveal manually" and "new round")
+ *
+ */
 const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
-  const isEstimationChangeAllowed = !selectedStory.get('revealed');
+  const revealed = selectedStory.get('revealed');
   const isVisitor = user.get('visitor');
 
+  const userCanCurrentlyEstimate = !revealed && !isVisitor;
   return (
     <div className='estimation'>
 
@@ -28,12 +36,12 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
       </div>
 
       {
-        isEstimationChangeAllowed && !isVisitor &&
+        userCanCurrentlyEstimate &&
         <Cards ownEstimate={ownEstimate}/>
       }
 
       {
-        isEstimationChangeAllowed && !isVisitor &&
+        userCanCurrentlyEstimate &&
         <div className='board-actions'>
           <button type='button' className='pure-button pure-button-primary'
                   onClick={() => reveal(selectedStory.get('id'))}>
@@ -44,8 +52,7 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
       }
 
       {
-        !isEstimationChangeAllowed &&
-
+        revealed &&
         <div className='board-actions'>
           <button type='button' className='pure-button pure-button-primary'
                   onClick={() => newEstimationRound(selectedStory.get('id'))}>

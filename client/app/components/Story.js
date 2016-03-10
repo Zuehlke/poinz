@@ -7,6 +7,9 @@ import Anchorify from 'react-anchorify-text';
 
 import { selectStory, editStory } from '../services/actions';
 
+/**
+ * One story in the backlog
+ */
 const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCommands }) => {
   const classes = classnames('story clickable', {
     'story-selected': selectedStoryId === story.get('id'),
@@ -14,7 +17,7 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCo
   });
 
   return (
-    <div className={classes} onClick={() => selectStory(story.get('id'))}>
+    <div className={classes} onClick={triggerSelect}>
       <i className='fa fa-pencil story-edit' onClick={triggerEdit}></i>
       <h4>
         {story.get('title')}
@@ -24,6 +27,10 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCo
       </div>
     </div>
   );
+
+  function triggerSelect() {
+    selectStory(story.get('id'));
+  }
 
   function triggerEdit(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select

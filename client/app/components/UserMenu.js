@@ -8,8 +8,9 @@ import { setVisitor, setUsername, leaveRoom } from '../services/actions';
 import ActionLog from '../components/ActionLog';
 
 /**
- * This component has own react state.
- * Local state like menuOpen does not belong into our app-state (redux store)
+ * The user menu displays a form for changing the username and the vistitor flag.
+ *
+ * It also displays the ActionLog and a "leave room" button.
  */
 const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => {
 

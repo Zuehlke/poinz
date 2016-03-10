@@ -10,6 +10,9 @@ import TopBar from '../components/TopBar';
 
 import { joinRoom } from '../services/actions';
 
+/**
+ * The Main component decides whether to display the landing page or the poinz estimation board (a room)
+ */
 class Main extends React.Component {
 
   componentDidMount() {

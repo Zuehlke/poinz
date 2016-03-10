@@ -6,6 +6,10 @@ import classnames from 'classnames';
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
 
+/**
+ * The backlog contains a form to add new stories
+ * and a list of stories.
+ */
 const Backlog = ({ stories, backlogShown, isVisitor }) => {
 
   const hasStories = stories && !!stories.size;
@@ -13,6 +17,10 @@ const Backlog = ({ stories, backlogShown, isVisitor }) => {
   const backlogClasses = classnames('backlog', {
     'backlog-active': backlogShown // if true, show menu also in small screens (menu toggle)
   });
+
+  const contentComponent = hasStories
+    ? <Stories />
+    : <div className='story-hint'>There are currently no stories in the estimation backlog...</div>;
 
   return (
     <div className={backlogClasses}>
@@ -22,15 +30,7 @@ const Backlog = ({ stories, backlogShown, isVisitor }) => {
         <StoryAddForm />
       }
 
-      {
-        hasStories &&
-        <Stories />
-      }
-
-      {
-        !hasStories &&
-        <div className='story-hint'>There are currently no stories in the estimation backlog...</div>
-      }
+      {contentComponent}
 
     </div>
   );

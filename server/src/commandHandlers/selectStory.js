@@ -14,12 +14,6 @@ module.exports = {
     }
   },
   fn: (room, command) => {
-
-    if (room.get('selectedStory') === command.payload.storyId) {
-      // command payload matches the already selected story. No need to apply event
-      return;
-    }
-
     room.applyEvent('storySelected', {storyId: command.payload.storyId});
   }
 };

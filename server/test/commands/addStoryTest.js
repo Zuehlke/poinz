@@ -24,8 +24,21 @@ describe('addStory', () => {
     this.roomId = 'rm_' + uuid();
 
     // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(new Immutable.Map({
-      id: this.roomId
+    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+      id: this.roomId,
+      users: {
+        [this.userId]: {
+          id: this.userId,
+          username: 'Tester'
+        }
+      },
+      stories: {
+        'abc': {
+          id: 'abc',
+          title: 'some',
+          estimations: {}
+        }
+      }
     }));
 
     this.processor = processorFactory(cmdHandlers, evtHandlers, this.mockRoomsStore);
@@ -51,6 +64,34 @@ describe('addStory', () => {
     assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
     assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
     assert.deepEqual(storyAddedEvent.payload.estimations, {});
+
+  });
+
+  it('Should produce storyAdded and additional storySelected event if this is the first story', function () {
+    this.mockRoomsStore.manipulate(room => room.removeIn(['stories', 'abc']));
+
+    const producedEvents = this.processor({
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    }, this.userId);
+
+    assert(producedEvents);
+    assert.equal(producedEvents.length, 2);
+
+    const storyAddedEvent = producedEvents[0];
+    commandTestUtils.assertValidEvent(storyAddedEvent, this.commandId, this.roomId, this.userId, 'storyAdded');
+    assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
+    assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
+    assert.deepEqual(storyAddedEvent.payload.estimations, {});
+
+    const storySelectedEvent = producedEvents[1];
+    commandTestUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
+
 
   });
 

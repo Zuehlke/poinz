@@ -1,6 +1,5 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
-import Immutable from 'immutable';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 
@@ -48,12 +47,12 @@ const StoryAddForm = ({ addStory, pendingAddCommands }) => {
 
 StoryAddForm.propTypes = {
   addStory: React.PropTypes.func,
-  pendingAddCommands: React.PropTypes.instanceOf(Immutable.Map)
+  pendingAddCommands: React.PropTypes.bool
 };
 
 export default connect(
   state => ({
-    pendingAddCommands: state.get('pendingCommands').find(cmd => cmd.name === 'addStory')
+    pendingAddCommands: !!state.get('pendingCommands').find(cmd => cmd.name === 'addStory')
   }),
   dispatch => bindActionCreators({addStory}, dispatch)
 )(StoryAddForm);

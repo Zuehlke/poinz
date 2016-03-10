@@ -7,13 +7,13 @@ const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu }) => {
   return (
     <div className='top-bar'>
       <div className='poinz-logo'>PoinZ</div>
-      <a className='backlog-toggle' onClick={toggleBacklog}>
+      <a className='backlog-toggle clickable' onClick={toggleBacklog}>
         <span className='menu-link-inner'>
           <span></span>
         </span>
       </a>
       <span className='whoami'>{username + '@' + roomId}</span>
-      <a className='user-menu-toggle' onClick={toggleUserMenu}>
+      <a className='user-menu-toggle clickable' onClick={toggleUserMenu}>
         <i className='fa fa-cog'></i>
       </a>
     </div>

@@ -8,7 +8,7 @@ import { giveStoryEstimate } from '../services/actions';
 
 const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate }) => {
 
-  const cardClasses = classnames('card pure-u-1 pure-u-md-2-24', {
+  const cardClasses = classnames('card clickable pure-u-1 pure-u-md-2-24', {
     'card-selected': card.get('value') === ownEstimate
   });
   const cardInnerClasses = classnames('card-inner', {

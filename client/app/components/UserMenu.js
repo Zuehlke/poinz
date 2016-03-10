@@ -20,33 +20,37 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
     'user-menu-active': userMenuShown
   });
 
+  const visitorCheckboxClasses = classnames('fa', {
+    'fa-square-o': !isVisitor,
+    'fa-check-square-o': isVisitor
+  });
+
   let usernameInputField;
-  let visitorCheckbox;
 
   return (
 
     <div className={menuClasses}>
 
-      <div className='pure-form pure-form-stacked'>
-        <h5>Settings</h5>
+      <div className='pure-form'>
+        <h5>Username</h5>
 
-        <label htmlFor='username'>Username</label>
-        <input type='text'
-               id='username'
-               placeholder='Username...'
-               defaultValue={username}
-               ref={ref => usernameInputField = ref}
-               onKeyPress={handleUsernameKeyPress}/>
+        <div className='username-wrapper'>
+          <input type='text'
+                 id='username'
+                 placeholder='Username...'
+                 defaultValue={username}
+                 ref={ref => usernameInputField = ref}
+                 onKeyPress={handleUsernameKeyPress}/>
 
-        <label htmlFor='visitor'>
-          <input type='checkbox'
-                 id='visitor'
-                 defaultChecked={isVisitor}
-                 ref={ref => visitorCheckbox = ref}
-          /> Visitor
-        </label>
+          <button className='pure-button pure-button-primary button-save' onClick={saveUsername}>Save</button>
+        </div>
 
-        <button className='pure-button pure-button-primary button-save' onClick={save}>Save</button>
+        <h5>Mark as Visitor</h5>
+        Visitors cannot add, change or estimate stories.
+
+        <p onClick={toggleVisitor} className='clickable'>
+          <i className={visitorCheckboxClasses}></i> Visitor
+        </p>
       </div>
 
       <div className='action-log-wrapper'>
@@ -67,16 +71,15 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
     }
   }
 
-  function save() {
-    saveUsername();
-    setVisitor(visitorCheckbox.checked);
-  }
-
   function saveUsername() {
     // username length minimum is 2 characters
     if (usernameInputField.value && usernameInputField.value.length > 1) {
       setUsername(usernameInputField.value);
     }
+  }
+
+  function toggleVisitor() {
+    setVisitor(!isVisitor);
   }
 
 };

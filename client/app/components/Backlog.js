@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
 
-const Backlog = ({ stories, backlogShown }) => {
+const Backlog = ({ stories, backlogShown, isVisitor }) => {
 
   const hasStories = stories && !!stories.size;
 
@@ -17,7 +17,10 @@ const Backlog = ({ stories, backlogShown }) => {
   return (
     <div className={backlogClasses}>
 
-      <StoryAddForm />
+      {
+        !isVisitor &&
+        <StoryAddForm />
+      }
 
       {
         hasStories &&
@@ -26,7 +29,7 @@ const Backlog = ({ stories, backlogShown }) => {
 
       {
         !hasStories &&
-        <div className='story-hint'>You don't have any stories in your estimation backlog...</div>
+        <div className='story-hint'>There are currently no stories in the estimation backlog...</div>
       }
 
     </div>
@@ -35,13 +38,14 @@ const Backlog = ({ stories, backlogShown }) => {
 
 Backlog.propTypes = {
   stories: React.PropTypes.instanceOf(Immutable.Map),
-  backlogShown: React.PropTypes.bool
+  backlogShown: React.PropTypes.bool,
+  isVisitor: React.PropTypes.bool
 };
-
 
 export default connect(
   state => ({
     stories: state.get('stories'),
-    backlogShown: state.get('backlogShown')
+    backlogShown: state.get('backlogShown'),
+    isVisitor: state.getIn(['users', state.get('userId'), 'visitor'])
   })
 )(Backlog);

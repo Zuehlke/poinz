@@ -25,9 +25,16 @@ body {
   right 0
 }
 
-.pure-button.pure-button-primary {
-  background-color $zuehlkePurple
+.clickable {
+  cursor pointer
+}
+
+.pure-button {
   border-radius 2px
+
+  &.pure-button-primary {
+    background-color $zuehlkePurple
+  }
 
   i.button-icon-left {
     padding-right 8px
@@ -98,12 +105,6 @@ a {
         outline none
       }
     }
-  }
-}
-
-.pure-form .pure-group {
-  inputfirst-child, textareafirst-child {
-    border-radius 2px
   }
 }
 
@@ -234,7 +235,6 @@ a {
   z-index 10
   width 34px
   height 34px
-  cursor pointer
 
   .menu-link-inner {
     position relative
@@ -278,7 +278,6 @@ a {
   padding 4px 8px
   box-sizing border-box
   color white
-  cursor pointer
 }
 
 $userMenuWidth = 300px
@@ -304,6 +303,30 @@ $userMenuWidth = 300px
   h5 {
     color $zuehlkeOrange
     font-weight 700
+    margin-bottom 8px
+  }
+
+  .pure-form {
+
+    .username-wrapper {
+      display: flex;
+      align-items: stretch;
+      padding 4px
+      border-bottom 1px solid white
+
+      input {
+        width 80%
+        border none
+        padding 1px 0
+      }
+    }
+    input, textarea {
+      background transparent
+      color white
+      border none
+      border-radius 0
+      border-bottom 1px solid white
+    }
   }
 }
 
@@ -311,7 +334,7 @@ $userMenuWidth = 300px
   width 100%
 
   .action-log {
-    top 264px
+    top 282px
     bottom 50px
     position absolute
     overflow-x hidden
@@ -330,18 +353,17 @@ $userMenuWidth = 300px
   right 8px
 }
 
-// tedious to overwrite all pure-css form styles. use !important
-// am I lazy or what?
 .pure-form {
-  textarea, input {
-    color $zuehlkeFontGrey !important
-    border-radius 0 !important
-    border 1px solid $zuehlkeDarkGrey !important
-    box-shadow none !important
 
-    &:focus {
-      border 1px solid $zuehlkeOrange !important
+  .pure-group {
+    input:first-child, textarea:first-child, input:last-child, textarea:last-child {
+      border-radius 0
     }
+  }
+
+  textarea, input {
+    box-shadow none !important
+    border-radius none !important
   }
 
   &.pure-form-stacked label {
@@ -412,26 +434,57 @@ $backlogWidth = 300px
       text-align center
     }
 
+    .button-group > div {
+      padding 0 4px
+      box-sizing border-box
+    }
+
+    .story-add-form {
+      background $zuehlkeDarkGrey
+      padding 8px 16px 16px 16px
+      margin-bottom 16px
+      box-sizing border-box
+      border-radius 2px
+    }
+
+    .pure-form {
+      input, textarea {
+        resize vertical
+        background transparent
+        color white
+        border none
+        border-bottom 1px solid white
+      }
+    }
+
     .stories {
       margin-top 16px
 
       .story {
         position relative
-        cursor pointer
         color white
         background $zuehlkeDarkGrey
-        background #4b5054
         padding 8px 16px 16px 16px
         margin-bottom 16px
         box-sizing border-box
         border-radius 2px
+
+        > i.story-edit {
+          display none
+          position absolute
+          top 4px
+          right 4px
+        }
+
+        &:hover > i.story-edit {
+          display block
+        }
 
         &.story-selected {
           border-left 2px solid $zuehlkeOrange
         }
 
         &.story-waiting {
-
           > i {
             position absolute
             top 4px
@@ -474,7 +527,6 @@ $backlogWidth = 300px
         box-sizing border-box
         font-size 28px
         padding 8px
-        cursor pointer
         font-family $zuehlkeFont
 
         .card-inner {

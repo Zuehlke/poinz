@@ -69,4 +69,23 @@ describe('addStory', () => {
     assert(this.mockRoomsStore.getRoomById().getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story');
   });
 
+  describe('preconditions', () => {
+
+    it('Should throw if user is a visitor', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
+
+      assert.throws(() => this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'addStory',
+        payload: {
+          title: 'SuperStory 232',
+          description: 'This will be awesome'
+        }
+      }, this.userId), /Visitors cannot add stories!/);
+
+    });
+
+  });
+
 });

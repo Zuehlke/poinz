@@ -1,4 +1,5 @@
 import log from 'loglevel';
+import Immutable from 'immutable';
 
 import eventReducer from './eventReducer';
 import {
@@ -8,7 +9,8 @@ import {
   CANCEL_EDIT_STORY,
   COMMAND_SENT,
   EVENT_RECEIVED,
-  SET_ROOMID
+  SET_ROOMID,
+  STATUS_FETCHED
 } from './actionTypes';
 
 const LOGGER = log.getLogger('rootReducer');
@@ -47,6 +49,8 @@ export default function rootReducer(state = {}, action = {}) {
         return state.setIn(['stories', action.storyId, 'editMode'], true);
       case CANCEL_EDIT_STORY:
         return state.setIn(['stories', action.storyId, 'editMode'], false);
+      case STATUS_FETCHED:
+        return state.set('appStatus', Immutable.fromJS(action.status));
       default :
         LOGGER.warn('unknown action', action);
         return state;

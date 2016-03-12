@@ -31,17 +31,20 @@ function handleStatusRequest(req, res) {
 function buildStatusObject() {
   const rooms = roomsStore
     .getAllRooms()
+    .filter(room => room.get('id') !== 'poinzstatus') // the status page in the client is technically also a room. do not include it in the result.
     .map(room => new Immutable.Map({
       userCount: room.get('users').size,
       userCountDisconnected: room.get('users').filter(user => user.get('disconnected')).size,
-      lastActivity: room.get('lastActivity')
+      lastActivity: room.get('lastActivity'),
+      created: room.get('created')
     }))
     .toList()
     .toJS();
 
   return {
     rooms,
-    roomCount: rooms.length
+    roomCount: rooms.length,
+    uptime: Math.floor(process.uptime())
   };
 }
 

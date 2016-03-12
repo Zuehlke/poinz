@@ -5,6 +5,7 @@ module.exports = (room, eventPayload) => (
   Immutable.fromJS({
     id: eventPayload.id,
     users: {},
-    stories: {}
+    stories: {},
+    created: new Date().getTime()
   })
 );

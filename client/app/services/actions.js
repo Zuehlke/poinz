@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createHistory } from 'history';
 import hub from './hub';
 
@@ -6,7 +7,8 @@ import {
   TOGGLE_USER_MENU,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
-  SET_ROOMID
+  SET_ROOMID,
+  STATUS_FETCHED
 } from './actionTypes';
 
 let history = createHistory();
@@ -168,6 +170,16 @@ export const changeStory = (storyId, title, description) => (dispatch, getState)
       description
     }
   }, dispatch);
+};
+
+export const fetchStatus = () => dispatch => {
+  axios.get('/api/status')
+    .then(response => {
+      dispatch({
+        type: STATUS_FETCHED,
+        status: response.data
+      });
+    });
 };
 
 // ui-only actions (client-side view state)

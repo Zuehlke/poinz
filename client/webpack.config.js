@@ -79,7 +79,15 @@ module.exports = {
   devServer: {
     // enables support for HTML5 urls ( http://host:port/context/ROOM instead of http://host:port/context/#ROOM)
     // during dev serving
-    historyApiFallback: true
+    historyApiFallback: true,
+
+    // proxy request to the rest api (our server does not send CORS headers intentionally)
+    proxy: {
+      '/api/*': {
+        target: 'http://localhost:3000',
+        secure: false
+      }
+    }
   }
 
 };

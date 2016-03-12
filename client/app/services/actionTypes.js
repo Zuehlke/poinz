@@ -5,10 +5,11 @@ export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG';
 export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
 export const EDIT_STORY = 'EDIT_STORY';
 export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
+export const STATUS_FETCHED = 'STATUS_FETCHED';
 
 
 /**
- * Action types for events
+ * Action types for backend events
  */
 export const EVENT_ACTION_TYPES = {
   roomCreated: 'ROOM_CREATED',

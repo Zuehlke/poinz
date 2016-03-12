@@ -2,16 +2,16 @@ import React from 'react';
 import Immutable from 'immutable';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import fecha from 'fecha';
 
+import Room from './Room';
+import AppStatus from './AppStatus';
 import Landing from './Landing';
-import Board from './Board';
-import TopBar from '../components/TopBar';
 
 import { joinRoom } from '../services/actions';
 
 /**
- * The Main component decides whether to display the landing page or the poinz estimation board (a room)
+ * The Main component decides whether to display the landing page or the poinz estimation board (a room).
+ * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
  */
 class Main extends React.Component {
 
@@ -27,21 +27,12 @@ class Main extends React.Component {
 
     const { roomId, users } = this.props;
 
-    if (roomId && users && users.size > 0) {
-      return (
-        <div style={{height:'100%'}}>
-          <TopBar />
-          <Board />
-          <div className='version-info'>
-            {__POINZ_CONFIG__.version}
-            {fecha.format(__POINZ_CONFIG__.buildTime, ' DD.MM.YY HH:mm')}
-          </div>
-        </div>
-      );
+    if (roomId === 'poinzstatus') {
+      return <AppStatus />;
+    } else if (roomId && users && users.size > 0) {
+      return <Room />;
     } else {
-      return (
-        <Landing  />
-      );
+      return <Landing />;
     }
   }
 }

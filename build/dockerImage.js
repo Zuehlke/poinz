@@ -22,31 +22,35 @@ del([
   '!./client/dist/index.html',
   './client/dist/**/*'
 ])
-  .then(function () {
+  .then(() => {
+    console.log('installing npm dependencies for client...');
+    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../client')});
+  })
+  .then(() => {
     console.log('POINZ: building client with webpack...');
     return spawnAndPrint(
       './node_modules/.bin/webpack', '-p --colors --bail --config webpack.production.config.js'.split(' '),
       {cwd: path.resolve(__dirname, '../client')});
   })
-  .then(function () {
+  .then(() => {
     console.log('POINZ: copying sources...');
     return Q.ninvoke(fs, 'copy', './client/dist', './deploy/public/assets');
   })
-  .then(function () {
+  .then(() => {
     return Q.ninvoke(fs, 'copy', './client/index.html', './deploy/public/index.html');
   })
-  .then(function () {
+  .then(()=> {
     return Q.ninvoke(fs, 'copy', './server/src', './deploy/src');
   })
-  .then(function () {
+  .then(() => {
     return Q.ninvoke(fs, 'copy', './server/package.json', './deploy/package.json');
   })
-  .then(function () {
+  .then(() => {
     console.log('POINZ: building docker container...');
     return spawnAndPrint('docker', 'build -t xeronimus/poinz .'.split(' '),
       {cwd: path.resolve(__dirname, '..')});
   })
-  .catch(function (error) {
+  .catch(error => {
     console.error(error);
     process.exit(1);
   });

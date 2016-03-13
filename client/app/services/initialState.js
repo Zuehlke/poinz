@@ -23,6 +23,7 @@ const INITIAL_STATE = Immutable.fromJS({
   ],
   presetUsername: clientSettingsStore.getPresetUsername(),
   presetUserId: clientSettingsStore.getPresetUserId(),
+  roomHistory: clientSettingsStore.getRoomHistory(),
   actionLog: [], // will contain human readable "log messages" of actions that did take place in the current room
   pendingCommands: {} // will contain pending commands (commands for which no event is received yet)
 });

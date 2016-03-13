@@ -7,7 +7,7 @@ import { joinRoom } from '../services/actions';
 /**
  * The form on the landing page where the user can enter a room to join
  */
-const RoomJoinForm = ({ presetUsername, joinRoom }) => {
+const RoomJoinForm = ({joinRoom }) => {
 
   let roomIdInputField;
 
@@ -20,7 +20,6 @@ const RoomJoinForm = ({ presetUsername, joinRoom }) => {
                 onClick={joinIfRoomIdNotEmpty}>Join
         </button>
       </div>
-      <div className='preset-user-name'>{presetUsername}</div>
     </div>
   );
 
@@ -38,13 +37,10 @@ const RoomJoinForm = ({ presetUsername, joinRoom }) => {
 };
 
 RoomJoinForm.propTypes = {
-  presetUsername: React.PropTypes.string,
   joinRoom: React.PropTypes.func
 };
 
 export default connect(
-  state => ({
-    presetUsername: state.get('presetUsername')
-  }),
+  undefined,
   dispatch => bindActionCreators({joinRoom}, dispatch)
 )(RoomJoinForm);

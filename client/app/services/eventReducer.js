@@ -85,6 +85,7 @@ const eventActionHandlers = {
         document.title = `PoinZ - ${event.roomId}`;
 
         clientSettingsStore.setPresetUserId(payload.userId);
+        clientSettingsStore.addRoomToHistory(event.roomId);
 
         // server sends current room state (users, stories, etc.)
         return state
@@ -121,6 +122,7 @@ const eventActionHandlers = {
           .remove('selectedStory')
           .remove('userMenuShown')
           .remove('backlogShown')
+          .set('roomHistory', Immutable.fromJS(clientSettingsStore.getRoomHistory()))
           .set('actionLog', new Immutable.List());
 
       } else {

@@ -63,6 +63,10 @@ a {
   background-position left top
   background-size contain
 
+  .landing-inner {
+    margin-top 20%
+  }
+
   .eyecatcher {
     margin auto
     display flex
@@ -71,19 +75,14 @@ a {
     flex-direction column
     width 400px
     max-width 85%
-    margin-top 20%
     background rgba(0, 0, 0, 0.5)
     padding 32px
     border-radius 2px
+    margin-bottom 16px
 
     &.loading {
       color white
       font-size larger
-    }
-
-    .preset-user-name {
-      margin-top 16px
-      color $zuehlkeOrange
     }
 
     .room-id-wrapper {
@@ -103,6 +102,22 @@ a {
         width 80%
         border none
         outline none
+      }
+    }
+
+    &.room-history {
+      color white
+
+      ol {
+        list-style-type none
+        margin 0
+        padding 0
+
+        li {
+          display inline-block
+          color $zuehlkeOrange
+          padding 4px 8px
+        }
       }
     }
   }

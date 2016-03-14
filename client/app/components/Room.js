@@ -5,6 +5,10 @@ import appConfig from '../services/appConfig';
 import Board from './Board';
 import TopBar from './TopBar';
 
+/**
+ * Is displayed as soon as the user joined a room.
+ * contains the top-bar, the board and the (bottom right) version info
+ */
 const Room = () => (
   <div style={{height:'100%'}}>
     <TopBar />

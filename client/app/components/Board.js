@@ -8,8 +8,13 @@ import Users from '../components/Users';
 import Estimation from '../components/Estimation';
 
 /**
- * the board is the main working area that displays a list of users,
- * the current story, estimations and cards
+ * The board is the main working area as soon as a room was joined.
+ * It contains
+ * - the backlog
+ * - a list of users,
+ * - estimations
+ * - the current story
+ * - cards
  */
 const Board = ({ roomId, isAStorySelected }) => (
   <div className='board' id={roomId}>

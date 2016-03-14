@@ -18,7 +18,6 @@ const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStory
     'waiting': card.get('value') === estimationWaiting
   });
 
-
   const customCardStyle = card.get('color') ? {background: card.get('color'), color: 'white'} : {};
   return (
     <button className={cardClasses} onClick={() => giveStoryEstimate(selectedStoryId, card.get('value'))}>

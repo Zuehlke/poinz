@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { joinRoom } from '../services/actions';
 
 /**
- * List of rooms that the user joined earlier
+ * List of rooms that the user joined earlier.
  */
 const RoomHistory = ({roomHistory, joinRoom }) => (
   <div className='eyecatcher room-history'>

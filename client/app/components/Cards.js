@@ -12,12 +12,11 @@ const Cards = ({ cardConfig })=> (
   <div className='pure-g cards'>
     {
       cardConfig.map((config, index) => (
-          <Card
-            key={'card_'+index}
-            card={config}
-          />
-        )
-      )
+        <Card
+          key={'card_'+index}
+          card={config}
+        />
+      ))
     }
   </div>
 );

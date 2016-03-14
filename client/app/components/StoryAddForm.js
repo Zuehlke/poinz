@@ -24,6 +24,7 @@ const StoryAddForm = ({ addStory, pendingAddCommands }) => {
                ref={ref => titleInputField = ref}/>
 
         <textarea className='pure-input-1'
+                  rows='1'
                   placeholder='Description / URL / etc.'
                   ref={ref => descriptionInputField = ref}/>
       </fieldset>

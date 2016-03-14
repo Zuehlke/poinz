@@ -1,4 +1,6 @@
-const Immutable = require('immutable');
+const
+  Promise = require('bluebird'),
+  Immutable = require('immutable');
 
 /**
  * At the moment we have a very simple in-memory store.
@@ -16,15 +18,15 @@ module.exports = {
 };
 
 function getRoomById(roomId) {
-  return new Promise(resolve => resolve(rooms.get(roomId)));
+  return Promise.resolve(rooms.get(roomId));
 }
 
 function saveRoom(room) {
   rooms = rooms.set(room.get('id'), room);
-  new Promise(resolve => resolve());
+  return Promise.resolve();
 }
 
 function getAllRooms() {
-  return new Promise(resolve => resolve(rooms));
+  return Promise.resolve(rooms);
 }
 

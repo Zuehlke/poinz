@@ -1,5 +1,6 @@
 const
   util = require('util'),
+  Promise = require('bluebird'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
   commandSchemaValidator = require('./commandSchemaValidator');
@@ -65,7 +66,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
     }
     ctx.handler = handler;
 
-    return new Promise(resolve => resolve());
+    return Promise.resolve();
   }
 
   /**

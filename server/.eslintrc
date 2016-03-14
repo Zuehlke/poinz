@@ -21,8 +21,5 @@
       "all"
     ],
     "no-use-before-define": 0
-  },
-  "globals": {
-    "Promise": false
   }
 }

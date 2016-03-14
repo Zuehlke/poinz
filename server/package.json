@@ -16,6 +16,7 @@
     "start": "node src/server.js"
   },
   "dependencies": {
+    "bluebird": "^3.3.4",
     "express": "4.13.4",
     "glob": "7.0.3",
     "immutable": "3.7.6",

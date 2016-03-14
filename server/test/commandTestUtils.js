@@ -1,4 +1,5 @@
 const
+  Promise = require('bluebird'),
   util = require('util'),
   assert = require('assert'),
   _ = require('lodash');
@@ -19,11 +20,11 @@ function assertValidEvent(actualEvent, correlationId, roomId, userId, eventName)
 }
 
 /**
- * Asserts that the given promise rejects and that the error contains the expected message
+ * Asserts that the given promise rejects and that the error contains the expected message.
  *
  * @param {Promise.<T>} promise
  * @param {String} expectedErrorMessage
- * @returns {Promise.<T>}
+ * @returns {Promise.<T>} a new Promise that will reject if the given promise resolves.
  */
 function assertPromiseRejects(promise, expectedErrorMessage) {
   return promise
@@ -50,14 +51,11 @@ function assertError(actualError, expectedMessage) {
 function newMockRoomsStore(initialRoom) {
   var room = initialRoom;
   return {
-    getRoomById: () => new Promise(resolve => resolve(room)),
+    getRoomById: () => Promise.resolve(room),
     saveRoom: rm => {
       room = rm;
-      return new Promise(resolve => resolve());
+      return Promise.resolve();
     },
-    manipulate: fn => {
-      room = fn(room);
-      return new Promise(resolve => resolve());
-    }
+    manipulate: fn => room = fn(room)
   };
 }

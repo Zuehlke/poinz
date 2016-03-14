@@ -102,7 +102,7 @@ describe('commandProcessor', () => {
 
   it('process a dummy command where command validation fails', function () {
 
-    const processor = processorFactory({}, {}, this, this.mockRoomsStore);
+    const processor = processorFactory({}, {}, this.mockRoomsStore);
 
     return commandTestUtils.assertPromiseRejects(
       processor({

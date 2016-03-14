@@ -19,6 +19,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
   /**
    *  The command processor handles incoming commands.
+   *  (is asynchronous - returns a Promise)
    *  For every command the following steps are done.
    *
    *  1. Validation
@@ -33,30 +34,25 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    *
    *  @param {object} command
    *  @param {string} userId The id of the user that sent the command. if command is "joinRoom" user id is not yet given and will be undefined!
-   *  @returns {object[]} List of events that were produced by this command. (they are already applied to the room state)
+   *  @returns {Promise<object[]>} Promise that resolves to a list of events that were produced by this command. (they are already applied to the room state)
    */
   return function processCommand(command, userId) {
 
-    const context = {
-      userId: userId
-    };
+    const context = {userId};
 
-    // TODO: this might get asynchronous sometime...
-    // e.g. when store gets persistent -> asynchronous cache/db access?
-    validate(command);
-    getCommandHandler(context, command);
-    getRoom(context, command);
-    preConditions(context, command);
-    handle(context, command);
-    applyEvents(context, command);
-    saveRoomBackToStore(context, command);
-
-    return context.eventsToSend;
+    return validate(command)
+      .then(() => getCommandHandler(context, command))
+      .then(() => loadRoom(context, command))
+      .then(() => preConditions(context, command))
+      .then(() => handle(context, command))
+      .then(() => applyEvents(context, command))
+      .then(() => saveRoomBackToStore(context))
+      .then(() => context.eventsToSend);
   };
 
   /** 1. Validate incoming command (syntactically, against schema) **/
   function validate(cmd) {
-    commandSchemaValidator(cmd);
+    return new Promise(resolve => resolve(commandSchemaValidator(cmd)));
   }
 
   /**
@@ -68,25 +64,34 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
       throw new Error('No handler found for ' + cmd.name);
     }
     ctx.handler = handler;
+
+    return new Promise(resolve => resolve());
   }
 
   /**
-   * 3. Get Room object by command.roomId (currently in-memory store only).
+   * 3. Load Room object by command.roomId (currently in-memory store only). (asynchronously)
    * For some commands it is valid that the room does not yet exist in the store.
    * Command handlers define whether they expect an existing room or not
+   *
+   * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
-  function getRoom(ctx, cmd) {
-    ctx.room = store.getRoomById(cmd.roomId);
+  function loadRoom(ctx, cmd) {
+    return store
+      .getRoomById(cmd.roomId)
+      .then(room => {
 
-    if (!ctx.room && ctx.handler.existingRoom) {
-      // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
-      throw new Error('Command "' + cmd.name + '" only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
-    }
+        if (!room && ctx.handler.existingRoom) {
+          // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
+          throw new Error('Command "' + cmd.name + '" only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
+        }
 
-    if (!ctx.room) {
-      // make sure that command handlers always receive a room object
-      ctx.room = new Immutable.Map();
-    }
+        if (room) {
+          ctx.room = room;
+        } else {
+          // make sure that command handlers always receive a room object
+          ctx.room = new Immutable.Map();
+        }
+      });
   }
 
   /**
@@ -156,14 +161,16 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   }
 
   /**
-   *  7. Store modified room object
+   *  7. Store modified room object (asynchronous)
    *  Command was processed successfully and all produced events were applied and modified the room object.
    *  Now store the new state.
+   *
+   *  @returns {Promise} returns a promise that resolves as soon as the room is stored
    */
   function saveRoomBackToStore(ctx) {
     // TODO: can eventHandlers "delete" the room? then ctx.room would be undefined here?
     ctx.room = ctx.room.set('lastActivity', new Date().getTime());
-    store.saveRoom(ctx.room);
+    return store.saveRoom(ctx.room);
   }
 
 }

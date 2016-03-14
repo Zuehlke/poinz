@@ -31,24 +31,21 @@ function handleNewConnection(socket) {
 function handleIncomingCommand(socket, msg) {
   LOGGER.debug('incoming command', msg);
 
-  try {
-    const producedEvents = commandProcessor(msg, socketToUserIdMap[socket.id]);
+  commandProcessor(msg, socketToUserIdMap[socket.id])
+    .then(producedEvents => {
+      if (msg.name === 'joinRoom') {
+        // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
+        registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
+      }
 
-    if (msg.name === 'joinRoom') {
-      // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
-      registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
-    }
+      if (settings.eventDelay) {
+        setTimeout(() => sendEvents(producedEvents, msg.roomId), settings.eventDelay);
+      } else {
+        sendEvents(producedEvents, msg.roomId);
+      }
 
-    if (settings.eventDelay) {
-      setTimeout(() => sendEvents(producedEvents, msg.roomId), settings.eventDelay);
-    } else {
-      sendEvents(producedEvents, msg.roomId);
-    }
-
-  } catch (commandProcessingError) {
-    handleCommandProcessingError(commandProcessingError, msg, socket);
-  }
-
+    })
+    .catch(commandProcessingError => handleCommandProcessingError(commandProcessingError, msg, socket));
 }
 
 /**

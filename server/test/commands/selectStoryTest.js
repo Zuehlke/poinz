@@ -2,12 +2,11 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('./commandTestUtils'),
+  commandTestUtils = require('../commandTestUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
 describe('selectStory', () => {
-
 
 
   beforeEach(function () {
@@ -25,66 +24,63 @@ describe('selectStory', () => {
     this.processor = processorFactory(cmdHandlers, evtHandlers, this.mockRoomsStore);
 
     // prepare the state with a story
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'addStory',
-      payload: {
-        title: 'SuperStory 444',
-        description: 'This will be awesome'
-      }
-    }, this.userId);
-
-    this.storyId = producedEvents[0].payload.id;
+    return this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'addStory',
+        payload: {
+          title: 'SuperStory 444',
+          description: 'This will be awesome'
+        }
+      }, this.userId)
+      .then(producedEvents => this.storyId = producedEvents[0].payload.id);
   });
 
   it('Should produce storySelected event', function () {
+    return this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'selectStory',
+        payload: {
+          storyId: this.storyId
+        }
+      }, this.userId)
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 1);
 
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'selectStory',
-      payload: {
-        storyId: this.storyId
-      }
-    }, this.userId);
-
-    assert(producedEvents);
-    assert.equal(producedEvents.length, 1);
-
-    const storySelectedEvent = producedEvents[0];
-    commandTestUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
-    assert.equal(storySelectedEvent.payload.storyId, this.storyId);
-
+        const storySelectedEvent = producedEvents[0];
+        commandTestUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
+        assert.equal(storySelectedEvent.payload.storyId, this.storyId);
+      });
   });
 
   it('Should store id of selectedStory', function () {
-
-    this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'selectStory',
-      payload: {
-        storyId: this.storyId
-      }
-    }, this.userId);
-
-    assert.equal(this.mockRoomsStore.getRoomById().get('selectedStory'), this.storyId);
+    return this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'selectStory',
+        payload: {
+          storyId: this.storyId
+        }
+      }, this.userId)
+      .then(() => this.mockRoomsStore.getRoomById())
+      .then(room => assert.equal(room.get('selectedStory'), this.storyId));
   });
 
   describe('preconditions', () => {
 
     it('Should throw if story is not in room', function () {
-
-      assert.throws(() => this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'selectStory',
-        payload: {
-          storyId: 'story-not-in-room'
-        }
-      }, this.userId), /Precondition Error during "selectStory": Story story-not-in-room cannot be selected. It is not part of room/);
-
+      return commandTestUtils.assertPromiseRejects(
+        this.processor({
+          id: this.commandId,
+          roomId: this.roomId,
+          name: 'selectStory',
+          payload: {
+            storyId: 'story-not-in-room'
+          }
+        }, this.userId),
+        'Precondition Error during "selectStory": Story story-not-in-room cannot be selected. It is not part of room');
     });
   });
 

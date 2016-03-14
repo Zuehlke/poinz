@@ -16,14 +16,15 @@ module.exports = {
 };
 
 function getRoomById(roomId) {
-  return rooms.get(roomId);
+  return new Promise(resolve => resolve(rooms.get(roomId)));
 }
 
 function saveRoom(room) {
   rooms = rooms.set(room.get('id'), room);
+  new Promise(resolve => resolve());
 }
 
 function getAllRooms() {
-  return rooms;
+  return new Promise(resolve => resolve(rooms));
 }
 

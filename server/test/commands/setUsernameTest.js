@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('./commandTestUtils'),
+  commandTestUtils = require('../commandTestUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -31,56 +31,54 @@ describe('setUsername', () => {
   });
 
   it('Should produce usernameSet event', function () {
+    return this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'setUsername',
+        payload: {
+          userId: this.userId,
+          username: 'John Doe'
+        }
+      }, this.userId)
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 1);
 
-    const producedEvents = this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'setUsername',
-      payload: {
-        userId: this.userId,
-        username: 'John Doe'
-      }
-    }, this.userId);
-
-    assert(producedEvents);
-    assert.equal(producedEvents.length, 1);
-
-    const usernameSetEvent = producedEvents[0];
-    commandTestUtils.assertValidEvent(usernameSetEvent, this.commandId, this.roomId, this.userId, 'usernameSet');
-    assert.equal(usernameSetEvent.payload.username, 'John Doe');
-    assert.equal(usernameSetEvent.payload.userId, this.userId);
-
+        const usernameSetEvent = producedEvents[0];
+        commandTestUtils.assertValidEvent(usernameSetEvent, this.commandId, this.roomId, this.userId, 'usernameSet');
+        assert.equal(usernameSetEvent.payload.username, 'John Doe');
+        assert.equal(usernameSetEvent.payload.userId, this.userId);
+      });
   });
 
   it('Should store username', function () {
-
-    this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'setUsername',
-      payload: {
-        userId: this.userId,
-        username: 'Mikey'
-      }
-    }, this.userId);
-
-    assert.equal(this.mockRoomsStore.getRoomById().getIn(['users', this.userId, 'username']), 'Mikey');
+    return this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'setUsername',
+        payload: {
+          userId: this.userId,
+          username: 'Mikey'
+        }
+      }, this.userId)
+      .then(() => this.mockRoomsStore.getRoomById())
+      .then(room => assert.equal(room.getIn(['users', this.userId, 'username']), 'Mikey'));
   });
 
   describe('preconditions', () => {
 
     it('Should throw if userId does not match', function () {
-
-      assert.throws(() => this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setUsername',
-        payload: {
-          userId: 'unknown',
-          username: 'Mikey'
-        }
-      }, this.userId), /Can only set username for own user!/);
-
+      return commandTestUtils.assertPromiseRejects(
+        this.processor({
+          id: this.commandId,
+          roomId: this.roomId,
+          name: 'setUsername',
+          payload: {
+            userId: 'unknown',
+            username: 'Mikey'
+          }
+        }, this.userId),
+        'Can only set username for own user!');
     });
   });
 

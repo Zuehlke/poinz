@@ -3,8 +3,13 @@
 module.exports = {
   serverHost: '0.0.0.0',
   serverPort: 3000,
-
-  // if set, the backend will delay sending produced events to clients (can be useful to simulate latency)
-  // set to 0 to disable
-  eventDelay: 0
+  log: {
+    file: {
+      level: 'info',
+      name: 'poinz.log'
+    },
+    console: {
+      level: 'info'
+    }
+  }
 };

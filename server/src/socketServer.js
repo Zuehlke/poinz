@@ -2,7 +2,6 @@ const
   http = require('http'),
   uuid = require('node-uuid').v4,
   socketIo = require('socket.io'),
-  settings = require('./settings'),
   logging = require('./logging');
 
 const LOGGER = logging.getLogger('socketServer');
@@ -38,12 +37,7 @@ function handleIncomingCommand(socket, msg) {
         registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
       }
 
-      if (settings.eventDelay) {
-        setTimeout(() => sendEvents(producedEvents, msg.roomId), settings.eventDelay);
-      } else {
-        sendEvents(producedEvents, msg.roomId);
-      }
-
+      sendEvents(producedEvents, msg.roomId);
     })
     .catch(commandProcessingError => handleCommandProcessingError(commandProcessingError, msg, socket));
 }
@@ -84,22 +78,24 @@ function handleCommandProcessingError(error, command, socket) {
   socket.emit('event', commandRejectedEvent);
 }
 
-function registerUserWithSocket(msg, socket, userIdToStore) {
-  // at this point, we know that join was successful
-  // we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
-  // on socket disconnect.
-  socketToRoomMap[socket.id] = msg.roomId;
+/**
+ * at this point, we know that the join was successful.
+ * we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
+ * on socket disconnect.
+ *
+ * @param {object} joinRoomCommand the handled joinRoom command
+ * @param socket
+ * @param userIdToStore
+ */
+function registerUserWithSocket(joinRoomCommand, socket, userIdToStore) {
   if (!userIdToStore) {
-    const noUserIdAfterJoinErr = new Error('Why is there no userId!');
-    LOGGER.error(noUserIdAfterJoinErr);
-    throw noUserIdAfterJoinErr;
+    throw new Error('No userId after "roomJoined" to pu into socketToUserIdMap!');
   }
+  socketToRoomMap[socket.id] = joinRoomCommand.roomId;
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(msg.roomId, function () {
-    LOGGER.debug('socket with id ' + socket.id + ' joined room ' + msg.roomId);
-  });
+  socket.join(joinRoomCommand.roomId, () => LOGGER.debug('socket with id ' + socket.id + ' joined room ' + joinRoomCommand.roomId));
 }
 
 /**

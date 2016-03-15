@@ -31,7 +31,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    *  6. Apply events
    *  7. Store room
    *
-   *  Every step can throw an error which will lead to a command rejection event.
+   *  Every step can throw an error which will reject the promise.
    *
    *  @param {object} command
    *  @param {string} userId The id of the user that sent the command. if command is "joinRoom" user id is not yet given and will be undefined!
@@ -53,6 +53,8 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
   /** 1. Validate incoming command (syntactically, against schema) **/
   function validate(cmd) {
+    // use "new Promise" instead of "Promise.resolve" -> errors thrown in invocation of "commandSchemaValidator" should
+    // reject returned promise.
     return new Promise(resolve => resolve(commandSchemaValidator(cmd)));
   }
 
@@ -65,8 +67,6 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
       throw new Error('No handler found for ' + cmd.name);
     }
     ctx.handler = handler;
-
-    return Promise.resolve();
   }
 
   /**
@@ -83,6 +83,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
         if (!room && ctx.handler.existingRoom) {
           // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
+          // could happen if server is restarted, users are still logged in to room and send a command with a "stale" roomId.
           throw new Error('Command "' + cmd.name + '" only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
         }
 
@@ -124,7 +125,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
      * @param eventName
      * @param eventPayload
      */
-    ctx.room.applyEvent = function applyEvent(eventName, eventPayload) {
+    ctx.room.applyEvent = (eventName, eventPayload) => {
       const eventHandler = eventHandlers[eventName];
       if (!eventHandler) {
         throw new Error('Cannot apply unknown event ' + eventName);

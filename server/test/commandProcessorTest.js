@@ -2,13 +2,13 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('./commandTestUtils'),
+  testUtils = require('./testUtils'),
   processorFactory = require('../src/commandProcessor');
 
 describe('commandProcessor', () => {
 
   beforeEach(function () {
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore();
+    this.mockRoomsStore = testUtils.newMockRoomsStore();
   });
 
   it('process a dummy command successfully', function () {
@@ -46,7 +46,7 @@ describe('commandProcessor', () => {
       // no event handlers
     }, this.mockRoomsStore);
 
-    return commandTestUtils.assertPromiseRejects(
+    return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
         roomId: 'my-test-room',
@@ -68,7 +68,7 @@ describe('commandProcessor', () => {
       // no event handlers
     }, this.mockRoomsStore);
 
-    return commandTestUtils.assertPromiseRejects(
+    return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
         roomId: 'my-test-room',
@@ -90,7 +90,7 @@ describe('commandProcessor', () => {
       // no event handlers
     }, this.mockRoomsStore);
 
-    return commandTestUtils.assertPromiseRejects(
+    return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
         roomId: 'my-test-room',
@@ -104,7 +104,7 @@ describe('commandProcessor', () => {
 
     const processor = processorFactory({}, {}, this.mockRoomsStore);
 
-    return commandTestUtils.assertPromiseRejects(
+    return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
         roomId: 'my-test-room',
@@ -118,7 +118,7 @@ describe('commandProcessor', () => {
 
     const processor = processorFactory({}, {}, this.mockRoomsStore);
 
-    return commandTestUtils.assertPromiseRejects(
+    return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
         roomId: 'my-test-room',
@@ -138,7 +138,7 @@ describe('commandProcessor', () => {
       }
     }, {}, this.mockRoomsStore);
 
-    return commandTestUtils.assertPromiseRejects(
+    return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
         roomId: 'room-' + uuid(),

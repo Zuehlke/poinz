@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -16,7 +16,7 @@ describe('clearStoryEstimate', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
       users: {
         [this.userId]: {
@@ -85,7 +85,7 @@ describe('clearStoryEstimate', () => {
         assert.equal(producedEvents.length, 1);
 
         const storyEstimateClearedEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(storyEstimateClearedEvent, this.commandId, this.roomId, this.userId, 'storyEstimateCleared');
+        testUtils.assertValidEvent(storyEstimateClearedEvent, this.commandId, this.roomId, this.userId, 'storyEstimateCleared');
         assert.equal(storyEstimateClearedEvent.payload.userId, this.userId);
         assert.equal(storyEstimateClearedEvent.payload.storyId, this.storyId);
       });
@@ -109,7 +109,7 @@ describe('clearStoryEstimate', () => {
   describe('preconditions', () => {
 
     it('Should throw if userId does not match', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -123,7 +123,7 @@ describe('clearStoryEstimate', () => {
     });
 
     it('Should throw if storyId does not match', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -139,7 +139,7 @@ describe('clearStoryEstimate', () => {
     it('Should throw if story already revealed', function () {
       this.mockRoomsStore.manipulate(room => room.setIn(['stories', this.storyId, 'revealed'], true));
 
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -155,7 +155,7 @@ describe('clearStoryEstimate', () => {
     it('Should throw if user is a visitor', function () {
       this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
 
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

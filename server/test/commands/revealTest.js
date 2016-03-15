@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -16,7 +16,7 @@ describe('reveal', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
       users: {
         [this.userId]: {
@@ -68,7 +68,7 @@ describe('reveal', () => {
         assert.equal(producedEvents.length, 1);
 
         const revealedEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(revealedEvent, this.commandId, this.roomId, this.userId, 'revealed');
+        testUtils.assertValidEvent(revealedEvent, this.commandId, this.roomId, this.userId, 'revealed');
         assert.equal(revealedEvent.payload.storyId, this.storyId);
         assert.equal(revealedEvent.payload.manually, true);
       });
@@ -90,7 +90,7 @@ describe('reveal', () => {
   describe('preconditions', () => {
 
     it('Should throw if storyId does not match currently selected story', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -106,7 +106,7 @@ describe('reveal', () => {
 
       this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
 
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

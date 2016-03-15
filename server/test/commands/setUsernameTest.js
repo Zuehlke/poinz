@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -17,7 +17,7 @@ describe('setUsername', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
       users: {
         [this.userId]: {
@@ -45,7 +45,7 @@ describe('setUsername', () => {
         assert.equal(producedEvents.length, 1);
 
         const usernameSetEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(usernameSetEvent, this.commandId, this.roomId, this.userId, 'usernameSet');
+        testUtils.assertValidEvent(usernameSetEvent, this.commandId, this.roomId, this.userId, 'usernameSet');
         assert.equal(usernameSetEvent.payload.username, 'John Doe');
         assert.equal(usernameSetEvent.payload.userId, this.userId);
       });
@@ -68,7 +68,7 @@ describe('setUsername', () => {
   describe('preconditions', () => {
 
     it('Should throw if userId does not match', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

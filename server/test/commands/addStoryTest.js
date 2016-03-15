@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -24,7 +24,7 @@ describe('addStory', () => {
     this.roomId = 'rm_' + uuid();
 
     // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
       users: {
         [this.userId]: {
@@ -59,7 +59,7 @@ describe('addStory', () => {
         assert.equal(producedEvents.length, 1);
 
         const storyAddedEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(storyAddedEvent, this.commandId, this.roomId, this.userId, 'storyAdded');
+        testUtils.assertValidEvent(storyAddedEvent, this.commandId, this.roomId, this.userId, 'storyAdded');
         assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
         assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
         assert.deepEqual(storyAddedEvent.payload.estimations, {});
@@ -83,13 +83,13 @@ describe('addStory', () => {
         assert.equal(producedEvents.length, 2);
 
         const storyAddedEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(storyAddedEvent, this.commandId, this.roomId, this.userId, 'storyAdded');
+        testUtils.assertValidEvent(storyAddedEvent, this.commandId, this.roomId, this.userId, 'storyAdded');
         assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
         assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
         assert.deepEqual(storyAddedEvent.payload.estimations, {});
 
         const storySelectedEvent = producedEvents[1];
-        commandTestUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
+        testUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
       });
   });
 
@@ -111,7 +111,7 @@ describe('addStory', () => {
     it('Should throw if user is a visitor', function () {
       this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
 
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

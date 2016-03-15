@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -17,7 +17,7 @@ describe('setVisitor', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
       users: {
         [this.userId]: {
@@ -57,7 +57,7 @@ describe('setVisitor', () => {
           assert.equal(producedEvents.length, 1);
 
           const visitorSetEvent = producedEvents[0];
-          commandTestUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorSet');
+          testUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorSet');
           assert.equal(visitorSetEvent.payload.userId, this.userId);
         });
     }
@@ -91,7 +91,7 @@ describe('setVisitor', () => {
           assert.equal(producedEvents.length, 1);
 
           const visitorSetEvent = producedEvents[0];
-          commandTestUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorUnset');
+          testUtils.assertValidEvent(visitorSetEvent, this.commandId, this.roomId, this.userId, 'visitorUnset');
           assert.equal(visitorSetEvent.payload.userId, this.userId);
         });
     }
@@ -132,7 +132,7 @@ describe('setVisitor', () => {
   describe('preconditions', () => {
 
     it('Should throw if userId does not match', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

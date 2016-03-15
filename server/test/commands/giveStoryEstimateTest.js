@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -16,7 +16,7 @@ describe('giveStoryEstimate', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(Immutable.fromJS({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
       users: {
         [this.userId]: {
@@ -76,7 +76,7 @@ describe('giveStoryEstimate', () => {
         assert.equal(producedEvents.length, 1);
 
         const storyEstimatgeGivenEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(storyEstimatgeGivenEvent, this.commandId, this.roomId, this.userId, 'storyEstimateGiven');
+        testUtils.assertValidEvent(storyEstimatgeGivenEvent, this.commandId, this.roomId, this.userId, 'storyEstimateGiven');
         assert.equal(storyEstimatgeGivenEvent.payload.userId, this.userId);
         assert.equal(storyEstimatgeGivenEvent.payload.storyId, this.storyId);
         assert.equal(storyEstimatgeGivenEvent.payload.value, 2);
@@ -127,10 +127,10 @@ describe('giveStoryEstimate', () => {
           assert.equal(producedEvents.length, 2);
 
           const storyEstimatgeGivenEvent = producedEvents[0];
-          commandTestUtils.assertValidEvent(storyEstimatgeGivenEvent, this.commandId, this.roomId, this.userId, 'storyEstimateGiven');
+          testUtils.assertValidEvent(storyEstimatgeGivenEvent, this.commandId, this.roomId, this.userId, 'storyEstimateGiven');
 
           const revealedEvent = producedEvents[1];
-          commandTestUtils.assertValidEvent(revealedEvent, this.commandId, this.roomId, this.userId, 'revealed');
+          testUtils.assertValidEvent(revealedEvent, this.commandId, this.roomId, this.userId, 'revealed');
           assert.equal(revealedEvent.payload.manually, false);
           assert.equal(revealedEvent.payload.storyId, this.storyId);
         });
@@ -142,7 +142,7 @@ describe('giveStoryEstimate', () => {
   describe('preconditions', () => {
 
     it('Should throw if userId does not match', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -157,7 +157,7 @@ describe('giveStoryEstimate', () => {
     });
 
     it('Should throw if storyId does not match', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -173,7 +173,7 @@ describe('giveStoryEstimate', () => {
 
     it('Should throw if story already revealed', function () {
       this.mockRoomsStore.manipulate(room => room.setIn(['stories', this.storyId, 'revealed'], true));
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
@@ -190,7 +190,7 @@ describe('giveStoryEstimate', () => {
     it('Should throw if user is a visitor', function () {
       this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
 
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

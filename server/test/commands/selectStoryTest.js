@@ -2,7 +2,7 @@ const
   assert = require('assert'),
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
-  commandTestUtils = require('../commandTestUtils'),
+  testUtils = require('../testUtils'),
   processorFactory = require('../../src/commandProcessor'),
   handlerGatherer = require('../../src//handlerGatherer');
 
@@ -17,7 +17,7 @@ describe('selectStory', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = commandTestUtils.newMockRoomsStore(new Immutable.Map({
+    this.mockRoomsStore = testUtils.newMockRoomsStore(new Immutable.Map({
       id: this.roomId
     }));
 
@@ -50,7 +50,7 @@ describe('selectStory', () => {
         assert.equal(producedEvents.length, 1);
 
         const storySelectedEvent = producedEvents[0];
-        commandTestUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
+        testUtils.assertValidEvent(storySelectedEvent, this.commandId, this.roomId, this.userId, 'storySelected');
         assert.equal(storySelectedEvent.payload.storyId, this.storyId);
       });
   });
@@ -71,7 +71,7 @@ describe('selectStory', () => {
   describe('preconditions', () => {
 
     it('Should throw if story is not in room', function () {
-      return commandTestUtils.assertPromiseRejects(
+      return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,

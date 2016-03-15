@@ -34,7 +34,6 @@ function assertPromiseRejects(promise, expectedErrorMessage) {
     .catch(err => assertError(err, expectedErrorMessage));
 }
 
-
 function assertError(actualError, expectedMessage) {
   assert(actualError.message);
   assert(actualError.message.indexOf(expectedMessage) > -1, `Error is expected to contain "${expectedMessage}".\nWas "${actualError.message}"`);

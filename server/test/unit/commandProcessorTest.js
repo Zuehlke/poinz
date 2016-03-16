@@ -3,7 +3,7 @@ const
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
   testUtils = require('./testUtils'),
-  processorFactory = require('../src/commandProcessor');
+  processorFactory = require('../../src/commandProcessor');
 
 describe('commandProcessor', () => {
 

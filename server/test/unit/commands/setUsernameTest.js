@@ -3,8 +3,8 @@ const
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
   testUtils = require('../testUtils'),
-  processorFactory = require('../../src/commandProcessor'),
-  handlerGatherer = require('../../src//handlerGatherer');
+  processorFactory = require('../../../src/commandProcessor'),
+  handlerGatherer = require('../../../src/handlerGatherer');
 
 describe('setUsername', () => {
 

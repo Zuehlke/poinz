@@ -21,6 +21,16 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 6. Start container `docker run -p 8080:3000 -d xeronimus/poinz`
 
+
+## Redis
+
+Our roomsStore uses redis as persistent storage.
+In order for it to work, there must be a redis server running, where our store can connect to.
+
+One solution is to run redis also within docker (in a separate container).
+
+`docker run -d --name redis -p 6379:6379 redis`
+
 ### port forwarding:
 
 (see also https://gist.github.com/kentbrew/776580)

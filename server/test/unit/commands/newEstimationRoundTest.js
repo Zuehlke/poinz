@@ -3,10 +3,10 @@ const
   Immutable = require('immutable'),
   uuid = require('node-uuid').v4,
   testUtils = require('../testUtils'),
-  processorFactory = require('../../src/commandProcessor'),
-  handlerGatherer = require('../../src//handlerGatherer');
+  processorFactory = require('../../../src/commandProcessor'),
+  handlerGatherer = require('../../../src/handlerGatherer');
 
-describe('reveal', () => {
+describe('newEstimationRound', () => {
 
   beforeEach(function () {
     const cmdHandlers = handlerGatherer.gatherCommandHandlers();
@@ -50,15 +50,27 @@ describe('reveal', () => {
             storyId: this.storyId
           }
         }, this.userId);
+      })
+      .then(() => {
+        // store some estimations
+        return this.processor({
+          id: this.commandId,
+          roomId: this.roomId,
+          name: 'giveStoryEstimate',
+          payload: {
+            userId: this.userId,
+            storyId: this.storyId,
+            value: 8
+          }
+        }, this.userId);
       });
-
   });
 
-  it('Should produce revealed event', function () {
+  it('Should produce newEstimationRoundStarted event', function () {
     return this.processor({
         id: this.commandId,
         roomId: this.roomId,
-        name: 'reveal',
+        name: 'newEstimationRound',
         payload: {
           storyId: this.storyId
         }
@@ -67,24 +79,39 @@ describe('reveal', () => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
 
-        const revealedEvent = producedEvents[0];
-        testUtils.assertValidEvent(revealedEvent, this.commandId, this.roomId, this.userId, 'revealed');
-        assert.equal(revealedEvent.payload.storyId, this.storyId);
-        assert.equal(revealedEvent.payload.manually, true);
+        const newRoundStartedEvent = producedEvents[0];
+        testUtils.assertValidEvent(newRoundStartedEvent, this.commandId, this.roomId, this.userId, 'newEstimationRoundStarted');
+        assert.equal(newRoundStartedEvent.payload.storyId, this.storyId);
       });
   });
 
-  it('Should set "revealed" flag', function () {
+  it('Should clear estimations', function () {
     return this.processor({
         id: this.commandId,
         roomId: this.roomId,
-        name: 'reveal',
+        name: 'newEstimationRound',
         payload: {
           storyId: this.storyId
         }
       }, this.userId)
-      .then(() => this.mockRoomsStore.getRoomById())
-      .then(room => assert.equal(room.getIn(['stories', this.storyId, 'revealed']), true));
+      .then(() =>this.mockRoomsStore.getRoomById())
+      .then(room => assert.equal(room.getIn(['stories', this.storyId, 'estimations']).size, 0));
+  });
+
+  it('Should clear "revealed" flag', function () {
+
+    this.mockRoomsStore.manipulate(room => room.setIn(['stories', this.storyId, 'revealed'], true));
+
+    return this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'newEstimationRound',
+        payload: {
+          storyId: this.storyId
+        }
+      }, this.userId)
+      .then(() =>this.mockRoomsStore.getRoomById())
+      .then(room => assert.equal(room.getIn(['stories', this.storyId, 'revealed']), false));
   });
 
   describe('preconditions', () => {
@@ -94,31 +121,13 @@ describe('reveal', () => {
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
-          name: 'reveal',
+          name: 'newEstimationRound',
           payload: {
             storyId: 'anotherStory'
           }
         }, this.userId),
-        'Can only reveal currently selected story!');
+        'Can only start a new round for currently selected story!');
     });
-
-    it('Should throw if user is visitor', function () {
-
-      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
-
-      return testUtils.assertPromiseRejects(
-        this.processor({
-          id: this.commandId,
-          roomId: this.roomId,
-          name: 'reveal',
-          payload: {
-            storyId: this.storyId
-          }
-        }, this.userId),
-        'Visitors cannot reveal stories!');
-    });
-
-
   });
 
 });

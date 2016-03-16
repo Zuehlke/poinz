@@ -12,16 +12,17 @@
   },
   "main": "src/server.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha test/*",
+    "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha test/unit/*",
     "start": "node src/server.js"
   },
   "dependencies": {
-    "bluebird": "^3.3.4",
+    "bluebird": "3.3.4",
     "express": "4.13.4",
     "glob": "7.0.3",
     "immutable": "3.7.6",
     "lodash": "4.6.1",
     "node-uuid": "1.4.7",
+    "redis": "2.5.1",
     "socket.io": "1.4.5",
     "tv4": "1.2.7",
     "winston": "2.2.0",
@@ -29,7 +30,8 @@
   },
   "devDependencies": {
     "eslint": "2.4.0",
-    "mocha": "2.4.5"
+    "mocha": "2.4.5",
+    "socket.io-client": "1.4.5"
   },
   "engines": {
     "node": ">=4.1.0"

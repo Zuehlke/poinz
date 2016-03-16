@@ -14,12 +14,12 @@ module.exports = {
 
     const newStoryId = uuid();
 
-    room.applyEvent('storyAdded', Object.assign({
-      id: newStoryId,
-      estimations: {}
-    }, command.payload));
+    const eventPayload = command.payload;
+    eventPayload.id = newStoryId;
+    eventPayload.estimations = {};
+    room.applyEvent('storyAdded', eventPayload);
 
-    if (!room.get('stories') || room.get('stories').size < 1) {
+    if (!room.get('stories') || !room.get('stories').first()) {
       // this is the first story that gets added
       room.applyEvent('storySelected', {storyId: newStoryId});
     }

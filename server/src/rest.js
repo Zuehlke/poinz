@@ -23,29 +23,34 @@ function init(app) {
 }
 
 function handleStatusRequest(req, res) {
-  const status = buildStatusObject();
-  res.contentType('application/json');
-  res.json(status);
+  buildStatusObject().then(status => {
+    res.contentType('application/json');
+    res.json(status);
+  });
 }
 
 function buildStatusObject() {
-  const rooms = roomsStore
+  return roomsStore
     .getAllRooms()
-    .filter(room => room.get('id') !== 'poinzstatus') // the status page in the client is technically also a room. do not include it in the result.
-    .map(room => new Immutable.Map({
-      userCount: room.get('users').size,
-      userCountDisconnected: room.get('users').filter(user => user.get('disconnected')).size,
-      lastActivity: room.get('lastActivity'),
-      created: room.get('created')
-    }))
-    .toList()
-    .toJS();
+    .then(allRooms => {
+      const rooms = allRooms
+      // the status page in the client is technically also a room. do not include it in the result.
+        .filter(room => room.get('id') !== 'poinzstatus')
+        .map(room => new Immutable.Map({
+          userCount: room.get('users').size,
+          userCountDisconnected: room.get('users').filter(user => user.get('disconnected')).size,
+          lastActivity: room.get('lastActivity'),
+          created: room.get('created')
+        }))
+        .toList()
+        .toJS();
 
-  return {
-    rooms,
-    roomCount: rooms.length,
-    uptime: Math.floor(process.uptime())
-  };
+      return {
+        rooms,
+        roomCount: rooms.length,
+        uptime: Math.floor(process.uptime())
+      };
+    });
 }
 
 module.exports = {init};

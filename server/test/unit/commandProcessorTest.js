@@ -1,6 +1,7 @@
 const
   assert = require('assert'),
   Immutable = require('immutable'),
+  Promise = require('bluebird'),
   uuid = require('node-uuid').v4,
   testUtils = require('./testUtils'),
   processorFactory = require('../../src/commandProcessor');
@@ -146,6 +147,49 @@ describe('commandProcessor', () => {
         payload: {userId: 'abc', username: 'john'}
       }),
       'Command "setUsername" only want\'s to get handled for an existing room');
+  });
+
+
+  /**
+   * Assures that we handle two "simultaneously" incoming commands correctly.
+   */
+  it('concurrency handling', function () {
+
+    const mockRoomsStore = testUtils.newMockRoomsStore(new Immutable.Map({
+      id: 'concurrencyTestRoom',
+      manipulationCount: 0
+    }));
+
+    const processor = processorFactory({
+      setUsername: {
+        fn: function (room, command) {
+          room.applyEvent('usernameSet', command.payload);
+        }
+      }
+    }, {
+      usernameSet: function (room, eventPayload) {
+        return room
+          .set('username', eventPayload.username)
+          .set('manipulationCount', room.get('manipulationCount') + 1);
+      }
+    }, mockRoomsStore);
+
+    const eventPromiseOne = processor({
+      id: uuid(),
+      roomId: 'concurrencyTestRoom',
+      name: 'setUsername',
+      payload: {userId: '1', username: 'tom'}
+    });
+    const eventPromiseTwo = processor({
+      id: uuid(),
+      roomId: 'concurrencyTestRoom',
+      name: 'setUsername',
+      payload: {userId: '1', username: 'jerry'}
+    });
+
+    return Promise.all([eventPromiseOne, eventPromiseTwo])
+      .then(() => mockRoomsStore.getRoomById())
+      .then(room => assert.equal(2, room.get('manipulationCount')));
   });
 
 });

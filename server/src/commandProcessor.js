@@ -2,14 +2,16 @@ const
   util = require('util'),
   Promise = require('bluebird'),
   Immutable = require('immutable'),
+  queueFactory = require('./sequenceQueue'),
   uuid = require('node-uuid').v4,
   commandSchemaValidator = require('./commandSchemaValidator');
 
 module.exports = commandProcessorFactory;
 
 /**
- * wrapped in a factory function. Separates the gathering of the handler from the processing logic.
- * Also allows us to pass in custom list of handlers during test.
+ * wrapped in a factory function.
+ * (Separate the gathering of the handlers from the processing logic.)
+ * Also allows us to pass in custom list of handlers during tests.
  *
  * @param {object} commandHandlers
  * @param {object} eventHandlers
@@ -17,6 +19,31 @@ module.exports = commandProcessorFactory;
  * @returns {function} the processCommand function
  */
 function commandProcessorFactory(commandHandlers, eventHandlers, store) {
+
+  const queue = queueFactory();
+
+  queue.setJobHandler((job, nextJob) => {
+    const userId = job.userId;
+    const command = job.command;
+    const context = {userId};
+
+    validate(command)
+      .then(() => getCommandHandler(context, command))
+      .then(() => loadRoom(context, command))
+      .then(() => preConditions(context, command))
+      .then(() => handle(context, command))
+      .then(() => applyEvents(context, command))
+      .then(() => saveRoomBackToStore(context))
+      .then(() => {
+        nextJob();
+        job.resolve(context.eventsToSend);
+      })
+      .catch(err => {
+        nextJob(err);
+        job.reject(err);
+      });
+
+  });
 
   /**
    *  The command processor handles incoming commands.
@@ -38,17 +65,13 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    *  @returns {Promise<object[]>} Promise that resolves to a list of events that were produced by this command. (they are already applied to the room state)
    */
   return function processCommand(command, userId) {
-
-    const context = {userId};
-
-    return validate(command)
-      .then(() => getCommandHandler(context, command))
-      .then(() => loadRoom(context, command))
-      .then(() => preConditions(context, command))
-      .then(() => handle(context, command))
-      .then(() => applyEvents(context, command))
-      .then(() => saveRoomBackToStore(context))
-      .then(() => context.eventsToSend);
+    /**
+     * In a scenario where two commands for the same room arrive only a few ms apart, both command handlers
+     * would receive the same room object from the store. the second command would override the state manipulations of the first.
+     *
+     * This is why we push incoming commands into a queue (see sequenceQueue).
+     */
+    return new Promise((resolve, reject) => queue.push({command, userId, resolve, reject}));
   };
 
   /** 1. Validate incoming command (syntactically, against schema) **/
@@ -80,7 +103,6 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
     return store
       .getRoomById(cmd.roomId)
       .then(room => {
-
         if (!room && ctx.handler.existingRoom) {
           // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
           // could happen if server is restarted, users are still logged in to room and send a command with a "stale" roomId.

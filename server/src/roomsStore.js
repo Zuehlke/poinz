@@ -29,8 +29,15 @@ module.exports = {
  * @returns {Promise.<Immutable.Map>}
  */
 function getRoomById(roomId) {
+  return getRoomByIdIntern(POINZ_REDIS_KEY_PREFIX + roomId);
+}
+
+/**
+ * pass in the already prependend ("poinz:") roomId
+ */
+function getRoomByIdIntern(roomIdPrepended) {
   return redisClient
-    .getAsync(POINZ_REDIS_KEY_PREFIX + roomId)
+    .getAsync(roomIdPrepended)
     .then(res => res ? redisValueToImmutableRoom(res) : undefined);
 }
 
@@ -60,7 +67,7 @@ function saveRoom(room) {
  */
 function getAllRooms() {
   return getAllKeysInCollection()
-    .then(allKeys => Promise.all(allKeys.map(key => getRoomById(key))))
+    .then(allKeys => Promise.all(allKeys.map(key => getRoomByIdIntern(key))))
     .then(allRooms => new Immutable.List(allRooms));
 }
 

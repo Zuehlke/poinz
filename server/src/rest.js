@@ -35,7 +35,7 @@ function buildStatusObject() {
     .then(allRooms => {
       const rooms = allRooms
       // the status page in the client is technically also a room. do not include it in the result.
-        .filter(room => room.get('id') !== 'poinzstatus')
+        .filter(room => room && room.get('id') !== 'poinzstatus')
         .map(room => new Immutable.Map({
           userCount: room.get('users').size,
           userCountDisconnected: room.get('users').filter(user => user.get('disconnected')).size,

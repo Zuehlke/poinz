@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import appConfig from '../services/appConfig';
+import {secondsToDaysHoursMinutes} from '../services/timeUtil';
 import TopBar from '../components/TopBar';
 
 import { fetchStatus } from '../services/actions';
@@ -31,8 +32,7 @@ class AppStatus extends React.Component {
       return null;
     }
 
-    const uptime = new Date(1970, 0, 1);
-    uptime.setSeconds(appStatus.get('uptime'));
+    const uptime = secondsToDaysHoursMinutes(appStatus.get('uptime'));
 
     const sortedActiveRooms = appStatus.get('rooms')
       .filter(room => room.get('userCount') > room.get('userCountDisconnected'))
@@ -56,7 +56,7 @@ class AppStatus extends React.Component {
           Version: {appConfig.version} {fecha.format(appConfig.buildTime, ' DD.MM.YY HH:mm')}
         </p>
         <p>
-          Uptime: {fecha.format(uptime, 'HH:mm')}
+          Uptime: {uptime}
         </p>
         <p>
           Total rooms: {appStatus.get('roomCount')}

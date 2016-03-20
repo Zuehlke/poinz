@@ -29,8 +29,11 @@ const commandProcessor = commandProcessorFactory(
   roomsStore
 );
 
-socketServer
-  .init(app, commandProcessor)
-  .listen(settings.serverPort, settings.serverHost, function () {
-    LOGGER.info('-- SERVER STARTED -- (' + settings.serverHost + ':' + settings.serverPort + ')');
-  });
+const server = socketServer.init(app, commandProcessor);
+server.listen(settings.serverPort, settings.serverHost, function () {
+  LOGGER.info('-- SERVER STARTED -- (' + settings.serverHost + ':' + settings.serverPort + ')');
+});
+
+process.on('SIGINT', function () {
+  server.close(()=> process.exit(0));
+});

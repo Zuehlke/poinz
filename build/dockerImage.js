@@ -27,13 +27,13 @@ del([
     return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../client')});
   })
   .then(() => {
-    console.log('POINZ: building client with webpack...');
+    console.log('building client with webpack...');
     return spawnAndPrint(
       './node_modules/.bin/webpack', '-p --colors --bail --config webpack.production.config.js'.split(' '),
       {cwd: path.resolve(__dirname, '../client')});
   })
   .then(() => {
-    console.log('POINZ: copying sources...');
+    console.log('copying sources...');
     return Q.ninvoke(fs, 'copy', './client/dist', './deploy/public/assets');
   })
   .then(() => {
@@ -46,7 +46,7 @@ del([
     return Q.ninvoke(fs, 'copy', './server/package.json', './deploy/package.json');
   })
   .then(() => {
-    console.log('POINZ: building docker container...');
+    console.log('building docker container...');
     return spawnAndPrint('docker', 'build -t xeronimus/poinz .'.split(' '),
       {cwd: path.resolve(__dirname, '..')});
   })

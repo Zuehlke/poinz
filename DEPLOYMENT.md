@@ -12,6 +12,7 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 - install docker `curl -fsSL https://get.docker.com/ | sh`
 - add user *ubuntu* to *docker* group `sudo gpasswd -a ubuntu docker`
 - port forwarding (see below)
+- redis container (see below)
 
 3. push new version to upstream github repo (zuehlke)
 
@@ -19,7 +20,23 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 5. build docker image `npm run build` (our image is not pushed to a repo, so we build on the EC2 instance for now)
 
-6. Start container `docker run -p 8080:3000 -d xeronimus/poinz`
+6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz`
+
+
+#### Cheat Sheet
+
+- `docker images` List all docker images
+- `docker ps -a` List all docker containers
+- `docker exec -it poinz /bin/bash` Open an interactive shell in our poinz container 
+
+## Redis
+
+Our roomsStore uses redis as persistent storage.
+In order for it to work, there must be a redis server running, where our store can connect to.
+
+One solution is to run redis also within docker (in a separate container).
+
+`docker run -d --name redis -p 6379:6379 redis`
 
 ### port forwarding:
 

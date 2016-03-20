@@ -26,7 +26,7 @@ function validate(cmd) {
   const schema = schemas[cmd.name];
 
   if (!schema) {
-    throw new CommandValidationError(new Error('Cannot validate command, no matching schema found!'), cmd);
+    throw new CommandValidationError(new Error(`Cannot validate command, no matching schema found for ${cmd.name}!`), cmd);
   }
 
   const result = tv4.validateMultiple(cmd, schema);

@@ -1,23 +1,29 @@
 const
   winston = require('winston'),
+  settings = require('./settings'),
   dailyRotateFileTransport = require('winston-daily-rotate-file');
 
+/**
+ * configuration of root logger with two appenders.
+ * see settings.js for loglevel and filename
+ */
 winston.loggers.options.transports = [
   new winston.transports.Console({
-    level: 'info',
+    level: settings.log.console.level,
     showLevel: false,
     timestamp: true
   }),
   new dailyRotateFileTransport({
-    filename: 'poinz.log',
-    level: 'info',
+    filename: settings.log.file.name,
+    level: settings.log.file.level,
     json: false,
     timestamp: true
   })
 ];
 
 /**
- * returns a new Logger for your component
+ * Returns a new Logger for your component
+ *
  * @param {string} loggerName
  * @returns {object} the new Logger
  */

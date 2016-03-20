@@ -1,7 +1,7 @@
 const
   assert = require('assert'),
   uuid = require('node-uuid').v4,
-  commandSchemaValidator = require('../src/commandSchemaValidator');
+  commandSchemaValidator = require('../../src/commandSchemaValidator');
 
 /**
  * We don't want to test each schema for every command.

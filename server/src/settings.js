@@ -9,17 +9,19 @@ module.exports = {
   // configuration for winston logging
   log: {
     file: {
-      level: 'warn',
+      level: 'info',
       name: 'poinz.log'
     },
     console: {
-      level: 'warn'
+      level: 'info'
     }
   },
 
   // configuration for redis connection (roomsStore)
+  // env variables are set by docker when linking redis container to point container
+  // see DEPLOYMENT.md for more information
   redis: {
-    host: '127.0.0.1',
-    port: 6379
+    host: process.env.DB_PORT_6379_TCP_ADDR || '127.0.0.1',
+    port: process.env.DB_PORT_6379_TCP_PORT || 6379
   }
 };

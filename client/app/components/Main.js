@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Room from './Room';
+import WhoAreYou from './WhoAreYou';
 import AppStatus from './AppStatus';
 import Landing from './Landing';
 
@@ -11,6 +12,7 @@ import { joinRoom } from '../services/actions';
 
 /**
  * The Main component decides whether to display the landing page or the poinz estimation board (a room).
+ * If the user did never set his username/name in a previous session, display "whoAreYou" with a username input field.
  * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
  */
 class Main extends React.Component {
@@ -25,12 +27,15 @@ class Main extends React.Component {
 
   render() {
 
-    const { roomId, users } = this.props;
+    const { roomId, users, presetUsername } = this.props;
+    const hasRoomIdAndUsers = roomId && users && users.size > 0;
 
     if (roomId === 'poinzstatus') {
       return <AppStatus />;
-    } else if (roomId && users && users.size > 0) {
+    } else if (hasRoomIdAndUsers && presetUsername) {
       return <Room />;
+    } else if (hasRoomIdAndUsers) {
+      return <WhoAreYou />;
     } else {
       return <Landing />;
     }

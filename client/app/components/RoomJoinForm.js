@@ -13,8 +13,14 @@ const RoomJoinForm = ({joinRoom }) => {
 
   return (
     <div className='eyecatcher'>
+      <div className='info-text'>
+        <i className='fa fa-users leading-paragraph-icon'></i>
+        <p>
+          Please enter the name of the room<br /> you'd like to join.
+        </p>
+      </div>
       <div className='room-id-wrapper'>
-        <input placeholder='Please enter a room name...' type='text' ref={ref => roomIdInputField = ref}
+        <input placeholder='Room name...' type='text' ref={ref => roomIdInputField = ref}
                onKeyPress={handleKeyPress}/>
         <button type='button' className='pure-button pure-button-primary'
                 onClick={joinIfRoomIdNotEmpty}>Join

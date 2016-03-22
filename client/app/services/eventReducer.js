@@ -173,7 +173,9 @@ const eventActionHandlers = {
       if (payload.userId === state.get('userId')) {
         clientSettingsStore.setPresetUsername(payload.username);
       }
-      return state.updateIn(['users', payload.userId], user => user.set('username', payload.username));
+      return state
+        .updateIn(['users', payload.userId], user => user.set('username', payload.username))
+        .set('presetUsername', payload.username);
     },
     log: (username, payload, oldState) => `${oldState.getIn(['users', payload.userId]).get('username')} is now called "${payload.username}"`
   },

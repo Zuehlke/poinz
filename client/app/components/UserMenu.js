@@ -38,7 +38,7 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
         <div className='username-wrapper'>
           <input type='text'
                  id='username'
-                 placeholder='Username...'
+                 placeholder='Name...'
                  defaultValue={username}
                  ref={ref => usernameInputField = ref}
                  onKeyPress={handleUsernameKeyPress}/>

@@ -76,16 +76,30 @@ a {
     width 400px
     max-width 85%
     background rgba(0, 0, 0, 0.5)
-    padding 32px
+    color white
+    padding 18px 32px 32px 32px
     border-radius 2px
     margin-bottom 16px
+
+    input {
+      color $zuehlkeFontGrey
+    }
+
+    .info-text {
+      display flex
+      align-items center
+      .leading-paragraph-icon {
+        font-size 30px
+        margin-right 16px
+      }
+    }
 
     &.loading {
       color white
       font-size larger
     }
 
-    .room-id-wrapper {
+    .room-id-wrapper, .username-wrapper {
       background #fff
       padding 8px
       border 1px solid #ccc

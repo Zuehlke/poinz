@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import log from 'loglevel';
 
 /*eslint-disable no-unused-vars */
-import normalizeCss from 'normalize.css';
+import normalizeCss from '../node_modules/normalize.css/normalize.css';
 import pureCss from 'purecss';
 import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
 import fontAwesome from '../node_modules/font-awesome/css/font-awesome.min.css';

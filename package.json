@@ -17,9 +17,9 @@
   },
   "devDependencies": {
     "del": "2.2.0",
-    "fs-extra": "0.26.5",
-    "lodash": "^4.6.1",
-    "npm-check-updates": "^2.5.8",
+    "fs-extra": "0.26.7",
+    "lodash": "4.6.1",
+    "npm-check-updates": "2.6.1",
     "q": "1.4.1"
   },
   "engines": {

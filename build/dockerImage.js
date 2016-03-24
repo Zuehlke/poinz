@@ -7,11 +7,12 @@
  *  4. build docker image (see Dockerfile)
  *
  * */
-var
-  fs = require('fs-extra'),
+const
   path = require('path'),
+  Promise = require('bluebird'),
+  fs = Promise.promisifyAll(require('fs-extra')),
   spawn = require('child_process').spawn,
-  Q = require('q'),
+  exec = Promise.promisify(require('child_process').exec),
   del = require('del');
 
 // first let's clean up
@@ -32,22 +33,15 @@ del([
       './node_modules/.bin/webpack', '-p --colors --bail --config webpack.production.config.js'.split(' '),
       {cwd: path.resolve(__dirname, '../client')});
   })
-  .then(() => {
-    console.log('copying sources...');
-    return Q.ninvoke(fs, 'copy', './client/dist', './deploy/public/assets');
-  })
-  .then(() => {
-    return Q.ninvoke(fs, 'copy', './client/index.html', './deploy/public/index.html');
-  })
-  .then(()=> {
-    return Q.ninvoke(fs, 'copy', './server/src', './deploy/src');
-  })
-  .then(() => {
-    return Q.ninvoke(fs, 'copy', './server/package.json', './deploy/package.json');
-  })
-  .then(() => {
-    console.log('building docker container...');
-    return spawnAndPrint('docker', 'build -t xeronimus/poinz .'.split(' '),
+  .then(() => fs.copy('./client/dist', './deploy/public/assets'))
+  .then(() => fs.copy('./client/index.html', './deploy/public/index.html'))
+  .then(() => fs.copy('./server/src', './deploy/src'))
+  .then(() => fs.copy('./server/package.json', './deploy/package.json'))
+  .then(() => exec('git rev-parse --short HEAD', {cdw: __dirname}))
+  .then(stdout => stdout.split('\n').join(''))
+  .then(gitShortHash => {
+    console.log(`building docker container for ${gitShortHash}`);
+    return spawnAndPrint('docker', `build -t xeronimus/poinz:latest -t xeronimus/poinz:${gitShortHash} .`.split(' '),
       {cwd: path.resolve(__dirname, '..')});
   })
   .catch(error => {
@@ -63,23 +57,14 @@ del([
  * @param command
  * @param arguments
  * @param options
- * @returns {Promise} Returns a promise that will reject if childprocess does not exit with code 0.
+ * @returns {Promise<T>} Returns a promise that will reject if childprocess does not exit with code 0.
  */
 function spawnAndPrint(command, arguments, options) {
-  var deferred = Q.defer();
 
   var spawned = spawn(command, arguments, options);
   spawned.stdout.pipe(process.stdout);
   spawned.stderr.pipe(process.stderr);
 
-  // when the spawn child process exits, check if there were any errors
-  spawned.on('exit', code => {
-    if (code != 0) {
-      deferred.reject(new Error('Error in child process'));
-    } else {
-      deferred.resolve();
-    }
-  });
-
-  return deferred.promise;
+  return new Promise((resolve, reject) => spawned.on('exit', code => code != 0 ? reject(new Error('Error in child process')) : resolve()));
 }
+

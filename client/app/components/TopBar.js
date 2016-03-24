@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { toggleBacklog, toggleUserMenu } from '../services/actions';
 
-const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu }) => {
+const TopBar = ({ hideUserMenuToggle, roomId, username, toggleBacklog, toggleUserMenu }) => {
   return (
     <div className='top-bar'>
       <div className='poinz-logo'>PoinZ</div>
@@ -12,15 +12,23 @@ const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu }) => {
           <span></span>
         </span>
       </a>
+
+      {!hideUserMenuToggle &&
       <span className='whoami'>{username + '@' + roomId}</span>
+      }
+
+      {!hideUserMenuToggle &&
       <a className='user-menu-toggle clickable' onClick={toggleUserMenu}>
         <i className='fa fa-cog'></i>
       </a>
+      }
+
     </div>
   );
 };
 
 TopBar.propTypes = {
+  hideUserMenuToggle: React.PropTypes.func,
   roomId: React.PropTypes.string,
   username: React.PropTypes.string,
   toggleBacklog: React.PropTypes.func,

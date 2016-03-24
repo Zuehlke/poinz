@@ -44,7 +44,7 @@ class AppStatus extends React.Component {
 
     return (
       <div className='app-status'>
-        <TopBar />
+        <TopBar hideUserMenuToggle={true}/>
 
         <button className='pure-button pure-button-primary' onClick={fetchStatus}>
           <i className='fa fa-refresh'></i>

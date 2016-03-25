@@ -41,6 +41,7 @@ del([
   .then(startBuildingDockerImage)
   .catch(error => {
     console.error(error);
+    console.error(error.stack);
     process.exit(1);
   });
 
@@ -67,9 +68,9 @@ function startBuildingDockerImage(gitInfo) {
   console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch}`);
 
   const userAndProject = 'xeronimus/poinz';
-  const arguments = `build -t ${userAndProject}:latest -t ${userAndProject}:${gitInfo.branch} -t ${userAndProject}:${gitInfo.hash} .`;
+  const cmdArgs = `build -t ${userAndProject}:latest -t ${userAndProject}:${gitInfo.branch} -t ${userAndProject}:${gitInfo.hash} .`;
 
-  return spawnAndPrint('docker', arguments.split(' '), {cwd: path.resolve(__dirname, '..')});
+  return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
 }
 
 function getGitInformation() {

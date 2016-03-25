@@ -1,8 +1,8 @@
 const
   _ = require('lodash'),
   path = require('path'),
-  fs = require('fs'),
-  q = require('q'),
+  Promise = require('bluebird'),
+  fs = Promise.promisifyAll(require('fs')),
   ncu = require('npm-check-updates');
 
 
@@ -30,11 +30,12 @@ function runCheck() {
   const pkg = getPackageInformation();
   const reportFileName = `./npm_dependencies_report.${pkg.name}.md`;
 
-  ncu.run({
+  ncu
+    .run({
       packageFile: getPackageFileToUse(),
       'error-level': 1 // we don't want to fail CI... we write a report file
     })
-    .then(function (upgraded) {
+    .then(upgraded => {
       const tmpl = _.size(upgraded)
         ? '# NPM DependencyCheck Report for <%- name %>\nThe following dependencies are out-of-date:\n\n<% _.forEach(upgraded, function(version, dependency) { %>* <%- dependency %>: <%- currentDependencies[dependency]%> -> <%- version%>\n<% }); %>'
         : '# NPM DependencyCheck Report for <%- name %>\nNo dependencies are out-of-date :-)';
@@ -42,10 +43,8 @@ function runCheck() {
         upgraded: upgraded
       }, pkg));
     })
-    .then(function (report) {
-      return q.nfcall(fs.writeFile, reportFileName, report);
-    })
-    .then(function () {
+    .then(report => fs.writeFile(reportFileName, report))
+    .then(() => {
       console.log('Report saved to ' + reportFileName);
       process.exit(0);
     })

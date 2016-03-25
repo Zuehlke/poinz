@@ -1,17 +1,30 @@
+sudo: required
+
+services:
+  - docker
+
 language: node_js
+
 node_js:
   - "4.2"
   - "5.7"
+
 cache:
   directories:
     - node_modules
     - client/node_modules
     - server/node_modules
+
 install:
   - npm i
   - cd $TRAVIS_BUILD_DIR/client && npm i
   - cd $TRAVIS_BUILD_DIR/server && npm i
   - cd $TRAVIS_BUILD_DIR/
+
 before_script:
   - npm run dependencyCheck
+
+script:
+  - npm test
+  - npm run build
 

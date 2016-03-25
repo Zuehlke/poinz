@@ -37,13 +37,8 @@ del([
   .then(() => fs.copy('./client/index.html', './deploy/public/index.html'))
   .then(() => fs.copy('./server/src', './deploy/src'))
   .then(() => fs.copy('./server/package.json', './deploy/package.json'))
-  .then(() => exec('git rev-parse --short HEAD', {cdw: __dirname}))
-  .then(stdout => stdout.split('\n').join(''))
-  .then(gitShortHash => {
-    console.log(`building docker container for ${gitShortHash}`);
-    return spawnAndPrint('docker', `build -t xeronimus/poinz:latest -t xeronimus/poinz:${gitShortHash} .`.split(' '),
-      {cwd: path.resolve(__dirname, '..')});
-  })
+  .then(getGitInformation)
+  .then(startBuildingDockerImage)
   .catch(error => {
     console.error(error);
     process.exit(1);
@@ -66,5 +61,25 @@ function spawnAndPrint(command, arguments, options) {
   spawned.stderr.pipe(process.stderr);
 
   return new Promise((resolve, reject) => spawned.on('exit', code => code != 0 ? reject(new Error('Error in child process')) : resolve()));
+}
+
+function startBuildingDockerImage(gitInfo) {
+  console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch}`);
+
+  const userAndProject = 'xeronimus/poinz';
+  const arguments = `build -t ${userAndProject}:latest -t ${userAndProject}:${gitInfo.branch} -t ${userAndProject}:${gitInfo.hash} .`;
+
+  return spawnAndPrint('docker', arguments.split(' '), {cwd: path.resolve(__dirname, '..')});
+}
+
+function getGitInformation() {
+  return Promise.all([
+      exec('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
+      exec('git rev-parse --short HEAD', {cdw: __dirname})
+    ])
+    .spread((abbrev, short) => ({
+      branch: abbrev.split('\n').join(''),
+      hash: short.split('\n').join('')
+    }));
 }
 

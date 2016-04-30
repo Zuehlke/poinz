@@ -29,4 +29,4 @@ script:
 
 after_success:
   - docker login --username="$DOCKER_USERNAME" --email="$DOCKER_EMAIL" --password="$DOCKER_PASSWORD"
-  - docker push xeronimus/poinz
+  - docker push xeronimus/poinz:latest

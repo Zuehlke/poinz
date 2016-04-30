@@ -41,7 +41,7 @@ Try to adhere to the [airbnb style guide](https://github.com/airbnb/javascript).
 
 * Install nodejs
 * Install git
-* Install redis (as of https://github.com/Zuehlke/poinz/issues/8 rooms are persisted). Note: you can also run redis as a docker container (https://hub.docker.com/_/redis/).
+* Install redis (as of https://github.com/Zuehlke/poinz/issues/8 rooms are persisted). See [Deployment](DEPLOYMENT.md) for more information.
 
 Fork & checkout the repository then install all npm dependencies.
 

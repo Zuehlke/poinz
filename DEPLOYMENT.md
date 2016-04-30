@@ -20,8 +20,7 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 5. build docker image `npm run build` (our image is not pushed to a repo, so we build on the EC2 instance for now)
 
-6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz`
-
+6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz`. Now you can point your browser to http://localhost:8080/ .
 
 #### Cheat Sheet
 
@@ -36,7 +35,7 @@ In order for it to work, there must be a redis server running, where our store c
 
 One solution is to run redis also within docker (in a separate container).
 
-`docker run -d --name redis -p 6379:6379 redis`
+`docker run -d --name redis -p 6379:6379 redis` (https://hub.docker.com/_/redis/)
 
 ### port forwarding:
 

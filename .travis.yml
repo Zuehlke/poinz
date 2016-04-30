@@ -28,5 +28,5 @@ script:
   - npm run build
 
 after_success:
-  - docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD"
+  - docker login --username="$DOCKER_USERNAME" --email="$DOCKER_EMAIL" --password="$DOCKER_PASSWORD"
   - docker push xeronimus/poinz

@@ -7,7 +7,6 @@ A more suitable deployment might be needed in the future.
 
 I did setup a free-tier ubuntu EC2 instance and installed docker
 
-
 - connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
 - install docker `curl -fsSL https://get.docker.com/ | sh`
 - add user *ubuntu* to *docker* group `sudo gpasswd -a ubuntu docker`
@@ -20,7 +19,7 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 5. build docker image `npm run build` (our image is not pushed to a repo, so we build on the EC2 instance for now)
 
-6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz`. Now you can point your browser to http://localhost:8080/ .
+6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz`.
 
 #### Cheat Sheet
 

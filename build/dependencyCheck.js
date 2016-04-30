@@ -2,9 +2,10 @@ const
   _ = require('lodash'),
   path = require('path'),
   Promise = require('bluebird'),
-  fs = Promise.promisifyAll(require('fs')),
+  nativeFs = require('fs'),
   ncu = require('npm-check-updates');
 
+const writeFile = Promise.promisify(nativeFs.writeFile);
 
 function getPackageFileToUse() {
   if (process.argv.length < 3) {
@@ -14,8 +15,8 @@ function getPackageFileToUse() {
   return path.resolve(process.cwd(), process.argv[2]);
 }
 
-function getPackageInformation() {
-  const pkg = require(getPackageFileToUse());
+function getPackageInformation(packageFile) {
+  const pkg = require(packageFile);
   return {
     currentDependencies: _.merge({}, pkg.dependencies, pkg.devDependencies),
     name: pkg.name
@@ -27,23 +28,34 @@ function getPackageInformation() {
  */
 function runCheck() {
 
-  const pkg = getPackageInformation();
+  const packageFile = getPackageFileToUse();
+
+  console.log('Reading information from  ' + packageFile);
+
+  const pkg = getPackageInformation(packageFile);
   const reportFileName = `./npm_dependencies_report.${pkg.name}.md`;
+
 
   ncu
     .run({
-      packageFile: getPackageFileToUse(),
+      packageFile: packageFile,
       'error-level': 1 // we don't want to fail CI... we write a report file
     })
     .then(upgraded => {
-      const tmpl = _.size(upgraded)
+      const tmpl = _.size(upgraded) > 0
         ? '# NPM DependencyCheck Report for <%- name %>\nThe following dependencies are out-of-date:\n\n<% _.forEach(upgraded, function(version, dependency) { %>* <%- dependency %>: <%- currentDependencies[dependency]%> -> <%- version%>\n<% }); %>'
         : '# NPM DependencyCheck Report for <%- name %>\nNo dependencies are out-of-date :-)';
-      return _.template(tmpl)(_.merge({
-        upgraded: upgraded
-      }, pkg));
+
+      const data = _.merge({
+        upgraded: upgraded,
+        _: _
+      }, pkg);
+
+      const report = _.template(tmpl)(data);
+
+      return report;
     })
-    .then(report => fs.writeFile(reportFileName, report))
+    .then(report => writeFile(reportFileName, report, 'utf-8'))
     .then(() => {
       console.log('Report saved to ' + reportFileName);
       process.exit(0);

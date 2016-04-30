@@ -8,7 +8,7 @@ const
  * NOTE: for these integration tests, the PoinZ server must be running
  * at localhost:3000 !
  */
-describe.only('serverIntegration', () => {
+describe('serverIntegration', () => {
 
   const backendUrl = 'http://localhost:3000';
 

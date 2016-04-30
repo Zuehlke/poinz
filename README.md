@@ -24,7 +24,7 @@ The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
 
 ### Prerequisites
 
-* You have `node` installed at v4.0.0+ and `npm` at v2.0.0+.
+* You have `nodeJS` installed at v4.2.0+ and `npm` at v2.0.0+.
 * You are familiar with `npm`
 * You are familiar with `git`
 * You know JavaScript (duh :-) )
@@ -36,6 +36,12 @@ The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
 Try to adhere to the [airbnb style guide](https://github.com/airbnb/javascript).
 
 ### Development
+
+### Prerequisites
+
+* Install nodejs
+* Install git
+* Install redis (as of https://github.com/Zuehlke/poinz/issues/8 rooms are persisted). Note: you can also run redis as a docker container (https://hub.docker.com/_/redis/).
 
 Fork & checkout the repository then install all npm dependencies.
 
@@ -54,7 +60,6 @@ Start the client-serving in dev mode via webpack-dev-server
 `$ cd client/ && npm run serve`
 
 Then you can open the app at http://localhost:9000/webpack-dev-server/
-
 
 
 ## Build

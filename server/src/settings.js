@@ -18,7 +18,7 @@ module.exports = {
   },
 
   // configuration for redis connection (roomsStore)
-  // env variables are set by docker when linking redis container to point container
+  // env variables are set by docker when linking redis container to poinz container
   // see DEPLOYMENT.md for more information
   redis: {
     host: process.env.DB_PORT_6379_TCP_ADDR || '127.0.0.1',

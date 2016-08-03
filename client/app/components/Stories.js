@@ -8,11 +8,18 @@ import StoryEditForm from './StoryEditForm';
 /**
  * A list of stories (in the backlog)
  */
-const Stories = ({ stories }) => (
-  <div className='stories'>
-    { stories.toList().map(story => <StoriesItem key={story.get('id')} story={story}/>) }
-  </div>
-);
+const Stories = ({ stories }) => {
+
+  const sortedStories = stories
+    .toList()
+    .sort(story => -1 * story.get('createdAt'));
+
+  return (
+    <div className='stories'>
+      { sortedStories.map(story => <StoriesItem key={story.get('id')} story={story}/>) }
+    </div>
+  );
+};
 
 Stories.propTypes = {
   stories: React.PropTypes.instanceOf(Immutable.Map)

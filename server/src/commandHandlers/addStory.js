@@ -17,6 +17,7 @@ module.exports = {
     const eventPayload = command.payload;
     eventPayload.id = newStoryId;
     eventPayload.estimations = {};
+    eventPayload.createdAt = new Date().getTime();
     room.applyEvent('storyAdded', eventPayload);
 
     if (!room.get('stories') || !room.get('stories').first()) {

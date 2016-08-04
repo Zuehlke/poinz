@@ -32,36 +32,36 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
 
     <div className={menuClasses}>
 
-      <div className='pure-form'>
+      <div className="pure-form">
         <h5>Username</h5>
 
-        <div className='username-wrapper'>
-          <input type='text'
-                 id='username'
-                 placeholder='Name...'
+        <div className="username-wrapper">
+          <input type="text"
+                 id="username"
+                 placeholder="Name..."
                  defaultValue={username}
                  ref={ref => usernameInputField = ref}
                  onKeyPress={handleUsernameKeyPress}/>
 
-          <button className='pure-button pure-button-primary button-save' onClick={saveUsername}>Save</button>
+          <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>Save</button>
         </div>
 
         <h5>Mark as Visitor</h5>
         Visitors cannot add, change or estimate stories.
 
-        <p onClick={toggleVisitor} className='clickable'>
+        <p onClick={toggleVisitor} className="clickable">
           <i className={visitorCheckboxClasses}></i> Visitor
         </p>
       </div>
 
-      <div className='action-log-wrapper'>
+      <div className="action-log-wrapper">
         <h5>Log</h5>
         <ActionLog />
       </div>
 
-      <button className='leave-room-button pure-button pure-button-primary' type='button' onClick={leaveRoom}>
+      <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>
         Leave Room
-        <i className='fa fa-sign-out button-icon-right'></i>
+        <i className="fa fa-sign-out button-icon-right"></i>
       </button>
     </div>
   );

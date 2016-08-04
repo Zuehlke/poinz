@@ -9,12 +9,12 @@ import { joinRoom } from '../services/actions';
  * List of rooms that the user joined earlier.
  */
 const RoomHistory = ({roomHistory, joinRoom }) => (
-  <div className='eyecatcher room-history'>
+  <div className="eyecatcher room-history">
     Join previous rooms
     <ol>
       {
         roomHistory.map((room, index) => (
-          <li key={index} className='clickable' onClick={() => joinRoom(room)}>
+          <li key={index} className="clickable" onClick={() => joinRoom(room)}>
             {room}
           </li>
         ))

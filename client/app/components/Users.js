@@ -8,7 +8,7 @@ import User from './User';
  * The list of users (avatars) and their estimations.
  */
 const Users = ({ users }) => (
-  <div className='users'>
+  <div className="users">
     {users.toList().map((user, index) => (
       <User
         key={user.get('id')}

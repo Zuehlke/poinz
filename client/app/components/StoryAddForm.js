@@ -18,22 +18,22 @@ const StoryAddForm = ({ addStory, pendingAddCommands }) => {
   return (
     <div className={classes}>
 
-      <fieldset className='pure-group'>
-        <input type='text' className='pure-input-1'
-               placeholder='Story title'
+      <fieldset className="pure-group">
+        <input type="text" className="pure-input-1"
+               placeholder="Story title"
                ref={ref => titleInputField = ref}/>
 
-        <textarea className='pure-input-1'
-                  rows='1'
-                  placeholder='Description / URL / etc.'
+        <textarea className="pure-input-1"
+                  rows="1"
+                  placeholder="Description / URL / etc."
                   ref={ref => descriptionInputField = ref}/>
       </fieldset>
 
-      <button type='button'
-              className='pure-button pure-input-1 pure-button-primary'
+      <button type="button"
+              className="pure-button pure-input-1 pure-button-primary"
               onClick={triggerAddAndClearForm}>
         Add Story
-        <i className='fa fa-plus  button-icon-right'></i>
+        <i className="fa fa-plus  button-icon-right"></i>
       </button>
 
     </div>

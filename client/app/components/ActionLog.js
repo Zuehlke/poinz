@@ -11,7 +11,7 @@ import fecha from 'fecha';
  * The ActionLog displays a chronological list of "actions" (backend events)
  */
 const ActionLog = ({ actionLog }) => (
-  <div className='action-log'>
+  <div className="action-log">
     <ul>
       {actionLog.map((entry, index) => (
         <li key={`logline_${index}`}>

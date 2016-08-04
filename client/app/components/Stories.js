@@ -15,7 +15,7 @@ const Stories = ({ stories }) => {
     .sort(story => -1 * story.get('createdAt'));
 
   return (
-    <div className='stories'>
+    <div className="stories">
       { sortedStories.map(story => <StoriesItem key={story.get('id')} story={story}/>) }
     </div>
   );

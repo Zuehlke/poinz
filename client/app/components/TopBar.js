@@ -5,21 +5,21 @@ import { toggleBacklog, toggleUserMenu } from '../services/actions';
 
 const TopBar = ({ hideUserMenuToggle, roomId, username, toggleBacklog, toggleUserMenu }) => {
   return (
-    <div className='top-bar'>
-      <div className='poinz-logo'>PoinZ</div>
-      <a className='backlog-toggle clickable' onClick={toggleBacklog}>
-        <span className='menu-link-inner'>
+    <div className="top-bar">
+      <div className="poinz-logo">PoinZ</div>
+      <a className="backlog-toggle clickable" onClick={toggleBacklog}>
+        <span className="menu-link-inner">
           <span></span>
         </span>
       </a>
 
       {!hideUserMenuToggle &&
-      <span className='whoami'>{username + '@' + roomId}</span>
+      <span className="whoami">{username + '@' + roomId}</span>
       }
 
       {!hideUserMenuToggle &&
-      <a className='user-menu-toggle clickable' onClick={toggleUserMenu}>
-        <i className='fa fa-cog'></i>
+      <a className="user-menu-toggle clickable" onClick={toggleUserMenu}>
+        <i className="fa fa-cog"></i>
       </a>
       }
 

@@ -43,11 +43,11 @@ class AppStatus extends React.Component {
       .sort(roomComparator);
 
     return (
-      <div className='app-status'>
+      <div className="app-status">
         <TopBar hideUserMenuToggle={true}/>
 
-        <button className='pure-button pure-button-primary' onClick={fetchStatus}>
-          <i className='fa fa-refresh'></i>
+        <button className="pure-button pure-button-primary" onClick={fetchStatus}>
+          <i className="fa fa-refresh"></i>
         </button>
 
         <h4>PoinZ Application Status</h4>
@@ -63,13 +63,13 @@ class AppStatus extends React.Component {
         </p>
 
         <h5>Active Rooms</h5>
-        <ul className='rooms rooms-active'>
+        <ul className="rooms rooms-active">
           <TableHeaders />
           {sortedActiveRooms.map((room, index) => <RoomItem key={index} index={index} room={room}/>)}
         </ul>
 
         <h5>Inactive Rooms</h5>
-        <ul className='rooms rooms-active'>
+        <ul className="rooms rooms-active">
           <TableHeaders />
           {sortedInActiveRooms.map((room, index) => <RoomItem key={index} room={room}/>)}
         </ul>
@@ -100,7 +100,7 @@ export default connect(
 
 
 const TableHeaders = () => (
-  <li className='headers'>
+  <li className="headers">
     <div>Total users</div>
     <div>Disconnected users</div>
     <div>Created</div>

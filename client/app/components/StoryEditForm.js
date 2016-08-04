@@ -18,16 +18,16 @@ const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeComma
 
   return (
     <div className={classes}>
-      <div className='pure-form'>
+      <div className="pure-form">
 
-        <fieldset className='pure-group'>
-          <input type='text' className='pure-input-1'
+        <fieldset className="pure-group">
+          <input type="text" className="pure-input-1"
                  defaultValue={story.get('title')}
                  ref={ref => titleInputField = ref}/>
 
-        <textarea className='pure-input-1'
-                  rows='1'
-                  placeholder='Description / URL / etc.'
+        <textarea className="pure-input-1"
+                  rows="1"
+                  placeholder="Description / URL / etc."
                   defaultValue={story.get('description')}
                   ref={ref => descriptionInputField = ref}/>
         </fieldset>
@@ -67,21 +67,21 @@ export default connect(
 )(StoryEditForm);
 
 const StoryEditFormButtonGroup = ({ onSave, onCancel}) => (
-  <div className='pure-g button-group'>
-    <div className='pure-u-1-2'>
-      <button type='button'
-              className='pure-button pure-input-1'
+  <div className="pure-g button-group">
+    <div className="pure-u-1-2">
+      <button type="button"
+              className="pure-button pure-input-1"
               onClick={onCancel}>
         Cancel
-        <i className='fa fa-times button-icon-right'></i>
+        <i className="fa fa-times button-icon-right"></i>
       </button>
     </div>
-    <div className='pure-u-1-2'>
-      <button type='button'
-              className='pure-button pure-input-1 pure-button-primary'
+    <div className="pure-u-1-2">
+      <button type="button"
+              className="pure-button pure-input-1 pure-button-primary"
               onClick={onSave}>
         Save
-        <i className='fa fa-pencil button-icon-right'></i>
+        <i className="fa fa-pencil button-icon-right"></i>
       </button>
     </div>
   </div>

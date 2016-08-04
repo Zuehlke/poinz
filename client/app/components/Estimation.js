@@ -24,13 +24,13 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
   const userCanCurrentlyEstimate = !revealed && !isVisitor;
 
   return (
-    <div className='estimation'>
+    <div className="estimation">
 
-      <div className='selected-story'>
+      <div className="selected-story">
         <h4>
           {selectedStory.get('title')}
         </h4>
-        <div className='story-text'>
+        <div className="story-text">
           <Anchorify text={selectedStory.get('description')}/>
         </div>
       </div>
@@ -42,22 +42,22 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
 
       {
         userCanCurrentlyEstimate &&
-        <div className='board-actions'>
-          <button type='button' className='pure-button pure-button-primary'
+        <div className="board-actions">
+          <button type="button" className="pure-button pure-button-primary"
                   onClick={() => reveal(selectedStory.get('id'))}>
             Reveal manually
-            <i className='fa fa-hand-paper-o button-icon-right'></i>
+            <i className="fa fa-hand-paper-o button-icon-right"></i>
           </button>
         </div>
       }
 
       {
         revealed &&
-        <div className='board-actions'>
-          <button type='button' className='pure-button pure-button-primary'
+        <div className="board-actions">
+          <button type="button" className="pure-button pure-button-primary"
                   onClick={() => newEstimationRound(selectedStory.get('id'))}>
             New Round
-            <i className='fa fa-undo  button-icon-right'></i>
+            <i className="fa fa-undo  button-icon-right"></i>
           </button>
         </div>
       }

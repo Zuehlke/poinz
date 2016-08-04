@@ -17,7 +17,7 @@ import Estimation from '../components/Estimation';
  * - cards
  */
 const Board = ({ roomId, isAStorySelected }) => (
-  <div className='board' id={roomId}>
+  <div className="board" id={roomId}>
     <Users />
     <UserMenu />
     <Backlog />

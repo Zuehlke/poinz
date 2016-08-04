@@ -13,24 +13,24 @@ const WhoAreYou = ({ setUsername }) => {
   let usernameInputField;
 
   return (
-    <div className='landing'>
-      <div className='landing-inner'>
-        <div className='eyecatcher'>
-          <div className='info-text'>
-            <i className='fa fa-user-secret leading-paragraph-icon'></i>
+    <div className="landing">
+      <div className="landing-inner">
+        <div className="eyecatcher">
+          <div className="info-text">
+            <i className="fa fa-user-secret leading-paragraph-icon"></i>
             <p>
               Your colleagues would like to know who you are.<br />
               Please provide us with your name.
             </p>
           </div>
-          <div className='username-wrapper'>
-            <input type='text'
-                   id='username'
-                   placeholder='Name...'
+          <div className="username-wrapper">
+            <input type="text"
+                   id="username"
+                   placeholder="Name..."
                    ref={ref => usernameInputField = ref}
                    onKeyPress={handleUsernameKeyPress}/>
 
-            <button className='pure-button pure-button-primary button-save' onClick={saveUsername}>Join</button>
+            <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>Join</button>
           </div>
         </div>
       </div>

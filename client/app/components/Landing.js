@@ -9,8 +9,8 @@ import RoomHistory from '../components/RoomHistory';
  */
 const Landing = ({ roomHistoryLength, waitingForJoin })=> {
   return (
-    <div className='landing'>
-      <div className='landing-inner'>
+    <div className="landing">
+      <div className="landing-inner">
         {!waitingForJoin && <RoomJoinForm />}
         {!waitingForJoin && roomHistoryLength && <RoomHistory />}
         {waitingForJoin && <Loader/>}
@@ -32,7 +32,7 @@ export default connect(
 )(Landing);
 
 const Loader = () => (
-  <div className='eyecatcher loading'>
+  <div className="eyecatcher loading">
     Loading...
   </div>
 );

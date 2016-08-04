@@ -21,7 +21,7 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCo
 
   return (
     <div className={classes} onClick={triggerSelect}>
-      <i className='fa fa-pencil story-edit' onClick={triggerEdit}></i>
+      <i className="fa fa-pencil story-edit" onClick={triggerEdit}></i>
       <h4>
         {story.get('title')}
       </h4>

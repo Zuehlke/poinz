@@ -20,7 +20,7 @@ const Backlog = ({ stories, backlogShown, isVisitor }) => {
 
   const contentComponent = hasStories
     ? <Stories />
-    : <div className='story-hint'>There are currently no stories in the estimation backlog...</div>;
+    : <div className="story-hint">There are currently no stories in the estimation backlog...</div>;
 
   return (
     <div className={backlogClasses}>

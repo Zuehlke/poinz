@@ -11,8 +11,11 @@ import { selectStory, editStory } from '../services/actions';
  * One story in the backlog
  */
 const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCommands }) => {
+
+  const isSelected = selectedStoryId === story.get('id');
+
   const classes = classnames('story clickable', {
-    'story-selected': selectedStoryId === story.get('id'),
+    'story-selected': isSelected,
     'waiting': pendingSelectCommands.find(cmd => cmd.payload.storyId === story.get('id'))
   });
 
@@ -22,9 +25,14 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, pendingSelectCo
       <h4>
         {story.get('title')}
       </h4>
-      <div>
-        <Anchorify text={story.get('description')}/>
-      </div>
+
+      {
+        // only display story text for selected story. improves overall readibility / usability (see #24)
+        isSelected &&
+        <div className="story-text">
+          <Anchorify text={story.get('description')}/>
+        </div>
+      }
     </div>
   );
 

@@ -30,7 +30,7 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
         <h4>
           {selectedStory.get('title')}
         </h4>
-        <div>
+        <div className='story-text'>
           <Anchorify text={selectedStory.get('description')}/>
         </div>
       </div>

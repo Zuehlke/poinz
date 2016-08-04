@@ -15,11 +15,11 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 3. push new version to upstream github repo (zuehlke)
 
-4. checkout new version of *master* branch on EC2 instance (/home/ubuntu/git/poinz)
+4. wait for travis build to complete (builds docker image and pushes it to https://hub.docker.com/r/xeronimus/poinz/tags/)
 
-5. build docker image `npm run build` (our image is not pushed to a repo, so we build on the EC2 instance for now)
+5. on the EC2 machine, pull newest image
 
-6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz`.
+6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz:latest`.
 
 #### Cheat Sheet
 

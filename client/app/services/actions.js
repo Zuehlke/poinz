@@ -35,8 +35,10 @@ export const joinRoom = roomId => (dispatch, getState) => {
   }
 
   /**
-   * "prematurely" set the room id ( see root reducer )
-   * so that first icoming "joined" event is not filtered out
+   * "prematurely" set the room id to the client state ( see root reducer )
+   * so that first incoming "joined" event is not filtered out.
+   *
+   * this is a client-only redux action
    */
   dispatch({
     type: SET_ROOMID,

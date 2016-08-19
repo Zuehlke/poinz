@@ -26,7 +26,7 @@ function eventReducer(state, action) {
 
   const matchingHandler = eventActionHandlers[action.type];
   if (!matchingHandler) {
-    LOGGER.warn('unknown event action', action);
+    LOGGER.warn('No matching backend-event handler for', action);
     return state;
   }
 
@@ -68,15 +68,23 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
  * TODO:  decide/discuss whether we should split these up into separate files (similar to backend)
  */
 const eventActionHandlers = {
+
+  /**
+   * If the user joins a room that does not yet exist, it is created by the backend.
+   * It will be followed by a "roomJoined" event.
+   */
   [EVENT_ACTION_TYPES.roomCreated]: {
     fn: (state) => state,
     log: (username, payload) => `Room "${payload.id}" created`
   },
 
+  /**
+   * A user joined the room. This can be either your own user or someone else joined the room.
+   */
   [EVENT_ACTION_TYPES.joinedRoom]: {
     fn: (state, payload, event) => {
       if (state.get('userId')) {
-        // someone else joined
+        // if our client state has already a userId set, this event indicates that someone else joined
         return state.setIn(['users', payload.userId], Immutable.fromJS(payload.users[payload.userId]));
       } else {
         // you joined
@@ -102,6 +110,9 @@ const eventActionHandlers = {
     }
   },
 
+  /**
+   * A user left the room. This can be either your own user. Or someone else left the room.
+   */
   [EVENT_ACTION_TYPES.leftRoom]: {
     fn: (state, payload) => {
 
@@ -135,6 +146,9 @@ const eventActionHandlers = {
     log: (username, payload, oldState) => `User ${oldState.getIn(['users', payload.userId, 'username'])} left the room`
   },
 
+  /**
+   * A disconnected user was kicked from the room.
+   */
   [EVENT_ACTION_TYPES.kicked]: {
     fn: (state, payload) => {
       return state
@@ -144,6 +158,9 @@ const eventActionHandlers = {
     log: (username, payload, oldState, newState, event) => `User ${oldState.getIn(['users', payload.userId, 'username'])} was kicked from the room by user ${newState.getIn(['users', event.userId, 'username'])}`
   },
 
+  /**
+   * A user in the room lost the connection to the server.
+   */
   [EVENT_ACTION_TYPES.connectionLost]: {
     fn: (state, payload) => state.updateIn(['users', payload.userId], user => user ? user.set('disconnected', true) : undefined),
     log: (username) =>`${username} lost the connection`
@@ -163,7 +180,9 @@ const eventActionHandlers = {
         .setIn(['stories', payload.storyId, 'title'], payload.title)
         .setIn(['stories', payload.storyId, 'description'], payload.description);
 
-      if (state.get('userId') === event.userId) {
+      const isOwnUser = state.get('userId') === event.userId;
+
+      if (isOwnUser) {
         // if you yourself changed the story, disable edit mode
         state = state.setIn(['stories', payload.storyId, 'editMode'], false);
       }
@@ -172,6 +191,9 @@ const eventActionHandlers = {
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
+  /**
+   * the selected story was set (i.e. the one that can be currently estimated by the team)
+   */
   [EVENT_ACTION_TYPES.storySelected]: {
     fn: (state, payload) => state.set('selectedStory', payload.storyId),
     log: (username, payload, oldState, newState) => `${username} selected current story "${newState.getIn(['stories', payload.storyId]).get('title')}"`
@@ -179,9 +201,13 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.usernameSet]: {
     fn: (state, payload) => {
-      if (payload.userId === state.get('userId')) {
+
+      const isOwnUser = state.get('userId') === payload.userId;
+
+      if (isOwnUser) {
         clientSettingsStore.setPresetUsername(payload.username);
       }
+
       return state
         .updateIn(['users', payload.userId], user => user.set('username', payload.username))
         .set('presetUsername', payload.username);
@@ -189,11 +215,17 @@ const eventActionHandlers = {
     log: (username, payload, oldState) => `${oldState.getIn(['users', payload.userId]).get('username')} is now called "${payload.username}"`
   },
 
+  /**
+   * visitor flag for a user was set
+   */
   [EVENT_ACTION_TYPES.visitorSet]: {
     fn: (state, payload) => state.updateIn(['users', payload.userId], person => person.set('visitor', true)),
     log: username => `${username} is now visitor`
   },
 
+  /**
+   * visitor flag for a user was removed / unset
+   */
   [EVENT_ACTION_TYPES.visitorUnset]: {
     fn: (state, payload) => state.updateIn(['users', payload.userId], person => person.set('visitor', false)),
     log: username => `${username} is no longer visitor`

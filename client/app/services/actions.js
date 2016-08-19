@@ -145,6 +145,17 @@ export const setVisitor = isVisitor => (dispatch, getState) => {
   }, dispatch);
 };
 
+export const kick = userId => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand({
+    name: 'kick',
+    roomId: state.get('roomId'),
+    payload: {
+      userId
+    }
+  }, dispatch);
+};
+
 export const leaveRoom = () => (dispatch, getState) => {
   history.push({
     pathname: ''

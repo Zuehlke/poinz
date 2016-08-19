@@ -51,7 +51,7 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
 
   const matchingUser = modifiedState.getIn(['users', event.userId]);
   const username = matchingUser ? matchingUser.get('username') || '' : '';
-  const message = (typeof logObject === 'function') ? logObject(username, event.payload, oldState, modifiedState) : logObject;
+  const message = (typeof logObject === 'function') ? logObject(username, event.payload, oldState, modifiedState, event) : logObject;
   return modifiedState.update('actionLog', new Immutable.List(), log => log.push(new Immutable.Map({
     tstamp: new Date(),
     message
@@ -132,7 +132,16 @@ const eventActionHandlers = {
           .removeIn(['users', payload.userId]); // then remove user from room
       }
     },
-    log: (username, payload, oldState) => `User ${oldState.getIn(['users', payload.userId]).get('username')} left the room`
+    log: (username, payload, oldState) => `User ${oldState.getIn(['users', payload.userId, 'username'])} left the room`
+  },
+
+  [EVENT_ACTION_TYPES.kicked]: {
+    fn: (state, payload) => {
+      return state
+        .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove kicked user's estimations from all stories
+        .removeIn(['users', payload.userId]); // then remove user from room
+    },
+    log: (username, payload, oldState, newState, event) => `User ${oldState.getIn(['users', payload.userId, 'username'])} was kicked from the room by user ${newState.getIn(['users', event.userId, 'username'])}`
   },
 
   [EVENT_ACTION_TYPES.connectionLost]: {

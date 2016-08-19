@@ -15,6 +15,7 @@ export const EVENT_ACTION_TYPES = {
   roomCreated: 'ROOM_CREATED',
   joinedRoom: 'JOINED_ROOM',
   leftRoom: 'LEFT_ROOM',
+  kicked: 'KICKED',
   connectionLost: 'CONNECTION_LOST',
   commandRejected: 'COMMAND_REJECTED',
   storyAdded: 'STORY_ADDED',

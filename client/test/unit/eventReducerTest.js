@@ -156,4 +156,32 @@ describe('eventReducer', () => {
     });
   });
 
+
+  describe(EVENT_ACTION_TYPES.kicked, () => {
+    it('someone kicked a disconnected user from the room', () => {
+
+      const startingState = Immutable.fromJS({
+        userId: 'myUser',
+        roomId: 'myRoom',
+        users: {
+          myUser: {},
+          someoneElse: {}
+        },
+        stories: {}
+      });
+
+      const modifiedState = eventReducer(startingState, {
+        type: EVENT_ACTION_TYPES.kicked,
+        event: {
+          roomId: 'myRoom',
+          payload: {
+            userId: 'someoneElse'
+          }
+        }
+      });
+
+      assert.deepEqual(modifiedState.get('users').toJS(), {myUser: {}});
+    });
+  });
+
 });

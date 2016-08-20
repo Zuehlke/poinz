@@ -47,8 +47,14 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick }) => {
         <span className="disconnected-badge"><i className="fa fa-flash"></i></span>
       }
 
-      <img className="avatar" onClick={kickUser} src={avatarIcons[index % avatarIcons.length]}/>
+
+      <img className="avatar" src={avatarIcons[index % avatarIcons.length]}/>
       <div className="user-name">{user.get('username') || '-'}</div>
+
+      {
+        isDisconnected &&
+        <span onClick={kickUser} className="disconnected-kick-overlay"><i className="fa fa-ban"></i></span>
+      }
 
       {
         selectedStory &&

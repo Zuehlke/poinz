@@ -218,6 +218,27 @@ a {
         -webkit-filter grayscale(100%)
         filter gray;
       }
+
+      .disconnected-kick-overlay {
+        position absolute
+        top 0
+        width 72px
+        height 72px
+        text-align center
+        font-size 64px
+        color $zuehlkeOrange
+        display none
+      }
+
+      &:hover {
+
+        .disconnected-kick-overlay {
+          display block
+        }
+
+        cursor pointer
+      }
+
     }
   }
 }

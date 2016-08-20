@@ -1,5 +1,5 @@
 /**
- * A user want's to leave the room.
+ * A user wants to leave the room.
  * Is also produced by the socketServer itself on connection lost!
  *
  */

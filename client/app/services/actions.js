@@ -35,8 +35,10 @@ export const joinRoom = roomId => (dispatch, getState) => {
   }
 
   /**
-   * "prematurely" set the room id ( see root reducer )
-   * so that first icoming "joined" event is not filtered out
+   * "prematurely" set the room id to the client state ( see root reducer )
+   * so that first incoming "joined" event is not filtered out.
+   *
+   * this is a client-only redux action
    */
   dispatch({
     type: SET_ROOMID,
@@ -141,6 +143,17 @@ export const setVisitor = isVisitor => (dispatch, getState) => {
     payload: {
       isVisitor,
       userId: state.get('userId')
+    }
+  }, dispatch);
+};
+
+export const kick = userId => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand({
+    name: 'kick',
+    roomId: state.get('roomId'),
+    payload: {
+      userId
     }
   }, dispatch);
 };

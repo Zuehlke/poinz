@@ -2,11 +2,13 @@ import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
 import {isUndefined} from 'lodash';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { kick } from '../services/actions';
 
 import avatarIcons from '../assets/avatars';
 
-const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
+const User = ({user, index, selectedStory, ownUserId, cardConfig, kick }) => {
 
   const isVisitor = user.get('visitor');
   const isDisconnected = user.get('disconnected');
@@ -35,18 +37,39 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig }) => {
   } : {};
   return (
     <div className={classes}>
-      {!isDisconnected && isVisitor && <span className="visitor-badge"><i className="fa fa-eye"></i></span>}
-      {isDisconnected && <span className="disconnected-badge"><i className="fa fa-flash"></i></span>}
+      {
+        !isDisconnected && isVisitor &&
+        <span className="visitor-badge"><i className="fa fa-eye"></i></span>
+      }
+
+      {
+        isDisconnected &&
+        <span className="disconnected-badge"><i className="fa fa-flash"></i></span>
+      }
+
+
       <img className="avatar" src={avatarIcons[index % avatarIcons.length]}/>
       <div className="user-name">{user.get('username') || '-'}</div>
 
-      {selectedStory &&
-      <div
-        className={estimationClasses} style={customCardStyle}>{estimationValueToDisplay}</div>
+      {
+        isDisconnected &&
+        <span onClick={kickUser} className="disconnected-kick-overlay"><i className="fa fa-ban"></i></span>
+      }
+
+      {
+        selectedStory &&
+        <div className={estimationClasses} style={customCardStyle}>{estimationValueToDisplay}</div>
       }
 
     </div>
   );
+
+  function kickUser() {
+    if (isDisconnected) {
+      // is also verified by backend precondition. but we can already test here in order to prevent precondition error
+      kick(user.get('id'));
+    }
+  }
 
 };
 
@@ -55,7 +78,8 @@ User.propTypes = {
   index: React.PropTypes.number,
   selectedStory: React.PropTypes.instanceOf(Immutable.Map),
   ownUserId: React.PropTypes.string,
-  cardConfig: React.PropTypes.instanceOf(Immutable.List)
+  cardConfig: React.PropTypes.instanceOf(Immutable.List),
+  kick: React.PropTypes.func
 };
 
 export default connect(
@@ -63,4 +87,6 @@ export default connect(
     cardConfig: state.get('cardConfig'),
     ownUserId: state.get('userId'),
     selectedStory: state.getIn(['stories', state.get('selectedStory')])
-  }))(User);
+  }),
+  dispatch => bindActionCreators({kick}, dispatch)
+)(User);

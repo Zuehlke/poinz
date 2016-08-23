@@ -21,6 +21,11 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz:latest`.
 
+
+### Update running poinz container
+
+On the deployment instance, run the `docker_pull_restart.sh` script in order to pull the newest image and restart the poinz container.
+
 #### Cheat Sheet
 
 - `docker images` List all docker images

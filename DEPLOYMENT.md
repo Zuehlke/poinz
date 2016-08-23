@@ -7,7 +7,7 @@ A more suitable deployment might be needed in the future.
 
 I did setup a free-tier ubuntu EC2 instance and installed docker
 
-- connect to the EC2 instance via ssh (user is "ubuntu", not "ec2-user" !)
+- connect to the EC2 instance via ssh (`ubuntu@ec2-52-37-30-226.us-west-2.compute.amazonaws.com`)
 - install docker `curl -fsSL https://get.docker.com/ | sh`
 - add user *ubuntu* to *docker* group `sudo gpasswd -a ubuntu docker`
 - port forwarding (see below)
@@ -17,7 +17,7 @@ I did setup a free-tier ubuntu EC2 instance and installed docker
 
 4. wait for travis build to complete (builds docker image and pushes it to https://hub.docker.com/r/xeronimus/poinz/tags/)
 
-5. on the EC2 machine, pull newest image
+5. on the EC2 machine, pull newest image (`docker pull xeronimus/poinz:latest`)
 
 6. Start container `docker run --name poinz --link redis:db -p 8080:3000 -d xeronimus/poinz:latest`.
 

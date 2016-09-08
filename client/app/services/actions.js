@@ -33,6 +33,9 @@ export const joinRoom = roomId => (dispatch, getState) => {
   if (state.get('presetUsername')) {
     joinCommandPayload.username = state.get('presetUsername');
   }
+  if (state.get('presetEmail')) {
+    joinCommandPayload.email = state.get('presetEmail');
+  }
 
   /**
    * "prematurely" set the room id to the client state ( see root reducer )
@@ -131,6 +134,18 @@ export const setUsername = username => (dispatch, getState) => {
     payload: {
       userId: state.get('userId'),
       username: username
+    }
+  }, dispatch);
+};
+
+export const setEmail = email => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand({
+    name: 'setEmail',
+    roomId: state.get('roomId'),
+    payload: {
+      userId: state.get('userId'),
+      email: email
     }
   }, dispatch);
 };

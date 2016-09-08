@@ -9,6 +9,8 @@ const LOGGER = logging.getLogger('commandSchemaValidator');
 
 const schemas = gatherSchemas();
 
+registerCustomFormats();
+
 module.exports = validate;
 
 /**
@@ -67,3 +69,20 @@ function CommandValidationError(err, cmd) {
 util.inherits(CommandValidationError, Error);
 
 
+const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+function registerCustomFormats() {
+  tv4.addFormat('email', validateEmail);
+}
+
+function validateEmail(data) {
+  if (!data) {
+    // allow empty string, undefined, null
+    return;
+  }
+
+  if (typeof data === 'string' && EMAIL_REGEX.test(data)) {
+    return null;
+  }
+
+  return 'must be a valid email-address';
+}

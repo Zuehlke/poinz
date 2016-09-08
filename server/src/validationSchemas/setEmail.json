@@ -11,14 +11,14 @@
             "userId": {
               "type": "string"
             },
-            "username": {
-              "type": "string"
-            },
             "email": {
               "type": "string",
               "format": "email"
             }
           },
+          "required": [
+            "userId"
+          ],
           "additionalProperties": false
         }
       }

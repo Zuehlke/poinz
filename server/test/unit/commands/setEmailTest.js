@@ -6,28 +6,22 @@ const
   processorFactory = require('../../../src/commandProcessor'),
   handlerGatherer = require('../../../src/handlerGatherer');
 
-describe('kick', () => {
+describe('setEmail', () => {
 
 
   beforeEach(function () {
     const cmdHandlers = handlerGatherer.gatherCommandHandlers();
     const evtHandlers = handlerGatherer.gatherEventHandlers();
 
-    this.userOneId = uuid();
-    this.userTwoId = uuid();
+    this.userId = uuid();
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
     this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
-      stories: [],
       users: {
-        [this.userOneId]: {
-          id: this.userOneId
-        },
-        [this.userTwoId]: {
-          id: this.userOneId,
-          disconnected: true
+        [this.userId]: {
+          id: this.userId
         }
       }
     }));
@@ -36,65 +30,71 @@ describe('kick', () => {
 
   });
 
-  it('Should produce kicked event', function () {
+  it('Should produce emailSet event', function () {
     return this.processor({
         id: this.commandId,
         roomId: this.roomId,
-        name: 'kick',
+        name: 'setEmail',
         payload: {
-          userId: this.userTwoId
+          userId: this.userId,
+          email: 'j.doe@gmail.com'
         }
-      }, this.userOneId)
+      }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
 
-        const kickedEvent = producedEvents[0];
-        testUtils.assertValidEvent(kickedEvent, this.commandId, this.roomId, this.userOneId, 'kicked');
-        assert.equal(kickedEvent.payload.userId, this.userTwoId);
+        const emailSetEvent = producedEvents[0];
+        testUtils.assertValidEvent(emailSetEvent, this.commandId, this.roomId, this.userId, 'emailSet');
+        assert.equal(emailSetEvent.payload.email, 'j.doe@gmail.com');
+        assert.equal(emailSetEvent.payload.userId, this.userId);
       });
   });
 
-  it('Should remove user from room', function () {
+  it('Should store email', function () {
     return this.processor({
         id: this.commandId,
         roomId: this.roomId,
-        name: 'kick',
+        name: 'setEmail',
         payload: {
-          userId: this.userTwoId
+          userId: this.userId,
+          email: 'mikey.mouse@hotmail.com'
         }
-      }, this.userOneId)
+      }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
-      .then(room => assert(!room.getIn(['users', this.userTwoId])));
+      .then(room => assert.equal(room.getIn(['users', this.userId, 'email']), 'mikey.mouse@hotmail.com'));
   });
 
   describe('preconditions', () => {
 
-    it('Should throw if userId does not match any user from the room', function () {
+    it('Should throw if userId does not match', function () {
       return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
-          name: 'kick',
+          name: 'setEmail',
           payload: {
-            userId: 'unknown'
+            userId: 'unknown',
+            email: 'm.mouse@gmail.com'
           }
-        }, this.userOneId),
-        'Can only kick user that belongs to the same room!');
+        }, this.userId),
+        'Can only set email for own user!');
     });
 
-    it('Should throw if tries to kick himself', function () {
+    it('Should throw if given email does not match format', function () {
       return testUtils.assertPromiseRejects(
         this.processor({
           id: this.commandId,
           roomId: this.roomId,
-          name: 'kick',
+          name: 'setEmail',
           payload: {
-            userId: this.userOneId
+            userId: this.userId,
+            email: 'this.is not a email'
           }
-        }, this.userOneId),
-        'User cannot kick himself!');
+        }, this.userId),
+        'Format validation failed (must be a valid email-address) in /payload/email');
     });
+
   });
 
 });

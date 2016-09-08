@@ -14,6 +14,12 @@ function getPresetUsername() {
 function setPresetUsername(username) {
   setItem('presetUserName', username);
 }
+function getPresetEmail() {
+  return getItem('presetEmail');
+}
+function setPresetEmail(email) {
+  setItem('presetEmail', email);
+}
 function getPresetUserId() {
   return getItem('presetUserId');
 }
@@ -42,6 +48,8 @@ function getRoomHistory() {
 export default {
   getPresetUsername,
   setPresetUsername,
+  getPresetEmail,
+  setPresetEmail,
   getPresetUserId,
   setPresetUserId,
   addRoomToHistory,

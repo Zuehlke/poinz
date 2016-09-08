@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { setVisitor, setUsername, leaveRoom } from '../services/actions';
+import { setVisitor, setUsername, setEmail, leaveRoom } from '../services/actions';
 import ActionLog from '../components/ActionLog';
 
 /**
@@ -12,9 +12,10 @@ import ActionLog from '../components/ActionLog';
  *
  * It also displays the ActionLog and a "leave room" button.
  */
-const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => {
+const UserMenu = ({user, setUsername, setEmail, leaveRoom, setVisitor, userMenuShown}) => {
 
   const username = user.get('username');
+  const email = user.get('email');
   const isVisitor = user.get('visitor');
 
   const menuClasses = classnames('user-menu', {
@@ -26,7 +27,7 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
     'fa-check-square-o': isVisitor
   });
 
-  let usernameInputField;
+  let usernameInputField, emailInputField;
 
   return (
 
@@ -44,6 +45,20 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
                  onKeyPress={handleUsernameKeyPress}/>
 
           <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>Save</button>
+        </div>
+
+        <h5>Gravatar Email</h5>
+        If you enter your <a href="https://en.gravatar.com/" target="_blank" >Gravatar</a> email address, your Gravatar icon will be used.
+
+        <div className="email-wrapper">
+          <input type="text"
+                 id="email"
+                 placeholder="Email..."
+                 defaultValue={email}
+                 ref={ref => emailInputField = ref}
+                 onKeyPress={handleEmailKeypress}/>
+
+          <button className="pure-button pure-button-primary button-save" onClick={saveEmail}>Save</button>
         </div>
 
         <h5>Mark as Visitor</h5>
@@ -79,6 +94,16 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
     }
   }
 
+  function handleEmailKeypress(e) {
+    if (e.key === 'Enter') {
+      saveEmail();
+    }
+  }
+
+  function saveEmail() {
+      setEmail(emailInputField.value);
+  }
+
   function toggleVisitor() {
     setVisitor(!isVisitor);
   }
@@ -90,7 +115,8 @@ UserMenu.propTypes = {
   userMenuShown: React.PropTypes.bool,
   setVisitor: React.PropTypes.func,
   leaveRoom: React.PropTypes.func,
-  setUsername: React.PropTypes.func
+  setUsername: React.PropTypes.func,
+  setEmail: React.PropTypes.func
 };
 
 export default connect(
@@ -101,6 +127,7 @@ export default connect(
   dispatch => bindActionCreators({
     setVisitor,
     leaveRoom,
-    setUsername
+    setUsername,
+    setEmail
   }, dispatch)
 )(UserMenu);

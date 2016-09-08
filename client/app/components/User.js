@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { kick } from '../services/actions';
 
-import avatarIcons from '../assets/avatars';
+import Avatar from './Avatar.js';
 
 const User = ({user, index, selectedStory, ownUserId, cardConfig, kick }) => {
 
@@ -35,6 +35,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick }) => {
     background: matchingCardConfig.get('color'),
     color: 'white'
   } : {};
+
   return (
     <div className={classes}>
       {
@@ -47,8 +48,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick }) => {
         <span className="disconnected-badge"><i className="fa fa-flash"></i></span>
       }
 
-
-      <img className="avatar" src={avatarIcons[index % avatarIcons.length]}/>
+      <Avatar user={user} index={index}/>
       <div className="user-name">{user.get('username') || '-'}</div>
 
       {

@@ -18,27 +18,17 @@ const
  */
 function init(app) {
   var restRouter = express.Router();
-  restRouter.get('/status', (req, res) => buildStatusObject().then(status => sendResponseObject(res, status)));
-  restRouter.get('/translations', (req, res) => getTranslations(req.query.lang).then(translations => sendResponseObject(res, translations)));
+  restRouter.get('/status', handleStatusRequest);
   app.use('/api', restRouter);
 }
 
-/**
- * sets response content type to application/json and sends given object as json body
- *
- * @param res
- * @param object
- */
-function sendResponseObject(res, object) {
-  res.contentType('application/json');
-  res.json(object);
+function handleStatusRequest(req, res) {
+  buildStatusObject().then(status => {
+    res.contentType('application/json');
+    res.json(status);
+  });
 }
 
-/**
- * builds the application status object. contains information about all rooms, connected users, etc.
- *
- * @returns {Promise.<Immutable.List>}
- */
 function buildStatusObject() {
   return roomsStore
     .getAllRooms()
@@ -61,16 +51,6 @@ function buildStatusObject() {
         uptime: Math.floor(process.uptime())
       };
     });
-}
-
-
-/**
- * return translations for given language
- *
- * @param {string} language a two char language code (e.g. "en" or "de")
- */
-function getTranslations(language) {
-  debugger;
 }
 
 module.exports = {init};

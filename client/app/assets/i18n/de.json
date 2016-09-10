@@ -17,5 +17,8 @@
   "leaveRoom": "Raum verlassen",
   "loading": "Laden...",
   "revealManually": "Aufdecken",
+  "language": "Sprache",
+  "german": "Deutsch",
+  "english": "Englisch",
   "provideUsernameInfo": "Deine Kollegen möchten gerne wissen wer du bist. Bitte sag uns wie du heisst."
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { toggleBacklog, toggleUserMenu, setLanguage } from '../services/actions';
+import { toggleBacklog, toggleUserMenu } from '../services/actions';
 
-const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu, setLanguage }) => {
+const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu }) => {
   return (
     <div className="top-bar">
       <div className="poinz-logo">PoinZ</div>
@@ -15,12 +15,6 @@ const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu, setLanguage }
 
       <span className="quick-menu">
         <span className="whoami">{username + '@' + roomId}</span>
-        <span className="language-selector">
-          <ul>
-            <li onClick={() => setLanguage('en')}>en</li>
-            <li onClick={() => setLanguage('de')}>de</li>
-          </ul>
-        </span>
       </span>
 
       <a className="user-menu-toggle clickable" onClick={toggleUserMenu}>
@@ -35,7 +29,6 @@ TopBar.propTypes = {
   roomId: React.PropTypes.string,
   username: React.PropTypes.string,
   toggleBacklog: React.PropTypes.func,
-  setLanguage: React.PropTypes.func,
   toggleUserMenu: React.PropTypes.func
 };
 
@@ -44,7 +37,7 @@ export default connect(
     roomId: state.get('roomId'),
     username: state.getIn(['users', state.get('userId'), 'username']) || '-'
   }),
-  dispatch => bindActionCreators({toggleBacklog, toggleUserMenu, setLanguage}, dispatch)
+  dispatch => bindActionCreators({toggleBacklog, toggleUserMenu}, dispatch)
 )(TopBar);
 
 

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { setVisitor, setUsername, leaveRoom } from '../services/actions';
+import { setVisitor, setUsername, leaveRoom, setLanguage } from '../services/actions';
 import ActionLog from '../components/ActionLog';
 
 /**
@@ -12,7 +12,7 @@ import ActionLog from '../components/ActionLog';
  *
  * It also displays the ActionLog and a "leave room" button.
  */
-const UserMenu = ({ t, user, setUsername, leaveRoom, setVisitor, userMenuShown }) => {
+const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLanguage, userMenuShown }) => {
 
   const username = user.get('username');
   const isVisitor = user.get('visitor');
@@ -44,6 +44,26 @@ const UserMenu = ({ t, user, setUsername, leaveRoom, setVisitor, userMenuShown }
                  onKeyPress={handleUsernameKeyPress}/>
 
           <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>{t('save')}</button>
+        </div>
+
+        <h5>{t('language')}</h5>
+        <div className="language-selector-wrapper">
+
+          <label htmlFor="language-selector-en">
+            <input type="radio" id="language-selector-en" name="language-selector"
+                   defaultChecked={language === 'en'}
+                   onClick={() => setLanguage('en')}
+            />
+            {t('english')}
+          </label>
+
+          <label htmlFor="language-selector-de">
+            <input type="radio" id="language-selector-de" name="language-selector"
+                   defaultChecked={language === 'de'}
+                   onClick={() => setLanguage('de')}
+            />
+            {t('german')}
+          </label>
         </div>
 
         <h5>{t('markVisitor')}</h5>
@@ -89,20 +109,24 @@ UserMenu.propTypes = {
   t: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map),
   userMenuShown: React.PropTypes.bool,
+  language: React.PropTypes.string,
   setVisitor: React.PropTypes.func,
   leaveRoom: React.PropTypes.func,
+  setLanguage: React.PropTypes.func,
   setUsername: React.PropTypes.func
 };
 
 export default connect(
   state => ({
     t: state.get('translator'),
+    language: state.get('language'),
     user: state.getIn(['users', state.get('userId')]),
     userMenuShown: state.get('userMenuShown')
   }),
   dispatch => bindActionCreators({
     setVisitor,
     leaveRoom,
-    setUsername
+    setUsername,
+    setLanguage
   }, dispatch)
 )(UserMenu);

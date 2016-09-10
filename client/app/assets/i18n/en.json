@@ -17,5 +17,8 @@
   "leaveRoom": "Leave Room",
   "loading": "Loading...",
   "revealManually": "Reveal manually",
+  "language": "Language",
+  "german": "German",
+  "english": "English",
   "provideUsernameInfo": "Your colleagues would like to know who you are. Please provide us with your name."
 }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import Backlog from '../components/Backlog';
 import UserMenu from '../components/UserMenu';
+import ActionLog from '../components/ActionLog';
 import Users from '../components/Users';
 
 import Estimation from '../components/Estimation';
@@ -20,6 +21,7 @@ const Board = ({ roomId, isAStorySelected }) => (
   <div className="board" id={roomId}>
     <Users />
     <UserMenu />
+    <ActionLog />
     <Backlog />
     {
       isAStorySelected &&

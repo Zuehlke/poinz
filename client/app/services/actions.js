@@ -5,6 +5,7 @@ import hub from './hub';
 import {
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU,
+  TOGGLE_LOG,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
   SET_ROOMID,
@@ -199,6 +200,7 @@ export const fetchStatus = () => dispatch => {
 // ui-only actions (client-side view state)
 export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
 export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
+export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = storyId => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = storyId => ({type: CANCEL_EDIT_STORY, storyId});
 export const setLanguage = language => ({type: SET_LANGUAGE, language});

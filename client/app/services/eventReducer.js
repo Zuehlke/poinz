@@ -132,6 +132,7 @@ const eventActionHandlers = {
           .remove('users')
           .remove('selectedStory')
           .remove('userMenuShown')
+          .remove('logShown')
           .remove('backlogShown')
           .set('roomHistory', Immutable.fromJS(clientSettingsStore.getRoomHistory()))
           .set('actionLog', new Immutable.List());

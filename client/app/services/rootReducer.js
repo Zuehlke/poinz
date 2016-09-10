@@ -7,6 +7,7 @@ import eventReducer from './eventReducer';
 import {
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU,
+  TOGGLE_LOG,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
   COMMAND_SENT,
@@ -48,6 +49,8 @@ export default function rootReducer(state = {}, action = {}) {
         return state.set('backlogShown', !state.get('backlogShown'));
       case TOGGLE_USER_MENU:
         return state.set('userMenuShown', !state.get('userMenuShown'));
+      case TOGGLE_LOG:
+        return state.set('logShown', !state.get('logShown'));
       case EDIT_STORY:
         return state.setIn(['stories', action.storyId, 'editMode'], true);
       case CANCEL_EDIT_STORY:

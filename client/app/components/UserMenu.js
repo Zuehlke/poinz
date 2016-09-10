@@ -5,12 +5,11 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import { setVisitor, setUsername, leaveRoom, setLanguage } from '../services/actions';
-import ActionLog from '../components/ActionLog';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.
  *
- * It also displays the ActionLog and a "leave room" button.
+ * It also dispalys a "leave room" button.
  */
 const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLanguage, userMenuShown }) => {
 
@@ -72,11 +71,6 @@ const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLa
         <p onClick={toggleVisitor} className="clickable">
           <i className={visitorCheckboxClasses}></i> {t('visitor')}
         </p>
-      </div>
-
-      <div className="action-log-wrapper">
-        <h5>{t('log')}</h5>
-        <ActionLog />
       </div>
 
       <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>

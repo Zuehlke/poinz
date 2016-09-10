@@ -292,7 +292,7 @@ a {
     position fixed
     display block
     top 0
-    right 34px
+    right 70px
     padding 8px
 
     > span {
@@ -367,11 +367,10 @@ a {
 }
 
 // wheel icon to toggle user menu
-.user-menu-toggle {
+.user-menu-toggle, .log-toggle {
   position fixed
   display block
   top 0
-  right 0
   background $zuehlkeDarkGrey
   z-index 10
   width 34px
@@ -380,6 +379,14 @@ a {
   padding 4px 8px
   box-sizing border-box
   color white
+}
+
+.user-menu-toggle {
+  right 34px
+}
+
+.log-toggle {
+  right 0
 }
 
 $userMenuWidth = 300px
@@ -447,12 +454,34 @@ $userMenuWidth = 300px
   }
 }
 
-.action-log-wrapper {
-  width 100%
+.action-log {
+  z-index 10
+  position fixed
+  width $userMenuWidth
+  top 0
+  bottom 0
+  right $userMenuWidth * -1
+  transition all 0.2s ease-out
+  background $zuehlkeLightGrey
+  -webkit-overflow-scrolling touch
+  box-sizing border-box
+  padding 8px
+  padding-top 27px
+  color white
 
-  .action-log {
-    top 348px
-    bottom 50px
+  &.action-log-active {
+    right 0
+  }
+
+  h5 {
+    color $zuehlkeOrange
+    font-weight 700
+    margin-bottom 8px
+  }
+
+  .action-log-wrapper {
+    top 73px
+    bottom 16px
     position absolute
     overflow-x hidden
     overflow-y auto

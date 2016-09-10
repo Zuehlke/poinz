@@ -151,6 +151,8 @@ a {
       width 60px
       height 60px
       padding 4px
+      display block
+      margin 0 auto
     }
 
     .user-name {
@@ -286,12 +288,41 @@ a {
     color $zuehlkePurple
   }
 
-  .whoami {
+  .quick-menu {
     position fixed
     display block
     top 0
     right 34px
     padding 8px
+
+    > span {
+      display inline-block
+      margin-right 4px
+    }
+  }
+
+  .language-selector ul {
+    list-style-type none
+    margin 0
+    padding 0
+
+    li {
+      margin 0
+      padding 0
+      display inline-block
+      cursor pointer
+
+      &:after {
+        content "|"
+        width 16px
+        display inline-block
+        text-align center
+      }
+
+      &:last-child:after {
+        display none
+      }
+    }
   }
 }
 

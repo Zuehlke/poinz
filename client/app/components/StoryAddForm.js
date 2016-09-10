@@ -8,7 +8,7 @@ import { addStory } from '../services/actions';
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({ addStory, pendingAddCommands }) => {
+const StoryAddForm = ({ t, addStory, pendingAddCommands }) => {
 
   const classes = classnames('pure-form story-add-form', {
     'waiting': pendingAddCommands
@@ -20,19 +20,19 @@ const StoryAddForm = ({ addStory, pendingAddCommands }) => {
 
       <fieldset className="pure-group">
         <input type="text" className="pure-input-1"
-               placeholder="Story title"
+               placeholder={t('storyTitle')}
                ref={ref => titleInputField = ref}/>
 
         <textarea className="pure-input-1"
                   rows="1"
-                  placeholder="Description / URL / etc."
+                  placeholder={t('description')}
                   ref={ref => descriptionInputField = ref}/>
       </fieldset>
 
       <button type="button"
               className="pure-button pure-input-1 pure-button-primary"
               onClick={triggerAddAndClearForm}>
-        Add Story
+        {t('addStory')}
         <i className="fa fa-plus  button-icon-right"></i>
       </button>
 
@@ -50,12 +50,14 @@ const StoryAddForm = ({ addStory, pendingAddCommands }) => {
 };
 
 StoryAddForm.propTypes = {
+  t: React.PropTypes.func,
   addStory: React.PropTypes.func,
   pendingAddCommands: React.PropTypes.bool
 };
 
 export default connect(
   state => ({
+    t: state.get('translator'),
     pendingAddCommands: !!state.get('pendingCommands').find(cmd => cmd.name === 'addStory')
   }),
   dispatch => bindActionCreators({addStory}, dispatch)

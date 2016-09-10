@@ -47,6 +47,11 @@ module.exports = {
         loader: 'babel'
       },
       {
+        // load and parse json files
+        test: /\.json$/,
+        loader: 'json'
+      },
+      {
         // load images: if filesize is lower than limit -> data-url (base64), plain url and packed file otherwise
         test: /\.(|png|jpg|gif)$/,
         loader: 'url?limit=8192'

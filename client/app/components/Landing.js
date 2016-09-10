@@ -7,33 +7,38 @@ import RoomHistory from '../components/RoomHistory';
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({ roomHistoryLength, waitingForJoin })=> {
+const Landing = ({ t, roomHistoryLength, waitingForJoin })=> {
   return (
     <div className="landing">
       <div className="landing-inner">
         {!waitingForJoin && <RoomJoinForm />}
         {!waitingForJoin && roomHistoryLength && <RoomHistory />}
-        {waitingForJoin && <Loader/>}
+        {waitingForJoin && <Loader t={t}/>}
       </div>
     </div>
   );
 };
 
 Landing.propTypes = {
+  t: React.PropTypes.func,
   waitingForJoin: React.PropTypes.bool,
   roomHistoryLength: React.PropTypes.number
 };
 
 export default connect(
   state => ({
+    t: state.get('translator'),
     roomHistoryLength: state.get('roomHistory').size,
     waitingForJoin: !!state.get('pendingCommands').find(cmd => cmd.name === 'joinRoom')
   })
 )(Landing);
 
-const Loader = () => (
+const Loader = ({ t }) => (
   <div className="eyecatcher loading">
-    Loading...
+    {t('loading')}
   </div>
 );
 
+Loader.propTypes = {
+  t: React.PropTypes.func
+};

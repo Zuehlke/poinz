@@ -12,7 +12,7 @@ import ActionLog from '../components/ActionLog';
  *
  * It also displays the ActionLog and a "leave room" button.
  */
-const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => {
+const UserMenu = ({ t, user, setUsername, leaveRoom, setVisitor, userMenuShown }) => {
 
   const username = user.get('username');
   const isVisitor = user.get('visitor');
@@ -33,34 +33,34 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
     <div className={menuClasses}>
 
       <div className="pure-form">
-        <h5>Username</h5>
+        <h5>{t('username')}</h5>
 
         <div className="username-wrapper">
           <input type="text"
                  id="username"
-                 placeholder="Name..."
+                 placeholder={t('name')}
                  defaultValue={username}
                  ref={ref => usernameInputField = ref}
                  onKeyPress={handleUsernameKeyPress}/>
 
-          <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>Save</button>
+          <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>{t('save')}</button>
         </div>
 
-        <h5>Mark as Visitor</h5>
-        Visitors cannot add, change or estimate stories.
+        <h5>{t('markVisitor')}</h5>
+        {t('visitorInfo')}
 
         <p onClick={toggleVisitor} className="clickable">
-          <i className={visitorCheckboxClasses}></i> Visitor
+          <i className={visitorCheckboxClasses}></i> {t('visitor')}
         </p>
       </div>
 
       <div className="action-log-wrapper">
-        <h5>Log</h5>
+        <h5>{t('log')}</h5>
         <ActionLog />
       </div>
 
       <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>
-        Leave Room
+        {t('leaveRoom')}
         <i className="fa fa-sign-out button-icon-right"></i>
       </button>
     </div>
@@ -86,6 +86,7 @@ const UserMenu = ({user, setUsername, leaveRoom, setVisitor, userMenuShown}) => 
 };
 
 UserMenu.propTypes = {
+  t: React.PropTypes.func,
   user: React.PropTypes.instanceOf(Immutable.Map),
   userMenuShown: React.PropTypes.bool,
   setVisitor: React.PropTypes.func,
@@ -95,6 +96,7 @@ UserMenu.propTypes = {
 
 export default connect(
   state => ({
+    t: state.get('translator'),
     user: state.getIn(['users', state.get('userId')]),
     userMenuShown: state.get('userMenuShown')
   }),

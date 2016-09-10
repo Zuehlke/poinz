@@ -1,0 +1,21 @@
+{
+  "enterRoomInfo": "Please enter the name of the room you'd like to join.",
+  "join": "Join",
+  "joinPrevious": "Join previous rooms",
+  "roomName": "Room Name...",
+  "name": "Name...",
+  "addStory": "Add Story",
+  "newRound": "New Round",
+  "storyTitle": "Story Title",
+  "description": "Description / URL",
+  "username": "Username",
+  "visitor": "Visitor",
+  "markVisitor": "Mark as Visitor",
+  "visitorInfo": "Visitors cannot add, change or estimate stories.",
+  "save": "Save",
+  "log": "Log",
+  "leaveRoom": "Leave Room",
+  "loading": "Loading...",
+  "revealManually": "Reveal manually",
+  "provideUsernameInfo": "Your colleagues would like to know who you are. Please provide us with your name."
+}

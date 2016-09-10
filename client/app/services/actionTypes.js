@@ -5,6 +5,7 @@ export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG';
 export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
 export const EDIT_STORY = 'EDIT_STORY';
 export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
+export const SET_LANGUAGE = 'SET_LANGUAGE';
 export const STATUS_FETCHED = 'STATUS_FETCHED';
 
 

@@ -15,7 +15,7 @@ import Cards from './Cards';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
+const Estimation = ({ t, selectedStory, user, newEstimationRound, reveal }) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
@@ -45,7 +45,7 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
         <div className="board-actions">
           <button type="button" className="pure-button pure-button-primary"
                   onClick={() => reveal(selectedStory.get('id'))}>
-            Reveal manually
+            {t('revealManually')}
             <i className="fa fa-hand-paper-o button-icon-right"></i>
           </button>
         </div>
@@ -56,7 +56,7 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
         <div className="board-actions">
           <button type="button" className="pure-button pure-button-primary"
                   onClick={() => newEstimationRound(selectedStory.get('id'))}>
-            New Round
+            {t('newRound')}
             <i className="fa fa-undo  button-icon-right"></i>
           </button>
         </div>
@@ -67,6 +67,7 @@ const Estimation = ({ selectedStory, user, newEstimationRound, reveal }) => {
 };
 
 Estimation.propTypes = {
+  t: React.PropTypes.func,
   selectedStory: React.PropTypes.instanceOf(Immutable.Map),
   user: React.PropTypes.instanceOf(Immutable.Map),
   newEstimationRound: React.PropTypes.func,
@@ -75,6 +76,7 @@ Estimation.propTypes = {
 
 export default connect(
   state => ({
+    t: state.get('translator'),
     selectedStory: state.getIn(['stories', state.get('selectedStory')]),
     user: state.getIn(['users', state.get('userId')])
   }),

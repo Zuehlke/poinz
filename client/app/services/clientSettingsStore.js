@@ -14,6 +14,12 @@ function getPresetUsername() {
 function setPresetUsername(username) {
   setItem('presetUserName', username);
 }
+function getPresetLanguage() {
+  return getItem('presetLanguage');
+}
+function setPresetLanguage(language) {
+  setItem('presetLanguage', language);
+}
 function getPresetUserId() {
   return getItem('presetUserId');
 }
@@ -42,6 +48,8 @@ function getRoomHistory() {
 export default {
   getPresetUsername,
   setPresetUsername,
+  getPresetLanguage,
+  setPresetLanguage,
   getPresetUserId,
   setPresetUserId,
   addRoomToHistory,

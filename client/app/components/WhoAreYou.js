@@ -8,7 +8,7 @@ import { setUsername } from '../services/actions';
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({ setUsername }) => {
+const WhoAreYou = ({ t, setUsername }) => {
 
   let usernameInputField;
 
@@ -19,18 +19,18 @@ const WhoAreYou = ({ setUsername }) => {
           <div className="info-text">
             <i className="fa fa-user-secret leading-paragraph-icon"></i>
             <p>
-              Your colleagues would like to know who you are.<br />
-              Please provide us with your name.
+              {t('provideUsernameInfo')}
             </p>
           </div>
           <div className="username-wrapper">
             <input type="text"
                    id="username"
-                   placeholder="Name..."
+                   placeholder={t('name')}
                    ref={ref => usernameInputField = ref}
                    onKeyPress={handleUsernameKeyPress}/>
 
-            <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>Join</button>
+            <button className="pure-button pure-button-primary button-save"
+                    onClick={saveUsername}>{t('join')}</button>
           </div>
         </div>
       </div>
@@ -53,10 +53,13 @@ const WhoAreYou = ({ setUsername }) => {
 };
 
 WhoAreYou.propTypes = {
+  t: React.PropTypes.func,
   setUsername: React.PropTypes.func
 };
 
 export default connect(
-  undefined,
+  state => ({
+    t: state.get('translator')
+  }),
   dispatch => bindActionCreators({setUsername}, dispatch)
 )(WhoAreYou);

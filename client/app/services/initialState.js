@@ -1,6 +1,11 @@
 import Immutable from 'immutable';
 
 import clientSettingsStore from './clientSettingsStore';
+import translator from './translator';
+
+
+const DEFAULT_LANGUAGE = 'en';
+const userLanguage = clientSettingsStore.getPresetLanguage();
 
 /**
  * The initial state that is loaded into the redux store on (client) application load.
@@ -25,7 +30,9 @@ const INITIAL_STATE = Immutable.fromJS({
   presetUserId: clientSettingsStore.getPresetUserId(),
   roomHistory: clientSettingsStore.getRoomHistory(),
   actionLog: [], // will contain human readable "log messages" of actions that did take place in the current room
-  pendingCommands: {} // will contain pending commands (commands for which no event is received yet)
+  pendingCommands: {}, // will contain pending commands (commands for which no event is received yet)
+  language: userLanguage || DEFAULT_LANGUAGE,
+  translator: key => translator(key, userLanguage || DEFAULT_LANGUAGE)
 });
 
 export default INITIAL_STATE;

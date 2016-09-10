@@ -8,9 +8,9 @@ import { joinRoom } from '../services/actions';
 /**
  * List of rooms that the user joined earlier.
  */
-const RoomHistory = ({roomHistory, joinRoom }) => (
+const RoomHistory = ({t, roomHistory, joinRoom }) => (
   <div className="eyecatcher room-history">
-    Join previous rooms
+    {t('joinPrevious')}
     <ol>
       {
         roomHistory.map((room, index) => (
@@ -24,12 +24,14 @@ const RoomHistory = ({roomHistory, joinRoom }) => (
 );
 
 RoomHistory.propTypes = {
+  t: React.PropTypes.func,
   roomHistory: React.PropTypes.instanceOf(Immutable.List),
   joinRoom: React.PropTypes.func
 };
 
 export default connect(
   state => ({
+    t: state.get('translator'),
     roomHistory: state.get('roomHistory')
   }),
   dispatch => bindActionCreators({joinRoom}, dispatch)

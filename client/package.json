@@ -50,6 +50,7 @@
     "redux-thunk": "2.0.1",
     "socket.io-client": "1.4.5",
     "style-loader": "0.13.1",
+    "json-loader": "0.5.4",
     "stylus": "0.54.5",
     "stylus-loader": "2.0.0",
     "url-loader": "0.5.7",

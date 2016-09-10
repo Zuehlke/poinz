@@ -151,6 +151,8 @@ a {
       width 60px
       height 60px
       padding 4px
+      display block
+      margin 0 auto
     }
 
     .user-name {
@@ -286,12 +288,41 @@ a {
     color $zuehlkePurple
   }
 
-  .whoami {
+  .quick-menu {
     position fixed
     display block
     top 0
     right 34px
     padding 8px
+
+    > span {
+      display inline-block
+      margin-right 4px
+    }
+  }
+
+  .language-selector ul {
+    list-style-type none
+    margin 0
+    padding 0
+
+    li {
+      margin 0
+      padding 0
+      display inline-block
+      cursor pointer
+
+      &:after {
+        content "|"
+        width 16px
+        display inline-block
+        text-align center
+      }
+
+      &:last-child:after {
+        display none
+      }
+    }
   }
 }
 
@@ -391,6 +422,21 @@ $userMenuWidth = 300px
         padding 1px 0
       }
     }
+
+    .language-selector-wrapper {
+      label {
+        display inline-block
+        margin-right 8px
+        cursor pointer
+
+        /** radio buttons **/
+        input {
+          margin-right 4px
+          display inline-block
+        }
+      }
+    }
+
     input, textarea {
       background transparent
       color white
@@ -405,7 +451,7 @@ $userMenuWidth = 300px
   width 100%
 
   .action-log {
-    top 282px
+    top 348px
     bottom 50px
     position absolute
     overflow-x hidden

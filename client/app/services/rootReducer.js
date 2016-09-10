@@ -1,6 +1,8 @@
 import log from 'loglevel';
 import Immutable from 'immutable';
 
+import clientSettingsStore from './clientSettingsStore';
+import translator from './translator';
 import eventReducer from './eventReducer';
 import {
   TOGGLE_BACKLOG,
@@ -10,7 +12,8 @@ import {
   COMMAND_SENT,
   EVENT_RECEIVED,
   SET_ROOMID,
-  STATUS_FETCHED
+  STATUS_FETCHED,
+  SET_LANGUAGE
 } from './actionTypes';
 
 const LOGGER = log.getLogger('rootReducer');
@@ -51,6 +54,12 @@ export default function rootReducer(state = {}, action = {}) {
         return state.setIn(['stories', action.storyId, 'editMode'], false);
       case STATUS_FETCHED:
         return state.set('appStatus', Immutable.fromJS(action.status));
+      case SET_LANGUAGE:
+      {
+        const language = action.language;
+        clientSettingsStore.setPresetLanguage(language);
+        return state.set('language', language).set('translator', key => translator(key, language));
+      }
       default :
         LOGGER.warn('unknown action', action);
         return state;

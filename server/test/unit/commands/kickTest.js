@@ -95,6 +95,22 @@ describe('kick', () => {
         }, this.userOneId),
         'User cannot kick himself!');
     });
+
+
+    it('Should throw if visitor tries to kick', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userOneId, 'visitor'], true));
+
+      return testUtils.assertPromiseRejects(
+        this.processor({
+          id: this.commandId,
+          roomId: this.roomId,
+          name: 'kick',
+          payload: {
+            userId: this.userTwoId
+          }
+        }, this.userOneId),
+        'Visitors cannot kick other users!');
+    });
   });
 
 });

@@ -54,7 +54,7 @@ describe('commandProcessor', () => {
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
-      'No handler found for setUsername');
+      'No command handler found for setUsername');
   });
 
   it('process a dummy command where command handler produced unknown event', function () {

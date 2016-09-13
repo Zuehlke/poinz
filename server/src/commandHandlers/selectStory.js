@@ -5,7 +5,7 @@ module.exports = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot add stories!');
+      throw new Error('Visitors cannot select current story!');
     }
 
     // check that id in payload is one of the stories in room

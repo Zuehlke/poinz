@@ -82,6 +82,22 @@ describe('selectStory', () => {
         }, this.userId),
         'Precondition Error during "selectStory": Story story-not-in-room cannot be selected. It is not part of room');
     });
+
+    it('Should throw if visitor tries to select current story', function () {
+      this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
+
+      return testUtils.assertPromiseRejects(
+        this.processor({
+          id: this.commandId,
+          roomId: this.roomId,
+          name: 'selectStory',
+          payload: {
+            storyId: this.storyId
+          }
+        }, this.userId),
+        'Visitors cannot select current story!');
+    });
+
   });
 
 });

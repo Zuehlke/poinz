@@ -13,7 +13,7 @@ module.exports = {
       name: 'poinz.log'
     },
     console: {
-      level: 'info'
+      level: 'debug'
     }
   },
 

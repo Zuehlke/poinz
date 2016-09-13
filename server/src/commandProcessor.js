@@ -10,40 +10,18 @@ module.exports = commandProcessorFactory;
 
 /**
  * wrapped in a factory function.
- * (Separate the gathering of the handlers from the processing logic.)
- * Also allows us to pass in custom list of handlers during tests.
+ * Allows us to pass in custom list of handlers during tests.
  *
- * @param {object} commandHandlers
+ * @param {object} commandHandlers A collection of command handlers indexed by command name
  * @param {object} eventHandlers
  * @param {object} store
  * @returns {function} the processCommand function
  */
 function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
+  // setup sequence queue
   const queue = queueFactory();
-
-  queue.setJobHandler((job, nextJob) => {
-    const userId = job.userId;
-    const command = job.command;
-    const context = {userId};
-
-    validate(command)
-      .then(() => getCommandHandler(context, command))
-      .then(() => loadRoom(context, command))
-      .then(() => preConditions(context, command))
-      .then(() => handle(context, command))
-      .then(() => applyEvents(context, command))
-      .then(() => saveRoomBackToStore(context))
-      .then(() => {
-        nextJob();
-        job.resolve(context.eventsToSend);
-      })
-      .catch(err => {
-        nextJob(err);
-        job.reject(err);
-      });
-
-  });
+  queue.setJobHandler(jobHandler);
 
   /**
    *  The command processor handles incoming commands.
@@ -51,7 +29,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    *  For every command the following steps are done.
    *
    *  1. Validation
-   *  2. Get command handler
+   *  2. Find matching command handler
    *  3. Load room
    *  4. Precondition check
    *  5. Handle Command
@@ -74,6 +52,35 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
     return new Promise((resolve, reject) => queue.push({command, userId, resolve, reject}));
   };
 
+  /**
+   * queue job handler
+   *
+   * @param job
+   * @param nextJob
+   */
+  function jobHandler(job, nextJob) {
+    const userId = job.userId;
+    const command = job.command;
+    const context = {userId};
+
+    validate(command)
+      .then(() => findMatchingCommandHandler(context, command))
+      .then(() => loadRoom(context, command))
+      .then(() => preConditions(context, command))
+      .then(() => handle(context, command))
+      .then(() => applyEvents(context, command))
+      .then(() => saveRoomBackToStore(context))
+      .then(() => {
+        nextJob();
+        job.resolve(context.eventsToSend);
+      })
+      .catch(err => {
+        nextJob(err);
+        job.reject(err);
+      });
+
+  }
+
   /** 1. Validate incoming command (syntactically, against schema) **/
   function validate(cmd) {
     // use "new Promise" instead of "Promise.resolve" -> errors thrown in invocation of "commandSchemaValidator" should
@@ -82,21 +89,23 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   }
 
   /**
-   * 2. Find command handler that matches the name of the command.
-   */
-  function getCommandHandler(ctx, cmd) {
+   * 2. Find matching command handler according to command name.
+   * */
+  function findMatchingCommandHandler(ctx, cmd) {
     const handler = commandHandlers[cmd.name];
     if (!handler) {
-      throw new Error('No handler found for ' + cmd.name);
+      throw new Error('No command handler found for ' + cmd.name);
     }
     ctx.handler = handler;
   }
 
   /**
-   * 3. Load Room object by command.roomId (currently in-memory store only). (asynchronously)
+   * 3. Load Room object by command.roomId
    * For some commands it is valid that the room does not yet exist in the store.
    * Command handlers define whether they expect an existing room or not
    *
+   * @param {object} ctx context object that is used to hold state between processing steps
+   * @param {object} cmd
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
   function loadRoom(ctx, cmd) {
@@ -105,7 +114,6 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
       .then(room => {
         if (!room && ctx.handler.existingRoom) {
           // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
-          // could happen if server is restarted, users are still logged in to room and send a command with a "stale" roomId.
           throw new Error('Command "' + cmd.name + '" only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
         }
 
@@ -121,6 +129,9 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   /**
    * 4. Run command preconditions which are defined in commandHandlers.
    * Preconditions receive the room, the command and the userId and can do some semantic checks.
+   *
+   * @param {object} ctx context object that is used to hold state between processing steps
+   * @param {object} cmd
    */
   function preConditions(ctx, cmd) {
     if (!ctx.handler.preCondition) {
@@ -136,7 +147,10 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   /**
    *  5. Handle the command by invoking the handler function.
    *  The handler function receives the room and the command.
-   *  The handler function decides which events are produced.
+   *  The handler function produces events
+   *
+   * @param {object} ctx context object that is used to hold state between processing steps
+   * @param {object} cmd
    */
   function handle(ctx, cmd) {
     ctx.eventHandlingQueue = [];
@@ -144,8 +158,8 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
     /**
      * called from command handlers: room.apply('someEvent', payload)
-     * @param eventName
-     * @param eventPayload
+     * @param {string} eventName
+     * @param {object} eventPayload
      */
     ctx.room.applyEvent = (eventName, eventPayload) => {
       const eventHandler = eventHandlers[eventName];
@@ -153,10 +167,11 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
         throw new Error('Cannot apply unknown event ' + eventName);
       }
 
+      // events are handled sequentially since events most often update the state of the room ("are applied to the room")
       ctx.eventHandlingQueue.push(currentRoom => {
         const updatedRoom = eventHandler(currentRoom, eventPayload);
 
-        // construct the event object that is sent back to clients
+        // build the event object that is sent back to clients
         ctx.eventsToSend.push({
           id: uuid(),
           userId: ctx.userId, // which user triggered the command / is "responsible" for the event
@@ -179,6 +194,8 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    * 6. Apply events to the room.
    * Events modify the room state.
    * All produced events are applied in-order.
+   *
+   * @param {object} ctx context object that is used to hold state between processing steps
    */
   function applyEvents(ctx) {
     ctx.eventHandlingQueue.forEach(evtHandler => ctx.room = evtHandler(ctx.room));
@@ -189,6 +206,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
    *  Command was processed successfully and all produced events were applied and modified the room object.
    *  Now store the new state.
    *
+   *  @param {object} ctx context object that is used to hold state between processing steps
    *  @returns {Promise} returns a promise that resolves as soon as the room is stored
    */
   function saveRoomBackToStore(ctx) {

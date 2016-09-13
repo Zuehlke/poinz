@@ -18,6 +18,9 @@ module.exports = {
       throw new Error('Can only kick disconnected users!');
     }
 
+    if (room.getIn(['users', userId, 'visitor'])) {
+      throw new Error('Visitors cannot kick other users!');
+    }
 
   },
   fn: (room, command) => {

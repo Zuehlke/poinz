@@ -1,15 +1,15 @@
-const
-  path = require('path'),
-  util = require('util'),
-  glob = require('glob'),
-  logging = require('./logging'),
-  tv4 = require('tv4');
+import path from 'path';
+import util from 'util';
+import glob from 'glob';
+import tv4 from  'tv4';
+
+import logging from './logging';
 
 const LOGGER = logging.getLogger('commandSchemaValidator');
 
 const schemas = gatherSchemas();
 
-module.exports = validate;
+export default validate;
 
 /**
  * Validates the given command against its schema.

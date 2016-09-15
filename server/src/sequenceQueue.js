@@ -5,7 +5,7 @@
  * Currently the sequence queue only supports a single jobHandler (all we need for now).
  *
  */
-module.exports = function queueFactory() {
+export default function sequeueFactory() {
   const queue = [];
   var handler;
   var isCurrentlyHandling = false;

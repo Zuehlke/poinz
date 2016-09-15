@@ -1,7 +1,6 @@
-const
-  path = require('path'),
-  glob = require('glob'),
-  _ = require('lodash');
+import path from 'path';
+import glob from 'glob';
+import _ from 'lodash';
 
 /**
  * Gathers all command handlers.
@@ -37,7 +36,7 @@ function gatherEventHandlers() {
   return handlers;
 }
 
-module.exports = {
+export default {
   gatherCommandHandlers,
   gatherEventHandlers
 };

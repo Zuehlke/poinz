@@ -1,13 +1,13 @@
-const
-  path = require('path'),
-  express = require('express'),
-  settings = require('./settings'),
-  socketServer = require('./socketServer'),
-  handlerGatherer = require('./handlerGatherer'),
-  commandProcessorFactory = require('./commandProcessor'),
-  logging = require('./logging'),
-  rest = require('./rest'),
-  roomsStore = require('./roomsStore');
+import path from 'path';
+import express from 'express';
+
+import settings from './settings';
+import socketServer from './socketServer';
+import handlerGatherer from './handlerGatherer';
+import commandProcessorFactory from './commandProcessor';
+import logging from './logging';
+import rest from './rest';
+import roomsStore from './roomsStore';
 
 const LOGGER = logging.getLogger('server');
 

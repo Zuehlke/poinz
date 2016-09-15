@@ -1,12 +1,13 @@
-const
-  util = require('util'),
-  Promise = require('bluebird'),
-  Immutable = require('immutable'),
-  queueFactory = require('./sequenceQueue'),
-  uuid = require('node-uuid').v4,
-  commandSchemaValidator = require('./commandSchemaValidator');
 
-module.exports = commandProcessorFactory;
+import util from 'util';
+import Promise from 'bluebird';
+import Immutable from 'immutable';
+import { v4 as uuid } from 'node-uuid';
+
+import queueFactory from './sequenceQueue';
+import commandSchemaValidator from './commandSchemaValidator';
+
+export default commandProcessorFactory;
 
 /**
  * wrapped in a factory function.

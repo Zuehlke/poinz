@@ -1,8 +1,7 @@
-const
-  http = require('http'),
-  uuid = require('node-uuid').v4,
-  socketIo = require('socket.io'),
-  logging = require('./logging');
+import http from 'http';
+import { v4 as uuid} from 'node-uuid';
+import socketIo from 'socket.io';
+import logging from './logging';
 
 const LOGGER = logging.getLogger('socketServer');
 
@@ -12,7 +11,7 @@ const
   socketToUserIdMap = {},
   socketToRoomMap = {};
 
-module.exports.init = init;
+export default {init};
 
 function init(app, cmdProcessor) {
   const server = http.createServer(app);

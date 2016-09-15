@@ -1,7 +1,7 @@
-const
-  Immutable = require('immutable'),
-  express = require('express'),
-  roomsStore = require('./roomsStore');
+import Immutable from 'immutable';
+import express from 'express';
+
+import roomsStore from './roomsStore';
 
 /**
  * This module handles incoming requests to the REST api.
@@ -53,4 +53,4 @@ function buildStatusObject() {
     });
 }
 
-module.exports = {init};
+export default {init};

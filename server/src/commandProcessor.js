@@ -1,13 +1,10 @@
-
 import util from 'util';
 import Promise from 'bluebird';
 import Immutable from 'immutable';
 import { v4 as uuid } from 'node-uuid';
 
 import queueFactory from './sequenceQueue';
-import commandSchemaValidator from './commandSchemaValidator';
-
-export default commandProcessorFactory;
+import validateCommand from './commandSchemaValidator';
 
 /**
  * wrapped in a factory function.
@@ -18,7 +15,7 @@ export default commandProcessorFactory;
  * @param {object} store
  * @returns {function} the processCommand function
  */
-function commandProcessorFactory(commandHandlers, eventHandlers, store) {
+export default function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
   // setup sequence queue
   const queue = queueFactory();
@@ -56,12 +53,11 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   /**
    * queue job handler
    *
-   * @param job
-   * @param nextJob
+   * @param {object} job
+   * @param {function} proceed function to proceed the queue (handle the next job)
    */
-  function jobHandler(job, nextJob) {
-    const userId = job.userId;
-    const command = job.command;
+  function jobHandler(job, proceed) {
+    const {command, userId} = job;
     const context = {userId};
 
     validate(command)
@@ -69,14 +65,14 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
       .then(() => loadRoom(context, command))
       .then(() => preConditions(context, command))
       .then(() => handle(context, command))
-      .then(() => applyEvents(context, command))
+      .then(() => applyEvents(context))
       .then(() => saveRoomBackToStore(context))
       .then(() => {
-        nextJob();
+        proceed();
         job.resolve(context.eventsToSend);
       })
       .catch(err => {
-        nextJob(err);
+        proceed(err);
         job.reject(err);
       });
 
@@ -86,7 +82,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   function validate(cmd) {
     // use "new Promise" instead of "Promise.resolve" -> errors thrown in invocation of "commandSchemaValidator" should
     // reject returned promise.
-    return new Promise(resolve => resolve(commandSchemaValidator(cmd)));
+    return new Promise(resolve => resolve(validateCommand(cmd)));
   }
 
   /**
@@ -95,7 +91,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
   function findMatchingCommandHandler(ctx, cmd) {
     const handler = commandHandlers[cmd.name];
     if (!handler) {
-      throw new Error('No command handler found for ' + cmd.name);
+      throw new Error(`No command handler found for ${cmd.name}`);
     }
     ctx.handler = handler;
   }
@@ -115,7 +111,7 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
       .then(room => {
         if (!room && ctx.handler.existingRoom) {
           // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
-          throw new Error('Command "' + cmd.name + '" only want\'s to get handled for an existing room. (' + cmd.roomId + ')');
+          throw new Error(`Command "${cmd.name}" only want\'s to get handled for an existing room. (${cmd.roomId})`);
         }
 
         if (room) {
@@ -221,6 +217,6 @@ function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 function PreconditionError(err, cmd) {
   this.stack = err.stack;
   this.name = this.constructor.name;
-  this.message = 'Precondition Error during "' + cmd.name + '": ' + err.message;
+  this.message = `Precondition Error during "${cmd.name}": ${err.message}`;
 }
 util.inherits(PreconditionError, Error);

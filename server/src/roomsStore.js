@@ -46,7 +46,7 @@ function redisValueToImmutableRoom(redisValue) {
     const parsedValue = JSON.parse(redisValue);
     return Immutable.fromJS(parsedValue);
   } catch (err) {
-    throw new Error('Invalid data in store' + redisValue + '\n' + err.message);
+    throw new Error(`Invalid data in store ${redisValue }\n${err.message}`);
   }
 }
 
@@ -73,8 +73,8 @@ function getAllRooms() {
 
 function getAllKeysInCollection() {
 
-  var cursor = '0';
-  var allKeys = [];
+  let cursor = '0';
+  let allKeys = [];
 
   return new Promise(doScan);
 

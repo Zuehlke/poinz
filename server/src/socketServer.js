@@ -5,7 +5,7 @@ import logging from './logging';
 
 const LOGGER = logging.getLogger('socketServer');
 
-var io, commandProcessor;
+let io, commandProcessor;
 
 const
   socketToUserIdMap = {},

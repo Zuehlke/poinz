@@ -31,10 +31,6 @@ const commandProcessor = commandProcessorFactory(
 );
 
 const server = socketServer.init(app, commandProcessor);
-server.listen(settings.serverPort, settings.serverHost, function () {
-  LOGGER.info('-- SERVER STARTED -- (' + settings.serverHost + ':' + settings.serverPort + ')');
-});
+server.listen(settings.serverPort, settings.serverHost, () => LOGGER.info(`-- SERVER STARTED -- (${ settings.serverHost }:${settings.serverPort})`));
 
-process.on('SIGINT', function () {
-  server.close(()=> process.exit(0));
-});
+process.on('SIGINT', () => server.close(()=> process.exit(0)));

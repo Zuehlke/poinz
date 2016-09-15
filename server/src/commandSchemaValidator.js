@@ -72,7 +72,7 @@ function parseSchemaFile(schemaFileContent, schemaFileName) {
 function CommandValidationError(err, cmd) {
   this.stack = err.stack;
   this.name = this.constructor.name;
-  this.message = 'Command validation Error during "' + cmd.name + '": ' + err.message;
+  this.message = `Command validation Error during "${cmd.name}": ${err.message}`;
 }
 util.inherits(CommandValidationError, Error);
 

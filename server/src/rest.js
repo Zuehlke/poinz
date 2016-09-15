@@ -17,7 +17,7 @@ import roomsStore from './roomsStore';
  * @param app the express app object
  */
 function init(app) {
-  var restRouter = express.Router();
+  const restRouter = express.Router();
   restRouter.get('/status', handleStatusRequest);
   app.use('/api', restRouter);
 }

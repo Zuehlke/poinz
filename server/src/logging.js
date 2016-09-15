@@ -27,7 +27,7 @@ winston.loggers.options.transports = [
  * @returns {object} the new Logger
  */
 function getLogger(loggerName) {
-  var newLogger = winston.loggers.add(loggerName);
+  const newLogger = winston.loggers.add(loggerName);
   newLogger.filters.push((level, msg, meta) => {
     return {
       msg: `[${level}] ${loggerName}: ${msg}`,

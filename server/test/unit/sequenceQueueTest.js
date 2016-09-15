@@ -42,7 +42,7 @@ describe('sequenceQueue', ()=> {
     var jobCount = 0;
     var handlingFirstJob = false;
 
-    queue.setJobHandler((job, nextJob) => {
+    queue.setJobHandler((job, proceed) => {
       jobCount++;
 
       if (jobCount === 1) {
@@ -51,7 +51,7 @@ describe('sequenceQueue', ()=> {
 
         setTimeout(function () {
           handlingFirstJob = false;
-          nextJob();
+          proceed();
         }, 1);
 
       } else if (jobCount === 2) {

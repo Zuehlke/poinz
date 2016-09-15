@@ -12,7 +12,7 @@
   },
   "main": "src/server.js",
   "scripts": {
-    "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha test/unit/*",
+    "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha  --compilers js:babel-register test/unit/*",
     "start": "node src/bootstrap.js"
   },
   "dependencies": {

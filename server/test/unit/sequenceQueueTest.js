@@ -1,6 +1,5 @@
-const
-  assert = require('assert'),
-  queueFactory = require('../../src/sequenceQueue');
+import assert from 'assert';
+import queueFactory from '../../src/sequenceQueue';
 
 describe('sequenceQueue', ()=> {
 

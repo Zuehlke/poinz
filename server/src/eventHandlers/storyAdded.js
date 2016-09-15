@@ -1,6 +1,6 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
-module.exports = (room, eventPayload) => {
+const storyAddedEventHandler = (room, eventPayload) => {
 
   const newStory = Immutable.fromJS(Object.assign(eventPayload, {
     estimations: {}
@@ -8,3 +8,5 @@ module.exports = (room, eventPayload) => {
 
   return room.update('stories', new Immutable.Map(), stories => stories.set(eventPayload.id, newStory));
 };
+
+export default storyAddedEventHandler;

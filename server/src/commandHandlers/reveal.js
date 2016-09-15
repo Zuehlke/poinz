@@ -3,7 +3,7 @@
  * Users may only reveal the currently selected story
  * A user that is marked as visitor cannot reveal stories
  */
-module.exports = {
+const revealCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
@@ -26,3 +26,5 @@ module.exports = {
     });
   }
 };
+
+export default revealCommandHandler;

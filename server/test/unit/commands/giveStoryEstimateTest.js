@@ -1,16 +1,16 @@
-const
-  assert = require('assert'),
-  Immutable = require('immutable'),
-  uuid = require('node-uuid').v4,
-  testUtils = require('../testUtils'),
-  processorFactory = require('../../../src/commandProcessor'),
-  handlerGatherer = require('../../../src//handlerGatherer');
+import assert from 'assert';
+import { v4 as uuid } from'node-uuid';
+import Immutable from 'immutable';
+import testUtils from '../testUtils';
+import processorFactory from '../../../src/commandProcessor';
+
+// we want to test with real command- and event handlers!
+import commandHandlers from '../../../src/commandHandlers/commandHandlers';
+import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
 describe('giveStoryEstimate', () => {
 
   beforeEach(function () {
-    const cmdHandlers = handlerGatherer.gatherCommandHandlers();
-    const evtHandlers = handlerGatherer.gatherEventHandlers();
 
     this.userId = uuid();
     this.commandId = uuid();
@@ -30,7 +30,7 @@ describe('giveStoryEstimate', () => {
       }
     }));
 
-    this.processor = processorFactory(cmdHandlers, evtHandlers, this.mockRoomsStore);
+    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
 
     // prepare the state with a story (you could this directly on the state, but this is closer to reality)
     return this.processor({

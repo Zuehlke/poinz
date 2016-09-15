@@ -4,7 +4,7 @@
  *
  * Can only be done for the currently selected story.
  */
-module.exports = {
+const newEstimationRoundCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
@@ -19,3 +19,5 @@ module.exports = {
     room.applyEvent('newEstimationRoundStarted', command.payload);
   }
 };
+
+export default  newEstimationRoundCommandHandler;

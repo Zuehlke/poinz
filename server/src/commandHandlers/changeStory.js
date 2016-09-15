@@ -1,8 +1,7 @@
-
 /**
  * A user changes the title and/or description of a story
  */
-module.exports = {
+const changeStoryCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.getIn(['users', userId, 'visitor'])) {
@@ -17,3 +16,5 @@ module.exports = {
     room.applyEvent('storyChanged', command.payload);
   }
 };
+
+export default changeStoryCommandHandler;

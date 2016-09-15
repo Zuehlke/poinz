@@ -1,7 +1,7 @@
 /**
  * A user selected a story (marked it as the "current" story to estimate)
  */
-module.exports = {
+const selectStoryCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.getIn(['users', userId, 'visitor'])) {
@@ -17,3 +17,5 @@ module.exports = {
     room.applyEvent('storySelected', {storyId: command.payload.storyId});
   }
 };
+
+export default selectStoryCommandHandler;

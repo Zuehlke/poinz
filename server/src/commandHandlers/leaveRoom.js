@@ -3,7 +3,7 @@
  * Is also produced by the socketServer itself on connection lost!
  *
  */
-module.exports = {
+const leaveRoomCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
@@ -18,3 +18,5 @@ module.exports = {
     }
   }
 };
+
+export default leaveRoomCommandHandler;

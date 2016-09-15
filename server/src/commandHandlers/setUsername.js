@@ -1,7 +1,7 @@
 /**
  * A user sets his username.
  */
-module.exports = {
+const setUsernameCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (userId !== command.payload.userId) {
@@ -12,3 +12,5 @@ module.exports = {
     room.applyEvent('usernameSet', command.payload);
   }
 };
+
+export default setUsernameCommandHandler;

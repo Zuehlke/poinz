@@ -1,7 +1,9 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
-module.exports = (room, eventPayload) => (
+const newEstimationRoundStartedEventHandler = (room, eventPayload) => (
   room
     .setIn(['stories', eventPayload.storyId, 'estimations'], new Immutable.Map())
     .setIn(['stories', eventPayload.storyId, 'revealed'], false)
 );
+
+export default newEstimationRoundStartedEventHandler;

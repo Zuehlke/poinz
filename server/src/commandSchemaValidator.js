@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import util from 'util';
 import glob from 'glob';
 import tv4 from  'tv4';
@@ -49,7 +50,9 @@ function gatherSchemas() {
   const schemaMap = {};
   const schemaFiles = glob.sync(path.resolve(__dirname, './validationSchemas/**/*.json'));
   schemaFiles.map(schemaFile => {
-    schemaMap[path.basename(schemaFile, '.json')] = require(schemaFile);
+    const schemaFileContent = fs.readFileSync(schemaFile, 'utf-8');
+    const schemaName = path.basename(schemaFile, '.json');
+    schemaMap[schemaName] = parseSchemaFile(schemaFileContent, schemaFile);
   });
 
   // add the default command schema, which is referenced from all others ($ref)
@@ -58,6 +61,13 @@ function gatherSchemas() {
   return schemaMap;
 }
 
+function parseSchemaFile(schemaFileContent, schemaFileName) {
+  try {
+    return JSON.parse(schemaFileContent);
+  } catch (err) {
+    LOGGER.error(`Could not parse schema file ${schemaFileName}.`, err);
+  }
+}
 
 function CommandValidationError(err, cmd) {
   this.stack = err.stack;

@@ -1,10 +1,9 @@
-const
-  Promise = require('bluebird'),
-  util = require('util'),
-  assert = require('assert'),
-  _ = require('lodash');
+import Promise from 'bluebird';
+import util from 'util';
+import assert from 'assert';
+import _ from 'lodash';
 
-module.exports = {
+export default {
   assertValidEvent,
   assertPromiseRejects,
   newMockRoomsStore

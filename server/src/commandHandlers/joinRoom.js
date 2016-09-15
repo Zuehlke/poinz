@@ -1,4 +1,4 @@
-const uuid = require('node-uuid').v4;
+import { v4 as uuid } from 'node-uuid';
 
 /**
  * A user joins a room.
@@ -7,7 +7,7 @@ const uuid = require('node-uuid').v4;
  * Produces also a "roomJoined" event (which contains the room state)
  *
  */
-module.exports = {
+const joinRoomCommandHandler = {
   existingRoom: false,
   fn: (room, command) => {
 
@@ -36,6 +36,8 @@ module.exports = {
   }
 
 };
+
+export default joinRoomCommandHandler;
 
 function handleNewRoom(room, command, newUser) {
   room.applyEvent('roomCreated', {id: command.roomId, userId: newUser.id});

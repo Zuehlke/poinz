@@ -3,11 +3,12 @@ import express from 'express';
 
 import settings from './settings';
 import socketServer from './socketServer';
-import handlerGatherer from './handlerGatherer';
 import commandProcessorFactory from './commandProcessor';
 import logging from './logging';
 import rest from './rest';
 import roomsStore from './roomsStore';
+import commandHandlers from './commandHandlers/commandHandlers';
+import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = logging.getLogger('server');
 
@@ -24,8 +25,8 @@ app.get('*', function (request, response) {
 });
 
 const commandProcessor = commandProcessorFactory(
-  handlerGatherer.gatherCommandHandlers(),
-  handlerGatherer.gatherEventHandlers(),
+  commandHandlers,
+  eventHandlers,
   roomsStore
 );
 

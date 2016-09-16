@@ -13,7 +13,7 @@ const settings = {
       name: 'poinz.log'
     },
     console: {
-      level: 'debug'
+      level: 'info'
     }
   },
 

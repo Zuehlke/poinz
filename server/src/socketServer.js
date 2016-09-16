@@ -94,7 +94,7 @@ function registerUserWithSocket(joinRoomCommand, socket, userIdToStore) {
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(joinRoomCommand.roomId, () => LOGGER.debug('socket with id ' + socket.id + ' joined room ' + joinRoomCommand.roomId));
+  socket.join(joinRoomCommand.roomId, () => LOGGER.debug(`socket with id ${socket.id} joined room ${joinRoomCommand.roomId}`));
 }
 
 /**
@@ -108,7 +108,7 @@ function onSocketDisconnect(socket) {
 
   if (!userId || !roomId) {
     // this can happen if the server was restarted, and a client re-connected!
-    LOGGER.debug('could not send leaveRoom command for ' + userId + ' in ' + roomId);
+    LOGGER.debug(`could not send leaveRoom command for userId=${userId} in roomId=${roomId}`);
     return;
   }
 

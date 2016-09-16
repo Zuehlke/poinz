@@ -27,7 +27,7 @@ function validate(cmd) {
   const schema = schemas[cmd.name];
 
   if (!schema) {
-    throw new CommandValidationError(new Error(`Cannot validate command, no matching schema found for ${cmd.name}!`), cmd);
+    throw new CommandValidationError(new Error(`Cannot validate command, no matching schema found for "${cmd.name}"!`), cmd);
   }
 
   const result = tv4.validateMultiple(cmd, schema);
@@ -48,7 +48,10 @@ function gatherSchemas() {
   LOGGER.info('loading command schemas..');
 
   const schemaMap = {};
-  const schemaFiles = glob.sync(path.resolve(__dirname, './validationSchemas/**/*.json'));
+  const schemaFiles = glob.sync(path.resolve(__dirname, '../resources/validationSchemas/**/*.json'));
+
+  LOGGER.info(`got ${schemaFiles.length} schema files...`);
+
   schemaFiles.map(schemaFile => {
     const schemaFileContent = fs.readFileSync(schemaFile, 'utf-8');
     const schemaName = path.basename(schemaFile, '.json');

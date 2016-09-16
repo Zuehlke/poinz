@@ -35,7 +35,14 @@ del([
   })
   .then(() => fs.copy('./client/dist', './deploy/public/assets'))
   .then(() => fs.copy('./client/index.html', './deploy/public/index.html'))
-  .then(() => fs.copy('./server/src', './deploy/src'))
+  .then(() => {
+    console.log('building backend (babel transpile)...');
+    return spawnAndPrint(
+      './node_modules/.bin/babel', './src/ -d ./lib'.split(' '),
+      {cwd: path.resolve(__dirname, '../server')});
+  })
+  .then(() => fs.copy('./server/lib', './deploy/src')) // copy transpiled backend files to deploy folder
+  .then(() => fs.copy('./server/resources', './deploy/resources'))
   .then(() => fs.copy('./server/package.json', './deploy/package.json'))
   .then(getGitInformation)
   .then(startBuildingDockerImage)

@@ -12,6 +12,7 @@
   },
   "main": "src/server.js",
   "scripts": {
+    "build": "babel src -d lib",
     "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha  --compilers js:babel-register test/unit/*",
     "start": "node src/bootstrap.js"
   },
@@ -29,6 +30,7 @@
     "winston-daily-rotate-file": "1.0.1"
   },
   "devDependencies": {
+    "babel-cli": "6.14.0",
     "babel-core": "6.7.7",
     "babel-preset-es2015": "6.6.0",
     "babel-register": "6.7.2",

@@ -12,7 +12,7 @@
 # start the container locally in detached mode
 # docker run -p 3000:3000 -d xeronimus/poinz
 
-FROM node:argon
+FROM node:6
 
 # Create app directory
 RUN mkdir -p /usr/src/poinz/public
@@ -22,6 +22,7 @@ WORKDIR /usr/src/poinz
 # Bundle app source
 COPY deploy/public /usr/src/poinz/public
 COPY deploy/lib /usr/src/poinz/lib
+COPY deploy/resources /usr/src/poinz/resources
 COPY deploy/package.json /usr/src/poinz/
 
 # install app dependencies

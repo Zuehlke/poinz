@@ -1,8 +1,9 @@
 /**
  *  Build Script for Docker Image
  *
- *  1. cleanup output directories
+ *  1. clean-up output directories
  *  2. build poinz client (webpack)
+ *  3. transpile backend sources
  *  3. copy client and backend to "deploy" folder
  *  4. build docker image (see Dockerfile)
  *

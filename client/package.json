@@ -58,6 +58,6 @@
     "webpack-dev-server": "1.14.1"
   },
   "engines": {
-    "node": ">=4.1.0"
+    "node": ">=6.5.0"
   }
 }

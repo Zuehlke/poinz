@@ -1,8 +1,7 @@
-const
-  assert = require('assert'),
-  http = require('http'),
-  uuid = require('node-uuid').v4,
-  socketIoClient = require('socket.io-client');
+import assert from 'assert';
+import http from 'http';
+import { v4 as uuid } from 'node-uuid';
+import socketIoClient from 'socket.io-client';
 
 /**
  * NOTE: for these integration tests, the PoinZ server must be running

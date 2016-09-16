@@ -5,10 +5,10 @@
  * Currently the sequence queue only supports a single jobHandler (all we need for now).
  *
  */
-module.exports = function queueFactory() {
+export default function sequenceQueueFactory() {
   const queue = [];
-  var handler;
-  var isCurrentlyHandling = false;
+  let handler;
+  let isCurrentlyHandling = false;
 
   return {
     push,
@@ -34,9 +34,6 @@ module.exports = function queueFactory() {
    * @param {function} jobHandler
    */
   function setJobHandler(jobHandler) {
-    if (handler) {
-      throw new Error('Sequence Queue supports only one handler to be registered!');
-    }
     handler = jobHandler;
     invokeJobHandler();
   }
@@ -56,4 +53,4 @@ module.exports = function queueFactory() {
   }
 
 
-};
+}

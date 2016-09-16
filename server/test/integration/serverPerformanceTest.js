@@ -1,6 +1,6 @@
-const
-  uuid = require('node-uuid').v4,
-  socketIoClient = require('socket.io-client');
+import { v4 as uuid } from 'node-uuid';
+import socketIoClient from 'socket.io-client';
+
 
 /**
  * NOTE: for these performance tests, the PoinZ server must be running

@@ -1,4 +1,4 @@
-const _ = require('lodash');
+import _ from 'lodash';
 
 /**
  * A user gives his estimation for a certain story.
@@ -6,7 +6,7 @@ const _ = require('lodash');
  * A user that is marked as visitor cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
-module.exports = {
+const giveStoryEstimateCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
@@ -47,3 +47,5 @@ module.exports = {
     }
   }
 };
+
+export default giveStoryEstimateCommandHandler;

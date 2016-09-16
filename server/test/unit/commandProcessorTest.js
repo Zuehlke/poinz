@@ -1,10 +1,9 @@
-const
-  assert = require('assert'),
-  Immutable = require('immutable'),
-  Promise = require('bluebird'),
-  uuid = require('node-uuid').v4,
-  testUtils = require('./testUtils'),
-  processorFactory = require('../../src/commandProcessor');
+import assert from 'assert';
+import { v4 as uuid } from'node-uuid';
+import Immutable from 'immutable';
+import Promise from 'bluebird';
+import testUtils from './testUtils';
+import processorFactory from '../../src/commandProcessor';
 
 describe('commandProcessor', () => {
 

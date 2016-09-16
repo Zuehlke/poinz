@@ -2,7 +2,7 @@
  * A user removes a disconnected user from the room.
  *
  */
-module.exports = {
+const kickCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
 
@@ -27,3 +27,5 @@ module.exports = {
     room.applyEvent('kicked', {userId: command.payload.userId});
   }
 };
+
+export default kickCommandHandler;

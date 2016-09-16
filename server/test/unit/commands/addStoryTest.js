@@ -1,10 +1,12 @@
-const
-  assert = require('assert'),
-  Immutable = require('immutable'),
-  uuid = require('node-uuid').v4,
-  testUtils = require('../testUtils'),
-  processorFactory = require('../../../src/commandProcessor'),
-  handlerGatherer = require('../../../src//handlerGatherer');
+import assert from 'assert';
+import { v4 as uuid } from'node-uuid';
+import Immutable from 'immutable';
+import testUtils from '../testUtils';
+import processorFactory from '../../../src/commandProcessor';
+
+// we want to test with real command- and event handlers!
+import commandHandlers from '../../../src/commandHandlers/commandHandlers';
+import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
 /**
  * Can serve as a sample for command testing.
@@ -15,9 +17,6 @@ const
 describe('addStory', () => {
 
   beforeEach(function () {
-    // we want to test with real command- and event handlers!
-    const cmdHandlers = handlerGatherer.gatherCommandHandlers();
-    const evtHandlers = handlerGatherer.gatherEventHandlers();
 
     this.userId = uuid();
     this.commandId = uuid();
@@ -41,7 +40,7 @@ describe('addStory', () => {
       }
     }));
 
-    this.processor = processorFactory(cmdHandlers, evtHandlers, this.mockRoomsStore);
+    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
   });
 
   it('Should produce storyAdded event', function () {

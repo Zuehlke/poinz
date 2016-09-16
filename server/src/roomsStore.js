@@ -1,9 +1,9 @@
-const
-  redis = require('redis'),
-  Promise = require('bluebird'),
-  Immutable = require('immutable'),
-  settings = require('./settings'),
-  logging = require('./logging');
+import redis from 'redis';
+import Promise from 'bluebird';
+import Immutable from 'immutable';
+
+import settings from './settings';
+import logging from './logging';
 
 // "promisify" redis client with bluebird -> use client.getAsync / client.setAsync / etc.
 Promise.promisifyAll(redis.RedisClient.prototype);
@@ -16,7 +16,7 @@ const redisClient = redis.createClient(settings.redis);
 redisClient.on('error', LOGGER.error);
 redisClient.select(0, (err, status) => LOGGER.info('select redis 0 ' + err + ' ' + status));
 
-module.exports = {
+export default {
   getRoomById,
   saveRoom,
   getAllRooms
@@ -46,7 +46,7 @@ function redisValueToImmutableRoom(redisValue) {
     const parsedValue = JSON.parse(redisValue);
     return Immutable.fromJS(parsedValue);
   } catch (err) {
-    throw new Error('Invalid data in store' + redisValue + '\n' + err.message);
+    throw new Error(`Invalid data in store ${redisValue }\n${err.message}`);
   }
 }
 
@@ -73,18 +73,14 @@ function getAllRooms() {
 
 function getAllKeysInCollection() {
 
-  var cursor = '0';
-  var allKeys = [];
+  let cursor = '0';
+  let allKeys = [];
 
   return new Promise(doScan);
 
 
   function doScan(resolve, reject) {
-    redisClient.scan(
-      cursor,
-      'MATCH', POINZ_REDIS_KEY_PREFIX + '*',
-      'COUNT', '10',
-      (err, res) => {
+    redisClient.scan(cursor, 'MATCH', POINZ_REDIS_KEY_PREFIX + '*', 'COUNT', '10', (err, res) => {
         if (err) {
           reject(err);
           return;

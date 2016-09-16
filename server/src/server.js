@@ -1,13 +1,14 @@
-const
-  path = require('path'),
-  express = require('express'),
-  settings = require('./settings'),
-  socketServer = require('./socketServer'),
-  handlerGatherer = require('./handlerGatherer'),
-  commandProcessorFactory = require('./commandProcessor'),
-  logging = require('./logging'),
-  rest = require('./rest'),
-  roomsStore = require('./roomsStore');
+import path from 'path';
+import express from 'express';
+
+import settings from './settings';
+import socketServer from './socketServer';
+import commandProcessorFactory from './commandProcessor';
+import logging from './logging';
+import rest from './rest';
+import roomsStore from './roomsStore';
+import commandHandlers from './commandHandlers/commandHandlers';
+import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = logging.getLogger('server');
 
@@ -24,16 +25,12 @@ app.get('*', function (request, response) {
 });
 
 const commandProcessor = commandProcessorFactory(
-  handlerGatherer.gatherCommandHandlers(),
-  handlerGatherer.gatherEventHandlers(),
+  commandHandlers,
+  eventHandlers,
   roomsStore
 );
 
 const server = socketServer.init(app, commandProcessor);
-server.listen(settings.serverPort, settings.serverHost, function () {
-  LOGGER.info('-- SERVER STARTED -- (' + settings.serverHost + ':' + settings.serverPort + ')');
-});
+server.listen(settings.serverPort, settings.serverHost, () => LOGGER.info(`-- SERVER STARTED -- (${ settings.serverHost }:${settings.serverPort})`));
 
-process.on('SIGINT', function () {
-  server.close(()=> process.exit(0));
-});
+process.on('SIGINT', () => server.close(()=> process.exit(0)));

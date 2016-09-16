@@ -1,3 +1,5 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
-module.exports = (room, eventPayload) => room.setIn(['users', eventPayload.userId], new Immutable.Map({id: eventPayload.userId}));
+const joinedRoomEventHandler = (room, eventPayload) => room.setIn(['users', eventPayload.userId], new Immutable.Map({id: eventPayload.userId}));
+
+export default joinedRoomEventHandler;

@@ -1,6 +1,6 @@
 // properties / settings for PoinZ backend
 
-module.exports = {
+const settings = {
 
   // host + port for webserver + socketserver
   serverHost: '0.0.0.0',
@@ -13,7 +13,7 @@ module.exports = {
       name: 'poinz.log'
     },
     console: {
-      level: 'debug'
+      level: 'info'
     }
   },
 
@@ -25,3 +25,5 @@ module.exports = {
     port: process.env.DB_PORT_6379_TCP_PORT || 6379
   }
 };
+
+export default settings;

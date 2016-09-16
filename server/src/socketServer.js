@@ -1,18 +1,17 @@
-const
-  http = require('http'),
-  uuid = require('node-uuid').v4,
-  socketIo = require('socket.io'),
-  logging = require('./logging');
+import http from 'http';
+import { v4 as uuid} from 'node-uuid';
+import socketIo from 'socket.io';
+import logging from './logging';
 
 const LOGGER = logging.getLogger('socketServer');
 
-var io, commandProcessor;
+let io, commandProcessor;
 
 const
   socketToUserIdMap = {},
   socketToRoomMap = {};
 
-module.exports.init = init;
+export default {init};
 
 function init(app, cmdProcessor) {
   const server = http.createServer(app);
@@ -95,7 +94,7 @@ function registerUserWithSocket(joinRoomCommand, socket, userIdToStore) {
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(joinRoomCommand.roomId, () => LOGGER.debug('socket with id ' + socket.id + ' joined room ' + joinRoomCommand.roomId));
+  socket.join(joinRoomCommand.roomId, () => LOGGER.debug(`socket with id ${socket.id} joined room ${joinRoomCommand.roomId}`));
 }
 
 /**
@@ -109,7 +108,7 @@ function onSocketDisconnect(socket) {
 
   if (!userId || !roomId) {
     // this can happen if the server was restarted, and a client re-connected!
-    LOGGER.debug('could not send leaveRoom command for ' + userId + ' in ' + roomId);
+    LOGGER.debug(`could not send leaveRoom command for userId=${userId} in roomId=${roomId}`);
     return;
   }
 

@@ -1,9 +1,9 @@
-const uuid = require('node-uuid').v4;
+import { v4 as uuid } from 'node-uuid';
 
 /**
  * A user adds a story to the estimation backlog of the room
  */
-module.exports = {
+const addStoryCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.getIn(['users', userId, 'visitor'])) {
@@ -26,3 +26,5 @@ module.exports = {
     }
   }
 };
+
+export default addStoryCommandHandler;

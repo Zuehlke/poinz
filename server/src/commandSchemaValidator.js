@@ -1,15 +1,16 @@
-const
-  path = require('path'),
-  util = require('util'),
-  glob = require('glob'),
-  logging = require('./logging'),
-  tv4 = require('tv4');
+import path from 'path';
+import fs from 'fs';
+import util from 'util';
+import glob from 'glob';
+import tv4 from  'tv4';
+
+import logging from './logging';
 
 const LOGGER = logging.getLogger('commandSchemaValidator');
 
 const schemas = gatherSchemas();
 
-module.exports = validate;
+export default validate;
 
 /**
  * Validates the given command against its schema.
@@ -26,7 +27,7 @@ function validate(cmd) {
   const schema = schemas[cmd.name];
 
   if (!schema) {
-    throw new CommandValidationError(new Error(`Cannot validate command, no matching schema found for ${cmd.name}!`), cmd);
+    throw new CommandValidationError(new Error(`Cannot validate command, no matching schema found for "${cmd.name}"!`), cmd);
   }
 
   const result = tv4.validateMultiple(cmd, schema);
@@ -47,9 +48,14 @@ function gatherSchemas() {
   LOGGER.info('loading command schemas..');
 
   const schemaMap = {};
-  const schemaFiles = glob.sync(path.resolve(__dirname, './validationSchemas/**/*.json'));
+  const schemaFiles = glob.sync(path.resolve(__dirname, '../resources/validationSchemas/**/*.json'));
+
+  LOGGER.info(`got ${schemaFiles.length} schema files...`);
+
   schemaFiles.map(schemaFile => {
-    schemaMap[path.basename(schemaFile, '.json')] = require(schemaFile);
+    const schemaFileContent = fs.readFileSync(schemaFile, 'utf-8');
+    const schemaName = path.basename(schemaFile, '.json');
+    schemaMap[schemaName] = parseSchemaFile(schemaFileContent, schemaFile);
   });
 
   // add the default command schema, which is referenced from all others ($ref)
@@ -58,11 +64,18 @@ function gatherSchemas() {
   return schemaMap;
 }
 
+function parseSchemaFile(schemaFileContent, schemaFileName) {
+  try {
+    return JSON.parse(schemaFileContent);
+  } catch (err) {
+    LOGGER.error(`Could not parse schema file ${schemaFileName}.`, err);
+  }
+}
 
 function CommandValidationError(err, cmd) {
   this.stack = err.stack;
   this.name = this.constructor.name;
-  this.message = 'Command validation Error during "' + cmd.name + '": ' + err.message;
+  this.message = `Command validation Error during "${cmd.name}": ${err.message}`;
 }
 util.inherits(CommandValidationError, Error);
 

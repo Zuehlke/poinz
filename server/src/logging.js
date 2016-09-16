@@ -1,7 +1,6 @@
-const
-  winston = require('winston'),
-  settings = require('./settings'),
-  dailyRotateFileTransport = require('winston-daily-rotate-file');
+import winston from 'winston';
+import settings from './settings';
+import dailyRotateFileTransport from 'winston-daily-rotate-file';
 
 /**
  * configuration of root logger with two appenders.
@@ -28,7 +27,7 @@ winston.loggers.options.transports = [
  * @returns {object} the new Logger
  */
 function getLogger(loggerName) {
-  var newLogger = winston.loggers.add(loggerName);
+  const newLogger = winston.loggers.add(loggerName);
   newLogger.filters.push((level, msg, meta) => {
     return {
       msg: `[${level}] ${loggerName}: ${msg}`,
@@ -39,4 +38,4 @@ function getLogger(loggerName) {
   return newLogger;
 }
 
-module.exports = {getLogger};
+export default {getLogger};

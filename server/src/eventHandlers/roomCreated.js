@@ -1,7 +1,7 @@
-const Immutable = require('immutable');
+import Immutable from 'immutable';
 
 // here we create the room object
-module.exports = (room, eventPayload) => (
+const roomCreatedEventHandler = (room, eventPayload) => (
   Immutable.fromJS({
     id: eventPayload.id,
     users: {},
@@ -9,3 +9,5 @@ module.exports = (room, eventPayload) => (
     created: new Date().getTime()
   })
 );
+
+export default roomCreatedEventHandler;

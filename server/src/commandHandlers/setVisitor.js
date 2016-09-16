@@ -5,7 +5,7 @@
  * Visitors cannot estimate stories.
  *
  */
-module.exports = {
+const setVisitorCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (userId !== command.payload.userId) {
@@ -20,3 +20,5 @@ module.exports = {
     }
   }
 };
+
+export default  setVisitorCommandHandler;

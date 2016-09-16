@@ -2,7 +2,7 @@
  * A user clears his estimation value for a certain story.
  * Users may only clear estimation for the currently selected story.
  */
-module.exports = {
+const clearStoryEstimateCommandHandler = {
   existingRoom: true,
   preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
@@ -25,3 +25,5 @@ module.exports = {
     room.applyEvent('storyEstimateCleared', command.payload);
   }
 };
+
+export default clearStoryEstimateCommandHandler;

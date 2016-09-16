@@ -33,6 +33,13 @@ const joinRoomCommandHandler = {
         username: command.payload.username
       });
     }
+
+    if (command.payload.email) {
+      room.applyEvent('emailSet', {
+        userId: newUser.id,
+        email: command.payload.email
+      });
+    }
   }
 
 };

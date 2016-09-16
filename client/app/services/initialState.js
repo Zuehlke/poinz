@@ -27,6 +27,7 @@ const INITIAL_STATE = Immutable.fromJS({
     {label: 'BIG', value: -1, color: '#1d508f'}
   ],
   presetUsername: clientSettingsStore.getPresetUsername(),
+  presetEmail: clientSettingsStore.getPresetEmail(),
   presetUserId: clientSettingsStore.getPresetUserId(),
   roomHistory: clientSettingsStore.getRoomHistory(),
   actionLog: [], // will contain human readable "log messages" of actions that did take place in the current room

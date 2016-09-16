@@ -20,6 +20,12 @@ function getPresetLanguage() {
 function setPresetLanguage(language) {
   setItem('presetLanguage', language);
 }
+function getPresetEmail() {
+  return getItem('presetEmail');
+}
+function setPresetEmail(email) {
+  setItem('presetEmail', email);
+}
 function getPresetUserId() {
   return getItem('presetUserId');
 }
@@ -50,6 +56,8 @@ export default {
   setPresetUsername,
   getPresetLanguage,
   setPresetLanguage,
+  getPresetEmail,
+  setPresetEmail,
   getPresetUserId,
   setPresetUserId,
   addRoomToHistory,

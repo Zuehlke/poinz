@@ -9,6 +9,7 @@ import newEstimationRound from './newEstimationRound';
 import reveal from './reveal';
 import selectStory from './selectStory';
 import setUsername from './setUsername';
+import setEmail from './setEmail';
 import setVisitor from './setVisitor';
 
 export default {
@@ -23,5 +24,6 @@ export default {
   reveal,
   selectStory,
   setUsername,
+  setEmail,
   setVisitor
 };

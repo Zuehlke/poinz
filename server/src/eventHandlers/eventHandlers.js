@@ -11,6 +11,7 @@ import storyEstimateCleared from './storyEstimateCleared';
 import storyEstimateGiven from './storyEstimateGiven';
 import storySelected from './storySelected';
 import usernameSet from './usernameSet';
+import emailSet from './emailSet';
 import visitorSet from './visitorSet';
 import visitorUnset from './visitorUnset';
 
@@ -28,6 +29,7 @@ export default {
   storyEstimateGiven,
   storySelected,
   usernameSet,
+  emailSet,
   visitorSet,
   visitorUnset
 };

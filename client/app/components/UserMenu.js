@@ -4,16 +4,17 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 
-import { setVisitor, setUsername, leaveRoom, setLanguage } from '../services/actions';
+import { setVisitor, setUsername, setEmail, leaveRoom, setLanguage } from '../services/actions';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.
  *
  * It also dispalys a "leave room" button.
  */
-const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLanguage, userMenuShown }) => {
+const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisitor, setLanguage, userMenuShown }) => {
 
   const username = user.get('username');
+  const email = user.get('email');
   const isVisitor = user.get('visitor');
 
   const menuClasses = classnames('user-menu', {
@@ -25,7 +26,7 @@ const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLa
     'fa-check-square-o': isVisitor
   });
 
-  let usernameInputField;
+  let usernameInputField, emailInputField;
 
   return (
 
@@ -65,6 +66,21 @@ const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLa
           </label>
         </div>
 
+        <h5>Gravatar Email</h5>
+        If you enter your <a href="https://en.gravatar.com/" target="_blank">Gravatar</a> email address, your Gravatar
+        icon will be used.
+
+        <div className="email-wrapper">
+          <input type="text"
+                 id="email"
+                 placeholder="Email..."
+                 defaultValue={email}
+                 ref={ref => emailInputField = ref}
+                 onKeyPress={handleEmailKeypress}/>
+
+          <button className="pure-button pure-button-primary button-save" onClick={saveEmail}>Save</button>
+        </div>
+
         <h5>{t('markVisitor')}</h5>
         {t('visitorInfo')}
 
@@ -93,6 +109,16 @@ const UserMenu = ({ t, language, user, setUsername, leaveRoom, setVisitor, setLa
     }
   }
 
+  function handleEmailKeypress(e) {
+    if (e.key === 'Enter') {
+      saveEmail();
+    }
+  }
+
+  function saveEmail() {
+    setEmail(emailInputField.value);
+  }
+
   function toggleVisitor() {
     setVisitor(!isVisitor);
   }
@@ -107,7 +133,8 @@ UserMenu.propTypes = {
   setVisitor: React.PropTypes.func,
   leaveRoom: React.PropTypes.func,
   setLanguage: React.PropTypes.func,
-  setUsername: React.PropTypes.func
+  setUsername: React.PropTypes.func,
+  setEmail: React.PropTypes.func
 };
 
 export default connect(
@@ -121,6 +148,7 @@ export default connect(
     setVisitor,
     leaveRoom,
     setUsername,
+    setEmail,
     setLanguage
   }, dispatch)
 )(UserMenu);

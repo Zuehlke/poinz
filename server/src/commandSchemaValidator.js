@@ -10,6 +10,8 @@ const LOGGER = logging.getLogger('commandSchemaValidator');
 
 const schemas = gatherSchemas();
 
+registerCustomFormats();
+
 export default validate;
 
 /**
@@ -70,6 +72,24 @@ function parseSchemaFile(schemaFileContent, schemaFileName) {
   } catch (err) {
     LOGGER.error(`Could not parse schema file ${schemaFileName}.`, err);
   }
+}
+
+const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+function registerCustomFormats() {
+  tv4.addFormat('email', validateEmail);
+}
+
+function validateEmail(data) {
+  if (!data) {
+    // allow empty string, undefined, null
+    return;
+  }
+
+  if (typeof data === 'string' && EMAIL_REGEX.test(data)) {
+    return null;
+  }
+
+  return 'must be a valid email-address';
 }
 
 function CommandValidationError(err, cmd) {

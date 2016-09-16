@@ -216,6 +216,22 @@ const eventActionHandlers = {
     log: (username, payload, oldState) => `${oldState.getIn(['users', payload.userId]).get('username')} is now called "${payload.username}"`
   },
 
+  [EVENT_ACTION_TYPES.emailSet]: {
+    fn: (state, payload) => {
+
+      const isOwnUser = state.get('userId') === payload.userId;
+
+      if (isOwnUser) {
+        clientSettingsStore.setPresetEmail(payload.email);
+      }
+
+      return state
+        .updateIn(['users', payload.userId], user => user.set('email', payload.email))
+        .set('presetEmail', payload.email);
+    },
+    log: (username, payload, oldState) => `${oldState.getIn(['users', payload.userId]).get('username')} set his/her email address`
+  },
+
   /**
    * visitor flag for a user was set
    */

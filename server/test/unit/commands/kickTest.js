@@ -49,9 +49,9 @@ describe('kick', () => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
 
-        const usernameSetEvent = producedEvents[0];
-        testUtils.assertValidEvent(usernameSetEvent, this.commandId, this.roomId, this.userOneId, 'kicked');
-        assert.equal(usernameSetEvent.payload.userId, this.userTwoId);
+        const kickedEvent = producedEvents[0];
+        testUtils.assertValidEvent(kickedEvent, this.commandId, this.roomId, this.userOneId, 'kicked');
+        assert.equal(kickedEvent.payload.userId, this.userTwoId);
       });
   });
 

@@ -10,11 +10,11 @@
     "type": "git",
     "url": "https://github.com/Zuehlke/poinz.git"
   },
-  "main": "src/server.js",
+  "main": "lib/server.js",
   "scripts": {
     "build": "babel src -d lib",
     "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha  --compilers js:babel-register test/unit/*",
-    "start": "node src/bootstrap.js"
+    "start": "node lib/server.js"
   },
   "dependencies": {
     "bluebird": "3.4.1",

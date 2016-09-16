@@ -17,8 +17,7 @@ const
 
 // first let's clean up
 del([
-  './deploy/src/',
-  './deploy/public',
+  './deploy/',
   './deploy/package.json',
   '!./client/dist/index.html',
   './client/dist/**/*'
@@ -41,7 +40,7 @@ del([
       './node_modules/.bin/babel', './src/ -d ./lib'.split(' '),
       {cwd: path.resolve(__dirname, '../server')});
   })
-  .then(() => fs.copy('./server/lib', './deploy/src')) // copy transpiled backend files to deploy folder
+  .then(() => fs.copy('./server/lib', './deploy/lib')) // copy transpiled backend files to deploy folder
   .then(() => fs.copy('./server/resources', './deploy/resources'))
   .then(() => fs.copy('./server/package.json', './deploy/package.json'))
   .then(getGitInformation)

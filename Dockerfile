@@ -1,6 +1,6 @@
 # PoinZ docker file
 
-# For the followin commands, we expect that your user is part of the "docker" usergroup
+# For the following commands, we expect that your user is part of the "docker" usergroup
 # (then you can run the docker command without "sudo")
 
 # use the following command to build
@@ -16,12 +16,12 @@ FROM node:argon
 
 # Create app directory
 RUN mkdir -p /usr/src/poinz/public
-RUN mkdir -p /usr/src/poinz/src
+RUN mkdir -p /usr/src/poinz/lib
 WORKDIR /usr/src/poinz
 
 # Bundle app source
 COPY deploy/public /usr/src/poinz/public
-COPY deploy/src /usr/src/poinz/src
+COPY deploy/lib /usr/src/poinz/lib
 COPY deploy/package.json /usr/src/poinz/
 
 # install app dependencies

@@ -5,14 +5,13 @@
  * Currently the sequence queue only supports a single jobHandler (all we need for now).
  *
  */
-export default function sequenceQueueFactory() {
+export default function sequenceQueueFactory(jobHandler) {
   const queue = [];
-  let handler;
+  const handler = jobHandler;
   let isCurrentlyHandling = false;
 
   return {
-    push,
-    setJobHandler
+    push
   };
 
 
@@ -27,15 +26,6 @@ export default function sequenceQueueFactory() {
       // if not yet handling, start handling
       invokeJobHandler();
     }
-  }
-
-  /**
-   * Set the job handler function
-   * @param {function} jobHandler
-   */
-  function setJobHandler(jobHandler) {
-    handler = jobHandler;
-    invokeJobHandler();
   }
 
   function invokeJobHandler() {

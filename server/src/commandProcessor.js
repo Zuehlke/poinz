@@ -18,8 +18,7 @@ import validateCommand from './commandSchemaValidator';
 export default function commandProcessorFactory(commandHandlers, eventHandlers, store) {
 
   // setup sequence queue
-  const queue = queueFactory();
-  queue.setJobHandler(jobHandler);
+  const queue = queueFactory(jobHandler);
 
   /**
    *  The command processor handles incoming commands.

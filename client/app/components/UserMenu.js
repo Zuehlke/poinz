@@ -66,9 +66,8 @@ const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisi
           </label>
         </div>
 
-        <h5>Gravatar Email</h5>
-        If you enter your <a href="https://en.gravatar.com/" target="_blank">Gravatar</a> email address, your Gravatar
-        icon will be used.
+        <h5>{t('gravatar')}</h5>
+        {t('gravatarInfo')}
 
         <div className="email-wrapper">
           <input type="text"
@@ -76,9 +75,10 @@ const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisi
                  placeholder="Email..."
                  defaultValue={email}
                  ref={ref => emailInputField = ref}
-                 onKeyPress={handleEmailKeypress}/>
+                 onKeyPress={handleEmailKeypress}
+          />
 
-          <button className="pure-button pure-button-primary button-save" onClick={saveEmail}>Save</button>
+          <button className="pure-button pure-button-primary button-save" onClick={saveEmail}>{t('save')}</button>
         </div>
 
         <h5>{t('markVisitor')}</h5>

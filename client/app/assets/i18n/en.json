@@ -20,5 +20,7 @@
   "language": "Language",
   "german": "German",
   "english": "English",
-  "provideUsernameInfo": "Your colleagues would like to know who you are. Please provide us with your name."
+  "provideUsernameInfo": "Your colleagues would like to know who you are. Please provide us with your name.",
+  "gravatar": "Gravatar",
+  "gravatarInfo": "If you enter your Gravatar email address, your Gravatar icon will be displayed."
 }

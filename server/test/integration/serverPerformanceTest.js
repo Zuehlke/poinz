@@ -87,7 +87,7 @@ describe('serverPerformance', () => {
   function sendCommandsInSequence(socket, roomId, eventTotal, commandName, commandPayload, done) {
     const testRunUniqueId = 'serverPerformanceTest_' + uuid();
 
-    console.log(`--- Starting  ${testRunUniqueId} with "${commandName}",  for ${eventTotal} events --`);
+    console.log(`--- Starting  ${testRunUniqueId} with "${commandName}",  until ${eventTotal} events are received --`);
 
     var isDone = false;
     var eventCount = 0;

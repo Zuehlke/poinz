@@ -16,13 +16,14 @@ const
   exec = Promise.promisify(require('child_process').exec),
   del = require('del');
 
-// first let's clean up
+// -- first let's clean up
 del([
   './deploy/',
   './deploy/package.json',
   '!./client/dist/index.html',
   './client/dist/**/*'
 ])
+// -- client
   .then(() => {
     console.log('installing npm dependencies for client...');
     return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../client')});
@@ -35,6 +36,12 @@ del([
   })
   .then(() => fs.copy('./client/dist', './deploy/public/assets'))
   .then(() => fs.copy('./client/index.html', './deploy/public/index.html'))
+
+  // -- server
+  .then(() => {
+    console.log('installing npm dependencies for server...');
+    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../server')});
+  })
   .then(() => {
     console.log('building backend (babel transpile)...');
     return spawnAndPrint(
@@ -44,6 +51,8 @@ del([
   .then(() => fs.copy('./server/lib', './deploy/lib')) // copy transpiled backend files to deploy folder
   .then(() => fs.copy('./server/resources', './deploy/resources'))
   .then(() => fs.copy('./server/package.json', './deploy/package.json'))
+
+  // -- docker image
   .then(getGitInformation)
   .then(startBuildingDockerImage)
   .catch(error => {
@@ -82,9 +91,9 @@ function startBuildingDockerImage(gitInfo) {
 
 function getGitInformation() {
   return Promise.all([
-      exec('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
-      exec('git rev-parse --short HEAD', {cdw: __dirname})
-    ])
+    exec('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
+    exec('git rev-parse --short HEAD', {cdw: __dirname})
+  ])
     .spread((abbrev, short) => ({
       branch: abbrev.split('\n').join(''),
       hash: short.split('\n').join('')

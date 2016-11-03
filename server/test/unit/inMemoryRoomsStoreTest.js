@@ -19,7 +19,7 @@ describe('inMemoryRoomsStore', () => {
         return roomsStore.getRoomById(roomId);
       })
       .then(retrievedRoom => {
-        assert(retrievedRoom)
+        assert(retrievedRoom);
       });
 
   });

@@ -22,12 +22,13 @@ describe('roomsStore', () => {
         return roomsStore.getRoomById(roomId);
       })
       .then(retrievedRoom => {
-        assert(retrievedRoom)
+        assert(retrievedRoom);
       });
 
   });
 
   it('should return undefined in unknown roomId', () => {
+    const roomsStore = roomStoreFactory(true);
     return roomsStore
       .getRoomById(uuid())
       .then(retrievedRoom => assert(!retrievedRoom));

@@ -18,7 +18,7 @@ const settings = {
   },
 
   // if set to false, in-memory store is used. if true, rooms are persisted in redis
-  persistentStore: false,
+  persistentStore: true,
 
   // configuration for redis connection (roomsStore)
   // env variables are set by docker when linking redis container to poinz container

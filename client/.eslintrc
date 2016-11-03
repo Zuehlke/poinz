@@ -3,7 +3,10 @@
     "browser": true,
     "es6": true
   },
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "plugins": [
     "react"
   ],
@@ -31,6 +34,7 @@
     "no-use-before-define": 0
   },
   "globals": {
-    "__POINZ_CONFIG__": false
+    "__POINZ_CONFIG__": false,
+    "beforeEach": false
   }
 }

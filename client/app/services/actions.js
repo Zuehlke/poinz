@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createHistory } from 'history';
+import createHistory from 'history/createBrowserHistory';
 import hub from './hub';
 
 import {

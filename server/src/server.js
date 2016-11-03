@@ -6,7 +6,7 @@ import socketServer from './socketServer';
 import commandProcessorFactory from './commandProcessor';
 import logging from './logging';
 import rest from './rest';
-import roomsStore from './roomsStore';
+import roomsStoreFactory from './store/roomStoreFactory';
 import commandHandlers from './commandHandlers/commandHandlers';
 import eventHandlers from './eventHandlers/eventHandlers';
 
@@ -14,8 +14,10 @@ const LOGGER = logging.getLogger('server');
 
 const app = express();
 
+const store = roomsStoreFactory(settings.persistentStore);
+
 // setup REST api
-rest.init(app);
+rest.init(app, store);
 
 // serve static client files
 app.use(express.static(path.resolve(__dirname, '../public')));
@@ -27,7 +29,7 @@ app.get('*', function (request, response) {
 const commandProcessor = commandProcessorFactory(
   commandHandlers,
   eventHandlers,
-  roomsStore
+  store
 );
 
 const server = socketServer.init(app, commandProcessor);

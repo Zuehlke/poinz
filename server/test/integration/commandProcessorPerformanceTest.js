@@ -1,5 +1,5 @@
-import { v4 as uuid } from'node-uuid';
-import roomsStore from '../../src/roomsStore';
+import {v4 as uuid} from'node-uuid';
+import roomStoreFactory from '../../src/store/roomStoreFactory';
 import processorFactory from '../../src/commandProcessor';
 
 // we want to test with real command- and event handlers!
@@ -21,7 +21,7 @@ describe('commandProcessor performance', () => {
     userId = uuid();
     roomId = 'rm_' + uuid();
 
-    processor = processorFactory(commandHandlers, eventHandlers, roomsStore);
+    processor = processorFactory(commandHandlers, eventHandlers, roomStoreFactory(true));
   });
 
   it('1000 "addStory" commands/events', function () {

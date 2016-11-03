@@ -2,8 +2,8 @@ import redis from 'redis';
 import Promise from 'bluebird';
 import Immutable from 'immutable';
 
-import settings from './settings';
-import logging from './logging';
+import settings from '../settings';
+import logging from '../logging';
 
 // "promisify" redis client with bluebird -> use client.getAsync / client.setAsync / etc.
 Promise.promisifyAll(redis.RedisClient.prototype);
@@ -12,15 +12,24 @@ const LOGGER = logging.getLogger('roomsStore');
 
 const POINZ_REDIS_KEY_PREFIX = 'poinz:';
 
-const redisClient = redis.createClient(settings.redis);
-redisClient.on('error', LOGGER.error);
-redisClient.select(0, (err, status) => LOGGER.info('select redis 0 ' + err + ' ' + status));
+var redisClient;
 
 export default {
+  init,
   getRoomById,
   saveRoom,
   getAllRooms
 };
+
+/**
+ * do not connect to redis right away, let server invoke init
+ * (since this roomsStore might be imported, but not actually used)
+ */
+function init() {
+  redisClient = redis.createClient(settings.redis);
+  redisClient.on('error', LOGGER.error);
+  redisClient.select(0, (err, status) => LOGGER.info('select redis 0 ' + err + ' ' + status));
+}
 
 /**
  * returns the room with the given id or undefined if the store does not contain such a room.

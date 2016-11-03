@@ -1,24 +1,25 @@
 'use strict';
 
-// either start Poinz from your "deploy" folder, or start a docker container
+// either start Poinz from your "deploy" folder, or start a docker container (if run from docker container, make sure to use localhost:8080 for e2eBaseUrl)
 // ( do not use the webdack-dev-server, since it displays the app within an iframe )
-var e2eBaseUrl = 'http://localhost:3000';
+var e2eBaseUrl = 'http://localhost:8080';
 
 var exportsConfig = {
 
   framework: 'jasmine2',
 
   // The location of the selenium standalone server .jar file.
-  seleniumServerJar: './node_modules/protractor/selenium/selenium-server-standalone-2.51.0.jar',
+  seleniumServerJar: './node_modules/protractor/node_modules/webdriver-manager/selenium/selenium-server-standalone-2.53.1.jar',
   // find its own unused port.
   seleniumPort: null,
 
-  chromeDriver: './node_modules/protractor/selenium/chromedriver',
+  chromeDriver: './node_modules/protractor/node_modules/webdriver-manager/selenium/chromedriver_2.25',
   seleniumArgs: [],
 
   allScriptsTimeout: 11000,
 
   specs: [
+    'test/e2e/**/_setup.js',
     'test/e2e/**/*Spec.js'
   ],
 

@@ -43,7 +43,7 @@ const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisi
                  ref={ref => usernameInputField = ref}
                  onKeyPress={handleUsernameKeyPress}/>
 
-          <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>{t('save')}</button>
+          <button className="pure-button pure-button-primary button-save button-save-username" onClick={saveUsername}>{t('save')}</button>
         </div>
 
         <h5>{t('language')}</h5>
@@ -78,7 +78,7 @@ const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisi
                  onKeyPress={handleEmailKeypress}
           />
 
-          <button className="pure-button pure-button-primary button-save" onClick={saveEmail}>{t('save')}</button>
+          <button className="pure-button pure-button-primary button-save button-save-email" onClick={saveEmail}>{t('save')}</button>
         </div>
 
         <h5>{t('markVisitor')}</h5>

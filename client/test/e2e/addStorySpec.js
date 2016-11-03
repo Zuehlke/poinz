@@ -1,9 +1,12 @@
 describe('Add Story', () => {
 
-  it('Add plain story', () => {
+  it('via form', () => {
     browser.get('/bar');
 
-    element(by.css('.backlog input')).sendKeys('Story 222');
+    // set username
+    element(by.css('.username-wrapper input#username')).sendKeys('e2eTestUser');
+    element(by.css('.username-wrapper .pure-button.button-save')).click();
+
     element(by.css('.backlog textarea')).sendKeys('A description');
     element(by.css('.backlog .pure-form button')).click();
 

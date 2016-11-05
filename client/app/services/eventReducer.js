@@ -1,6 +1,6 @@
 import log from 'loglevel';
 import Immutable from 'immutable';
-import { EVENT_ACTION_TYPES } from './actionTypes';
+import {EVENT_ACTION_TYPES} from './actionTypes';
 import clientSettingsStore from './clientSettingsStore';
 
 const LOGGER = log.getLogger('eventReducer');
@@ -15,7 +15,7 @@ const LOGGER = log.getLogger('eventReducer');
  */
 function eventReducer(state, action) {
 
-  const { event } = action;
+  const {event} = action;
 
   // currently, events from other rooms do not affect us (backend should not send such events in the first place)
   // so we do not modify our client-side state in any way
@@ -207,13 +207,18 @@ const eventActionHandlers = {
 
       if (isOwnUser) {
         clientSettingsStore.setPresetUsername(payload.username);
+        state = state.set('presetUsername', payload.username);
       }
 
       return state
-        .updateIn(['users', payload.userId], user => user.set('username', payload.username))
-        .set('presetUsername', payload.username);
+        .updateIn(['users', payload.userId], user => user.set('username', payload.username));
     },
-    log: (username, payload, oldState) => `${oldState.getIn(['users', payload.userId]).get('username')} is now called "${payload.username}"`
+    log: (username, payload, oldState) => {
+      const oldUsername = oldState.getIn(['users', payload.userId]).get('username');
+      if (oldUsername) {
+        return `"${oldState.getIn(['users', payload.userId]).get('username')}" is now called "${payload.username}"`;
+      }
+    }
   },
 
   [EVENT_ACTION_TYPES.emailSet]: {

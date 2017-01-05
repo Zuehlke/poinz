@@ -1,9 +1,9 @@
 /**
  *  UI-only
  */
-export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG';
-export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU';
-export const TOGGLE_LOG = 'TOGGLE_LOG';
+export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG'; // toggles the visibility of the story backlog
+export const TOGGLE_USER_MENU = 'TOGGLE_USER_MENU'; // toggles the visibility of the user menu (settings)
+export const TOGGLE_LOG = 'TOGGLE_LOG'; // toggles the visibility of the event log
 export const EDIT_STORY = 'EDIT_STORY';
 export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
 export const SET_LANGUAGE = 'SET_LANGUAGE';

@@ -48,9 +48,27 @@ export default function rootReducer(state = {}, action = {}) {
       case TOGGLE_BACKLOG:
         return state.set('backlogShown', !state.get('backlogShown'));
       case TOGGLE_USER_MENU:
-        return state.set('userMenuShown', !state.get('userMenuShown'));
+      {
+        const showMenu = !state.get('userMenuShown');
+        const modifiedState = state.set('userMenuShown', showMenu);
+
+        if (showMenu) {
+          return modifiedState.set('logShown', false);
+        } else {
+          return modifiedState;
+        }
+      }
       case TOGGLE_LOG:
-        return state.set('logShown', !state.get('logShown'));
+      {
+        const showLog = !state.get('logShown');
+        const modifiedState = state.set('logShown', showLog);
+
+        if (showLog) {
+          return modifiedState.set('userMenuShown', false);
+        } else {
+          return modifiedState;
+        }
+      }
       case EDIT_STORY:
         return state.setIn(['stories', action.storyId, 'editMode'], true);
       case CANCEL_EDIT_STORY:

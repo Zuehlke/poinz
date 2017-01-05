@@ -31,7 +31,6 @@ const giveStoryEstimateCommandHandler = {
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
-
     if (allValidUsersEstimated(room, command)) {
 
       room.applyEvent('revealed', {
@@ -39,10 +38,6 @@ const giveStoryEstimateCommandHandler = {
         manually: false
       });
 
-      room.applyEvent('storyPointsSet', {
-        storyId: command.payload.storyId,
-        value: command.payload.value
-      })
     }
   }
 };

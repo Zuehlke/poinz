@@ -21,7 +21,8 @@ const StoryAddForm = ({ t, addStory, pendingAddCommands }) => {
       <fieldset className="pure-group">
         <input type="text" className="pure-input-1"
                placeholder={t('storyTitle')}
-               ref={ref => titleInputField = ref}/>
+               ref={ref => titleInputField = ref}
+               onKeyPress={handleTitleKeyEvent}/>
 
         <textarea className="pure-input-1"
                   rows="1"
@@ -38,6 +39,12 @@ const StoryAddForm = ({ t, addStory, pendingAddCommands }) => {
 
     </div>
   );
+
+  function handleTitleKeyEvent(keyEvent) {
+    if(keyEvent.key === 'Enter') {
+      triggerAddAndClearForm();
+    }
+  }
 
   function triggerAddAndClearForm() {
     if (titleInputField.value) {

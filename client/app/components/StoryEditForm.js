@@ -23,7 +23,8 @@ const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeComma
         <fieldset className="pure-group">
           <input type="text" className="pure-input-1"
                  defaultValue={story.get('title')}
-                 ref={ref => titleInputField = ref}/>
+                 ref={ref => titleInputField = ref}
+                 onKeyPress={handleTitleKeyEvent}/>
 
         <textarea className="pure-input-1"
                   rows="1"
@@ -40,6 +41,12 @@ const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeComma
       </div>
     </div>
   );
+
+  function handleTitleKeyEvent(keyEvent) {
+    if(keyEvent.key === 'Enter') {
+      triggerChange();
+    }
+  }
 
   function triggerChange() {
     if (titleInputField.value) {

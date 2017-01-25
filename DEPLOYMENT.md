@@ -7,7 +7,7 @@ A more suitable deployment might be needed in the future.
 
 I did setup a free-tier ubuntu EC2 instance and installed docker
 
-- connect to the EC2 instance via ssh (`ubuntu@ec2-52-37-30-226.us-west-2.compute.amazonaws.com`)
+- connect to the EC2 instance via ssh (`ubuntu@35.162.226.55`)
 - install docker `curl -fsSL https://get.docker.com/ | sh`
 - add user *ubuntu* to *docker* group `sudo gpasswd -a ubuntu docker`
 - port forwarding (see below)

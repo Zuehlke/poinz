@@ -39,6 +39,6 @@
     "socket.io-client": "1.5.1"
   },
   "engines": {
-    "node": ">=6.5.0"
+    "node": ">=6.9.1"
   }
 }

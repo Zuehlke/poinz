@@ -11,7 +11,7 @@ import {NotificationContainer, NotificationManager} from 'react-notifications';
 class PopUp extends React.Component {
 
   componentDidMount() {
-    this.displayNotification(this.props.messageType, this.props.message)
+    this.displayNotification(this.props.messageType, this.props.message);
   }
 
   /**
@@ -34,7 +34,7 @@ class PopUp extends React.Component {
         NotificationManager.error(message, 'Error', 1500);
         break;
     }
-  };
+  }
 
   render() {
     return (
@@ -44,5 +44,10 @@ class PopUp extends React.Component {
     );
   }
 }
+
+PopUp.propTypes = {
+  messageType: React.PropTypes.string,
+  message : React.PropTypes.string
+};
 
 export default PopUp;

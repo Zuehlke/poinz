@@ -22,5 +22,6 @@
   "english": "Englisch",
   "provideUsernameInfo": "Deine Kollegen möchten gerne wissen wer du bist. Bitte sag uns wie du heisst.",
   "gravatar": "Gravatar",
-  "gravatarInfo": "Wenn du deine Gravatar Email Adresse eingibst, wird dein Gravatar icon angezeigt."
+  "gravatarInfo": "Wenn du deine Gravatar Email Adresse eingibst, wird dein Gravatar icon angezeigt.",
+  "spConsent" : "Herzlichen Glückwunsch! Die Schätzung der Story Points war eindeutig."
 }

@@ -22,5 +22,6 @@
   "english": "English",
   "provideUsernameInfo": "Your colleagues would like to know who you are. Please provide us with your name.",
   "gravatar": "Gravatar",
-  "gravatarInfo": "If you enter your Gravatar email address, your Gravatar icon will be displayed."
+  "gravatarInfo": "If you enter your Gravatar email address, your Gravatar icon will be displayed.",
+  "spConsent" : "Congratulations! The team has achieved a consent on the story points."
 }

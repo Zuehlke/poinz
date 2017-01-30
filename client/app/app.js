@@ -9,6 +9,7 @@ import pureCss from 'purecss';
 import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
 import fontAwesome from '../node_modules/font-awesome/css/font-awesome.min.css';
 import poinzStyles from './assets/poinz.styl';
+import '../node_modules/react-notifications/lib/notifications.css';
 /*eslint-enable no-unused-vars */
 
 import appConfig from './services/appConfig';

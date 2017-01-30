@@ -25,9 +25,6 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
     const isVisitor = user.get('visitor');
     const userCanCurrentlyEstimate = !revealed && !isVisitor;
 
-    console.log("Self reveled");
-    console.log(selectedStory);
-
     //check if the cards were reveled
     if (revealed) {
       const estimations = selectedStory.getIn(['estimations']);

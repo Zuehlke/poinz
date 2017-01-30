@@ -7,6 +7,7 @@ import revealed from './revealed';
 import roomCreated from './roomCreated';
 import storyAdded from './storyAdded';
 import storyChanged from './storyChanged';
+import storyDeleted from './storyDeleted';
 import storyEstimateCleared from './storyEstimateCleared';
 import storyEstimateGiven from './storyEstimateGiven';
 import storySelected from './storySelected';
@@ -25,6 +26,7 @@ export default {
   roomCreated,
   storyAdded,
   storyChanged,
+  storyDeleted,
   storyEstimateCleared,
   storyEstimateGiven,
   storySelected,

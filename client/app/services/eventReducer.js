@@ -192,6 +192,11 @@ const eventActionHandlers = {
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
+  [EVENT_ACTION_TYPES.storyDeleted]: {
+    fn: (state, payload) => state.removeIn(['stories', payload.storyId]),
+    log: (username, payload) => `${username} deleted story ${payload.storyId}`
+  },
+
   /**
    * the selected story was set (i.e. the one that can be currently estimated by the team)
    */

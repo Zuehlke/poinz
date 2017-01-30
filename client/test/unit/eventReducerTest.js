@@ -59,6 +59,48 @@ describe('eventReducer', () => {
     });
   });
 
+  it(EVENT_ACTION_TYPES.storyDeleted, () => {
+    const startingState = Immutable.fromJS({
+      roomId: 'someRoom',
+      stories: {
+        story01: {
+          title: 'aaaa',
+          description: '',
+          id: 'e9eaee24-92c2-410a-a7b4-e9c796d68369',
+          estimations: {},
+          createdAt: 1485359114569
+        },
+        story02: {
+          title: 'asdf',
+          description: 'af',
+          id: '3b8b38dd-1456-46d8-8174-2e981ad746f1',
+          estimations: {},
+          createdAt: 1485425539399
+        }
+      }
+    });
+
+    const modifiedState = eventReducer(startingState, {
+      type: EVENT_ACTION_TYPES.storyDeleted,
+      event: {
+        roomId:'someRoom',
+        payload: {
+          storyId: 'story01'
+        }
+      }
+    });
+
+    assert.deepEqual(modifiedState.get('stories').toJS(), {
+      story02: {
+          title: 'asdf',
+          description: 'af',
+          id: '3b8b38dd-1456-46d8-8174-2e981ad746f1',
+          estimations: {},
+          createdAt: 1485425539399
+        }
+    });
+  });
+
   describe(EVENT_ACTION_TYPES.joinedRoom, () => {
     it('someone else joined', () => {
 

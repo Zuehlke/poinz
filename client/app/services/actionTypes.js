@@ -30,7 +30,8 @@ export const EVENT_ACTION_TYPES = {
   newEstimationRoundStarted: 'NEW_ESTIMATION_ROUND_STARTED',
   visitorSet: 'VISITOR_SET',
   visitorUnset: 'VISITOR_UNSET',
-  storyChanged: 'STORY_CHANGED'
+  storyChanged: 'STORY_CHANGED',
+  storyDeleted: 'STORY_DELETED'
 };
 
 

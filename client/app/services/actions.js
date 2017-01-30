@@ -202,6 +202,17 @@ export const changeStory = (storyId, title, description) => (dispatch, getState)
   }, dispatch);
 };
 
+export const deleteStory = (storyId) => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand({
+    name: 'deleteStory',
+    roomId: state.get('roomId'),
+    payload: {
+      storyId
+    }
+  }, dispatch);
+};
+
 export const fetchStatus = () => dispatch => {
   axios.get('/api/status')
     .then(response => {

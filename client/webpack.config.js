@@ -57,30 +57,26 @@ module.exports = {
         loader: 'url?limit=8192'
       },
 
-      // now some font loaders (needed for zuehlke font and font-awesome icons)
-      // {
-      //   test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-      //   loader: "url?limit=10000&mimetype=application/font-woff"
-      // },
-      // {
-      //   test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-      //   loader: "url?limit=10000&mimetype=application/font-woff"
-      // },
-      // {
-      //   test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-      //   loader: "url?limit=10000&mimetype=image/svg+xml"
-      // },
-      // {
-      //   test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-      //   loader: "url?limit=10000&mimetype=application/octet-stream"
-      // },
-      // {
-      //   test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-      //   loader: "file"
-      // }
+      // now some font loaders (needed for zuehlke font, font-awesome icons and react notification font)
       {
-        test: /\.(ttf|eot|svg|woff(2)?)(\S+)?$/,
-        loader: 'file-loader?name=[name].[ext]'
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?(\?\w+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?(\?\w+)?$/,
+        loader: "url?limit=10000&mimetype=image/svg+xml"
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?(\?\w+)?$/,
+        loader: "url?limit=10000&mimetype=application/octet-stream"
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?(\?\w+)?$/,
+        loader: "file"
       }
     ]
   },

@@ -25,13 +25,13 @@ class PopUp extends React.Component {
         NotificationManager.info(message);
         break;
       case 'success':
-        NotificationManager.success(message, 'Success', 1500);
+        NotificationManager.success(message, 'Success', 1300);
         break;
       case 'warning':
-        NotificationManager.warning(message, 'Warning', 1500);
+        NotificationManager.warning(message, 'Warning', 1300);
         break;
       case 'error':
-        NotificationManager.error(message, 'Error', 1500);
+        NotificationManager.error(message, 'Error', 1300);
         break;
     }
   }

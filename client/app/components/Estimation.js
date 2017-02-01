@@ -1,10 +1,10 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 
-import { newEstimationRound, reveal } from '../services/actions';
+import {newEstimationRound, reveal} from '../services/actions';
 
 import Cards from './Cards';
 
@@ -19,79 +19,84 @@ import PopUp from './PopUp';
  */
 const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
-    const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
+  const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
-    const revealed = selectedStory.get('revealed');
-    const isVisitor = user.get('visitor');
-    const userCanCurrentlyEstimate = !revealed && !isVisitor;
+  const revealed = selectedStory.get('revealed');
+  const isVisitor = user.get('visitor');
+  const userCanCurrentlyEstimate = !revealed && !isVisitor;
 
-    //check if the cards were reveled
-    if (revealed) {
-      const estimations = selectedStory.getIn(['estimations']);
-      //needed for Reveal Manually
-      if (estimations._root && estimations._root.entries) {
-        let lastStoryPointsValue = 0;
-        var storyPointConsentAchieved = true;
-        for (let i = 0; i < estimations._root.entries.length; i++) {
-          let entry = estimations._root.entries[i];
-          let currentStoryPointsValue = entry[1]; //the story points value are always at this position
-          if (i === 0) { //for the fist iteration
-            lastStoryPointsValue = currentStoryPointsValue;
-          }
-          else if (currentStoryPointsValue !== lastStoryPointsValue) {
-            storyPointConsentAchieved = false;
-            break;
-          }
-          lastStoryPointsValue = currentStoryPointsValue;
-        }
+  //check if the cards were reveled
+  if (revealed) {
+    const estimations = selectedStory.get('estimations');
+    var storyPointConsentAchieved = isConsentAchieved(estimations);
+  }
+
+  return (
+    <div className="estimation">
+
+      <div className="selected-story">
+        <h4>
+          {selectedStory.get('title')}
+        </h4>
+        <div className="story-text">
+          <Anchorify text={selectedStory.get('description')}/>
+        </div>
+      </div>
+
+      {
+        userCanCurrentlyEstimate &&
+        <Cards ownEstimate={ownEstimate}/>
       }
+
+      {
+        userCanCurrentlyEstimate &&
+        <div className="board-actions">
+          <button type="button" className="pure-button pure-button-primary"
+                  onClick={() => reveal(selectedStory.get('id'))}>
+            {t('revealManually')}
+            <i className="fa fa-hand-paper-o button-icon-right"></i>
+          </button>
+        </div>
+      }
+
+      {
+        revealed &&
+        <div className="board-actions">
+          <button type="button" className="pure-button pure-button-primary"
+                  onClick={() => newEstimationRound(selectedStory.get('id'))}>
+            {t('newRound')}
+            <i className="fa fa-undo  button-icon-right"></i>
+          </button>
+        </div>
+      }
+      {
+        revealed && storyPointConsentAchieved && <PopUp messageType="success" message={t('spConsent')}/>
+      }
+    </div>
+  );
+
+  /**
+   * Tests if the consent was achieved
+   * @param estimations the estimations
+   * @return true if the consent was achieved otherwise false
+   */
+  function isConsentAchieved(estimations) {
+    //This is the case when no one gave an estimation
+    if(estimations.size === 0) {
+      return false;
     }
 
-    return (
-      <div className="estimation">
+    var fistValue = 0;
+    var result = estimations.valueSeq().every((v, i) => {
+      if (i === 0) {
+        fistValue = v;
+      }
+      return fistValue === v;
+    });
 
-        <div className="selected-story">
-          <h4>
-            {selectedStory.get('title')}
-          </h4>
-          <div className="story-text">
-            <Anchorify text={selectedStory.get('description')}/>
-          </div>
-        </div>
-
-        {
-          userCanCurrentlyEstimate &&
-          <Cards ownEstimate={ownEstimate}/>
-        }
-
-        {
-          userCanCurrentlyEstimate &&
-          <div className="board-actions">
-            <button type="button" className="pure-button pure-button-primary"
-                    onClick={() => reveal(selectedStory.get('id'))}>
-              {t('revealManually')}
-              <i className="fa fa-hand-paper-o button-icon-right"></i>
-            </button>
-          </div>
-        }
-
-        {
-          revealed &&
-          <div className="board-actions">
-            <button type="button" className="pure-button pure-button-primary"
-                    onClick={() => newEstimationRound(selectedStory.get('id'))}>
-              {t('newRound')}
-              <i className="fa fa-undo  button-icon-right"></i>
-            </button>
-          </div>
-        }
-        {
-          revealed && storyPointConsentAchieved && <PopUp messageType="success" message={t('spConsent')}/>
-        }
-      </div>
-    );
+    return result;
   }
-  ;
+};
 
 Estimation.propTypes = {
   t: React.PropTypes.func,

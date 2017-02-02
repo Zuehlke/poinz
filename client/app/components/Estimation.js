@@ -8,7 +8,7 @@ import {newEstimationRound, reveal} from '../services/actions';
 
 import Cards from './Cards';
 
-import PopUp from './PopUp';
+import Notification, {TYPE} from './Notification';
 
 /**
  * Displays
@@ -70,7 +70,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
         </div>
       }
       {
-        revealed && storyPointConsentAchieved && <PopUp messageType="success" message={t('spConsent')}/>
+        revealed && storyPointConsentAchieved && <Notification type={TYPE.SUCCESS} message={t('spConsent')}/>
       }
     </div>
   );
@@ -78,7 +78,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
   /**
    * Tests if the consent was achieved
    * @param estimations the estimations
-   * @return true if the consent was achieved otherwise false
+   * @return {boolean} true if the consent was achieved otherwise false
    */
   function isConsentAchieved(estimations) {
     //This is the case when no one gave an estimation

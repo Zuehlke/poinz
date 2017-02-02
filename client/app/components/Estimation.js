@@ -85,16 +85,9 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
     if(estimations.size === 0) {
       return false;
     }
-
-    var fistValue = 0;
-    var result = estimations.valueSeq().every((v, i) => {
-      if (i === 0) {
-        fistValue = v;
-      }
-      return fistValue === v;
-    });
-
-    return result;
+    const estimationValues = estimations.valueSeq();
+    var firstValue = estimationValues.get(0);
+    return estimationValues.every((v) => v === firstValue);
   }
 };
 

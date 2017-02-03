@@ -194,7 +194,7 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.storyDeleted]: {
     fn: (state, payload) => state.removeIn(['stories', payload.storyId]),
-    log: (username, payload) => `${username} deleted story ${payload.storyId}`
+    log: (username, payload) => `${username} deleted story "${payload.title}"`
   },
 
   /**

@@ -1,5 +1,5 @@
 /**
- * A user changes the title and/or description of a story
+ * A user deletes a story
  */
 const deleteStoryCommandHandler = {
   existingRoom: true,

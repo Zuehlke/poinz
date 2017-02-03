@@ -47,7 +47,7 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, deleteStory, pe
   }
   function triggerDelete(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
-    deleteStory(story.get('id'));
+    deleteStory(story.get('id'), story.get('title'));
   }
 };
 

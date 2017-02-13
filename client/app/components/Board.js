@@ -1,12 +1,11 @@
 import React from 'react';
-import { connect } from 'react-redux';
-
+import {connect} from 'react-redux';
 import Backlog from '../components/Backlog';
 import UserMenu from '../components/UserMenu';
 import ActionLog from '../components/ActionLog';
 import Users from '../components/Users';
-
 import Estimation from '../components/Estimation';
+import {NotificationContainer} from 'react-notifications';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -17,8 +16,9 @@ import Estimation from '../components/Estimation';
  * - the current story
  * - cards
  */
-const Board = ({ roomId, isAStorySelected }) => (
+const Board = ({roomId, isAStorySelected}) => (
   <div className="board" id={roomId}>
+    <NotificationContainer/>
     <Users />
     <UserMenu />
     <ActionLog />

@@ -10,7 +10,8 @@ import {
   CANCEL_EDIT_STORY,
   SET_ROOMID,
   STATUS_FETCHED,
-  SET_LANGUAGE
+  SET_LANGUAGE,
+  DISPLAY_NOTIFICATION
 } from './actionTypes';
 
 let history = createHistory();
@@ -219,4 +220,5 @@ export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = storyId => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = storyId => ({type: CANCEL_EDIT_STORY, storyId});
 export const setLanguage = language => ({type: SET_LANGUAGE, language});
+export const displayNotification = (messageType, message) => ({type: DISPLAY_NOTIFICATION, messageType, message});
 

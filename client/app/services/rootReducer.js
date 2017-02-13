@@ -1,6 +1,7 @@
 import log from 'loglevel';
 import Immutable from 'immutable';
 
+import displayNotification from '../components/Notification';
 import clientSettingsStore from './clientSettingsStore';
 import translator from './translator';
 import eventReducer from './eventReducer';
@@ -14,7 +15,8 @@ import {
   EVENT_RECEIVED,
   SET_ROOMID,
   STATUS_FETCHED,
-  SET_LANGUAGE
+  SET_LANGUAGE,
+  DISPLAY_NOTIFICATION
 } from './actionTypes';
 
 const LOGGER = log.getLogger('rootReducer');
@@ -80,6 +82,12 @@ export default function rootReducer(state = {}, action = {}) {
         const language = action.language;
         clientSettingsStore.setPresetLanguage(language);
         return state.set('language', language).set('translator', key => translator(key, language));
+      }
+      case DISPLAY_NOTIFICATION: {
+        const messageType = action.messageType;
+        const message = action.message;
+        displayNotification(messageType, message);
+        return state;
       }
       default :
         LOGGER.warn('unknown action', action);

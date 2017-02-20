@@ -2,6 +2,7 @@ import log from 'loglevel';
 import Immutable from 'immutable';
 import {EVENT_ACTION_TYPES} from './actionTypes';
 import clientSettingsStore from './clientSettingsStore';
+import displayNotification, {TYPE} from '../components/Notification';
 
 const LOGGER = log.getLogger('eventReducer');
 
@@ -57,6 +58,22 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
     message
   })));
 
+}
+
+/**
+ * Tests if the consent was achieved
+ * @param estimations the estimations
+ * @return {boolean} true if the consent was achieved otherwise false
+ * TODO discuss if this function should be defined here
+ */
+function isConsentAchieved(estimations) {
+  //This is the case when no one gave an estimation
+  if (estimations.size === 0) {
+    return false;
+  }
+  const estimationValues = estimations.valueSeq();
+  let firstValue = estimationValues.get(0);
+  return estimationValues.every((v) => v === firstValue);
 }
 
 /**
@@ -164,7 +181,7 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.connectionLost]: {
     fn: (state, payload) => state.updateIn(['users', payload.userId], user => user ? user.set('disconnected', true) : undefined),
-    log: (username) =>`${username} lost the connection`
+    log: (username) => `${username} lost the connection`
   },
 
   [EVENT_ACTION_TYPES.storyAdded]: {
@@ -264,7 +281,14 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.revealed]: {
-    fn: (state, payload) => state.setIn(['stories', payload.storyId, 'revealed'], true),
+    fn: (state, payload) => {
+      const estimations = state.getIn(['stories', payload.storyId, 'estimations']);
+      if (isConsentAchieved(estimations)){
+        let t = state.get('translator');
+        displayNotification(TYPE.success, t('spConsent'));
+      }
+      return state.setIn(['stories', payload.storyId, 'revealed'], true);
+    },
     log: (username, payload) => payload.manually ? `${username} manually revealed estimates for the current story` : 'Estimates were automatically revealed for the current story'
   },
 

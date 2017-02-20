@@ -4,11 +4,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 
-import {newEstimationRound, reveal, displayNotification} from '../services/actions';
+import {newEstimationRound, reveal} from '../services/actions';
 
 import Cards from './Cards';
-
-import {TYPE} from './Notification';
 
 /**
  * Displays
@@ -17,21 +15,13 @@ import {TYPE} from './Notification';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({t, selectedStory, user, newEstimationRound, reveal, displayNotification}) => {
+const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 
   const revealed = selectedStory.get('revealed');
   const isVisitor = user.get('visitor');
   const userCanCurrentlyEstimate = !revealed && !isVisitor;
-
-  //check if the cards were reveled
-  if (revealed) {
-    const estimations = selectedStory.get('estimations');
-    if (isConsentAchieved(estimations)) {
-      displayNotification(TYPE.SUCCESS, t('spConsent'));
-    }
-  }
 
   return (
     <div className="estimation">
@@ -73,20 +63,6 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal, display
       }
     </div>
   );
-  /**
-   * Tests if the consent was achieved
-   * @param estimations the estimations
-   * @return {boolean} true if the consent was achieved otherwise false
-   */
-  function isConsentAchieved(estimations) {
-    //This is the case when no one gave an estimation
-    if (estimations.size === 0) {
-      return false;
-    }
-    const estimationValues = estimations.valueSeq();
-    var firstValue = estimationValues.get(0);
-    return estimationValues.every((v) => v === firstValue);
-  }
 };
 
 Estimation.propTypes = {
@@ -94,7 +70,6 @@ Estimation.propTypes = {
   selectedStory: React.PropTypes.instanceOf(Immutable.Map),
   user: React.PropTypes.instanceOf(Immutable.Map),
   newEstimationRound: React.PropTypes.func,
-  displayNotification: React.PropTypes.func,
   reveal: React.PropTypes.func
 };
 
@@ -104,5 +79,5 @@ export default connect(
     selectedStory: state.getIn(['stories', state.get('selectedStory')]),
     user: state.getIn(['users', state.get('userId')])
   }),
-  dispatch => bindActionCreators({newEstimationRound, reveal, displayNotification}, dispatch)
+  dispatch => bindActionCreators({newEstimationRound, reveal}, dispatch)
 )(Estimation);

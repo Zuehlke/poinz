@@ -13,14 +13,12 @@ import fecha from 'fecha';
  */
 const ActionLog = ({t, actionLog, logShown}) => {
 
-
-  const mainClasses = classnames('action-log', {
+  const actionLogClasses = classnames('action-log', {
     'action-log-active': logShown
   });
 
-
   return (
-    <div className={mainClasses}>
+    <div className={actionLogClasses}>
       <h5>{t('log')}</h5>
       <div className="action-log-wrapper">
         <ul>
@@ -31,7 +29,6 @@ const ActionLog = ({t, actionLog, logShown}) => {
           ))}
         </ul>
       </div>
-
     </div>
   );
 };

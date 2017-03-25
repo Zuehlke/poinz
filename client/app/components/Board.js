@@ -23,10 +23,7 @@ const Board = ({roomId, isAStorySelected}) => (
     <UserMenu />
     <ActionLog />
     <Backlog />
-    {
-      isAStorySelected &&
-      <Estimation />
-    }
+    {isAStorySelected && <Estimation />}
   </div>
 );
 

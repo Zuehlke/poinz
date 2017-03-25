@@ -35,10 +35,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
         </div>
       </div>
 
-      {
-        userCanCurrentlyEstimate &&
-        <Cards ownEstimate={ownEstimate}/>
-      }
+      {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate}/>}
 
       {
         userCanCurrentlyEstimate &&

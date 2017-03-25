@@ -18,19 +18,13 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
     'backlog-active': backlogShown // if true, show menu also in small screens (menu toggle)
   });
 
-  const contentComponent = hasStories
-    ? <Stories />
-    : <div className="story-hint">There are currently no stories in the estimation backlog...</div>;
-
   return (
     <div className={backlogClasses}>
 
-      {
-        !isVisitor &&
-        <StoryAddForm />
-      }
+      {!isVisitor && <StoryAddForm />}
 
-      {contentComponent}
+      {hasStories && <Stories />}
+      {!hasStories && <div className="story-hint">There are currently no stories in the estimation backlog...</div>}
 
     </div>
   );

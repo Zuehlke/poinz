@@ -6,7 +6,7 @@ import avatarIcons from '../assets/avatars';
 
 const Avatar = ({user, index}) => {
 
-  var email = user.get('email');
+  const email = user.get('email');
   const avatarImageSource = email ? createGravatarUrl(email) : avatarIcons[index % avatarIcons.length];
 
   return (

@@ -53,13 +53,12 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
 
       {
         isDisconnected &&
-        <span onClick={kickUser} className="disconnected-kick-overlay"><i className="fa fa-ban"></i></span>
+        <span onClick={kickUser} className="disconnected-kick-overlay">
+          <i className="fa fa-ban"></i>
+        </span>
       }
 
-      {
-        selectedStory &&
-        <div className={estimationClasses} style={customCardStyle}>{estimationValueToDisplay}</div>
-      }
+      {selectedStory && <div className={estimationClasses} style={customCardStyle}>{estimationValueToDisplay}</div>}
 
     </div>
   );

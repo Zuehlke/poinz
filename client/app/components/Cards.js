@@ -26,7 +26,7 @@ Cards.propTypes = {
 };
 
 export default connect(
-  state =>({
+  state => ({
     cardConfig: state.get('cardConfig')
   })
 )(Cards);

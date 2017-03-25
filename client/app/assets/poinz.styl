@@ -629,12 +629,32 @@ $backlogWidth = 300px
           right 4px
         }
 
+
         // show the pencil when story is hovered
         &:hover > i.story-edit {
           opacity 0.6
 
           &:hover {
             opacity 1 // show the pencil with full opacity when icon is hovered
+          }
+        }
+
+        // story delete icon (trash)
+        > i.story-delete {
+          transition opacity 0.12s ease-out
+          opacity 0 // do not show by default
+          position absolute
+          display block
+          top 28px
+          right 4px
+        }
+
+        // show the trash icon when story is hovered
+        &:hover > i.story-delete {
+          opacity 0.6
+
+          &:hover {
+            opacity 1 // show the trash icon with full opacity when icon is hovered
           }
         }
 

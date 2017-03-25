@@ -1,5 +1,6 @@
 import addStory from './addStory';
 import changeStory from './changeStory';
+import deleteStory from './deleteStory';
 import clearStoryEstimate from './clearStoryEstimate';
 import giveStoryEstimate from './giveStoryEstimate';
 import joinRoom from './joinRoom';
@@ -15,6 +16,7 @@ import setVisitor from './setVisitor';
 export default {
   addStory,
   changeStory,
+  deleteStory,
   clearStoryEstimate,
   giveStoryEstimate,
   joinRoom,

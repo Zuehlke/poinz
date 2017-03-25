@@ -1,19 +1,21 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
-import { setUsername } from '../services/actions';
+import {setUsername} from '../services/actions';
+import GithubRibbon from '../components/GithubRibbon';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({ t, setUsername }) => {
+const WhoAreYou = ({t, setUsername}) => {
 
   let usernameInputField;
 
   return (
     <div className="landing">
+      <GithubRibbon />
       <div className="landing-inner">
         <div className="eyecatcher">
           <div className="info-text">

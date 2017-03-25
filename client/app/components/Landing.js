@@ -1,15 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import RoomJoinForm from '../components/RoomJoinForm';
 import RoomHistory from '../components/RoomHistory';
+import GithubRibbon from '../components/GithubRibbon';
 
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({ t, roomHistoryLength, waitingForJoin })=> {
+const Landing = ({t, roomHistoryLength, waitingForJoin})=> {
   return (
     <div className="landing">
+      <GithubRibbon />
       <div className="landing-inner">
         {!waitingForJoin && <RoomJoinForm />}
         {!waitingForJoin && roomHistoryLength && <RoomHistory />}
@@ -33,7 +35,7 @@ export default connect(
   })
 )(Landing);
 
-const Loader = ({ t }) => (
+const Loader = ({t}) => (
   <div className="eyecatcher loading">
     {t('loading')}
   </div>

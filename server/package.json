@@ -13,7 +13,8 @@
   "main": "lib/server.js",
   "scripts": {
     "build": "babel src -d lib",
-    "test": "./node_modules/.bin/eslint src/* test/* && ./node_modules/.bin/mocha  --compilers js:babel-register test/unit/*",
+    "test": "eslint src/* test/* && mocha  --compilers js:babel-register test/unit/*",
+    "lint": "eslint src/* test/*",
     "start": "node lib/server.js"
   },
   "dependencies": {

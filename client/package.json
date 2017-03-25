@@ -11,10 +11,11 @@
     "url": "https://github.com/Zuehlke/poinz.git"
   },
   "scripts": {
-    "test": "./node_modules/.bin/eslint app/* test/* && ./node_modules/.bin/mocha --compilers js:babel-register test/unit/*",
-    "teste2e": "./node_modules/.bin/protractor protractor.conf.js",
-    "serve": "./node_modules/.bin/webpack-dev-server --progress --colors --port 9000",
-    "build": "./node_modules/.bin/webpack --progress --colors --bail"
+    "lint": "eslint src/* test/*",
+    "test": "eslint app/* test/* && mocha --compilers js:babel-register test/unit/*",
+    "teste2e": "protractor protractor.conf.js",
+    "serve": "webpack-dev-server --progress --colors --port 9000",
+    "build": "webpack --progress --colors --bail"
   },
   "dependencies": {},
   "devDependencies": {

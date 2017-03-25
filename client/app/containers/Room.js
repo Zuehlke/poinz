@@ -2,8 +2,8 @@ import React from 'react';
 import fecha from 'fecha';
 
 import appConfig from '../services/appConfig';
-import Board from './Board';
-import TopBar from './TopBar';
+import Board from '../components/Board';
+import TopBar from '../components/TopBar';
 
 /**
  * Is displayed as soon as the user joined a room.

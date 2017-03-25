@@ -3,19 +3,16 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import log from 'loglevel';
 
-/*eslint-disable no-unused-vars */
-import normalizeCss from '../node_modules/normalize.css/normalize.css';
-import pureCss from 'purecss';
-import pureCssResponsive from '../node_modules/purecss/build/grids-responsive-min.css';
-import fontAwesome from '../node_modules/font-awesome/css/font-awesome.min.css';
-import poinzStyles from './assets/poinz.styl';
-/*eslint-enable no-unused-vars */
+import 'purecss';
+import '../node_modules/purecss/build/grids-responsive-min.css';
+import '../node_modules/font-awesome/css/font-awesome.min.css';
+import './assets/poinz.styl';
 
 import appConfig from './services/appConfig';
 import initialState from './services/initialState';
 import configureStore from './services/configureStore';
 
-import Main from './components/Main';
+import Main from './containers/Main';
 
 if (appConfig.env === 'dev') {
   log.setLevel('debug');

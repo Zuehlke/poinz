@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -31,14 +31,14 @@ describe('setUsername', () => {
 
   it('Should produce usernameSet event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setUsername',
-        payload: {
-          userId: this.userId,
-          username: 'John Doe'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'setUsername',
+      payload: {
+        userId: this.userId,
+        username: 'John Doe'
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -52,14 +52,14 @@ describe('setUsername', () => {
 
   it('Should store username', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setUsername',
-        payload: {
-          userId: this.userId,
-          username: 'Mikey'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'setUsername',
+      payload: {
+        userId: this.userId,
+        username: 'Mikey'
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['users', this.userId, 'username']), 'Mikey'));
   });

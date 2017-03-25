@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import Promise from 'bluebird';
 import testUtils from './testUtils';

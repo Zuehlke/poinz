@@ -1,9 +1,9 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { toggleBacklog, toggleUserMenu, toggleLog } from '../services/actions';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {toggleBacklog, toggleUserMenu, toggleLog} from '../services/actions';
 
-const TopBar = ({ roomId, username, toggleBacklog, toggleUserMenu, toggleLog }) => {
+const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog}) => {
   return (
     <div className="top-bar">
       <div className="poinz-logo">PoinZ</div>

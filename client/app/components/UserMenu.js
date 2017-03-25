@@ -1,17 +1,17 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 
-import { setVisitor, setUsername, setEmail, leaveRoom, setLanguage } from '../services/actions';
+import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../services/actions';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.
  *
  * It also dispalys a "leave room" button.
  */
-const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisitor, setLanguage, userMenuShown }) => {
+const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisitor, setLanguage, userMenuShown}) => {
 
   const username = user.get('username');
   const email = user.get('email');
@@ -43,7 +43,8 @@ const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisi
                  ref={ref => usernameInputField = ref}
                  onKeyPress={handleUsernameKeyPress}/>
 
-          <button className="pure-button pure-button-primary button-save button-save-username" onClick={saveUsername}>{t('save')}</button>
+          <button className="pure-button pure-button-primary button-save button-save-username"
+                  onClick={saveUsername}>{t('save')}</button>
         </div>
 
         <h5>{t('language')}</h5>
@@ -78,7 +79,8 @@ const UserMenu = ({ t, language, user, setUsername, setEmail, leaveRoom, setVisi
                  onKeyPress={handleEmailKeypress}
           />
 
-          <button className="pure-button pure-button-primary button-save button-save-email" onClick={saveEmail}>{t('save')}</button>
+          <button className="pure-button pure-button-primary button-save button-save-email"
+                  onClick={saveEmail}>{t('save')}</button>
         </div>
 
         <h5>{t('markVisitor')}</h5>

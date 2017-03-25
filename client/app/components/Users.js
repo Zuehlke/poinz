@@ -1,13 +1,13 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import User from './User';
 
 /**
  * The list of users (avatars) and their estimations.
  */
-const Users = ({ users }) => (
+const Users = ({users}) => (
   <div className="users">
     {users.toList().map((user, index) => (
       <User

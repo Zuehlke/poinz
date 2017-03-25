@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -34,14 +34,14 @@ describe('clearStoryEstimate', () => {
 
     // add a story
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => {
         this.storyId = producedEvents[0].payload.id;
 
@@ -72,14 +72,14 @@ describe('clearStoryEstimate', () => {
 
   it('Should produce storyEstimateCleared event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'clearStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'clearStoryEstimate',
+      payload: {
+        storyId: this.storyId,
+        userId: this.userId
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -94,14 +94,14 @@ describe('clearStoryEstimate', () => {
 
   it('Should clear value', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'clearStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'clearStoryEstimate',
+      payload: {
+        storyId: this.storyId,
+        userId: this.userId
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['stories', this.storyId, 'estimations', this.userId]), undefined));
   });

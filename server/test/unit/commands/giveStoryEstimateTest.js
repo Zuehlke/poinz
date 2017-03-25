@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -34,14 +34,14 @@ describe('giveStoryEstimate', () => {
 
     // prepare the state with a story (you could this directly on the state, but this is closer to reality)
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => {
 
         this.storyId = producedEvents[0].payload.id;
@@ -62,15 +62,15 @@ describe('giveStoryEstimate', () => {
 
   it('Should produce storyEstimateGiven event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId,
-          value: 2
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: this.storyId,
+        userId: this.userId,
+        value: 2
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -86,15 +86,15 @@ describe('giveStoryEstimate', () => {
 
   it('Should store value', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId,
-          value: 2
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: this.storyId,
+        userId: this.userId,
+        value: 2
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['stories', this.storyId, 'estimations', this.userId]), 2));
   });
@@ -113,15 +113,15 @@ describe('giveStoryEstimate', () => {
 
     function handleCommandAndAssertRevealed() {
       return this.processor({
-          id: this.commandId,
-          roomId: this.roomId,
-          name: 'giveStoryEstimate',
-          payload: {
-            storyId: this.storyId,
-            userId: this.userId,
-            value: 2
-          }
-        }, this.userId)
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'giveStoryEstimate',
+        payload: {
+          storyId: this.storyId,
+          userId: this.userId,
+          value: 2
+        }
+      }, this.userId)
         .then(producedEvents => {
           assert(producedEvents);
           assert.equal(producedEvents.length, 2);

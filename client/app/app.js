@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
 import log from 'loglevel';
 
 /*eslint-disable no-unused-vars */

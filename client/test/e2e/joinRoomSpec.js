@@ -2,7 +2,7 @@ describe('Join Room', () => {
 
   it('via input field on landing page', () => {
     const roomInputField = element(by.css('.room-id-wrapper input'));
-    const roomJoinButton =  element(by.css('.room-id-wrapper button'));
+    const roomJoinButton = element(by.css('.room-id-wrapper button'));
     const topBarWhoami = element(by.css('.top-bar .whoami'));
 
     browser.get('/');

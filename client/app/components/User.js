@@ -2,13 +2,13 @@ import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
 import {isUndefined} from 'lodash';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { kick } from '../services/actions';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {kick} from '../services/actions';
 
 import Avatar from './Avatar.js';
 
-const User = ({user, index, selectedStory, ownUserId, cardConfig, kick }) => {
+const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
 
   const isVisitor = user.get('visitor');
   const isDisconnected = user.get('disconnected');

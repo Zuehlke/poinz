@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import Backlog from '../components/Backlog';
 import UserMenu from '../components/UserMenu';
@@ -17,7 +17,7 @@ import Estimation from '../components/Estimation';
  * - the current story
  * - cards
  */
-const Board = ({ roomId, isAStorySelected }) => (
+const Board = ({roomId, isAStorySelected}) => (
   <div className="board" id={roomId}>
     <Users />
     <UserMenu />

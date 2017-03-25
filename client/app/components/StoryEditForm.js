@@ -1,15 +1,15 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 
-import { changeStory, cancelEditStory } from '../services/actions';
+import {changeStory, cancelEditStory} from '../services/actions';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeCommands }) => {
+const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
   const classes = classnames('story', {
     'waiting': pendingChangeCommands.find(cmd => cmd.payload.storyId === story.get('id'))
   });
@@ -43,7 +43,7 @@ const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeComma
   );
 
   function handleTitleKeyEvent(keyEvent) {
-    if(keyEvent.key === 'Enter') {
+    if (keyEvent.key === 'Enter') {
       triggerChange();
     }
   }
@@ -73,7 +73,7 @@ export default connect(
   dispatch => bindActionCreators({changeStory, cancelEditStory}, dispatch)
 )(StoryEditForm);
 
-const StoryEditFormButtonGroup = ({ onSave, onCancel}) => (
+const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
   <div className="pure-g button-group">
     <div className="pure-u-1-2">
       <button type="button"

@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'node-uuid';
+import {v4 as uuid} from 'node-uuid';
 
 /**
  * A user adds a story to the estimation backlog of the room

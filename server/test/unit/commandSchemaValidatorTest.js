@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 
 import commandSchemaValidator from '../../src/commandSchemaValidator';
 

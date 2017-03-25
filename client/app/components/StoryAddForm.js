@@ -1,14 +1,14 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
+import {bindActionCreators} from 'redux';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { addStory } from '../services/actions';
+import {addStory} from '../services/actions';
 
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({ t, addStory, pendingAddCommands }) => {
+const StoryAddForm = ({t, addStory, pendingAddCommands}) => {
 
   const classes = classnames('pure-form story-add-form', {
     'waiting': pendingAddCommands
@@ -41,7 +41,7 @@ const StoryAddForm = ({ t, addStory, pendingAddCommands }) => {
   );
 
   function handleTitleKeyEvent(keyEvent) {
-    if(keyEvent.key === 'Enter') {
+    if (keyEvent.key === 'Enter') {
       triggerAddAndClearForm();
     }
   }

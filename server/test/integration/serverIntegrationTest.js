@@ -1,6 +1,6 @@
 import assert from 'assert';
 import http from 'http';
-import { v4 as uuid } from 'node-uuid';
+import {v4 as uuid} from 'node-uuid';
 import socketIoClient from 'socket.io-client';
 
 /**

@@ -2,7 +2,7 @@ import assert from 'assert';
 import Immutable from 'immutable';
 import _ from 'lodash';
 import eventReducer from '../../app/services/eventReducer';
-import { EVENT_ACTION_TYPES } from '../../app/services/actionTypes';
+import {EVENT_ACTION_TYPES} from '../../app/services/actionTypes';
 
 /**
  * Tests the event reducing functions for various events.
@@ -83,7 +83,7 @@ describe('eventReducer', () => {
     const modifiedState = eventReducer(startingState, {
       type: EVENT_ACTION_TYPES.storyDeleted,
       event: {
-        roomId:'someRoom',
+        roomId: 'someRoom',
         payload: {
           storyId: 'story01'
         }
@@ -92,12 +92,12 @@ describe('eventReducer', () => {
 
     assert.deepEqual(modifiedState.get('stories').toJS(), {
       story02: {
-          title: 'asdf',
-          description: 'af',
-          id: '3b8b38dd-1456-46d8-8174-2e981ad746f1',
-          estimations: {},
-          createdAt: 1485425539399
-        }
+        title: 'asdf',
+        description: 'af',
+        id: '3b8b38dd-1456-46d8-8174-2e981ad746f1',
+        estimations: {},
+        createdAt: 1485425539399
+      }
     });
   });
 

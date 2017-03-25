@@ -1,14 +1,14 @@
 import React from 'react';
 import fecha from 'fecha';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
 import appConfig from '../services/appConfig';
 import {secondsToDaysHoursMinutes} from '../services/timeUtil';
 import TopBar from '../components/TopBar';
 
-import { fetchStatus } from '../services/actions';
+import {fetchStatus} from '../services/actions';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
@@ -17,7 +17,7 @@ import { fetchStatus } from '../services/actions';
 class AppStatus extends React.Component {
 
   componentDidMount() {
-    const { fetchStatus, appStatus } = this.props;
+    const {fetchStatus, appStatus} = this.props;
 
     if (!appStatus) {
       fetchStatus();
@@ -26,7 +26,7 @@ class AppStatus extends React.Component {
 
   render() {
 
-    const { fetchStatus, appStatus } = this.props;
+    const {fetchStatus, appStatus} = this.props;
     if (!appStatus) {
       // this is an operations UI, it's ok to display a empty page during data loading...
       return null;

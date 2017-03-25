@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -45,14 +45,14 @@ describe('addStory', () => {
 
   it('Should produce storyAdded event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 232',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -69,14 +69,14 @@ describe('addStory', () => {
     this.mockRoomsStore.manipulate(room => room.removeIn(['stories', 'abc']));
 
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 232',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 2);
@@ -94,14 +94,14 @@ describe('addStory', () => {
 
   it('Should store new story in room', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 232',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => this.mockRoomsStore.getRoomById().then(room => assert(room.getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story')));
   });
 

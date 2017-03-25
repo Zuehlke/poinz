@@ -1,12 +1,12 @@
-import { EventEmitter } from 'events';
-import { inherits } from 'util';
+import {EventEmitter} from 'events';
+import {inherits} from 'util';
 
 import socketIo from 'socket.io-client';
 import log from 'loglevel';
-import { v4 as uuid } from 'node-uuid';
+import {v4 as uuid} from 'node-uuid';
 
 import appConfig from './appConfig';
-import { COMMAND_SENT } from './actionTypes';
+import {COMMAND_SENT} from './actionTypes';
 
 /**
  * The Hub  is our interface between the websocket connection and the app.

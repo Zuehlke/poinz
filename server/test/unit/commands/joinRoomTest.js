@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -24,15 +24,15 @@ describe('joinRoom', () => {
 
   it('Should produce 4 events for a non-existing room', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'joinRoom',
-        payload: {
-          userId: this.userId,
-          email: 'j.doe@gmail.com',
-          username: 'something'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'joinRoom',
+      payload: {
+        userId: this.userId,
+        email: 'j.doe@gmail.com',
+        username: 'something'
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 4);
@@ -69,13 +69,13 @@ describe('joinRoom', () => {
 
     return this.processor({
       // first another user creates the room
-        id: uuid(),
-        roomId: this.roomId,
-        name: 'joinRoom',
-        payload: {
-          userId: userOne
-        }
-      }, userOne)
+      id: uuid(),
+      roomId: this.roomId,
+      name: 'joinRoom',
+      payload: {
+        userId: userOne
+      }
+    }, userOne)
       .then(() => this.processor({
         id: this.commandId,
         roomId: this.roomId,

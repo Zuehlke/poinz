@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -25,26 +25,26 @@ describe('selectStory', () => {
 
     // prepare the state with a story
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => this.storyId = producedEvents[0].payload.id);
   });
 
   it('Should produce storySelected event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'selectStory',
-        payload: {
-          storyId: this.storyId
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'selectStory',
+      payload: {
+        storyId: this.storyId
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -57,13 +57,13 @@ describe('selectStory', () => {
 
   it('Should store id of selectedStory', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'selectStory',
-        payload: {
-          storyId: this.storyId
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'selectStory',
+      payload: {
+        storyId: this.storyId
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.get('selectedStory'), this.storyId));
   });

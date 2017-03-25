@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -38,13 +38,13 @@ describe('kick', () => {
 
   it('Should produce kicked event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'kick',
-        payload: {
-          userId: this.userTwoId
-        }
-      }, this.userOneId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'kick',
+      payload: {
+        userId: this.userTwoId
+      }
+    }, this.userOneId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -57,13 +57,13 @@ describe('kick', () => {
 
   it('Should remove user from room', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'kick',
-        payload: {
-          userId: this.userTwoId
-        }
-      }, this.userOneId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'kick',
+      payload: {
+        userId: this.userTwoId
+      }
+    }, this.userOneId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert(!room.getIn(['users', this.userTwoId])));
   });

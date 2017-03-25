@@ -1,15 +1,15 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 
-import { giveStoryEstimate } from '../services/actions';
+import {giveStoryEstimate} from '../services/actions';
 
 /**
  * One estimation card on the board.
  */
-const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate }) => {
+const Card = ({card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate}) => {
 
   const cardClasses = classnames('card clickable pure-u-1 pure-u-md-2-24', {
     'card-selected': card.get('value') === ownEstimate

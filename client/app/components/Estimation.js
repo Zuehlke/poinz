@@ -1,10 +1,10 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 
-import { newEstimationRound, reveal } from '../services/actions';
+import {newEstimationRound, reveal} from '../services/actions';
 
 import Cards from './Cards';
 
@@ -15,7 +15,7 @@ import Cards from './Cards';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({ t, selectedStory, user, newEstimationRound, reveal }) => {
+const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
   const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
 

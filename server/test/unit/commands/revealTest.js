@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -29,14 +29,14 @@ describe('reveal', () => {
 
     // add story to room
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    }, this.userId)
       .then(producedEvents => {
 
         this.storyId = producedEvents[0].payload.id;
@@ -56,13 +56,13 @@ describe('reveal', () => {
 
   it('Should produce revealed event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'reveal',
-        payload: {
-          storyId: this.storyId
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'reveal',
+      payload: {
+        storyId: this.storyId
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -76,13 +76,13 @@ describe('reveal', () => {
 
   it('Should set "revealed" flag', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'reveal',
-        payload: {
-          storyId: this.storyId
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'reveal',
+      payload: {
+        storyId: this.storyId
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['stories', this.storyId, 'revealed']), true));
   });

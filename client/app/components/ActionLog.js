@@ -1,7 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 // we do not use momentjs, since we only need one function "format(..)" . momentjs is 15Kb, fecha is 2Kb
 // https://github.com/taylorhakes/fecha
@@ -11,7 +11,7 @@ import fecha from 'fecha';
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
  */
-const ActionLog = ({ t, actionLog, logShown }) => {
+const ActionLog = ({t, actionLog, logShown}) => {
 
 
   const mainClasses = classnames('action-log', {

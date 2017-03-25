@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -44,14 +44,14 @@ describe('setVisitor', () => {
 
     function handleCommandAndAssert() {
       return this.processor({
-          id: this.commandId,
-          roomId: this.roomId,
-          name: 'setVisitor',
-          payload: {
-            userId: this.userId,
-            isVisitor: true
-          }
-        }, this.userId)
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'setVisitor',
+        payload: {
+          userId: this.userId,
+          isVisitor: true
+        }
+      }, this.userId)
         .then(producedEvents => {
           assert(producedEvents);
           assert.equal(producedEvents.length, 1);
@@ -78,14 +78,14 @@ describe('setVisitor', () => {
 
     function handleCommandAndAssert() {
       return this.processor({
-          id: this.commandId,
-          roomId: this.roomId,
-          name: 'setVisitor',
-          payload: {
-            userId: this.userId,
-            isVisitor: false
-          }
-        }, this.userId)
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'setVisitor',
+        payload: {
+          userId: this.userId,
+          isVisitor: false
+        }
+      }, this.userId)
         .then(producedEvents => {
           assert(producedEvents);
           assert.equal(producedEvents.length, 1);
@@ -101,14 +101,14 @@ describe('setVisitor', () => {
 
   it('Should store flag on set', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setVisitor',
-        payload: {
-          userId: this.userId,
-          isVisitor: true
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'setVisitor',
+      payload: {
+        userId: this.userId,
+        isVisitor: true
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['users', this.userId, 'visitor']), true));
   });
@@ -117,14 +117,14 @@ describe('setVisitor', () => {
     this.mockRoomsStore.manipulate(room => room.setIn(['users', this.userId, 'visitor'], true));
 
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setVisitor',
-        payload: {
-          userId: this.userId,
-          isVisitor: false
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'setVisitor',
+      payload: {
+        userId: this.userId,
+        isVisitor: false
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['users', this.userId, 'visitor']), false));
   });

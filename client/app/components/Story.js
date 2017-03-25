@@ -1,16 +1,16 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
 
-import { selectStory, editStory, deleteStory } from '../services/actions';
+import {selectStory, editStory, deleteStory} from '../services/actions';
 
 /**
  * One story in the backlog
  */
-const Story = ({ story, selectedStoryId, selectStory, editStory, deleteStory, pendingSelectCommands }) => {
+const Story = ({story, selectedStoryId, selectStory, editStory, deleteStory, pendingSelectCommands}) => {
 
   const isSelected = selectedStoryId === story.get('id');
 
@@ -27,7 +27,7 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, deleteStory, pe
         {story.get('title')}
       </h4>
 
-        {
+      {
         // only display story text for selected story. improves overall readibility / usability (see #24)
         isSelected &&
         <div className="story-text">
@@ -45,6 +45,7 @@ const Story = ({ story, selectedStoryId, selectStory, editStory, deleteStory, pe
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
     editStory(story.get('id'));
   }
+
   function triggerDelete(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
     deleteStory(story.get('id'), story.get('title'));

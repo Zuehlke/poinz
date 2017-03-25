@@ -1,6 +1,6 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 import Story from './Story';
 import StoryEditForm from './StoryEditForm';
@@ -8,7 +8,7 @@ import StoryEditForm from './StoryEditForm';
 /**
  * A list of stories (in the backlog)
  */
-const Stories = ({ stories }) => {
+const Stories = ({stories}) => {
 
   const sortedStories = stories
     .toList()

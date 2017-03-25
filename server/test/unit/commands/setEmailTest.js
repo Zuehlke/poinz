@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { v4 as uuid } from'node-uuid';
+import {v4 as uuid} from'node-uuid';
 import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -33,14 +33,14 @@ describe('setEmail', () => {
 
   it('Should produce emailSet event', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setEmail',
-        payload: {
-          userId: this.userId,
-          email: 'j.doe@gmail.com'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'setEmail',
+      payload: {
+        userId: this.userId,
+        email: 'j.doe@gmail.com'
+      }
+    }, this.userId)
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 1);
@@ -54,14 +54,14 @@ describe('setEmail', () => {
 
   it('Should store email', function () {
     return this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setEmail',
-        payload: {
-          userId: this.userId,
-          email: 'mikey.mouse@hotmail.com'
-        }
-      }, this.userId)
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'setEmail',
+      payload: {
+        userId: this.userId,
+        email: 'mikey.mouse@hotmail.com'
+      }
+    }, this.userId)
       .then(() => this.mockRoomsStore.getRoomById())
       .then(room => assert.equal(room.getIn(['users', this.userId, 'email']), 'mikey.mouse@hotmail.com'));
   });

@@ -1,14 +1,14 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
-import { joinRoom } from '../services/actions';
+import {joinRoom} from '../services/actions';
 
 /**
  * List of rooms that the user joined earlier.
  */
-const RoomHistory = ({t, roomHistory, joinRoom }) => (
+const RoomHistory = ({t, roomHistory, joinRoom}) => (
   <div className="eyecatcher room-history">
     {t('joinPrevious')}
     <ol>

@@ -1,14 +1,14 @@
 import React from 'react';
 import Immutable from 'immutable';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
 
 import Room from './Room';
 import WhoAreYou from './WhoAreYou';
 import AppStatus from './AppStatus';
 import Landing from './Landing';
 
-import { joinRoom } from '../services/actions';
+import {joinRoom} from '../services/actions';
 
 /**
  * The Main component decides whether to display the landing page or the poinz estimation board (a room).
@@ -27,7 +27,7 @@ class Main extends React.Component {
 
   render() {
 
-    const { roomId, users, presetUsername } = this.props;
+    const {roomId, users, presetUsername} = this.props;
     const hasRoomIdAndUsers = roomId && users && users.size > 0;
 
     if (roomId === 'poinzstatus') {

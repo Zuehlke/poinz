@@ -3,7 +3,7 @@ import {inherits} from 'util';
 
 import socketIo from 'socket.io-client';
 import log from 'loglevel';
-import {v4 as uuid} from 'node-uuid';
+import {v4 as uuid} from 'uuid';
 
 import appConfig from './appConfig';
 import {COMMAND_SENT} from '../actions/types';

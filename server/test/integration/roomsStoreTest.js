@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Immutable from 'immutable';
-import {v4 as uuid} from 'node-uuid';
+import {v4 as uuid} from 'uuid';
 import roomStoreFactory from '../../src/store/roomStoreFactory';
 
 /**

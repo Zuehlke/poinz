@@ -1,11 +1,9 @@
-var
-  path = require('path'),
-  webpack = require('webpack');
+const webpack = require('webpack');
 
-var packageInformation = require('./package.json');
-var defaultConfig = require('./webpack.config.js');
+const packageInformation = require('./package.json');
+const defaultConfig = require('./webpack.config.js');
 
-var definePlugin = new webpack.DefinePlugin({
+const definePlugin = new webpack.DefinePlugin({
   __POINZ_CONFIG__: JSON.stringify({
     env: 'production',
     version: packageInformation.version,
@@ -16,7 +14,6 @@ var definePlugin = new webpack.DefinePlugin({
 
 // override our default webpack config
 defaultConfig.plugins = [definePlugin];
-defaultConfig.debug = false;
-defaultConfig.devtool = undefined;
+defaultConfig.devtool = 'eval';
 
 module.exports = defaultConfig;

@@ -1,6 +1,6 @@
 {
   "name": "poinz",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -17,10 +17,10 @@
   },
   "devDependencies": {
     "del": "2.2.2",
-    "fs-extra": "1.0.0",
-    "lodash": "4.16.6",
-    "npm-check-updates": "2.8.6",
-    "bluebird": "3.4.6"
+    "fs-extra": "2.1.2",
+    "lodash": "4.17.4",
+    "npm-check-updates": "2.10.4",
+    "bluebird": "3.5.0"
   },
   "engines": {
     "node": ">=6.9.1"

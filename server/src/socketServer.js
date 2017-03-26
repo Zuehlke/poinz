@@ -1,5 +1,5 @@
 import http from 'http';
-import {v4 as uuid} from 'node-uuid';
+import {v4 as uuid} from 'uuid';
 import socketIo from 'socket.io';
 import logging from './logging';
 

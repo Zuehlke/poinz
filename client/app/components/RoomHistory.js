@@ -3,7 +3,7 @@ import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {joinRoom} from '../services/actions';
+import {joinRoom} from '../actions';
 
 /**
  * List of rooms that the user joined earlier.

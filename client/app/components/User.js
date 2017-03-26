@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import {isUndefined} from 'lodash';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {kick} from '../services/actions';
+import {kick} from '../actions';
 
 import Avatar from './Avatar.js';
 

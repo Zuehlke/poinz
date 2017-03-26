@@ -1,7 +1,7 @@
 import Immutable from 'immutable';
 
 import clientSettingsStore from './clientSettingsStore';
-import translator from './translator';
+import translator from '../services/translator';
 
 
 const DEFAULT_LANGUAGE = 'en';

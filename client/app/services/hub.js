@@ -6,7 +6,7 @@ import log from 'loglevel';
 import {v4 as uuid} from 'node-uuid';
 
 import appConfig from './appConfig';
-import {COMMAND_SENT} from './actionTypes';
+import {COMMAND_SENT} from '../actions/types';
 
 /**
  * The Hub  is our interface between the websocket connection and the app.

@@ -2,7 +2,7 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {setUsername} from '../services/actions';
+import {setUsername} from '../actions';
 import GithubRibbon from '../components/GithubRibbon';
 
 /**

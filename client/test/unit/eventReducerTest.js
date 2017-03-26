@@ -2,7 +2,7 @@ import assert from 'assert';
 import Immutable from 'immutable';
 import _ from 'lodash';
 import eventReducer from '../../app/services/eventReducer';
-import {EVENT_ACTION_TYPES} from '../../app/services/actionTypes';
+import {EVENT_ACTION_TYPES} from '../../app/actions/types';
 
 /**
  * Tests the event reducing functions for various events.

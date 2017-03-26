@@ -1,7 +1,7 @@
 import log from 'loglevel';
 import Immutable from 'immutable';
-import {EVENT_ACTION_TYPES} from './actionTypes';
-import clientSettingsStore from './clientSettingsStore';
+import {EVENT_ACTION_TYPES} from '../actions/types';
+import clientSettingsStore from '../store/clientSettingsStore';
 
 const LOGGER = log.getLogger('eventReducer');
 
@@ -13,7 +13,7 @@ const LOGGER = log.getLogger('eventReducer');
  * @param {object} action
  * @returns {Immutable.Map} the modified state
  */
-function eventReducer(state, action) {
+export default function eventReducer(state, action) {
 
   const {event} = action;
 
@@ -286,4 +286,3 @@ const eventActionHandlers = {
   }
 };
 
-export default eventReducer;

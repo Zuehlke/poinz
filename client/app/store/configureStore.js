@@ -2,12 +2,12 @@ import {createStore, applyMiddleware} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import log from 'loglevel';
 
-import rootReducer from './rootReducer';
-import hub from './hub';
+import rootReducer from '../services/rootReducer';
+import hub from '../services/hub';
 import {
   EVENT_ACTION_TYPES,
   EVENT_RECEIVED
-} from './actionTypes';
+} from '../actions/types';
 
 const LOGGER = log.getLogger('store');
 

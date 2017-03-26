@@ -2,7 +2,7 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
-import {joinRoom} from '../services/actions';
+import {joinRoom} from '../actions';
 
 /**
  * The form on the landing page where the user can enter a room to join

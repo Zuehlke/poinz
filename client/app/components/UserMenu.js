@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 
-import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../services/actions';
+import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.

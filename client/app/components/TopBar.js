@@ -1,7 +1,7 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {toggleBacklog, toggleUserMenu, toggleLog} from '../services/actions';
+import {toggleBacklog, toggleUserMenu, toggleLog} from '../actions';
 
 const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog}) => {
   return (

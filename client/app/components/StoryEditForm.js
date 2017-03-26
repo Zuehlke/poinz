@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 
-import {changeStory, cancelEditStory} from '../services/actions';
+import {changeStory, cancelEditStory} from '../actions';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)

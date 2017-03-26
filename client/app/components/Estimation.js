@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 
-import {newEstimationRound, reveal} from '../services/actions';
+import {newEstimationRound, reveal} from '../actions';
 
 import Cards from './Cards';
 

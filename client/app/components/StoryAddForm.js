@@ -3,7 +3,7 @@ import {bindActionCreators} from 'redux';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
 
-import {addStory} from '../services/actions';
+import {addStory} from '../actions';
 
 /**
  * Form for adding stories to the backlog

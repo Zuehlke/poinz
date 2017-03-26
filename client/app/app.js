@@ -9,8 +9,8 @@ import '../node_modules/font-awesome/css/font-awesome.min.css';
 import './assets/poinz.styl';
 
 import appConfig from './services/appConfig';
-import initialState from './services/initialState';
-import configureStore from './services/configureStore';
+import initialState from './store/initialState';
+import configureStore from './store/configureStore';
 
 import Main from './containers/Main';
 

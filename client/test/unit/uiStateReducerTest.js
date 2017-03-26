@@ -1,7 +1,7 @@
 import assert from 'assert';
 import Immutable from 'immutable';
 import rootReducer from '../../app/services/rootReducer';
-import {TOGGLE_USER_MENU, TOGGLE_LOG} from '../../app/services/actionTypes';
+import {TOGGLE_USER_MENU, TOGGLE_LOG} from '../../app/actions/types';
 
 
 describe('uiStateReducer', () => {

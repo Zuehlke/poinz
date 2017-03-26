@@ -1,6 +1,6 @@
 import axios from 'axios';
 import createHistory from 'history/createBrowserHistory';
-import hub from './hub';
+import hub from '../services/hub';
 
 import {
   TOGGLE_BACKLOG,
@@ -11,7 +11,7 @@ import {
   SET_ROOMID,
   STATUS_FETCHED,
   SET_LANGUAGE
-} from './actionTypes';
+} from '../actions/types';
 
 let history = createHistory();
 

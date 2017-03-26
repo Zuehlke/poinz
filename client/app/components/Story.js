@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
 
-import {selectStory, editStory, deleteStory} from '../services/actions';
+import {selectStory, editStory, deleteStory} from '../actions';
 
 /**
  * One story in the backlog

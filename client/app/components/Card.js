@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 
-import {giveStoryEstimate} from '../services/actions';
+import {giveStoryEstimate} from '../actions';
 
 /**
  * One estimation card on the board.

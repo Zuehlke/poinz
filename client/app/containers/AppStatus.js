@@ -8,7 +8,7 @@ import appConfig from '../services/appConfig';
 import {secondsToDaysHoursMinutes} from '../services/timeUtil';
 import TopBar from '../components/TopBar';
 
-import {fetchStatus} from '../services/actions';
+import {fetchStatus} from '../actions';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Immutable from 'immutable';
-import configureStore from '../../app/services/configureStore';
+import configureStore from '../../app/store/configureStore';
 
 describe('configureStore', () => {
 

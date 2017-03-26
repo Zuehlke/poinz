@@ -8,7 +8,7 @@ import WhoAreYou from './WhoAreYou';
 import AppStatus from './AppStatus';
 import Landing from './Landing';
 
-import {joinRoom} from '../services/actions';
+import {joinRoom} from '../actions';
 
 /**
  * The Main component decides whether to display the landing page or the poinz estimation board (a room).

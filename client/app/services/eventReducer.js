@@ -151,11 +151,11 @@ const eventActionHandlers = {
    * A disconnected user was kicked from the room.
    */
   [EVENT_ACTION_TYPES.kicked]: {
-    fn: (state, payload) => {
-      return state
+    fn: (state, payload) => (
+      state
         .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove kicked user's estimations from all stories
-        .removeIn(['users', payload.userId]); // then remove user from room
-    },
+        .removeIn(['users', payload.userId]) // then remove user from room
+    ),
     log: (username, payload, oldState, newState, event) => `User ${oldState.getIn(['users', payload.userId, 'username'])} was kicked from the room by user ${newState.getIn(['users', event.userId, 'username'])}`
   },
 
@@ -163,7 +163,11 @@ const eventActionHandlers = {
    * A user in the room lost the connection to the server.
    */
   [EVENT_ACTION_TYPES.connectionLost]: {
-    fn: (state, payload) => state.updateIn(['users', payload.userId], user => user ? user.set('disconnected', true) : undefined),
+    fn: (state, payload) => (
+      state.updateIn(['users', payload.userId], user => (
+        user ? user.set('disconnected', true) : undefined
+      ))
+    ),
     log: (username) =>`${username} lost the connection`
   },
 

@@ -47,9 +47,17 @@ Fork & checkout the repository then install all npm dependencies.
 
 `$ npm install`  (This will also install *client* and *server* npm dependencies)
 
+Build the backend
+
+`$ cd server/ && npm run-script build`
+
 Start the backend
 
 `$ cd server/ && npm start`
+
+Build the client
+
+`$ cd client/ && npm run-script build`
 
 Start the client-serving in dev mode via webpack-dev-server
 

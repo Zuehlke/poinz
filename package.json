@@ -13,7 +13,8 @@
   "scripts": {
     "test": "cd client/ && npm test &&  cd ../server && npm test",
     "build": "node build/dockerImage.js",
-    "dependencyCheck": "node ./build/dependencyCheck.js ./package.json && node ./build/dependencyCheck.js ./client/package.json && node ./build/dependencyCheck.js ./server/package.json"
+    "dependencyCheck": "node ./build/dependencyCheck.js ./package.json && node ./build/dependencyCheck.js ./client/package.json && node ./build/dependencyCheck.js ./server/package.json",
+    "postinstall":"cd client/ && npm i && cd ../server && npm i"
   },
   "devDependencies": {
     "del": "2.2.2",

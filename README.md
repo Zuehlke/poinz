@@ -45,11 +45,7 @@ Try to adhere to the [airbnb style guide](https://github.com/airbnb/javascript).
 
 Fork & checkout the repository then install all npm dependencies.
 
-`$ npm install`
-
-`$ cd client/ && npm install`
-
-`$ cd server/ && npm install`
+`$ npm install`  (This will also install *client* and *server* npm dependencies)
 
 Start the backend
 

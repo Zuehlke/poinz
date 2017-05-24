@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {v4 as uuid} from'node-uuid';
+import {v4 as uuid} from 'uuid';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 

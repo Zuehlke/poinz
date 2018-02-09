@@ -2,9 +2,8 @@
 
 const settings = {
 
-  // host + port for webserver + socketserver
-  serverHost: '0.0.0.0',
-  serverPort: 3000,
+  // port for webserver & socketserver
+  serverPort: process.env.PORT || 3000,
 
   // configuration for winston logging
   log: {
@@ -18,7 +17,7 @@ const settings = {
   },
 
   // if set to false, in-memory store is used. if true, rooms are persisted in redis
-  persistentStore: true,
+  persistentStore: false,
 
   // configuration for redis connection (roomsStore)
   // env variables are set by docker when linking redis container to poinz container

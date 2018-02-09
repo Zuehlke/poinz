@@ -16,8 +16,6 @@ cache:
 
 install:
   - npm i
-  - cd $TRAVIS_BUILD_DIR/client && npm i
-  - cd $TRAVIS_BUILD_DIR/server && npm i
   - cd $TRAVIS_BUILD_DIR/
 
 before_script:

@@ -6,7 +6,7 @@ PoinZ (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. 
 
 The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.
 
-Checkout the App at [poinz.zuehlke.io](http://poinz.zuehlke.io/)
+Checkout the App at [https://poinz.herokuapp.com/](https://poinz.herokuapp.com/)
 
 ![poinz_screenshot](https://cloud.githubusercontent.com/assets/1777143/13347877/846c4630-dc70-11e5-8c04-e5a03d18645d.png)
 
@@ -61,17 +61,13 @@ Then you can open the app at http://localhost:9000/webpack-dev-server/
 ## Build
 
 Our build produces a docker image that contains nodejs and our poinz server.
-Make sure you have docker installed on your machine and your user is in the "docker" usergroup.
+Make sure you have docker installed on your machine and your user is in the "docker" usergroup. (```$ sudo groupadd docker``` and ```$ sudo usermod -aG docker $USER```)
 
-### 1. Install client npm dependencies
+### 1. Install  npm dependencies
 
-Since we bundle our client, we need all dependencies installed.
+We need all dependencies of the server and the client installed.
 
-```
-$ npm i
-$ cd client
-$ npm i
-```
+```$ npm i``` within the project root will do that for us (postinstall in package.json)
 
 ### 2. Build & Pack for deployment
 

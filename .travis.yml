@@ -18,6 +18,9 @@ install:
   - npm i
   - cd $TRAVIS_BUILD_DIR/
 
+before_script:
+  - npm run dependencyCheck
+
 script:
   - npm test
   - npm run build

@@ -27,6 +27,6 @@ script:
 
 after_success:
  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-   docker login --username="$DOCKER_USERNAME" --email="$DOCKER_EMAIL" --password="$DOCKER_PASSWORD";
+   docker login --username="$DOCKER_USERNAME" --password="$DOCKER_PASSWORD";
    docker push xeronimus/poinz;
    fi

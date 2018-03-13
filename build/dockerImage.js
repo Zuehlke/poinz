@@ -8,13 +8,13 @@
  *  4. build docker image (see Dockerfile)
  *
  * */
-const
-  path = require('path'),
-  Promise = require('bluebird'),
-  fs = Promise.promisifyAll(require('fs-extra')),
-  spawn = require('child_process').spawn,
-  exec = Promise.promisify(require('child_process').exec),
-  del = require('del');
+const path = require('path');
+const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs-extra'));
+const {spawn, exec} = require('child_process');
+const del = require('del');
+
+const execPromised = Promise.promisify(exec);
 
 // -- first let's clean up
 del([
@@ -73,11 +73,11 @@ del([
  */
 function spawnAndPrint(command, arguments, options) {
 
-  var spawned = spawn(command, arguments, options);
+  const spawned = spawn(command, arguments, options);
   spawned.stdout.pipe(process.stdout);
   spawned.stderr.pipe(process.stderr);
 
-  return new Promise((resolve, reject) => spawned.on('exit', code => code != 0 ? reject(new Error('Error in child process')) : resolve()));
+  return new Promise((resolve, reject) => spawned.on('exit', (code) => (code !== 0 ? reject(new Error('Error in child process')) : resolve())));
 }
 
 function startBuildingDockerImage(gitInfo) {
@@ -91,8 +91,8 @@ function startBuildingDockerImage(gitInfo) {
 
 function getGitInformation() {
   return Promise.all([
-    exec('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
-    exec('git rev-parse --short HEAD', {cdw: __dirname})
+    execPromised('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
+    execPromised('git rev-parse --short HEAD', {cdw: __dirname})
   ])
     .spread((abbrev, short) => ({
       branch: abbrev.split('\n').join(''),

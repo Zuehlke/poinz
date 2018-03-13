@@ -16,8 +16,7 @@
     "test": "mocha --require babel-core/register test/unit/*",
     "pretest": "npm run lint",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
-    "start": "node lib/server.js",
-    "prestart": "npm run build"
+    "start": "node lib/server.js"
   },
   "dependencies": {
     "bluebird": "3.5.1",

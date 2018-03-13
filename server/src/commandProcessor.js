@@ -110,7 +110,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       .then(room => {
         if (!room && ctx.handler.existingRoom) {
           // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
-          throw new Error(`Command "${cmd.name}" only want\'s to get handled for an existing room. (${cmd.roomId})`);
+          throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room. (${cmd.roomId})`);
         }
 
         if (room) {

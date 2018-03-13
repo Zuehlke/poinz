@@ -145,7 +145,7 @@ describe('commandProcessor', () => {
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
-      'Command "setUsername" only want\'s to get handled for an existing room');
+      'Command "setUsername" only wants to get handled for an existing room');
   });
 
 

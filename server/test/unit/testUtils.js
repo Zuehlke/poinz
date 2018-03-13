@@ -47,7 +47,7 @@ function assertError(actualError, expectedMessage) {
  * @param {Immutable.Map} [initialRoom] If not set, room will not exists in store.
  */
 function newMockRoomsStore(initialRoom) {
-  var room = initialRoom;
+  let room = initialRoom;
   return {
     getRoomById: () => Promise.resolve(room),
     saveRoom: rm => {

@@ -12,7 +12,7 @@ const LOGGER = logging.getLogger('roomsStore');
 
 const POINZ_REDIS_KEY_PREFIX = 'poinz:';
 
-var redisClient;
+let redisClient;
 
 export default {
   init,

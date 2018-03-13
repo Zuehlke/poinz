@@ -16,7 +16,7 @@ describe('serverPerformance', () => {
     this.socket = socketIoClient(backendUrl);
     this.roomId = 'room_' + uuid();
 
-    var eventCount = 0;
+    let eventCount = 0;
 
     this.socket.on('event', event => {
       eventCount++;
@@ -89,9 +89,9 @@ describe('serverPerformance', () => {
 
     console.log(`--- Starting  ${testRunUniqueId} with "${commandName}",  until ${eventTotal} events are received --`);
 
-    var isDone = false;
-    var eventCount = 0;
-    var commandCount = 0;
+    let isDone = false;
+    let eventCount = 0;
+    let commandCount = 0;
 
     console.time(testRunUniqueId);
     send();

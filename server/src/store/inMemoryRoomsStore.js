@@ -6,7 +6,7 @@ import Immutable from 'immutable';
  *  Switch between persistent / non-persistent store is done in settings.js
  */
 
-var rooms = new Immutable.Map();
+let rooms = new Immutable.Map();
 
 export default {
   init,

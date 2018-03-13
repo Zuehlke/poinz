@@ -55,8 +55,8 @@ describe('sequenceQueue', ()=> {
 
     });
 
-    var jobCount = 0;
-    var handlingFirstJob = false;
+    let jobCount = 0;
+    let handlingFirstJob = false;
 
 
     queue.push({

@@ -48,7 +48,7 @@ describe('serverIntegration', () => {
       const commandId = uuid();
       const roomId = uuid();
 
-      var eventCount = 0;
+      let eventCount = 0;
 
       socket.on('event', msg => {
         assert(msg);
@@ -112,11 +112,11 @@ describe('serverIntegration', () => {
  */
 function httpGetJSON(options, callback) {
   const req = http.request(options, res => {
-    var output = '';
+    let output = '';
     res.setEncoding('utf8');
     res.on('data', chunk => output += chunk);
     res.on('end', () => {
-      var parsedBody;
+      let parsedBody;
 
       try {
         parsedBody = JSON.parse(output);

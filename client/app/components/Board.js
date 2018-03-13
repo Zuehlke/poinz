@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Backlog from '../components/Backlog';
 import UserMenu from '../components/UserMenu';
@@ -28,8 +29,8 @@ const Board = ({roomId, isAStorySelected}) => (
 );
 
 Board.propTypes = {
-  roomId: React.PropTypes.string,
-  isAStorySelected: React.PropTypes.bool
+  roomId: PropTypes.string,
+  isAStorySelected: PropTypes.bool
 };
 
 export default connect(

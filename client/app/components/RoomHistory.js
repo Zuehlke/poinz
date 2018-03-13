@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {joinRoom} from '../actions';
 
@@ -24,9 +25,9 @@ const RoomHistory = ({t, roomHistory, joinRoom}) => (
 );
 
 RoomHistory.propTypes = {
-  t: React.PropTypes.func,
-  roomHistory: React.PropTypes.instanceOf(Immutable.List),
-  joinRoom: React.PropTypes.func
+  t: PropTypes.func,
+  roomHistory: PropTypes.instanceOf(Immutable.List),
+  joinRoom: PropTypes.func
 };
 
 export default connect(

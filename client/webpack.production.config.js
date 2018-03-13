@@ -15,5 +15,6 @@ const definePlugin = new webpack.DefinePlugin({
 // override our default webpack config
 defaultConfig.plugins = [definePlugin];
 defaultConfig.devtool = 'eval';
+defaultConfig.mode = 'production';
 
 module.exports = defaultConfig;

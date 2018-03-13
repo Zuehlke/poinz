@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 import {changeStory, cancelEditStory} from '../actions';
 
@@ -60,10 +61,10 @@ const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeComman
 };
 
 StoryEditForm.propTypes = {
-  story: React.PropTypes.instanceOf(Immutable.Map),
-  changeStory: React.PropTypes.func,
-  cancelEditStory: React.PropTypes.func,
-  pendingChangeCommands: React.PropTypes.instanceOf(Immutable.Map)
+  story: PropTypes.instanceOf(Immutable.Map),
+  changeStory: PropTypes.func,
+  cancelEditStory: PropTypes.func,
+  pendingChangeCommands: PropTypes.instanceOf(Immutable.Map)
 };
 
 export default connect(
@@ -95,6 +96,6 @@ const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
 );
 
 StoryEditFormButtonGroup.propTypes = {
-  onSave: React.PropTypes.func,
-  onCancel: React.PropTypes.func
+  onSave: PropTypes.func,
+  onCancel: PropTypes.func
 };

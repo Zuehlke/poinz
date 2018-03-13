@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
+import PropTypes from 'prop-types';
 
 import {newEstimationRound, reveal} from '../actions';
 
@@ -64,11 +65,11 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 };
 
 Estimation.propTypes = {
-  t: React.PropTypes.func,
-  selectedStory: React.PropTypes.instanceOf(Immutable.Map),
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  newEstimationRound: React.PropTypes.func,
-  reveal: React.PropTypes.func
+  t: PropTypes.func,
+  selectedStory: PropTypes.instanceOf(Immutable.Map),
+  user: PropTypes.instanceOf(Immutable.Map),
+  newEstimationRound: PropTypes.func,
+  reveal: PropTypes.func
 };
 
 export default connect(

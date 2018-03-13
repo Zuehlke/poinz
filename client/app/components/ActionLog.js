@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 // we do not use momentjs, since we only need one function "format(..)" . momentjs is 15Kb, fecha is 2Kb
 // https://github.com/taylorhakes/fecha
@@ -34,9 +35,9 @@ const ActionLog = ({t, actionLog, logShown}) => {
 };
 
 ActionLog.propTypes = {
-  t: React.PropTypes.func,
-  logShown: React.PropTypes.bool,
-  actionLog: React.PropTypes.instanceOf(Immutable.List)
+  t: PropTypes.func,
+  logShown: PropTypes.bool,
+  actionLog: PropTypes.instanceOf(Immutable.List)
 };
 
 export default connect(

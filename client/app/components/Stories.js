@@ -1,6 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Story from './Story';
 import StoryEditForm from './StoryEditForm';
@@ -22,7 +23,7 @@ const Stories = ({stories}) => {
 };
 
 Stories.propTypes = {
-  stories: React.PropTypes.instanceOf(Immutable.Map)
+  stories: PropTypes.instanceOf(Immutable.Map)
 };
 
 export default connect(
@@ -42,6 +43,6 @@ const StoriesItem = ({story}) => {
 };
 
 StoriesItem.propTypes = {
-  story: React.PropTypes.instanceOf(Immutable.Map)
+  story: PropTypes.instanceOf(Immutable.Map)
 };
 

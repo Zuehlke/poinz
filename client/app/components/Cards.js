@@ -1,6 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Card from './Card';
 
@@ -22,7 +23,7 @@ const Cards = ({cardConfig})=> (
 );
 
 Cards.propTypes = {
-  cardConfig: React.PropTypes.instanceOf(Immutable.List)
+  cardConfig: PropTypes.instanceOf(Immutable.List)
 };
 
 export default connect(

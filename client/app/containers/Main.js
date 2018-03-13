@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import Room from './Room';
 import WhoAreYou from './WhoAreYou';
@@ -43,10 +44,10 @@ class Main extends React.Component {
 }
 
 Main.propTypes = {
-  joinRoom: React.PropTypes.func,
-  roomId: React.PropTypes.string,
-  users: React.PropTypes.instanceOf(Immutable.Map),
-  presetUsername: React.PropTypes.string
+  joinRoom: PropTypes.func,
+  roomId: PropTypes.string,
+  users: PropTypes.instanceOf(Immutable.Map),
+  presetUsername: PropTypes.string
 };
 
 export default connect(

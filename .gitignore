@@ -2,6 +2,7 @@ server/node_modules/
 server/lib/
 client/node_modules/
 client/dist/
+webpack-build-stats.json
 deploy/
 node_modules/
 .idea

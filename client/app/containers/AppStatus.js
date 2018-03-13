@@ -3,11 +3,11 @@ import fecha from 'fecha';
 import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import appConfig from '../services/appConfig';
 import {secondsToDaysHoursMinutes} from '../services/timeUtil';
 import TopBar from '../components/TopBar';
-
 import {fetchStatus} from '../actions';
 
 /**
@@ -81,8 +81,8 @@ class AppStatus extends React.Component {
 }
 
 AppStatus.propTypes = {
-  fetchStatus: React.PropTypes.func,
-  appStatus: React.PropTypes.instanceOf(Immutable.Map)
+  fetchStatus: PropTypes.func,
+  appStatus: PropTypes.instanceOf(Immutable.Map)
 };
 
 function roomComparator(rA, rB) {
@@ -118,5 +118,5 @@ const RoomItem = ({room}) => (
 );
 
 RoomItem.propTypes = {
-  room: React.PropTypes.instanceOf(Immutable.Map)
+  room: PropTypes.instanceOf(Immutable.Map)
 };

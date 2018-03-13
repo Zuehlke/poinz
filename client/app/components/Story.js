@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
+import PropTypes from 'prop-types';
 
 import {selectStory, editStory, deleteStory} from '../actions';
 
@@ -53,12 +54,12 @@ const Story = ({story, selectedStoryId, selectStory, editStory, deleteStory, pen
 };
 
 Story.propTypes = {
-  story: React.PropTypes.instanceOf(Immutable.Map),
-  selectedStoryId: React.PropTypes.string,
-  selectStory: React.PropTypes.func,
-  editStory: React.PropTypes.func,
-  deleteStory: React.PropTypes.func,
-  pendingSelectCommands: React.PropTypes.instanceOf(Immutable.Map)
+  story: PropTypes.instanceOf(Immutable.Map),
+  selectedStoryId: PropTypes.string,
+  selectStory: PropTypes.func,
+  editStory: PropTypes.func,
+  deleteStory: PropTypes.func,
+  pendingSelectCommands: PropTypes.instanceOf(Immutable.Map)
 };
 
 export default connect(

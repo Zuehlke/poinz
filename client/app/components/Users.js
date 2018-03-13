@@ -1,6 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import User from './User';
 
@@ -20,7 +21,7 @@ const Users = ({users}) => (
 );
 
 Users.propTypes = {
-  users: React.PropTypes.instanceOf(Immutable.Map)
+  users: PropTypes.instanceOf(Immutable.Map)
 };
 
 export default connect(

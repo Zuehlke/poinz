@@ -2,6 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
@@ -31,9 +32,9 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
 };
 
 Backlog.propTypes = {
-  stories: React.PropTypes.instanceOf(Immutable.Map),
-  backlogShown: React.PropTypes.bool,
-  isVisitor: React.PropTypes.bool
+  stories: PropTypes.instanceOf(Immutable.Map),
+  backlogShown: PropTypes.bool,
+  isVisitor: PropTypes.bool
 };
 
 export default connect(

@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
 
@@ -128,15 +129,15 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
 };
 
 UserMenu.propTypes = {
-  t: React.PropTypes.func,
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  userMenuShown: React.PropTypes.bool,
-  language: React.PropTypes.string,
-  setVisitor: React.PropTypes.func,
-  leaveRoom: React.PropTypes.func,
-  setLanguage: React.PropTypes.func,
-  setUsername: React.PropTypes.func,
-  setEmail: React.PropTypes.func
+  t: PropTypes.func,
+  user: PropTypes.instanceOf(Immutable.Map),
+  userMenuShown: PropTypes.bool,
+  language: PropTypes.string,
+  setVisitor: PropTypes.func,
+  leaveRoom: PropTypes.func,
+  setLanguage: PropTypes.func,
+  setUsername: PropTypes.func,
+  setEmail: PropTypes.func
 };
 
 export default connect(

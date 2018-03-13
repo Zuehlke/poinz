@@ -12,7 +12,7 @@
 # start the container locally in detached mode
 # docker run -p 3000:3000 -d xeronimus/poinz
 
-FROM node:6
+FROM node:9.8
 
 # Create app directory
 RUN mkdir -p /usr/src/poinz/public

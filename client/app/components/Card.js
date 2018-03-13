@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
 import {giveStoryEstimate} from '../actions';
 
@@ -27,11 +28,11 @@ const Card = ({card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryE
 };
 
 Card.propTypes = {
-  card: React.PropTypes.instanceOf(Immutable.Map),
-  selectedStoryId: React.PropTypes.string,
-  ownEstimate: React.PropTypes.number,
-  estimationWaiting: React.PropTypes.number,
-  giveStoryEstimate: React.PropTypes.func
+  card: PropTypes.instanceOf(Immutable.Map),
+  selectedStoryId: PropTypes.string,
+  ownEstimate: PropTypes.number,
+  estimationWaiting: PropTypes.number,
+  giveStoryEstimate: PropTypes.func
 };
 
 export default connect(

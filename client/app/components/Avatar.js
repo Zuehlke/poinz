@@ -1,6 +1,7 @@
 import React from 'react';
 import md5 from 'blueimp-md5';
 import Immutable from 'immutable';
+import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
 
@@ -21,8 +22,8 @@ const Avatar = ({user, index}) => {
 };
 
 Avatar.propTypes = {
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  index: React.PropTypes.number
+  user: PropTypes.instanceOf(Immutable.Map),
+  index: PropTypes.number
 };
 
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {joinRoom} from '../actions';
 
@@ -43,8 +44,8 @@ const RoomJoinForm = ({t, joinRoom}) => {
 };
 
 RoomJoinForm.propTypes = {
-  t: React.PropTypes.func,
-  joinRoom: React.PropTypes.func
+  t: PropTypes.func,
+  joinRoom: PropTypes.func
 };
 
 export default connect(

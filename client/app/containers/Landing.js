@@ -1,5 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import RoomJoinForm from '../components/RoomJoinForm';
 import RoomHistory from '../components/RoomHistory';
@@ -22,9 +23,9 @@ const Landing = ({t, roomHistoryLength, waitingForJoin})=> {
 };
 
 Landing.propTypes = {
-  t: React.PropTypes.func,
-  waitingForJoin: React.PropTypes.bool,
-  roomHistoryLength: React.PropTypes.number
+  t: PropTypes.func,
+  waitingForJoin: PropTypes.bool,
+  roomHistoryLength: PropTypes.number
 };
 
 export default connect(
@@ -42,5 +43,5 @@ const Loader = ({t}) => (
 );
 
 Loader.propTypes = {
-  t: React.PropTypes.func
+  t: PropTypes.func
 };

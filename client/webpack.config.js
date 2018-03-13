@@ -17,13 +17,18 @@ const definePlugin = new webpack.DefinePlugin({
 });
 
 module.exports = {
+  mode:'development',
+
   entry: './app/app.js',
+
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/assets/',
     filename: 'bundle.js'
   },
+
   devtool: 'source-map',
+
   module: {
     rules: [
       {
@@ -42,11 +47,6 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: 'babel-loader'
-      },
-      {
-        // load and parse json files
-        test: /\.json$/,
-        use: 'json-loader'
       },
       {
         // load images: if filesize is lower than limit -> data-url (base64), plain url and packed file otherwise
@@ -106,7 +106,9 @@ module.exports = {
       }
     ]
   },
+
   plugins: [definePlugin],
+
   devServer: {
     // enables support for HTML5 urls ( http://host:port/context/ROOM instead of http://host:port/context/#ROOM)
     // during dev serving

@@ -1,6 +1,7 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {setUsername} from '../actions';
 import GithubRibbon from '../components/GithubRibbon';
@@ -55,8 +56,8 @@ const WhoAreYou = ({t, setUsername}) => {
 };
 
 WhoAreYou.propTypes = {
-  t: React.PropTypes.func,
-  setUsername: React.PropTypes.func
+  t: PropTypes.func,
+  setUsername: PropTypes.func
 };
 
 export default connect(

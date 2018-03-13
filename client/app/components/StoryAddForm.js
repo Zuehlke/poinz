@@ -2,6 +2,7 @@ import React from 'react';
 import {bindActionCreators} from 'redux';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 import {addStory} from '../actions';
 
@@ -57,9 +58,9 @@ const StoryAddForm = ({t, addStory, pendingAddCommands}) => {
 };
 
 StoryAddForm.propTypes = {
-  t: React.PropTypes.func,
-  addStory: React.PropTypes.func,
-  pendingAddCommands: React.PropTypes.bool
+  t: PropTypes.func,
+  addStory: PropTypes.func,
+  pendingAddCommands: PropTypes.bool
 };
 
 export default connect(

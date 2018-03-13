@@ -1,6 +1,8 @@
 import React from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
+
 import {toggleBacklog, toggleUserMenu, toggleLog} from '../actions';
 
 const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog}) => {
@@ -29,11 +31,11 @@ const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog}) =>
 };
 
 TopBar.propTypes = {
-  roomId: React.PropTypes.string,
-  username: React.PropTypes.string,
-  toggleBacklog: React.PropTypes.func,
-  toggleUserMenu: React.PropTypes.func,
-  toggleLog: React.PropTypes.func
+  roomId: PropTypes.string,
+  username: PropTypes.string,
+  toggleBacklog: PropTypes.func,
+  toggleUserMenu: PropTypes.func,
+  toggleLog: PropTypes.func
 };
 
 export default connect(

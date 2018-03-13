@@ -1,11 +1,11 @@
 import React from 'react';
 import Immutable from 'immutable';
 import classnames from 'classnames';
-import {isUndefined} from 'lodash';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {kick} from '../actions';
+import PropTypes from 'prop-types';
 
+import {kick} from '../actions';
 import Avatar from './Avatar.js';
 
 const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
@@ -21,7 +21,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
   });
 
   const userEstimationValue = selectedStory && selectedStory.getIn(['estimations', user.get('id')]);
-  const userHasEstimation = !isUndefined(userEstimationValue); // value could be "0" which is falsy, check for undefined
+  const userHasEstimation = (userEstimationValue !== undefined); // value could be "0" which is falsy, check for undefined
 
   const estimationClasses = classnames('user-estimation', {
     'user-estimation-given': userHasEstimation,
@@ -73,12 +73,12 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
 };
 
 User.propTypes = {
-  user: React.PropTypes.instanceOf(Immutable.Map),
-  index: React.PropTypes.number,
-  selectedStory: React.PropTypes.instanceOf(Immutable.Map),
-  ownUserId: React.PropTypes.string,
-  cardConfig: React.PropTypes.instanceOf(Immutable.List),
-  kick: React.PropTypes.func
+  user: PropTypes.instanceOf(Immutable.Map),
+  index: PropTypes.number,
+  selectedStory: PropTypes.instanceOf(Immutable.Map),
+  ownUserId: PropTypes.string,
+  cardConfig: PropTypes.instanceOf(Immutable.List),
+  kick: PropTypes.func
 };
 
 export default connect(

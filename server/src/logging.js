@@ -1,24 +1,10 @@
 import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 import settings from './settings';
-import dailyRotateFileTransport from 'winston-daily-rotate-file';
 
-/**
- * configuration of root logger with two appenders.
- * see settings.js for loglevel and filename
- */
-winston.loggers.options.transports = [
-  new winston.transports.Console({
-    level: settings.log.console.level,
-    showLevel: false,
-    timestamp: true
-  }),
-  new dailyRotateFileTransport({
-    filename: settings.log.file.name,
-    level: settings.log.file.level,
-    json: false,
-    timestamp: true
-  })
-];
+module.exports = {
+  getLogger
+};
 
 /**
  * Returns a new Logger for your component
@@ -27,15 +13,41 @@ winston.loggers.options.transports = [
  * @returns {object} the new Logger
  */
 function getLogger(loggerName) {
-  const newLogger = winston.loggers.add(loggerName);
-  newLogger.filters.push((level, msg, meta) => {
-    return {
-      msg: `[${level}] ${loggerName}: ${msg}`,
-      meta: meta
-    };
+  const {format} = winston;
+
+  return winston.loggers.add(loggerName, {
+    transports: [
+      new winston.transports.Console({
+        level: 'debug',
+        handleExceptions: true,
+        format: format.combine(
+          format.colorize(),
+          format.timestamp(),
+          format.align(),
+          format.printf(
+            (info) =>
+              `${info.timestamp} ${info.level}: [${loggerName}] ${info.message}${
+                info.stack ? ' ' + info.stack : ''
+                }`
+          )
+        )
+      }),
+      new DailyRotateFile({
+        filename: settings.log.file.name,
+        level: settings.log.file.level,
+        timestamp: true,
+        handleExceptions: true,
+        format: format.combine(
+          format.timestamp(),
+          format.align(),
+          format.printf(
+            (info) =>
+              `${info.timestamp} ${info.level}: [${loggerName}] ${info.message}${
+                info.stack ? ' ' + info.stack : ''
+                }`
+          )
+        )
+      })
+    ]
   });
-
-  return newLogger;
 }
-
-export default {getLogger};

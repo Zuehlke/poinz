@@ -1,6 +1,6 @@
 {
   "name": "poinz-server",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -19,26 +19,26 @@
     "start": "node lib/server.js"
   },
   "dependencies": {
-    "bluebird": "3.5.1",
-    "express": "4.16.3",
-    "glob": "7.1.2",
-    "immutable": "3.8.2",
-    "lodash": "4.17.5",
-    "uuid": "3.2.1",
+    "bluebird": "3.5.3",
+    "express": "4.16.4",
+    "glob": "7.1.3",
+    "immutable": "4.0.0-rc.12",
+    "lodash": "4.17.11",
+    "uuid": "3.3.2",
     "redis": "2.8.0",
-    "socket.io": "2.0.4",
+    "socket.io": "2.2.0",
     "tv4": "1.3.0",
-    "winston": "2.3.1",
-    "winston-daily-rotate-file": "1.7.2"
+    "winston": "3.2.1",
+    "winston-daily-rotate-file": "3.8.0"
   },
   "devDependencies": {
     "babel-cli": "6.26.0",
-    "babel-core": "6.26.0",
-    "babel-preset-env": "1.6.1",
+    "babel-core": "6.26.3",
+    "babel-preset-env": "1.7.0",
     "babel-register": "6.26.0",
-    "eslint": "4.18.2",
-    "mocha": "5.0.4",
-    "socket.io-client": "2.0.4"
+    "eslint": "5.15.1",
+    "mocha": "6.0.2",
+    "socket.io-client": "2.2.0"
   },
   "engines": {
     "node": ">=6.9.1"

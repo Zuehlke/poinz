@@ -17,10 +17,10 @@
     "postinstall": "cd client/ && npm i && cd ../server && npm i"
   },
   "devDependencies": {
-    "del": "3.0.0",
-    "fs-extra": "5.0.0",
-    "npm-check-updates": "2.14.1",
-    "bluebird": "3.5.1"
+    "del": "4.0.0",
+    "fs-extra": "7.0.1",
+    "npm-check-updates": "2.15.0",
+    "bluebird": "3.5.3"
   },
   "engines": {
     "node": ">=9"

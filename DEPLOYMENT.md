@@ -16,7 +16,7 @@ PoinZ is currently deployed on a free-tier heroku dyno. (currently without persi
 
 * push tagged image to heroku registry ```$ docker push registry.heroku.com/poinz/web ```
 
-* release new image ```$ heroku container:release web -a poinz```
+* release new image ```$ heroku container:release web -a poinz``` (this will finally replace the currently running version on https://poinz.herokuapp.com)
 
 
 

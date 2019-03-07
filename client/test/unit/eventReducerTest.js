@@ -1,6 +1,5 @@
 import assert from 'assert';
 import Immutable from 'immutable';
-import _ from 'lodash';
 import eventReducer from '../../app/services/eventReducer';
 import {EVENT_ACTION_TYPES} from '../../app/actions/types';
 
@@ -14,7 +13,7 @@ import {EVENT_ACTION_TYPES} from '../../app/actions/types';
 describe('eventReducer', () => {
 
   before(() => {
-    global.localStorage = {setItem: _.noop, getItem: _.noop};
+    global.localStorage = {setItem: () => undefined, getItem: () => undefined};
     global.document = {};
   });
 

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 
 /**
  * A user gives his estimation for a certain story.
@@ -44,20 +43,22 @@ const giveStoryEstimateCommandHandler = {
 
 /**
  * checks if every user in the room (that is not marked as visitor and is not disconnected)  did estimate the current story
+ *
  * @param room
  * @param command
  * @returns {boolean}
  */
 function allValidUsersEstimated(room, command) {
-  const userIdsThatHaveEstimateGiven = room.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().toJS();
-  userIdsThatHaveEstimateGiven.push(command.payload.userId);
-  const allUserIdsThatCanEstimate = room.get('users')
+  let estimationCount = room.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().size; // estimations is a map of userId to estimation value. so userIds are unique
+  estimationCount += 1; // add the user that is now giving his estimation...
+
+  const possibleEstimationCount = room.get('users')
     .filter(usr => !usr.get('visitor'))
     .filter(usr => !usr.get('disconnected'))
-    .keySeq().toJS();
+    .keySeq().size;
 
-  return (userIdsThatHaveEstimateGiven.length <= allUserIdsThatCanEstimate.length
-  && _.isEqual(userIdsThatHaveEstimateGiven.sort(), allUserIdsThatCanEstimate.sort()));
+  return (estimationCount === possibleEstimationCount);
+
 }
 
 export default giveStoryEstimateCommandHandler;

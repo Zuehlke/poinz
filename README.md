@@ -63,6 +63,8 @@ Then you can open the app at http://localhost:9000/webpack-dev-server/
 Our build produces a docker image that contains nodejs and our poinz server.
 Make sure you have docker installed on your machine and your user is in the "docker" usergroup. (```$ sudo groupadd docker``` and ```$ sudo usermod -aG docker $USER```)
 
+*NOTE*: make sure to exit Zühlke VPN before running the build.
+
 ### 1. Install  npm dependencies
 
 We need all dependencies of the server and the client installed.

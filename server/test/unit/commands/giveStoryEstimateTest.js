@@ -32,7 +32,7 @@ describe('giveStoryEstimate', () => {
 
     this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
 
-    // prepare the state with a story (you could this directly on the state, but this is closer to reality)
+    // prepare the state with a story (you could do this directly on the state, but this is closer to reality)
     return this.processor({
       id: this.commandId,
       roomId: this.roomId,

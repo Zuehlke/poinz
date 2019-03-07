@@ -1,7 +1,6 @@
 import Promise from 'bluebird';
 import util from 'util';
 import assert from 'assert';
-import _ from 'lodash';
 
 export default {
   assertValidEvent,
@@ -15,7 +14,7 @@ function assertValidEvent(actualEvent, correlationId, roomId, userId, eventName)
   assert.equal(actualEvent.roomId, roomId);
   assert.equal(actualEvent.userId, userId);
   assert(actualEvent.payload);
-  assert(_.isPlainObject(actualEvent.payload));
+  assert(typeof actualEvent.payload === 'object');
 }
 
 /**

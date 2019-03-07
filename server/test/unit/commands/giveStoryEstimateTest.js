@@ -84,6 +84,50 @@ describe('giveStoryEstimate', () => {
 
   });
 
+  it('Should not produce revealed event if user changes his estimation', function () {
+    return this.processor({
+      id: this.commandId,
+      roomId: this.roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: this.storyId,
+        userId: this.userId,
+        value: 2
+      }
+    }, this.userId)
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 1);
+
+        const storyEstimatgeGivenEvent = producedEvents[0];
+        testUtils.assertValidEvent(storyEstimatgeGivenEvent, this.commandId, this.roomId, this.userId, 'storyEstimateGiven');
+        assert.equal(storyEstimatgeGivenEvent.payload.userId, this.userId);
+        assert.equal(storyEstimatgeGivenEvent.payload.storyId, this.storyId);
+        assert.equal(storyEstimatgeGivenEvent.payload.value, 2);
+      })
+      .then(() => this.processor({
+        id: this.commandId,
+        roomId: this.roomId,
+        name: 'giveStoryEstimate',
+        payload: {
+          storyId: this.storyId,
+          userId: this.userId,
+          value: 5
+        }
+      }, this.userId))
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 1);
+
+        const storyEstimatgeGivenEvent = producedEvents[0];
+        testUtils.assertValidEvent(storyEstimatgeGivenEvent, this.commandId, this.roomId, this.userId, 'storyEstimateGiven');
+        assert.equal(storyEstimatgeGivenEvent.payload.userId, this.userId);
+        assert.equal(storyEstimatgeGivenEvent.payload.storyId, this.storyId);
+        assert.equal(storyEstimatgeGivenEvent.payload.value, 5);
+      });
+
+  });
+
   it('Should store value', function () {
     return this.processor({
       id: this.commandId,

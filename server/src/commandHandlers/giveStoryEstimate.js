@@ -1,4 +1,3 @@
-
 /**
  * A user gives his estimation for a certain story.
  * Users may only give estimations for the currently selected story.
@@ -30,7 +29,7 @@ const giveStoryEstimateCommandHandler = {
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
-    if (allValidUsersEstimated(room, command)) {
+    if (allValidUsersEstimated(room, command.payload.storyId, command.payload.userId)) {
 
       room.applyEvent('revealed', {
         storyId: command.payload.storyId,
@@ -45,12 +44,16 @@ const giveStoryEstimateCommandHandler = {
  * checks if every user in the room (that is not marked as visitor and is not disconnected)  did estimate the current story
  *
  * @param room
- * @param command
+ * @param storyId
+ * @param userId
  * @returns {boolean}
  */
-function allValidUsersEstimated(room, command) {
-  let estimationCount = room.getIn(['stories', command.payload.storyId, 'estimations']).keySeq().size; // estimations is a map of userId to estimation value. so userIds are unique
-  estimationCount += 1; // add the user that is now giving his estimation...
+function allValidUsersEstimated(room, storyId, userId) {
+
+  let estimations = room.getIn(['stories', storyId, 'estimations']);
+  // if the user did estimate before, his userId is not added to the map...
+  estimations = estimations.set(userId, -1); // the estimation-value does not matter for counting...
+  let estimationCount = estimations.size;
 
   const possibleEstimationCount = room.get('users')
     .filter(usr => !usr.get('visitor'))

@@ -11,6 +11,7 @@
     "url": "https://github.com/Zuehlke/poinz.git"
   },
   "scripts": {
+    "start": "npm run serve",
     "lint": "eslint 'app/**/*.js' 'test/**/*.js'",
     "test": "mocha --require @babel/register 'test/unit/*'",
     "pretest": "npm run lint",

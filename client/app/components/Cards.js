@@ -10,7 +10,7 @@ import Card from './Card';
  * (number of available cards and their value is set in cardConfig)
  */
 const Cards = ({cardConfig})=> (
-  <div className="pure-g cards">
+  <div className="cards">
     {
       cardConfig.map((config, index) => (
         <Card

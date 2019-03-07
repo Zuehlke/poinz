@@ -704,7 +704,14 @@ $backlogWidth = 300px
 
     .cards {
 
+      display flex
+      flex-wrap wrap
+
+
       button.card, button.card:focus {
+        min-width 75px
+        flex-grow 1
+        display block
         border none
         outline none
         background transparent

@@ -112,14 +112,20 @@ function onSocketDisconnect(socket) {
     return;
   }
 
-  handleIncomingCommand(socket, {
-    id: uuid(),
-    roomId: roomId,
-    name: 'leaveRoom',
-    payload: {
-      userId,
-      connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
-    }
-  });
+  if(Object.values(socketToUserIdMap).filter(socketUserId => socketUserId === userId).length === 1) {
+    handleIncomingCommand(socket, {
+      id: uuid(),
+      roomId: roomId,
+      name: 'leaveRoom',
+      payload: {
+        userId,
+        connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
+      }
+    });
+  } else {
+    LOGGER.debug(`User userId=${userId} disconnected from room roomId=${roomId}, but there are other connections open for this user`);
+  }
 
+  delete socketToRoomMap[socket.id];
+  delete socketToUserIdMap[socket.id];
 }

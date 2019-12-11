@@ -53,7 +53,7 @@ function allValidUsersEstimated(room, storyId, userId) {
   let estimations = room.getIn(['stories', storyId, 'estimations']);
   // if the user did estimate before, his userId is not added to the map...
   estimations = estimations.set(userId, -1); // the estimation-value does not matter for counting...
-  let estimationCount = estimations.size;
+  const estimationCount = estimations.size;
 
   const possibleEstimationCount = room.get('users')
     .filter(usr => !usr.get('visitor'))

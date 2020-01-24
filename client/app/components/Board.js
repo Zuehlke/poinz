@@ -35,7 +35,7 @@ Board.propTypes = {
 
 export default connect(
   state => ({
-    roomId: state.get('roomId'),
-    isAStorySelected: !!state.getIn(['stories', state.get('selectedStory')])
+    roomId: state.roomId,
+    isAStorySelected: !!state.stories[state.selectedStory]
   })
 )(Board);

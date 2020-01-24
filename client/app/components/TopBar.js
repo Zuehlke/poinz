@@ -40,8 +40,8 @@ TopBar.propTypes = {
 
 export default connect(
   state => ({
-    roomId: state.get('roomId'),
-    username: state.getIn(['users', state.get('userId'), 'username']) || '-'
+    roomId: state.roomId,
+    username: state.users[state.userId] ? state.users[state.userId].username : '-'
   }),
   dispatch => bindActionCreators({toggleBacklog, toggleUserMenu, toggleLog}, dispatch)
 )(TopBar);

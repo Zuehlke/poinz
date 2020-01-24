@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
@@ -13,7 +12,7 @@ import StoryAddForm from './StoryAddForm';
  */
 const Backlog = ({stories, backlogShown, isVisitor}) => {
 
-  const hasStories = stories && !!stories.size;
+  const hasStories = stories && !!Object.keys(stories).length;
 
   const backlogClasses = classnames('backlog', {
     'backlog-active': backlogShown // if true, show menu also in small screens (menu toggle)
@@ -22,9 +21,9 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
   return (
     <div className={backlogClasses}>
 
-      {!isVisitor && <StoryAddForm />}
+      {!isVisitor && <StoryAddForm/>}
 
-      {hasStories && <Stories />}
+      {hasStories && <Stories/>}
       {!hasStories && <div className="story-hint">There are currently no stories in the estimation backlog...</div>}
 
     </div>
@@ -32,15 +31,15 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
 };
 
 Backlog.propTypes = {
-  stories: PropTypes.instanceOf(Immutable.Map),
+  stories: PropTypes.object,
   backlogShown: PropTypes.bool,
   isVisitor: PropTypes.bool
 };
 
 export default connect(
   state => ({
-    stories: state.get('stories'),
-    backlogShown: state.get('backlogShown'),
-    isVisitor: state.getIn(['users', state.get('userId'), 'visitor'])
+    stories: state.stories,
+    backlogShown: state.backlogShown,
+    isVisitor: state.users[state.userId] ? state.users[state.userId].visitor : false
   })
 )(Backlog);

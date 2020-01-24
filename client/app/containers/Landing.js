@@ -30,9 +30,9 @@ Landing.propTypes = {
 
 export default connect(
   state => ({
-    t: state.get('translator'),
-    roomHistoryLength: state.get('roomHistory').size,
-    waitingForJoin: !!state.get('pendingCommands').find(cmd => cmd.name === 'joinRoom')
+    t: state.translator,
+    roomHistoryLength: state.roomHistory.length,
+    waitingForJoin: !!Object.values(state.pendingCommands).find(cmd => cmd.name === 'joinRoom')
   })
 )(Landing);
 

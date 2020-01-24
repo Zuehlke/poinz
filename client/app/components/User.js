@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import classnames from 'classnames';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -10,17 +9,17 @@ import Avatar from './Avatar.js';
 
 const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
 
-  const isVisitor = user.get('visitor');
-  const isDisconnected = user.get('disconnected');
-  const revealed = selectedStory && selectedStory.get('revealed');
+  const isVisitor = user.visitor;
+  const isDisconnected = user.disconnected;
+  const revealed = selectedStory && selectedStory.revealed;
 
-  const classes = classnames('user user-' + user.get('id'), {
-    'user-own': user.get('id') === ownUserId,
+  const classes = classnames('user user-' + user.id, {
+    'user-own': user.id === ownUserId,
     'user-visitor': isVisitor,
     'user-disconnected': isDisconnected
   });
 
-  const userEstimationValue = selectedStory && selectedStory.getIn(['estimations', user.get('id')]);
+  const userEstimationValue = selectedStory && selectedStory.estimations[user.id];
   const userHasEstimation = (userEstimationValue !== undefined); // value could be "0" which is falsy, check for undefined
 
   const estimationClasses = classnames('user-estimation', {
@@ -28,11 +27,11 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
     'revealed': revealed
   });
 
-  const matchingCardConfig = cardConfig.find(cc => cc.get('value') === userEstimationValue);
-  const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.get('label') : 'Z';
+  const matchingCardConfig = cardConfig.find(cc => cc.value === userEstimationValue);
+  const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
 
-  const customCardStyle = userHasEstimation && revealed && matchingCardConfig.get('color') ? {
-    background: matchingCardConfig.get('color'),
+  const customCardStyle = userHasEstimation && revealed && matchingCardConfig.color ? {
+    background: matchingCardConfig.color,
     color: 'white'
   } : {};
 
@@ -49,7 +48,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
       }
 
       <Avatar user={user} index={index}/>
-      <div className="user-name">{user.get('username') || '-'}</div>
+      <div className="user-name">{user.username || '-'}</div>
 
       {
         isDisconnected &&
@@ -66,26 +65,26 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
   function kickUser() {
     if (isDisconnected) {
       // is also verified by backend precondition. but we can already test here in order to prevent precondition error
-      kick(user.get('id'));
+      kick(user.id);
     }
   }
 
 };
 
 User.propTypes = {
-  user: PropTypes.instanceOf(Immutable.Map),
+  user: PropTypes.object,
   index: PropTypes.number,
-  selectedStory: PropTypes.instanceOf(Immutable.Map),
+  selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
-  cardConfig: PropTypes.instanceOf(Immutable.List),
+  cardConfig: PropTypes.array,
   kick: PropTypes.func
 };
 
 export default connect(
   state => ({
-    cardConfig: state.get('cardConfig'),
-    ownUserId: state.get('userId'),
-    selectedStory: state.getIn(['stories', state.get('selectedStory')])
+    cardConfig: state.cardConfig,
+    ownUserId: state.userId,
+    selectedStory: state.stories[state.selectedStory]
   }),
   dispatch => bindActionCreators({kick}, dispatch)
 )(User);

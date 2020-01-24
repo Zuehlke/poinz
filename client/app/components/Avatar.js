@@ -1,14 +1,12 @@
 import React from 'react';
 import md5 from 'blueimp-md5';
-import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
 
 const Avatar = ({user, index}) => {
 
-  const email = user.get('email');
-  const avatarImageSource = email ? createGravatarUrl(email) : avatarIcons[index % avatarIcons.length];
+  const avatarImageSource = user.email ? createGravatarUrl(user.email) : avatarIcons[index % avatarIcons.length];
 
   return (
     <img className="avatar" src={avatarImageSource}/>
@@ -22,7 +20,7 @@ const Avatar = ({user, index}) => {
 };
 
 Avatar.propTypes = {
-  user: PropTypes.instanceOf(Immutable.Map),
+  user: PropTypes.object,
   index: PropTypes.number
 };
 

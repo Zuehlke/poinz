@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import log from 'loglevel';
 
 import clientSettingsStore from '../store/clientSettingsStore';
@@ -19,76 +18,74 @@ import {
 const LOGGER = log.getLogger('clientActionReducer');
 
 /**
- * The event reducer handles backend-event actions.
- * These are equivalent to the event handlers in the backend as they modify the room state.
+ *  The client Action Reducer handles actions triggered by the client (view state, etc.)
  *
- * @param {Immutable.Map} state
+ * @param {object} state
  * @param {object} action
- * @returns {Immutable.Map} the modified state
+ * @returns {object} the modified state
  */
 export default function clientActionReducer(state, action) {
   switch (action.type) {
-    case COMMAND_SENT:
-    {
+    case COMMAND_SENT: {
       // for every command we send, let's store it in our client state as "pending command". various view components
       // are then able to display "spinners" when waiting for the corresponding backend event.
       // limitations:
       // - the first event produced by a command will again remove (consider that the backend might produce N events for a single command that is processed)
       // - if the backend does not produce an event for a command, the command will remain in the client state.
-      return state.setIn(['pendingCommands', action.command.id], action.command);
+
+      const modifiedPendingCommands = {...state.pendingCommands, [action.command.id]: action.command};
+      return {...state, pendingCommands: modifiedPendingCommands};
     }
-    case EVENT_RECEIVED:
-    {
+    case EVENT_RECEIVED: {
       // for every event that we receive, we remove the corresponding command if any. (i.e. the command that triggered that event in the backend)
-      return state.removeIn(['pendingCommands', action.correlationId]);
+
+      delete state.pendingCommands[action.correlationId];
+      const modifiedPendingCommands = {...state.pendingCommands};
+      return {...state, pendingCommands: modifiedPendingCommands};
     }
-    case SET_ROOMID:
-    {
-      return state.set('roomId', action.roomId);
+    case SET_ROOMID: {
+      return {...state, roomId: action.roomId};
     }
-    case TOGGLE_BACKLOG:
-    {
-      return state.set('backlogShown', !state.get('backlogShown'));
+    case TOGGLE_BACKLOG: {
+      return {...state, backlogShown: !state.backlogShown};
     }
-    case TOGGLE_USER_MENU:
-    {
-      const showMenu = !state.get('userMenuShown');
-      const modifiedState = state.set('userMenuShown', showMenu);
+    case TOGGLE_USER_MENU: {
+
+      const showMenu = !state.userMenuShown;
 
       if (showMenu) {
-        return modifiedState.set('logShown', false);
+        return {...state, userMenuShown: true, logShown: false};
       } else {
-        return modifiedState;
+        return {...state, userMenuShown: false};
       }
     }
-    case TOGGLE_LOG:
-    {
-      const showLog = !state.get('logShown');
-      const modifiedState = state.set('logShown', showLog);
+    case TOGGLE_LOG: {
+      const showLog = !state.logShown;
 
       if (showLog) {
-        return modifiedState.set('userMenuShown', false);
+        return {...state, logShown: true, userMenuShown: false};
       } else {
-        return modifiedState;
+        return {...state, logShown: false};
       }
     }
-    case EDIT_STORY:
-    {
-      return state.setIn(['stories', action.storyId, 'editMode'], true);
+    case EDIT_STORY: {
+      const modifiedStories = {...state.stories, [action.storyId]: {...state.stories[action.storyId], editMode: true}};
+      return {...state, stories: modifiedStories};
     }
-    case CANCEL_EDIT_STORY:
-    {
-      return state.setIn(['stories', action.storyId, 'editMode'], false);
+    case CANCEL_EDIT_STORY: {
+      const modifiedStories = {...state.stories, [action.storyId]: {...state.stories[action.storyId], editMode: false}};
+      return {...state, stories: modifiedStories};
     }
-    case STATUS_FETCHED:
-    {
-      return state.set('appStatus', Immutable.fromJS(action.status));
+    case STATUS_FETCHED: {
+      return {
+        ...state,
+        appStatus: action.status
+      };
     }
-    case SET_LANGUAGE:
-    {
+    case SET_LANGUAGE: {
       const language = action.language;
       clientSettingsStore.setPresetLanguage(language);
-      return state.set('language', language).set('translator', key => translator(key, language));
+      return {...state, language, translator: (key) => translator(key, language)};
     }
     default :
       LOGGER.warn('unknown action', action);

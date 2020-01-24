@@ -8,7 +8,7 @@ import clientActionReducer from './clientActionReducer';
  *
  * @param state
  * @param {object} action the redux action
- * @returns {Immutable.Map} the modified state
+ * @returns {object} the modified state
  */
 export default function rootReducer(state = {}, action = {}) {
   if (action.event) {

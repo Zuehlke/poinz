@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 
 import clientSettingsStore from './clientSettingsStore';
 import translator from '../services/translator';
@@ -10,7 +9,7 @@ const userLanguage = clientSettingsStore.getPresetLanguage();
 /**
  * The initial state that is loaded into the redux store on (client) application load.
  */
-const INITIAL_STATE = Immutable.fromJS({
+const INITIAL_STATE = {
 // TODO: evaluate if creator of room must be able to choose card values. store creator's selection to local storage and use as default
   cardConfig: [
     {label: '?', value: -2, color: '#bdbfbf'},
@@ -34,6 +33,6 @@ const INITIAL_STATE = Immutable.fromJS({
   pendingCommands: {}, // will contain pending commands (commands for which no event is received yet)
   language: userLanguage || DEFAULT_LANGUAGE,
   translator: key => translator(key, userLanguage || DEFAULT_LANGUAGE)
-});
+};
 
 export default INITIAL_STATE;

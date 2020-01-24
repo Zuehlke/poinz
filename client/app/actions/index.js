@@ -1,5 +1,5 @@
 import axios from 'axios';
-import createHistory from 'history/createBrowserHistory';
+import {createBrowserHistory} from 'history';
 import hub from '../services/hub';
 
 import {
@@ -13,7 +13,7 @@ import {
   SET_LANGUAGE
 } from '../actions/types';
 
-let history = createHistory();
+const history = createBrowserHistory();
 
 /**
  * Our actions contain our client-side business logic. (when to send which command).
@@ -29,14 +29,14 @@ export const joinRoom = roomId => (dispatch, getState) => {
   const joinCommandPayload = {};
   const state = getState();
 
-  if (state.get('presetUserId')) {
-    joinCommandPayload.userId = state.get('presetUserId');
+  if (state.presetUserId) {
+    joinCommandPayload.userId = state.presetUserId;
   }
-  if (state.get('presetUsername')) {
-    joinCommandPayload.username = state.get('presetUsername');
+  if (state.presetUsername) {
+    joinCommandPayload.username = state.presetUsername;
   }
-  if (state.get('presetEmail')) {
-    joinCommandPayload.email = state.get('presetEmail');
+  if (state.presetEmail) {
+    joinCommandPayload.email = state.presetEmail;
   }
 
   /**
@@ -61,7 +61,7 @@ export const addStory = (storyTitle, storyDescription) => (dispatch, getState) =
   const state = getState();
   hub.sendCommand({
     name: 'addStory',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       title: storyTitle,
       description: storyDescription
@@ -71,46 +71,45 @@ export const addStory = (storyTitle, storyDescription) => (dispatch, getState) =
 
 export const selectStory = storyId => (dispatch, getState) => {
   const state = getState();
-  if (state.get('selectedStory') === storyId) {
+  if (state.selectedStory === storyId) {
     return;
   }
 
   hub.sendCommand({
     name: 'selectStory',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       storyId
     }
   }, dispatch);
 };
 
-export const giveStoryEstimate = (storyId, value) => (dispatch, getState)=> {
+export const giveStoryEstimate = (storyId, value) => (dispatch, getState) => {
   const state = getState();
 
   const command = {
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       value: value,
-      userId: state.get('userId'),
+      userId: state.userId,
       storyId: storyId
     }
   };
 
-  if (state.getIn(['stories', storyId, 'estimations', state.get('userId')]) === value) {
+  if (state.stories[storyId] && state.stories[storyId].estimations[state.userId] === value) {
     command.name = 'clearStoryEstimate';
   } else {
     command.name = 'giveStoryEstimate';
-    command.payload.value = value;
   }
 
   hub.sendCommand(command, dispatch);
 };
 
-export const newEstimationRound = storyId => (dispatch, getState)=> {
+export const newEstimationRound = storyId => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'newEstimationRound',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       storyId: storyId
     }
@@ -121,7 +120,7 @@ export const reveal = storyId => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'reveal',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       storyId: storyId
     }
@@ -132,9 +131,9 @@ export const setUsername = username => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'setUsername',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
-      userId: state.get('userId'),
+      userId: state.userId,
       username: username
     }
   }, dispatch);
@@ -144,9 +143,9 @@ export const setEmail = email => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'setEmail',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
-      userId: state.get('userId'),
+      userId: state.userId,
       email: email
     }
   }, dispatch);
@@ -156,10 +155,10 @@ export const setVisitor = isVisitor => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'setVisitor',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       isVisitor,
-      userId: state.get('userId')
+      userId: state.userId
     }
   }, dispatch);
 };
@@ -168,7 +167,7 @@ export const kick = userId => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'kick',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       userId
     }
@@ -182,9 +181,9 @@ export const leaveRoom = () => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'leaveRoom',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
-      userId: state.get('userId')
+      userId: state.userId
     }
   }, dispatch);
 };
@@ -193,7 +192,7 @@ export const changeStory = (storyId, title, description) => (dispatch, getState)
   const state = getState();
   hub.sendCommand({
     name: 'changeStory',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       storyId,
       title,
@@ -206,7 +205,7 @@ export const deleteStory = (storyId, title) => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand({
     name: 'deleteStory',
-    roomId: state.get('roomId'),
+    roomId: state.roomId,
     payload: {
       storyId,
       title

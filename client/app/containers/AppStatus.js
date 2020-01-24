@@ -1,6 +1,5 @@
 import React from 'react';
 import fecha from 'fecha';
-import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -32,19 +31,19 @@ class AppStatus extends React.Component {
       return null;
     }
 
-    const uptime = secondsToDaysHoursMinutes(appStatus.get('uptime'));
+    const uptime = secondsToDaysHoursMinutes(appStatus.uptime);
 
-    const sortedActiveRooms = appStatus.get('rooms')
-      .filter(room => room.get('userCount') > room.get('userCountDisconnected'))
+    const sortedActiveRooms = appStatus.rooms
+      .filter(room => room.userCount > room.userCountDisconnected)
       .sort(roomComparator);
 
-    const sortedInActiveRooms = appStatus.get('rooms')
-      .filter(room => room.get('userCount') <= room.get('userCountDisconnected'))
+    const sortedInActiveRooms = appStatus.rooms
+      .filter(room => room.userCount <= room.userCountDisconnected)
       .sort(roomComparator);
 
     return (
       <div className="app-status">
-        <TopBar />
+        <TopBar/>
 
         <button className="pure-button pure-button-primary" onClick={fetchStatus}>
           <i className="fa fa-refresh"></i>
@@ -59,18 +58,18 @@ class AppStatus extends React.Component {
           Uptime: {uptime}
         </p>
         <p>
-          Total rooms: {appStatus.get('roomCount')}
+          Total rooms: {appStatus.roomCount}
         </p>
 
         <h5>Active Rooms</h5>
         <ul className="rooms rooms-active">
-          <TableHeaders />
+          <TableHeaders/>
           {sortedActiveRooms.map((room, index) => <RoomItem key={index} index={index} room={room}/>)}
         </ul>
 
         <h5>Inactive Rooms</h5>
         <ul className="rooms rooms-active">
-          <TableHeaders />
+          <TableHeaders/>
           {sortedInActiveRooms.map((room, index) => <RoomItem key={index} room={room}/>)}
         </ul>
 
@@ -82,18 +81,18 @@ class AppStatus extends React.Component {
 
 AppStatus.propTypes = {
   fetchStatus: PropTypes.func,
-  appStatus: PropTypes.instanceOf(Immutable.Map)
+  appStatus: PropTypes.object
 };
 
 function roomComparator(rA, rB) {
-  const roomOneTimestamp = rA.get('lastActivity');
-  const roomTwoTimestamp = rB.get('lastActivity');
+  const roomOneTimestamp = rA.lastActivity;
+  const roomTwoTimestamp = rB.lastActivity;
   return (roomOneTimestamp < roomTwoTimestamp) ? 1 : roomTwoTimestamp < roomOneTimestamp ? -1 : 0;
 }
 
 export default connect(
   state => ({
-    appStatus: state.get('appStatus')
+    appStatus: state.appStatus
   }),
   dispatch => bindActionCreators({fetchStatus}, dispatch)
 )(AppStatus);
@@ -110,13 +109,13 @@ const TableHeaders = () => (
 
 const RoomItem = ({room}) => (
   <li>
-    <div>{room.get('userCount')}</div>
-    <div>{room.get('userCountDisconnected')}</div>
-    <div>{fecha.format(room.get('created'), 'DD.MM.YYYY HH:mm')}</div>
-    <div>{fecha.format(room.get('lastActivity'), 'DD.MM.YYYY HH:mm')}</div>
+    <div>{room.userCount}</div>
+    <div>{room.userCountDisconnected}</div>
+    <div>{fecha.format(room.created, 'DD.MM.YYYY HH:mm')}</div>
+    <div>{fecha.format(room.lastActivity, 'DD.MM.YYYY HH:mm')}</div>
   </li>
 );
 
 RoomItem.propTypes = {
-  room: PropTypes.instanceOf(Immutable.Map)
+  room: PropTypes.object
 };

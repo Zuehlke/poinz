@@ -13,7 +13,7 @@
   "scripts": {
     "start": "npm run serve",
     "lint": "eslint 'app/**/*.js' 'test/**/*.js'",
-    "test": "mocha --require @babel/register 'test/unit/*'",
+    "test": "mocha --require @babel/register --require 'test/unit/setup.js' 'test/unit/*Test.js'",
     "pretest": "npm run lint",
     "teste2e": "protractor protractor.conf.js",
     "serve": "webpack-dev-server --progress --colors --port 9000",
@@ -36,7 +36,6 @@
     "file-loader": "5.0.2",
     "font-awesome": "4.7.0",
     "history": "4.10.1",
-    "immutable": "4.0.0-rc.12",
     "loglevel": "1.6.6",
     "mocha": "6.2.2",
     "protractor": "5.4.2",

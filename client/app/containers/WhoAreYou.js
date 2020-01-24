@@ -62,7 +62,7 @@ WhoAreYou.propTypes = {
 
 export default connect(
   state => ({
-    t: state.get('translator')
+    t: state.translator
   }),
   dispatch => bindActionCreators({setUsername}, dispatch)
 )(WhoAreYou);

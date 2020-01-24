@@ -49,6 +49,6 @@ RoomJoinForm.propTypes = {
 };
 
 export default connect(
-  state => ({t: state.get('translator')}),
+  state => ({t: state.translator}),
   dispatch => bindActionCreators({joinRoom}, dispatch)
 )(RoomJoinForm);

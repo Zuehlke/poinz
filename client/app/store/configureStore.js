@@ -1,4 +1,4 @@
-import {createStore, applyMiddleware} from 'redux';
+import {createStore, applyMiddleware, compose} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import log from 'loglevel';
 
@@ -14,26 +14,25 @@ const LOGGER = log.getLogger('store');
 const loggerMiddleware = store => next => action => {
   LOGGER.debug('reducing action', action);
   let result = next(action);
-  LOGGER.debug('modified state ', store.getState().toJS());
+  LOGGER.debug('modified state ', store.getState());
   return result;
 };
 
 /**
  * configures and sets up the redux store.
  *
- * @param {Immutable.Map} [initialState]
- * @param {object} the redux store
+ * @param {object} [initialState]
  */
 export default function configureStore(initialState) {
 
-  let store = createStore(
-    rootReducer,
-    initialState,
+  const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
+  const store = createStore(rootReducer, initialState, composeEnhancers(
     applyMiddleware(
       thunkMiddleware,
       loggerMiddleware
     )
-  );
+  ));
 
   /**
    * Backend events that are received by the hub are dispatched to our redux store

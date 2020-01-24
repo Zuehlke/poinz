@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -29,7 +28,7 @@ class Main extends React.Component {
   render() {
 
     const {roomId, users, presetUsername} = this.props;
-    const hasRoomIdAndUsers = roomId && users && users.size > 0;
+    const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0;
 
     if (roomId === 'poinzstatus') {
       return <AppStatus />;
@@ -46,15 +45,15 @@ class Main extends React.Component {
 Main.propTypes = {
   joinRoom: PropTypes.func,
   roomId: PropTypes.string,
-  users: PropTypes.instanceOf(Immutable.Map),
+  users: PropTypes.object,
   presetUsername: PropTypes.string
 };
 
 export default connect(
   state => ({
-    roomId: state.get('roomId'),
-    users: state.get('users'),
-    presetUsername: state.get('presetUsername')
+    roomId: state.roomId,
+    users: state.users,
+    presetUsername: state.presetUsername
   }),
   dispatch => bindActionCreators({joinRoom}, dispatch)
 )(Main);

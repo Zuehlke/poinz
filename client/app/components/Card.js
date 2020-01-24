@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
@@ -13,22 +12,22 @@ import {giveStoryEstimate} from '../actions';
 const Card = ({card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate}) => {
 
   const cardClasses = classnames('card clickable', {
-    'card-selected': card.get('value') === ownEstimate
+    'card-selected': card.value === ownEstimate
   });
   const cardInnerClasses = classnames('card-inner', {
-    'waiting': card.get('value') === estimationWaiting
+    'waiting': card.value === estimationWaiting
   });
 
-  const customCardStyle = card.get('color') ? {background: card.get('color'), color: 'white'} : {};
+  const customCardStyle = card.color ? {background: card.color, color: 'white'} : {};
   return (
-    <button className={cardClasses} onClick={() => giveStoryEstimate(selectedStoryId, card.get('value'))}>
-      <div className={cardInnerClasses} style={customCardStyle}>{card.get('label')}</div>
+    <button className={cardClasses} onClick={() => giveStoryEstimate(selectedStoryId, card.value)}>
+      <div className={cardInnerClasses} style={customCardStyle}>{card.label}</div>
     </button>
   );
 };
 
 Card.propTypes = {
-  card: PropTypes.instanceOf(Immutable.Map),
+  card: PropTypes.object,
   selectedStoryId: PropTypes.string,
   ownEstimate: PropTypes.number,
   estimationWaiting: PropTypes.number,
@@ -37,10 +36,10 @@ Card.propTypes = {
 
 export default connect(
   state => {
-    const pendingEstimationCommand = state.get('pendingCommands').find(cmd => cmd.name === 'giveStoryEstimate');
+    const pendingEstimationCommand = Object.values(state.pendingCommands).find(cmd => cmd.name === 'giveStoryEstimate');
     return {
-      selectedStoryId: state.get('selectedStory'),
-      ownEstimate: state.getIn(['stories', state.get('selectedStory'), 'estimations', state.get('userId')]),
+      selectedStoryId: state.selectedStory,
+      ownEstimate:  state.stories[state.selectedStory].estimations[state.userId],
       estimationWaiting: pendingEstimationCommand ? pendingEstimationCommand.payload.value : undefined
     };
   },

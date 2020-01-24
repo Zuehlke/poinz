@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -25,7 +24,7 @@ const ActionLog = ({t, actionLog, logShown}) => {
         <ul>
           {actionLog.map((entry, index) => (
             <li key={`logline_${index}`}>
-              {fecha.format(entry.get('tstamp'), 'HH:mm')} {entry.get('message')}
+              {fecha.format(entry.tstamp, 'HH:mm')} {entry.message}
             </li>
           ))}
         </ul>
@@ -37,13 +36,13 @@ const ActionLog = ({t, actionLog, logShown}) => {
 ActionLog.propTypes = {
   t: PropTypes.func,
   logShown: PropTypes.bool,
-  actionLog: PropTypes.instanceOf(Immutable.List)
+  actionLog: PropTypes.array
 };
 
 export default connect(
   state => ({
-    t: state.get('translator'),
-    logShown: state.get('logShown'),
-    actionLog: state.get('actionLog')
+    t: state.translator,
+    logShown: state.logShown,
+    actionLog: state.actionLog
   })
 )(ActionLog);

@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
@@ -14,9 +13,9 @@ import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../acti
  */
 const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisitor, setLanguage, userMenuShown}) => {
 
-  const username = user.get('username');
-  const email = user.get('email');
-  const isVisitor = user.get('visitor');
+  const username = user.username;
+  const email = user.email;
+  const isVisitor = user.visitor;
 
   const menuClasses = classnames('user-menu', {
     'user-menu-active': userMenuShown
@@ -130,7 +129,7 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
 
 UserMenu.propTypes = {
   t: PropTypes.func,
-  user: PropTypes.instanceOf(Immutable.Map),
+  user: PropTypes.object,
   userMenuShown: PropTypes.bool,
   language: PropTypes.string,
   setVisitor: PropTypes.func,
@@ -142,10 +141,10 @@ UserMenu.propTypes = {
 
 export default connect(
   state => ({
-    t: state.get('translator'),
-    language: state.get('language'),
-    user: state.getIn(['users', state.get('userId')]),
-    userMenuShown: state.get('userMenuShown')
+    t: state.translator,
+    language: state.language,
+    user: state.users[state.userId],
+    userMenuShown: state.userMenuShown
   }),
   dispatch => bindActionCreators({
     setVisitor,

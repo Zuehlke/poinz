@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
@@ -18,10 +17,10 @@ import Cards from './Cards';
  */
 const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
-  const ownEstimate = selectedStory.getIn(['estimations', user.get('id')]);
+  const ownEstimate = selectedStory.estimations[user.id];
 
-  const revealed = selectedStory.get('revealed');
-  const isVisitor = user.get('visitor');
+  const revealed = selectedStory.revealed;
+  const isVisitor = user.visitor;
   const userCanCurrentlyEstimate = !revealed && !isVisitor;
 
   return (
@@ -29,10 +28,10 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
       <div className="selected-story">
         <h4>
-          {selectedStory.get('title')}
+          {selectedStory.title}
         </h4>
         <div className="story-text">
-          <Anchorify text={selectedStory.get('description')}/>
+          <Anchorify text={selectedStory.description}/>
         </div>
       </div>
 
@@ -42,7 +41,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
         userCanCurrentlyEstimate &&
         <div className="board-actions">
           <button type="button" className="pure-button pure-button-primary"
-                  onClick={() => reveal(selectedStory.get('id'))}>
+                  onClick={() => reveal(selectedStory.id)}>
             {t('revealManually')}
             <i className="fa fa-hand-paper-o button-icon-right"></i>
           </button>
@@ -53,7 +52,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
         revealed &&
         <div className="board-actions">
           <button type="button" className="pure-button pure-button-primary"
-                  onClick={() => newEstimationRound(selectedStory.get('id'))}>
+                  onClick={() => newEstimationRound(selectedStory.id)}>
             {t('newRound')}
             <i className="fa fa-undo  button-icon-right"></i>
           </button>
@@ -66,17 +65,17 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
 Estimation.propTypes = {
   t: PropTypes.func,
-  selectedStory: PropTypes.instanceOf(Immutable.Map),
-  user: PropTypes.instanceOf(Immutable.Map),
+  selectedStory: PropTypes.object,
+  user: PropTypes.object,
   newEstimationRound: PropTypes.func,
   reveal: PropTypes.func
 };
 
 export default connect(
   state => ({
-    t: state.get('translator'),
-    selectedStory: state.getIn(['stories', state.get('selectedStory')]),
-    user: state.getIn(['users', state.get('userId')])
+    t: state.translator,
+    selectedStory: state.stories[state.selectedStory],
+    user:state.users[state.userId],
   }),
   dispatch => bindActionCreators({newEstimationRound, reveal}, dispatch)
 )(Estimation);

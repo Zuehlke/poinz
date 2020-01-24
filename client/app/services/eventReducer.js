@@ -1,7 +1,7 @@
 import log from 'loglevel';
-import Immutable from 'immutable';
 import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
+import initialState from '../store/initialState';
 
 const LOGGER = log.getLogger('eventReducer');
 
@@ -9,9 +9,9 @@ const LOGGER = log.getLogger('eventReducer');
  * The event reducer handles backend-event actions.
  * These are equivalent to the event handlers in the backend as they modify the room state.
  *
- * @param {Immutable.Map} state
+ * @param {object} state
  * @param {object} action
- * @returns {Immutable.Map} the modified state
+ * @returns {object} the modified state
  */
 export default function eventReducer(state, action) {
 
@@ -19,8 +19,8 @@ export default function eventReducer(state, action) {
 
   // currently, events from other rooms do not affect us (backend should not send such events in the first place)
   // so we do not modify our client-side state in any way
-  if (state.get('roomId') !== event.roomId) {
-    LOGGER.warn(`Event with different roomId received. localRoomId=${state.get('roomId')}, eventRoomId=${event.roomId} (${event.name})`);
+  if (state.roomId !== event.roomId) {
+    LOGGER.warn(`Event with different roomId received. localRoomId=${state.roomId}, eventRoomId=${event.roomId} (${event.name})`);
     return state;
   }
 
@@ -39,23 +39,27 @@ export default function eventReducer(state, action) {
  * adds a log message for a backend event to the state.
  *
  * @param {undefined | string | function} logObject defined in event handlers. If this is a function: username, eventPayload, oldState and newState will be passed.
- * @param {Immutable.Map} oldState The state before the action was reduced
- * @param {Immutable.Map} modifiedState The state after the action was reduced
+ * @param {object} oldState The state before the action was reduced
+ * @param {object} modifiedState The state after the action was reduced
  * @param {object} event
- * @returns {Immutable.Map} The new state containing updated actionLog
+ * @returns {object} The new state containing updated actionLog
  */
 function updateActionLog(logObject, oldState, modifiedState, event) {
   if (!logObject) {
     return modifiedState;
   }
 
-  const matchingUser = modifiedState.getIn(['users', event.userId]);
-  const username = matchingUser ? matchingUser.get('username') || '' : '';
+  const matchingUser = modifiedState.users && modifiedState.users[event.userId];
+  const username = matchingUser ? matchingUser.username || '' : '';
   const message = (typeof logObject === 'function') ? logObject(username, event.payload, oldState, modifiedState, event) : logObject;
-  return modifiedState.update('actionLog', new Immutable.List(), log => log.push(new Immutable.Map({
-    tstamp: new Date(),
-    message
-  })));
+
+  return {
+    ...modifiedState,
+    actionLog: [...modifiedState.actionLog || [], {
+      tstamp: new Date(),
+      message
+    }]
+  };
 
 }
 
@@ -83,9 +87,15 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.joinedRoom]: {
     fn: (state, payload, event) => {
-      if (state.get('userId')) {
+
+      if (state.userId) {
         // if our client state has already a userId set, this event indicates that someone else joined
-        return state.setIn(['users', payload.userId], Immutable.fromJS(payload.users[payload.userId]));
+        const modifiedUsers = {...state.users};
+        modifiedUsers[payload.userId] = payload.users[payload.userId];
+        return {
+          ...state,
+          users: modifiedUsers
+        };
       } else {
         // you joined
 
@@ -96,17 +106,20 @@ const eventActionHandlers = {
         clientSettingsStore.addRoomToHistory(event.roomId);
 
         // server sends current room state (users, stories, etc.)
-        return state
-          .set('roomId', event.roomId)
-          .set('userId', payload.userId)
-          .set('selectedStory', payload.selectedStory)
-          .set('users', Immutable.fromJS(payload.users || {}))
-          .set('stories', Immutable.fromJS(payload.stories || {}));
+        return {
+          ...state,
+          roomId: event.roomId,
+          userId: payload.userId,
+          selectedStory: payload.selectedStory,
+          users: payload.users || {},
+          stories: payload.stories || {}
+        };
+
 
       }
     },
     log: (username, payload, oldState, newState) => {
-      return (oldState.get('userId')) ? `User ${username} joined` : `You joined room "${newState.get('roomId')}"`;
+      return (oldState.userId) ? `User ${username} joined` : `You joined room "${newState.roomId}"`;
     }
   },
 
@@ -116,7 +129,7 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.leftRoom]: {
     fn: (state, payload) => {
 
-      const isOwnUser = state.get('userId') === payload.userId;
+      const isOwnUser = state.userId === payload.userId;
 
       if (isOwnUser) {
         // you (or you in another browser) left the room
@@ -124,80 +137,115 @@ const eventActionHandlers = {
         // set the page title
         document.title = 'PoinZ';
 
-        // let's clear some state
-        return state
-          .remove('userId')
-          .remove('roomId')
-          .remove('stories')
-          .remove('users')
-          .remove('selectedStory')
-          .remove('userMenuShown')
-          .remove('logShown')
-          .remove('backlogShown')
-          .set('roomHistory', Immutable.fromJS(clientSettingsStore.getRoomHistory()))
-          .set('actionLog', new Immutable.List());
+        // let's reset our state
+        return {...initialState};
 
       } else {
         // someone else left the room
-        return state
-          .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove leaving user's estimations from all stories
-          .removeIn(['users', payload.userId]); // then remove user from room
+
+        const modifiedStories = Object.values(state.stories).reduce((result, currentStory) => {
+          const leavingUserHasEstimatedStory = Object.keys(currentStory.estimations).find(userId => userId === payload.userId);
+          if (!leavingUserHasEstimatedStory) {
+            result[currentStory.id] = currentStory;
+          } else {
+            const modifiedEstimations = {...currentStory.estimations};
+            delete modifiedEstimations[payload.userId];
+            result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
+          }
+          return result;
+        }, {});
+        const modifiedUsers = {...state.users};
+        delete modifiedUsers[payload.userId];
+
+        return {...state, stories: modifiedStories, users: modifiedUsers};
       }
     },
-    log: (username, payload, oldState) => `User ${oldState.getIn(['users', payload.userId, 'username'])} left the room`
+    log: (username, payload, oldState) => `User ${oldState.users[payload.userId].username} left the room`
   },
 
   /**
    * A disconnected user was kicked from the room.
    */
   [EVENT_ACTION_TYPES.kicked]: {
-    fn: (state, payload) => (
-      state
-        .update('stories', stories => stories.map(story => story.removeIn(['estimations', payload.userId])))  // remove kicked user's estimations from all stories
-        .removeIn(['users', payload.userId]) // then remove user from room
-    ),
-    log: (username, payload, oldState, newState, event) => `User ${oldState.getIn(['users', payload.userId, 'username'])} was kicked from the room by user ${newState.getIn(['users', event.userId, 'username'])}`
+    fn: (state, payload) => {
+      const modifiedStories = Object.values(state.stories).reduce((result, currentStory) => {
+        const leavingUserHasEstimatedStory = Object.keys(currentStory.estimations).find(userId => userId === payload.userId);
+        if (!leavingUserHasEstimatedStory) {
+          result[currentStory.id] = currentStory;
+        } else {
+          const modifiedEstimations = {...currentStory.estimations};
+          delete modifiedEstimations[payload.userId];
+          result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
+        }
+        return result;
+      }, {});
+      const modifiedUsers = {...state.users};
+      delete modifiedUsers[payload.userId];
+
+      return {...state, stories: modifiedStories, users: modifiedUsers};
+    },
+    log: (username, payload, oldState) => `User ${oldState.users[payload.userId].username} was kicked from the room by another user`
   },
 
   /**
    * A user in the room lost the connection to the server.
    */
   [EVENT_ACTION_TYPES.connectionLost]: {
-    fn: (state, payload) => (
-      state.updateIn(['users', payload.userId], user => (
-        user ? user.set('disconnected', true) : undefined
-      ))
-    ),
-    log: (username) =>`${username} lost the connection`
+    fn: (state, payload) => {
+
+      if (state.users[payload.userId]) {
+        return {
+          ...state,
+          users: {...state.users, [payload.userId]: {...state.users[payload.userId], disconnected: true}}
+        };
+      } else {
+        return state;
+      }
+
+    },
+    log: (username) => `${username} lost the connection`
   },
 
   [EVENT_ACTION_TYPES.storyAdded]: {
     fn: (state, payload) => {
-      const newStory = Immutable.fromJS(payload);
-      return state.update('stories', stories => stories.set(payload.id, newStory));
+      const modifiedStories = {...state.stories};
+      modifiedStories[payload.id] = payload;
+      return {
+        ...state,
+        stories: modifiedStories
+      };
     },
     log: (username, payload) => `${username} added new story "${payload.title}"`
   },
 
   [EVENT_ACTION_TYPES.storyChanged]: {
-    fn: (state, payload, event) => {
-      state = state
-        .setIn(['stories', payload.storyId, 'title'], payload.title)
-        .setIn(['stories', payload.storyId, 'description'], payload.description);
+    fn: (state, payload) => {
 
-      const isOwnUser = state.get('userId') === event.userId;
+      const modifiedStory = {
+        ...state.stories[payload.storyId],
+        title: payload.title,
+        description: payload.description,
+        editMode: false
+      };
 
-      if (isOwnUser) {
-        // if you yourself changed the story, disable edit mode
-        state = state.setIn(['stories', payload.storyId, 'editMode'], false);
-      }
-      return state;
+      return {...state, stories: {...state.stories, [payload.storyId]: modifiedStory}};
+
     },
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
   [EVENT_ACTION_TYPES.storyDeleted]: {
-    fn: (state, payload) => state.removeIn(['stories', payload.storyId]),
+    fn: (state, payload) => {
+
+      const modifiedStories = {...state.stories};
+      delete modifiedStories[payload.storyId];
+
+      return {
+        ...state,
+        stories: modifiedStories
+      };
+
+    },
     log: (username, payload) => `${username} deleted story "${payload.title}"`
   },
 
@@ -205,27 +253,29 @@ const eventActionHandlers = {
    * the selected story was set (i.e. the one that can be currently estimated by the team)
    */
   [EVENT_ACTION_TYPES.storySelected]: {
-    fn: (state, payload) => state.set('selectedStory', payload.storyId),
-    log: (username, payload, oldState, newState) => `${username} selected current story "${newState.getIn(['stories', payload.storyId]).get('title')}"`
+    fn: (state, payload) => ({...state, selectedStory: payload.storyId}),
+    log: (username, payload, oldState, newState) => `${username} selected current story "${newState.stories[payload.storyId].title}"`
   },
 
   [EVENT_ACTION_TYPES.usernameSet]: {
     fn: (state, payload) => {
 
-      const isOwnUser = state.get('userId') === payload.userId;
+      const isOwnUser = state.userId === payload.userId;
 
       if (isOwnUser) {
         clientSettingsStore.setPresetUsername(payload.username);
-        state = state.set('presetUsername', payload.username);
       }
 
-      return state
-        .updateIn(['users', payload.userId], user => user.set('username', payload.username));
+      const modifiedUsers = {
+        ...state.users,
+        [payload.userId]: {...state.users[payload.userId], username: payload.username}
+      };
+      return {...state, users: modifiedUsers, presetUsername: isOwnUser ? payload.username : state.presetUsername};
     },
     log: (username, payload, oldState) => {
-      const oldUsername = oldState.getIn(['users', payload.userId]).get('username');
+      const oldUsername = oldState.users[payload.userId].username;
       if (oldUsername) {
-        return `"${oldState.getIn(['users', payload.userId]).get('username')}" is now called "${payload.username}"`;
+        return `"${oldState.users[payload.userId].username}" is now called "${payload.username}"`;
       }
     }
   },
@@ -233,24 +283,29 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.emailSet]: {
     fn: (state, payload) => {
 
-      const isOwnUser = state.get('userId') === payload.userId;
+      const isOwnUser = state.userId === payload.userId;
 
       if (isOwnUser) {
         clientSettingsStore.setPresetEmail(payload.email);
       }
 
-      return state
-        .updateIn(['users', payload.userId], user => user.set('email', payload.email))
-        .set('presetEmail', payload.email);
+      return {
+        ...state,
+        users: {...state.users, [payload.userId]: {...state.users[payload.userId], email: payload.email}},
+        presetEmail: isOwnUser ? payload.email : state.presetEmail
+      };
     },
-    log: (username, payload, oldState) => `${oldState.getIn(['users', payload.userId]).get('username')} set his/her email address`
+    log: (username, payload, oldState) => `${oldState.users[payload.userId].username} set his/her email address`
   },
 
   /**
    * visitor flag for a user was set
    */
   [EVENT_ACTION_TYPES.visitorSet]: {
-    fn: (state, payload) => state.updateIn(['users', payload.userId], person => person.set('visitor', true)),
+    fn: (state, payload) => ({
+      ...state,
+      users: {...state.users, [payload.userId]: {...state.users[payload.userId], visitor: true}}
+    }),
     log: username => `${username} is now visitor`
   },
 
@@ -258,29 +313,63 @@ const eventActionHandlers = {
    * visitor flag for a user was removed / unset
    */
   [EVENT_ACTION_TYPES.visitorUnset]: {
-    fn: (state, payload) => state.updateIn(['users', payload.userId], person => person.set('visitor', false)),
+    fn: (state, payload) => ({
+      ...state,
+      users: {...state.users, [payload.userId]: {...state.users[payload.userId], visitor: false}}
+    }),
     log: username => `${username} is no longer visitor`
   },
 
   [EVENT_ACTION_TYPES.storyEstimateGiven]: {
-    fn: (state, payload) => state.setIn(['stories', payload.storyId, 'estimations', payload.userId], payload.value)
+    fn: (state, payload) => ({
+      ...state,
+      stories: {
+        ...state.stories,
+        [payload.storyId]: {
+          ...state.stories[payload.storyId],
+          estimations: {...state.stories[payload.storyId].estimations, [payload.userId]: payload.value}
+        }
+      }
+    })
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues
   },
 
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {
-    fn: (state, payload) => state.removeIn(['stories', payload.storyId, 'estimations', payload.userId])
+    fn: (state, payload) => {
+
+      const modifiedEstimations = {...state.stories[payload.storyId].estimations};
+      delete modifiedEstimations[payload.userId];
+
+      return {
+        ...state,
+        stories: {
+          ...state.stories,
+          [payload.storyId]: {
+            ...state.stories[payload.storyId],
+            estimations: modifiedEstimations
+          }
+        }
+      };
+    }
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues
   },
 
   [EVENT_ACTION_TYPES.revealed]: {
-    fn: (state, payload) => state.setIn(['stories', payload.storyId, 'revealed'], true),
+    fn: (state, payload) => ({
+      ...state,
+      stories: {...state.stories, [payload.storyId]: {...state.stories[payload.storyId], revealed: true}}
+    }),
     log: (username, payload) => payload.manually ? `${username} manually revealed estimates for the current story` : 'Estimates were automatically revealed for the current story'
   },
 
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {
-    fn: (state, payload) => state
-      .setIn(['stories', payload.storyId, 'estimations'], new Immutable.Map())
-      .setIn(['stories', payload.storyId, 'revealed'], false),
+    fn: (state, payload) => ({
+      ...state,
+      stories: {
+        ...state.stories,
+        [payload.storyId]: {...state.stories[payload.storyId], estimations: {}, revealed: false}
+      }
+    }),
     log: username => `${username} started a new estimation round for the current story`
   },
 

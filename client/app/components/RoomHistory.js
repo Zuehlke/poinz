@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -26,14 +25,14 @@ const RoomHistory = ({t, roomHistory, joinRoom}) => (
 
 RoomHistory.propTypes = {
   t: PropTypes.func,
-  roomHistory: PropTypes.instanceOf(Immutable.List),
+  roomHistory: PropTypes.array,
   joinRoom: PropTypes.func
 };
 
 export default connect(
   state => ({
-    t: state.get('translator'),
-    roomHistory: state.get('roomHistory')
+    t: state.translator,
+    roomHistory: state.roomHistory
   }),
   dispatch => bindActionCreators({joinRoom}, dispatch)
 )(RoomHistory);

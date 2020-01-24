@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -23,11 +22,11 @@ const Cards = ({cardConfig})=> (
 );
 
 Cards.propTypes = {
-  cardConfig: PropTypes.instanceOf(Immutable.List)
+  cardConfig: PropTypes.array
 };
 
 export default connect(
   state => ({
-    cardConfig: state.get('cardConfig')
+    cardConfig: state.cardConfig
   })
 )(Cards);

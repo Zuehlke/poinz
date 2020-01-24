@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -10,25 +9,23 @@ import StoryEditForm from './StoryEditForm';
  * A list of stories (in the backlog)
  */
 const Stories = ({stories}) => {
-
-  const sortedStories = stories
-    .toList()
-    .sort(story => -1 * story.get('createdAt'));
+  const storyList = Object.values(stories);
+  storyList.sort(story => -1 * story.createdAt);
 
   return (
     <div className="stories">
-      { sortedStories.map(story => <StoriesItem key={story.get('id')} story={story}/>) }
+      {storyList.map(story => <StoriesItem key={story.id} story={story}/>)}
     </div>
   );
 };
 
 Stories.propTypes = {
-  stories: PropTypes.instanceOf(Immutable.Map)
+  stories: PropTypes.object
 };
 
 export default connect(
   state => ({
-    stories: state.get('stories')
+    stories: state.stories
   })
 )(Stories);
 
@@ -37,12 +34,12 @@ export default connect(
  * if story is in edit mode, display form.
  */
 const StoriesItem = ({story}) => {
-  return (story.get('editMode'))
+  return (story.editMode)
     ? <StoryEditForm story={story}/>
     : <Story story={story}/>;
 };
 
 StoriesItem.propTypes = {
-  story: PropTypes.instanceOf(Immutable.Map)
+  story: PropTypes.object
 };
 

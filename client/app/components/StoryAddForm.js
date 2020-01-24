@@ -65,8 +65,8 @@ StoryAddForm.propTypes = {
 
 export default connect(
   state => ({
-    t: state.get('translator'),
-    pendingAddCommands: !!state.get('pendingCommands').find(cmd => cmd.name === 'addStory')
+    t: state.translator,
+    pendingAddCommands: !!Object.values(state.pendingCommands).find(cmd => cmd.name === 'addStory')
   }),
   dispatch => bindActionCreators({addStory}, dispatch)
 )(StoryAddForm);

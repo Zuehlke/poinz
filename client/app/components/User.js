@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -86,5 +85,5 @@ export default connect(
     ownUserId: state.userId,
     selectedStory: state.stories[state.selectedStory]
   }),
-  dispatch => bindActionCreators({kick}, dispatch)
+ {kick}
 )(User);

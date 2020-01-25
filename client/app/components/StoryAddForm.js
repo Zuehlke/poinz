@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
@@ -68,5 +67,5 @@ export default connect(
     t: state.translator,
     pendingAddCommands: !!Object.values(state.pendingCommands).find(cmd => cmd.name === 'addStory')
   }),
-  dispatch => bindActionCreators({addStory}, dispatch)
+ {addStory}
 )(StoryAddForm);

@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -34,5 +33,5 @@ export default connect(
     t: state.translator,
     roomHistory: state.roomHistory
   }),
-  dispatch => bindActionCreators({joinRoom}, dispatch)
+  {joinRoom}
 )(RoomHistory);

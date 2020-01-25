@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -43,7 +42,7 @@ export default connect(
     roomId: state.roomId,
     username: state.users[state.userId] ? state.users[state.userId].username : '-'
   }),
-  dispatch => bindActionCreators({toggleBacklog, toggleUserMenu, toggleLog}, dispatch)
+ {toggleBacklog, toggleUserMenu, toggleLog}
 )(TopBar);
 
 

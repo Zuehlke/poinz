@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
@@ -43,5 +42,5 @@ export default connect(
       estimationWaiting: pendingEstimationCommand ? pendingEstimationCommand.payload.value : undefined
     };
   },
-  dispatch => bindActionCreators({giveStoryEstimate}, dispatch)
+  {giveStoryEstimate}
 )(Card);

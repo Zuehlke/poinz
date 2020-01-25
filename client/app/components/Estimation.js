@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
@@ -75,7 +74,7 @@ export default connect(
   state => ({
     t: state.translator,
     selectedStory: state.stories[state.selectedStory],
-    user:state.users[state.userId],
+    user: state.users[state.userId],
   }),
-  dispatch => bindActionCreators({newEstimationRound, reveal}, dispatch)
+  {newEstimationRound, reveal}
 )(Estimation);

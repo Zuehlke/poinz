@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -64,5 +63,5 @@ export default connect(
   state => ({
     t: state.translator
   }),
-  dispatch => bindActionCreators({setUsername}, dispatch)
+ {setUsername}
 )(WhoAreYou);

@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
@@ -66,5 +65,5 @@ export default connect(
     selectedStoryId: state.selectedStory,
     pendingSelectCommands: Object.values(state.pendingCommands).filter(cmd => cmd.name === 'selectStory')
   }),
-  dispatch => bindActionCreators({selectStory, editStory, deleteStory}, dispatch)
+ {selectStory, editStory, deleteStory}
 )(Story);

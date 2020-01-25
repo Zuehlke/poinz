@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -55,5 +54,5 @@ export default connect(
     users: state.users,
     presetUsername: state.presetUsername
   }),
-  dispatch => bindActionCreators({joinRoom}, dispatch)
+ {joinRoom}
 )(Main);

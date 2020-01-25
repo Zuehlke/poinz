@@ -1,6 +1,5 @@
 import React from 'react';
 import fecha from 'fecha';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -94,7 +93,7 @@ export default connect(
   state => ({
     appStatus: state.appStatus
   }),
-  dispatch => bindActionCreators({fetchStatus}, dispatch)
+  {fetchStatus}
 )(AppStatus);
 
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
@@ -146,11 +145,11 @@ export default connect(
     user: state.users[state.userId],
     userMenuShown: state.userMenuShown
   }),
-  dispatch => bindActionCreators({
+  {
     setVisitor,
     leaveRoom,
     setUsername,
     setEmail,
     setLanguage
-  }, dispatch)
+  }
 )(UserMenu);

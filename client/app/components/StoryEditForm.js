@@ -1,5 +1,4 @@
 import React from 'react';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
@@ -70,7 +69,7 @@ export default connect(
   state => ({
     pendingChangeCommands: Object.values(state.pendingCommands).filter(cmd => cmd.name === 'changeStory')
   }),
-  dispatch => bindActionCreators({changeStory, cancelEditStory}, dispatch)
+ {changeStory, cancelEditStory}
 )(StoryEditForm);
 
 const StoryEditFormButtonGroup = ({onSave, onCancel}) => (

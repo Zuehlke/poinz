@@ -1,6 +1,6 @@
 {
   "name": "poinz",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -18,8 +18,8 @@
   },
   "devDependencies": {
     "del": "5.1.0",
-    "fs-extra": "8.1.0",
-    "npm-check-updates": "4.0.1",
+    "fs-extra": "9.0.0",
+    "npm-check-updates": "4.1.2",
     "bluebird": "3.7.2"
   },
   "engines": {

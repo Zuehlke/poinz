@@ -1,6 +1,6 @@
 {
   "name": "poinz-client",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",

@@ -6,7 +6,7 @@ PoinZ is currently deployed on a free-tier heroku dyno. (currently without persi
 
 ### Heroku deployment
 
-* Build Docker image wiht ```$ npm run build```
+* Build Docker image with ```$ npm run build```
 
 * tag built image: ```$ docker tag <imageID> registry.heroku.com/poinz/web```
 

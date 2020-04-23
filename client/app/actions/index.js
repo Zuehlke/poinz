@@ -98,6 +98,7 @@ export const giveStoryEstimate = (storyId, value) => (dispatch, getState) => {
 
   if (state.stories[storyId] && state.stories[storyId].estimations[state.userId] === value) {
     command.name = 'clearStoryEstimate';
+    delete command.payload.value;
   } else {
     command.name = 'giveStoryEstimate';
   }

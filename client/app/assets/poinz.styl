@@ -1,6 +1,8 @@
+
+$zuehlkeBackgroundGrey = rgb(250,250,250)
+$zuehlkeBlue = #0099CC;
 $zuehlkePurple = #985b9c
 $zuehlkeOrange = #ff820a
-$zuehlkeDarkGrey = #4b5054
 $zuehlkeLightGrey = #575d62
 $zuehlkeLighterGrey = #e8e8e8
 $zuehlkeFontGrey = #484e54
@@ -33,7 +35,7 @@ body {
   border-radius 2px
 
   &.pure-button-primary {
-    background-color $zuehlkePurple
+    background-color $zuehlkeBlue
   }
 
   i.button-icon-left {
@@ -58,7 +60,7 @@ a {
   top 0
   left 0
   position fixed !important
-  background url('./landing_bg_z.jpg') no-repeat center center fixed
+  background url('./landing_bg_z2020_lightblue.jpg') no-repeat center center fixed
   background-size cover
 
   .landing-inner {
@@ -170,9 +172,9 @@ a {
       border-radius 12px
       box-sizing border-box
       font-size 28px
-      border 4px dashed white
+      border 4px dashed $zuehlkeLighterGrey
       background transparent
-      color $zuehlkeLighterGrey
+      color $zuehlkeLightGrey
 
       font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
 
@@ -180,6 +182,7 @@ a {
         // user has given estimation, but value is not yet shown
         border 4px solid white
         background $zuehlkeLightGrey
+        color $zuehlkeLighterGrey
       }
 
       &.revealed {
@@ -267,10 +270,10 @@ a {
 }
 
 .top-bar {
-  background-color $zuehlkeLightGrey
-  color white
   z-index 1003
   position fixed
+  box-shadow 0 1px 2px 0 #cccccc
+  background $zuehlkeBackgroundGrey
   top 0
   left 0
   right 0
@@ -332,11 +335,11 @@ a {
   display block
   top 0
   left 0
-  background $zuehlkeDarkGrey
   font-size 10px
   z-index 10
   width 34px
   height 34px
+  background $zuehlkeBlue
 
   .menu-link-inner {
     position relative
@@ -371,7 +374,6 @@ a {
   position fixed
   display block
   top 0
-  background $zuehlkeDarkGrey
   z-index 10
   width 34px
   height 34px
@@ -379,6 +381,7 @@ a {
   padding 4px 8px
   box-sizing border-box
   color white
+  background $zuehlkeBlue
 }
 
 .user-menu-toggle {
@@ -398,35 +401,52 @@ $userMenuWidth = 300px
   bottom 0
   right $userMenuWidth * -1
   transition all 0.2s ease-out
-  background $zuehlkeLightGrey
+  background $zuehlkeBackgroundGrey
   -webkit-overflow-scrolling touch
   box-sizing border-box
   padding 8px
   padding-top 27px
-  color white
 
   &.user-menu-active {
     right 0
+  }
+
+  &:after {
+    content: "";
+    border-right: 1px solid #e8e8e8;
+    top: 44px;
+    left: 0;
+    position: absolute;
+    bottom: 20px;
   }
 
   h5 {
     color $zuehlkeOrange
     font-weight 700
     margin-bottom 8px
+    margin-top:0
   }
 
   .pure-form {
+
+    .user-menu-section {
+      background:white;
+      border: 1px solid $zuehlkeLighterGrey
+      padding:8px;
+      margin:16px 0;
+    }
 
     .username-wrapper, .email-wrapper {
       display: flex;
       align-items: stretch;
       padding 4px
-      border-bottom 1px solid white
 
       input {
         width 80%
         border none
+        border-bottom 1px solid $zuehlkeLighterGrey
         padding 1px 0
+        margin-right 4px
       }
     }
 
@@ -446,7 +466,6 @@ $userMenuWidth = 300px
 
     input, textarea {
       background transparent
-      color white
       border none
       border-radius 0
       border-bottom 1px solid white
@@ -462,12 +481,21 @@ $userMenuWidth = 300px
   bottom 0
   right $userMenuWidth * -1
   transition all 0.2s ease-out
-  background $zuehlkeLightGrey
   -webkit-overflow-scrolling touch
   box-sizing border-box
   padding 8px
   padding-top 27px
-  color white
+
+  background $zuehlkeBackgroundGrey
+
+  &:after {
+    content: "";
+    border-right: 1px solid #e8e8e8;
+    top: 44px;
+    left: 0;
+    position: absolute;
+    bottom: 20px;
+  }
 
   &.action-log-active {
     right 0
@@ -558,9 +586,7 @@ $backlogWidth = 300px
   position relative
   min-height 100%
   height auto
-  // TODO: currently not shown, discuss Zühlke Branding
-  // background $zuehlkeLighterGrey url('../assets/logo-zuehlke-small.png') no-repeat bottom right
-  background $zuehlkeLighterGrey
+  background $zuehlkeBackgroundGrey
 
   .backlog {
     transition all 0.2s ease-out
@@ -571,16 +597,24 @@ $backlogWidth = 300px
     left 0
     bottom 0
     z-index 1000
-    background $zuehlkeLightGrey
     overflow-y auto
     -webkit-overflow-scrolling touch
     box-sizing border-box
     padding 8px
     padding-top 27px
+    background $zuehlkeBackgroundGrey
+
+    &:after {
+      content:"";
+      border-right: 1px solid $zuehlkeLighterGrey;
+      top: 44px;
+      right: 0;
+      position: absolute;
+      bottom: 20px;
+    }
 
     .story-hint {
       margin-top 16px
-      color white
       text-align center
     }
 
@@ -590,9 +624,10 @@ $backlogWidth = 300px
     }
 
     .story-add-form {
-      background $zuehlkeDarkGrey
+      background white;
+      border: 1px solid $zuehlkeLighterGrey
       padding 8px 16px 16px 16px
-      margin-bottom 16px
+      margin 16px 0 16px 0
       box-sizing border-box
       border-radius 2px
     }
@@ -601,9 +636,13 @@ $backlogWidth = 300px
       input, textarea {
         resize vertical
         background transparent
-        color white
+
         border none
-        border-bottom 1px solid white
+        border-bottom 1px solid $zuehlkeLighterGrey
+      }
+
+      textarea {
+        min-height: 64px;
       }
     }
 
@@ -612,12 +651,11 @@ $backlogWidth = 300px
 
       .story {
         position relative
-        color white
-        background $zuehlkeDarkGrey
+        background white
         padding 8px 16px 16px 16px
         margin-bottom 16px
         box-sizing border-box
-        border-radius 2px
+        border: 1px solid $zuehlkeLighterGrey
 
         // story edit icon (pencil)
         > i.story-edit {
@@ -684,8 +722,8 @@ $backlogWidth = 300px
     padding 16px
 
     .selected-story {
-      background $zuehlkeDarkGrey
-      color white
+      background white
+      border: 1px solid $zuehlkeLighterGrey
       padding 8px
 
       h4 {

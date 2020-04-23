@@ -32,62 +32,72 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
     <div className={menuClasses}>
 
       <div className="pure-form">
-        <h5>{t('username')}</h5>
 
-        <div className="username-wrapper">
-          <input type="text"
-                 id="username"
-                 placeholder={t('name')}
-                 defaultValue={username}
-                 ref={ref => usernameInputField = ref}
-                 onKeyPress={handleUsernameKeyPress}/>
+        <div className="user-menu-section">
+          <h5>{t('username')}</h5>
 
-          <button className="pure-button pure-button-primary button-save button-save-username"
-                  onClick={saveUsername}>{t('save')}</button>
+          <div className="username-wrapper">
+            <input type="text"
+                   id="username"
+                   placeholder={t('name')}
+                   defaultValue={username}
+                   ref={ref => usernameInputField = ref}
+                   onKeyPress={handleUsernameKeyPress}/>
+
+            <button className="pure-button pure-button-primary button-save button-save-username"
+                    onClick={saveUsername}>{t('save')}</button>
+          </div>
         </div>
 
-        <h5>{t('language')}</h5>
-        <div className="language-selector-wrapper">
+        <div className="user-menu-section">
+          <h5>{t('language')}</h5>
+          <div className="language-selector-wrapper">
 
-          <label htmlFor="language-selector-en">
-            <input type="radio" id="language-selector-en" name="language-selector"
-                   defaultChecked={language === 'en'}
-                   onClick={() => setLanguage('en')}
+            <label htmlFor="language-selector-en">
+              <input type="radio" id="language-selector-en" name="language-selector"
+                     defaultChecked={language === 'en'}
+                     onClick={() => setLanguage('en')}
+              />
+              {t('english')}
+            </label>
+
+            <label htmlFor="language-selector-de">
+              <input type="radio" id="language-selector-de" name="language-selector"
+                     defaultChecked={language === 'de'}
+                     onClick={() => setLanguage('de')}
+              />
+              {t('german')}
+            </label>
+          </div>
+        </div>
+
+        <div className="user-menu-section">
+          <h5>{t('gravatar')}</h5>
+          {t('gravatarInfo')}
+
+          <div className="email-wrapper">
+            <input type="text"
+                   id="email"
+                   placeholder="Email..."
+                   defaultValue={email}
+                   ref={ref => emailInputField = ref}
+                   onKeyPress={handleEmailKeypress}
             />
-            {t('english')}
-          </label>
 
-          <label htmlFor="language-selector-de">
-            <input type="radio" id="language-selector-de" name="language-selector"
-                   defaultChecked={language === 'de'}
-                   onClick={() => setLanguage('de')}
-            />
-            {t('german')}
-          </label>
+            <button className="pure-button pure-button-primary button-save button-save-email"
+                    onClick={saveEmail}>{t('save')}</button>
+          </div>
         </div>
 
-        <h5>{t('gravatar')}</h5>
-        {t('gravatarInfo')}
+        <div className="user-menu-section">
 
-        <div className="email-wrapper">
-          <input type="text"
-                 id="email"
-                 placeholder="Email..."
-                 defaultValue={email}
-                 ref={ref => emailInputField = ref}
-                 onKeyPress={handleEmailKeypress}
-          />
+          <h5>{t('markVisitor')}</h5>
+          {t('visitorInfo')}
 
-          <button className="pure-button pure-button-primary button-save button-save-email"
-                  onClick={saveEmail}>{t('save')}</button>
+          <p onClick={toggleVisitor} className="clickable">
+            <i className={visitorCheckboxClasses}></i> {t('visitor')}
+          </p>
         </div>
-
-        <h5>{t('markVisitor')}</h5>
-        {t('visitorInfo')}
-
-        <p onClick={toggleVisitor} className="clickable">
-          <i className={visitorCheckboxClasses}></i> {t('visitor')}
-        </p>
       </div>
 
       <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>

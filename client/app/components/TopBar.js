@@ -40,7 +40,7 @@ TopBar.propTypes = {
 export default connect(
   state => ({
     roomId: state.roomId,
-    username: state.users[state.userId] ? state.users[state.userId].username : '-'
+    username: (state.users && state.users[state.userId] ) ? state.users[state.userId].username : '-'
   }),
  {toggleBacklog, toggleUserMenu, toggleLog}
 )(TopBar);

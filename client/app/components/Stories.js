@@ -10,7 +10,7 @@ import StoryEditForm from './StoryEditForm';
  */
 const Stories = ({stories}) => {
   const storyList = Object.values(stories);
-  storyList.sort(story => -1 * story.createdAt);
+  storyList.sort(story => story.createdAt);
 
   return (
     <div className="stories">

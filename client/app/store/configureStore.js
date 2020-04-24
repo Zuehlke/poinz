@@ -11,12 +11,6 @@ import {
 
 const LOGGER = log.getLogger('store');
 
-const loggerMiddleware = store => next => action => {
-  LOGGER.debug('reducing action', action);
-  let result = next(action);
-  LOGGER.debug('modified state ', store.getState());
-  return result;
-};
 
 /**
  * configures and sets up the redux store.
@@ -29,8 +23,7 @@ export default function configureStore(initialState) {
 
   const store = createStore(rootReducer, initialState, composeEnhancers(
     applyMiddleware(
-      thunkMiddleware,
-      loggerMiddleware
+      thunkMiddleware
     )
   ));
 
@@ -48,6 +41,7 @@ export default function configureStore(initialState) {
     // dispatch a generic action
     store.dispatch({
       type: EVENT_RECEIVED,
+      eventName: event.name,
       correlationId: event.correlationId
     });
 

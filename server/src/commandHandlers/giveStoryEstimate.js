@@ -5,7 +5,6 @@
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
 const giveStoryEstimateCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
       throw new Error('Can only give estimate if userId in command payload matches!');

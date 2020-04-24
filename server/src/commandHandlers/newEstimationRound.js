@@ -5,7 +5,6 @@
  * Can only be done for the currently selected story.
  */
 const newEstimationRoundCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only start a new round for currently selected story!');

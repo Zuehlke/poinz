@@ -38,4 +38,3 @@ export const EVENT_ACTION_TYPES = {
 /** various **/
 export const COMMAND_SENT = 'COMMAND_SENT';
 export const EVENT_RECEIVED = 'EVENT_RECEIVED';
-export const SET_ROOMID = 'SET_ROOMID';

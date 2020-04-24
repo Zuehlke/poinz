@@ -4,7 +4,6 @@ import {v4 as uuid} from 'uuid';
  * A user adds a story to the estimation backlog of the room
  */
 const addStoryCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.getIn(['users', userId, 'visitor'])) {
       throw new Error('Visitors cannot add stories!');

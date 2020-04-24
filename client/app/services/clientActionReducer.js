@@ -10,7 +10,6 @@ import {
   CANCEL_EDIT_STORY,
   COMMAND_SENT,
   EVENT_RECEIVED,
-  SET_ROOMID,
   STATUS_FETCHED,
   SET_LANGUAGE
 } from '../actions/types';
@@ -30,7 +29,7 @@ export default function clientActionReducer(state, action) {
       // for every command we send, let's store it in our client state as "pending command". various view components
       // are then able to display "spinners" when waiting for the corresponding backend event.
       // limitations:
-      // - the first event produced by a command will again remove (consider that the backend might produce N events for a single command that is processed)
+      // - the first event produced by a command will remove it (consider that the backend might produce N events for a single command that is processed)
       // - if the backend does not produce an event for a command, the command will remain in the client state.
 
       const modifiedPendingCommands = {...state.pendingCommands, [action.command.id]: action.command};
@@ -42,9 +41,6 @@ export default function clientActionReducer(state, action) {
       delete state.pendingCommands[action.correlationId];
       const modifiedPendingCommands = {...state.pendingCommands};
       return {...state, pendingCommands: modifiedPendingCommands};
-    }
-    case SET_ROOMID: {
-      return {...state, roomId: action.roomId};
     }
     case TOGGLE_BACKLOG: {
       return {...state, backlogShown: !state.backlogShown};

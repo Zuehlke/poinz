@@ -3,7 +3,6 @@
  * Users may only clear estimation for the currently selected story.
  */
 const clearStoryEstimateCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
       throw new Error('Can only clear estimate if userId in command payload matches!');

@@ -3,7 +3,6 @@
  *
  */
 const kickCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
 
     if (userId === command.payload.userId) {

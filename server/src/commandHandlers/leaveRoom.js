@@ -4,7 +4,6 @@
  *
  */
 const leaveRoomCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (command.payload.userId !== userId) {
       throw new Error('Can only leave if userId in command payload matches!');

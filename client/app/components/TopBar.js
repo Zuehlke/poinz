@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {toggleBacklog, toggleUserMenu, toggleLog} from '../actions';
 
-const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog, userMenuShown, logShown, backlogShown}) => {
+const TopBar = ({ username, toggleBacklog, toggleUserMenu, toggleLog, userMenuShown, logShown, backlogShown}) => {
   return (
     <div className="top-bar">
       <div className="poinz-logo">PoinZ</div>
@@ -15,7 +15,7 @@ const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog, use
       </a>
 
       <span className="quick-menu">
-        <span className="whoami">{username + '@' + roomId}</span>
+        <span className="whoami">{username}</span>
       </span>
 
       <a
@@ -33,7 +33,9 @@ const TopBar = ({roomId, username, toggleBacklog, toggleUserMenu, toggleLog, use
 };
 
 TopBar.propTypes = {
-  roomId: PropTypes.string,
+  userMenuShown: PropTypes.bool,
+  backlogShown: PropTypes.bool,
+  logShown: PropTypes.bool,
   username: PropTypes.string,
   toggleBacklog: PropTypes.func,
   toggleUserMenu: PropTypes.func,
@@ -45,7 +47,6 @@ export default connect(
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
-    roomId: state.roomId,
     username: (state.users && state.users[state.userId]) ? state.users[state.userId].username : '-'
   }),
   {toggleBacklog, toggleUserMenu, toggleLog}

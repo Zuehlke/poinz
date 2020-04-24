@@ -2,6 +2,7 @@ import log from 'loglevel';
 import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
+import history from './getBrowserHistory';
 
 const LOGGER = log.getLogger('eventReducer');
 
@@ -17,7 +18,12 @@ export default function eventReducer(state, action) {
 
   const {event} = action;
 
-  // currently, events from other rooms do not affect us (backend should not send such events in the first place)
+  // if we created a new room, and then joined, we don't have a roomId yet
+  if (!state.roomId && event.name === 'joinedRoom') {
+    state.roomId = event.roomId;
+  }
+
+  // Events from other rooms do not affect us (backend should not send such events in the first place)
   // so we do not modify our client-side state in any way
   if (state.roomId !== event.roomId) {
     LOGGER.warn(`Event with different roomId received. localRoomId=${state.roomId}, eventRoomId=${event.roomId} (${event.name})`);
@@ -101,6 +107,7 @@ const eventActionHandlers = {
 
         // set the page title
         document.title = `PoinZ - ${event.roomId}`;
+        history.push('/' + event.roomId);
 
         clientSettingsStore.setPresetUserId(payload.userId);
         clientSettingsStore.addRoomToHistory(event.roomId);

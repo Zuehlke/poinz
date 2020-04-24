@@ -1,5 +1,7 @@
 import assert from 'assert';
 import {v4 as uuid} from 'uuid';
+import Immutable from 'immutable';
+
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -16,56 +18,30 @@ describe('joinRoom', () => {
     this.commandId = uuid();
     this.roomId = 'rm_' + uuid();
 
-    this.mockRoomsStore = testUtils.newMockRoomsStore();
+    // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
+    this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
+      id: this.roomId,
+      users: {
+        ['user123']: {
+          id: 'user123',
+          username: 'creator'
+        }
+      },
+      stories: {
+        'abc': {
+          id: 'abc',
+          title: 'some',
+          estimations: {}
+        }
+      }
+    }));
+
 
     this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
 
   });
 
-  it('Should produce 4 events for a non-existing room', function () {
-    return this.processor({
-      id: this.commandId,
-      roomId: this.roomId,
-      name: 'joinRoom',
-      payload: {
-        userId: this.userId,
-        email: 'j.doe@gmail.com',
-        username: 'something'
-      }
-    }, this.userId)
-      .then(producedEvents => {
-        assert(producedEvents);
-        assert.equal(producedEvents.length, 4);
-
-        const roomCreatedEvent = producedEvents[0];
-        testUtils.assertValidEvent(roomCreatedEvent, this.commandId, this.roomId, this.userId, 'roomCreated');
-        assert.equal(roomCreatedEvent.payload.userId, this.userId);
-        assert.equal(roomCreatedEvent.payload.id, this.roomId);
-
-        const joinedRoomEvent = producedEvents[1];
-        testUtils.assertValidEvent(joinedRoomEvent, this.commandId, this.roomId, this.userId, 'joinedRoom');
-        assert.equal(joinedRoomEvent.payload.userId, this.userId);
-        assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
-          id: this.userId,
-          username: 'something'
-        });
-
-        const usernameSetEvent = producedEvents[2];
-        testUtils.assertValidEvent(usernameSetEvent, this.commandId, this.roomId, this.userId, 'usernameSet');
-        assert.equal(usernameSetEvent.payload.userId, this.userId);
-        assert.equal(usernameSetEvent.payload.username, 'something');
-
-
-        const emailSet = producedEvents[3];
-        testUtils.assertValidEvent(emailSet, this.commandId, this.roomId, this.userId, 'emailSet');
-        assert.equal(emailSet.payload.userId, this.userId);
-        assert.equal(emailSet.payload.email, 'j.doe@gmail.com');
-
-      });
-  });
-
   it('Should produce 3 events for a already existing room', function () {
-    const userOne = uuid();
 
     return this.processor({
       // first another user creates the room
@@ -73,9 +49,9 @@ describe('joinRoom', () => {
       roomId: this.roomId,
       name: 'joinRoom',
       payload: {
-        userId: userOne
+        userId: this.userId
       }
-    }, userOne)
+    }, this.userId)
       .then(() => this.processor({
         id: this.commandId,
         roomId: this.roomId,
@@ -94,6 +70,8 @@ describe('joinRoom', () => {
         testUtils.assertValidEvent(joinedRoomEvent, this.commandId, this.roomId, this.userId, 'joinedRoom');
         assert.equal(joinedRoomEvent.payload.userId, this.userId);
         assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
+          disconnected:false,
+          email:'j.doe@gmail.com',
           id: this.userId,
           username: 'something'
         });

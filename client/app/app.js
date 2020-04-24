@@ -16,7 +16,7 @@ import Main from './containers/Main';
 
 if (appConfig.env === 'dev') {
   log.setLevel('debug');
-  localStorage.debug = 'socket.io-client:*'; // enable socket.io debugging
+ // localStorage.debug = 'socket.io-client:*'; // enable socket.io debugging
 } else {
   log.setLevel('error');
 }

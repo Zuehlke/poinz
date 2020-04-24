@@ -15,6 +15,7 @@ describe('commandProcessor', () => {
 
     const processor = processorFactory({
       setUsername: {
+        canCreateRoom: true,
         fn: function (room, command) {
           room.applyEvent('usernameSet', command.payload);
         }
@@ -27,7 +28,6 @@ describe('commandProcessor', () => {
 
     return processor({
       id: uuid(),
-      roomId: 'my-test-room',
       name: 'setUsername',
       payload: {userId: 'abc', username: 'john'}
     })
@@ -60,6 +60,7 @@ describe('commandProcessor', () => {
 
     const processor = processorFactory({
       setUsername: {
+        canCreateRoom: true,
         fn: function (room) {
           room.applyEvent('unknownEvent', {});
         }
@@ -71,7 +72,6 @@ describe('commandProcessor', () => {
     return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
-        roomId: 'my-test-room',
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
@@ -82,6 +82,7 @@ describe('commandProcessor', () => {
 
     const processor = processorFactory({
       setUsername: {
+        canCreateRoom: true,
         preCondition: function () {
           throw new Error('Uh-uh. nono!');
         }
@@ -93,7 +94,6 @@ describe('commandProcessor', () => {
     return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
-        roomId: 'my-test-room',
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
@@ -129,10 +129,9 @@ describe('commandProcessor', () => {
   });
 
 
-  it('process a dummy command where room must exist', function () {
+  it('process a dummy command without roomId: where room must exist', function () {
     const processor = processorFactory({
       setUsername: {
-        existingRoom: true, // This command handler expect an existing room
         fn: function () {
         }
       }
@@ -141,11 +140,30 @@ describe('commandProcessor', () => {
     return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
-        roomId: 'room-' + uuid(),
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
+      // no roomId given in command. handler does not allow creation of new room
       'Command "setUsername" only wants to get handled for an existing room');
+  });
+
+  it('process a dummy command with roomId: where room must exist', function () {
+    const processor = processorFactory({
+      setUsername: {
+        fn: function () {
+        }
+      }
+    }, {}, this.mockRoomsStore);
+
+    return testUtils.assertPromiseRejects(
+      processor({
+        id: uuid(),
+        roomId: 'rm_' + uuid(),
+        name: 'setUsername',
+        payload: {userId: 'abc', username: 'john'}
+      }),
+      //  roomId is given in command, room does not exist
+      'does not exist. ("setUsername")');
   });
 
 

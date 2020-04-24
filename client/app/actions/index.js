@@ -1,30 +1,47 @@
 import axios from 'axios';
-import {createBrowserHistory} from 'history';
 import hub from '../services/hub';
-
+import history from '../services/getBrowserHistory';
 import {
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU,
   TOGGLE_LOG,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
-  SET_ROOMID,
   STATUS_FETCHED,
   SET_LANGUAGE
 } from '../actions/types';
 
-const history = createBrowserHistory();
+
 
 /**
  * Our actions contain our client-side business logic. (when to send which command).
  * They produce commands and pass them to the hub for sending.
  */
 
+
+export const createRoom = () => (dispatch, getState) => {
+  const cmdPayload = {};
+  const state = getState();
+
+  if (state.presetUserId) {
+    cmdPayload.userId = state.presetUserId;
+  }
+  if (state.presetUsername) {
+    cmdPayload.username = state.presetUsername;
+  }
+  if (state.presetEmail) {
+    cmdPayload.email = state.presetEmail;
+  }
+
+  hub.sendCommand({
+    name: 'createRoom',
+    payload: cmdPayload
+  }, dispatch);
+
+};
+
 export const joinRoom = roomId => (dispatch, getState) => {
   const normalizedRoomId = roomId.toLowerCase();
-  history.push({
-    pathname: `/${normalizedRoomId}`
-  });
 
   const joinCommandPayload = {};
   const state = getState();
@@ -38,17 +55,6 @@ export const joinRoom = roomId => (dispatch, getState) => {
   if (state.presetEmail) {
     joinCommandPayload.email = state.presetEmail;
   }
-
-  /**
-   * "prematurely" set the room id to the client state ( see root reducer )
-   * so that first incoming "joined" event is not filtered out.
-   *
-   * this is a client-only redux action
-   */
-  dispatch({
-    type: SET_ROOMID,
-    roomId: normalizedRoomId
-  });
 
   hub.sendCommand({
     name: 'joinRoom',
@@ -177,7 +183,7 @@ export const kick = userId => (dispatch, getState) => {
 
 export const leaveRoom = () => (dispatch, getState) => {
   history.push({
-    pathname: ''
+    pathname: '/'
   });
   const state = getState();
   hub.sendCommand({

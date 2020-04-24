@@ -1,5 +1,7 @@
 {
-  "enterRoomInfo": "Please enter the name of the room you'd like to join.",
+  "createRoomInfo": "Create a new room and start to poker!",
+  "joinRoomInfo": "You can also join an existing room by link. Ask the creator of the room for the address.",
+  "createNewRoom": "Create new room",
   "join": "Join",
   "joinPrevious": "Join previous rooms",
   "roomName": "Room Name...",

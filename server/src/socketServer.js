@@ -31,11 +31,12 @@ function handleIncomingCommand(socket, msg) {
 
   commandProcessor(msg, socketToUserIdMap[socket.id])
     .then(producedEvents => {
-      if (msg.name === 'joinRoom') {
-        // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
-        registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
-      }
 
+      const joinedRoomEvent = producedEvents.find(ev => ev.name === 'joinedRoom');
+      if (joinedRoomEvent) {
+        registerUserWithSocket(joinedRoomEvent, socket, joinedRoomEvent.payload.userId);
+
+      }
       sendEvents(producedEvents, msg.roomId);
     })
     .catch(commandProcessingError => handleCommandProcessingError(commandProcessingError, msg, socket));
@@ -82,19 +83,19 @@ function handleCommandProcessingError(error, command, socket) {
  * we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
  * on socket disconnect.
  *
- * @param {object} joinRoomCommand the handled joinRoom command
+ * @param {object} joinedRoomEvent the handled joinedRoomEvent event
  * @param socket
  * @param userIdToStore
  */
-function registerUserWithSocket(joinRoomCommand, socket, userIdToStore) {
+function registerUserWithSocket(joinedRoomEvent, socket, userIdToStore) {
   if (!userIdToStore) {
-    throw new Error('No userId after "roomJoined" to pu into socketToUserIdMap!');
+    throw new Error('No userId after "joinedRoom" to put into socketToUserIdMap!');
   }
-  socketToRoomMap[socket.id] = joinRoomCommand.roomId;
+  socketToRoomMap[socket.id] = joinedRoomEvent.roomId;
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(joinRoomCommand.roomId, () => LOGGER.debug(`socket with id ${socket.id} joined room ${joinRoomCommand.roomId}`));
+  socket.join(joinedRoomEvent.roomId, () => LOGGER.debug(`User ${userIdToStore} on socket ${socket.id} joined room ${joinedRoomEvent.roomId}`));
 }
 
 /**

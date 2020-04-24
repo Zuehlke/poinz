@@ -89,6 +89,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * */
   function findMatchingCommandHandler(ctx, cmd) {
     const handler = commandHandlers[cmd.name];
+
     if (!handler) {
       throw new Error(`No command handler found for ${cmd.name}`);
     }
@@ -97,28 +98,37 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
   /**
    * 3. Load Room object by command.roomId
-   * For some commands it is valid that the room does not yet exist in the store.
-   * Command handlers define whether they expect an existing room or not
+   *
+   * By Default, the command must have a roomId and the matching room object must exist in the store.
+   * For some commands, it is valid that no roomId is given. Then a roomId is generated and an "empty" room created.
+   * Command handlers must specify this with "canCreateRoom:true"
    *
    * @param {object} ctx context object that is used to hold state between processing steps
    * @param {object} cmd
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
   function loadRoom(ctx, cmd) {
+
+    if (!cmd.roomId) {
+      return new Promise((resolve) => {
+        if (!ctx.handler.canCreateRoom) {
+          throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`);
+        }
+        cmd.roomId = uuid();   // command is allowed to create new room. generate random id
+        ctx.room = new Immutable.Map({
+          id: cmd.roomId
+        });
+        resolve();
+      });
+    }
+
     return store
       .getRoomById(cmd.roomId)
-      .then(room => {
-        if (!room && ctx.handler.existingRoom) {
-          // if no room with this id is in the store but the commandHandler defines "existingRoom=true"
-          throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room. (${cmd.roomId})`);
+      .then((room) => {
+        if (!room) {
+          throw new Error(`Specified room ${cmd.roomId} does not exist. ("${cmd.name}")`);
         }
-
-        if (room) {
-          ctx.room = room;
-        } else {
-          // make sure that command handlers always receive a room object
-          ctx.room = new Immutable.Map();
-        }
+        ctx.room = room;
       });
   }
 
@@ -213,9 +223,11 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
 }
 
+
 function PreconditionError(err, cmd) {
   this.stack = err.stack;
   this.name = this.constructor.name;
   this.message = `Precondition Error during "${cmd.name}": ${err.message}`;
 }
+
 util.inherits(PreconditionError, Error);

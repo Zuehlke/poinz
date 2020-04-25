@@ -1,0 +1,90 @@
+const Promise = require('bluebird');
+const path = require('path');
+const glob = Promise.promisify(require("glob"));
+const fs = Promise.promisifyAll(require('fs-extra'));
+
+const TRANSLATION_INVOKE_PATTERN = /\{t\('(.*)'\)/g;
+
+const DEFINED_KEYS_EN = Object.keys(require('../client/app/assets/i18n/en.json'));
+const DEFINED_KEYS_DE = Object.keys(require('../client/app/assets/i18n/de.json'));
+
+check().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
+
+const findTranslationKeysInFileContent = (fileName, content) => {
+  const fileMatches = {
+    fileName,
+    translationKeys: []
+  };
+  let match;
+  while ((match = TRANSLATION_INVOKE_PATTERN.exec(content)) !== null) {
+    fileMatches.translationKeys.push(match[1])
+  }
+  return fileMatches;
+};
+
+
+const groupByKey = (fileResults) => Object.values(fileResults
+  .filter(r => r.translationKeys.length)
+  .reduce((groupedByKey, currentFile) => (
+    currentFile.translationKeys.reduce((innerGroupedByKey, translationKey) => {
+      if (!innerGroupedByKey[translationKey]) {
+        innerGroupedByKey[translationKey] = {files: [currentFile.fileName], key: translationKey};
+      } else {
+        innerGroupedByKey[translationKey].files.push(currentFile.fileName);
+      }
+      return innerGroupedByKey;
+    }, groupedByKey)
+  ), {}));
+
+
+async function check() {
+
+  const files = await glob('../client/app/**/*.js', {cwd: __dirname});
+  console.log(`Checking ${files.length} js files for translation key use...`);
+  const filePromises = files.map(async (fileName) => {
+    const content = await fs.readFile(path.join(__dirname, fileName), 'utf-8');
+    return findTranslationKeysInFileContent(fileName, content);
+  });
+  const fileResults = await Promise.all(filePromises);
+  const keys = groupByKey(fileResults);
+  keys.sort((kA, kB) => kA.key.localeCompare(kB.key));
+
+  const missingTranslations = keys.map((key) => {
+    key.isTranslatedDE = DEFINED_KEYS_DE.includes(key.key);
+    key.isTranslatedEN = DEFINED_KEYS_EN.includes(key.key);
+    return key;
+  })
+    .filter((res) => !res.isTranslatedDE || !res.isTranslatedEN);
+
+  missingTranslations.forEach((res) => {
+    console.error(`Key "${res.key}" is missing at least one translation. Used in File(s) ${res.files.join()}: isTranslatedDE=${res.isTranslatedDE}  isTranslatedEN=${res.isTranslatedEN}`)
+  });
+
+  if (missingTranslations.length > 0) {
+    throw new Error('Check failed');
+  }
+
+  const usedKeyStrings = keys.map(k => k.key);
+
+  const unusedDE = DEFINED_KEYS_DE.filter((deKey) => !usedKeyStrings.includes(deKey));
+  const unusedEN = DEFINED_KEYS_EN.filter((enKey) => !usedKeyStrings.includes(enKey));
+
+  unusedDE.forEach((unusedDeKey) => {
+    console.warn(`Defined DE key "${unusedDeKey}" is not used..`);
+  });
+  unusedEN.forEach((unusedEnKey) => {
+    console.warn(`Defined EN key "${unusedEnKey}" is not used..`);
+  });
+
+
+  if (unusedDE.length > 0 || unusedEN.length) {
+    throw new Error('Check failed');
+  }
+
+
+  console.log(`checked ${usedKeyStrings.length} translation keys... all good.`);
+
+}

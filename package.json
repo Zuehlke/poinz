@@ -12,15 +12,17 @@
   },
   "scripts": {
     "test": "cd client/ && npm test &&  cd ../server && npm test",
+    "prebuild": "node build/checkTranslationKeys.js",
     "build": "node build/dockerImage.js",
     "dependencyCheck": "ncu --packageFile ./package.json > npm_dependencies_report.poinz.md && ncu --packageFile ./client/package.json > npm_dependencies_report.poinz-client.md && ncu --packageFile ./server/package.json > npm_dependencies_report.poinz-server.md ",
     "postinstall": "cd client/ && npm i && cd ../server && npm i"
   },
   "devDependencies": {
+    "bluebird": "3.7.2",
     "del": "5.1.0",
     "fs-extra": "9.0.0",
-    "npm-check-updates": "4.1.2",
-    "bluebird": "3.7.2"
+    "glob": "^7.1.6",
+    "npm-check-updates": "4.1.2"
   },
   "engines": {
     "node": ">=9"

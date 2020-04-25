@@ -13,11 +13,11 @@ const setVisitorCommandHandler = {
   },
   fn: (room, command) => {
     if (command.payload.isVisitor) {
-      room.applyEvent('visitorSet', {userId: command.payload.userId});
+      room.applyEvent('visitorSet', { userId: command.payload.userId });
     } else {
-      room.applyEvent('visitorUnset', {userId: command.payload.userId});
+      room.applyEvent('visitorUnset', { userId: command.payload.userId });
     }
   }
 };
 
-export default  setVisitorCommandHandler;
+export default setVisitorCommandHandler;

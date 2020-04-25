@@ -29,12 +29,10 @@ const giveStoryEstimateCommandHandler = {
     room.applyEvent('storyEstimateGiven', command.payload);
 
     if (allValidUsersEstimated(room, command.payload.storyId, command.payload.userId)) {
-
       room.applyEvent('revealed', {
         storyId: command.payload.storyId,
         manually: false
       });
-
     }
   }
 };
@@ -48,19 +46,18 @@ const giveStoryEstimateCommandHandler = {
  * @returns {boolean}
  */
 function allValidUsersEstimated(room, storyId, userId) {
-
   let estimations = room.getIn(['stories', storyId, 'estimations']);
   // if the user did estimate before, his userId is not added to the map...
   estimations = estimations.set(userId, -1); // the estimation-value does not matter for counting...
   const estimationCount = estimations.size;
 
-  const possibleEstimationCount = room.get('users')
-    .filter(usr => !usr.get('visitor'))
-    .filter(usr => !usr.get('disconnected'))
+  const possibleEstimationCount = room
+    .get('users')
+    .filter((usr) => !usr.get('visitor'))
+    .filter((usr) => !usr.get('disconnected'))
     .keySeq().size;
 
-  return (estimationCount === possibleEstimationCount);
-
+  return estimationCount === possibleEstimationCount;
 }
 
 export default giveStoryEstimateCommandHandler;

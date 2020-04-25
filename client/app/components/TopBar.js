@@ -1,14 +1,25 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {toggleBacklog, toggleUserMenu, toggleLog} from '../actions';
+import { toggleBacklog, toggleUserMenu, toggleLog } from '../actions';
 
-const TopBar = ({ username, toggleBacklog, toggleUserMenu, toggleLog, userMenuShown, logShown, backlogShown}) => {
+const TopBar = ({
+  username,
+  toggleBacklog,
+  toggleUserMenu,
+  toggleLog,
+  userMenuShown,
+  logShown,
+  backlogShown
+}) => {
   return (
     <div className="top-bar">
       <div className="poinz-logo">PoinZ</div>
-      <a className={`backlog-toggle clickable ${backlogShown ? 'pure-button-active' : ''}`} onClick={toggleBacklog}>
+      <a
+        className={`backlog-toggle clickable ${backlogShown ? 'pure-button-active' : ''}`}
+        onClick={toggleBacklog}
+      >
         <span className="menu-link-inner">
           <span></span>
         </span>
@@ -19,15 +30,21 @@ const TopBar = ({ username, toggleBacklog, toggleUserMenu, toggleLog, userMenuSh
       </span>
 
       <a
-        className={`user-menu-toggle clickable pure-button pure-button-primary ${userMenuShown ? 'pure-button-active' : ''} `}
-        onClick={toggleUserMenu}>
+        className={`user-menu-toggle clickable pure-button pure-button-primary ${
+          userMenuShown ? 'pure-button-active' : ''
+        } `}
+        onClick={toggleUserMenu}
+      >
         <i className="fa fa-cog"></i>
       </a>
-      <a className={`log-toggle clickable pure-button pure-button-primary ${logShown ? 'pure-button-active' : ''}`}
-         onClick={toggleLog}>
+      <a
+        className={`log-toggle clickable pure-button pure-button-primary ${
+          logShown ? 'pure-button-active' : ''
+        }`}
+        onClick={toggleLog}
+      >
         <i className="fa fa-list"></i>
       </a>
-
     </div>
   );
 };
@@ -43,13 +60,11 @@ TopBar.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
-    username: (state.users && state.users[state.userId]) ? state.users[state.userId].username : '-'
+    username: state.users && state.users[state.userId] ? state.users[state.userId].username : '-'
   }),
-  {toggleBacklog, toggleUserMenu, toggleLog}
+  { toggleBacklog, toggleUserMenu, toggleLog }
 )(TopBar);
-
-

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CreateRoomForm from '../components/CreateRoomForm';
@@ -9,14 +9,14 @@ import GithubRibbon from '../components/GithubRibbon';
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({t, roomHistoryLength, waitingForJoin})=> {
+const Landing = ({ t, roomHistoryLength, waitingForJoin }) => {
   return (
     <div className="landing">
       <GithubRibbon />
       <div className="landing-inner">
         {!waitingForJoin && <CreateRoomForm />}
         {!waitingForJoin && roomHistoryLength && <RoomHistory />}
-        {waitingForJoin && <Loader t={t}/>}
+        {waitingForJoin && <Loader t={t} />}
       </div>
     </div>
   );
@@ -28,19 +28,13 @@ Landing.propTypes = {
   roomHistoryLength: PropTypes.number
 };
 
-export default connect(
-  state => ({
-    t: state.translator,
-    roomHistoryLength: state.roomHistory.length,
-    waitingForJoin: !!Object.values(state.pendingCommands).find(cmd => cmd.name === 'joinRoom')
-  })
-)(Landing);
+export default connect((state) => ({
+  t: state.translator,
+  roomHistoryLength: state.roomHistory.length,
+  waitingForJoin: !!Object.values(state.pendingCommands).find((cmd) => cmd.name === 'joinRoom')
+}))(Landing);
 
-const Loader = ({t}) => (
-  <div className="eyecatcher loading">
-    {t('loading')}
-  </div>
-);
+const Loader = ({ t }) => <div className="eyecatcher loading">{t('loading')}</div>;
 
 Loader.propTypes = {
   t: PropTypes.func

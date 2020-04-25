@@ -14,7 +14,6 @@ const revealCommandHandler = {
     }
   },
   fn: (room, command) => {
-
     if (room.getIn(['stories', command.payload.storyId, 'revealed'])) {
       return;
     }

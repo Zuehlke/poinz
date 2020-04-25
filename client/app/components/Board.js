@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Backlog from '../components/Backlog';
@@ -18,7 +18,7 @@ import Estimation from '../components/Estimation';
  * - the current story
  * - cards
  */
-const Board = ({roomId, isAStorySelected}) => (
+const Board = ({ roomId, isAStorySelected }) => (
   <div className="board" id={roomId}>
     <Users />
     <UserMenu />
@@ -33,9 +33,7 @@ Board.propTypes = {
   isAStorySelected: PropTypes.bool
 };
 
-export default connect(
-  state => ({
-    roomId: state.roomId,
-    isAStorySelected: !!state.stories[state.selectedStory]
-  })
-)(Board);
+export default connect((state) => ({
+  roomId: state.roomId,
+  isAStorySelected: !!state.stories[state.selectedStory]
+}))(Board);

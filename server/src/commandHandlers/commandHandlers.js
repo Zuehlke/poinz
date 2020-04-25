@@ -14,7 +14,6 @@ import setUsername from './setUsername';
 import setEmail from './setEmail';
 import setVisitor from './setVisitor';
 
-
 export default {
   createRoom,
   addStory,

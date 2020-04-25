@@ -10,4 +10,16 @@ import NICK_FURY from './Nick Fury-01.png';
 import THOR from './Thor-01.png';
 import WAR_MACHINE from './War Machine-01.png';
 
-export default [AGENT_COULSON, BLACK_WIDOW, CAPTAIN, GIANT_MAN, HAWKEYE, HULK, IRONMAN, LOKI, NICK_FURY, THOR, WAR_MACHINE];
+export default [
+  AGENT_COULSON,
+  BLACK_WIDOW,
+  CAPTAIN,
+  GIANT_MAN,
+  HAWKEYE,
+  HULK,
+  IRONMAN,
+  LOKI,
+  NICK_FURY,
+  THOR,
+  WAR_MACHINE
+];

@@ -1,16 +1,16 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import {changeStory, cancelEditStory} from '../actions';
+import { changeStory, cancelEditStory } from '../actions';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
+const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeCommands }) => {
   const classes = classnames('story', {
-    'waiting': Object.values(pendingChangeCommands).find(cmd => cmd.payload.storyId === story.id)
+    waiting: Object.values(pendingChangeCommands).find((cmd) => cmd.payload.storyId === story.id)
   });
 
   let titleInputField, descriptionInputField;
@@ -18,25 +18,25 @@ const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeComman
   return (
     <div className={classes}>
       <div className="pure-form">
-
         <fieldset className="pure-group">
-          <input type="text" className="pure-input-1"
-                 defaultValue={story.title}
-                 ref={ref => titleInputField = ref}
-                 onKeyPress={handleTitleKeyEvent}/>
+          <input
+            type="text"
+            className="pure-input-1"
+            defaultValue={story.title}
+            ref={(ref) => (titleInputField = ref)}
+            onKeyPress={handleTitleKeyEvent}
+          />
 
-        <textarea className="pure-input-1"
-                  rows="1"
-                  placeholder="Description / URL / etc."
-                  defaultValue={story. description }
-                  ref={ref => descriptionInputField = ref}/>
+          <textarea
+            className="pure-input-1"
+            rows="1"
+            placeholder="Description / URL / etc."
+            defaultValue={story.description}
+            ref={(ref) => (descriptionInputField = ref)}
+          />
         </fieldset>
 
-        <StoryEditFormButtonGroup
-          onSave={triggerChange}
-          onCancel={triggerCancel}
-        />
-
+        <StoryEditFormButtonGroup onSave={triggerChange} onCancel={triggerCancel} />
       </div>
     </div>
   );
@@ -66,26 +66,28 @@ StoryEditForm.propTypes = {
 };
 
 export default connect(
-  state => ({
-    pendingChangeCommands: Object.values(state.pendingCommands).filter(cmd => cmd.name === 'changeStory')
+  (state) => ({
+    pendingChangeCommands: Object.values(state.pendingCommands).filter(
+      (cmd) => cmd.name === 'changeStory'
+    )
   }),
- {changeStory, cancelEditStory}
+  { changeStory, cancelEditStory }
 )(StoryEditForm);
 
-const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
+const StoryEditFormButtonGroup = ({ onSave, onCancel }) => (
   <div className="pure-g button-group">
     <div className="pure-u-1-2">
-      <button type="button"
-              className="pure-button pure-input-1"
-              onClick={onCancel}>
+      <button type="button" className="pure-button pure-input-1" onClick={onCancel}>
         Cancel
         <i className="fa fa-times button-icon-right"></i>
       </button>
     </div>
     <div className="pure-u-1-2">
-      <button type="button"
-              className="pure-button pure-input-1 pure-button-primary"
-              onClick={onSave}>
+      <button
+        type="button"
+        className="pure-button pure-input-1 pure-button-primary"
+        onClick={onSave}
+      >
         Save
         <i className="fa fa-pencil button-icon-right"></i>
       </button>

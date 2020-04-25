@@ -1,17 +1,26 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
+import { setVisitor, setUsername, setEmail, leaveRoom, setLanguage } from '../actions';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.
  *
  * It also dispalys a "leave room" button.
  */
-const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisitor, setLanguage, userMenuShown}) => {
-
+const UserMenu = ({
+  t,
+  language,
+  user,
+  setUsername,
+  setEmail,
+  leaveRoom,
+  setVisitor,
+  setLanguage,
+  userMenuShown
+}) => {
   const username = user.username;
   const email = user.email;
   const isVisitor = user.visitor;
@@ -28,43 +37,51 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
   let usernameInputField, emailInputField;
 
   return (
-
     <div className={menuClasses}>
-
       <div className="pure-form">
-
         <div className="user-menu-section">
           <h5>{t('username')}</h5>
 
           <div className="username-wrapper">
-            <input type="text"
-                   id="username"
-                   placeholder={t('name')}
-                   defaultValue={username}
-                   ref={ref => usernameInputField = ref}
-                   onKeyPress={handleUsernameKeyPress}/>
+            <input
+              type="text"
+              id="username"
+              placeholder={t('name')}
+              defaultValue={username}
+              ref={(ref) => (usernameInputField = ref)}
+              onKeyPress={handleUsernameKeyPress}
+            />
 
-            <button className="pure-button pure-button-primary button-save button-save-username"
-                    onClick={saveUsername}>{t('save')}</button>
+            <button
+              className="pure-button pure-button-primary button-save button-save-username"
+              onClick={saveUsername}
+            >
+              {t('save')}
+            </button>
           </div>
         </div>
 
         <div className="user-menu-section">
           <h5>{t('language')}</h5>
           <div className="language-selector-wrapper">
-
             <label htmlFor="language-selector-en">
-              <input type="radio" id="language-selector-en" name="language-selector"
-                     defaultChecked={language === 'en'}
-                     onClick={() => setLanguage('en')}
+              <input
+                type="radio"
+                id="language-selector-en"
+                name="language-selector"
+                defaultChecked={language === 'en'}
+                onClick={() => setLanguage('en')}
               />
               {t('english')}
             </label>
 
             <label htmlFor="language-selector-de">
-              <input type="radio" id="language-selector-de" name="language-selector"
-                     defaultChecked={language === 'de'}
-                     onClick={() => setLanguage('de')}
+              <input
+                type="radio"
+                id="language-selector-de"
+                name="language-selector"
+                defaultChecked={language === 'de'}
+                onClick={() => setLanguage('de')}
               />
               {t('german')}
             </label>
@@ -76,21 +93,25 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
           {t('gravatarInfo')}
 
           <div className="email-wrapper">
-            <input type="text"
-                   id="email"
-                   placeholder="Email..."
-                   defaultValue={email}
-                   ref={ref => emailInputField = ref}
-                   onKeyPress={handleEmailKeypress}
+            <input
+              type="text"
+              id="email"
+              placeholder="Email..."
+              defaultValue={email}
+              ref={(ref) => (emailInputField = ref)}
+              onKeyPress={handleEmailKeypress}
             />
 
-            <button className="pure-button pure-button-primary button-save button-save-email"
-                    onClick={saveEmail}>{t('save')}</button>
+            <button
+              className="pure-button pure-button-primary button-save button-save-email"
+              onClick={saveEmail}
+            >
+              {t('save')}
+            </button>
           </div>
         </div>
 
         <div className="user-menu-section">
-
           <h5>{t('markVisitor')}</h5>
           {t('visitorInfo')}
 
@@ -100,7 +121,11 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
         </div>
       </div>
 
-      <button className="leave-room-button pure-button pure-button-primary" type="button" onClick={leaveRoom}>
+      <button
+        className="leave-room-button pure-button pure-button-primary"
+        type="button"
+        onClick={leaveRoom}
+      >
         {t('leaveRoom')}
         <i className="fa fa-sign-out button-icon-right"></i>
       </button>
@@ -133,7 +158,6 @@ const UserMenu = ({t, language, user, setUsername, setEmail, leaveRoom, setVisit
   function toggleVisitor() {
     setVisitor(!isVisitor);
   }
-
 };
 
 UserMenu.propTypes = {
@@ -149,7 +173,7 @@ UserMenu.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     t: state.translator,
     language: state.language,
     user: state.users[state.userId],

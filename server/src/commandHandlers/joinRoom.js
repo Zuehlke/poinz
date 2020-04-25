@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 /**
  * A user joins a room.
@@ -9,7 +9,6 @@ import {v4 as uuid} from 'uuid';
  */
 const joinRoomCommandHandler = {
   fn: (room, command) => {
-
     // if user joins an existing room with a preset userId, the userId is handled like a "session" token.
     // Since we do not handle any sensitive data, it is known and accepted, that with a known userId one user can hijack the "session" of
     // another user
@@ -28,7 +27,6 @@ const joinRoomCommandHandler = {
 
     room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
-
     if (command.payload.username) {
       room.applyEvent('usernameSet', {
         userId: userObject.id,
@@ -43,7 +41,6 @@ const joinRoomCommandHandler = {
       });
     }
   }
-
 };
 
 export default joinRoomCommandHandler;
@@ -78,10 +75,8 @@ function getUserObject(room, command) {
   } else {
     return {
       id: command.payload.userId || uuid(), // client can cache/store userId and send it already with "joinRoom" command
-      username: command.payload.username,// client can cache/store username and send it already with "joinRoom" command
+      username: command.payload.username, // client can cache/store username and send it already with "joinRoom" command
       email: command.payload.email // client can cache/store email and send it already with "joinRoom" command
     };
   }
-
-
 }

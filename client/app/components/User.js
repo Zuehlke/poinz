@@ -1,13 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {kick} from '../actions';
+import { kick } from '../actions';
 import Avatar from './Avatar.js';
 
-const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
-
+const User = ({ user, index, selectedStory, ownUserId, cardConfig, kick }) => {
   const isVisitor = user.visitor;
   const isDisconnected = user.disconnected;
   const revealed = selectedStory && selectedStory.revealed;
@@ -19,45 +18,52 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
   });
 
   const userEstimationValue = selectedStory && selectedStory.estimations[user.id];
-  const userHasEstimation = (userEstimationValue !== undefined); // value could be "0" which is falsy, check for undefined
+  const userHasEstimation = userEstimationValue !== undefined; // value could be "0" which is falsy, check for undefined
 
   const estimationClasses = classnames('user-estimation', {
     'user-estimation-given': userHasEstimation,
-    'revealed': revealed
+    revealed: revealed
   });
 
-  const matchingCardConfig = cardConfig.find(cc => cc.value === userEstimationValue);
+  const matchingCardConfig = cardConfig.find((cc) => cc.value === userEstimationValue);
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
 
-  const customCardStyle = userHasEstimation && revealed && matchingCardConfig.color ? {
-    background: matchingCardConfig.color,
-    color: 'white'
-  } : {};
+  const customCardStyle =
+    userHasEstimation && revealed && matchingCardConfig.color
+      ? {
+          background: matchingCardConfig.color,
+          color: 'white'
+        }
+      : {};
 
   return (
     <div className={classes}>
-      {
-        !isDisconnected && isVisitor &&
-        <span className="visitor-badge"><i className="fa fa-eye"></i></span>
-      }
+      {!isDisconnected && isVisitor && (
+        <span className="visitor-badge">
+          <i className="fa fa-eye"></i>
+        </span>
+      )}
 
-      {
-        isDisconnected &&
-        <span className="disconnected-badge"><i className="fa fa-flash"></i></span>
-      }
+      {isDisconnected && (
+        <span className="disconnected-badge">
+          <i className="fa fa-flash"></i>
+        </span>
+      )}
 
-      <Avatar user={user} index={index}/>
+      <Avatar user={user} index={index} />
       <div className="user-name">{user.username || '-'}</div>
 
-      {
-        isDisconnected &&
+      {isDisconnected && (
         <span onClick={kickUser} className="disconnected-kick-overlay">
           <i className="fa fa-ban"></i>
         </span>
-      }
+      )}
 
-      {selectedStory && <div className={estimationClasses} style={customCardStyle}>{estimationValueToDisplay}</div>}
-
+      {selectedStory && (
+        <div className={estimationClasses} style={customCardStyle}>
+          {estimationValueToDisplay}
+        </div>
+      )}
     </div>
   );
 
@@ -67,7 +73,6 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
       kick(user.id);
     }
   }
-
 };
 
 User.propTypes = {
@@ -80,10 +85,10 @@ User.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     cardConfig: state.cardConfig,
     ownUserId: state.userId,
     selectedStory: state.stories[state.selectedStory]
   }),
- {kick}
+  { kick }
 )(User);

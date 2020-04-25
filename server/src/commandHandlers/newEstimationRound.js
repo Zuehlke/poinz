@@ -19,4 +19,4 @@ const newEstimationRoundCommandHandler = {
   }
 };
 
-export default  newEstimationRoundCommandHandler;
+export default newEstimationRoundCommandHandler;

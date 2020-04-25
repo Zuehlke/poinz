@@ -11,9 +11,9 @@ const leaveRoomCommandHandler = {
   },
   fn: (room, command) => {
     if (command.payload.connectionLost) {
-      room.applyEvent('connectionLost', {userId: command.payload.userId});
+      room.applyEvent('connectionLost', { userId: command.payload.userId });
     } else {
-      room.applyEvent('leftRoom', {userId: command.payload.userId});
+      room.applyEvent('leftRoom', { userId: command.payload.userId });
     }
   }
 };

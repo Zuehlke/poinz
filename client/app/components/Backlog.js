@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -10,8 +10,7 @@ import StoryAddForm from './StoryAddForm';
  * The backlog contains a form to add new stories
  * and a list of stories.
  */
-const Backlog = ({stories, backlogShown, isVisitor}) => {
-
+const Backlog = ({ stories, backlogShown, isVisitor }) => {
   const hasStories = stories && !!Object.keys(stories).length;
 
   const backlogClasses = classnames('backlog', {
@@ -20,12 +19,14 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
 
   return (
     <div className={backlogClasses}>
+      {!isVisitor && <StoryAddForm />}
 
-      {!isVisitor && <StoryAddForm/>}
-
-      {hasStories && <Stories/>}
-      {!hasStories && <div className="story-hint">There are currently no stories in the estimation backlog...</div>}
-
+      {hasStories && <Stories />}
+      {!hasStories && (
+        <div className="story-hint">
+          There are currently no stories in the estimation backlog...
+        </div>
+      )}
     </div>
   );
 };
@@ -36,10 +37,8 @@ Backlog.propTypes = {
   isVisitor: PropTypes.bool
 };
 
-export default connect(
-  state => ({
-    stories: state.stories,
-    backlogShown: state.backlogShown,
-    isVisitor: state.users[state.userId] ? state.users[state.userId].visitor : false
-  })
-)(Backlog);
+export default connect((state) => ({
+  stories: state.stories,
+  backlogShown: state.backlogShown,
+  isVisitor: state.users[state.userId] ? state.users[state.userId].visitor : false
+}))(Backlog);

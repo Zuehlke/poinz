@@ -1,5 +1,4 @@
-const storyDeletedEventHandler = (room, eventPayload) => (
-  room.removeIn(['stories', eventPayload.storyId])
-);
+const storyDeletedEventHandler = (room, eventPayload) =>
+  room.removeIn(['stories', eventPayload.storyId]);
 
 export default storyDeletedEventHandler;

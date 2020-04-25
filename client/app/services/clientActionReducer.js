@@ -32,45 +32,53 @@ export default function clientActionReducer(state, action) {
       // - the first event produced by a command will remove it (consider that the backend might produce N events for a single command that is processed)
       // - if the backend does not produce an event for a command, the command will remain in the client state.
 
-      const modifiedPendingCommands = {...state.pendingCommands, [action.command.id]: action.command};
-      return {...state, pendingCommands: modifiedPendingCommands};
+      const modifiedPendingCommands = {
+        ...state.pendingCommands,
+        [action.command.id]: action.command
+      };
+      return { ...state, pendingCommands: modifiedPendingCommands };
     }
     case EVENT_RECEIVED: {
       // for every event that we receive, we remove the corresponding command if any. (i.e. the command that triggered that event in the backend)
 
       delete state.pendingCommands[action.correlationId];
-      const modifiedPendingCommands = {...state.pendingCommands};
-      return {...state, pendingCommands: modifiedPendingCommands};
+      const modifiedPendingCommands = { ...state.pendingCommands };
+      return { ...state, pendingCommands: modifiedPendingCommands };
     }
     case TOGGLE_BACKLOG: {
-      return {...state, backlogShown: !state.backlogShown};
+      return { ...state, backlogShown: !state.backlogShown };
     }
     case TOGGLE_USER_MENU: {
-
       const showMenu = !state.userMenuShown;
 
       if (showMenu) {
-        return {...state, userMenuShown: true, logShown: false};
+        return { ...state, userMenuShown: true, logShown: false };
       } else {
-        return {...state, userMenuShown: false};
+        return { ...state, userMenuShown: false };
       }
     }
     case TOGGLE_LOG: {
       const showLog = !state.logShown;
 
       if (showLog) {
-        return {...state, logShown: true, userMenuShown: false};
+        return { ...state, logShown: true, userMenuShown: false };
       } else {
-        return {...state, logShown: false};
+        return { ...state, logShown: false };
       }
     }
     case EDIT_STORY: {
-      const modifiedStories = {...state.stories, [action.storyId]: {...state.stories[action.storyId], editMode: true}};
-      return {...state, stories: modifiedStories};
+      const modifiedStories = {
+        ...state.stories,
+        [action.storyId]: { ...state.stories[action.storyId], editMode: true }
+      };
+      return { ...state, stories: modifiedStories };
     }
     case CANCEL_EDIT_STORY: {
-      const modifiedStories = {...state.stories, [action.storyId]: {...state.stories[action.storyId], editMode: false}};
-      return {...state, stories: modifiedStories};
+      const modifiedStories = {
+        ...state.stories,
+        [action.storyId]: { ...state.stories[action.storyId], editMode: false }
+      };
+      return { ...state, stories: modifiedStories };
     }
     case STATUS_FETCHED: {
       return {
@@ -81,9 +89,9 @@ export default function clientActionReducer(state, action) {
     case SET_LANGUAGE: {
       const language = action.language;
       clientSettingsStore.setPresetLanguage(language);
-      return {...state, language, translator: (key) => translator(key, language)};
+      return { ...state, language, translator: (key) => translator(key, language) };
     }
-    default :
+    default:
       LOGGER.warn('unknown action', action);
       return state;
   }

@@ -10,7 +10,7 @@ import TopBar from '../components/TopBar';
  * contains the top-bar, the board and the (bottom right) version info
  */
 const Room = () => (
-  <div style={{height:'100%'}}>
+  <div style={{ height: '100%' }}>
     <TopBar />
     <Board />
     <div className="version-info">

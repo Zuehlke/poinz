@@ -1,9 +1,9 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {newEstimationRound, reveal} from '../actions';
+import { newEstimationRound, reveal } from '../actions';
 
 import Cards from './Cards';
 
@@ -14,8 +14,7 @@ import Cards from './Cards';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
-
+const Estimation = ({ t, selectedStory, user, newEstimationRound, reveal }) => {
   const ownEstimate = selectedStory.estimations[user.id];
 
   const revealed = selectedStory.revealed;
@@ -24,40 +23,40 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
   return (
     <div className="estimation">
-
       <div className="selected-story">
-        <h4>
-          {selectedStory.title}
-        </h4>
+        <h4>{selectedStory.title}</h4>
         <div className="story-text">
-          <Anchorify text={selectedStory.description}/>
+          <Anchorify text={selectedStory.description} />
         </div>
       </div>
 
-      {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate}/>}
+      {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate} />}
 
-      {
-        userCanCurrentlyEstimate &&
+      {userCanCurrentlyEstimate && (
         <div className="board-actions">
-          <button type="button" className="pure-button pure-button-primary"
-                  onClick={() => reveal(selectedStory.id)}>
+          <button
+            type="button"
+            className="pure-button pure-button-primary"
+            onClick={() => reveal(selectedStory.id)}
+          >
             {t('revealManually')}
             <i className="fa fa-hand-paper-o button-icon-right"></i>
           </button>
         </div>
-      }
+      )}
 
-      {
-        revealed &&
+      {revealed && (
         <div className="board-actions">
-          <button type="button" className="pure-button pure-button-primary"
-                  onClick={() => newEstimationRound(selectedStory.id)}>
+          <button
+            type="button"
+            className="pure-button pure-button-primary"
+            onClick={() => newEstimationRound(selectedStory.id)}
+          >
             {t('newRound')}
             <i className="fa fa-undo  button-icon-right"></i>
           </button>
         </div>
-      }
-
+      )}
     </div>
   );
 };
@@ -71,10 +70,10 @@ Estimation.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     t: state.translator,
     selectedStory: state.stories[state.selectedStory],
-    user: state.users[state.userId],
+    user: state.users[state.userId]
   }),
-  {newEstimationRound, reveal}
+  { newEstimationRound, reveal }
 )(Estimation);

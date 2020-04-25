@@ -1,16 +1,15 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {setUsername} from '../actions';
+import { setUsername } from '../actions';
 import GithubRibbon from '../components/GithubRibbon';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({t, setUsername}) => {
-
+const WhoAreYou = ({ t, setUsername }) => {
   let usernameInputField;
 
   return (
@@ -20,19 +19,20 @@ const WhoAreYou = ({t, setUsername}) => {
         <div className="eyecatcher">
           <div className="info-text">
             <i className="fa fa-user-secret leading-paragraph-icon"></i>
-            <p>
-              {t('provideUsernameInfo')}
-            </p>
+            <p>{t('provideUsernameInfo')}</p>
           </div>
           <div className="username-wrapper">
-            <input type="text"
-                   id="username"
-                   placeholder={t('name')}
-                   ref={ref => usernameInputField = ref}
-                   onKeyPress={handleUsernameKeyPress}/>
+            <input
+              type="text"
+              id="username"
+              placeholder={t('name')}
+              ref={(ref) => (usernameInputField = ref)}
+              onKeyPress={handleUsernameKeyPress}
+            />
 
-            <button className="pure-button pure-button-primary button-save"
-                    onClick={saveUsername}>{t('join')}</button>
+            <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>
+              {t('join')}
+            </button>
           </div>
         </div>
       </div>
@@ -51,7 +51,6 @@ const WhoAreYou = ({t, setUsername}) => {
       setUsername(usernameInputField.value);
     }
   }
-
 };
 
 WhoAreYou.propTypes = {
@@ -60,8 +59,8 @@ WhoAreYou.propTypes = {
 };
 
 export default connect(
-  state => ({
+  (state) => ({
     t: state.translator
   }),
- {setUsername}
+  { setUsername }
 )(WhoAreYou);

@@ -9,7 +9,6 @@ export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
 export const STATUS_FETCHED = 'STATUS_FETCHED';
 
-
 /**
  * Action types for backend events
  */
@@ -33,7 +32,6 @@ export const EVENT_ACTION_TYPES = {
   storyChanged: 'STORY_CHANGED',
   storyDeleted: 'STORY_DELETED'
 };
-
 
 /** various **/
 export const COMMAND_SENT = 'COMMAND_SENT';

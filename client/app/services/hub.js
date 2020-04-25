@@ -1,12 +1,12 @@
-import {EventEmitter} from 'events';
-import {inherits} from 'util';
+import { EventEmitter } from 'events';
+import { inherits } from 'util';
 
 import socketIo from 'socket.io-client';
 import log from 'loglevel';
-import {v4 as uuid} from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import appConfig from './appConfig';
-import {COMMAND_SENT} from '../actions/types';
+import { COMMAND_SENT } from '../actions/types';
 
 /**
  * The Hub  is our interface between the websocket connection and the app.
@@ -22,7 +22,7 @@ function Hub() {
     return;
   }
 
-  this.io = (appConfig.wsUrl) ? socketIo(appConfig.wsUrl) : socketIo();
+  this.io = appConfig.wsUrl ? socketIo(appConfig.wsUrl) : socketIo();
 
   this.io.on('connect', () => log.info('socket to server connected'));
   this.io.on('disconnect', () => log.info('socket from server disconnected'));

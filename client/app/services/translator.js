@@ -3,7 +3,6 @@ import log from 'loglevel';
 import translationsEN from '../assets/i18n/en.json';
 import translationsDE from '../assets/i18n/de.json';
 
-
 const LOGGER = log.getLogger('translator');
 
 const dictionary = {
@@ -19,7 +18,6 @@ const dictionary = {
  * @returns {string}
  */
 export default function lookup(translationKey, language) {
-
   const translations = dictionary[language];
 
   if (!translations) {
@@ -34,4 +32,3 @@ export default function lookup(translationKey, language) {
 
   return translation;
 }
-

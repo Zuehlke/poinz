@@ -1,21 +1,20 @@
 import React from 'react';
 import fecha from 'fecha';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import appConfig from '../services/appConfig';
-import {secondsToDaysHoursMinutes} from '../services/timeUtil';
+import { secondsToDaysHoursMinutes } from '../services/timeUtil';
 import TopBar from '../components/TopBar';
-import {fetchStatus} from '../actions';
+import { fetchStatus } from '../actions';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
  * How many rooms, how many users.
  */
 class AppStatus extends React.Component {
-
   componentDidMount() {
-    const {fetchStatus, appStatus} = this.props;
+    const { fetchStatus, appStatus } = this.props;
 
     if (!appStatus) {
       fetchStatus();
@@ -23,8 +22,7 @@ class AppStatus extends React.Component {
   }
 
   render() {
-
-    const {fetchStatus, appStatus} = this.props;
+    const { fetchStatus, appStatus } = this.props;
     if (!appStatus) {
       // this is an operations UI, it's ok to display a empty page during data loading...
       return null;
@@ -33,16 +31,16 @@ class AppStatus extends React.Component {
     const uptime = secondsToDaysHoursMinutes(appStatus.uptime);
 
     const sortedActiveRooms = appStatus.rooms
-      .filter(room => room.userCount > room.userCountDisconnected)
+      .filter((room) => room.userCount > room.userCountDisconnected)
       .sort(roomComparator);
 
     const sortedInActiveRooms = appStatus.rooms
-      .filter(room => room.userCount <= room.userCountDisconnected)
+      .filter((room) => room.userCount <= room.userCountDisconnected)
       .sort(roomComparator);
 
     return (
       <div className="app-status">
-        <TopBar/>
+        <TopBar />
 
         <button className="pure-button pure-button-primary" onClick={fetchStatus}>
           <i className="fa fa-refresh"></i>
@@ -53,26 +51,24 @@ class AppStatus extends React.Component {
         <p>
           Version: {appConfig.version} {fecha.format(appConfig.buildTime, ' DD.MM.YY HH:mm')}
         </p>
-        <p>
-          Uptime: {uptime}
-        </p>
-        <p>
-          Total rooms: {appStatus.roomCount}
-        </p>
+        <p>Uptime: {uptime}</p>
+        <p>Total rooms: {appStatus.roomCount}</p>
 
         <h5>Active Rooms</h5>
         <ul className="rooms rooms-active">
-          <TableHeaders/>
-          {sortedActiveRooms.map((room, index) => <RoomItem key={index} index={index} room={room}/>)}
+          <TableHeaders />
+          {sortedActiveRooms.map((room, index) => (
+            <RoomItem key={index} index={index} room={room} />
+          ))}
         </ul>
 
         <h5>Inactive Rooms</h5>
         <ul className="rooms rooms-active">
-          <TableHeaders/>
-          {sortedInActiveRooms.map((room, index) => <RoomItem key={index} room={room}/>)}
+          <TableHeaders />
+          {sortedInActiveRooms.map((room, index) => (
+            <RoomItem key={index} room={room} />
+          ))}
         </ul>
-
-
       </div>
     );
   }
@@ -86,16 +82,15 @@ AppStatus.propTypes = {
 function roomComparator(rA, rB) {
   const roomOneTimestamp = rA.lastActivity;
   const roomTwoTimestamp = rB.lastActivity;
-  return (roomOneTimestamp < roomTwoTimestamp) ? 1 : roomTwoTimestamp < roomOneTimestamp ? -1 : 0;
+  return roomOneTimestamp < roomTwoTimestamp ? 1 : roomTwoTimestamp < roomOneTimestamp ? -1 : 0;
 }
 
 export default connect(
-  state => ({
+  (state) => ({
     appStatus: state.appStatus
   }),
-  {fetchStatus}
+  { fetchStatus }
 )(AppStatus);
-
 
 const TableHeaders = () => (
   <li className="headers">
@@ -106,7 +101,7 @@ const TableHeaders = () => (
   </li>
 );
 
-const RoomItem = ({room}) => (
+const RoomItem = ({ room }) => (
   <li>
     <div>{room.userCount}</div>
     <div>{room.userCountDisconnected}</div>

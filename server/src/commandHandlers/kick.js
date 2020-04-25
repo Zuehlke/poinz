@@ -4,7 +4,6 @@
  */
 const kickCommandHandler = {
   preCondition: (room, command, userId) => {
-
     if (userId === command.payload.userId) {
       throw new Error('User cannot kick himself!');
     }
@@ -20,10 +19,9 @@ const kickCommandHandler = {
     if (room.getIn(['users', userId, 'visitor'])) {
       throw new Error('Visitors cannot kick other users!');
     }
-
   },
   fn: (room, command) => {
-    room.applyEvent('kicked', {userId: command.payload.userId});
+    room.applyEvent('kicked', { userId: command.payload.userId });
   }
 };
 

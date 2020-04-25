@@ -11,31 +11,27 @@
 const path = require('path');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs-extra'));
-const {spawn, exec} = require('child_process');
+const { spawn, exec } = require('child_process');
 const del = require('del');
 
 const execPromised = Promise.promisify(exec);
 
-
 const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
 
 // -- first let's clean up
-del([
-  './deploy/',
-  './deploy/package.json',
-  '!./client/dist/index.html',
-  './client/dist/**/*'
-])
-// -- client
+del(['./deploy/', './deploy/package.json', '!./client/dist/index.html', './client/dist/**/*'])
+  // -- client
   .then(() => {
     console.log('installing npm dependencies for client...');
-    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../client')});
+    return spawnAndPrint('npm', ['install'], { cwd: path.resolve(__dirname, '../client') });
   })
   .then(() => {
     console.log('building client with webpack...');
     return spawnAndPrint(
-      './node_modules/.bin/webpack', '-p --colors --bail --config webpack.production.config.js'.split(' '),
-      {cwd: path.resolve(__dirname, '../client')});
+      './node_modules/.bin/webpack',
+      '-p --colors --bail --config webpack.production.config.js'.split(' '),
+      { cwd: path.resolve(__dirname, '../client') }
+    );
   })
   .then(() => fs.copy('./client/dist', './deploy/public/assets'))
   .then(() => fs.copy('./client/index.html', './deploy/public/index.html'))
@@ -43,13 +39,13 @@ del([
   // -- server
   .then(() => {
     console.log('installing npm dependencies for server...');
-    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../server')});
+    return spawnAndPrint('npm', ['install'], { cwd: path.resolve(__dirname, '../server') });
   })
   .then(() => {
     console.log('building backend (babel transpile)...');
-    return spawnAndPrint(
-      './node_modules/.bin/babel', './src/ -d ./lib'.split(' '),
-      {cwd: path.resolve(__dirname, '../server')});
+    return spawnAndPrint('./node_modules/.bin/babel', './src/ -d ./lib'.split(' '), {
+      cwd: path.resolve(__dirname, '../server')
+    });
   })
   .then(() => fs.copy('./server/lib', './deploy/lib')) // copy transpiled backend files to deploy folder
   .then(() => fs.copy('./server/resources', './deploy/resources'))
@@ -58,12 +54,11 @@ del([
   // -- docker image
   .then(getGitInformation)
   .then(startBuildingDockerImage)
-  .catch(error => {
+  .catch((error) => {
     console.error(error);
     console.error(error.stack);
     process.exit(1);
   });
-
 
 /**
  * spawns a child process (nodejs' child_process.spawn)
@@ -75,12 +70,15 @@ del([
  * @returns {Promise<T>} Returns a promise that will reject if childprocess does not exit with code 0.
  */
 function spawnAndPrint(command, arguments, options) {
-
   const spawned = spawn(command, arguments, options);
   spawned.stdout.pipe(process.stdout);
   spawned.stderr.pipe(process.stderr);
 
-  return new Promise((resolve, reject) => spawned.on('exit', (code) => (code !== 0 ? reject(new Error('Error in child process')) : resolve())));
+  return new Promise((resolve, reject) =>
+    spawned.on('exit', (code) =>
+      code !== 0 ? reject(new Error('Error in child process')) : resolve()
+    )
+  );
 }
 
 function startBuildingDockerImage(gitInfo) {
@@ -89,17 +87,15 @@ function startBuildingDockerImage(gitInfo) {
   const userAndProject = 'xeronimus/poinz';
   const cmdArgs = `build -t ${userAndProject}:latest -t ${userAndProject}:${gitInfo.branch} -t ${userAndProject}:${gitInfo.hash} -t ${HEROKU_DEPLOYMENT_TAG} .`;
 
-  return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
+  return spawnAndPrint('docker', cmdArgs.split(' '), { cwd: path.resolve(__dirname, '..') });
 }
 
 function getGitInformation() {
   return Promise.all([
-    execPromised('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
-    execPromised('git rev-parse --short HEAD', {cdw: __dirname})
-  ])
-    .spread((abbrev, short) => ({
-      branch: abbrev.split('\n').join(''),
-      hash: short.split('\n').join('')
-    }));
+    execPromised('git rev-parse --abbrev-ref HEAD', { cdw: __dirname }),
+    execPromised('git rev-parse --short HEAD', { cdw: __dirname })
+  ]).spread((abbrev, short) => ({
+    branch: abbrev.split('\n').join(''),
+    hash: short.split('\n').join('')
+  }));
 }
-

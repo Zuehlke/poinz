@@ -9,5 +9,7 @@ export function secondsToDaysHoursMinutes(inSeconds) {
   const hours = inHours % 24;
   const days = Math.floor(inHours / 24);
 
-  return `${days} day${days > 1 ? 's' : ''} ${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${minutes > 1 ? 's' : ''}`;
+  return `${days} day${days > 1 ? 's' : ''} ${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${
+    minutes > 1 ? 's' : ''
+  }`;
 }

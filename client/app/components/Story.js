@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import { selectStory, editStory, deleteStory } from '../actions';
+import {selectStory, editStory, deleteStory} from '../actions';
 
 /**
  * One story in the backlog
@@ -72,5 +72,5 @@ export default connect(
       (cmd) => cmd.name === 'selectStory'
     )
   }),
-  { selectStory, editStory, deleteStory }
+  {selectStory, editStory, deleteStory}
 )(Story);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
@@ -10,7 +10,7 @@ import StoryAddForm from './StoryAddForm';
  * The backlog contains a form to add new stories
  * and a list of stories.
  */
-const Backlog = ({ stories, backlogShown, isVisitor }) => {
+const Backlog = ({stories, backlogShown, isVisitor}) => {
   const hasStories = stories && !!Object.keys(stories).length;
 
   const backlogClasses = classnames('backlog', {

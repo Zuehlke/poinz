@@ -1,14 +1,13 @@
 import http from 'http';
 import {v4 as uuid} from 'uuid';
 import socketIo from 'socket.io';
-import logging from './logging';
+import getLogger from './getLogger';
 
-const LOGGER = logging.getLogger('socketServer');
+const LOGGER = getLogger('socketServer');
 
 let io, commandProcessor;
 
-const
-  socketToUserIdMap = {},
+const socketToUserIdMap = {},
   socketToRoomMap = {};
 
 export default {init};
@@ -23,23 +22,21 @@ function init(app, cmdProcessor) {
 
 function handleNewConnection(socket) {
   socket.on('disconnect', onSocketDisconnect.bind(undefined, socket));
-  socket.on('command', msg => handleIncomingCommand(socket, msg));
+  socket.on('command', (msg) => handleIncomingCommand(socket, msg));
 }
 
 function handleIncomingCommand(socket, msg) {
-  LOGGER.debug('incoming command', msg);
-
   commandProcessor(msg, socketToUserIdMap[socket.id])
-    .then(producedEvents => {
-
-      const joinedRoomEvent = producedEvents.find(ev => ev.name === 'joinedRoom');
+    .then((producedEvents) => {
+      const joinedRoomEvent = producedEvents.find((ev) => ev.name === 'joinedRoom');
       if (joinedRoomEvent) {
         registerUserWithSocket(joinedRoomEvent, socket, joinedRoomEvent.payload.userId);
-
       }
       sendEvents(producedEvents, msg.roomId);
     })
-    .catch(commandProcessingError => handleCommandProcessingError(commandProcessingError, msg, socket));
+    .catch((commandProcessingError) =>
+      handleCommandProcessingError(commandProcessingError, msg, socket)
+    );
 }
 
 /**
@@ -48,10 +45,7 @@ function handleIncomingCommand(socket, msg) {
  * @param roomId
  */
 function sendEvents(producedEvents, roomId) {
-  producedEvents.forEach(producedEvent => {
-    io.to(roomId).emit('event', producedEvent);
-    LOGGER.debug('outgoing event', producedEvent);
-  });
+  producedEvents.forEach((producedEvent) => io.to(roomId).emit('event', producedEvent));
 }
 
 /**
@@ -71,8 +65,6 @@ function handleCommandProcessingError(error, command, socket) {
       reason: error.message
     }
   };
-
-  LOGGER.debug('outgoing event', commandRejectedEvent);
 
   // command rejected event is only sent to the one socket that sent the command
   socket.emit('event', commandRejectedEvent);
@@ -95,7 +87,11 @@ function registerUserWithSocket(joinedRoomEvent, socket, userIdToStore) {
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(joinedRoomEvent.roomId, () => LOGGER.debug(`User ${userIdToStore} on socket ${socket.id} joined room ${joinedRoomEvent.roomId}`));
+  socket.join(joinedRoomEvent.roomId, () =>
+    LOGGER.debug(
+      `User ${userIdToStore} on socket ${socket.id} joined room ${joinedRoomEvent.roomId}`
+    )
+  );
 }
 
 /**
@@ -103,7 +99,6 @@ function registerUserWithSocket(joinedRoomEvent, socket, userIdToStore) {
  * a "leaveRoom" command that will mark the user.
  */
 function onSocketDisconnect(socket) {
-
   const userId = socketToUserIdMap[socket.id];
   const roomId = socketToRoomMap[socket.id]; // socket.rooms is at this moment already emptied. so we have to use our own map
 
@@ -122,5 +117,4 @@ function onSocketDisconnect(socket) {
       connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
     }
   });
-
 }

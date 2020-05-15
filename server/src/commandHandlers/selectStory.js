@@ -17,7 +17,7 @@ const selectStoryCommandHandler = {
     }
   },
   fn: (room, command) => {
-    room.applyEvent('storySelected', { storyId: command.payload.storyId });
+    room.applyEvent('storySelected', {storyId: command.payload.storyId});
   }
 };
 

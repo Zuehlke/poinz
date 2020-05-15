@@ -1,15 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { setUsername } from '../actions';
+import {setUsername} from '../actions';
 import GithubRibbon from '../components/GithubRibbon';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({ t, setUsername }) => {
+const WhoAreYou = ({t, setUsername}) => {
   let usernameInputField;
 
   return (
@@ -62,5 +62,5 @@ export default connect(
   (state) => ({
     t: state.translator
   }),
-  { setUsername }
+  {setUsername}
 )(WhoAreYou);

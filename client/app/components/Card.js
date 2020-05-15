@@ -1,14 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { giveStoryEstimate } from '../actions';
+import {giveStoryEstimate} from '../actions';
 
 /**
  * One estimation card on the board.
  */
-const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate }) => {
+const Card = ({card, selectedStoryId, ownEstimate, estimationWaiting, giveStoryEstimate}) => {
   const cardClasses = classnames('card clickable', {
     'card-selected': card.value === ownEstimate
   });
@@ -16,7 +16,7 @@ const Card = ({ card, selectedStoryId, ownEstimate, estimationWaiting, giveStory
     waiting: card.value === estimationWaiting
   });
 
-  const customCardStyle = card.color ? { background: card.color, color: 'white' } : {};
+  const customCardStyle = card.color ? {background: card.color, color: 'white'} : {};
   return (
     <button className={cardClasses} onClick={() => giveStoryEstimate(selectedStoryId, card.value)}>
       <div className={cardInnerClasses} style={customCardStyle}>
@@ -47,5 +47,5 @@ export default connect(
         : undefined
     };
   },
-  { giveStoryEstimate }
+  {giveStoryEstimate}
 )(Card);

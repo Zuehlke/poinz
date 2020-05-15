@@ -1,14 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { addStory } from '../actions';
+import {addStory} from '../actions';
 
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({ t, addStory, pendingAddCommands }) => {
+const StoryAddForm = ({t, addStory, pendingAddCommands}) => {
   const classes = classnames('pure-form story-add-form', {
     waiting: pendingAddCommands
   });
@@ -72,5 +72,5 @@ export default connect(
       (cmd) => cmd.name === 'addStory'
     )
   }),
-  { addStory }
+  {addStory}
 )(StoryAddForm);

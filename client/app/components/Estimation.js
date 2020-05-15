@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import { newEstimationRound, reveal } from '../actions';
+import {newEstimationRound, reveal} from '../actions';
 
 import Cards from './Cards';
 
@@ -14,7 +14,7 @@ import Cards from './Cards';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({ t, selectedStory, user, newEstimationRound, reveal }) => {
+const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
   const ownEstimate = selectedStory.estimations[user.id];
 
   const revealed = selectedStory.revealed;
@@ -75,5 +75,5 @@ export default connect(
     selectedStory: state.stories[state.selectedStory],
     user: state.users[state.userId]
   }),
-  { newEstimationRound, reveal }
+  {newEstimationRound, reveal}
 )(Estimation);

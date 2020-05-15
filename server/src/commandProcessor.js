@@ -5,6 +5,9 @@ import {v4 as uuid} from 'uuid';
 
 import queueFactory from './sequenceQueue';
 import validateCommand from './commandSchemaValidator';
+import getLogger from './getLogger';
+
+const LOGGER = getLogger('commandProcessor');
 
 /**
  * wrapped in a factory function.
@@ -16,7 +19,6 @@ import validateCommand from './commandSchemaValidator';
  * @returns {function} the processCommand function
  */
 export default function commandProcessorFactory(commandHandlers, eventHandlers, store) {
-
   // setup sequence queue
   const queue = queueFactory(jobHandler);
 
@@ -59,6 +61,8 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     const {command, userId} = job;
     const context = {userId};
 
+    LOGGER.debug('HANDLING COMMAND', command.name, command);
+
     validate(command)
       .then(() => findMatchingCommandHandler(context, command))
       .then(() => loadRoom(context, command))
@@ -68,20 +72,28 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       .then(() => saveRoomBackToStore(context))
       .then(() => {
         proceed();
+
+        if (LOGGER.isLevelEnabled('debug')) {
+          LOGGER.debug(
+            'PRODUCED EVENTS',
+            context.eventsToSend.map((e) => e.name).join(', '),
+            context.eventsToSend
+          );
+        }
+
         job.resolve(context.eventsToSend);
       })
-      .catch(err => {
+      .catch((err) => {
         proceed(err);
         job.reject(err);
       });
-
   }
 
   /** 1. Validate incoming command (syntactically, against schema) **/
   function validate(cmd) {
     // use "new Promise" instead of "Promise.resolve" -> errors thrown in invocation of "commandSchemaValidator" should
     // reject returned promise.
-    return new Promise(resolve => resolve(validateCommand(cmd)));
+    return new Promise((resolve) => resolve(validateCommand(cmd)));
   }
 
   /**
@@ -108,13 +120,12 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
   function loadRoom(ctx, cmd) {
-
     if (!cmd.roomId) {
       return new Promise((resolve) => {
         if (!ctx.handler.canCreateRoom) {
           throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`);
         }
-        cmd.roomId = uuid();   // command is allowed to create new room. generate random id
+        cmd.roomId = uuid(); // command is allowed to create new room. generate random id
         ctx.room = new Immutable.Map({
           id: cmd.roomId
         });
@@ -122,14 +133,12 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       });
     }
 
-    return store
-      .getRoomById(cmd.roomId)
-      .then((room) => {
-        if (!room) {
-          throw new Error(`Specified room ${cmd.roomId} does not exist. ("${cmd.name}")`);
-        }
-        ctx.room = room;
-      });
+    return store.getRoomById(cmd.roomId).then((room) => {
+      if (!room) {
+        throw new Error(`Specified room ${cmd.roomId} does not exist. ("${cmd.name}")`);
+      }
+      ctx.room = room;
+    });
   }
 
   /**
@@ -174,7 +183,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       }
 
       // events are handled sequentially since events most often update the state of the room ("are applied to the room")
-      ctx.eventHandlingQueue.push(currentRoom => {
+      ctx.eventHandlingQueue.push((currentRoom) => {
         const updatedRoom = eventHandler(currentRoom, eventPayload);
 
         // build the event object that is sent back to clients
@@ -189,7 +198,6 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
         return updatedRoom;
       });
-
     };
 
     // invoke the command handler function (will produce events by calling "applyEvent")
@@ -204,7 +212,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * @param {object} ctx context object that is used to hold state between processing steps
    */
   function applyEvents(ctx) {
-    ctx.eventHandlingQueue.forEach(evtHandler => ctx.room = evtHandler(ctx.room));
+    ctx.eventHandlingQueue.forEach((evtHandler) => (ctx.room = evtHandler(ctx.room)));
   }
 
   /**
@@ -220,9 +228,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     ctx.room = ctx.room.set('lastActivity', new Date().getTime());
     return store.saveRoom(ctx.room);
   }
-
 }
-
 
 function PreconditionError(err, cmd) {
   this.stack = err.stack;

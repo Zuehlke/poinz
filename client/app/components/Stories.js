@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Story from './Story';
@@ -8,7 +8,7 @@ import StoryEditForm from './StoryEditForm';
 /**
  * A list of stories (in the backlog)
  */
-const Stories = ({ stories }) => {
+const Stories = ({stories}) => {
   const storyList = Object.values(stories);
   storyList.sort((story) => story.createdAt);
 
@@ -32,7 +32,7 @@ export default connect((state) => ({
 /**
  * if story is in edit mode, display form.
  */
-const StoriesItem = ({ story }) => {
+const StoriesItem = ({story}) => {
   return story.editMode ? <StoryEditForm story={story} /> : <Story story={story} />;
 };
 

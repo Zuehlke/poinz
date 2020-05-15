@@ -1,12 +1,12 @@
 import React from 'react';
 import classnames from 'classnames';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { kick } from '../actions';
+import {kick} from '../actions';
 import Avatar from './Avatar.js';
 
-const User = ({ user, index, selectedStory, ownUserId, cardConfig, kick }) => {
+const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
   const isVisitor = user.visitor;
   const isDisconnected = user.disconnected;
   const revealed = selectedStory && selectedStory.revealed;
@@ -90,5 +90,5 @@ export default connect(
     ownUserId: state.userId,
     selectedStory: state.stories[state.selectedStory]
   }),
-  { kick }
+  {kick}
 )(User);

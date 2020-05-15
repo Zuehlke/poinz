@@ -11,7 +11,7 @@
 const path = require('path');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs-extra'));
-const { spawn, exec } = require('child_process');
+const {spawn, exec} = require('child_process');
 const del = require('del');
 
 const execPromised = Promise.promisify(exec);
@@ -23,14 +23,14 @@ del(['./deploy/', './deploy/package.json', '!./client/dist/index.html', './clien
   // -- client
   .then(() => {
     console.log('installing npm dependencies for client...');
-    return spawnAndPrint('npm', ['install'], { cwd: path.resolve(__dirname, '../client') });
+    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../client')});
   })
   .then(() => {
     console.log('building client with webpack...');
     return spawnAndPrint(
       './node_modules/.bin/webpack',
       '-p --colors --bail --config webpack.production.config.js'.split(' '),
-      { cwd: path.resolve(__dirname, '../client') }
+      {cwd: path.resolve(__dirname, '../client')}
     );
   })
   .then(() => fs.copy('./client/dist', './deploy/public/assets'))
@@ -39,7 +39,7 @@ del(['./deploy/', './deploy/package.json', '!./client/dist/index.html', './clien
   // -- server
   .then(() => {
     console.log('installing npm dependencies for server...');
-    return spawnAndPrint('npm', ['install'], { cwd: path.resolve(__dirname, '../server') });
+    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../server')});
   })
   .then(() => {
     console.log('building backend (babel transpile)...');
@@ -87,13 +87,13 @@ function startBuildingDockerImage(gitInfo) {
   const userAndProject = 'xeronimus/poinz';
   const cmdArgs = `build -t ${userAndProject}:latest -t ${userAndProject}:${gitInfo.branch} -t ${userAndProject}:${gitInfo.hash} -t ${HEROKU_DEPLOYMENT_TAG} .`;
 
-  return spawnAndPrint('docker', cmdArgs.split(' '), { cwd: path.resolve(__dirname, '..') });
+  return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
 }
 
 function getGitInformation() {
   return Promise.all([
-    execPromised('git rev-parse --abbrev-ref HEAD', { cdw: __dirname }),
-    execPromised('git rev-parse --short HEAD', { cdw: __dirname })
+    execPromised('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
+    execPromised('git rev-parse --short HEAD', {cdw: __dirname})
   ]).spread((abbrev, short) => ({
     branch: abbrev.split('\n').join(''),
     hash: short.split('\n').join('')

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
 
-const Avatar = ({ user, index }) => {
+const Avatar = ({user, index}) => {
   const avatarImageSource = user.email
     ? createGravatarUrl(user.email)
     : avatarIcons[index % avatarIcons.length];

@@ -4,13 +4,13 @@ import express from 'express';
 import settings from './settings';
 import socketServer from './socketServer';
 import commandProcessorFactory from './commandProcessor';
-import logging from './logging';
+import getLogger from './getLogger';
 import rest from './rest';
 import roomsStoreFactory from './store/roomStoreFactory';
 import commandHandlers from './commandHandlers/commandHandlers';
 import eventHandlers from './eventHandlers/eventHandlers';
 
-const LOGGER = logging.getLogger('server');
+const LOGGER = getLogger('server');
 
 const app = express();
 
@@ -26,13 +26,11 @@ app.get('*', function (request, response) {
   response.sendFile(path.resolve(__dirname, '../public/index.html'));
 });
 
-const commandProcessor = commandProcessorFactory(
-  commandHandlers,
-  eventHandlers,
-  store
-);
+const commandProcessor = commandProcessorFactory(commandHandlers, eventHandlers, store);
 
 const server = socketServer.init(app, commandProcessor);
-server.listen(settings.serverPort, () => LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`));
+server.listen(settings.serverPort, () =>
+  LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`)
+);
 
-process.on('SIGINT', () => server.close(()=> process.exit(0)));
+process.on('SIGINT', () => server.close(() => process.exit(0)));

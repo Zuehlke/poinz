@@ -1,5 +1,5 @@
 import log from 'loglevel';
-import { EVENT_ACTION_TYPES } from '../actions/types';
+import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
 import history from './getBrowserHistory';
@@ -15,7 +15,7 @@ const LOGGER = log.getLogger('eventReducer');
  * @returns {object} the modified state
  */
 export default function eventReducer(state, action) {
-  const { event } = action;
+  const {event} = action;
 
   // if we created a new room, and then joined, we don't have a roomId yet
   if (!state.roomId && event.name === 'joinedRoom') {
@@ -100,7 +100,7 @@ const eventActionHandlers = {
     fn: (state, payload, event) => {
       if (state.userId) {
         // if our client state has already a userId set, this event indicates that someone else joined
-        const modifiedUsers = { ...state.users };
+        const modifiedUsers = {...state.users};
         modifiedUsers[payload.userId] = payload.users[payload.userId];
         return {
           ...state,
@@ -145,7 +145,7 @@ const eventActionHandlers = {
         document.title = 'PoinZ';
 
         // let's reset our state
-        return { ...initialState };
+        return {...initialState};
       } else {
         // someone else left the room
 
@@ -156,16 +156,16 @@ const eventActionHandlers = {
           if (!leavingUserHasEstimatedStory) {
             result[currentStory.id] = currentStory;
           } else {
-            const modifiedEstimations = { ...currentStory.estimations };
+            const modifiedEstimations = {...currentStory.estimations};
             delete modifiedEstimations[payload.userId];
-            result[currentStory.id] = { ...currentStory, estimations: modifiedEstimations };
+            result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
           }
           return result;
         }, {});
-        const modifiedUsers = { ...state.users };
+        const modifiedUsers = {...state.users};
         delete modifiedUsers[payload.userId];
 
-        return { ...state, stories: modifiedStories, users: modifiedUsers };
+        return {...state, stories: modifiedStories, users: modifiedUsers};
       }
     },
     log: (username, payload, oldState) =>
@@ -184,16 +184,16 @@ const eventActionHandlers = {
         if (!leavingUserHasEstimatedStory) {
           result[currentStory.id] = currentStory;
         } else {
-          const modifiedEstimations = { ...currentStory.estimations };
+          const modifiedEstimations = {...currentStory.estimations};
           delete modifiedEstimations[payload.userId];
-          result[currentStory.id] = { ...currentStory, estimations: modifiedEstimations };
+          result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
         }
         return result;
       }, {});
-      const modifiedUsers = { ...state.users };
+      const modifiedUsers = {...state.users};
       delete modifiedUsers[payload.userId];
 
-      return { ...state, stories: modifiedStories, users: modifiedUsers };
+      return {...state, stories: modifiedStories, users: modifiedUsers};
     },
     log: (username, payload, oldState) =>
       `User ${oldState.users[payload.userId].username} was kicked from the room by another user`
@@ -209,7 +209,7 @@ const eventActionHandlers = {
           ...state,
           users: {
             ...state.users,
-            [payload.userId]: { ...state.users[payload.userId], disconnected: true }
+            [payload.userId]: {...state.users[payload.userId], disconnected: true}
           }
         };
       } else {
@@ -221,7 +221,7 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.storyAdded]: {
     fn: (state, payload) => {
-      const modifiedStories = { ...state.stories };
+      const modifiedStories = {...state.stories};
       modifiedStories[payload.id] = payload;
       return {
         ...state,
@@ -240,14 +240,14 @@ const eventActionHandlers = {
         editMode: false
       };
 
-      return { ...state, stories: { ...state.stories, [payload.storyId]: modifiedStory } };
+      return {...state, stories: {...state.stories, [payload.storyId]: modifiedStory}};
     },
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
   [EVENT_ACTION_TYPES.storyDeleted]: {
     fn: (state, payload) => {
-      const modifiedStories = { ...state.stories };
+      const modifiedStories = {...state.stories};
       delete modifiedStories[payload.storyId];
 
       return {
@@ -262,7 +262,7 @@ const eventActionHandlers = {
    * the selected story was set (i.e. the one that can be currently estimated by the team)
    */
   [EVENT_ACTION_TYPES.storySelected]: {
-    fn: (state, payload) => ({ ...state, selectedStory: payload.storyId }),
+    fn: (state, payload) => ({...state, selectedStory: payload.storyId}),
     log: (username, payload, oldState, newState) =>
       `${username} selected current story "${newState.stories[payload.storyId].title}"`
   },
@@ -277,7 +277,7 @@ const eventActionHandlers = {
 
       const modifiedUsers = {
         ...state.users,
-        [payload.userId]: { ...state.users[payload.userId], username: payload.username }
+        [payload.userId]: {...state.users[payload.userId], username: payload.username}
       };
       return {
         ...state,
@@ -305,7 +305,7 @@ const eventActionHandlers = {
         ...state,
         users: {
           ...state.users,
-          [payload.userId]: { ...state.users[payload.userId], email: payload.email }
+          [payload.userId]: {...state.users[payload.userId], email: payload.email}
         },
         presetEmail: isOwnUser ? payload.email : state.presetEmail
       };
@@ -322,7 +322,7 @@ const eventActionHandlers = {
       ...state,
       users: {
         ...state.users,
-        [payload.userId]: { ...state.users[payload.userId], visitor: true }
+        [payload.userId]: {...state.users[payload.userId], visitor: true}
       }
     }),
     log: (username) => `${username} is now visitor`
@@ -336,7 +336,7 @@ const eventActionHandlers = {
       ...state,
       users: {
         ...state.users,
-        [payload.userId]: { ...state.users[payload.userId], visitor: false }
+        [payload.userId]: {...state.users[payload.userId], visitor: false}
       }
     }),
     log: (username) => `${username} is no longer visitor`
@@ -361,7 +361,7 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {
     fn: (state, payload) => {
-      const modifiedEstimations = { ...state.stories[payload.storyId].estimations };
+      const modifiedEstimations = {...state.stories[payload.storyId].estimations};
       delete modifiedEstimations[payload.userId];
 
       return {
@@ -383,7 +383,7 @@ const eventActionHandlers = {
       ...state,
       stories: {
         ...state.stories,
-        [payload.storyId]: { ...state.stories[payload.storyId], revealed: true }
+        [payload.storyId]: {...state.stories[payload.storyId], revealed: true}
       }
     }),
     log: (username, payload) =>
@@ -397,7 +397,7 @@ const eventActionHandlers = {
       ...state,
       stories: {
         ...state.stories,
-        [payload.storyId]: { ...state.stories[payload.storyId], estimations: {}, revealed: false }
+        [payload.storyId]: {...state.stories[payload.storyId], estimations: {}, revealed: false}
       }
     }),
     log: (username) => `${username} started a new estimation round for the current story`

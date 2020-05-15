@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ribbonStyle = { position: 'absolute', top: 0, right: 0, border: 0 };
+const ribbonStyle = {position: 'absolute', top: 0, right: 0, border: 0};
 const GithubRibbon = () => (
   <a href="https://github.com/Zuehlke/poinz" target="_blank" rel="noopener noreferrer">
     <img

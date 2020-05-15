@@ -1,10 +1,9 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+
 import settings from './settings';
 
-module.exports = {
-  getLogger
-};
+export default getLogger;
 
 /**
  * Returns a new Logger for your component
@@ -15,6 +14,14 @@ module.exports = {
 function getLogger(loggerName) {
   const {format} = winston;
 
+  const formatter = (info) => {
+    const splat = info[Symbol.for('splat')] || info.splat || [];
+
+    return `${info.timestamp} ${info.level}: [${loggerName}] ${info.message}  ${
+      splat && splat.length ? splat.map((s) => JSON.stringify(s, null, 4)) : ''
+    }  ${info.stack ? ' ' + info.stack : ''}`;
+  };
+
   return winston.loggers.add(loggerName, {
     transports: [
       new winston.transports.Console({
@@ -24,12 +31,7 @@ function getLogger(loggerName) {
           format.colorize(),
           format.timestamp(),
           format.align(),
-          format.printf(
-            (info) =>
-              `${info.timestamp} ${info.level}: [${loggerName}] ${info.message}${
-                info.stack ? ' ' + info.stack : ''
-                }`
-          )
+          format.printf(formatter)
         )
       }),
       new DailyRotateFile({
@@ -37,16 +39,7 @@ function getLogger(loggerName) {
         level: settings.log.file.level,
         timestamp: true,
         handleExceptions: true,
-        format: format.combine(
-          format.timestamp(),
-          format.align(),
-          format.printf(
-            (info) =>
-              `${info.timestamp} ${info.level}: [${loggerName}] ${info.message}${
-                info.stack ? ' ' + info.stack : ''
-                }`
-          )
-        )
+        format: format.combine(format.timestamp(), format.align(), format.printf(formatter))
       })
     ]
   });

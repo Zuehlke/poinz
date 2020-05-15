@@ -47,7 +47,7 @@ const groupByKey = (fileResults) =>
   );
 
 async function check() {
-  const files = await glob('../client/app/**/*.js', { cwd: __dirname });
+  const files = await glob('../client/app/**/*.js', {cwd: __dirname});
   console.log(`Checking ${files.length} js files for translation key use...`);
   const filePromises = files.map(async (fileName) => {
     const content = await fs.readFile(path.join(__dirname, fileName), 'utf-8');

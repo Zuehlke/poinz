@@ -3,12 +3,12 @@ import Promise from 'bluebird';
 import Immutable from 'immutable';
 
 import settings from '../settings';
-import logging from '../logging';
+import getLogger from '../getLogger';
 
 // "promisify" redis client with bluebird -> use client.getAsync / client.setAsync / etc.
 Promise.promisifyAll(redis.RedisClient.prototype);
 
-const LOGGER = logging.getLogger('roomsStore');
+const LOGGER = getLogger('roomsStore');
 
 const POINZ_REDIS_KEY_PREFIX = 'poinz:';
 

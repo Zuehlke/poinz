@@ -1,14 +1,14 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { changeStory, cancelEditStory } from '../actions';
+import {changeStory, cancelEditStory} from '../actions';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({ story, changeStory, cancelEditStory, pendingChangeCommands }) => {
+const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
   const classes = classnames('story', {
     waiting: Object.values(pendingChangeCommands).find((cmd) => cmd.payload.storyId === story.id)
   });
@@ -71,10 +71,10 @@ export default connect(
       (cmd) => cmd.name === 'changeStory'
     )
   }),
-  { changeStory, cancelEditStory }
+  {changeStory, cancelEditStory}
 )(StoryEditForm);
 
-const StoryEditFormButtonGroup = ({ onSave, onCancel }) => (
+const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
   <div className="pure-g button-group">
     <div className="pure-u-1-2">
       <button type="button" className="pure-button pure-input-1" onClick={onCancel}>

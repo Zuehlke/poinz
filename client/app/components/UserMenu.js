@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import { setVisitor, setUsername, setEmail, leaveRoom, setLanguage } from '../actions';
+import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.
@@ -119,7 +119,6 @@ const UserMenu = ({
           </p>
         </div>
       </div>
-
     </div>
   );
 

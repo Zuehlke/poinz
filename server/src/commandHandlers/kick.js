@@ -21,7 +21,7 @@ const kickCommandHandler = {
     }
   },
   fn: (room, command) => {
-    room.applyEvent('kicked', { userId: command.payload.userId });
+    room.applyEvent('kicked', {userId: command.payload.userId});
   }
 };
 

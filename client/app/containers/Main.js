@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Room from './Room';
@@ -7,7 +7,7 @@ import WhoAreYou from './WhoAreYou';
 import AppStatus from './AppStatus';
 import Landing from './Landing';
 
-import { joinRoom } from '../actions';
+import {joinRoom} from '../actions';
 
 /**
  * The Main component decides whether to display the landing page or the poinz estimation board (a room).
@@ -24,7 +24,7 @@ class Main extends React.Component {
   }
 
   render() {
-    const { roomId, users, presetUsername } = this.props;
+    const {roomId, users, presetUsername} = this.props;
     const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0;
 
     if (roomId === 'poinzstatus') {
@@ -52,5 +52,5 @@ export default connect(
     users: state.users,
     presetUsername: state.presetUsername
   }),
-  { joinRoom }
+  {joinRoom}
 )(Main);

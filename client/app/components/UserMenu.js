@@ -16,7 +16,6 @@ const UserMenu = ({
   user,
   setUsername,
   setEmail,
-  leaveRoom,
   setVisitor,
   setLanguage,
   userMenuShown
@@ -121,14 +120,6 @@ const UserMenu = ({
         </div>
       </div>
 
-      <button
-        className="leave-room-button pure-button pure-button-primary"
-        type="button"
-        onClick={leaveRoom}
-      >
-        {t('leaveRoom')}
-        <i className="fa fa-sign-out button-icon-right"></i>
-      </button>
     </div>
   );
 

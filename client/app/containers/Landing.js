@@ -3,19 +3,17 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CreateRoomForm from '../components/CreateRoomForm';
-import RoomHistory from '../components/RoomHistory';
 import GithubRibbon from '../components/GithubRibbon';
 
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({ t, roomHistoryLength, waitingForJoin }) => {
+const Landing = ({ t, waitingForJoin }) => {
   return (
     <div className="landing">
       <GithubRibbon />
       <div className="landing-inner">
         {!waitingForJoin && <CreateRoomForm />}
-        {!waitingForJoin && roomHistoryLength && <RoomHistory />}
         {waitingForJoin && <Loader t={t} />}
       </div>
     </div>
@@ -24,13 +22,11 @@ const Landing = ({ t, roomHistoryLength, waitingForJoin }) => {
 
 Landing.propTypes = {
   t: PropTypes.func,
-  waitingForJoin: PropTypes.bool,
-  roomHistoryLength: PropTypes.number
+  waitingForJoin: PropTypes.bool
 };
 
 export default connect((state) => ({
   t: state.translator,
-  roomHistoryLength: state.roomHistory.length,
   waitingForJoin: !!Object.values(state.pendingCommands).find((cmd) => cmd.name === 'joinRoom')
 }))(Landing);
 

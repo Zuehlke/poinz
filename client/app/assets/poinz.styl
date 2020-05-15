@@ -1,5 +1,4 @@
-
-$zuehlkeBackgroundGrey = rgb(250,250,250)
+$zuehlkeBackgroundGrey = rgb(250, 250, 250)
 $zuehlkeBlue = #0099CC;
 $zuehlkePurple = #985b9c
 $zuehlkeOrange = #ff820a
@@ -88,6 +87,7 @@ a {
     .info-text {
       display flex
       align-items center
+
       .leading-paragraph-icon {
         font-size 30px
         margin-right 16px
@@ -119,24 +119,6 @@ a {
       }
     }
 
-    &.room-history {
-      color white
-
-      ol {
-        list-style-type none
-        margin 0
-        padding 0
-
-        li {
-          display inline-block
-          color $zuehlkeOrange
-          padding 4px 8px
-          a  {
-            text-decoration none
-          }
-        }
-      }
-    }
   }
 }
 
@@ -204,6 +186,7 @@ a {
 
     &.user-own {
       color $zuehlkeOrange
+
       .avatar {
         border 2px solid $zuehlkeOrange
       }
@@ -220,6 +203,7 @@ a {
 
     &.user-disconnected {
       color $zuehlkeLightGrey
+
       .avatar {
         -webkit-filter grayscale(100%)
         filter gray;
@@ -274,6 +258,8 @@ a {
 
 .top-bar {
   z-index 1003
+  display flex
+  justify-content space-between
   position fixed
   box-shadow 0 1px 2px 0 #cccccc
   background $zuehlkeBackgroundGrey
@@ -284,27 +270,40 @@ a {
   padding 0
   box-sizing border-box
 
-  .poinz-logo {
-    position fixed
-    display block
-    top 0
-    left 39px
-    font-family $zuehlkeFont
-    font-size 29px
-    color $zuehlkePurple
+  .left-logo-container {
+    display flex
+
+    .poinz-logo {
+      font-family $zuehlkeFont
+      font-size 29px
+      padding-left 8px
+      color $zuehlkePurple
+    }
   }
 
-  .quick-menu {
-    position fixed
-    display block
-    top 0
-    right 70px
-    padding 8px
 
-    > span {
-      display inline-block
-      margin-right 4px
+  .quick-menu {
+    display block
+
+    .whoami {
+      padding 0 8px
     }
+
+    // wheel icon to toggle user menu
+    // list  icon to toggle action log
+    a.user-menu-toggle, a.log-toggle, a.leave-room {
+      display inline-block
+      width 34px
+      height 34px
+      font-size 22px
+      padding 4px 8px
+      box-sizing border-box
+      color white
+      border-radius 0
+      background $zuehlkeBlue
+
+    }
+
   }
 
   .language-selector ul {
@@ -334,10 +333,7 @@ a {
 
 // hamburger icon to toggle backlog on small screens
 .backlog-toggle {
-  position fixed
   display block
-  top 0
-  left 0
   font-size 10px
   z-index 10
   width 34px
@@ -372,30 +368,6 @@ a {
 
 }
 
-// wheel icon to toggle user menu
-.user-menu-toggle, .log-toggle {
-  position fixed
-  display block
-  top 0
-  z-index 10
-  width 34px
-  height 34px
-  font-size 22px
-  padding 4px 8px
-  box-sizing border-box
-  color white
-  border-radius 0
-  background $zuehlkeBlue
-}
-
-.user-menu-toggle {
-  right 34px
-}
-
-.log-toggle {
-  right 0
-}
-
 $userMenuWidth = 300px
 .user-menu {
   z-index 10
@@ -428,16 +400,16 @@ $userMenuWidth = 300px
     color $zuehlkeOrange
     font-weight 700
     margin-bottom 8px
-    margin-top:0
+    margin-top: 0
   }
 
   .pure-form {
 
     .user-menu-section {
-      background:white;
+      background: white;
       border: 1px solid $zuehlkeLighterGrey
-      padding:8px;
-      margin:16px 0;
+      padding: 8px;
+      margin: 16px 0;
     }
 
     .username-wrapper, .email-wrapper {
@@ -461,6 +433,7 @@ $userMenuWidth = 300px
         cursor pointer
 
         /** radio buttons **/
+
         input {
           margin-right 4px
           display inline-block
@@ -609,7 +582,7 @@ $backlogWidth = 300px
     background $zuehlkeBackgroundGrey
 
     &:after {
-      content:"";
+      content: "";
       border-right: 1px solid $zuehlkeLighterGrey;
       top: 44px;
       right: 0;
@@ -662,6 +635,7 @@ $backlogWidth = 300px
         border: 1px solid $zuehlkeLighterGrey
 
         // story edit icon (pencil)
+
         > i.story-edit {
           transition opacity 0.12s ease-out
           opacity 0 // do not show by default
@@ -672,6 +646,7 @@ $backlogWidth = 300px
         }
 
         // show the pencil when story is hovered
+
         &:hover > i.story-edit {
           opacity 0.6
 
@@ -681,6 +656,7 @@ $backlogWidth = 300px
         }
 
         // story delete icon (trash)
+
         > i.story-delete {
           transition opacity 0.12s ease-out
           opacity 0 // do not show by default
@@ -691,6 +667,7 @@ $backlogWidth = 300px
         }
 
         // show the trash icon when story is hovered
+
         &:hover > i.story-delete {
           opacity 0.6
 
@@ -715,6 +692,7 @@ $backlogWidth = 300px
           margin-top 8px
           margin-bottom 0
         }
+
         .story-text {
           margin-top 4px
         }
@@ -807,10 +785,6 @@ $backlogWidth = 300px
     position fixed
     left $backlogWidth
     display none
-  }
-
-  .top-bar .poinz-logo {
-    left 8px
   }
 
   .board {

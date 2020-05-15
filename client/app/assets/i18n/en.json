@@ -3,7 +3,6 @@
   "joinRoomInfo": "You can also join an existing room by link. Ask the creator of the room for the address.",
   "createNewRoom": "Create new room",
   "join": "Join",
-  "joinPrevious": "Join previous rooms",
   "name": "Name...",
   "addStory": "Add Story",
   "newRound": "New Round",
@@ -23,5 +22,7 @@
   "english": "English",
   "provideUsernameInfo": "Your colleagues would like to know who you are. Please provide us with your name.",
   "gravatar": "Gravatar",
-  "gravatarInfo": "If you enter your Gravatar email address, your Gravatar icon will be displayed."
+  "gravatarInfo": "If you enter your Gravatar email address, your Gravatar icon will be displayed.",
+  "toggleLog": "Action Log",
+  "toggleMenu": "Menu"
 }

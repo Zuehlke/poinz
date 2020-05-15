@@ -3,7 +3,6 @@
   "joinRoomInfo": "Du kannst auch einen bereits existierenden Raum betreten. Frage den Ersteller für den Link.",
   "createNewRoom": "Erstelle einen neuen Raum",
   "join": "Beitreten",
-  "joinPrevious": "Vorherige Räume",
   "name": "Name...",
   "addStory": "Story hinzufügen",
   "newRound": "Neue Runde",
@@ -23,5 +22,7 @@
   "english": "Englisch",
   "provideUsernameInfo": "Deine Kollegen möchten gerne wissen wer du bist. Bitte sag uns wie du heisst.",
   "gravatar": "Gravatar",
-  "gravatarInfo": "Wenn du deine Gravatar Email Adresse eingibst, wird dein Gravatar icon angezeigt."
+  "gravatarInfo": "Wenn du deine Gravatar Email Adresse eingibst, wird dein Gravatar icon angezeigt.",
+  "toggleLog": "Action Log",
+  "toggleMenu": "Menu"
 }

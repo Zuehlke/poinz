@@ -30,6 +30,8 @@ export const createRoom = () => (dispatch, getState) => {
     cmdPayload.email = state.presetEmail;
   }
 
+  cmdPayload.roomAlias = 'superAlias';
+
   hub.sendCommand(
     {
       name: 'createRoom',

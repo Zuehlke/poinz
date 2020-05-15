@@ -114,7 +114,6 @@ const eventActionHandlers = {
         history.push('/' + event.roomId);
 
         clientSettingsStore.setPresetUserId(payload.userId);
-        clientSettingsStore.addRoomToHistory(event.roomId);
 
         // server sends current room state (users, stories, etc.)
         return {

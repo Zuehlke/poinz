@@ -56,6 +56,76 @@ describe('createRoom', () => {
         assert.equal(usernameSetEvent.payload.userId, this.userId);
         assert.equal(usernameSetEvent.payload.username, 'something');
 
+      });
+
+  });
+
+
+  it('should produce roomCreated & joinedRoom events', function () {
+    return this.processor({
+      id: this.commandId,
+      name: 'createRoom',
+      payload: {
+        userId: this.userId
+      }
+    }, this.userId)
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 2);
+
+        const roomCreatedEvent = producedEvents[0];
+
+        const roomId = roomCreatedEvent.roomId; // roomId is given by backend
+
+        testUtils.assertValidEvent(roomCreatedEvent, this.commandId, roomId, this.userId, 'roomCreated');
+
+        assert.equal(roomCreatedEvent.payload.userId, this.userId);
+        assert.equal(roomCreatedEvent.payload.id, roomId);
+
+        const joinedRoomEvent = producedEvents[1];
+        testUtils.assertValidEvent(joinedRoomEvent, this.commandId, roomId, this.userId, 'joinedRoom');
+        assert.equal(joinedRoomEvent.payload.userId, this.userId);
+        assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
+          id: this.userId,
+          username: undefined
+        });
+
+
+      });
+
+  });
+
+
+  it('can create room with alias', function () {
+    return this.processor({
+      id: this.commandId,
+      name: 'createRoom',
+      payload: {
+        userId: this.userId,
+        roomAlias: 'super-group'
+      }
+    }, this.userId)
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 2);
+
+        const roomCreatedEvent = producedEvents[0];
+
+        const roomId = roomCreatedEvent.roomId; // roomId is given by backend
+
+        testUtils.assertValidEvent(roomCreatedEvent, this.commandId, roomId, this.userId, 'roomCreated');
+
+        assert.equal(roomCreatedEvent.payload.userId, this.userId);
+        assert.equal(roomCreatedEvent.payload.roomAlias, 'super-group');
+        assert.equal(roomCreatedEvent.payload.id, roomId);
+
+        const joinedRoomEvent = producedEvents[1];
+        testUtils.assertValidEvent(joinedRoomEvent, this.commandId, roomId, this.userId, 'joinedRoom');
+        assert.equal(joinedRoomEvent.payload.userId, this.userId);
+        assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
+          id: this.userId,
+          username: undefined
+        });
 
       });
 

@@ -14,7 +14,11 @@ const createRoomCommandHandler = {
       username: command.payload.username // client can cache/store username and send it already with "joinRoom" command
     };
 
-    room.applyEvent('roomCreated', { id: command.roomId, userId: newUser.id });
+    room.applyEvent('roomCreated', {
+      id: command.roomId,
+      userId: newUser.id,
+      roomAlias: command.payload.roomAlias
+    });
 
     // produce a "roomJoined" event for a new room
     // the current user (the creator) will be the only one in this room

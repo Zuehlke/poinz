@@ -17,6 +17,9 @@
             "email": {
               "type": "string",
               "format": "email"
+            },
+            "roomAlias": {
+              "type": "string"
             }
           },
           "additionalProperties": false

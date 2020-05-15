@@ -6,6 +6,7 @@ const roomCreatedEventHandler = (room, eventPayload) =>
     id: eventPayload.id,
     users: {},
     stories: {},
+    alias: eventPayload.roomAlias,
     created: new Date().getTime()
   });
 

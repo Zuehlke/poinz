@@ -60,7 +60,7 @@ describe('setUsername', () => {
         username: 'Mikey'
       }
     }, this.userId)
-      .then(() => this.mockRoomsStore.getRoomById())
+      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => assert.equal(room.getIn(['users', this.userId, 'username']), 'Mikey'));
   });
 

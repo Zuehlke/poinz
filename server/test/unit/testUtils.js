@@ -48,7 +48,12 @@ function assertError(actualError, expectedMessage) {
 function newMockRoomsStore(initialRoom) {
   let room = initialRoom;
   return {
-    getRoomById: () => Promise.resolve(room),
+    getRoomById: (id) => {
+      if (!room || room.get('id') !== id) {
+        return Promise.resolve(undefined);
+      }
+      return Promise.resolve(room);
+    },
     saveRoom: rm => {
       room = rm;
       return Promise.resolve();

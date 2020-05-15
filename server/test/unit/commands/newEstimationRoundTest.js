@@ -94,7 +94,7 @@ describe('newEstimationRound', () => {
         storyId: this.storyId
       }
     }, this.userId)
-      .then(() =>this.mockRoomsStore.getRoomById())
+      .then(() =>this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => assert.equal(room.getIn(['stories', this.storyId, 'estimations']).size, 0));
   });
 
@@ -110,7 +110,7 @@ describe('newEstimationRound', () => {
         storyId: this.storyId
       }
     }, this.userId)
-      .then(() =>this.mockRoomsStore.getRoomById())
+      .then(() =>this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => assert.equal(room.getIn(['stories', this.storyId, 'revealed']), false));
   });
 

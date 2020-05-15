@@ -109,7 +109,7 @@ describe('setVisitor', () => {
         isVisitor: true
       }
     }, this.userId)
-      .then(() => this.mockRoomsStore.getRoomById())
+      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => assert.equal(room.getIn(['users', this.userId, 'visitor']), true));
   });
 
@@ -125,7 +125,7 @@ describe('setVisitor', () => {
         isVisitor: false
       }
     }, this.userId)
-      .then(() => this.mockRoomsStore.getRoomById())
+      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => assert.equal(room.getIn(['users', this.userId, 'visitor']), false));
   });
 

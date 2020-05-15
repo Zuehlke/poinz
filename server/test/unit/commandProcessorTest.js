@@ -205,7 +205,7 @@ describe('commandProcessor', () => {
     });
 
     return Promise.all([eventPromiseOne, eventPromiseTwo])
-      .then(() => mockRoomsStore.getRoomById())
+      .then(() => mockRoomsStore.getRoomById('concurrencyTestRoom'))
       .then(room => assert.equal(2, room.get('manipulationCount')));
   });
 

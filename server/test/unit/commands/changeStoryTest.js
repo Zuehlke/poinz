@@ -77,7 +77,7 @@ describe('changeStory', () => {
         description: 'New Description'
       }
     }, this.userId)
-      .then(() => this.mockRoomsStore.getRoomById())
+      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => {
         assert.equal(room.getIn(['stories', this.storyId, 'title']), 'NewTitle');
         assert.equal(room.getIn(['stories', this.storyId, 'description']), 'New Description');

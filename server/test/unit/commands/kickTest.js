@@ -64,7 +64,7 @@ describe('kick', () => {
         userId: this.userTwoId
       }
     }, this.userOneId)
-      .then(() => this.mockRoomsStore.getRoomById())
+      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
       .then(room => assert(!room.getIn(['users', this.userTwoId])));
   });
 

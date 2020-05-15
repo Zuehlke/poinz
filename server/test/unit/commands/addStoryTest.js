@@ -102,7 +102,7 @@ describe('addStory', () => {
         description: 'This will be awesome'
       }
     }, this.userId)
-      .then(producedEvents => this.mockRoomsStore.getRoomById().then(room => assert(room.getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story')));
+      .then(producedEvents => this.mockRoomsStore.getRoomById(this.roomId).then(room => assert(room.getIn(['stories', producedEvents[0].payload.id]), 'room must now contain added story')));
   });
 
   describe('preconditions', () => {

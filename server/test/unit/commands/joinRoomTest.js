@@ -21,8 +21,9 @@ describe('joinRoom', () => {
     // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
     this.mockRoomsStore = testUtils.newMockRoomsStore(Immutable.fromJS({
       id: this.roomId,
+      alias: 'custom.room.alias',
       users: {
-        ['user123']: {
+        'user123': {
           id: 'user123',
           username: 'creator'
         }
@@ -44,24 +45,15 @@ describe('joinRoom', () => {
   it('Should produce 3 events for a already existing room', function () {
 
     return this.processor({
-      // first another user creates the room
-      id: uuid(),
+      id: this.commandId,
       roomId: this.roomId,
       name: 'joinRoom',
       payload: {
-        userId: this.userId
+        userId: this.userId,
+        email: 'j.doe@gmail.com',
+        username: 'something'
       }
     }, this.userId)
-      .then(() => this.processor({
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'joinRoom',
-        payload: {
-          userId: this.userId,
-          email: 'j.doe@gmail.com',
-          username: 'something'
-        }
-      }, this.userId))
       .then(producedEvents => {
         assert(producedEvents);
         assert.equal(producedEvents.length, 3);
@@ -70,8 +62,7 @@ describe('joinRoom', () => {
         testUtils.assertValidEvent(joinedRoomEvent, this.commandId, this.roomId, this.userId, 'joinedRoom');
         assert.equal(joinedRoomEvent.payload.userId, this.userId);
         assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
-          disconnected:false,
-          email:'j.doe@gmail.com',
+          email: 'j.doe@gmail.com',
           id: this.userId,
           username: 'something'
         });
@@ -90,4 +81,21 @@ describe('joinRoom', () => {
   });
 
 
+  it('Should be able to join room by alias', function () {
+
+    return this.processor({
+      id: this.commandId,
+      roomId: 'custom-room-alias',  // <- this is not the roomId but the alias
+      name: 'joinRoom',
+      payload: {
+        userId: this.userId,
+        email: 'j.doe@gmail.com',
+        username: 'something'
+      }
+    }, this.userId)
+      .then(producedEvents => {
+        assert(producedEvents);
+        assert.equal(producedEvents.length, 3);
+      });
+  });
 });

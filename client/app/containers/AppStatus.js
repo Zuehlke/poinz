@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 
 import appConfig from '../services/appConfig';
 import {secondsToDaysHoursMinutes} from '../services/timeUtil';
-import TopBar from '../components/TopBar';
 import {fetchStatus} from '../actions';
+
+export const APP_STATUS_IDENTIFIER = 'poinzstatus';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
@@ -40,7 +41,11 @@ class AppStatus extends React.Component {
 
     return (
       <div className="app-status">
-        <TopBar />
+        <div className="top-bar">
+          <div className="left-logo-container">
+            <div className="poinz-logo">PoinZ</div>
+          </div>
+        </div>
 
         <button className="pure-button pure-button-primary" onClick={fetchStatus}>
           <i className="fa fa-refresh"></i>

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Room from './Room';
 import WhoAreYou from './WhoAreYou';
-import AppStatus from './AppStatus';
+import AppStatus, {APP_STATUS_IDENTIFIER} from './AppStatus';
 import Landing from './Landing';
 
 import {joinRoom} from '../actions';
@@ -17,8 +17,8 @@ import {joinRoom} from '../actions';
 class Main extends React.Component {
   componentDidMount() {
     // if our url already contains a pathname, request room for that value
-    const roomIdFromUrl = location.pathname ? location.pathname.substr(1) : '';
-    if (roomIdFromUrl) {
+    const roomIdFromUrl = getPathnameFromUrl();
+    if (roomIdFromUrl && roomIdFromUrl !== APP_STATUS_IDENTIFIER) {
       this.props.joinRoom(roomIdFromUrl);
     }
   }
@@ -27,7 +27,7 @@ class Main extends React.Component {
     const {roomId, users, presetUsername} = this.props;
     const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0;
 
-    if (roomId === 'poinzstatus') {
+    if (getPathnameFromUrl() === APP_STATUS_IDENTIFIER) {
       return <AppStatus />;
     } else if (hasRoomIdAndUsers && presetUsername) {
       return <Room />;
@@ -37,6 +37,10 @@ class Main extends React.Component {
       return <Landing />;
     }
   }
+}
+
+function getPathnameFromUrl() {
+  return location.pathname ? location.pathname.substr(1) : '';
 }
 
 Main.propTypes = {

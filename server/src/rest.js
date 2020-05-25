@@ -23,8 +23,6 @@ function init(app, store) {
   function buildStatusObject() {
     return store.getAllRooms().then((allRooms) => {
       const rooms = allRooms
-        // the status page in the client is technically also a room. do not include it in the result.
-        .filter((room) => room && room.get('id') !== 'poinzstatus')
         .map(
           (room) =>
             new Immutable.Map({

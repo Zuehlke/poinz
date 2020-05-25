@@ -136,7 +136,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
           return;
         }
 
-        throw new Error(`Specified room ${cmd.roomId} does not exist. ("${cmd.name}")`);
+        throw new Error(`Specified room "${cmd.roomId}" does not exist. ("${cmd.name}")`);
       });
     });
   }

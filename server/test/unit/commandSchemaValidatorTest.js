@@ -9,7 +9,6 @@ import commandSchemaValidator from '../../src/commandSchemaValidator';
  * Just test that on schema validation error, the validator throws
  */
 describe('commandSchemaValidator', () => {
-
   it('validates successfully ', () => {
     commandSchemaValidator({
       id: uuid(),
@@ -20,22 +19,27 @@ describe('commandSchemaValidator', () => {
   });
 
   it('throws on invalid command (id)', () => {
-    assert.throws(() =>
-      commandSchemaValidator({
-        roomId: 'some-room',
-        name: 'setUsername',
-        payload: {}
-      }), /Missing required property: id/);
+    assert.throws(
+      () =>
+        commandSchemaValidator({
+          roomId: 'some-room',
+          name: 'setUsername',
+          payload: {}
+        }),
+      /Missing required property: id/
+    );
   });
 
   it('throws on invalid command (payload)', () => {
-    assert.throws(() =>
-      commandSchemaValidator({
-        id: uuid(),
-        roomId: 'some-room',
-        name: 'setUsername',
-        payload: {}
-      }), /Missing required property: userId/);
+    assert.throws(
+      () =>
+        commandSchemaValidator({
+          id: uuid(),
+          roomId: 'some-room',
+          name: 'setUsername',
+          payload: {}
+        }),
+      /Missing required property: userId/
+    );
   });
-
 });

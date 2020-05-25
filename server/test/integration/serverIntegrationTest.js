@@ -8,22 +8,20 @@ import socketIoClient from 'socket.io-client';
  * at localhost:3000 !
  */
 describe('serverIntegration', () => {
-
   const backendUrl = 'http://localhost:3000';
 
   describe('websocket endpoint', () => {
-
-    it('should accept websocket connections', done => {
+    it('should accept websocket connections', (done) => {
       const socket = socketIoClient(backendUrl);
       socket.on('connect', () => done());
     });
 
-    it('should handle command messages on websocket connections', done => {
+    it('should handle command messages on websocket connections', (done) => {
       const socket = socketIoClient(backendUrl);
 
       const commandId = uuid();
 
-      socket.on('event', msg => {
+      socket.on('event', (msg) => {
         assert(msg);
         assert.equal(msg.name, 'commandRejected');
         assert.equal(msg.correlationId, commandId);
@@ -36,13 +34,14 @@ describe('serverIntegration', () => {
           id: commandId,
           name: 'unknownCommand',
           payload: {}
-        }));
+        })
+      );
     });
 
     // we don't want to test all our commands + events here.
     // instead assert one roundtrip -> send valid command -> receive expected events
     // command handling for all commands is tested in unit tests (see test/unit/commands)
-    it('should handle a valid command', done => {
+    it('should handle a valid command', (done) => {
       const socket = socketIoClient(backendUrl);
 
       const commandId = uuid();
@@ -50,7 +49,7 @@ describe('serverIntegration', () => {
 
       let eventCount = 0;
 
-      socket.on('event', msg => {
+      socket.on('event', (msg) => {
         assert(msg);
         assert.equal(msg.correlationId, commandId);
         assert.equal(msg.roomId, roomId);
@@ -73,17 +72,15 @@ describe('serverIntegration', () => {
           roomId: roomId,
           name: 'joinRoom',
           payload: {}
-        }));
+        })
+      );
     });
-
   });
 
-
   describe('REST endpoint', () => {
-
-    it('should return all rooms ', done => {
-
-      httpGetJSON({
+    it('should return all rooms ', (done) => {
+      httpGetJSON(
+        {
           host: 'localhost',
           port: 3000,
           path: '/api/status',
@@ -98,11 +95,10 @@ describe('serverIntegration', () => {
           assert(body.roomCount);
           assert(body.rooms.length);
           done();
-        });
+        }
+      );
     });
-
   });
-
 });
 
 /**
@@ -111,10 +107,10 @@ describe('serverIntegration', () => {
  * @param callback
  */
 function httpGetJSON(options, callback) {
-  const req = http.request(options, res => {
+  const req = http.request(options, (res) => {
     let output = '';
     res.setEncoding('utf8');
-    res.on('data', chunk => output += chunk);
+    res.on('data', (chunk) => (output += chunk));
     res.on('end', () => {
       let parsedBody;
 

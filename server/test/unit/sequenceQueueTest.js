@@ -1,9 +1,8 @@
 import assert from 'assert';
 import queueFactory from '../../src/sequenceQueue';
 
-describe('sequenceQueue', ()=> {
-
-  it('register first, push one job', mochaDone => {
+describe('sequenceQueue', () => {
+  it('register first, push one job', (mochaDone) => {
     const queue = queueFactory((job, done) => {
       assert(job);
       assert.equal(job.number, 1);
@@ -11,14 +10,12 @@ describe('sequenceQueue', ()=> {
       mochaDone();
     });
 
-
     queue.push({
       number: 1
     });
-
   });
 
-  it('push one job, register afterwards', done => {
+  it('push one job, register afterwards', (done) => {
     const queue = queueFactory((job, nextJob) => {
       assert(job);
       assert.equal(job.number, 1);
@@ -29,11 +26,9 @@ describe('sequenceQueue', ()=> {
     queue.push({
       number: 1
     });
-
   });
 
-  it('push two jobs', done => {
-
+  it('push two jobs', (done) => {
     const queue = queueFactory((job, proceed) => {
       jobCount++;
 
@@ -45,19 +40,16 @@ describe('sequenceQueue', ()=> {
           handlingFirstJob = false;
           proceed();
         }, 1);
-
       } else if (jobCount === 2) {
         assert(!handlingFirstJob, 'Must not call handler for job2 if job1 is still being handled!');
         assert.equal(job.number, 2);
 
         done();
       }
-
     });
 
     let jobCount = 0;
     let handlingFirstJob = false;
-
 
     queue.push({
       number: 1
@@ -65,6 +57,5 @@ describe('sequenceQueue', ()=> {
     queue.push({
       number: 2
     });
-
   });
 });

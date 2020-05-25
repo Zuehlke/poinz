@@ -1,7 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import socketIoClient from 'socket.io-client';
 
-
 /**
  * NOTE: for these performance tests, the PoinZ server must be running
  * at localhost:3000 !
@@ -9,7 +8,6 @@ import socketIoClient from 'socket.io-client';
  * Run this test with additional mocha parameter --timeout 60000 (1 minute)
  */
 describe('serverPerformance', () => {
-
   const backendUrl = 'http://localhost:3000';
 
   beforeEach(function (done) {
@@ -18,7 +16,7 @@ describe('serverPerformance', () => {
 
     let eventCount = 0;
 
-    this.socket.on('event', event => {
+    this.socket.on('event', (event) => {
       eventCount++;
       if (eventCount === 2) {
         // this is the "joined" event
@@ -34,7 +32,8 @@ describe('serverPerformance', () => {
         roomId: this.roomId,
         name: 'joinRoom',
         payload: {}
-      }));
+      })
+    );
   });
 
   it('should handle 100 "addStory" commands', function (done) {
@@ -45,7 +44,9 @@ describe('serverPerformance', () => {
       'addStory',
       {
         title: 'newStory'
-      }, done);
+      },
+      done
+    );
   });
 
   it('should handle 1000 "addStory" commands', function (done) {
@@ -57,7 +58,9 @@ describe('serverPerformance', () => {
       {
         title: 'newStory-123',
         description: 'My super story'
-      }, done);
+      },
+      done
+    );
   });
 
   it('should handle 4000 "setUsername" commands', function (done) {
@@ -69,7 +72,9 @@ describe('serverPerformance', () => {
       {
         username: 'jimmy',
         userId: this.userId
-      }, done);
+      },
+      done
+    );
   });
 
   /**
@@ -87,7 +92,9 @@ describe('serverPerformance', () => {
   function sendCommandsInSequence(socket, roomId, eventTotal, commandName, commandPayload, done) {
     const testRunUniqueId = 'serverPerformanceTest_' + uuid();
 
-    console.log(`--- Starting  ${testRunUniqueId} with "${commandName}",  until ${eventTotal} events are received --`);
+    console.log(
+      `--- Starting  ${testRunUniqueId} with "${commandName}",  until ${eventTotal} events are received --`
+    );
 
     let isDone = false;
     let eventCount = 0;
@@ -109,7 +116,9 @@ describe('serverPerformance', () => {
         send();
       } else {
         isDone = true;
-        console.log(`Performance test done. sent ${commandCount} commands. Received ${eventCount} events.`);
+        console.log(
+          `Performance test done. sent ${commandCount} commands. Received ${eventCount} events.`
+        );
         console.timeEnd(testRunUniqueId);
         console.log('\n---');
         done();
@@ -125,6 +134,5 @@ describe('serverPerformance', () => {
         payload: commandPayload
       });
     }
-
   }
 });

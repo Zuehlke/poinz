@@ -9,14 +9,14 @@ import {
   CANCEL_EDIT_STORY,
   STATUS_FETCHED,
   SET_LANGUAGE
-} from '../actions/types';
+} from './types';
 
 /**
  * Our actions contain our client-side business logic. (when to send which command).
  * They produce commands and pass them to the hub for sending.
  */
 
-export const createRoom = () => (dispatch, getState) => {
+export const createRoom = (alias) => (dispatch, getState) => {
   const cmdPayload = {};
   const state = getState();
 
@@ -30,7 +30,9 @@ export const createRoom = () => (dispatch, getState) => {
     cmdPayload.email = state.presetEmail;
   }
 
-  cmdPayload.roomAlias = 'superAlias';
+  if (alias) {
+    cmdPayload.alias = alias;
+  }
 
   hub.sendCommand(
     {

@@ -6,7 +6,9 @@ import {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom} from '../actions';
 
 const TopBar = ({
   t,
+  roomId,
   username,
+  alias,
   leaveRoom,
   toggleBacklog,
   toggleUserMenu,
@@ -15,6 +17,8 @@ const TopBar = ({
   logShown,
   backlogShown
 }) => {
+  const roomLink = <a href={'/' + (alias ? alias : roomId)}>{alias ? alias : roomId}</a>;
+
   return (
     <div className="top-bar">
       <div className="left-logo-container">
@@ -30,7 +34,13 @@ const TopBar = ({
       </div>
 
       <div className="quick-menu">
-        <span className="whoami">{username}</span>
+        <span className="whoami">
+          <span className="whoami-simple">{username}</span>
+
+          <span className="whoami-extended">
+            {username} @ {roomLink}
+          </span>
+        </span>
 
         <a
           className={`user-menu-toggle clickable pure-button pure-button-primary ${
@@ -69,6 +79,7 @@ TopBar.propTypes = {
   backlogShown: PropTypes.bool,
   logShown: PropTypes.bool,
   username: PropTypes.string,
+  roomId: PropTypes.string,
   toggleBacklog: PropTypes.func,
   toggleUserMenu: PropTypes.func,
   leaveRoom: PropTypes.func,
@@ -78,9 +89,11 @@ TopBar.propTypes = {
 export default connect(
   (state) => ({
     t: state.translator,
+    roomId: state.roomId,
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
+    alias: state.alias,
     username: state.users && state.users[state.userId] ? state.users[state.userId].username : '-'
   }),
   {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom}

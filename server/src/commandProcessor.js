@@ -121,23 +121,38 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    */
   function loadRoom(ctx, cmd) {
     if (!cmd.roomId) {
-      return new Promise((resolve) => {
-        if (!ctx.handler.canCreateRoom) {
-          throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`);
-        }
-        cmd.roomId = uuid(); // command is allowed to create new room. generate random id
-        ctx.room = new Immutable.Map({
-          id: cmd.roomId
-        });
-        resolve();
-      });
+      return newEmptyRoom(ctx, cmd);
     }
 
     return store.getRoomById(cmd.roomId).then((room) => {
-      if (!room) {
-        throw new Error(`Specified room ${cmd.roomId} does not exist. ("${cmd.name}")`);
+      if (room) {
+        ctx.room = room;
+        return;
       }
-      ctx.room = room;
+
+      return store.getRoomByAlias(cmd.roomId).then((room) => {
+        if (room) {
+          ctx.room = room;
+          return;
+        }
+
+        throw new Error(`Specified room ${cmd.roomId} does not exist. ("${cmd.name}")`);
+      });
+    });
+  }
+
+  function newEmptyRoom(ctx, cmd) {
+    return new Promise((resolve, reject) => {
+      if (!ctx.handler.canCreateRoom) {
+        reject(new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`));
+        return;
+      }
+
+      cmd.roomId = uuid(); // command is allowed to create new room. generate random id
+      ctx.room = new Immutable.Map({
+        id: cmd.roomId
+      });
+      resolve();
     });
   }
 

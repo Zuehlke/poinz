@@ -32,7 +32,9 @@ function handleIncomingCommand(socket, msg) {
       if (joinedRoomEvent) {
         registerUserWithSocket(joinedRoomEvent, socket, joinedRoomEvent.payload.userId);
       }
-      sendEvents(producedEvents, msg.roomId);
+      if (producedEvents && producedEvents.length) {
+        sendEvents(producedEvents, producedEvents[0].roomId);
+      }
     })
     .catch((commandProcessingError) =>
       handleCommandProcessingError(commandProcessingError, msg, socket)

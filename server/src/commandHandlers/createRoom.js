@@ -17,13 +17,14 @@ const createRoomCommandHandler = {
     room.applyEvent('roomCreated', {
       id: command.roomId,
       userId: newUser.id,
-      roomAlias: command.payload.roomAlias
+      alias: command.payload.alias ? command.payload.alias.toLowerCase() : undefined
     });
 
     // produce a "roomJoined" event for a new room
     // the current user (the creator) will be the only one in this room
     const joinedRoomEventPayload = {
       userId: newUser.id,
+      alias: command.payload.alias ? command.payload.alias.toLowerCase() : undefined,
       users: {
         [newUser.id]: newUser
       }

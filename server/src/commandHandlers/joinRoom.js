@@ -22,6 +22,7 @@ const joinRoomCommandHandler = {
       userId: userObject.id,
       users: room.get('users').set(userObject.id, userObject).toJS(), // and all users that were already in that room
       stories: room.get('stories').toJS(),
+      alias: room.get('alias'),
       selectedStory: room.get('selectedStory')
     };
 

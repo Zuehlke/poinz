@@ -86,7 +86,7 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
 const eventActionHandlers = {
   /**
    * If the user joins a room that does not yet exist, it is created by the backend.
-   * It will be followed by a "roomJoined" event.
+   * It will be followed by a "joinedRoom" event.
    */
   [EVENT_ACTION_TYPES.roomCreated]: {
     fn: (state) => state,
@@ -118,6 +118,7 @@ const eventActionHandlers = {
         // server sends current room state (users, stories, etc.)
         return {
           ...state,
+          alias: payload.alias,
           roomId: event.roomId,
           userId: payload.userId,
           selectedStory: payload.selectedStory,
@@ -127,7 +128,18 @@ const eventActionHandlers = {
       }
     },
     log: (username, payload, oldState, newState) => {
-      return oldState.userId ? `User ${username} joined` : `You joined room "${newState.roomId}"`;
+      const youJoined = !oldState.userId;
+      const hasAlias = !!newState.alias;
+
+      if (youJoined) {
+        if (hasAlias) {
+          return `You joined room "${newState.alias}" (${newState.roomId})`;
+        } else {
+          return `You joined room "${newState.roomId}"`;
+        }
+      }
+
+      return `User ${username} joined`;
     }
   },
 

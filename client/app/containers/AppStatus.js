@@ -1,10 +1,9 @@
 import React from 'react';
-import fecha from 'fecha';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import appConfig from '../services/appConfig';
-import {secondsToDaysHoursMinutes} from '../services/timeUtil';
+import {formatDateTime, secondsToDaysHoursMinutes} from '../services/timeUtil';
 import {fetchStatus} from '../actions';
 
 export const APP_STATUS_IDENTIFIER = 'poinzstatus';
@@ -54,7 +53,7 @@ class AppStatus extends React.Component {
         <h4>PoinZ Application Status</h4>
 
         <p>
-          Version: {appConfig.version} {fecha.format(appConfig.buildTime, ' DD.MM.YY HH:mm')}
+          Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
         </p>
         <p>Uptime: {uptime}</p>
         <p>Total rooms: {appStatus.roomCount}</p>
@@ -110,8 +109,8 @@ const RoomItem = ({room}) => (
   <li>
     <div>{room.userCount}</div>
     <div>{room.userCountDisconnected}</div>
-    <div>{fecha.format(room.created, 'DD.MM.YYYY HH:mm')}</div>
-    <div>{fecha.format(room.lastActivity, 'DD.MM.YYYY HH:mm')}</div>
+    <div>{formatDateTime(room.created)}</div>
+    <div>{formatDateTime(room.lastActivity)}</div>
   </li>
 );
 

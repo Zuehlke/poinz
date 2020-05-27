@@ -2,11 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-
-// we do not use momentjs, since we only need one function "format(..)" . momentjs is 15Kb, fecha is 2Kb
-// https://github.com/taylorhakes/fecha
-// see https://www.npmjs.com/package/fecha#formatting-tokens for format
-import fecha from 'fecha';
+import {formatTime} from '../services/timeUtil';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
@@ -23,7 +19,7 @@ const ActionLog = ({t, actionLog, logShown}) => {
         <ul>
           {actionLog.map((entry, index) => (
             <li key={`logline_${index}`}>
-              {fecha.format(entry.tstamp, 'HH:mm')} {entry.message}
+              {formatTime(entry.tstamp)} {entry.message}
             </li>
           ))}
         </ul>

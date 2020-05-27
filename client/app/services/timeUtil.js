@@ -1,3 +1,7 @@
+import isDate from 'date-fns/isDate';
+import format from 'date-fns/format';
+import log from 'loglevel';
+
 /**
  *
  * @param inSeconds
@@ -12,4 +16,24 @@ export function secondsToDaysHoursMinutes(inSeconds) {
   return `${days} day${days > 1 ? 's' : ''} ${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${
     minutes > 1 ? 's' : ''
   }`;
+}
+
+export function formatDateTime(dateOrTs) {
+  return format(normalizeDateOrTs(dateOrTs), 'dd.MM.yyyy HH:mm');
+}
+
+export function formatTime(dateOrTs) {
+  return format(normalizeDateOrTs(dateOrTs), 'HH:mm');
+}
+
+function normalizeDateOrTs(dateOrTs) {
+  if (isDate(dateOrTs)) {
+    return dateOrTs;
+  }
+
+  const dateObject = new Date(dateOrTs);
+  if (dateObject.getFullYear() < 2000) {
+    log.warn('DateObject is far in the past. Check Seconds versus Milliseconds!',dateObject);
+  }
+  return dateObject;
 }

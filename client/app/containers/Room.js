@@ -1,9 +1,9 @@
 import React from 'react';
-import fecha from 'fecha';
 
 import appConfig from '../services/appConfig';
 import Board from '../components/Board';
 import TopBar from '../components/TopBar';
+import {formatDateTime} from '../services/timeUtil';
 
 /**
  * Is displayed as soon as the user joined a room.
@@ -15,7 +15,7 @@ const Room = () => (
     <Board />
     <div className="version-info">
       {appConfig.version}
-      {fecha.format(appConfig.buildTime, ' DD.MM.YY HH:mm')}
+      {formatDateTime(appConfig.buildTime)}
     </div>
   </div>
 );

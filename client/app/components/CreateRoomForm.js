@@ -14,7 +14,7 @@ const CreateRoomForm = ({t, createRoom}) => {
   let aliasInputField;
 
   return (
-    <div className="eyecatcher">
+    <div className="eyecatcher create-room-form">
       <div className="info-text">
         <i className="fa fa-users leading-paragraph-icon"></i>
         <div>
@@ -26,7 +26,7 @@ const CreateRoomForm = ({t, createRoom}) => {
       <div>
         <button
           type="button"
-          className="pure-button pure-button-primary"
+          className="create-room-button pure-button pure-button-primary"
           onClick={onCreateButtonClick}
         >
           {t('createNewRoom')}
@@ -34,7 +34,7 @@ const CreateRoomForm = ({t, createRoom}) => {
 
         <button
           type="button"
-          className="pure-button pure-button-primary"
+          className="create-room-extend-button pure-button pure-button-primary"
           onClick={() => setShowExtended(!showExtended)}
         >
           <i className={`fa fa-angle-double-${showExtended ? 'up' : 'down'}`} />
@@ -66,4 +66,9 @@ CreateRoomForm.propTypes = {
   createRoom: PropTypes.func
 };
 
-export default connect((state) => ({t: state.translator}), {createRoom})(CreateRoomForm);
+export default connect(
+  (state) => ({
+    t: state.translator
+  }),
+  {createRoom}
+)(CreateRoomForm);

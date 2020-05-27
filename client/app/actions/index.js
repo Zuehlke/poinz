@@ -1,15 +1,77 @@
 import axios from 'axios';
+import log from 'loglevel';
+
 import hub from '../services/hub';
 import history from '../services/getBrowserHistory';
 import {
+  LOCATION_CHANGED,
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU,
   TOGGLE_LOG,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
   STATUS_FETCHED,
-  SET_LANGUAGE
+  SET_LANGUAGE,
+  EVENT_RECEIVED,
+  EVENT_ACTION_TYPES
 } from './types';
+
+/**
+ * store current pathname in our redux store
+ */
+export const locationChanged = (pathname) => (dispatch, getState) => {
+  if (!pathname || pathname.length < 2) {
+    const state = getState();
+    hub.sendCommand(
+      {
+        name: 'leaveRoom',
+        roomId: state.roomId,
+        payload: {
+          userId: state.userId
+        }
+      },
+      dispatch
+    );
+  }
+
+  dispatch({
+    type: LOCATION_CHANGED,
+    pathname
+  });
+};
+
+/**
+ *
+ * @param event
+ */
+export const eventReceived = (event) => (dispatch) => {
+  const matchingType = EVENT_ACTION_TYPES[event.name];
+  if (!matchingType) {
+    log.error(`Unknown incoming event type ${event.name}. Will not dispatch a specific action.`);
+    return;
+  }
+
+  // dispatch generic "event_received" action
+  dispatch({
+    type: EVENT_RECEIVED,
+    eventName: event.name,
+    correlationId: event.correlationId
+  });
+
+  // dispatch the specific event action
+  dispatch({
+    event,
+    type: matchingType
+  });
+
+  if (event.name === 'joinedRoom') {
+    if (event.payload.alias) {
+      history.push('/' + event.payload.alias);
+    } else {
+      history.push('/' + event.roomId);
+    }
+  }
+};
 
 /**
  * Our actions contain our client-side business logic. (when to send which command).

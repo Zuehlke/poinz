@@ -11,10 +11,9 @@ import {
   COMMAND_SENT,
   EVENT_RECEIVED,
   STATUS_FETCHED,
-  SET_LANGUAGE
+  SET_LANGUAGE,
+  LOCATION_CHANGED
 } from '../actions/types';
-
-const LOGGER = log.getLogger('clientActionReducer');
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)
@@ -91,8 +90,13 @@ export default function clientActionReducer(state, action) {
       clientSettingsStore.setPresetLanguage(language);
       return {...state, language, translator: (key) => translator(key, language)};
     }
+
+    case LOCATION_CHANGED: {
+      return {...state, pathname: action.pathname};
+    }
+
     default:
-      LOGGER.warn('unknown action', action);
+      log.warn('unknown action', action);
       return state;
   }
 }

@@ -2,9 +2,6 @@ import log from 'loglevel';
 import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
-import history from './getBrowserHistory';
-
-const LOGGER = log.getLogger('eventReducer');
 
 /**
  * The event reducer handles backend-event actions.
@@ -23,9 +20,8 @@ export default function eventReducer(state, action) {
   }
 
   // Events from other rooms do not affect us (backend should not send such events in the first place)
-  // so we do not modify our client-side state in any way
   if (state.roomId !== event.roomId) {
-    LOGGER.warn(
+    log.warn(
       `Event with different roomId received. localRoomId=${state.roomId}, eventRoomId=${event.roomId} (${event.name})`
     );
     return state;
@@ -33,7 +29,7 @@ export default function eventReducer(state, action) {
 
   const matchingHandler = eventActionHandlers[action.type];
   if (!matchingHandler) {
-    LOGGER.warn('No matching backend-event handler for', action);
+    log.warn('No matching backend-event handler for', action);
     return state;
   }
 
@@ -111,7 +107,6 @@ const eventActionHandlers = {
 
         // set the page title
         document.title = `PoinZ - ${event.roomId}`;
-        history.push('/' + event.roomId);
 
         clientSettingsStore.setPresetUserId(payload.userId);
 
@@ -416,7 +411,7 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {
-    fn: (state, payload, event) => LOGGER.error(event),
+    fn: (state, payload, event) => log.error(event),
     log: (username, payload) => `An error occurred: ${payload.reason}`
   }
 };

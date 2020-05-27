@@ -3,8 +3,6 @@ import log from 'loglevel';
 import translationsEN from '../assets/i18n/en.json';
 import translationsDE from '../assets/i18n/de.json';
 
-const LOGGER = log.getLogger('translator');
-
 const dictionary = {
   en: translationsEN,
   de: translationsDE
@@ -21,7 +19,7 @@ export default function lookup(translationKey, language) {
   const translations = dictionary[language];
 
   if (!translations) {
-    LOGGER.error(`Unknown language '${language}'`);
+    log.error(`Unknown language '${language}'`);
     return `!!!${translationKey}!!!`;
   }
 

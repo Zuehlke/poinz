@@ -79,6 +79,7 @@ TopBar.propTypes = {
   backlogShown: PropTypes.bool,
   logShown: PropTypes.bool,
   username: PropTypes.string,
+  alias: PropTypes.string,
   roomId: PropTypes.string,
   toggleBacklog: PropTypes.func,
   toggleUserMenu: PropTypes.func,

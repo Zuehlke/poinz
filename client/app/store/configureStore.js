@@ -1,12 +1,10 @@
-import {createStore, applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware, compose, bindActionCreators} from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import log from 'loglevel';
 
 import rootReducer from '../services/rootReducer';
 import hub from '../services/hub';
-import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../actions/types';
-
-const LOGGER = log.getLogger('store');
+import {locationChanged, eventReceived} from '../actions';
+import history from '../services/getBrowserHistory';
 
 /**
  * configures and sets up the redux store.
@@ -23,32 +21,16 @@ export default function configureStore(initialState) {
     composeEnhancers(applyMiddleware(thunkMiddleware))
   );
 
-  /**
-   * Backend events that are received by the hub are dispatched to our redux store
-   * if we "know" the event (i.e. eventName is a defined event type)
-   */
-  hub.on('event', (event) => {
-    const matchingType = EVENT_ACTION_TYPES[event.name];
-    if (!matchingType) {
-      LOGGER.error(
-        `Unknown incoming event type ${event.name}. Will not dispatch a specific action.`
-      );
-      return;
-    }
+  const boundActions = bindActionCreators({locationChanged, eventReceived}, store.dispatch);
 
-    // dispatch a generic action
-    store.dispatch({
-      type: EVENT_RECEIVED,
-      eventName: event.name,
-      correlationId: event.correlationId
-    });
+  // "sync" url changes to our redux store. if location changes -> store pathname in state
+  history.listen((location) => boundActions.locationChanged(location.pathname));
 
-    // dispatch the specific event action
-    store.dispatch({
-      event,
-      type: matchingType
-    });
-  });
+  // and fire it once initially, so that the pathname on first page load is stored
+  boundActions.locationChanged(history.location.pathname);
+
+  // Backend events that are received by the hub are dispatched to our redux store
+  hub.on('event', (event) => boundActions.eventReceived(event));
 
   return store;
 }

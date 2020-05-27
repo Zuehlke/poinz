@@ -7,7 +7,9 @@ import WhoAreYou from './WhoAreYou';
 import AppStatus, {APP_STATUS_IDENTIFIER} from './AppStatus';
 import Landing from './Landing';
 
-import {joinRoom} from '../actions';
+import {joinRoom, locationChanged} from '../actions';
+
+const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
 
 /**
  * The Main component decides whether to display the landing page or the poinz estimation board (a room).
@@ -17,17 +19,17 @@ import {joinRoom} from '../actions';
 class Main extends React.Component {
   componentDidMount() {
     // if our url already contains a pathname, request room for that value
-    const roomIdFromUrl = getPathnameFromUrl();
+    const roomIdFromUrl = getNormalizedRoomId(this.props.pathname);
     if (roomIdFromUrl && roomIdFromUrl !== APP_STATUS_IDENTIFIER) {
       this.props.joinRoom(roomIdFromUrl);
     }
   }
 
   render() {
-    const {roomId, users, presetUsername} = this.props;
+    const {roomId, users, presetUsername, pathname} = this.props;
     const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0;
 
-    if (getPathnameFromUrl() === APP_STATUS_IDENTIFIER) {
+    if (getNormalizedRoomId(pathname) === APP_STATUS_IDENTIFIER) {
       return <AppStatus />;
     } else if (hasRoomIdAndUsers && presetUsername) {
       return <Room />;
@@ -39,22 +41,21 @@ class Main extends React.Component {
   }
 }
 
-function getPathnameFromUrl() {
-  return location.pathname ? location.pathname.substr(1) : '';
-}
-
 Main.propTypes = {
   joinRoom: PropTypes.func,
+  locationChanged: PropTypes.func,
   roomId: PropTypes.string,
+  pathname: PropTypes.string,
   users: PropTypes.object,
   presetUsername: PropTypes.string
 };
 
 export default connect(
   (state) => ({
+    pathname: state.pathname,
     roomId: state.roomId,
     users: state.users,
     presetUsername: state.presetUsername
   }),
-  {joinRoom}
+  {joinRoom, locationChanged}
 )(Main);

@@ -18,16 +18,30 @@ function Hub() {
   EventEmitter.call(this);
 
   if (appConfig.env === 'test') {
+    this.io = {
+      emit: () => {}
+    };
     // during test, there is no browser. thus we cannot instantiate socket.io!
     return;
   }
 
   this.io = appConfig.wsUrl ? socketIo(appConfig.wsUrl) : socketIo();
 
-  this.io.on('connect', () => log.info('socket to server connected'));
+  this.io.on('connect', () => log.info('socket connected to server'));
   this.io.on('disconnect', () => log.info('socket from server disconnected'));
-  this.io.on('event', this.emit.bind(this, 'event'));
+
+  if (log.getLevel() <= log.levels.DEBUG) {
+    this.io.on('event', (ev) => {
+      console.groupCollapsed('%c %s', 'color:blue', ev.name);
+      console.dir(ev);
+      console.groupEnd();
+      this.emit('event', ev);
+    });
+  } else {
+    this.io.on('event', this.emit.bind(this, 'event'));
+  }
 }
+
 inherits(Hub, EventEmitter);
 
 /**

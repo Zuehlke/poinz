@@ -11,7 +11,6 @@ import initialState from '../../app/store/initialState';
  * // TODO: test every incoming event?
  **/
 describe('eventReducer', () => {
-
   it(EVENT_ACTION_TYPES.roomCreated, () => {
     const startingState = {
       roomId: 'myRoom',
@@ -99,7 +98,6 @@ describe('eventReducer', () => {
 
   describe(EVENT_ACTION_TYPES.joinedRoom, () => {
     it('someone else joined', () => {
-
       const startingState = {
         userId: 'myUserId',
         roomId: 'ourRoom',
@@ -124,13 +122,17 @@ describe('eventReducer', () => {
         }
       });
 
-      assert.deepEqual(modifiedState.users, {
-        myUserId: {username: 'tester1'}, theNewUser: {}
-      }, 'The new user must be added to the room.users object. Nothing else must be changed.');
+      assert.deepEqual(
+        modifiedState.users,
+        {
+          myUserId: {username: 'tester1'},
+          theNewUser: {}
+        },
+        'The new user must be added to the room.users object. Nothing else must be changed.'
+      );
     });
 
     it('you joined', () => {
-
       const startingState = {
         roomId: 'myRoom',
         waitingForJoin: true
@@ -162,20 +164,17 @@ describe('eventReducer', () => {
       assert.deepEqual(modifiedState.users, {
         myUserId: {}
       });
-
     });
-
   });
 
   describe(EVENT_ACTION_TYPES.leftRoom, () => {
     it('someone else left', () => {
-
       const startingState = {
         userId: 'myUser',
         roomId: 'myRoom',
         users: {
           myUser: {username: 'My User'},
-          someoneElse: {username: 'Someone Else'}   // <<-- this user will leave
+          someoneElse: {username: 'Someone Else'} // <<-- this user will leave
         },
         stories: {
           someStoryId: {
@@ -205,9 +204,7 @@ describe('eventReducer', () => {
       assert.deepEqual(modifiedState.stories.someStoryId.estimations, {}); // <<- estimation of leaving user must be removed
     });
 
-
     it('you left', () => {
-
       const startingState = {
         userId: 'myUser',
         roomId: 'myRoom',
@@ -234,10 +231,8 @@ describe('eventReducer', () => {
     });
   });
 
-
   describe(EVENT_ACTION_TYPES.kicked, () => {
     it('someone kicked a disconnected user from the room', () => {
-
       const startingState = {
         userId: 'myUser',
         roomId: 'myRoom',
@@ -261,5 +256,4 @@ describe('eventReducer', () => {
       assert.deepEqual(modifiedState.users, {myUser: {}});
     });
   });
-
 });

@@ -1,44 +1,22 @@
+const landingPage = require('./pages/landingPage');
+
 describe('Join Room', () => {
+  it('directly via url', async () => {
+    // first a room must exist...
 
-  it('via input field on landing page', () => {
-    const roomInputField = element(by.css('.room-id-wrapper input'));
-    const roomJoinButton = element(by.css('.room-id-wrapper button'));
-    const topBarWhoami = element(by.css('.top-bar .whoami'));
+    landingPage.goTo();
+    landingPage.createRoomAndSetOwnUsername('e2eTestUser');
 
-    browser.get('/');
+    // now get assigned (random, unique) roomId from url
+    const url = await browser.getCurrentUrl();
+    const roomId = url.substring(url.lastIndexOf('/') + 1);
 
-    expect(browser.getTitle()).toEqual('PoinZ');
+    browser.get('/' + roomId);
 
-    roomInputField.sendKeys('foo');
-    roomJoinButton.click();
+    expect(browser.getTitle()).toEqual('PoinZ - ' + roomId); // page title is set
 
-    // set username
-    element(by.css('.username-wrapper input#username')).sendKeys('e2eTestUser');
-    element(by.css('.username-wrapper .pure-button.button-save')).click();
-
-    expect(browser.getTitle()).toEqual('PoinZ - foo');
-
-    expect(browser.getCurrentUrl()).toContain('/foo'); // url now contains room
-
-    expect(topBarWhoami.getText()).toContain('e2eTestUser@foo');  // top-bar displays room
-
+    expect(element(by.css('.top-bar .quick-menu .whoami-simple')).getText()).toContain(
+      'e2eTestUser'
+    ); // top-bar displays room
   });
-
-  it('via url part', () => {
-    const topBarWhoami = element(by.css('.top-bar .whoami'));
-
-    browser.get('/bar');
-
-    expect(browser.getCurrentUrl()).toContain('/bar'); // url still set
-
-    // set username
-    element(by.css('.username-wrapper input#username')).sendKeys('e2eTestUser');
-    element(by.css('.username-wrapper .pure-button.button-save')).click();
-
-    expect(browser.getTitle()).toEqual('PoinZ - bar'); // page title is set
-
-    expect(topBarWhoami.getText()).toContain('e2eTestUser@bar'); // top-bar displays room
-
-  });
-
 });

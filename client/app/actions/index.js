@@ -3,6 +3,8 @@ import log from 'loglevel';
 
 import hub from '../services/hub';
 import history from '../services/getBrowserHistory';
+import appConfig from '../services/appConfig';
+
 import {
   LOCATION_CHANGED,
   TOGGLE_BACKLOG,
@@ -17,11 +19,19 @@ import {
 } from './types';
 
 /**
- * store current pathname in our redux store
+ * store current pathname in our redux store, join or leave room if necessary
  */
 export const locationChanged = (pathname) => (dispatch, getState) => {
-  if (!pathname || pathname.length < 2) {
-    const state = getState();
+  const state = getState();
+
+  if (
+    pathname &&
+    pathname.length > 1 &&
+    pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER &&
+    !state.roomId
+  ) {
+    joinRoom(pathname.substring(1))(dispatch, getState);
+  } else if (!pathname || (pathname.length < 2 && state.userId && state.roomId)) {
     hub.sendCommand(
       {
         name: 'leaveRoom',

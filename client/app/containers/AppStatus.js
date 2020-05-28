@@ -6,11 +6,10 @@ import appConfig from '../services/appConfig';
 import {formatDateTime, secondsToDaysHoursMinutes} from '../services/timeUtil';
 import {fetchStatus} from '../actions';
 
-export const APP_STATUS_IDENTIFIER = 'poinzstatus';
-
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
  * How many rooms, how many users.
+ * Does not display room names, since this page is publicly accessible.
  */
 class AppStatus extends React.Component {
   componentDidMount() {

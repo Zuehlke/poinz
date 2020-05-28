@@ -7,7 +7,7 @@ import {createRoom} from '../actions';
 /**
  * The form on the landing page where the user can create a new room
  */
-const CreateRoomForm = ({t, createRoom}) => {
+const CreateRoomForm = ({t, presetUsername, createRoom}) => {
   const [showExtended, setShowExtended] = useState(false);
   const [alias, setAlias] = useState('');
 
@@ -18,6 +18,11 @@ const CreateRoomForm = ({t, createRoom}) => {
       <div className="info-text">
         <i className="fa fa-users leading-paragraph-icon"></i>
         <div>
+          {presetUsername && (
+            <h5>
+              {t('welcomeBack')}, {presetUsername}!
+            </h5>
+          )}
           <h4>{t('createRoomInfo')}</h4>
           <p>{t('joinRoomInfo')}</p>
         </div>
@@ -63,12 +68,14 @@ const CreateRoomForm = ({t, createRoom}) => {
 
 CreateRoomForm.propTypes = {
   t: PropTypes.func,
+  presetUsername: PropTypes.string,
   createRoom: PropTypes.func
 };
 
 export default connect(
   (state) => ({
-    t: state.translator
+    t: state.translator,
+    presetUsername: state.presetUsername
   }),
   {createRoom}
 )(CreateRoomForm);

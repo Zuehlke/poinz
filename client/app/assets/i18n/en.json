@@ -25,5 +25,6 @@
   "gravatarInfo": "If you enter your Gravatar email address, your Gravatar icon will be displayed.",
   "toggleLog": "Action Log",
   "toggleMenu": "Menu",
-  "alias": "Room Alias"
+  "alias": "Room Alias",
+  "welcomeBack": "Welcome back"
 }

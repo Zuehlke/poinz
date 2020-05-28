@@ -26,5 +26,6 @@
   "toggleLog": "Action Log",
   "toggleMenu": "Menu",
   "alias": "Room Alias",
-  "welcomeBack": "Welcome back"
+  "welcomeBack": "Welcome back",
+  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is publicly available!"
 }

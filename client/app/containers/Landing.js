@@ -15,6 +15,13 @@ const Landing = ({t, waitingForJoin}) => {
       <div className="landing-inner">
         {!waitingForJoin && <CreateRoomForm />}
         {waitingForJoin && <Loader t={t} />}
+
+        <div className="eyecatcher disclaimer-text">
+          <div className="info-text">
+            <i className="fa fa-warning leading-paragraph-icon-small"></i>
+            {t('disclaimer')}
+          </div>
+        </div>
       </div>
     </div>
   );

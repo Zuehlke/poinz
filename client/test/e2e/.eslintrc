@@ -3,6 +3,7 @@
     "element": false,
     "by": false,
     "browser": false,
-    "expect": false
+    "expect": false,
+    "protractor": false
   }
 }

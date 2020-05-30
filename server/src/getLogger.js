@@ -25,7 +25,7 @@ function getLogger(loggerName) {
   return winston.loggers.add(loggerName, {
     transports: [
       new winston.transports.Console({
-        level: 'debug',
+        level: settings.log.console.level,
         handleExceptions: true,
         format: format.combine(
           format.colorize(),

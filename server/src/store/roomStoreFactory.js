@@ -1,4 +1,4 @@
-import roomsStore from './roomsStore';
+import persistentRoomsStore from './persistentRoomsStore';
 import inMemoryRoomsStore from './inMemoryRoomsStore';
 
 /**
@@ -7,7 +7,7 @@ import inMemoryRoomsStore from './inMemoryRoomsStore';
  * @returns {{init, getRoomById, saveRoom, getAllRooms}}
  */
 export default function getNewRoomsStore(persistent) {
-  const store = persistent ? roomsStore : inMemoryRoomsStore;
+  const store = persistent ? persistentRoomsStore : inMemoryRoomsStore;
   store.init();
   return store;
 }

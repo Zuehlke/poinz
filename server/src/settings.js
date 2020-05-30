@@ -15,16 +15,8 @@ const settings = {
     }
   },
 
-  // if set to false, in-memory store is used. if true, rooms are persisted in redis
-  persistentStore: false,
-
-  // configuration for redis connection (roomsStore)
-  // env variables are set by docker when linking redis container to poinz container
-  // see DEPLOYMENT.md for more information
-  redis: {
-    host: process.env.DB_PORT_6379_TCP_ADDR || '127.0.0.1',
-    port: process.env.DB_PORT_6379_TCP_PORT || 6379
-  }
+  // if set to false, in-memory store is used. (currently only option. no working implementation for persistent store...)
+  persistentStore: false
 };
 
 export default settings;

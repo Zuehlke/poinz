@@ -8,7 +8,7 @@ The goal was to provide a ready-to-use tool without the hassle of registration/l
 
 Checkout the App at [https://poinz.herokuapp.com/](https://poinz.herokuapp.com/)
 
-![poinz_screenshot](https://cloud.githubusercontent.com/assets/1777143/13347877/846c4630-dc70-11e5-8c04-e5a03d18645d.png)
+![poinz_screenshot](https://user-images.githubusercontent.com/1777143/83323333-5c74b780-a25e-11ea-9629-48ae85b22215.png)
 
 Similar tools are : https://www.pointingpoker.com/ or https://www.planningpoker.com/
 

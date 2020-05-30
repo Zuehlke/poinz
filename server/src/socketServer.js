@@ -96,6 +96,9 @@ function registerUserWithSocket(joinedRoomEvent, socket, userIdToStore) {
   );
 }
 
+const isLastSocketForUserId = (userId) =>
+  Object.values(socketToUserIdMap).filter((socketUserId) => socketUserId === userId).length === 1;
+
 /**
  * if the socket is disconnected (e.g. user closed browser tab), manually produce and handle
  * a "leaveRoom" command that will mark the user.
@@ -110,9 +113,8 @@ function onSocketDisconnect(socket) {
     return;
   }
 
-
-  if(Object.values(socketToUserIdMap).filter(socketUserId => socketUserId === userId).length === 1) {
-    handleIncomingCommand(socket, {
+  if (isLastSocketForUserId(userId)) {
+    const leaveRoomCommand = {
       id: uuid(),
       roomId: roomId,
       name: 'leaveRoom',
@@ -120,12 +122,14 @@ function onSocketDisconnect(socket) {
         userId,
         connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
       }
-    });
+    };
+    handleIncomingCommand(socket, leaveRoomCommand);
   } else {
-    LOGGER.debug(`User userId=${userId} disconnected from room roomId=${roomId}, but there are other connections open for this user`);
+    LOGGER.debug(
+      `User userId=${userId} disconnected from room roomId=${roomId}, but there are other connections open for this user`
+    );
   }
 
   delete socketToRoomMap[socket.id];
   delete socketToUserIdMap[socket.id];
-
 }

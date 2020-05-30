@@ -105,17 +105,12 @@ function checkUnused(keys) {
   }
 }
 
-
 async function check() {
-
   const keys = await getUsedKeysInAppFiles();
 
   checkMissing(keys);
 
   checkUnused(keys);
 
-
   console.log(`checked ${keys.length} translation keys... all good.`);
 }
-
-

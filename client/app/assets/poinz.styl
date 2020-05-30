@@ -144,6 +144,17 @@ a {
   }
 }
 
+.avatar {
+  border 2px solid $zuehlkeLightGrey
+  border-radius 50%
+  background white
+  width 60px
+  height 60px
+  padding 4px
+  display block
+  margin 0 auto
+}
+
 .users {
   padding 16px
   padding-top 48px
@@ -153,16 +164,6 @@ a {
     display inline-block
     position relative
 
-    .avatar {
-      border 2px solid $zuehlkeLightGrey
-      border-radius 50%
-      background white
-      width 60px
-      height 60px
-      padding 4px
-      display block
-      margin 0 auto
-    }
 
     .user-name {
       text-align center
@@ -766,7 +767,7 @@ $backlogWidth = 300px
       flex-wrap wrap
 
       button.card, button.card:focus {
-        min-width 75px
+        min-width 30vw
         display block
         border none
         outline none
@@ -808,12 +809,41 @@ $backlogWidth = 300px
 
 }
 
-.version-info {
+.room-footer {
+  display flex
+  justify-content flex-end
+  align-items baseline
   position fixed
   bottom 8px
   right 8px
   font-size 9px
   color $zuehlkeFontGrey
+
+}
+
+.feedback-hint {
+  position absolute
+  bottom 0
+  left 0
+  right 1px
+  background $zuehlkeBlue
+  padding 8px
+  color white
+  display flex
+  font-size 13px
+  align-items center
+
+  > span {
+    display inline-block
+    margin 0 0 0 8px
+  }
+
+  .avatar {
+    display block
+    width 40px
+    height 40px
+    border-width 1px
+  }
 }
 
 // on screens bigger than 48em width
@@ -831,6 +861,13 @@ $backlogWidth = 300px
 
     .backlog {
       left $backlogWidth
+    }
+  }
+
+
+  .board .estimation .cards {
+    button.card, button.card:focus {
+      min-width 100px
     }
   }
 }

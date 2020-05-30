@@ -10,12 +10,12 @@ const Avatar = ({user, index}) => {
     : avatarIcons[index % avatarIcons.length];
 
   return <img className="avatar" src={avatarImageSource} />;
-
-  function createGravatarUrl(email) {
-    const hash = md5(email.trim().toLowerCase());
-    return `https://www.gravatar.com/avatar/${hash}?size=60`;
-  }
 };
+
+function createGravatarUrl(email) {
+  const hash = md5(email.trim().toLowerCase());
+  return `https://www.gravatar.com/avatar/${hash}?size=60`;
+}
 
 Avatar.propTypes = {
   user: PropTypes.object,

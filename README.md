@@ -24,16 +24,16 @@ The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
 
 ### Prerequisites
 
-* You have `nodeJS` installed at v4.2.0+ and `npm` at v2.0.0+.
+* You have `nodeJS` installed at v9+ and `npm` at v6+.
 * You are familiar with `npm`
 * You are familiar with `git`
-* You know JavaScript (duh :-) )
 * You are familiar with- or eager to learn `react`
 * You are familiar with- or eager to learn `redux`
 
 ### Style
 
 Try to adhere to the [airbnb style guide](https://github.com/airbnb/javascript).
+(Run ```$ npm t``` in the root directory to lint all files and run tests.)
 
 ### Development
 
@@ -53,17 +53,15 @@ Start the backend
 
 Start the client-serving in dev mode via webpack-dev-server
 
-`$ cd client/ && npm run serve`
+`$ cd client/ && npm start`
 
-Then you can open the app at http://localhost:9000/webpack-dev-server/
+Then you can open the app at http://localhost:9000/
 
 
 ## Build
 
 Our build produces a docker image that contains nodejs and our poinz server.
 Make sure you have docker installed on your machine and your user is in the "docker" usergroup. (```$ sudo groupadd docker``` and ```$ sudo usermod -aG docker $USER```)
-
-*NOTE*: make sure to exit Zühlke VPN before running the build.
 
 ### 1. Install  npm dependencies
 

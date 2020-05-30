@@ -46,7 +46,7 @@ const groupByKey = (fileResults) =>
       )
   );
 
-async function check() {
+async function getUsedKeysInAppFiles() {
   const files = await glob('../client/app/**/*.js', {cwd: __dirname});
   console.log(`Checking ${files.length} js files for translation key use...`);
   const filePromises = files.map(async (fileName) => {
@@ -57,6 +57,13 @@ async function check() {
   const keys = groupByKey(fileResults);
   keys.sort((kA, kB) => kA.key.localeCompare(kB.key));
 
+  return keys;
+}
+
+/**
+ * check whether for all used keys, there exists a DE and EN translation
+ */
+function checkMissing(keys) {
   const missingTranslations = keys
     .map((key) => {
       key.isTranslatedDE = DEFINED_KEYS_DE.includes(key.key);
@@ -78,7 +85,9 @@ async function check() {
   if (missingTranslations.length > 0) {
     throw new Error('Check failed');
   }
+}
 
+function checkUnused(keys) {
   const usedKeyStrings = keys.map((k) => k.key);
 
   const unusedDE = DEFINED_KEYS_DE.filter((deKey) => !usedKeyStrings.includes(deKey));
@@ -94,6 +103,19 @@ async function check() {
   if (unusedDE.length > 0 || unusedEN.length) {
     throw new Error('Check failed');
   }
-
-  console.log(`checked ${usedKeyStrings.length} translation keys... all good.`);
 }
+
+
+async function check() {
+
+  const keys = await getUsedKeysInAppFiles();
+
+  checkMissing(keys);
+
+  checkUnused(keys);
+
+
+  console.log(`checked ${keys.length} translation keys... all good.`);
+}
+
+

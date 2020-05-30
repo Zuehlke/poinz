@@ -13,19 +13,25 @@
   "scripts": {
     "start": "npm run serve",
     "lint": "eslint 'app/**/*.js' 'test/**/*.js'",
-    "test": "mocha --require @babel/register --require 'test/unit/setup.js' 'test/unit/*Test.js'",
+    "test": "jest",
     "pretest": "npm run lint",
     "teste2e": "protractor protractor.conf.js",
     "serve": "webpack-dev-server --progress --colors --port 9000",
     "build": "webpack --progress --colors --bail --json > webpack-build-stats.json"
   },
+  "jest": {
+    "testMatch": [
+      "**/test/unit/**/*Test.js"
+    ]
+  },
   "dependencies": {},
   "devDependencies": {
-    "@babel/core": "7.10.1",
-    "@babel/preset-env": "7.10.1",
+    "@babel/core": "^7.10.1",
+    "@babel/preset-env": "^7.10.1",
     "@babel/preset-react": "7.10.1",
     "@babel/register": "7.10.1",
     "axios": "0.19.2",
+    "babel-jest": "^26.0.1",
     "babel-loader": "8.1.0",
     "blueimp-md5": "2.16.0",
     "classnames": "2.2.6",
@@ -36,8 +42,8 @@
     "file-loader": "6.0.0",
     "font-awesome": "4.7.0",
     "history": "4.10.1",
+    "jest": "^26.0.1",
     "loglevel": "1.6.8",
-    "mocha": "7.2.0",
     "protractor": "^7.0.0",
     "purecss": "2.0.3",
     "react": "16.13.1",

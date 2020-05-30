@@ -1,5 +1,3 @@
-import log from 'loglevel';
-
 import clientSettingsStore from '../store/clientSettingsStore';
 import translator from './translator';
 import {
@@ -96,7 +94,6 @@ export default function clientActionReducer(state, action) {
     }
 
     default:
-      log.warn('unknown action', action);
       return state;
   }
 }

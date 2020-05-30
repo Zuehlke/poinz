@@ -4,6 +4,7 @@
     "by": false,
     "browser": false,
     "expect": false,
-    "protractor": false
+    "protractor": false,
+    "it": false
   }
 }

@@ -6,7 +6,6 @@
  *
  */
 const setVisitorCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (userId !== command.payload.userId) {
       throw new Error('Can only set visitor flag for own user!');
@@ -21,4 +20,4 @@ const setVisitorCommandHandler = {
   }
 };
 
-export default  setVisitorCommandHandler;
+export default setVisitorCommandHandler;

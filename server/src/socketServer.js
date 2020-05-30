@@ -1,14 +1,13 @@
 import http from 'http';
 import {v4 as uuid} from 'uuid';
 import socketIo from 'socket.io';
-import logging from './logging';
+import getLogger from './getLogger';
 
-const LOGGER = logging.getLogger('socketServer');
+const LOGGER = getLogger('socketServer');
 
 let io, commandProcessor;
 
-const
-  socketToUserIdMap = {},
+const socketToUserIdMap = {},
   socketToRoomMap = {};
 
 export default {init};
@@ -23,22 +22,23 @@ function init(app, cmdProcessor) {
 
 function handleNewConnection(socket) {
   socket.on('disconnect', onSocketDisconnect.bind(undefined, socket));
-  socket.on('command', msg => handleIncomingCommand(socket, msg));
+  socket.on('command', (msg) => handleIncomingCommand(socket, msg));
 }
 
 function handleIncomingCommand(socket, msg) {
-  LOGGER.debug('incoming command', msg);
-
   commandProcessor(msg, socketToUserIdMap[socket.id])
-    .then(producedEvents => {
-      if (msg.name === 'joinRoom') {
-        // TODO: for this, we need to "know" a lot about the commandHandler for "joinRoom". How to improve that?
-        registerUserWithSocket(msg, socket, producedEvents[producedEvents.length - 1].payload.userId);
+    .then((producedEvents) => {
+      const joinedRoomEvent = producedEvents.find((ev) => ev.name === 'joinedRoom');
+      if (joinedRoomEvent) {
+        registerUserWithSocket(joinedRoomEvent, socket, joinedRoomEvent.payload.userId);
       }
-
-      sendEvents(producedEvents, msg.roomId);
+      if (producedEvents && producedEvents.length) {
+        sendEvents(producedEvents, producedEvents[0].roomId);
+      }
     })
-    .catch(commandProcessingError => handleCommandProcessingError(commandProcessingError, msg, socket));
+    .catch((commandProcessingError) =>
+      handleCommandProcessingError(commandProcessingError, msg, socket)
+    );
 }
 
 /**
@@ -47,10 +47,7 @@ function handleIncomingCommand(socket, msg) {
  * @param roomId
  */
 function sendEvents(producedEvents, roomId) {
-  producedEvents.forEach(producedEvent => {
-    io.to(roomId).emit('event', producedEvent);
-    LOGGER.debug('outgoing event', producedEvent);
-  });
+  producedEvents.forEach((producedEvent) => io.to(roomId).emit('event', producedEvent));
 }
 
 /**
@@ -71,8 +68,6 @@ function handleCommandProcessingError(error, command, socket) {
     }
   };
 
-  LOGGER.debug('outgoing event', commandRejectedEvent);
-
   // command rejected event is only sent to the one socket that sent the command
   socket.emit('event', commandRejectedEvent);
 }
@@ -82,19 +77,23 @@ function handleCommandProcessingError(error, command, socket) {
  * we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
  * on socket disconnect.
  *
- * @param {object} joinRoomCommand the handled joinRoom command
+ * @param {object} joinedRoomEvent the handled joinedRoomEvent event
  * @param socket
  * @param userIdToStore
  */
-function registerUserWithSocket(joinRoomCommand, socket, userIdToStore) {
+function registerUserWithSocket(joinedRoomEvent, socket, userIdToStore) {
   if (!userIdToStore) {
-    throw new Error('No userId after "roomJoined" to pu into socketToUserIdMap!');
+    throw new Error('No userId after "joinedRoom" to put into socketToUserIdMap!');
   }
-  socketToRoomMap[socket.id] = joinRoomCommand.roomId;
+  socketToRoomMap[socket.id] = joinedRoomEvent.roomId;
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(joinRoomCommand.roomId, () => LOGGER.debug(`socket with id ${socket.id} joined room ${joinRoomCommand.roomId}`));
+  socket.join(joinedRoomEvent.roomId, () =>
+    LOGGER.debug(
+      `User ${userIdToStore} on socket ${socket.id} joined room ${joinedRoomEvent.roomId}`
+    )
+  );
 }
 
 /**
@@ -102,7 +101,6 @@ function registerUserWithSocket(joinRoomCommand, socket, userIdToStore) {
  * a "leaveRoom" command that will mark the user.
  */
 function onSocketDisconnect(socket) {
-
   const userId = socketToUserIdMap[socket.id];
   const roomId = socketToRoomMap[socket.id]; // socket.rooms is at this moment already emptied. so we have to use our own map
 
@@ -111,6 +109,7 @@ function onSocketDisconnect(socket) {
     LOGGER.debug(`could not send leaveRoom command for userId=${userId} in roomId=${roomId}`);
     return;
   }
+
 
   if(Object.values(socketToUserIdMap).filter(socketUserId => socketUserId === userId).length === 1) {
     handleIncomingCommand(socket, {
@@ -128,4 +127,5 @@ function onSocketDisconnect(socket) {
 
   delete socketToRoomMap[socket.id];
   delete socketToUserIdMap[socket.id];
+
 }

@@ -2,11 +2,11 @@ import path from 'path';
 import fs from 'fs';
 import util from 'util';
 import glob from 'glob';
-import tv4 from  'tv4';
+import tv4 from 'tv4';
 
-import logging from './logging';
+import getLogger from './getLogger';
 
-const LOGGER = logging.getLogger('commandSchemaValidator');
+const LOGGER = getLogger('commandSchemaValidator');
 
 const schemas = gatherSchemas();
 
@@ -29,17 +29,23 @@ function validate(cmd) {
   const schema = schemas[cmd.name];
 
   if (!schema) {
-    throw new CommandValidationError(new Error(`Cannot validate command, no matching schema found for "${cmd.name}"!`), cmd);
+    throw new CommandValidationError(
+      new Error(`Cannot validate command, no matching schema found for "${cmd.name}"!`),
+      cmd
+    );
   }
 
   const result = tv4.validateMultiple(cmd, schema);
   if (!result.valid) {
-    throw new CommandValidationError(new Error('Command validation failed!\n' + serializeErrors(result.errors)), cmd);
+    throw new CommandValidationError(
+      new Error('Command validation failed!\n' + serializeErrors(result.errors)),
+      cmd
+    );
   }
 }
 
 function serializeErrors(tv4Errors) {
-  const errs = tv4Errors.map(tv4Err => tv4Err.message + ' in ' + tv4Err.dataPath);
+  const errs = tv4Errors.map((tv4Err) => tv4Err.message + ' in ' + tv4Err.dataPath);
   return errs.join('\n');
 }
 
@@ -50,11 +56,13 @@ function gatherSchemas() {
   LOGGER.info('loading command schemas..');
 
   const schemaMap = {};
-  const schemaFiles = glob.sync(path.resolve(__dirname, '../resources/validationSchemas/**/*.json'));
+  const schemaFiles = glob.sync(
+    path.resolve(__dirname, '../resources/validationSchemas/**/*.json')
+  );
 
   LOGGER.info(`got ${schemaFiles.length} schema files...`);
 
-  schemaFiles.map(schemaFile => {
+  schemaFiles.map((schemaFile) => {
     const schemaFileContent = fs.readFileSync(schemaFile, 'utf-8');
     const schemaName = path.basename(schemaFile, '.json');
     schemaMap[schemaName] = parseSchemaFile(schemaFileContent, schemaFile);
@@ -98,5 +106,3 @@ function CommandValidationError(err, cmd) {
   this.message = `Command validation Error during "${cmd.name}": ${err.message}`;
 }
 util.inherits(CommandValidationError, Error);
-
-

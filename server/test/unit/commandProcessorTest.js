@@ -6,45 +6,49 @@ import testUtils from './testUtils';
 import processorFactory from '../../src/commandProcessor';
 
 describe('commandProcessor', () => {
-
   beforeEach(function () {
     this.mockRoomsStore = testUtils.newMockRoomsStore();
   });
 
   it('process a dummy command successfully', function () {
-
-    const processor = processorFactory({
-      setUsername: {
-        fn: function (room, command) {
-          room.applyEvent('usernameSet', command.payload);
+    const processor = processorFactory(
+      {
+        setUsername: {
+          canCreateRoom: true,
+          fn: function (room, command) {
+            room.applyEvent('usernameSet', command.payload);
+          }
         }
-      }
-    }, {
-      usernameSet: function () {
-        return new Immutable.Map();
-      }
-    }, this.mockRoomsStore);
+      },
+      {
+        usernameSet: function () {
+          return new Immutable.Map();
+        }
+      },
+      this.mockRoomsStore
+    );
 
     return processor({
       id: uuid(),
-      roomId: 'my-test-room',
       name: 'setUsername',
       payload: {userId: 'abc', username: 'john'}
-    })
-      .then(producedEvents => {
-        assert(producedEvents);
-        assert.equal(producedEvents.length, 1);
-        assert.equal(producedEvents[0].name, 'usernameSet');
-      });
+    }).then((producedEvents) => {
+      assert(producedEvents);
+      assert.equal(producedEvents.length, 1);
+      assert.equal(producedEvents[0].name, 'usernameSet');
+    });
   });
 
   it('process a dummy command with No Handler', function () {
-
-    const processor = processorFactory({
-      // no command handlers
-    }, {
-      // no event handlers
-    }, this.mockRoomsStore);
+    const processor = processorFactory(
+      {
+        // no command handlers
+      },
+      {
+        // no event handlers
+      },
+      this.mockRoomsStore
+    );
 
     return testUtils.assertPromiseRejects(
       processor({
@@ -53,55 +57,63 @@ describe('commandProcessor', () => {
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
-      'No command handler found for setUsername');
+      'No command handler found for setUsername'
+    );
   });
 
   it('process a dummy command where command handler produced unknown event', function () {
-
-    const processor = processorFactory({
-      setUsername: {
-        fn: function (room) {
-          room.applyEvent('unknownEvent', {});
+    const processor = processorFactory(
+      {
+        setUsername: {
+          canCreateRoom: true,
+          fn: function (room) {
+            room.applyEvent('unknownEvent', {});
+          }
         }
-      }
-    }, {
-      // no event handlers
-    }, this.mockRoomsStore);
+      },
+      {
+        // no event handlers
+      },
+      this.mockRoomsStore
+    );
 
     return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
-        roomId: 'my-test-room',
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
-      'Cannot apply unknown event unknownEvent');
+      'Cannot apply unknown event unknownEvent'
+    );
   });
 
   it('process a dummy command where command precondition throws', function () {
-
-    const processor = processorFactory({
-      setUsername: {
-        preCondition: function () {
-          throw new Error('Uh-uh. nono!');
+    const processor = processorFactory(
+      {
+        setUsername: {
+          canCreateRoom: true,
+          preCondition: function () {
+            throw new Error('Uh-uh. nono!');
+          }
         }
-      }
-    }, {
-      // no event handlers
-    }, this.mockRoomsStore);
+      },
+      {
+        // no event handlers
+      },
+      this.mockRoomsStore
+    );
 
     return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
-        roomId: 'my-test-room',
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
-      'Precondition Error during "setUsername": Uh-uh. nono!');
+      'Precondition Error during "setUsername": Uh-uh. nono!'
+    );
   });
 
   it('process a dummy command where command validation fails', function () {
-
     const processor = processorFactory({}, {}, this.mockRoomsStore);
 
     return testUtils.assertPromiseRejects(
@@ -111,11 +123,11 @@ describe('commandProcessor', () => {
         // no name -> cannot load appropriate schema
         payload: {}
       }),
-      'Command validation Error during "undefined": Command must contain a name');
+      'Command validation Error during "undefined": Command must contain a name'
+    );
   });
 
   it('process a dummy command where command validation fails (schema)', function () {
-
     const processor = processorFactory({}, {}, this.mockRoomsStore);
 
     return testUtils.assertPromiseRejects(
@@ -125,53 +137,83 @@ describe('commandProcessor', () => {
         name: 'setUsername',
         payload: {}
       }),
-      'Missing required property');
+      'Missing required property'
+    );
   });
 
-
-  it('process a dummy command where room must exist', function () {
-    const processor = processorFactory({
-      setUsername: {
-        existingRoom: true, // This command handler expect an existing room
-        fn: function () {
+  it('process a dummy command without roomId: where room must exist', function () {
+    const processor = processorFactory(
+      {
+        setUsername: {
+          fn: function () {}
         }
-      }
-    }, {}, this.mockRoomsStore);
+      },
+      {},
+      this.mockRoomsStore
+    );
 
     return testUtils.assertPromiseRejects(
       processor({
         id: uuid(),
-        roomId: 'room-' + uuid(),
         name: 'setUsername',
         payload: {userId: 'abc', username: 'john'}
       }),
-      'Command "setUsername" only wants to get handled for an existing room');
+      // no roomId given in command. handler does not allow creation of new room
+      'Command "setUsername" only wants to get handled for an existing room'
+    );
   });
 
+  it('process a dummy command with roomId: where room must exist', function () {
+    const processor = processorFactory(
+      {
+        setUsername: {
+          fn: function () {}
+        }
+      },
+      {},
+      this.mockRoomsStore
+    );
+
+    return testUtils.assertPromiseRejects(
+      processor({
+        id: uuid(),
+        roomId: 'rm_' + uuid(),
+        name: 'setUsername',
+        payload: {userId: 'abc', username: 'john'}
+      }),
+      //  roomId is given in command, room does not exist
+      'does not exist. ("setUsername")'
+    );
+  });
 
   /**
    * Assures that we handle two "simultaneously" incoming commands correctly.
    */
   it('concurrency handling', function () {
+    const mockRoomsStore = testUtils.newMockRoomsStore(
+      new Immutable.Map({
+        id: 'concurrencyTestRoom',
+        manipulationCount: 0
+      })
+    );
 
-    const mockRoomsStore = testUtils.newMockRoomsStore(new Immutable.Map({
-      id: 'concurrencyTestRoom',
-      manipulationCount: 0
-    }));
-
-    const processor = processorFactory({
-      setUsername: {
-        fn: function (room, command) {
-          room.applyEvent('usernameSet', command.payload);
+    const processor = processorFactory(
+      {
+        setUsername: {
+          fn: function (room, command) {
+            room.applyEvent('usernameSet', command.payload);
+          }
         }
-      }
-    }, {
-      usernameSet: function (room, eventPayload) {
-        return room
-          .set('username', eventPayload.username)
-          .set('manipulationCount', room.get('manipulationCount') + 1);
-      }
-    }, mockRoomsStore);
+      },
+      {
+        usernameSet: function (room, eventPayload) {
+          return room
+            .set('username', eventPayload.username)
+            .set('manipulationCount', room.get('manipulationCount') + 1);
+        }
+      },
+      mockRoomsStore
+    );
 
     const eventPromiseOne = processor({
       id: uuid(),
@@ -187,8 +229,7 @@ describe('commandProcessor', () => {
     });
 
     return Promise.all([eventPromiseOne, eventPromiseTwo])
-      .then(() => mockRoomsStore.getRoomById())
-      .then(room => assert.equal(2, room.get('manipulationCount')));
+      .then(() => mockRoomsStore.getRoomById('concurrencyTestRoom'))
+      .then((room) => assert.equal(2, room.get('manipulationCount')));
   });
-
 });

@@ -1,6 +1,6 @@
 {
   "name": "poinz-server",
-  "version": "0.2.3",
+  "version": "0.2.8",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -13,31 +13,31 @@
   "main": "lib/server.js",
   "scripts": {
     "build": "babel src -d lib",
-    "test": "mocha --require babel-core/register test/unit/*",
+    "test": "mocha --require @babel/register test/unit/*",
     "pretest": "npm run lint",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
     "start": "node lib/server.js"
   },
   "dependencies": {
-    "bluebird": "3.5.3",
-    "express": "4.16.4",
-    "glob": "7.1.3",
+    "bluebird": "3.7.2",
+    "express": "4.17.1",
+    "glob": "7.1.6",
     "immutable": "4.0.0-rc.12",
-    "uuid": "3.3.2",
-    "redis": "2.8.0",
-    "socket.io": "2.2.0",
+    "uuid": "7.0.3",
+    "redis": "3.0.2",
+    "socket.io": "2.3.0",
     "tv4": "1.3.0",
     "winston": "3.2.1",
-    "winston-daily-rotate-file": "3.8.0"
+    "winston-daily-rotate-file": "4.4.2"
   },
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
-    "babel-preset-env": "1.7.0",
-    "babel-register": "6.26.0",
-    "eslint": "5.15.1",
-    "mocha": "6.0.2",
-    "socket.io-client": "2.2.0"
+    "@babel/cli": "7.8.4",
+    "@babel/core": "7.9.0",
+    "@babel/preset-env": "7.9.5",
+    "@babel/register": "7.9.0",
+    "eslint": "6.8.0",
+    "mocha": "7.1.1",
+    "socket.io-client": "2.3.0"
   },
   "engines": {
     "node": ">=6.9.1"

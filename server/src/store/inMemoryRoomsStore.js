@@ -11,6 +11,7 @@ let rooms = new Immutable.Map();
 export default {
   init,
   getRoomById,
+  getRoomByAlias,
   saveRoom,
   getAllRooms
 };
@@ -20,7 +21,19 @@ function init() {
 }
 
 function getRoomById(roomId) {
+  if (!roomId) {
+    return Promise.resolve(undefined);
+  }
+
   return Promise.resolve(rooms.get(roomId));
+}
+
+function getRoomByAlias(alias) {
+  if (!alias) {
+    return Promise.resolve(undefined);
+  }
+
+  return Promise.resolve(rooms.find((room) => room.get('alias') === alias));
 }
 
 function saveRoom(room) {

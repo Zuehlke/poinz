@@ -1,80 +1,70 @@
-import assert from 'assert';
-import Immutable from 'immutable';
 import rootReducer from '../../app/services/rootReducer';
 import {TOGGLE_USER_MENU, TOGGLE_LOG} from '../../app/actions/types';
 
-
-describe('uiStateReducer', () => {
-
-  describe('userMenu and log toggling', () => {
-
-    it('show log', () => {
-      const startingState = new Immutable.Map({
-        roomId: 'myRoom'
-      });
-      const modifiedState = rootReducer(startingState, {
-        type: TOGGLE_LOG
-      });
-      assert(modifiedState.get('logShown'));
+describe('userMenu and log toggling', () => {
+  test('show log', () => {
+    const startingState = {
+      roomId: 'myRoom'
+    };
+    const modifiedState = rootReducer(startingState, {
+      type: TOGGLE_LOG
     });
+    expect(modifiedState.logShown).toBe(true);
+  });
 
-    it('hide log', () => {
-      const startingState = new Immutable.Map({
-        roomId: 'myRoom',
-        logShown: true
-      });
-      const modifiedState = rootReducer(startingState, {
-        type: TOGGLE_LOG
-      });
-      assert(!modifiedState.get('logShown'));
+  test('hide log', () => {
+    const startingState = {
+      roomId: 'myRoom',
+      logShown: true
+    };
+    const modifiedState = rootReducer(startingState, {
+      type: TOGGLE_LOG
     });
+    expect(modifiedState.logShown).toBe(false);
+  });
 
-    it('show user menu', () => {
-      const startingState = new Immutable.Map({
-        roomId: 'myRoom'
-      });
-      const modifiedState = rootReducer(startingState, {
-        type: TOGGLE_USER_MENU
-      });
-      assert(modifiedState.get('userMenuShown'));
+  test('show user menu', () => {
+    const startingState = {
+      roomId: 'myRoom'
+    };
+    const modifiedState = rootReducer(startingState, {
+      type: TOGGLE_USER_MENU
     });
+    expect(modifiedState.userMenuShown).toBe(true);
+  });
 
-    it('hide user menu', () => {
-      const startingState = new Immutable.Map({
-        roomId: 'myRoom',
-        userMenuShown: true
-      });
-      const modifiedState = rootReducer(startingState, {
-        type: TOGGLE_USER_MENU
-      });
-      assert(!modifiedState.get('userMenuShown'));
+  test('hide user menu', () => {
+    const startingState = {
+      roomId: 'myRoom',
+      userMenuShown: true
+    };
+    const modifiedState = rootReducer(startingState, {
+      type: TOGGLE_USER_MENU
     });
+    expect(modifiedState.userMenuShown).toBe(false);
+  });
 
-
-    it('should hide user menu when showing log', () => {
-      const startingState = new Immutable.Map({
-        roomId: 'myRoom',
-        userMenuShown: true
-      });
-      const modifiedState = rootReducer(startingState, {
-        type: TOGGLE_LOG
-      });
-      assert(!modifiedState.get('userMenuShown'));
-      assert(modifiedState.get('logShown'));
+  test('should hide user menu when showing log', () => {
+    const startingState = {
+      roomId: 'myRoom',
+      userMenuShown: true
+    };
+    const modifiedState = rootReducer(startingState, {
+      type: TOGGLE_LOG
     });
+    expect(modifiedState.userMenuShown).toBe(false);
+    expect(modifiedState.logShown).toBe(true);
+  });
 
-
-    it('should hide log when showing user menu', () => {
-      const startingState = new Immutable.Map({
-        roomId: 'myRoom',
-        logShown: true
-      });
-      const modifiedState = rootReducer(startingState, {
-        type: TOGGLE_USER_MENU
-      });
-      assert(!modifiedState.get('logShown'));
-      assert(modifiedState.get('userMenuShown'));
+  test('should hide log when showing user menu', () => {
+    const startingState = {
+      roomId: 'myRoom',
+      logShown: true
+    };
+    const modifiedState = rootReducer(startingState, {
+      type: TOGGLE_USER_MENU
     });
-
+    expect(modifiedState.logShown).toBe(false);
+    expect(modifiedState.userMenuShown).toBe(true);
   });
 });

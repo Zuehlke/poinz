@@ -20,8 +20,7 @@
   },
   "required": [
     "id",
-    "name",
-    "roomId"
+    "name"
   ],
   "additionalProperties": false
 }

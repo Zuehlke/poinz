@@ -1,21 +1,14 @@
-import assert from 'assert';
-import Immutable from 'immutable';
 import configureStore from '../../app/store/configureStore';
 
-describe('configureStore', () => {
+test('should return a correctly configured store', () => {
+  const store = configureStore();
+  expect(store).toBeDefined();
+  expect(store.dispatch).toBeDefined();
+});
 
-  it('should return a correctly configured store', () => {
-    const store = configureStore();
-    assert(store);
-    assert(store.dispatch);
-    assert.deepEqual(store.getState(), {});
-  });
-
-  it('should return a correctly configured store with initial state', () => {
-    const store = configureStore(new Immutable.Map({some: 'data'}));
-    assert(store);
-    assert(store.dispatch);
-    assert.deepEqual(store.getState().toJS(), {some: 'data'});
-  });
-
+test('should return a correctly configured store with initial state', () => {
+  const store = configureStore({some: 'data'});
+  expect(store).toBeDefined();
+  expect(store.dispatch).toBeDefined();
+  expect(store.getState().some).toEqual('data');
 });

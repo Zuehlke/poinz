@@ -1,5 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -10,22 +9,16 @@ import User from './User';
  */
 const Users = ({users}) => (
   <div className="users">
-    {users.toList().map((user, index) => (
-      <User
-        key={user.get('id')}
-        index={index}
-        user={user}
-      />
+    {Object.values(users).map((user, index) => (
+      <User key={user.id} index={index} user={user} />
     ))}
   </div>
 );
 
 Users.propTypes = {
-  users: PropTypes.instanceOf(Immutable.Map)
+  users: PropTypes.object
 };
 
-export default connect(
-  state => ({
-    users: state.get('users')
-  })
-)(Users);
+export default connect((state) => ({
+  users: state.users
+}))(Users);

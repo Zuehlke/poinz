@@ -4,7 +4,6 @@
  * A user that is marked as visitor cannot reveal stories
  */
 const revealCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only reveal currently selected story!');
@@ -15,7 +14,6 @@ const revealCommandHandler = {
     }
   },
   fn: (room, command) => {
-
     if (room.getIn(['stories', command.payload.storyId, 'revealed'])) {
       return;
     }

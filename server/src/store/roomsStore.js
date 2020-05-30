@@ -3,12 +3,12 @@ import Promise from 'bluebird';
 import Immutable from 'immutable';
 
 import settings from '../settings';
-import logging from '../logging';
+import getLogger from '../getLogger';
 
 // "promisify" redis client with bluebird -> use client.getAsync / client.setAsync / etc.
 Promise.promisifyAll(redis.RedisClient.prototype);
 
-const LOGGER = logging.getLogger('roomsStore');
+const LOGGER = getLogger('roomsStore');
 
 const POINZ_REDIS_KEY_PREFIX = 'poinz:';
 
@@ -47,7 +47,7 @@ function getRoomById(roomId) {
 function getRoomByIdIntern(roomIdPrepended) {
   return redisClient
     .getAsync(roomIdPrepended)
-    .then(res => res ? redisValueToImmutableRoom(res) : undefined);
+    .then((res) => (res ? redisValueToImmutableRoom(res) : undefined));
 }
 
 function redisValueToImmutableRoom(redisValue) {
@@ -55,7 +55,7 @@ function redisValueToImmutableRoom(redisValue) {
     const parsedValue = JSON.parse(redisValue);
     return Immutable.fromJS(parsedValue);
   } catch (err) {
-    throw new Error(`Invalid data in store ${redisValue }\n${err.message}`);
+    throw new Error(`Invalid data in store ${redisValue}\n${err.message}`);
   }
 }
 
@@ -76,42 +76,38 @@ function saveRoom(room) {
  */
 function getAllRooms() {
   return getAllKeysInCollection()
-    .then(allKeys => Promise.all(allKeys.map(key => getRoomByIdIntern(key))))
-    .then(allRooms => new Immutable.List(allRooms));
+    .then((allKeys) => Promise.all(allKeys.map((key) => getRoomByIdIntern(key))))
+    .then((allRooms) => new Immutable.List(allRooms));
 }
 
 function getAllKeysInCollection() {
-
   let cursor = '0';
   let allKeys = [];
 
   return new Promise(doScan);
 
-
   function doScan(resolve, reject) {
     redisClient.scan(cursor, 'MATCH', POINZ_REDIS_KEY_PREFIX + '*', 'COUNT', '10', (err, res) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-
-        // Update the cursor position for the next scan
-        cursor = res[0];
-        // get the SCAN result for this iteration
-        const keys = res[1];
-
-        if (keys.length > 0) {
-          allKeys = allKeys.concat(keys);
-        }
-
-        if (cursor === '0') {
-          resolve(allKeys);
-          return;
-        }
-
-        return doScan(resolve, reject);
+      if (err) {
+        reject(err);
+        return;
       }
-    );
+
+      // Update the cursor position for the next scan
+      cursor = res[0];
+      // get the SCAN result for this iteration
+      const keys = res[1];
+
+      if (keys.length > 0) {
+        allKeys = allKeys.concat(keys);
+      }
+
+      if (cursor === '0') {
+        resolve(allKeys);
+        return;
+      }
+
+      return doScan(resolve, reject);
+    });
   }
 }
-

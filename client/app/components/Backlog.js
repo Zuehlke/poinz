@@ -1,19 +1,18 @@
 import React from 'react';
-import Immutable from 'immutable';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
+import Avatar from './Avatar';
 
 /**
  * The backlog contains a form to add new stories
  * and a list of stories.
  */
 const Backlog = ({stories, backlogShown, isVisitor}) => {
-
-  const hasStories = stories && !!stories.size;
+  const hasStories = stories && !!Object.keys(stories).length;
 
   const backlogClasses = classnames('backlog', {
     'backlog-active': backlogShown // if true, show menu also in small screens (menu toggle)
@@ -21,26 +20,40 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
 
   return (
     <div className={backlogClasses}>
-
       {!isVisitor && <StoryAddForm />}
 
       {hasStories && <Stories />}
-      {!hasStories && <div className="story-hint">There are currently no stories in the estimation backlog...</div>}
+      {!hasStories && (
+        <div className="story-hint">
+          There are currently no stories in the estimation backlog...
+        </div>
+      )}
 
+      <div className="feedback-hint">
+        <Avatar user={{email: 'set@zuehlke.com'}} index={0} />
+        <span>
+          Hey there! Do you use Poinz on a regular basis? I would be very interested in your{' '}
+          <a
+            href="https://github.com/Zuehlke/poinz/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            feedback!
+          </a>
+        </span>
+      </div>
     </div>
   );
 };
 
 Backlog.propTypes = {
-  stories: PropTypes.instanceOf(Immutable.Map),
+  stories: PropTypes.object,
   backlogShown: PropTypes.bool,
   isVisitor: PropTypes.bool
 };
 
-export default connect(
-  state => ({
-    stories: state.get('stories'),
-    backlogShown: state.get('backlogShown'),
-    isVisitor: state.getIn(['users', state.get('userId'), 'visitor'])
-  })
-)(Backlog);
+export default connect((state) => ({
+  stories: state.stories,
+  backlogShown: state.backlogShown,
+  isVisitor: state.users[state.userId] ? state.users[state.userId].visitor : false
+}))(Backlog);

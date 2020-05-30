@@ -1,7 +1,6 @@
 // properties / settings for PoinZ backend
 
 const settings = {
-
   // port for webserver & socketserver
   serverPort: process.env.PORT || 3000,
 

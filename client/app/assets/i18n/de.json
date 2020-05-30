@@ -1,8 +1,8 @@
 {
-  "enterRoomInfo": "Bitte gib den Namen des Raumes ein, dem du beitreten möchtest.",
+  "createRoomInfo": "Erstelle einen neuen Raum und leg los!",
+  "joinRoomInfo": "Du kannst auch einen bereits existierenden Raum betreten. Frage den Ersteller für den Link.",
+  "createNewRoom": "Erstelle einen neuen Raum",
   "join": "Beitreten",
-  "joinPrevious": "Vorherige Räume",
-  "roomName": "Raum Name...",
   "name": "Name...",
   "addStory": "Story hinzufügen",
   "newRound": "Neue Runde",
@@ -22,5 +22,10 @@
   "english": "Englisch",
   "provideUsernameInfo": "Deine Kollegen möchten gerne wissen wer du bist. Bitte sag uns wie du heisst.",
   "gravatar": "Gravatar",
-  "gravatarInfo": "Wenn du deine Gravatar Email Adresse eingibst, wird dein Gravatar icon angezeigt."
+  "gravatarInfo": "Wenn du deine Gravatar Email Adresse eingibst, wird dein Gravatar icon angezeigt.",
+  "toggleLog": "Action Log",
+  "toggleMenu": "Menu",
+  "alias": "Raum Alias",
+  "welcomeBack": "Willkommen zurück",
+  "disclaimer": "Die Benützung von Poinz erfolgt auf eigenes Risiko! Jegliche eingetragene informationen sind möglicherweise öffentlich abrufbar."
 }

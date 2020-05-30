@@ -11,13 +11,11 @@ import eventHandlers from '../../src/eventHandlers/eventHandlers';
  *
  */
 describe('commandProcessor performance', () => {
-
   let userId;
   let roomId;
   let processor;
 
   beforeEach(() => {
-
     userId = uuid();
     roomId = 'rm_' + uuid();
 
@@ -25,22 +23,24 @@ describe('commandProcessor performance', () => {
   });
 
   it('1000 "addStory" commands/events', function () {
-
     const totalEvents = 1000;
     let eventCounter = 0;
     let commandCounter = 0;
 
-
-    console.log(`--- Starting test with "addStory" on roomId ${roomId},  until ${totalEvents} events are received --`);
+    console.log(
+      `--- Starting test with "addStory" on roomId ${roomId},  until ${totalEvents} events are received --`
+    );
     console.time('commandProcessorPerformance');
 
-
-    return processor({
-      id: uuid(),
-      roomId: roomId,
-      name: 'joinRoom',
-      payload: {}
-    }, userId)
+    return processor(
+      {
+        id: uuid(),
+        roomId: roomId,
+        name: 'joinRoom',
+        payload: {}
+      },
+      userId
+    )
       .then(sendAddStoryCommand)
       .then(onHandled);
 
@@ -50,7 +50,9 @@ describe('commandProcessor performance', () => {
         return sendAddStoryCommand().then(onHandled);
       }
 
-      console.log(`Performance test done. sent ${commandCounter} commands. Received ${eventCounter} events.`);
+      console.log(
+        `Performance test done. sent ${commandCounter} commands. Received ${eventCounter} events.`
+      );
       console.timeEnd('commandProcessorPerformance');
       console.log('\n---');
     }
@@ -58,17 +60,18 @@ describe('commandProcessor performance', () => {
     function sendAddStoryCommand() {
       commandCounter++;
 
-      return processor({
-        id: uuid(),
-        roomId: roomId,
-        name: 'addStory',
-        payload: {
-          title: `SuperStory_${commandCounter}`,
-          description: 'This will be awesome'
-        }
-      }, userId);
+      return processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'addStory',
+          payload: {
+            title: `SuperStory_${commandCounter}`,
+            description: 'This will be awesome'
+          }
+        },
+        userId
+      );
     }
-
   });
-
 });

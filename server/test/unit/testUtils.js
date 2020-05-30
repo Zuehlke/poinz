@@ -26,15 +26,18 @@ function assertValidEvent(actualEvent, correlationId, roomId, userId, eventName)
  */
 function assertPromiseRejects(promise, expectedErrorMessage) {
   return promise
-    .then(result => {
+    .then((result) => {
       throw new Error('Given promise is expected to reject. but Resolved\n' + util.inspect(result));
     })
-    .catch(err => assertError(err, expectedErrorMessage));
+    .catch((err) => assertError(err, expectedErrorMessage));
 }
 
 function assertError(actualError, expectedMessage) {
   assert(actualError.message);
-  assert(actualError.message.indexOf(expectedMessage) > -1, `Error is expected to contain "${expectedMessage}".\nWas "${actualError.message}"`);
+  assert(
+    actualError.message.indexOf(expectedMessage) > -1,
+    `Error is expected to contain "${expectedMessage}".\nWas "${actualError.message}"`
+  );
 }
 
 /**
@@ -48,11 +51,22 @@ function assertError(actualError, expectedMessage) {
 function newMockRoomsStore(initialRoom) {
   let room = initialRoom;
   return {
-    getRoomById: () => Promise.resolve(room),
-    saveRoom: rm => {
+    getRoomById: (id) => {
+      if (!room || room.get('id') !== id) {
+        return Promise.resolve(undefined);
+      }
+      return Promise.resolve(room);
+    },
+    getRoomByAlias: (alias) => {
+      if (!room || room.get('alias') !== alias) {
+        return Promise.resolve(undefined);
+      }
+      return Promise.resolve(room);
+    },
+    saveRoom: (rm) => {
       room = rm;
       return Promise.resolve();
     },
-    manipulate: fn => room = fn(room)
+    manipulate: (fn) => (room = fn(room))
   };
 }

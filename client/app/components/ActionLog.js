@@ -1,19 +1,13 @@
 import React from 'react';
-import Immutable from 'immutable';
 import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-
-// we do not use momentjs, since we only need one function "format(..)" . momentjs is 15Kb, fecha is 2Kb
-// https://github.com/taylorhakes/fecha
-// see https://www.npmjs.com/package/fecha#formatting-tokens for format
-import fecha from 'fecha';
+import {formatTime} from '../services/timeUtil';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
  */
 const ActionLog = ({t, actionLog, logShown}) => {
-
   const actionLogClasses = classnames('action-log', {
     'action-log-active': logShown
   });
@@ -25,7 +19,7 @@ const ActionLog = ({t, actionLog, logShown}) => {
         <ul>
           {actionLog.map((entry, index) => (
             <li key={`logline_${index}`}>
-              {fecha.format(entry.get('tstamp'), 'HH:mm')} {entry.get('message')}
+              {formatTime(entry.tstamp)} {entry.message}
             </li>
           ))}
         </ul>
@@ -37,13 +31,11 @@ const ActionLog = ({t, actionLog, logShown}) => {
 ActionLog.propTypes = {
   t: PropTypes.func,
   logShown: PropTypes.bool,
-  actionLog: PropTypes.instanceOf(Immutable.List)
+  actionLog: PropTypes.array
 };
 
-export default connect(
-  state => ({
-    t: state.get('translator'),
-    logShown: state.get('logShown'),
-    actionLog: state.get('actionLog')
-  })
-)(ActionLog);
+export default connect((state) => ({
+  t: state.translator,
+  logShown: state.logShown,
+  actionLog: state.actionLog
+}))(ActionLog);

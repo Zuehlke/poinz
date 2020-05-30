@@ -1,15 +1,22 @@
+const until = protractor.ExpectedConditions;
+
+const landingPage = require('./pages/landingPage');
+const roomPage = require('./pages/roomPage');
+
 describe('Add Story', () => {
-
   it('via form', () => {
-    browser.get('/bar');
+    landingPage.goTo();
+    landingPage.createRoomAndSetOwnUsername('e2eTestUser');
 
-    // set username
-    element(by.css('.username-wrapper input#username')).sendKeys('e2eTestUser');
-    element(by.css('.username-wrapper .pure-button.button-save')).click();
+    roomPage.addStory('A Story Title', 'A description');
 
-    element(by.css('.backlog textarea')).sendKeys('A description');
-    element(by.css('.backlog .pure-form button')).click();
+    browser.wait(
+      until.presenceOf(roomPage.selectedStoryElement()),
+      5000,
+      'Element taking too long to appear in the DOM'
+    );
 
+    expect(roomPage.getSelectedStoryTitle()).toEqual('A Story Title');
+    expect(roomPage.getSelectedStoryDescription()).toEqual('A description');
   });
-
 });

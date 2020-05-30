@@ -1,6 +1,4 @@
 import React from 'react';
-import Immutable from 'immutable';
-import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
@@ -12,7 +10,7 @@ import {changeStory, cancelEditStory} from '../actions';
  */
 const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
   const classes = classnames('story', {
-    'waiting': pendingChangeCommands.find(cmd => cmd.payload.storyId === story.get('id'))
+    waiting: Object.values(pendingChangeCommands).find((cmd) => cmd.payload.storyId === story.id)
   });
 
   let titleInputField, descriptionInputField;
@@ -20,25 +18,25 @@ const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeComman
   return (
     <div className={classes}>
       <div className="pure-form">
-
         <fieldset className="pure-group">
-          <input type="text" className="pure-input-1"
-                 defaultValue={story.get('title')}
-                 ref={ref => titleInputField = ref}
-                 onKeyPress={handleTitleKeyEvent}/>
+          <input
+            type="text"
+            className="pure-input-1"
+            defaultValue={story.title}
+            ref={(ref) => (titleInputField = ref)}
+            onKeyPress={handleTitleKeyEvent}
+          />
 
-        <textarea className="pure-input-1"
-                  rows="1"
-                  placeholder="Description / URL / etc."
-                  defaultValue={story.get('description')}
-                  ref={ref => descriptionInputField = ref}/>
+          <textarea
+            className="pure-input-1"
+            rows="1"
+            placeholder="Description / URL / etc."
+            defaultValue={story.description}
+            ref={(ref) => (descriptionInputField = ref)}
+          />
         </fieldset>
 
-        <StoryEditFormButtonGroup
-          onSave={triggerChange}
-          onCancel={triggerCancel}
-        />
-
+        <StoryEditFormButtonGroup onSave={triggerChange} onCancel={triggerCancel} />
       </div>
     </div>
   );
@@ -51,43 +49,45 @@ const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeComman
 
   function triggerChange() {
     if (titleInputField.value) {
-      changeStory(story.get('id'), titleInputField.value, descriptionInputField.value);
+      changeStory(story.id, titleInputField.value, descriptionInputField.value);
     }
   }
 
   function triggerCancel() {
-    cancelEditStory(story.get('id'));
+    cancelEditStory(story.id);
   }
 };
 
 StoryEditForm.propTypes = {
-  story: PropTypes.instanceOf(Immutable.Map),
+  story: PropTypes.object,
   changeStory: PropTypes.func,
   cancelEditStory: PropTypes.func,
-  pendingChangeCommands: PropTypes.instanceOf(Immutable.Map)
+  pendingChangeCommands: PropTypes.array
 };
 
 export default connect(
-  state => ({
-    pendingChangeCommands: state.get('pendingCommands').filter(cmd => cmd.name === 'changeStory')
+  (state) => ({
+    pendingChangeCommands: Object.values(state.pendingCommands).filter(
+      (cmd) => cmd.name === 'changeStory'
+    )
   }),
-  dispatch => bindActionCreators({changeStory, cancelEditStory}, dispatch)
+  {changeStory, cancelEditStory}
 )(StoryEditForm);
 
 const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
   <div className="pure-g button-group">
     <div className="pure-u-1-2">
-      <button type="button"
-              className="pure-button pure-input-1"
-              onClick={onCancel}>
+      <button type="button" className="pure-button pure-input-1" onClick={onCancel}>
         Cancel
         <i className="fa fa-times button-icon-right"></i>
       </button>
     </div>
     <div className="pure-u-1-2">
-      <button type="button"
-              className="pure-button pure-input-1 pure-button-primary"
-              onClick={onSave}>
+      <button
+        type="button"
+        className="pure-button pure-input-1 pure-button-primary"
+        onClick={onSave}
+      >
         Save
         <i className="fa fa-pencil button-icon-right"></i>
       </button>

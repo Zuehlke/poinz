@@ -1,6 +1,6 @@
 {
   "name": "poinz",
-  "version": "0.2.3",
+  "version": "0.2.8",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -11,16 +11,20 @@
     "url": "https://github.com/Zuehlke/poinz.git"
   },
   "scripts": {
+    "format": "prettier --write \"client/app/**/*.js\" \"client/test/**/*.js\" \"build/*.js\" \"server/src/**/*.js\" \"server/test/**/*.js\"",
     "test": "cd client/ && npm test &&  cd ../server && npm test",
+    "prebuild": "node build/checkTranslationKeys.js",
     "build": "node build/dockerImage.js",
     "dependencyCheck": "ncu --packageFile ./package.json > npm_dependencies_report.poinz.md && ncu --packageFile ./client/package.json > npm_dependencies_report.poinz-client.md && ncu --packageFile ./server/package.json > npm_dependencies_report.poinz-server.md ",
     "postinstall": "cd client/ && npm i && cd ../server && npm i"
   },
   "devDependencies": {
-    "del": "4.0.0",
-    "fs-extra": "7.0.1",
-    "npm-check-updates": "2.15.0",
-    "bluebird": "3.5.3"
+    "bluebird": "3.7.2",
+    "del": "5.1.0",
+    "fs-extra": "9.0.0",
+    "glob": "^7.1.6",
+    "npm-check-updates": "4.1.2",
+    "prettier": "^2.0.5"
   },
   "engines": {
     "node": ">=9"

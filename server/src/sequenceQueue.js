@@ -14,7 +14,6 @@ export default function sequenceQueueFactory(jobHandler) {
     push
   };
 
-
   /**
    * Push a job into the queue
    * @param {Object} job
@@ -41,6 +40,4 @@ export default function sequenceQueueFactory(jobHandler) {
       invokeJobHandler();
     });
   }
-
-
 }

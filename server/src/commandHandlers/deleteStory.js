@@ -2,7 +2,6 @@
  * A user deletes a story
  */
 const deleteStoryCommandHandler = {
-  existingRoom: true,
   preCondition: (room, command, userId) => {
     if (room.getIn(['users', userId, 'visitor'])) {
       throw new Error('Visitors cannot delete stories!');

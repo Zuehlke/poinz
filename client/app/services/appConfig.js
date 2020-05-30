@@ -6,5 +6,8 @@
  *
  * In webpack dev serve + production, __POINZ_CONFIG__ is set via webpack (see webpack.config.js and webpack.production.config.js)
  */
-const appConfig = (typeof __POINZ_CONFIG__ !== 'undefined') ? __POINZ_CONFIG__ : {env: 'test'};
-export default appConfig;
+const appConfig = typeof __POINZ_CONFIG__ !== 'undefined' ? __POINZ_CONFIG__ : {env: 'test'};
+export default {
+  ...appConfig,
+  APP_STATUS_IDENTIFIER: 'poinzstatus'
+};

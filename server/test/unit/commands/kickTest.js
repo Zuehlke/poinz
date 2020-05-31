@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -8,129 +6,126 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('kick', () => {
-  beforeEach(function () {
-    this.userOneId = uuid();
-    this.userTwoId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce kicked event (userOne kicks disconnected userTwo)', async () => {
+  const {roomId, userOneId, userTwoId, processor} = await prep();
+  const commandId = uuid();
 
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        stories: [],
-        users: {
-          [this.userOneId]: {
-            id: this.userOneId
-          },
-          [this.userTwoId]: {
-            id: this.userOneId,
-            disconnected: true
-          }
-        }
-      })
-    );
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'kick',
+      payload: {
+        userId: userTwoId
+      }
+    },
+    userOneId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(1);
 
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-  });
-
-  it('Should produce kicked event', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'kick',
-        payload: {
-          userId: this.userTwoId
-        }
-      },
-      this.userOneId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 1);
-
-      const kickedEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        kickedEvent,
-        this.commandId,
-        this.roomId,
-        this.userOneId,
-        'kicked'
-      );
-      assert.equal(kickedEvent.payload.userId, this.userTwoId);
-    });
-  });
-
-  it('Should remove user from room', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'kick',
-        payload: {
-          userId: this.userTwoId
-        }
-      },
-      this.userOneId
-    )
-      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
-      .then((room) => assert(!room.getIn(['users', this.userTwoId])));
-  });
-
-  describe('preconditions', () => {
-    it('Should throw if userId does not match any user from the room', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'kick',
-            payload: {
-              userId: 'unknown'
-            }
-          },
-          this.userOneId
-        ),
-        'Can only kick user that belongs to the same room!'
-      );
-    });
-
-    it('Should throw if tries to kick himself', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'kick',
-            payload: {
-              userId: this.userOneId
-            }
-          },
-          this.userOneId
-        ),
-        'User cannot kick himself!'
-      );
-    });
-
-    it('Should throw if visitor tries to kick', function () {
-      this.mockRoomsStore.manipulate((room) =>
-        room.setIn(['users', this.userOneId, 'visitor'], true)
-      );
-
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'kick',
-            payload: {
-              userId: this.userTwoId
-            }
-          },
-          this.userOneId
-        ),
-        'Visitors cannot kick other users!'
-      );
-    });
+    const kickedEvent = producedEvents[0];
+    testUtils.assertValidEvent(kickedEvent, commandId, roomId, userOneId, 'kicked');
+    expect(kickedEvent.payload.userId).toEqual(userTwoId);
   });
 });
+
+test('Should remove user from room', async () => {
+  const {roomId, userOneId, userTwoId, processor, mockRoomsStore} = await prep();
+  return processor(
+    {
+      id: uuid(),
+      roomId,
+      name: 'kick',
+      payload: {
+        userId: userTwoId
+      }
+    },
+    userOneId
+  )
+    .then(() => mockRoomsStore.getRoomById(roomId))
+    .then((room) => expect(room.getIn(['users', userTwoId])).toBeUndefined());
+});
+
+describe('preconditions', () => {
+  test('Should throw if userId does not match any user from the room', async () => {
+    const {roomId, userIdOne, processor} = await prep();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'kick',
+          payload: {
+            userId: 'unknown'
+          }
+        },
+        userIdOne
+      )
+    ).rejects.toThrow('Can only kick user that belongs to the same room!');
+  });
+
+  test('Should throw if tries to kick himself', async () => {
+    const {roomId, userOneId, processor} = await prep();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'kick',
+          payload: {
+            userId: userOneId
+          }
+        },
+        userOneId
+      )
+    ).rejects.toThrow('User cannot kick himself!');
+  });
+
+  test('Should throw if visitor tries to kick', async () => {
+    const {roomId, userOneId, userTwoId, processor, mockRoomsStore} = await prep();
+
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userOneId, 'visitor'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'kick',
+          payload: {
+            userId: userTwoId
+          }
+        },
+        userOneId
+      )
+    ).rejects.toThrow('Visitors cannot kick other users!');
+  });
+});
+
+/**
+ * create mock room store with two users. userTwo is marked as disconnected
+ */
+function prep() {
+  const userOneId = uuid();
+  const userTwoId = uuid();
+  const roomId = 'rm_' + uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    stories: [],
+    users: {
+      [userOneId]: {
+        id: userOneId
+      },
+      [userTwoId]: {
+        id: userOneId,
+        disconnected: true
+      }
+    }
+  });
+
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  return {userOneId, userTwoId, roomId, mockRoomsStore, processor};
+}

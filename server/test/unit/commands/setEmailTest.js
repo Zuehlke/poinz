@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -8,109 +6,107 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('setEmail', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce emailSet event', async () => {
+  const {processor, roomId, userId} = await prep();
 
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        users: {
-          [this.userId]: {
-            id: this.userId
-          }
-        }
-      })
-    );
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'setEmail',
+      payload: {
+        userId: userId,
+        email: 'j.doe@gmail.com'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(1);
 
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-  });
-
-  it('Should produce emailSet event', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setEmail',
-        payload: {
-          userId: this.userId,
-          email: 'j.doe@gmail.com'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 1);
-
-      const emailSetEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        emailSetEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'emailSet'
-      );
-      assert.equal(emailSetEvent.payload.email, 'j.doe@gmail.com');
-      assert.equal(emailSetEvent.payload.userId, this.userId);
-    });
-  });
-
-  it('Should store email', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'setEmail',
-        payload: {
-          userId: this.userId,
-          email: 'mikey.mouse@hotmail.com'
-        }
-      },
-      this.userId
-    )
-      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
-      .then((room) =>
-        assert.equal(room.getIn(['users', this.userId, 'email']), 'mikey.mouse@hotmail.com')
-      );
-  });
-
-  describe('preconditions', () => {
-    it('Should throw if userId does not match', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'setEmail',
-            payload: {
-              userId: 'unknown',
-              email: 'm.mouse@gmail.com'
-            }
-          },
-          this.userId
-        ),
-        'Can only set email for own user!'
-      );
-    });
-
-    it('Should throw if given email does not match format', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'setEmail',
-            payload: {
-              userId: this.userId,
-              email: 'this.is not a email'
-            }
-          },
-          this.userId
-        ),
-        'Format validation failed (must be a valid email-address) in /payload/email'
-      );
-    });
+    const emailSetEvent = producedEvents[0];
+    testUtils.assertValidEvent(emailSetEvent, commandId, roomId, userId, 'emailSet');
+    expect(emailSetEvent.payload.email).toEqual('j.doe@gmail.com');
+    expect(emailSetEvent.payload.userId).toEqual(userId);
   });
 });
+
+test('Should store email', async () => {
+  const {processor, roomId, userId, mockRoomsStore} = await prep();
+  return processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'setEmail',
+      payload: {
+        userId: userId,
+        email: 'mikey.mouse@hotmail.com'
+      }
+    },
+    userId
+  )
+    .then(() => mockRoomsStore.getRoomById(roomId))
+    .then((room) =>
+      expect(room.getIn(['users', userId, 'email'])).toEqual('mikey.mouse@hotmail.com')
+    );
+});
+
+describe('preconditions', () => {
+  test('Should throw if userId does not match', async () => {
+    const {processor, roomId, userId} = await prep();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'setEmail',
+          payload: {
+            userId: 'unknown',
+            email: 'm.mouse@gmail.com'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Can only set email for own user!');
+  });
+
+  test('Should throw if given email does not match format', async () => {
+    const {processor, roomId, userId} = await prep();
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'setEmail',
+          payload: {
+            userId: userId,
+            email: 'is not a email'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Format validation failed (must be a valid email-address) in /payload/email');
+  });
+});
+
+/**
+ * prepares mock rooms store with one user
+ */
+async function prep() {
+  const userId = uuid();
+  const roomId = 'rm_' + uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    users: {
+      [userId]: {
+        id: userId
+      }
+    }
+  });
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  return {userId, roomId, processor, mockRoomsStore};
+}

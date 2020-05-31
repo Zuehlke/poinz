@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -8,155 +6,129 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-/**
- * Can serve as a sample for command testing.
- *
- * Can test whether a given command produces expected events (validation + preconditions + event production)
- * Can test whether the produced events modify the room as expected (event handler functions)
- */
-describe('addStory', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce storyAdded event', async () => {
+  const {userId, roomId, processor} = prep();
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(1);
 
-    // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        users: {
-          [this.userId]: {
-            id: this.userId,
-            username: 'Tester'
-          }
-        },
-        stories: {
-          abc: {
-            id: 'abc',
-            title: 'some',
-            estimations: {}
-          }
-        }
-      })
-    );
-
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-  });
-
-  it('Should produce storyAdded event', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 232',
-          description: 'This will be awesome'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 1);
-
-      const storyAddedEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        storyAddedEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'storyAdded'
-      );
-      assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
-      assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
-      assert.deepEqual(storyAddedEvent.payload.estimations, {});
-    });
-  });
-
-  it('Should produce storyAdded and additional storySelected event if this is the first story', function () {
-    this.mockRoomsStore.manipulate((room) => room.removeIn(['stories', 'abc']));
-
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 232',
-          description: 'This will be awesome'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 2);
-
-      const storyAddedEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        storyAddedEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'storyAdded'
-      );
-      assert.equal(storyAddedEvent.payload.title, 'SuperStory 232');
-      assert.equal(storyAddedEvent.payload.description, 'This will be awesome');
-      assert.deepEqual(storyAddedEvent.payload.estimations, {});
-
-      const storySelectedEvent = producedEvents[1];
-      testUtils.assertValidEvent(
-        storySelectedEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'storySelected'
-      );
-    });
-  });
-
-  it('Should store new story in room', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 232',
-          description: 'This will be awesome'
-        }
-      },
-      this.userId
-    ).then((producedEvents) =>
-      this.mockRoomsStore
-        .getRoomById(this.roomId)
-        .then((room) =>
-          assert(
-            room.getIn(['stories', producedEvents[0].payload.id]),
-            'room must now contain added story'
-          )
-        )
-    );
-  });
-
-  describe('preconditions', () => {
-    it('Should throw if user is a visitor', function () {
-      this.mockRoomsStore.manipulate((room) => room.setIn(['users', this.userId, 'visitor'], true));
-
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'addStory',
-            payload: {
-              title: 'SuperStory 232',
-              description: 'This will be awesome'
-            }
-          },
-          this.userId
-        ),
-        'Visitors cannot add stories!'
-      );
-    });
+    const storyAddedEvent = producedEvents[0];
+    testUtils.assertValidEvent(storyAddedEvent, commandId, roomId, userId, 'storyAdded');
+    expect(storyAddedEvent.payload.title).toEqual('SuperStory 232');
+    expect(storyAddedEvent.payload.description).toEqual('This will be awesome');
+    expect(storyAddedEvent.payload.estimations).toEqual({});
   });
 });
+
+test('Should produce storyAdded and additional storySelected event if this is the first story', async () => {
+  const {userId, roomId, processor, mockRoomsStore} = prep();
+  const commandId = uuid();
+  mockRoomsStore.manipulate((room) => room.removeIn(['stories', 'abc']));
+
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(2);
+
+    const storyAddedEvent = producedEvents[0];
+    testUtils.assertValidEvent(storyAddedEvent, commandId, roomId, userId, 'storyAdded');
+    expect(storyAddedEvent.payload.title).toEqual('SuperStory 232');
+    expect(storyAddedEvent.payload.description).toEqual('This will be awesome');
+    expect(storyAddedEvent.payload.estimations).toEqual({});
+
+    const storySelectedEvent = producedEvents[1];
+    testUtils.assertValidEvent(storySelectedEvent, commandId, roomId, userId, 'storySelected');
+  });
+});
+
+test('Should store new story in room', async () => {
+  const {userId, roomId, processor, mockRoomsStore} = prep();
+  return processor(
+    {
+      id: uuid(),
+      roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then((producedEvents) =>
+    mockRoomsStore
+      .getRoomById(roomId)
+      .then((room) => expect(room.getIn(['stories', producedEvents[0].payload.id])).toBeDefined())
+  );
+});
+
+describe('preconditions', () => {
+  test('Should throw if user is a visitor', async () => {
+    const {userId, roomId, processor, mockRoomsStore} = prep();
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'addStory',
+          payload: {
+            title: 'SuperStory 232',
+            description: 'This will be awesome'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Visitors cannot add stories!');
+  });
+});
+
+/**
+ * create mock room store with one user and one story
+ */
+function prep() {
+  const userId = uuid();
+  const roomId = 'rm_' + uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    users: {
+      [userId]: {
+        id: userId,
+        username: 'Tester'
+      }
+    },
+    stories: {
+      abc: {
+        id: 'abc',
+        title: 'some',
+        estimations: {}
+      }
+    }
+  });
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  return {userId, roomId, processor, mockRoomsStore};
+}

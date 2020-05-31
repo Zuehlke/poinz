@@ -4,6 +4,8 @@
   },
   "globals": {
     "it": false,
+    "test": false,
+    "expect": false,
     "beforeEach": false,
     "describe": false
   }

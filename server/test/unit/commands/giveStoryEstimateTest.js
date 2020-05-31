@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -8,307 +6,303 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('giveStoryEstimate', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce storyEstimateGiven event', async () => {
+  const {roomId, storyId, userId, processor} = await prep();
+  const commandId = uuid();
 
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        users: {
-          [this.userId]: {
-            id: this.userId,
-            username: 'Tester'
-          },
-          someoneElse: {
-            id: 'someoneElse',
-            username: 'John Doe'
-          }
-        }
-      })
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        userId: userId,
+        value: 2
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(1);
+
+    const storyEstimatgeGivenEvent = producedEvents[0];
+    testUtils.assertValidEvent(
+      storyEstimatgeGivenEvent,
+      commandId,
+      roomId,
+      userId,
+      'storyEstimateGiven'
     );
-
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-
-    // prepare the state with a story (you could do this directly on the state, but this is closer to reality)
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      this.storyId = producedEvents[0].payload.id;
-
-      // select the story
-      return this.processor(
-        {
-          id: this.commandId,
-          roomId: this.roomId,
-          name: 'selectStory',
-          payload: {
-            storyId: this.storyId
-          }
-        },
-        this.userId
-      );
-    });
+    expect(storyEstimatgeGivenEvent.payload.userId).toEqual(userId);
+    expect(storyEstimatgeGivenEvent.payload.storyId).toEqual(storyId);
+    expect(storyEstimatgeGivenEvent.payload.value).toBe(2);
   });
+});
 
-  it('Should produce storyEstimateGiven event', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId,
-          value: 2
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 1);
+test('Should not produce revealed event if user changes his estimation', async () => {
+  const {roomId, storyId, userId, processor} = await prep();
+  const commandId = uuid();
+
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        userId: userId,
+        value: 2
+      }
+    },
+    userId
+  )
+    .then((producedEvents) => {
+      expect(producedEvents).toBeDefined();
+      expect(producedEvents.length).toBe(1);
 
       const storyEstimatgeGivenEvent = producedEvents[0];
       testUtils.assertValidEvent(
         storyEstimatgeGivenEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
+        commandId,
+        roomId,
+        userId,
         'storyEstimateGiven'
       );
-      assert.equal(storyEstimatgeGivenEvent.payload.userId, this.userId);
-      assert.equal(storyEstimatgeGivenEvent.payload.storyId, this.storyId);
-      assert.equal(storyEstimatgeGivenEvent.payload.value, 2);
-    });
-  });
-
-  it('Should not produce revealed event if user changes his estimation', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId,
-          value: 2
-        }
-      },
-      this.userId
-    )
-      .then((producedEvents) => {
-        assert(producedEvents);
-        assert.equal(producedEvents.length, 1);
-
-        const storyEstimatgeGivenEvent = producedEvents[0];
-        testUtils.assertValidEvent(
-          storyEstimatgeGivenEvent,
-          this.commandId,
-          this.roomId,
-          this.userId,
-          'storyEstimateGiven'
-        );
-        assert.equal(storyEstimatgeGivenEvent.payload.userId, this.userId);
-        assert.equal(storyEstimatgeGivenEvent.payload.storyId, this.storyId);
-        assert.equal(storyEstimatgeGivenEvent.payload.value, 2);
-      })
-      .then(() =>
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'giveStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: this.userId,
-              value: 5
-            }
-          },
-          this.userId
-        )
-      )
-      .then((producedEvents) => {
-        assert(producedEvents);
-        assert.equal(producedEvents.length, 1);
-
-        const storyEstimatgeGivenEvent = producedEvents[0];
-        testUtils.assertValidEvent(
-          storyEstimatgeGivenEvent,
-          this.commandId,
-          this.roomId,
-          this.userId,
-          'storyEstimateGiven'
-        );
-        assert.equal(storyEstimatgeGivenEvent.payload.userId, this.userId);
-        assert.equal(storyEstimatgeGivenEvent.payload.storyId, this.storyId);
-        assert.equal(storyEstimatgeGivenEvent.payload.value, 5);
-      });
-  });
-
-  it('Should store value', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId,
-          value: 2
-        }
-      },
-      this.userId
-    )
-      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
-      .then((room) =>
-        assert.equal(room.getIn(['stories', this.storyId, 'estimations', this.userId]), 2)
-      );
-  });
-
-  describe('with additional "revealed" event', () => {
-    it('Should produce additional "revealed" event if all users estimated (only one user)', function () {
-      this.mockRoomsStore.manipulate((room) => room.removeIn(['users', 'someoneElse']));
-      return handleCommandAndAssertRevealed.call(this);
-    });
-
-    it('Should produce additional "revealed" event if all users estimated (other user is visitor)', function () {
-      this.mockRoomsStore.manipulate((room) =>
-        room.setIn(['users', 'someoneElse', 'visitor'], true)
-      );
-      return handleCommandAndAssertRevealed.call(this);
-    });
-
-    function handleCommandAndAssertRevealed() {
-      return this.processor(
+      expect(storyEstimatgeGivenEvent.payload.userId).toEqual(userId);
+      expect(storyEstimatgeGivenEvent.payload.storyId).toEqual(storyId);
+      expect(storyEstimatgeGivenEvent.payload.value).toBe(2);
+    })
+    .then(() =>
+      processor(
         {
-          id: this.commandId,
-          roomId: this.roomId,
+          id: commandId,
+          roomId: roomId,
           name: 'giveStoryEstimate',
           payload: {
-            storyId: this.storyId,
-            userId: this.userId,
+            storyId: storyId,
+            userId: userId,
+            value: 5
+          }
+        },
+        userId
+      )
+    )
+    .then((producedEvents) => {
+      expect(producedEvents).toBeDefined();
+      expect(producedEvents.length).toBe(1);
+
+      const storyEstimateGivenEvent = producedEvents[0];
+      testUtils.assertValidEvent(
+        storyEstimateGivenEvent,
+        commandId,
+        roomId,
+        userId,
+        'storyEstimateGiven'
+      );
+      expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
+      expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+      expect(storyEstimateGivenEvent.payload.value).toBe(5);
+    });
+});
+
+test('Should store value', async () => {
+  const {roomId, storyId, userId, processor, mockRoomsStore} = await prep();
+  const commandId = uuid();
+
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        userId: userId,
+        value: 2
+      }
+    },
+    userId
+  )
+    .then(() => mockRoomsStore.getRoomById(roomId))
+    .then((room) => expect(room.getIn(['stories', storyId, 'estimations', userId])).toBe(2));
+});
+
+describe('with additional "revealed" event', () => {
+  test('Should produce additional "revealed" event if all users estimated (only one user)', async () => {
+    const {roomId, storyId, userId, processor, mockRoomsStore} = await prep();
+    mockRoomsStore.manipulate((room) => room.removeIn(['users', 'someoneElse']));
+    return handleCommandAndAssertRevealed(processor, roomId, storyId, userId);
+  });
+
+  test('Should produce additional "revealed" event if all users estimated (other user is visitor)', async () => {
+    const {roomId, storyId, userId, processor, mockRoomsStore} = await prep();
+    mockRoomsStore.manipulate((room) => room.setIn(['users', 'someoneElse', 'visitor'], true));
+    return handleCommandAndAssertRevealed(processor, roomId, storyId, userId);
+  });
+
+  function handleCommandAndAssertRevealed(processor, roomId, storyId, userId) {
+    const commandId = uuid();
+    return processor(
+      {
+        id: commandId,
+        roomId: roomId,
+        name: 'giveStoryEstimate',
+        payload: {
+          storyId: storyId,
+          userId: userId,
+          value: 2
+        }
+      },
+      userId
+    ).then((producedEvents) => {
+      expect(producedEvents).toBeDefined();
+      expect(producedEvents.length).toBe(2);
+
+      const storyEstimatgeGivenEvent = producedEvents[0];
+      testUtils.assertValidEvent(
+        storyEstimatgeGivenEvent,
+        commandId,
+        roomId,
+        userId,
+        'storyEstimateGiven'
+      );
+
+      const revealedEvent = producedEvents[1];
+      testUtils.assertValidEvent(revealedEvent, commandId, roomId, userId, 'revealed');
+      expect(revealedEvent.payload.manually).toBe(false);
+      expect(revealedEvent.payload.storyId).toEqual(storyId);
+    });
+  }
+});
+
+describe('preconditions', () => {
+  test('Should throw if userId does not match', async () => {
+    const {roomId, storyId, userId, processor} = await prep();
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'giveStoryEstimate',
+          payload: {
+            storyId: storyId,
+            userId: 'unknown',
             value: 2
           }
         },
-        this.userId
-      ).then((producedEvents) => {
-        assert(producedEvents);
-        assert.equal(producedEvents.length, 2);
-
-        const storyEstimatgeGivenEvent = producedEvents[0];
-        testUtils.assertValidEvent(
-          storyEstimatgeGivenEvent,
-          this.commandId,
-          this.roomId,
-          this.userId,
-          'storyEstimateGiven'
-        );
-
-        const revealedEvent = producedEvents[1];
-        testUtils.assertValidEvent(
-          revealedEvent,
-          this.commandId,
-          this.roomId,
-          this.userId,
-          'revealed'
-        );
-        assert.equal(revealedEvent.payload.manually, false);
-        assert.equal(revealedEvent.payload.storyId, this.storyId);
-      });
-    }
+        userId
+      )
+    ).rejects.toThrow('Can only give estimate if userId in command payload matches');
   });
 
-  describe('preconditions', () => {
-    it('Should throw if userId does not match', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'giveStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: 'unknown',
-              value: 2
-            }
-          },
-          this.userId
-        ),
-        'Can only give estimate if userId in command payload matches'
-      );
-    });
+  test('Should throw if storyId does not match', async () => {
+    const {roomId, userId, processor} = await prep();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'giveStoryEstimate',
+          payload: {
+            storyId: 'unknown',
+            userId: userId,
+            value: 2
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Can only give estimation for currently selected story!');
+  });
 
-    it('Should throw if storyId does not match', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'giveStoryEstimate',
-            payload: {
-              storyId: 'unknown',
-              userId: this.userId,
-              value: 2
-            }
-          },
-          this.userId
-        ),
-        'Can only give estimation for currently selected story!'
-      );
-    });
+  test('Should throw if story already revealed', async () => {
+    const {roomId, storyId, userId, processor, mockRoomsStore} = await prep();
 
-    it('Should throw if story already revealed', function () {
-      this.mockRoomsStore.manipulate((room) =>
-        room.setIn(['stories', this.storyId, 'revealed'], true)
-      );
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'giveStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: this.userId,
-              value: 2
-            }
-          },
-          this.userId
-        ),
-        'You cannot give an estimate for a story that was revealed!'
-      );
-    });
+    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'revealed'], true));
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'giveStoryEstimate',
+          payload: {
+            storyId: storyId,
+            userId: userId,
+            value: 2
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('You cannot give an estimate for a story that was revealed!');
+  });
 
-    it('Should throw if user is a visitor', function () {
-      this.mockRoomsStore.manipulate((room) => room.setIn(['users', this.userId, 'visitor'], true));
+  test('Should throw if user is a visitor', async () => {
+    const {roomId, storyId, userId, processor, mockRoomsStore} = await prep();
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
 
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'giveStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: this.userId,
-              value: 2
-            }
-          },
-          this.userId
-        ),
-        'Visitors cannot give estimations!'
-      );
-    });
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'giveStoryEstimate',
+          payload: {
+            storyId: storyId,
+            userId: userId,
+            value: 2
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Visitors cannot give estimations!');
   });
 });
+
+/**
+ * prepares mock rooms store with two users, adds story and selects it
+ */
+async function prep() {
+  const userId = uuid();
+  const roomId = 'rm_' + uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    users: {
+      [userId]: {
+        id: userId
+      },
+      someoneElse: {
+        id: 'someoneElse',
+        username: 'John Doe'
+      }
+    }
+  });
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  const storyId = await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then((producedEvents) => producedEvents[0].payload.id);
+
+  await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'selectStory',
+      payload: {
+        storyId: storyId
+      }
+    },
+    userId
+  );
+
+  return {userId, roomId, processor, storyId, mockRoomsStore};
+}

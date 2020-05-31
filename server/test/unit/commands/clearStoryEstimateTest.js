@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -8,202 +6,200 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('clearStoryEstimate', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce storyEstimateCleared event', async () => {
+  const {roomId, storyId, userId, processor} = await prep();
 
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        users: {
-          [this.userId]: {
-            id: this.userId,
-            username: 'Tester'
-          },
-          someoneElse: {
-            id: 'someoneElse',
-            username: 'John Doe'
-          }
-        }
-      })
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'clearStoryEstimate',
+      payload: {
+        storyId: storyId,
+        userId: userId
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(1);
+
+    const storyEstimateClearedEvent = producedEvents[0];
+    testUtils.assertValidEvent(
+      storyEstimateClearedEvent,
+      commandId,
+      roomId,
+      userId,
+      'storyEstimateCleared'
     );
-
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-
-    // add a story
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      },
-      this.userId
-    )
-      .then((producedEvents) => {
-        this.storyId = producedEvents[0].payload.id;
-
-        // select the story
-        return this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'selectStory',
-            payload: {
-              storyId: this.storyId
-            }
-          },
-          this.userId
-        );
-      })
-      .then(() => {
-        // store some estimations
-        return this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'giveStoryEstimate',
-            payload: {
-              userId: this.userId,
-              storyId: this.storyId,
-              value: 8
-            }
-          },
-          this.userId
-        );
-      });
-  });
-
-  it('Should produce storyEstimateCleared event', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'clearStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 1);
-
-      const storyEstimateClearedEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        storyEstimateClearedEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'storyEstimateCleared'
-      );
-      assert.equal(storyEstimateClearedEvent.payload.userId, this.userId);
-      assert.equal(storyEstimateClearedEvent.payload.storyId, this.storyId);
-    });
-  });
-
-  it('Should clear value', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'clearStoryEstimate',
-        payload: {
-          storyId: this.storyId,
-          userId: this.userId
-        }
-      },
-      this.userId
-    )
-      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
-      .then((room) =>
-        assert.equal(room.getIn(['stories', this.storyId, 'estimations', this.userId]), undefined)
-      );
-  });
-
-  describe('preconditions', () => {
-    it('Should throw if userId does not match', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'clearStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: 'unknown'
-            }
-          },
-          this.userId
-        ),
-        'Can only clear estimate if userId in command payload matches!'
-      );
-    });
-
-    it('Should throw if storyId does not match', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'clearStoryEstimate',
-            payload: {
-              storyId: 'unknown',
-              userId: this.userId
-            }
-          },
-          this.userId
-        ),
-        'Can only clear estimation for currently selected story!'
-      );
-    });
-
-    it('Should throw if story already revealed', function () {
-      this.mockRoomsStore.manipulate((room) =>
-        room.setIn(['stories', this.storyId, 'revealed'], true)
-      );
-
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'clearStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: this.userId
-            }
-          },
-          this.userId
-        ),
-        'You cannot clear your estimate for a story that was revealed!'
-      );
-    });
-
-    it('Should throw if user is a visitor', function () {
-      this.mockRoomsStore.manipulate((room) => room.setIn(['users', this.userId, 'visitor'], true));
-
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'clearStoryEstimate',
-            payload: {
-              storyId: this.storyId,
-              userId: this.userId
-            }
-          },
-          this.userId
-        ),
-        '' + 'Visitors cannot clear estimations!'
-      );
-    });
+    expect(storyEstimateClearedEvent.payload.userId).toEqual(userId);
+    expect(storyEstimateClearedEvent.payload.storyId).toEqual(storyId);
   });
 });
+
+test('Should clear value', async () => {
+  const {roomId, storyId, userId, processor, mockRoomsStore} = await prep();
+  return processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'clearStoryEstimate',
+      payload: {
+        storyId: storyId,
+        userId: userId
+      }
+    },
+    userId
+  )
+    .then(() => mockRoomsStore.getRoomById(roomId))
+    .then((room) =>
+      expect(room.getIn(['stories', storyId, 'estimations', userId])).toBeUndefined()
+    );
+});
+
+describe('preconditions', () => {
+  test('Should throw if userId does not match', async () => {
+    const {roomId, storyId, userId, processor} = await prep();
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'clearStoryEstimate',
+          payload: {
+            storyId: storyId,
+            userId: 'unknown'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Can only clear estimate if userId in command payload matches!');
+  });
+
+  test('Should throw if storyId does not match', async () => {
+    const {roomId, userId, processor} = await prep();
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'clearStoryEstimate',
+          payload: {
+            storyId: 'unknown',
+            userId: userId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Can only clear estimation for currently selected story!');
+  });
+
+  test('Should throw if story already revealed', async () => {
+    const {roomId, userId, storyId, processor, mockRoomsStore} = await prep();
+
+    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'revealed'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'clearStoryEstimate',
+          payload: {
+            storyId: storyId,
+            userId: userId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('You cannot clear your estimate for a story that was revealed!');
+  });
+
+  test('Should throw if user is a visitor', async () => {
+    const {roomId, userId, storyId, processor, mockRoomsStore} = await prep();
+
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'clearStoryEstimate',
+          payload: {
+            storyId: storyId,
+            userId: userId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Visitors cannot clear estimations!');
+  });
+});
+
+/**
+ * prepares mock rooms store,  adds story, selects it and gives estimate
+ */
+async function prep() {
+  const userId = uuid();
+  const roomId = 'rm_' + uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    users: {
+      [userId]: {
+        id: userId,
+        username: 'Tester'
+      },
+      someoneElse: {
+        id: 'someoneElse',
+        username: 'John Doe'
+      }
+    }
+  });
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  const storyId = await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then((producedEvents) => producedEvents[0].payload.id);
+
+  await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'selectStory',
+      payload: {
+        storyId: storyId
+      }
+    },
+    userId
+  );
+
+  await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        userId: userId,
+        storyId: storyId,
+        value: 8
+      }
+    },
+    userId
+  );
+
+  return {userId, roomId, processor, storyId, mockRoomsStore};
+}

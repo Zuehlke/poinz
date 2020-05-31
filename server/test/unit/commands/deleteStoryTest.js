@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
 
@@ -8,126 +6,117 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('deleteStory', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce storyDeleted event', async () => {
+  const {userId, processor, roomId, storyId} = await prep();
+  const commandId = uuid();
 
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        users: {
-          [this.userId]: {
-            id: this.userId,
-            username: 'Tester'
-          }
-        }
-      })
-    );
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'deleteStory',
+      payload: {
+        storyId,
+        title: 'SuperStory 444'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(1);
 
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-
-    // prepare the state with a story (you could this directly on the state, but this is closer to reality)
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'addStory',
-        payload: {
-          title: 'SuperStory 444',
-          description: 'This will be awesome'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => (this.storyId = producedEvents[0].payload.id));
-  });
-
-  it('Should produce storyDeleted event', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'deleteStory',
-        payload: {
-          storyId: this.storyId,
-          title: 'SuperStory 444'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 1);
-
-      const storyDeletedEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        storyDeletedEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'storyDeleted'
-      );
-      assert.equal(storyDeletedEvent.payload.storyId, this.storyId);
-      assert.equal(storyDeletedEvent.payload.title, 'SuperStory 444');
-    });
-  });
-
-  it('Should delete story', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'deleteStory',
-        payload: {
-          storyId: this.storyId,
-          title: 'SuperStory 444'
-        }
-      },
-      this.userId
-    )
-      .then(() => this.mockRoomsStore.getRoomById(this.roomId))
-      .then((room) => {
-        assert.equal(room.getIn(['stories', this.storyId]), undefined);
-      });
-  });
-
-  describe('preconditions', () => {
-    it('Should throw if room does not contain matching story', function () {
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'deleteStory',
-            payload: {
-              storyId: 'some-unknown-story',
-              title: 'SuperStory 444'
-            }
-          },
-          this.userId
-        ),
-        'Cannot delete unknown story some-unknown-story'
-      );
-    });
-
-    it('Should throw if user is a visitor', function () {
-      this.mockRoomsStore.manipulate((room) => room.setIn(['users', this.userId, 'visitor'], true));
-
-      return testUtils.assertPromiseRejects(
-        this.processor(
-          {
-            id: this.commandId,
-            roomId: this.roomId,
-            name: 'deleteStory',
-            payload: {
-              storyId: this.storyId,
-              title: 'SuperStory 444'
-            }
-          },
-          this.userId
-        ),
-        'Visitors cannot delete stories!'
-      );
-    });
+    const storyDeletedEvent = producedEvents[0];
+    testUtils.assertValidEvent(storyDeletedEvent, commandId, roomId, userId, 'storyDeleted');
+    expect(storyDeletedEvent.payload.storyId).toEqual(storyId);
+    expect(storyDeletedEvent.payload.title).toEqual('SuperStory 444');
   });
 });
+
+test('Should delete story', async () => {
+  const {userId, processor, roomId, storyId, mockRoomsStore} = await prep();
+  return processor(
+    {
+      id: uuid(),
+      roomId,
+      name: 'deleteStory',
+      payload: {
+        storyId,
+        title: 'SuperStory 444'
+      }
+    },
+    userId
+  )
+    .then(() => mockRoomsStore.getRoomById(roomId))
+    .then((room) => expect(room.getIn(['stories', storyId])).toBeUndefined());
+});
+
+describe('preconditions', () => {
+  test('Should throw if room does not contain matching story', async () => {
+    const {userId, processor, roomId} = await prep();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'deleteStory',
+          payload: {
+            storyId: 'some-unknown-story',
+            title: 'SuperStory 444'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Cannot delete unknown story some-unknown-story');
+  });
+
+  test('Should throw if user is a visitor', async () => {
+    const {userId, processor, roomId, mockRoomsStore, storyId} = await prep();
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'deleteStory',
+          payload: {
+            storyId,
+            title: 'SuperStory 444'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Visitors cannot delete stories!');
+  });
+});
+
+async function prep() {
+  const userId = uuid();
+  const roomId = 'rm_' + uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    users: {
+      [userId]: {
+        id: userId,
+        username: 'Tester'
+      }
+    }
+  });
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  const storyId = await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 444',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then((producedEvents) => producedEvents[0].payload.id);
+
+  return {userId, roomId, processor, storyId, mockRoomsStore};
+}

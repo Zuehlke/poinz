@@ -1,6 +1,4 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -9,105 +7,97 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('joinRoom', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-    this.roomId = 'rm_' + uuid();
+test('Should produce 3 events for a already existing room', async () => {
+  const {userId, processor, roomId} = await prep();
+  const commandId = uuid();
 
-    // roomsStore is mocked so we can start with a clean slate and also manipulate state before tests
-    this.mockRoomsStore = testUtils.newMockRoomsStore(
-      Immutable.fromJS({
-        id: this.roomId,
-        alias: 'custom.room.alias',
-        users: {
-          user123: {
-            id: 'user123',
-            username: 'creator'
-          }
-        },
-        stories: {
-          abc: {
-            id: 'abc',
-            title: 'some',
-            estimations: {}
-          }
-        }
-      })
-    );
-
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-  });
-
-  it('Should produce 3 events for a already existing room', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: this.roomId,
-        name: 'joinRoom',
-        payload: {
-          userId: this.userId,
-          email: 'j.doe@gmail.com',
-          username: 'something'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 3);
-
-      const joinedRoomEvent = producedEvents[0];
-      testUtils.assertValidEvent(
-        joinedRoomEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'joinedRoom'
-      );
-      assert.equal(joinedRoomEvent.payload.userId, this.userId);
-      assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        userId,
         email: 'j.doe@gmail.com',
-        id: this.userId,
         username: 'something'
-      });
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(3);
 
-      const usernameSetEvent = producedEvents[1];
-      testUtils.assertValidEvent(
-        usernameSetEvent,
-        this.commandId,
-        this.roomId,
-        this.userId,
-        'usernameSet'
-      );
-      assert.equal(usernameSetEvent.payload.userId, this.userId);
-      assert.equal(usernameSetEvent.payload.username, 'something');
-
-      const emailSet = producedEvents[2];
-      testUtils.assertValidEvent(emailSet, this.commandId, this.roomId, this.userId, 'emailSet');
-      assert.equal(emailSet.payload.userId, this.userId);
-      assert.equal(emailSet.payload.email, 'j.doe@gmail.com');
+    const joinedRoomEvent = producedEvents[0];
+    testUtils.assertValidEvent(joinedRoomEvent, commandId, roomId, userId, 'joinedRoom');
+    expect(joinedRoomEvent.payload.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload.users[userId]).toEqual({
+      email: 'j.doe@gmail.com',
+      id: userId,
+      username: 'something'
     });
-  });
 
-  it('Should be able to join room by alias', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        roomId: 'custom.room.alias', // <- this is not the roomId but the alias
-        name: 'joinRoom',
-        payload: {
-          userId: this.userId,
-          email: 'j.doe@gmail.com',
-          username: 'something'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 3);
+    const usernameSetEvent = producedEvents[1];
+    testUtils.assertValidEvent(usernameSetEvent, commandId, roomId, userId, 'usernameSet');
+    expect(usernameSetEvent.payload.userId).toEqual(userId);
+    expect(usernameSetEvent.payload.username).toEqual('something');
 
-      const joinedRoomEvent = producedEvents[0];
-      assert.equal(joinedRoomEvent.payload.alias, 'custom.room.alias');
-    });
+    const emailSet = producedEvents[2];
+    testUtils.assertValidEvent(emailSet, commandId, roomId, userId, 'emailSet');
+    expect(emailSet.payload.userId).toEqual(userId);
+    expect(emailSet.payload.email).toEqual('j.doe@gmail.com');
   });
 });
+
+test('Should be able to join room by alias', async () => {
+  const {userId, processor, alias} = await prep();
+
+  return processor(
+    {
+      id: uuid(),
+      roomId: alias, // <- this is not the roomId but the alias
+      name: 'joinRoom',
+      payload: {
+        userId: userId,
+        email: 'j.doe@gmail.com',
+        username: 'something'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(3);
+
+    const joinedRoomEvent = producedEvents[0];
+    expect(joinedRoomEvent.payload.alias).toEqual('custom.room.alias');
+  });
+});
+
+/**
+ * prepares mock room store with one user and one story
+ */
+async function prep() {
+  const userId = uuid();
+  const roomId = 'rm_' + uuid();
+  const alias = 'custom.room.alias';
+
+  const mockRoomsStore = testUtils.newMockRoomsStore({
+    id: roomId,
+    alias,
+    users: {
+      user123: {
+        id: 'user123',
+        username: 'creator'
+      }
+    },
+    stories: {
+      abc: {
+        id: 'abc',
+        title: 'some',
+        estimations: {}
+      }
+    }
+  });
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  return {userId, roomId, processor, mockRoomsStore, alias};
+}

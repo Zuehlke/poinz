@@ -1,43 +1,18 @@
 import Promise from 'bluebird';
-import util from 'util';
-import assert from 'assert';
+import Immutable from 'immutable';
 
 export default {
   assertValidEvent,
-  assertPromiseRejects,
   newMockRoomsStore
 };
 
 function assertValidEvent(actualEvent, correlationId, roomId, userId, eventName) {
-  assert.equal(actualEvent.correlationId, correlationId);
-  assert.equal(actualEvent.name, eventName);
-  assert.equal(actualEvent.roomId, roomId);
-  assert.equal(actualEvent.userId, userId);
-  assert(actualEvent.payload);
-  assert(typeof actualEvent.payload === 'object');
-}
-
-/**
- * Asserts that the given promise rejects and that the error contains the expected message.
- *
- * @param {Promise.<T>} promise
- * @param {String} expectedErrorMessage
- * @returns {Promise.<T>} a new Promise that will reject if the given promise resolves.
- */
-function assertPromiseRejects(promise, expectedErrorMessage) {
-  return promise
-    .then((result) => {
-      throw new Error('Given promise is expected to reject. but Resolved\n' + util.inspect(result));
-    })
-    .catch((err) => assertError(err, expectedErrorMessage));
-}
-
-function assertError(actualError, expectedMessage) {
-  assert(actualError.message);
-  assert(
-    actualError.message.indexOf(expectedMessage) > -1,
-    `Error is expected to contain "${expectedMessage}".\nWas "${actualError.message}"`
-  );
+  expect(actualEvent.correlationId).toEqual(correlationId);
+  expect(actualEvent.name).toEqual(eventName);
+  expect(actualEvent.roomId).toEqual(roomId);
+  expect(actualEvent.userId).toEqual(userId);
+  expect(actualEvent.payload).toBeDefined();
+  expect(typeof actualEvent.payload).toEqual('object');
 }
 
 /**
@@ -46,10 +21,15 @@ function assertError(actualError, expectedMessage) {
  *
  * room object can be manually manipulated to prepare for different scenarios.
  *
- * @param {Immutable.Map} [initialRoom] If not set, room will not exists in store.
+ * @param {Immutable.Map | object} [initialRoom] If not set, room will not exists in store.
  */
 function newMockRoomsStore(initialRoom) {
-  let room = initialRoom;
+  let room = initialRoom
+    ? initialRoom.toJS
+      ? initialRoom
+      : Immutable.fromJS(initialRoom)
+    : undefined;
+
   return {
     getRoomById: (id) => {
       if (!room || room.get('id') !== id) {

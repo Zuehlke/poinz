@@ -1,4 +1,3 @@
-import assert from 'assert';
 import {v4 as uuid} from 'uuid';
 import testUtils from '../testUtils';
 import processorFactory from '../../../src/commandProcessor';
@@ -7,187 +6,152 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('createRoom', () => {
-  beforeEach(function () {
-    this.userId = uuid();
-    this.commandId = uuid();
-
-    this.mockRoomsStore = testUtils.newMockRoomsStore();
-
-    this.processor = processorFactory(commandHandlers, eventHandlers, this.mockRoomsStore);
-  });
-
-  it('should produce roomCreated & joinedRoom & usernameSet events', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        name: 'createRoom',
-        payload: {
-          userId: this.userId,
-          username: 'something'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 3);
-
-      const roomCreatedEvent = producedEvents[0];
-
-      const roomId = roomCreatedEvent.roomId; // roomId is given by backend
-
-      testUtils.assertValidEvent(
-        roomCreatedEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'roomCreated'
-      );
-
-      assert.equal(roomCreatedEvent.payload.userId, this.userId);
-      assert.equal(roomCreatedEvent.payload.id, roomId);
-
-      const joinedRoomEvent = producedEvents[1];
-      testUtils.assertValidEvent(
-        joinedRoomEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'joinedRoom'
-      );
-      assert.equal(joinedRoomEvent.payload.userId, this.userId);
-      assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
-        id: this.userId,
+test('should produce roomCreated & joinedRoom & usernameSet events', async () => {
+  const {userId, processor} = prep();
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      name: 'createRoom',
+      payload: {
+        userId: userId,
         username: 'something'
-      });
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(3);
 
-      const usernameSetEvent = producedEvents[2];
-      testUtils.assertValidEvent(
-        usernameSetEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'usernameSet'
-      );
-      assert.equal(usernameSetEvent.payload.userId, this.userId);
-      assert.equal(usernameSetEvent.payload.username, 'something');
+    const roomCreatedEvent = producedEvents[0];
+
+    const roomId = roomCreatedEvent.roomId; // roomId is given by backend
+
+    testUtils.assertValidEvent(roomCreatedEvent, commandId, roomId, userId, 'roomCreated');
+
+    expect(roomCreatedEvent.payload.userId).toEqual(userId);
+    expect(roomCreatedEvent.payload.id).toEqual(roomId);
+
+    const joinedRoomEvent = producedEvents[1];
+    testUtils.assertValidEvent(joinedRoomEvent, commandId, roomId, userId, 'joinedRoom');
+    expect(joinedRoomEvent.payload.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload.users[userId]).toEqual({
+      id: userId,
+      username: 'something'
     });
+
+    const usernameSetEvent = producedEvents[2];
+    testUtils.assertValidEvent(usernameSetEvent, commandId, roomId, userId, 'usernameSet');
+    expect(usernameSetEvent.payload.userId).toEqual(userId);
+    expect(usernameSetEvent.payload.username).toEqual('something');
   });
+});
 
-  it('should produce roomCreated & joinedRoom events', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        name: 'createRoom',
-        payload: {
-          userId: this.userId
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 2);
+test('should produce roomCreated & joinedRoom events', async () => {
+  const {userId, processor} = prep();
+  const commandId = uuid();
 
-      const roomCreatedEvent = producedEvents[0];
+  return processor(
+    {
+      id: commandId,
+      name: 'createRoom',
+      payload: {
+        userId: userId
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(2);
 
-      const roomId = roomCreatedEvent.roomId; // roomId is given by backend
+    const roomCreatedEvent = producedEvents[0];
 
-      testUtils.assertValidEvent(
-        roomCreatedEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'roomCreated'
-      );
+    const roomId = roomCreatedEvent.roomId; // roomId is given by backend
 
-      assert.equal(roomCreatedEvent.payload.userId, this.userId);
-      assert.equal(roomCreatedEvent.payload.id, roomId);
+    testUtils.assertValidEvent(roomCreatedEvent, commandId, roomId, userId, 'roomCreated');
 
-      const joinedRoomEvent = producedEvents[1];
-      testUtils.assertValidEvent(
-        joinedRoomEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'joinedRoom'
-      );
-      assert.equal(joinedRoomEvent.payload.userId, this.userId);
-      assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
-        id: this.userId,
-        username: undefined
-      });
-    });
-  });
+    expect(roomCreatedEvent.payload.userId).toEqual(userId);
+    expect(roomCreatedEvent.payload.id).toEqual(roomId);
 
-  it('can create room with alias', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        name: 'createRoom',
-        payload: {
-          userId: this.userId,
-          alias: 'super-group'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 2);
-
-      const roomCreatedEvent = producedEvents[0];
-
-      const roomId = roomCreatedEvent.roomId; // roomId is given by backend
-
-      testUtils.assertValidEvent(
-        roomCreatedEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'roomCreated'
-      );
-
-      assert.equal(roomCreatedEvent.payload.userId, this.userId);
-      assert.equal(roomCreatedEvent.payload.alias, 'super-group');
-      assert.equal(roomCreatedEvent.payload.id, roomId);
-
-      const joinedRoomEvent = producedEvents[1];
-      testUtils.assertValidEvent(
-        joinedRoomEvent,
-        this.commandId,
-        roomId,
-        this.userId,
-        'joinedRoom'
-      );
-      assert.equal(joinedRoomEvent.payload.userId, this.userId);
-      assert.deepEqual(joinedRoomEvent.payload.users[this.userId], {
-        id: this.userId,
-        username: undefined
-      });
-      assert.equal(joinedRoomEvent.payload.alias, 'super-group');
-
-      return this.mockRoomsStore.getRoomById(roomId).then((room) => {
-        assert.equal(room.toJS().alias, 'super-group');
-      });
-    });
-  });
-
-  it('can create room with alias, alias will be lowercase', function () {
-    return this.processor(
-      {
-        id: this.commandId,
-        name: 'createRoom',
-        payload: {
-          userId: this.userId,
-          alias: 'superAliasCamelCase'
-        }
-      },
-      this.userId
-    ).then((producedEvents) => {
-      assert(producedEvents);
-      assert.equal(producedEvents.length, 2);
-
-      const roomCreatedEvent = producedEvents[0];
-      assert.equal(roomCreatedEvent.payload.alias, 'superaliascamelcase'); // <<-  all lowercase
+    const joinedRoomEvent = producedEvents[1];
+    testUtils.assertValidEvent(joinedRoomEvent, commandId, roomId, userId, 'joinedRoom');
+    expect(joinedRoomEvent.payload.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload.users[userId]).toEqual({
+      id: userId,
+      username: undefined
     });
   });
 });
+
+test('can create room with alias', async () => {
+  const {userId, processor, mockRoomsStore} = prep();
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      name: 'createRoom',
+      payload: {
+        userId,
+        alias: 'super-group'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(2);
+
+    const roomCreatedEvent = producedEvents[0];
+
+    const roomId = roomCreatedEvent.roomId; // roomId is given by backend
+
+    testUtils.assertValidEvent(roomCreatedEvent, commandId, roomId, userId, 'roomCreated');
+
+    expect(roomCreatedEvent.payload.userId).toEqual(userId);
+    expect(roomCreatedEvent.payload.alias).toEqual('super-group');
+    expect(roomCreatedEvent.payload.id).toEqual(roomId);
+
+    const joinedRoomEvent = producedEvents[1];
+    testUtils.assertValidEvent(joinedRoomEvent, commandId, roomId, userId, 'joinedRoom');
+    expect(joinedRoomEvent.payload.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload.users[userId]).toEqual({
+      id: userId,
+      username: undefined
+    });
+    expect(joinedRoomEvent.payload.alias).toEqual('super-group');
+
+    return mockRoomsStore
+      .getRoomById(roomId)
+      .then((room) => expect(room.toJS().alias).toEqual('super-group'));
+  });
+});
+
+test('can create room with alias, alias will be lowercase', async () => {
+  const {userId, processor} = prep();
+  return processor(
+    {
+      id: uuid(),
+      name: 'createRoom',
+      payload: {
+        userId,
+        alias: 'superAliasCamelCase'
+      }
+    },
+    userId
+  ).then((producedEvents) => {
+    expect(producedEvents).toBeDefined();
+    expect(producedEvents.length).toBe(2);
+
+    const roomCreatedEvent = producedEvents[0];
+    expect(roomCreatedEvent.payload.alias).toEqual('superaliascamelcase'); // <<-  all lowercase
+  });
+});
+
+function prep() {
+  const userId = uuid();
+
+  const mockRoomsStore = testUtils.newMockRoomsStore();
+
+  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+
+  return {userId, mockRoomsStore, processor};
+}

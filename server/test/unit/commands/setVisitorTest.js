@@ -6,7 +6,7 @@ import processorFactory from '../../../src/commandProcessor';
 import commandHandlers from '../../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../../src/eventHandlers/eventHandlers';
 
-describe('visitorSet', async () => {
+describe('visitorSet', () => {
   test('Should produce visitorSet event', async () => {
     const {userId, processor, roomId, mockRoomsStore} = await prep();
     mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], false));
@@ -43,7 +43,7 @@ describe('visitorSet', async () => {
   }
 });
 
-describe('visitorUnset', async () => {
+describe('visitorUnset', () => {
   test('Should produce visitorUnset event', async () => {
     const {userId, processor, roomId, mockRoomsStore} = await prep();
     mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));

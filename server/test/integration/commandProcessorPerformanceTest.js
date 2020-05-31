@@ -10,68 +10,73 @@ import eventHandlers from '../../src/eventHandlers/eventHandlers';
  * tests the command processor performance with the real room store (redis)  but without socker connection (no json serializing, etc.)
  *
  */
-describe('commandProcessor performance', () => {
-  let userId;
-  let roomId;
-  let processor;
 
-  beforeEach(() => {
-    userId = uuid();
-    roomId = 'rm_' + uuid();
+test('1000 "addStory" commands/events', async () => {
+  const userId = uuid();
 
-    processor = processorFactory(commandHandlers, eventHandlers, roomStoreFactory(true));
-  });
+  const processor = processorFactory(commandHandlers, eventHandlers, roomStoreFactory(false));
 
-  it('1000 "addStory" commands/events', function () {
-    const totalEvents = 1000;
-    let eventCounter = 0;
-    let commandCounter = 0;
+  const totalEvents = 1000;
+  let eventCounter = 0;
+  let commandCounter = 0;
+
+  const producedEvents = await processor(
+    {
+      id: uuid(),
+      name: 'createRoom',
+      payload: {
+        userId: userId
+      }
+    },
+    userId
+  );
+
+  const roomId = producedEvents[0].roomId;
+
+  console.log(
+    `--- Starting test with "addStory" on roomId ${roomId},  until ${totalEvents} events are received --`
+  );
+  console.time('commandProcessorPerformance');
+
+  return processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'joinRoom',
+      payload: {}
+    },
+    userId
+  )
+    .then(sendAddStoryCommand)
+    .then(onHandled);
+
+  function onHandled() {
+    eventCounter++;
+    if (eventCounter < totalEvents) {
+      return sendAddStoryCommand().then(onHandled);
+    }
 
     console.log(
-      `--- Starting test with "addStory" on roomId ${roomId},  until ${totalEvents} events are received --`
+      `Performance test done. sent ${commandCounter} commands. Received ${eventCounter} events.`
     );
-    console.time('commandProcessorPerformance');
+    console.timeEnd('commandProcessorPerformance');
+    console.log('\n---');
+  }
+
+  function sendAddStoryCommand() {
+    commandCounter++;
 
     return processor(
       {
         id: uuid(),
         roomId: roomId,
-        name: 'joinRoom',
-        payload: {}
+        name: 'addStory',
+        payload: {
+          title: `SuperStory_${commandCounter}`,
+          description: 'This will be awesome'
+        }
       },
       userId
-    )
-      .then(sendAddStoryCommand)
-      .then(onHandled);
-
-    function onHandled() {
-      eventCounter++;
-      if (eventCounter < totalEvents) {
-        return sendAddStoryCommand().then(onHandled);
-      }
-
-      console.log(
-        `Performance test done. sent ${commandCounter} commands. Received ${eventCounter} events.`
-      );
-      console.timeEnd('commandProcessorPerformance');
-      console.log('\n---');
-    }
-
-    function sendAddStoryCommand() {
-      commandCounter++;
-
-      return processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'addStory',
-          payload: {
-            title: `SuperStory_${commandCounter}`,
-            description: 'This will be awesome'
-          }
-        },
-        userId
-      );
-    }
-  });
+    );
+  }
 });

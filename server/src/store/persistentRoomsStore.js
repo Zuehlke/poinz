@@ -8,5 +8,7 @@ export default {
 };
 
 function init() {
-  throw new Error('Currently no longer supported!');
+  throw new Error(
+    'Persistent mock room store (former implementation with redis) is currently no longer supported!'
+  );
 }

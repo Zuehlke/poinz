@@ -13,7 +13,8 @@
   "main": "lib/server.js",
   "scripts": {
     "build": "babel src -d lib",
-    "test": "jest",
+    "test": "jest './test/unit'",
+    "test:integration": "jest './test/integration'",
     "pretest": "npm run lint",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
     "start": "node lib/server.js"
@@ -24,7 +25,7 @@
       "/node_modules/"
     ],
     "testMatch": [
-      "**/test/unit/**/*Test.js"
+      "**/test/**/*Test.js"
     ]
   },
   "dependencies": {
@@ -47,7 +48,6 @@
     "babel-jest": "^26.0.1",
     "eslint": "7.1.0",
     "jest": "^26.0.1",
-    "mocha": "7.2.0",
     "socket.io-client": "2.3.0"
   },
   "engines": {

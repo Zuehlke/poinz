@@ -10,71 +10,84 @@ import socketIoClient from 'socket.io-client';
 describe('serverPerformance', () => {
   const backendUrl = 'http://localhost:3000';
 
-  beforeEach(function (done) {
-    this.socket = socketIoClient(backendUrl);
-    this.roomId = 'room_' + uuid();
+  let socket, userId;
 
+  afterAll(() => {
+    if (socket) {
+      socket.disconnect();
+    }
+  });
+
+  function prep(done) {
+    socket = socketIoClient(backendUrl);
+    userId = uuid();
     let eventCount = 0;
 
-    this.socket.on('event', (event) => {
+    socket.on('event', (event) => {
       eventCount++;
-      if (eventCount === 2) {
-        // this is the "joined" event
-        this.userId = event.payload.userId;
-        done();
+      if (eventCount === 1) {
+        // this is the "roomCreated" event
+        done(null, event.roomId);
       }
     });
 
     // let's create a room
-    this.socket.on('connect', () =>
-      this.socket.emit('command', {
+    socket.on('connect', () =>
+      socket.emit('command', {
         id: uuid(),
-        roomId: this.roomId,
-        name: 'joinRoom',
-        payload: {}
+        name: 'createRoom',
+        payload: {
+          userId
+        }
       })
     );
+  }
+
+  test('should handle 100 "addStory" commands', (done) => {
+    prep((err, roomId) => {
+      sendCommandsInSequence(
+        socket,
+        roomId,
+        100,
+        'addStory',
+        {
+          title: 'newStory'
+        },
+        done
+      );
+    });
   });
 
-  it('should handle 100 "addStory" commands', function (done) {
-    sendCommandsInSequence(
-      this.socket,
-      this.roomId,
-      100,
-      'addStory',
-      {
-        title: 'newStory'
-      },
-      done
-    );
+  it('should handle 1000 "addStory" commands', (done) => {
+    prep((err, roomId) => {
+      sendCommandsInSequence(
+        socket,
+        roomId,
+        1000,
+        'addStory',
+        {
+          title: 'newStory-123',
+          description: 'My super story'
+        },
+        done
+      );
+    });
   });
 
-  it('should handle 1000 "addStory" commands', function (done) {
-    sendCommandsInSequence(
-      this.socket,
-      this.roomId,
-      1000,
-      'addStory',
-      {
-        title: 'newStory-123',
-        description: 'My super story'
-      },
-      done
-    );
-  });
-
-  it('should handle 4000 "setUsername" commands', function (done) {
-    sendCommandsInSequence(
-      this.socket,
-      this.roomId,
-      4000,
-      'setUsername',
-      {
-        username: 'jimmy',
-        userId: this.userId
-      },
-      done
-    );
+  test('should handle 4000 "setUsername" commands', (done) => {
+    prep((err, roomId) => {
+      sendCommandsInSequence(
+        socket,
+        roomId,
+        4000,
+        'setUsername',
+        {
+          username: 'jimmy',
+          userId
+        },
+        done
+      );
+    });
   });
 
   /**

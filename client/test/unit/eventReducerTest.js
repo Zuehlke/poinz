@@ -246,7 +246,8 @@ describe(EVENT_ACTION_TYPES.kicked, () => {
         roomId: 'myRoom',
         payload: {
           userId: 'someoneElse'
-        }
+        },
+        userId: 'myUser'
       }
     });
 

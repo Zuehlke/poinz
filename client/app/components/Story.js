@@ -12,6 +12,7 @@ import {selectStory, editStory, deleteStory} from '../actions';
 const Story = ({
   story,
   selectedStoryId,
+  cardConfig,
   selectStory,
   editStory,
   deleteStory,
@@ -26,9 +27,17 @@ const Story = ({
 
   return (
     <div className={classes} onClick={triggerSelect}>
-      <i className="fa fa-pencil story-edit" onClick={triggerEdit}></i>
-      <i className="fa fa-trash story-delete" onClick={triggerDelete} />
-      <h4>{story.title}</h4>
+      <div className="story-toolbar">
+        <i className="fa fa-pencil story-edit" onClick={triggerEdit}></i>
+        <i className="fa fa-trash story-delete" onClick={triggerDelete} />
+      </div>
+
+      <h4>
+        <div>{story.title}</div>
+        {story.consensus && (
+          <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
+        )}
+      </h4>
 
       {
         // only display story text for selected story. improves overall readibility / usability (see #24)
@@ -58,6 +67,7 @@ const Story = ({
 
 Story.propTypes = {
   story: PropTypes.object,
+  cardConfig: PropTypes.object,
   selectedStoryId: PropTypes.string,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
@@ -67,6 +77,7 @@ Story.propTypes = {
 
 export default connect(
   (state) => ({
+    cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
     pendingSelectCommands: Object.values(state.pendingCommands).filter(
       (cmd) => cmd.name === 'selectStory'
@@ -74,3 +85,17 @@ export default connect(
   }),
   {selectStory, editStory, deleteStory}
 )(Story);
+
+const ConsensusBadge = ({cardConfig, consensusValue}) => {
+  const matchingCardConfig = cardConfig.find((cc) => cc.value === consensusValue);
+
+  return (
+    <div className="consensus-badge" style={{background: matchingCardConfig.color}}>
+      <div>{matchingCardConfig.label}</div>
+    </div>
+  );
+};
+ConsensusBadge.propTypes = {
+  cardConfig: PropTypes.array,
+  consensusValue: PropTypes.number
+};

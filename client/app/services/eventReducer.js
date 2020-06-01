@@ -202,8 +202,10 @@ const eventActionHandlers = {
 
       return {...state, stories: modifiedStories, users: modifiedUsers};
     },
-    log: (username, payload, oldState) =>
-      `User ${oldState.users[payload.userId].username} was kicked from the room by another user`
+    log: (username, payload, oldState, modifiedState, event) =>
+      `User "${oldState.users[payload.userId].username}" was kicked from the room by user "${
+        oldState.users[event.userId].username
+      }"`
   },
 
   /**
@@ -366,6 +368,23 @@ const eventActionHandlers = {
     // do not log -> if user is uncertain and switches between cards -> gives hints to other colleagues
   },
 
+  [EVENT_ACTION_TYPES.consensusAchieved]: {
+    fn: (state, payload) => ({
+      ...state,
+      stories: {
+        ...state.stories,
+        [payload.storyId]: {
+          ...state.stories[payload.storyId],
+          consensus: payload.value
+        }
+      }
+    }),
+    log: (username, eventPayload, oldState, modifiedState) =>
+      `Consensus achieved for story "${modifiedState.stories[eventPayload.storyId].title}": ${
+        modifiedState.stories[eventPayload.storyId].consensus
+      }`
+  },
+
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {
     fn: (state, payload) => {
       const modifiedEstimations = {...state.stories[payload.storyId].estimations};
@@ -393,10 +412,14 @@ const eventActionHandlers = {
         [payload.storyId]: {...state.stories[payload.storyId], revealed: true}
       }
     }),
-    log: (username, payload) =>
+    log: (username, payload, oldState, modifiedState) =>
       payload.manually
-        ? `${username} manually revealed estimates for the current story`
-        : 'Estimates were automatically revealed for the current story'
+        ? `${username} manually revealed estimates for story "${
+            modifiedState.stories[payload.storyId].title
+          }"`
+        : `Estimates were automatically revealed for story "${
+            modifiedState.stories[payload.storyId].title
+          }"`
   },
 
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {
@@ -404,10 +427,18 @@ const eventActionHandlers = {
       ...state,
       stories: {
         ...state.stories,
-        [payload.storyId]: {...state.stories[payload.storyId], estimations: {}, revealed: false}
+        [payload.storyId]: {
+          ...state.stories[payload.storyId],
+          estimations: {},
+          revealed: false,
+          consensus: undefined
+        }
       }
     }),
-    log: (username) => `${username} started a new estimation round for the current story`
+    log: (username, payload, oldState, modifiedState) =>
+      `${username} started a new estimation round for story "${
+        modifiedState.stories[payload.storyId].title
+      }"`
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {

@@ -673,20 +673,22 @@ $backlogWidth = 300px
         box-sizing border-box
         border: 1px solid $zuehlkeLighterGrey
 
-        // story edit icon (pencil)
+        > .story-toolbar {
 
-        > i.story-edit {
-          transition opacity 0.12s ease-out
-          opacity 0 // do not show by default
+          display flex
           position absolute
-          display block
-          top 4px
           right 4px
+          top 4px
+          font-size 18px
+
+          > i {
+            margin 0 4px
+            opacity 0 // do not show by default
+            display block
+          }
         }
 
-        // show the pencil when story is hovered
-
-        &:hover > i.story-edit {
+        &:hover > .story-toolbar i {
           opacity 0.6
 
           &:hover {
@@ -694,25 +696,23 @@ $backlogWidth = 300px
           }
         }
 
-        // story delete icon (trash)
+        .consensus-badge {
+          display flex
+          width 24px
+          height 24px
+          border-radius 50%
+          margin-left 8px
 
-        > i.story-delete {
-          transition opacity 0.12s ease-out
-          opacity 0 // do not show by default
-          position absolute
-          display block
-          top 28px
-          right 4px
-        }
+          justify-content center
+          align-items center
 
-        // show the trash icon when story is hovered
-
-        &:hover > i.story-delete {
-          opacity 0.6
-
-          &:hover {
-            opacity 1 // show the trash icon with full opacity when icon is hovered
+          > div {
+            font-size 12px
+            color white
+            font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
           }
+
+
         }
 
         &.story-selected {
@@ -728,6 +728,8 @@ $backlogWidth = 300px
         }
 
         h4 {
+          line-height 24px
+          display flex
           margin-top 8px
           margin-bottom 0
         }

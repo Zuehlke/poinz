@@ -1,5 +1,4 @@
 expect.extend({
-
   /**
    * custom jest matcher to check events produced by the commandProcessor
    *
@@ -36,7 +35,9 @@ expect.extend({
         message: () =>
           `Expected producedEvents to contain ${eventNames.length} event(s)\n` +
           `  Expected: ${this.utils.printExpected(eventNames.length)}\n` +
-          `  Received: ${this.utils.printReceived(received.length)}`
+          `  Received: ${this.utils.printReceived(received.length)}  (${received
+            .map((re) => re.name)
+            .join(', ')})`
       };
     }
 

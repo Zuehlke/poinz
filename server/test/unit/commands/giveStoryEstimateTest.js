@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import { prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyEstimateGiven event', async () => {
   const {roomId, storyId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
@@ -96,7 +96,9 @@ describe('with additional "revealed" event', () => {
       processor,
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStory();
+
     mockRoomsStore.manipulate((room) => room.removeIn(['users', userIdTwo]));
+
     return handleCommandAndAssertRevealed(processor, roomId, storyId, userId);
   });
 
@@ -109,8 +111,34 @@ describe('with additional "revealed" event', () => {
       processor,
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStory();
+
     mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'visitor'], true));
+
     return handleCommandAndAssertRevealed(processor, roomId, storyId, userId);
+  });
+
+  test('Should produce additional "revealed" event if all users estimated (both users estimated)', async () => {
+    const {
+      roomId,
+      storyId,
+      userIdOne,
+      userIdTwo,
+      processor
+    } = await prepTwoUsersInOneRoomWithOneStory();
+
+    return processor(
+      {
+        id: uuid(),
+        roomId: roomId,
+        name: 'giveStoryEstimate',
+        payload: {
+          storyId: storyId,
+          userId: userIdTwo,
+          value: 2
+        }
+      },
+      userIdTwo
+    ).then(() => handleCommandAndAssertRevealed(processor, roomId, storyId, userIdOne));
   });
 
   function handleCommandAndAssertRevealed(processor, roomId, storyId, userId) {

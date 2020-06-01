@@ -80,3 +80,8 @@ This will copy all backend and client files to `deploy/`.
 And then start the docker build.
 
 See [Deployment](DEPLOYMENT.md) for more information.
+
+To start the newly build image locally, in detached mode with port forwarding:
+```
+$ docker run -p 3000:3000 -d xeronimus/poinz
+```

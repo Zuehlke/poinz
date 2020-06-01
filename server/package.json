@@ -20,7 +20,9 @@
     "start": "node lib/server.js"
   },
   "jest": {
-    "setupFilesAfterEnv": ["./test/unit/setup.js"],
+    "setupFilesAfterEnv": [
+      "./test/unit/setup.js"
+    ],
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"

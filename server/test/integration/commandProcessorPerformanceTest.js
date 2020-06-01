@@ -20,7 +20,7 @@ test('1000 "addStory" commands/events', async () => {
   let eventCounter = 0;
   let commandCounter = 0;
 
-  const producedEvents = await processor(
+  const {producedEvents} = await processor(
     {
       id: uuid(),
       name: 'createRoom',

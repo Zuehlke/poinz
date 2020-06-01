@@ -1,4 +1,16 @@
 expect.extend({
+
+  /**
+   * custom jest matcher to check events produced by the commandProcessor
+   *
+   * ```
+   *  expect(producedEvents).toMatchEvents(commandId, roomId, 'eventNameOne', 'eventNameTwo');
+   * ```
+   * @param received  The object/value under test
+   * @param expectedCommandId
+   * @param expectedRoomId
+   * @param eventNames
+   */
   toMatchEvents(received, expectedCommandId, expectedRoomId, ...eventNames) {
     if (!received) {
       return {

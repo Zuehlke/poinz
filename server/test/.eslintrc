@@ -3,10 +3,10 @@
     "node": true
   },
   "globals": {
-    "it": false,
     "test": false,
     "expect": false,
     "beforeEach": false,
+    "afterAll": false,
     "describe": false
   }
 }

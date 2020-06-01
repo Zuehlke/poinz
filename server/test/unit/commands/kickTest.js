@@ -1,13 +1,17 @@
 import {v4 as uuid} from 'uuid';
-import testUtils from '../testUtils';
-import processorFactory from '../../../src/commandProcessor';
-
-// we want to test with real command- and event handlers!
-import commandHandlers from '../../../src/commandHandlers/commandHandlers';
-import eventHandlers from '../../../src/eventHandlers/eventHandlers';
+import {assertEvents, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce kicked event (userOne kicks disconnected userTwo)', async () => {
-  const {roomId, userOneId, userTwoId, processor} = await prep();
+  const {
+    roomId,
+    userIdOne,
+    userIdTwo,
+    processor,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
+
   const commandId = uuid();
 
   return processor(
@@ -16,40 +20,23 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
       roomId: roomId,
       name: 'kick',
       payload: {
-        userId: userTwoId
+        userId: userIdTwo
       }
     },
-    userOneId
-  ).then((producedEvents) => {
-    expect(producedEvents).toBeDefined();
-    expect(producedEvents.length).toBe(1);
+    userIdOne
+  ).then(({producedEvents, room}) => {
+    const [kickedEvent] = assertEvents(producedEvents, commandId, roomId, 'kicked');
 
-    const kickedEvent = producedEvents[0];
-    testUtils.assertValidEvent(kickedEvent, commandId, roomId, userOneId, 'kicked');
-    expect(kickedEvent.payload.userId).toEqual(userTwoId);
+    expect(kickedEvent.payload.userId).toEqual(userIdTwo);
+
+    // user is removed from room
+    expect(room.users[userIdTwo]).toBeUndefined();
   });
-});
-
-test('Should remove user from room', async () => {
-  const {roomId, userOneId, userTwoId, processor, mockRoomsStore} = await prep();
-  return processor(
-    {
-      id: uuid(),
-      roomId,
-      name: 'kick',
-      payload: {
-        userId: userTwoId
-      }
-    },
-    userOneId
-  )
-    .then(() => mockRoomsStore.getRoomById(roomId))
-    .then((room) => expect(room.getIn(['users', userTwoId])).toBeUndefined());
 });
 
 describe('preconditions', () => {
   test('Should throw if userId does not match any user from the room', async () => {
-    const {roomId, userIdOne, processor} = await prep();
+    const {roomId, userIdOne, processor} = await prepTwoUsersInOneRoomWithOneStory();
     return expect(
       processor(
         {
@@ -66,7 +53,7 @@ describe('preconditions', () => {
   });
 
   test('Should throw if tries to kick himself', async () => {
-    const {roomId, userOneId, processor} = await prep();
+    const {roomId, userIdOne, processor} = await prepTwoUsersInOneRoomWithOneStory();
     return expect(
       processor(
         {
@@ -74,18 +61,26 @@ describe('preconditions', () => {
           roomId,
           name: 'kick',
           payload: {
-            userId: userOneId
+            userId: userIdOne
           }
         },
-        userOneId
+        userIdOne
       )
     ).rejects.toThrow('User cannot kick himself!');
   });
 
   test('Should throw if visitor tries to kick', async () => {
-    const {roomId, userOneId, userTwoId, processor, mockRoomsStore} = await prep();
+    const {
+      roomId,
+      userIdOne,
+      userIdTwo,
+      processor,
+      mockRoomsStore
+    } = await prepTwoUsersInOneRoomWithOneStory();
 
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userOneId, 'visitor'], true));
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
+
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userIdOne, 'visitor'], true));
 
     return expect(
       processor(
@@ -94,38 +89,11 @@ describe('preconditions', () => {
           roomId,
           name: 'kick',
           payload: {
-            userId: userTwoId
+            userId: userIdTwo
           }
         },
-        userOneId
+        userIdOne
       )
     ).rejects.toThrow('Visitors cannot kick other users!');
   });
 });
-
-/**
- * create mock room store with two users. userTwo is marked as disconnected
- */
-function prep() {
-  const userOneId = uuid();
-  const userTwoId = uuid();
-  const roomId = 'rm_' + uuid();
-
-  const mockRoomsStore = testUtils.newMockRoomsStore({
-    id: roomId,
-    stories: [],
-    users: {
-      [userOneId]: {
-        id: userOneId
-      },
-      [userTwoId]: {
-        id: userOneId,
-        disconnected: true
-      }
-    }
-  });
-
-  const processor = processorFactory(commandHandlers, eventHandlers, mockRoomsStore);
-
-  return {userOneId, userTwoId, roomId, mockRoomsStore, processor};
-}

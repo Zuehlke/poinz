@@ -58,7 +58,7 @@ describe('serverPerformance', () => {
     });
   });
 
-  it('should handle 1000 "addStory" commands', (done) => {
+  test('should handle 1000 "addStory" commands', (done) => {
     prep((err, roomId) => {
       sendCommandsInSequence(
         socket,

@@ -1,4 +1,3 @@
-import assert from 'assert';
 import http from 'http';
 import {v4 as uuid} from 'uuid';
 import socketIoClient from 'socket.io-client';

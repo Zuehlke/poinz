@@ -81,7 +81,10 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
           );
         }
 
-        job.resolve(context.eventsToSend);
+        job.resolve({
+          producedEvents: context.eventsToSend,
+          room: context.room.toJS()
+        });
       })
       .catch((err) => {
         proceed(err);

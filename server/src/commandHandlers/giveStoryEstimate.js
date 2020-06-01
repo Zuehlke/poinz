@@ -33,6 +33,13 @@ const giveStoryEstimateCommandHandler = {
         storyId: command.payload.storyId,
         manually: false
       });
+
+      if (allValidUsersEstimatedSame(room, command.payload)) {
+        room.applyEvent('consensusAchieved', {
+          storyId: command.payload.storyId,
+          value: command.payload.value
+        });
+      }
     }
   }
 };
@@ -46,18 +53,32 @@ const giveStoryEstimateCommandHandler = {
  * @returns {boolean}
  */
 function allValidUsersEstimated(room, storyId, userId) {
+  const possibleEstimationCount = getAllUsersThatCanEstimate(room).keySeq().size;
+
   let estimations = room.getIn(['stories', storyId, 'estimations']);
-  // if the user did estimate before, his userId is not added to the map...
-  estimations = estimations.set(userId, -1); // the estimation-value does not matter for counting...
+  // Add our user's estimation manually to the estimationMap with a value of -1 (value does not matter here), because user's estimation might not yet be in map (event will be applied later)
+  estimations = estimations.set(userId, -1);
   const estimationCount = estimations.size;
 
-  const possibleEstimationCount = room
+  return estimationCount === possibleEstimationCount;
+}
+
+function allValidUsersEstimatedSame(room, cmdPayload) {
+  let estimations = room.getIn(['stories', cmdPayload.storyId, 'estimations']);
+  // Add our user's estimation manually to the estimationMap .. (event will be applied later)
+  estimations = estimations.set(cmdPayload.userId, cmdPayload.value);
+
+  const estValues = estimations.valueSeq();
+  const firstValue = estValues.get(0);
+
+  return estValues.every((est) => est === firstValue);
+}
+
+function getAllUsersThatCanEstimate(room) {
+  return room
     .get('users')
     .filter((usr) => !usr.get('visitor'))
-    .filter((usr) => !usr.get('disconnected'))
-    .keySeq().size;
-
-  return estimationCount === possibleEstimationCount;
+    .filter((usr) => !usr.get('disconnected'));
 }
 
 export default giveStoryEstimateCommandHandler;

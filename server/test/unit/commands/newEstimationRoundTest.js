@@ -2,7 +2,15 @@ import {v4 as uuid} from 'uuid';
 import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
 
 test('Should produce newEstimationRoundStarted event', async () => {
-  const {processor, roomId, storyId, userId} = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+  const {
+    processor,
+    roomId,
+    storyId,
+    userId,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+  mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'consensus'], 4));
+
   const commandId = uuid();
   return processor(
     {
@@ -26,6 +34,9 @@ test('Should produce newEstimationRoundStarted event', async () => {
 
     // revealed flag is reset
     expect(room.stories[storyId].revealed).toBe(false);
+
+    // previously achieved consensus is reset
+    expect(room.stories[storyId].consensus).toBeUndefined();
   });
 });
 

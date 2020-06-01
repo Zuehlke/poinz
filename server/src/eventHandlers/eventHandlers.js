@@ -15,6 +15,7 @@ import usernameSet from './usernameSet';
 import emailSet from './emailSet';
 import visitorSet from './visitorSet';
 import visitorUnset from './visitorUnset';
+import consensusAchieved from './consensusAchieved';
 
 export default {
   connectionLost,
@@ -29,6 +30,7 @@ export default {
   storyDeleted,
   storyEstimateCleared,
   storyEstimateGiven,
+  consensusAchieved,
   storySelected,
   usernameSet,
   emailSet,

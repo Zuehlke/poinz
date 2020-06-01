@@ -34,7 +34,9 @@ expect.extend({
         pass: false,
         message: () =>
           `Expected producedEvents to contain ${eventNames.length} event(s)\n` +
-          `  Expected: ${this.utils.printExpected(eventNames.length)}\n` +
+          `  Expected: ${this.utils.printExpected(eventNames.length)}  (${eventNames.join(
+            ', '
+          )})\n` +
           `  Received: ${this.utils.printReceived(received.length)}  (${received
             .map((re) => re.name)
             .join(', ')})`

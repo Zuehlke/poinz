@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
+import { prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
 
 test('Should produce newEstimationRoundStarted event', async () => {
   const {processor, roomId, storyId, userId} = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
@@ -15,12 +15,9 @@ test('Should produce newEstimationRoundStarted event', async () => {
     },
     userId
   ).then(({producedEvents, room}) => {
-    const [newRoundStartedEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'newEstimationRoundStarted'
-    );
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted');
+
+    const [newRoundStartedEvent] = producedEvents;
 
     expect(newRoundStartedEvent.payload.storyId).toEqual(storyId);
 

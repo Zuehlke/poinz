@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepOneUserInOneRoom} from '../testUtils';
+import {prepOneUserInOneRoom} from '../testUtils';
 
 test('Should produce usernameSet event', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();
@@ -16,7 +16,9 @@ test('Should produce usernameSet event', async () => {
     },
     userId
   ).then(({producedEvents, room}) => {
-    const [usernameSetEvent] = assertEvents(producedEvents, commandId, roomId, 'usernameSet');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'usernameSet');
+
+    const [usernameSetEvent] = producedEvents;
 
     expect(usernameSetEvent.payload.username).toEqual('John Doe');
     expect(usernameSetEvent.payload.userId).toEqual(userId);

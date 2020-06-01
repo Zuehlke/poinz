@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
+import { prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
 
 test('Should produce storyEstimateCleared event', async () => {
   const {
@@ -22,12 +22,9 @@ test('Should produce storyEstimateCleared event', async () => {
     },
     userId
   ).then(({producedEvents, room}) => {
-    const [storyEstimateClearedEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'storyEstimateCleared'
-    );
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateCleared');
+
+    const [storyEstimateClearedEvent] = producedEvents;
 
     expect(storyEstimateClearedEvent.payload.userId).toEqual(userId);
     expect(storyEstimateClearedEvent.payload.storyId).toEqual(storyId);

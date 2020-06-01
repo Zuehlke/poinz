@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
+import { prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyEstimateGiven event', async () => {
   const {roomId, storyId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
@@ -18,12 +18,9 @@ test('Should produce storyEstimateGiven event', async () => {
     },
     userId
   ).then(({producedEvents}) => {
-    const [storyEstimateGivenEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'storyEstimateGiven'
-    );
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+
+    const [storyEstimateGivenEvent] = producedEvents;
 
     expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
     expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
@@ -49,12 +46,9 @@ test('Should not produce revealed event if user changes his estimation', async (
     userId
   )
     .then(({producedEvents, room}) => {
-      const [storyEstimateGivenEvent] = assertEvents(
-        producedEvents,
-        commandId,
-        roomId,
-        'storyEstimateGiven'
-      );
+      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+
+      const [storyEstimateGivenEvent] = producedEvents;
 
       expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
       expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
@@ -79,12 +73,9 @@ test('Should not produce revealed event if user changes his estimation', async (
       )
     )
     .then(({producedEvents, room}) => {
-      const [storyEstimateGivenEvent] = assertEvents(
-        producedEvents,
-        commandId,
-        roomId,
-        'storyEstimateGiven'
-      );
+      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+
+      const [storyEstimateGivenEvent] = producedEvents;
 
       expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
       expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
@@ -137,13 +128,9 @@ describe('with additional "revealed" event', () => {
       },
       userId
     ).then(({producedEvents}) => {
-      const [storyEstimatgeGivenEvent, revealedEvent] = assertEvents(
-        producedEvents,
-        commandId,
-        roomId,
-        'storyEstimateGiven',
-        'revealed'
-      );
+      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven', 'revealed');
+
+      const [storyEstimatgeGivenEvent, revealedEvent] = producedEvents;
 
       expect(storyEstimatgeGivenEvent).toBeDefined();
 

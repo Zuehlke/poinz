@@ -1,10 +1,6 @@
 import {v4 as uuid} from 'uuid';
 
-import {
-  assertEvents,
-  EXPECT_UUID_MATCHING,
-  prepTwoUsersInOneRoomWithOneStory
-} from '../testUtils';
+import { EXPECT_UUID_MATCHING, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce leftRoom event', async () => {
   const {userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();
@@ -21,7 +17,9 @@ test('Should produce leftRoom event', async () => {
     },
     userIdTwo
   ).then(({producedEvents, room}) => {
-    const [leftRoomEvent] = assertEvents(producedEvents, commandId, roomId, 'leftRoom');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'leftRoom');
+
+    const [leftRoomEvent] = producedEvents;
 
     expect(leftRoomEvent.payload.userId).toEqual(userIdTwo);
 
@@ -46,7 +44,9 @@ test('Should produce connectionLost event', async () => {
     },
     userIdTwo
   ).then(({producedEvents, room}) => {
-    const [connectionLostEvent] = assertEvents(producedEvents, commandId, roomId, 'connectionLost');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'connectionLost');
+
+    const [connectionLostEvent] = producedEvents;
 
     expect(connectionLostEvent.payload.userId).toEqual(userIdTwo);
 

@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce kicked event (userOne kicks disconnected userTwo)', async () => {
   const {
@@ -25,7 +25,9 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
     },
     userIdOne
   ).then(({producedEvents, room}) => {
-    const [kickedEvent] = assertEvents(producedEvents, commandId, roomId, 'kicked');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked');
+
+    const [kickedEvent] = producedEvents;
 
     expect(kickedEvent.payload.userId).toEqual(userIdTwo);
 

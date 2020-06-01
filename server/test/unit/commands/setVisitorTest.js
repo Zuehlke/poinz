@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepOneUserInOneRoom} from '../testUtils';
+import {   prepOneUserInOneRoom} from '../testUtils';
 
 describe('visitorSet', () => {
   test('Should produce visitorSet event', async () => {
@@ -28,7 +28,9 @@ describe('visitorSet', () => {
       },
       userId
     ).then(({producedEvents, room}) => {
-      const [visitorSetEvent] = assertEvents(producedEvents, commandId, roomId, 'visitorSet');
+      expect(producedEvents).toMatchEvents(commandId, roomId, 'visitorSet');
+
+      const [visitorSetEvent] = producedEvents;
 
       expect(visitorSetEvent.payload.userId).toEqual(userId);
 
@@ -65,7 +67,9 @@ describe('visitorUnset', () => {
       },
       userId
     ).then(({producedEvents, room}) => {
-      const [visitorUnsetEvent] = assertEvents(producedEvents, commandId, roomId, 'visitorUnset');
+      expect(producedEvents).toMatchEvents(commandId, roomId, 'visitorUnset');
+
+      const [visitorUnsetEvent] = producedEvents;
 
       expect(visitorUnsetEvent.payload.userId).toEqual(userId);
 

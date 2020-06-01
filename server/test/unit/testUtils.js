@@ -7,38 +7,6 @@ import processorFactory from '../../src/commandProcessor';
 import commandHandlers from '../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../src/eventHandlers/eventHandlers';
 
-export function assertValidEvent(
-  eventToCheck,
-  expectedCorrelationId,
-  expectedRoomId,
-  expectedUserId,
-  expectedEventName
-) {
-  expect(eventToCheck.correlationId).toEqual(expectedCorrelationId);
-  expect(eventToCheck.name).toEqual(expectedEventName);
-  expect(eventToCheck.roomId).toEqual(expectedRoomId);
-  expect(eventToCheck.payload).toBeDefined();
-  expect(typeof eventToCheck.payload).toEqual('object');
-}
-
-export function assertEvents(producedEvents, commandId, roomId, ...expectedEventNames) {
-  expect(producedEvents).toBeDefined();
-  expect(producedEvents.length).toBe(expectedEventNames.length);
-
-  expectedEventNames.forEach((expectedEventName, index) => {
-    expect(producedEvents[index].name).toEqual(expectedEventName);
-    assertValidEvent(
-      producedEvents[index],
-      commandId,
-      roomId,
-      '---todo--remove---',
-      expectedEventName
-    );
-  });
-
-  return expectedEventNames.map((evN, index) => producedEvents[index]);
-}
-
 export const EXPECT_UUID_MATCHING = expect.stringMatching(
   new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
 );

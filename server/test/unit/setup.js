@@ -1,10 +1,10 @@
 expect.extend({
   toMatchEvents(received, expectedCommandId, expectedRoomId, ...eventNames) {
-
     if (!received) {
       return {
         pass: false,
-        message: () => 'Expected producedEvents to be defined\n' +
+        message: () =>
+          'Expected producedEvents to be defined\n' +
           `  Received: ${this.utils.printReceived(received)}`
       };
     }
@@ -12,7 +12,8 @@ expect.extend({
     if (!Array.isArray(received)) {
       return {
         pass: false,
-        message: () => 'Expected producedEvents to be an array\n' +
+        message: () =>
+          'Expected producedEvents to be an array\n' +
           `  Received: ${this.utils.printReceived(received)}`
       };
     }
@@ -20,39 +21,40 @@ expect.extend({
     if (received.length !== eventNames.length) {
       return {
         pass: false,
-        message: () => `Expected producedEvents to contain ${eventNames.length} event(s)\n`+
+        message: () =>
+          `Expected producedEvents to contain ${eventNames.length} event(s)\n` +
           `  Expected: ${this.utils.printExpected(eventNames.length)}\n` +
           `  Received: ${this.utils.printReceived(received.length)}`
       };
     }
 
-    const eventTestResultsNotPassed = eventNames.map(testSingleEvent.bind(this)).filter((tr) => !!tr);
+    const eventTestResultsNotPassed = eventNames
+      .map(testSingleEvent.bind(this))
+      .filter((tr) => !!tr);
 
     if (eventTestResultsNotPassed.length > 0) {
       return eventTestResultsNotPassed[0];
     }
-
 
     // the happy case, all checks successful
     return {
       pass: true,
 
       // message in case of expect(...).not.toMatchEvents
-      message: () => `Expect ${
-        received.length
-      } producedEvents not to match your specifications: \n${JSON.stringify(
-        {commandId: expectedCommandId, roomId: expectedRoomId, eventNames},
-        null,
-        4
-      )}\nBut they did.`
+      message: () =>
+        `Expect ${
+          received.length
+        } producedEvents not to match your specifications: \n${JSON.stringify(
+          {commandId: expectedCommandId, roomId: expectedRoomId, eventNames},
+          null,
+          4
+        )}\nBut they did.`
     };
-
 
     /**
      * checks a single event: name, correlationId, roomId
      */
     function testSingleEvent(expectedEventName, index) {
-
       if (received[index].name !== expectedEventName) {
         return {
           pass: false,
@@ -95,9 +97,5 @@ expect.extend({
 
       return undefined;
     }
-
   }
 });
-
-
-

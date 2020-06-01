@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents,  prepEmpty} from '../testUtils';
+import { prepEmpty} from '../testUtils';
 
 test('should produce roomCreated / joinedRoom / usernameSet / emailSet events', async () => {
   const {processor} = prepEmpty();
@@ -18,9 +18,7 @@ test('should produce roomCreated / joinedRoom / usernameSet / emailSet events', 
     userId
   ).then(({producedEvents, room}) => {
     const roomId = producedEvents[0].roomId; // roomId is given by backend
-
-    const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent, emailSetEvent] = assertEvents(
-      producedEvents,
+    expect(producedEvents).toMatchEvents(
       commandId,
       roomId,
       'roomCreated',
@@ -28,6 +26,8 @@ test('should produce roomCreated / joinedRoom / usernameSet / emailSet events', 
       'usernameSet',
       'emailSet'
     );
+
+    const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
 
     expect(roomCreatedEvent.payload.userId).toEqual(userId);
     expect(roomCreatedEvent.payload.id).toEqual(roomId);
@@ -68,14 +68,9 @@ test('should produce roomCreated & joinedRoom events', async () => {
     userId
   ).then(({producedEvents}) => {
     const roomId = producedEvents[0].roomId; // roomId is given by backend
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'roomCreated', 'joinedRoom');
 
-    const [roomCreatedEvent, joinedRoomEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'roomCreated',
-      'joinedRoom'
-    );
+    const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
 
     expect(roomCreatedEvent.payload.userId).toEqual(userId);
     expect(roomCreatedEvent.payload.id).toEqual(roomId);
@@ -105,14 +100,9 @@ test('can create room with alias', async () => {
     userId
   ).then(({producedEvents}) => {
     const roomId = producedEvents[0].roomId; // roomId is given by backend
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'roomCreated', 'joinedRoom');
 
-    const [roomCreatedEvent, joinedRoomEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'roomCreated',
-      'joinedRoom'
-    );
+    const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
 
     expect(roomCreatedEvent.payload).toEqual({
       userId,
@@ -149,13 +139,9 @@ test('can create room with alias, alias will be lowercase', async () => {
     userId
   ).then(({producedEvents}) => {
     const roomId = producedEvents[0].roomId;
-    const [roomCreatedEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'roomCreated',
-      'joinedRoom'
-    );
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'roomCreated', 'joinedRoom');
+
+    const [roomCreatedEvent] = producedEvents;
 
     expect(roomCreatedEvent.payload.alias).toEqual('superaliascamelcase'); // <<-  all lowercase
   });

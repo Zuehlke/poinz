@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 
-import {assertEvents, prepOneUserInOneRoomWithOneStory} from '../testUtils';
+import { prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce 3 events for a already existing room', async () => {
   const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
@@ -19,14 +19,15 @@ test('Should produce 3 events for a already existing room', async () => {
     },
     userId
   ).then(({producedEvents}) => {
-    const [joinedRoomEvent, usernameSetEvent, emailSet] = assertEvents(
-      producedEvents,
+    expect(producedEvents).toMatchEvents(
       commandId,
       roomId,
       'joinedRoom',
       'usernameSet',
       'emailSet'
     );
+
+    const [joinedRoomEvent, usernameSetEvent, emailSet] = producedEvents;
 
     expect(joinedRoomEvent.payload.userId).toEqual(userId);
     expect(joinedRoomEvent.payload.users[userId]).toMatchObject({
@@ -62,14 +63,15 @@ test('Should be able to join room by alias', async () => {
     userId
   ).then(({producedEvents}) => {
     const roomId = producedEvents[0].roomId;
-    const [joinedRoomEvent] = assertEvents(
-      producedEvents,
+    expect(producedEvents).toMatchEvents(
       commandId,
       roomId,
       'joinedRoom',
       'usernameSet',
       'emailSet'
     );
+
+    const [joinedRoomEvent] = producedEvents;
 
     expect(joinedRoomEvent.payload.alias).toEqual('custom.room.alias');
   });

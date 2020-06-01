@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepOneUserInOneRoomWithOneStory} from '../testUtils';
+import { prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyDeleted event', async () => {
   const {userId, processor, roomId, storyId} = await prepOneUserInOneRoomWithOneStory();
@@ -17,7 +17,9 @@ test('Should produce storyDeleted event', async () => {
     },
     userId
   ).then(({producedEvents, room}) => {
-    const [storyDeletedEvent] = assertEvents(producedEvents, commandId, roomId, 'storyDeleted');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted');
+
+    const [storyDeletedEvent] = producedEvents;
 
     expect(storyDeletedEvent.payload.storyId).toEqual(storyId);
     expect(storyDeletedEvent.payload.title).toEqual('SuperStory 444');

@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, EXPECT_UUID_MATCHING, prepOneUserInOneRoom} from '../testUtils';
+import { EXPECT_UUID_MATCHING, prepOneUserInOneRoom} from '../testUtils';
 
 test('Should produce storyAdded and storySelected event (since it is the first story added to the room)', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
@@ -17,13 +17,9 @@ test('Should produce storyAdded and storySelected event (since it is the first s
     },
     userId
   ).then(({producedEvents}) => {
-    const [storyAddedEvent, storySelectedEvent] = assertEvents(
-      producedEvents,
-      commandId,
-      roomId,
-      'storyAdded',
-      'storySelected'
-    );
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded', 'storySelected');
+
+    const [storyAddedEvent, storySelectedEvent] = producedEvents;
 
     expect(storyAddedEvent.payload).toMatchObject({
       title: 'SuperStory 232',
@@ -68,7 +64,9 @@ test('Should produce storyAdded event', async () => {
       )
     )
     .then(({producedEvents, room}) => {
-      const [storyAddedEvent] = assertEvents(producedEvents, commandId, roomId, 'storyAdded');
+      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded');
+
+      const [storyAddedEvent] = producedEvents;
 
       expect(storyAddedEvent.payload).toMatchObject({
         title: 'SuperStory 222',

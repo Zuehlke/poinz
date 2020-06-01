@@ -50,4 +50,32 @@ describe('preconditions', () => {
       )
     ).rejects.toThrow('Can only start a new round for currently selected story!');
   });
+
+  test('Should throw if user is visitor', async () => {
+    const {
+      processor,
+      roomId,
+      storyId,
+      userId,
+      mockRoomsStore
+    } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+
+    const commandId = uuid();
+    return expect(
+      processor(
+        {
+          id: commandId,
+          roomId: roomId,
+          name: 'newEstimationRound',
+          payload: {
+            storyId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow(
+      'Precondition Error during "newEstimationRound": Visitors cannot start new estimation round!'
+    );
+  });
 });

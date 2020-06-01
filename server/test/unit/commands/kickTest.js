@@ -69,6 +69,23 @@ describe('preconditions', () => {
     ).rejects.toThrow('User cannot kick himself!');
   });
 
+  test('Should throw if tries to kick user that is not disconnected', async () => {
+    const {roomId, userIdOne, userIdTwo, processor} = await prepTwoUsersInOneRoomWithOneStory();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'kick',
+          payload: {
+            userId: userIdOne
+          }
+        },
+        userIdTwo
+      )
+    ).rejects.toThrow('Precondition Error during "kick": Can only kick disconnected users!');
+  });
+
   test('Should throw if visitor tries to kick', async () => {
     const {
       roomId,

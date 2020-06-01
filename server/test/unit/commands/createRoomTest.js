@@ -1,7 +1,7 @@
 import {v4 as uuid} from 'uuid';
-import {assertEvents, prepEmpty} from '../testUtils';
+import {assertEvents,  prepEmpty} from '../testUtils';
 
-test('should produce roomCreated & joinedRoom & usernameSet events', async () => {
+test('should produce roomCreated / joinedRoom / usernameSet / emailSet events', async () => {
   const {processor} = prepEmpty();
   const commandId = uuid();
   const userId = uuid();
@@ -11,20 +11,22 @@ test('should produce roomCreated & joinedRoom & usernameSet events', async () =>
       name: 'createRoom',
       payload: {
         userId: userId,
-        username: 'something'
+        username: 'something',
+        email: 'preset.email@test.com'
       }
     },
     userId
-  ).then(({producedEvents}) => {
+  ).then(({producedEvents, room}) => {
     const roomId = producedEvents[0].roomId; // roomId is given by backend
 
-    const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent] = assertEvents(
+    const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent, emailSetEvent] = assertEvents(
       producedEvents,
       commandId,
       roomId,
       'roomCreated',
       'joinedRoom',
-      'usernameSet'
+      'usernameSet',
+      'emailSet'
     );
 
     expect(roomCreatedEvent.payload.userId).toEqual(userId);
@@ -38,6 +40,15 @@ test('should produce roomCreated & joinedRoom & usernameSet events', async () =>
 
     expect(usernameSetEvent.payload.userId).toEqual(userId);
     expect(usernameSetEvent.payload.username).toEqual('something');
+
+    expect(emailSetEvent.payload.userId).toEqual(userId);
+    expect(emailSetEvent.payload.email).toEqual('preset.email@test.com');
+
+    expect(room.users[userId]).toEqual({
+      email: 'preset.email@test.com',
+      id: userId,
+      username: 'something'
+    });
   });
 });
 

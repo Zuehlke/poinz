@@ -67,7 +67,7 @@ const Story = ({
 
 Story.propTypes = {
   story: PropTypes.object,
-  cardConfig: PropTypes.object,
+  cardConfig: PropTypes.array,
   selectedStoryId: PropTypes.string,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,

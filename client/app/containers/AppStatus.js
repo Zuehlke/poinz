@@ -99,6 +99,7 @@ const TableHeaders = () => (
   <li className="headers">
     <div>Total users</div>
     <div>Disconnected users</div>
+    <div>Stories</div>
     <div>Created</div>
     <div>Last Activity</div>
   </li>
@@ -108,6 +109,7 @@ const RoomItem = ({room}) => (
   <li>
     <div>{room.userCount}</div>
     <div>{room.userCountDisconnected}</div>
+    <div>{room.storyCount}</div>
     <div>{formatDateTime(room.created)}</div>
     <div>{formatDateTime(room.lastActivity)}</div>
   </li>

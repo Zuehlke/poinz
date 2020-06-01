@@ -26,6 +26,7 @@ function init(app, store) {
         .map(
           (room) =>
             new Immutable.Map({
+              storyCount: room.get('stories').size,
               userCount: room.get('users').size,
               userCountDisconnected: room.get('users').filter((user) => user.get('disconnected'))
                 .size,

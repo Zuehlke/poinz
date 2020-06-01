@@ -27,7 +27,7 @@ function handleNewConnection(socket) {
 
 function handleIncomingCommand(socket, msg) {
   commandProcessor(msg, socketToUserIdMap[socket.id])
-    .then((producedEvents) => {
+    .then(({producedEvents}) => {
       const joinedRoomEvent = producedEvents.find((ev) => ev.name === 'joinedRoom');
       if (joinedRoomEvent) {
         registerUserWithSocket(joinedRoomEvent, socket, joinedRoomEvent.payload.userId);

@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import { prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
+import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../testUtils';
 
 test('Should produce storyEstimateCleared event', async () => {
   const {

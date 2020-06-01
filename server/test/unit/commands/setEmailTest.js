@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import { prepOneUserInOneRoom} from '../testUtils';
+import {prepOneUserInOneRoom} from '../testUtils';
 
 test('Should produce emailSet event', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();

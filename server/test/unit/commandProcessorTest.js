@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import Promise from 'bluebird';
-import { newMockRoomsStore} from './testUtils';
+import {newMockRoomsStore} from './testUtils';
 import processorFactory from '../../src/commandProcessor';
 
 test('process a dummy command successfully', () => {

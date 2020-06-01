@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 
-import { EXPECT_UUID_MATCHING, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
+import {EXPECT_UUID_MATCHING, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce leftRoom event', async () => {
   const {userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();

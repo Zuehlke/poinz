@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {   prepOneUserInOneRoomWithOneStory} from '../testUtils';
+import {prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storySelected event', async () => {
   const {roomId, userId, storyId, processor} = await prepOneUserInOneRoomWithOneStory();

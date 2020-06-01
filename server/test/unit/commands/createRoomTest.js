@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import { prepEmpty} from '../testUtils';
+import {prepEmpty} from '../testUtils';
 
 test('should produce roomCreated / joinedRoom / usernameSet / emailSet events', async () => {
   const {processor} = prepEmpty();

@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {   prepOneUserInOneRoom} from '../testUtils';
+import {prepOneUserInOneRoom} from '../testUtils';
 
 describe('visitorSet', () => {
   test('Should produce visitorSet event', async () => {

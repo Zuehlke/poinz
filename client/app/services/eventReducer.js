@@ -69,11 +69,11 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
   return {
     ...modifiedState,
     actionLog: [
-      ...(modifiedState.actionLog || []),
       {
         tstamp: new Date(),
         message
-      }
+      },
+      ...(modifiedState.actionLog || [])
     ]
   };
 }
@@ -141,7 +141,7 @@ const eventActionHandlers = {
         }
       }
 
-      return `User ${username} joined`;
+      return `User ${newState.users[payload.userId].username || ''} joined`; // cannot directly use parameter "username". event is not yet reduced.
     }
   },
 

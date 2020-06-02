@@ -5,6 +5,7 @@ import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
 import {selectStory, editStory, deleteStory} from '../actions';
+import {getCardConfigForValue} from '../services/getCardConfigForValue';
 
 /**
  * One story in the backlog
@@ -87,10 +88,13 @@ export default connect(
 )(Story);
 
 const ConsensusBadge = ({cardConfig, consensusValue}) => {
-  const matchingCardConfig = cardConfig.find((cc) => cc.value === consensusValue);
+  const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
 
   return (
-    <div className="consensus-badge" style={{background: matchingCardConfig.color}}>
+    <div
+      className="consensus-badge"
+      style={{background: matchingCardConfig ? matchingCardConfig.color : '#bdbfbf'}}
+    >
       <div>{matchingCardConfig.label}</div>
     </div>
   );

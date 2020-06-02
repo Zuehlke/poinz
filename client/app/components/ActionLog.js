@@ -19,7 +19,8 @@ const ActionLog = ({t, actionLog, logShown}) => {
         <ul>
           {actionLog.map((entry, index) => (
             <li key={`logline_${index}`}>
-              {formatTime(entry.tstamp)} {entry.message}
+              <span>{formatTime(entry.tstamp)}</span>
+              <span>{entry.message}</span>
             </li>
           ))}
         </ul>

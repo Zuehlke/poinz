@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 import {kick} from '../actions';
 import Avatar from './Avatar.js';
+import {getCardConfigForValue} from '../services/getCardConfigForValue';
 
 const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
   const isExcluded = user.excluded;
@@ -25,7 +26,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
     revealed: revealed
   });
 
-  const matchingCardConfig = cardConfig.find((cc) => cc.value === userEstimationValue);
+  const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
 
   const customCardStyle =

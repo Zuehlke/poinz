@@ -7,13 +7,13 @@ import {kick} from '../actions';
 import Avatar from './Avatar.js';
 
 const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
-  const isVisitor = user.visitor;
+  const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
   const revealed = selectedStory && selectedStory.revealed;
 
   const classes = classnames('user user-' + user.id, {
     'user-own': user.id === ownUserId,
-    'user-visitor': isVisitor,
+    'user-excluded': isExcluded,
     'user-disconnected': isDisconnected
   });
 
@@ -38,8 +38,8 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
 
   return (
     <div className={classes}>
-      {!isDisconnected && isVisitor && (
-        <span className="visitor-badge">
+      {!isDisconnected && isExcluded && (
+        <span className="excluded-badge">
           <i className="fa fa-eye"></i>
         </span>
       )}

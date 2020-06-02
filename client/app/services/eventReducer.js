@@ -324,31 +324,31 @@ const eventActionHandlers = {
   },
 
   /**
-   * visitor flag for a user was set
+   * user was excluded from estimations (flag for a user was set / toggled on)
    */
-  [EVENT_ACTION_TYPES.visitorSet]: {
+  [EVENT_ACTION_TYPES.excludedFromEstimations]: {
     fn: (state, payload) => ({
       ...state,
       users: {
         ...state.users,
-        [payload.userId]: {...state.users[payload.userId], visitor: true}
+        [payload.userId]: {...state.users[payload.userId], excluded: true}
       }
     }),
-    log: (username) => `${username} is now visitor`
+    log: (username) => `${username} is now excluded from estimations`
   },
 
   /**
-   * visitor flag for a user was removed / unset
+   * user was included in estimations (flag for a user was unset / toggled off)
    */
-  [EVENT_ACTION_TYPES.visitorUnset]: {
+  [EVENT_ACTION_TYPES.includedInEstimations]: {
     fn: (state, payload) => ({
       ...state,
       users: {
         ...state.users,
-        [payload.userId]: {...state.users[payload.userId], visitor: false}
+        [payload.userId]: {...state.users[payload.userId], excluded: false}
       }
     }),
-    log: (username) => `${username} is no longer visitor`
+    log: (username) => `${username} is no longer excluded from estimations`
   },
 
   [EVENT_ACTION_TYPES.storyEstimateGiven]: {

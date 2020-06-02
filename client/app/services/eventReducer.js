@@ -2,6 +2,7 @@ import log from 'loglevel';
 import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
+import {getCardConfigForValue} from './getCardConfigForValue';
 
 /**
  * The event reducer handles backend-event actions.
@@ -41,7 +42,9 @@ export default function eventReducer(state, action) {
 /**
  * adds a log message for a backend event to the state.
  *
- * @param {undefined | string | function} logObject defined in event handlers. If this is a function: username, eventPayload, oldState and newState will be passed.
+ * @param {undefined | string | function} logObject defined in event handlers.
+ *         If this is a function: username, eventPayload, oldState and newState will be passed.
+ *         The function can return undefined or empty string. then no logEntry will be added
  * @param {object} oldState The state before the action was reduced
  * @param {object} modifiedState The state after the action was reduced
  * @param {object} event
@@ -58,6 +61,10 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
     typeof logObject === 'function'
       ? logObject(username, event.payload, oldState, modifiedState, event)
       : logObject;
+
+  if (!message) {
+    return modifiedState;
+  }
 
   return {
     ...modifiedState,
@@ -296,8 +303,10 @@ const eventActionHandlers = {
     },
     log: (username, payload, oldState) => {
       const oldUsername = oldState.users[payload.userId].username;
-      if (oldUsername) {
-        return `"${oldState.users[payload.userId].username}" is now called "${payload.username}"`;
+      const newUsername = payload.username;
+
+      if (oldUsername && oldUsername !== newUsername) {
+        return `"${oldState.users[payload.userId].username}" is now called "${newUsername}"`;
       }
     }
   },
@@ -379,10 +388,15 @@ const eventActionHandlers = {
         }
       }
     }),
-    log: (username, eventPayload, oldState, modifiedState) =>
-      `Consensus achieved for story "${modifiedState.stories[eventPayload.storyId].title}": ${
+    log: (username, eventPayload, oldState, modifiedState) => {
+      const matchingCardConfig = getCardConfigForValue(
+        oldState.cardConfig,
         modifiedState.stories[eventPayload.storyId].consensus
-      }`
+      );
+      return `Consensus achieved for story "${
+        modifiedState.stories[eventPayload.storyId].title
+      }": ${matchingCardConfig ? matchingCardConfig.label : '-'}`;
+    }
   },
 
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {

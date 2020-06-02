@@ -14,6 +14,8 @@ import storySelected from './storySelected';
 import usernameSet from './usernameSet';
 import emailSet from './emailSet';
 import visitorSet from './visitorSet';
+import excludedFromEstimations from './excludedFromEstimations';
+import includedInEstimations from './includedInEstimations';
 import visitorUnset from './visitorUnset';
 import consensusAchieved from './consensusAchieved';
 
@@ -35,5 +37,7 @@ export default {
   usernameSet,
   emailSet,
   visitorSet,
+  excludedFromEstimations,
+  includedInEstimations,
   visitorUnset
 };

@@ -13,6 +13,7 @@ import selectStory from './selectStory';
 import setUsername from './setUsername';
 import setEmail from './setEmail';
 import setVisitor from './setVisitor';
+import toggleExclude from './toggleExclude';
 
 export default {
   createRoom,
@@ -29,5 +30,6 @@ export default {
   selectStory,
   setUsername,
   setEmail,
-  setVisitor
+  setVisitor,
+  toggleExclude
 };

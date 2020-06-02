@@ -41,6 +41,12 @@ const joinRoomCommandHandler = {
         email: command.payload.email
       });
     }
+
+    if (userObject.excluded) {
+      room.applyEvent('excludedFromEstimations', {
+        userId: userObject.id
+      });
+    }
   }
 };
 

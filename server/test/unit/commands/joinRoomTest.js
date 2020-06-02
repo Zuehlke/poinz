@@ -44,6 +44,35 @@ test('Should produce 3 events for a already existing room', async () => {
   });
 });
 
+test('Should persist excluded flag on rejoin of disconnected user', async () => {
+  const {userId, processor, roomId, mockRoomsStore} = await prepOneUserInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'disconnected'], true));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        userId,
+        username: 'something'
+      }
+    },
+    userId
+  ).then(({producedEvents}) => {
+    expect(producedEvents).toMatchEvents(
+      commandId,
+      roomId,
+      'joinedRoom',
+      'usernameSet',
+      'excludedFromEstimations'
+    );
+  });
+});
+
 test('Should be able to join room by alias', async () => {
   const {userId, processor, mockRoomsStore} = await prepOneUserInOneRoomWithOneStory();
   mockRoomsStore.manipulate((room) => room.set('alias', 'custom.room.alias'));

@@ -530,13 +530,31 @@ $userMenuWidth = 300px
     overflow-x hidden
     overflow-y auto
     left 8px
-    right 0
+    right 8px
 
     ul {
       width 100%
       margin 0
       padding 0
       list-style-type none
+
+      li {
+        background #fff
+        padding 4px
+        margin-bottom 8px
+        box-sizing border-box
+        border 1px solid $zuehlkeLighterGrey
+
+        > span {
+          display  block
+          margin-right 4px
+        }
+
+        > span:first-child {
+          color $zuehlkeLightGrey
+          font-size 12px
+        }
+      }
     }
   }
 }

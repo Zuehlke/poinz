@@ -11,7 +11,7 @@ import Avatar from './Avatar';
  * The backlog contains a form to add new stories
  * and a list of stories.
  */
-const Backlog = ({stories, backlogShown, isVisitor}) => {
+const Backlog = ({stories, backlogShown}) => {
   const hasStories = stories && !!Object.keys(stories).length;
 
   const backlogClasses = classnames('backlog', {
@@ -20,7 +20,7 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
 
   return (
     <div className={backlogClasses}>
-      {!isVisitor && <StoryAddForm />}
+      <StoryAddForm />
 
       {hasStories && <Stories />}
       {!hasStories && (
@@ -48,12 +48,10 @@ const Backlog = ({stories, backlogShown, isVisitor}) => {
 
 Backlog.propTypes = {
   stories: PropTypes.object,
-  backlogShown: PropTypes.bool,
-  isVisitor: PropTypes.bool
+  backlogShown: PropTypes.bool
 };
 
 export default connect((state) => ({
   stories: state.stories,
-  backlogShown: state.backlogShown,
-  isVisitor: state.users[state.userId] ? state.users[state.userId].visitor : false
+  backlogShown: state.backlogShown
 }))(Backlog);

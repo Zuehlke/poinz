@@ -29,8 +29,8 @@ export const EVENT_ACTION_TYPES = {
   storyEstimateCleared: 'STORY_ESTIMATE_CLEARED',
   revealed: 'REVEALED',
   newEstimationRoundStarted: 'NEW_ESTIMATION_ROUND_STARTED',
-  visitorSet: 'VISITOR_SET',
-  visitorUnset: 'VISITOR_UNSET',
+  excludedFromEstimations: 'EXCLUDED_FROM_ESTM',
+  includedInEstimations: 'INCLUDED_IN_ESTM',
   storyChanged: 'STORY_CHANGED',
   storyDeleted: 'STORY_DELETED'
 };

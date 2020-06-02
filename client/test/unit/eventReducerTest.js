@@ -254,3 +254,70 @@ describe(EVENT_ACTION_TYPES.kicked, () => {
     expect(modifiedState.users).toEqual({myUser: {}});
   });
 });
+
+describe(
+  EVENT_ACTION_TYPES.includedInEstimations + ' ' + EVENT_ACTION_TYPES.excludedFromEstimations,
+  () => {
+    test('someone marked himself as included in estimations', () => {
+      const startingState = {
+        userId: 'myUser',
+        roomId: 'myRoom',
+        users: {
+          myUser: {
+            excluded: true
+          },
+          someoneElse: {}
+        },
+        stories: {}
+      };
+
+      const modifiedState = eventReducer(startingState, {
+        type: EVENT_ACTION_TYPES.includedInEstimations,
+        event: {
+          roomId: 'myRoom',
+          payload: {
+            userId: 'myUser'
+          },
+          userId: 'myUser'
+        }
+      });
+
+      expect(modifiedState.users).toEqual({
+        myUser: {
+          excluded: false
+        },
+        someoneElse: {}
+      });
+    });
+
+    test('someone marked himself as excluded from estimations', () => {
+      const startingState = {
+        userId: 'myUser',
+        roomId: 'myRoom',
+        users: {
+          myUser: {},
+          someoneElse: {}
+        },
+        stories: {}
+      };
+
+      const modifiedState = eventReducer(startingState, {
+        type: EVENT_ACTION_TYPES.excludedFromEstimations,
+        event: {
+          roomId: 'myRoom',
+          payload: {
+            userId: 'myUser'
+          },
+          userId: 'myUser'
+        }
+      });
+
+      expect(modifiedState.users).toEqual({
+        myUser: {
+          excluded: true
+        },
+        someoneElse: {}
+      });
+    });
+  }
+);

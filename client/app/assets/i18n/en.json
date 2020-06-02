@@ -9,9 +9,6 @@
   "storyTitle": "Story Title",
   "description": "Description / URL",
   "username": "Username",
-  "visitor": "Visitor",
-  "markVisitor": "Mark as Visitor",
-  "visitorInfo": "Visitors cannot add, change or estimate stories.",
   "save": "Save",
   "log": "Log",
   "leaveRoom": "Leave Room",
@@ -27,5 +24,8 @@
   "toggleMenu": "Menu",
   "alias": "Room Alias",
   "welcomeBack": "Welcome back",
-  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is publicly available!"
+  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is publicly available!",
+  "markExcluded": "Mark as excluded",
+  "excludedInfo": "Excluded users cannot participate in estimations. They still can add and modify stories.",
+  "excluded": "Excluded from estimations"
 }

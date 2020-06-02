@@ -45,7 +45,7 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userIdOne,
+        userId: userIdOne, // first user estimates story
         value: 4
       }
     },
@@ -59,7 +59,7 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userIdTwo,
+            userId: userIdTwo, // second user estimates story
             value: 2
           }
         },
@@ -97,7 +97,7 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userIdOne,
+        userId: userIdOne, // first user estimates "2"
         value: 2
       }
     },
@@ -111,7 +111,7 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userIdTwo,
+            userId: userIdTwo, // second user estimates "2"
             value: 2
           }
         },
@@ -239,7 +239,7 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
   );
 });
 
-test('Should produce additional "revealed" and "consensusAchieved" events if all users estimated (other user is visitor)', async () => {
+test('Should produce additional "revealed" and "consensusAchieved" events if all users estimated (other user is excluded)', async () => {
   const {
     roomId,
     storyId,
@@ -249,7 +249,7 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'visitor'], true));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'excluded'], true));
 
   const commandId = uuid();
   return processor(
@@ -348,7 +348,7 @@ describe('preconditions', () => {
     ).rejects.toThrow('You cannot give an estimate for a story that was revealed!');
   });
 
-  test('Should throw if user is a visitor', async () => {
+  test('Should throw if user is marked as excluded', async () => {
     const {
       roomId,
       storyId,
@@ -356,7 +356,7 @@ describe('preconditions', () => {
       processor,
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStory();
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
 
     return expect(
       processor(
@@ -372,6 +372,6 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('Visitors cannot give estimations!');
+    ).rejects.toThrow('Users that are excluded from estimations cannot give estimations!');
   });
 });

@@ -1,7 +1,7 @@
 /**
  * A user gives his estimation for a certain story.
  * Users may only give estimations for the currently selected story.
- * A user that is marked as visitor cannot give estimations
+ * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
 const giveStoryEstimateCommandHandler = {
@@ -18,8 +18,8 @@ const giveStoryEstimateCommandHandler = {
       throw new Error('You cannot give an estimate for a story that was revealed!');
     }
 
-    if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot give estimations!');
+    if (room.getIn(['users', userId, 'excluded'])) {
+      throw new Error('Users that are excluded from estimations cannot give estimations!');
     }
   },
   fn: (room, command) => {
@@ -45,7 +45,7 @@ const giveStoryEstimateCommandHandler = {
 };
 
 /**
- * checks if every user in the room (that is not marked as visitor and is not disconnected)  did estimate the current story
+ * checks if every user in the room (that is not marked as excluded and is not disconnected)  did estimate the current story
  *
  * @param room
  * @param storyId
@@ -77,7 +77,7 @@ function allValidUsersEstimatedSame(room, cmdPayload) {
 function getAllUsersThatCanEstimate(room) {
   return room
     .get('users')
-    .filter((usr) => !usr.get('visitor'))
+    .filter((usr) => !usr.get('excluded'))
     .filter((usr) => !usr.get('disconnected'));
 }
 

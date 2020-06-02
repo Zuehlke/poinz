@@ -9,9 +9,6 @@
   "storyTitle": "Story Titel",
   "description": "Beschreibung / URL",
   "username": "Benutzername",
-  "visitor": "Zuschauer",
-  "markVisitor": "Als Zuschauer Markieren",
-  "visitorInfo": "Zuschauer können keine Stories hinzufügen, ändern oder schätzen.",
   "save": "Speichern",
   "log": "Log",
   "leaveRoom": "Raum verlassen",
@@ -27,5 +24,8 @@
   "toggleMenu": "Menu",
   "alias": "Raum Alias",
   "welcomeBack": "Willkommen zurück",
-  "disclaimer": "Die Benützung von Poinz erfolgt auf eigenes Risiko! Jegliche eingetragene informationen sind möglicherweise öffentlich abrufbar."
+  "disclaimer": "Die Benützung von Poinz erfolgt auf eigenes Risiko! Jegliche eingetragene informationen sind möglicherweise öffentlich abrufbar.",
+  "markExcluded": "Von Schätzungen ausschliessen ",
+  "excludedInfo": "Ausgeschlossene Benutzer können keine Stories schätzen. Sie können aber nach wie vor Stories hinzufügen und editieren.",
+  "excluded": "Von Schätzungen ausgeschlossen"
 }

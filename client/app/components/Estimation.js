@@ -18,8 +18,8 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
   const ownEstimate = selectedStory.estimations[user.id];
 
   const revealed = selectedStory.revealed;
-  const isVisitor = user.visitor;
-  const userCanCurrentlyEstimate = !revealed && !isVisitor;
+  const isExcluded = user.excluded;
+  const userCanCurrentlyEstimate = !revealed && !isExcluded;
 
   return (
     <div className="estimation">

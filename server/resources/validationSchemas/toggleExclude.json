@@ -10,14 +10,10 @@
           "properties": {
             "userId": {
               "type": "string"
-            },
-            "isVisitor": {
-              "type": "boolean"
             }
           },
           "required": [
-            "userId",
-            "isVisitor"
+            "userId"
           ],
           "additionalProperties": false
         }

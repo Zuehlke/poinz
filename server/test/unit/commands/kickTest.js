@@ -36,6 +36,33 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
   });
 });
 
+test('Users that are marked as excluded can also kick others (userOne [excluded]  kicks disconnected userTwo)', async () => {
+  const {
+    roomId,
+    userIdOne,
+    userIdTwo,
+    processor,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdOne, 'excluded'], true));
+
+  const commandId = uuid();
+
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'kick',
+      payload: {
+        userId: userIdTwo
+      }
+    },
+    userIdOne
+  ).then(({producedEvents}) => expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked'));
+});
+
 describe('preconditions', () => {
   test('Should throw if userId does not match any user from the room', async () => {
     const {roomId, userIdOne, processor} = await prepTwoUsersInOneRoomWithOneStory();
@@ -86,33 +113,5 @@ describe('preconditions', () => {
         userIdTwo
       )
     ).rejects.toThrow('Precondition Error during "kick": Can only kick disconnected users!');
-  });
-
-  test('Should throw if visitor tries to kick', async () => {
-    const {
-      roomId,
-      userIdOne,
-      userIdTwo,
-      processor,
-      mockRoomsStore
-    } = await prepTwoUsersInOneRoomWithOneStory();
-
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
-
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userIdOne, 'visitor'], true));
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId,
-          name: 'kick',
-          payload: {
-            userId: userIdTwo
-          }
-        },
-        userIdOne
-      )
-    ).rejects.toThrow('Visitors cannot kick other users!');
   });
 });

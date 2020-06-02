@@ -16,8 +16,8 @@ const clearStoryEstimateCommandHandler = {
       throw new Error('You cannot clear your estimate for a story that was revealed!');
     }
 
-    if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot clear estimations!');
+    if (room.getIn(['users', userId, 'excluded'])) {
+      throw new Error('Users marked as excluded cannot clear estimations!');
     }
   },
   fn: (room, command) => {

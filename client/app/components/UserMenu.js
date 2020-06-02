@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import {setVisitor, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
+import {toggleExcluded, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
 
 /**
  * The user menu displays a form for changing the username and the vistitor flag.
@@ -16,21 +16,21 @@ const UserMenu = ({
   user,
   setUsername,
   setEmail,
-  setVisitor,
+  toggleExcluded,
   setLanguage,
   userMenuShown
 }) => {
   const username = user.username;
   const email = user.email;
-  const isVisitor = user.visitor;
+  const excluded = user.excluded;
 
   const menuClasses = classnames('user-menu', {
     'user-menu-active': userMenuShown
   });
 
-  const visitorCheckboxClasses = classnames('fa', {
-    'fa-square-o': !isVisitor,
-    'fa-check-square-o': isVisitor
+  const excludedCheckboxClasses = classnames('fa', {
+    'fa-square-o': !excluded,
+    'fa-check-square-o': excluded
   });
 
   let usernameInputField, emailInputField;
@@ -111,11 +111,11 @@ const UserMenu = ({
         </div>
 
         <div className="user-menu-section">
-          <h5>{t('markVisitor')}</h5>
-          {t('visitorInfo')}
+          <h5>{t('markExcluded')}</h5>
+          {t('excludedInfo')}
 
-          <p onClick={toggleVisitor} className="clickable">
-            <i className={visitorCheckboxClasses}></i> {t('visitor')}
+          <p onClick={toggleExcluded} className="clickable">
+            <i className={excludedCheckboxClasses}></i> {t('excluded')}
           </p>
         </div>
       </div>
@@ -144,10 +144,6 @@ const UserMenu = ({
   function saveEmail() {
     setEmail(emailInputField.value);
   }
-
-  function toggleVisitor() {
-    setVisitor(!isVisitor);
-  }
 };
 
 UserMenu.propTypes = {
@@ -155,7 +151,7 @@ UserMenu.propTypes = {
   user: PropTypes.object,
   userMenuShown: PropTypes.bool,
   language: PropTypes.string,
-  setVisitor: PropTypes.func,
+  toggleExcluded: PropTypes.func,
   leaveRoom: PropTypes.func,
   setLanguage: PropTypes.func,
   setUsername: PropTypes.func,
@@ -170,7 +166,7 @@ export default connect(
     userMenuShown: state.userMenuShown
   }),
   {
-    setVisitor,
+    toggleExcluded,
     leaveRoom,
     setUsername,
     setEmail,

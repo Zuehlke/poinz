@@ -1,16 +1,11 @@
 /**
  * A user manually reveals estimates for a certain story
  * Users may only reveal the currently selected story
- * A user that is marked as visitor cannot reveal stories
  */
 const revealCommandHandler = {
-  preCondition: (room, command, userId) => {
+  preCondition: (room, command) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only reveal currently selected story!');
-    }
-
-    if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot reveal stories!');
     }
   },
   fn: (room, command) => {

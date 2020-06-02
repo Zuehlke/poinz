@@ -254,14 +254,13 @@ export const setEmail = (email) => (dispatch, getState) => {
   );
 };
 
-export const setVisitor = (isVisitor) => (dispatch, getState) => {
+export const toggleExcluded = () => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand(
     {
-      name: 'setVisitor',
+      name: 'toggleExclude',
       roomId: state.roomId,
       payload: {
-        isVisitor,
         userId: state.userId
       }
     },

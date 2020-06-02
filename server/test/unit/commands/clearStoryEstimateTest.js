@@ -109,7 +109,7 @@ describe('preconditions', () => {
     ).rejects.toThrow('You cannot clear your estimate for a story that was revealed!');
   });
 
-  test('Should throw if user is a visitor', async () => {
+  test('Should throw if user is marked as excluded', async () => {
     const {
       roomId,
       userIdOne: userId,
@@ -118,7 +118,7 @@ describe('preconditions', () => {
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
 
     return expect(
       processor(
@@ -133,6 +133,6 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('Visitors cannot clear estimations!');
+    ).rejects.toThrow('Users marked as excluded cannot clear estimations!');
   });
 });

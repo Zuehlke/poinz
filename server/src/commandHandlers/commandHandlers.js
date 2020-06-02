@@ -12,7 +12,6 @@ import reveal from './reveal';
 import selectStory from './selectStory';
 import setUsername from './setUsername';
 import setEmail from './setEmail';
-import setVisitor from './setVisitor';
 import toggleExclude from './toggleExclude';
 
 export default {
@@ -30,6 +29,5 @@ export default {
   selectStory,
   setUsername,
   setEmail,
-  setVisitor,
   toggleExclude
 };

@@ -15,10 +15,6 @@ const kickCommandHandler = {
     if (!room.getIn(['users', command.payload.userId, 'disconnected'])) {
       throw new Error('Can only kick disconnected users!');
     }
-
-    if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot kick other users!');
-    }
   },
   fn: (room, command) => {
     room.applyEvent('kicked', {userId: command.payload.userId});

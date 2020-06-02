@@ -2,11 +2,7 @@
  * A user changes the title and/or description of a story
  */
 const changeStoryCommandHandler = {
-  preCondition: (room, command, userId) => {
-    if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot change stories!');
-    }
-
+  preCondition: (room, command) => {
     if (!room.getIn(['stories', command.payload.storyId])) {
       throw new Error('Cannot change unknown story ' + command.payload.storyId);
     }

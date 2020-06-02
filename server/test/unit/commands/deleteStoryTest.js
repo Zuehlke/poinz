@@ -29,6 +29,34 @@ test('Should produce storyDeleted event', async () => {
   });
 });
 
+test('users marked as excluded can still delete stories', async () => {
+  const {
+    userId,
+    processor,
+    roomId,
+    storyId,
+    mockRoomsStore
+  } = await prepOneUserInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'deleteStory',
+      payload: {
+        storyId,
+        title: 'SuperStory 444'
+      }
+    },
+    userId
+  ).then(({producedEvents}) =>
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted')
+  );
+});
+
 describe('preconditions', () => {
   test('Should throw if room does not contain matching story', async () => {
     const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
@@ -46,31 +74,5 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow('Cannot delete unknown story some-unknown-story');
-  });
-
-  test('Should throw if user is a visitor', async () => {
-    const {
-      userId,
-      processor,
-      roomId,
-      mockRoomsStore,
-      storyId
-    } = await prepOneUserInOneRoomWithOneStory();
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId,
-          name: 'deleteStory',
-          payload: {
-            storyId,
-            title: 'SuperStory 444'
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Visitors cannot delete stories!');
   });
 });

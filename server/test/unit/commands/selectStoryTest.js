@@ -27,6 +27,34 @@ test('Should produce storySelected event', async () => {
   });
 });
 
+test('Users marked as excluded can still select current story', async () => {
+  const {
+    roomId,
+    userId,
+    storyId,
+    processor,
+    mockRoomsStore
+  } = await prepOneUserInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+  const commandId = uuid();
+
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'selectStory',
+      payload: {
+        storyId
+      }
+    },
+    userId
+  ).then(({producedEvents}) =>
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storySelected')
+  );
+});
+
 describe('preconditions', () => {
   test('Should throw if story is not in room', async () => {
     const {roomId, userId, processor} = await prepOneUserInOneRoomWithOneStory();
@@ -45,30 +73,5 @@ describe('preconditions', () => {
     ).rejects.toThrow(
       'Precondition Error during "selectStory": Story story-not-in-room cannot be selected. It is not part of room'
     );
-  });
-
-  test('Should throw if visitor tries to select current story', async () => {
-    const {
-      roomId,
-      userId,
-      storyId,
-      processor,
-      mockRoomsStore
-    } = await prepOneUserInOneRoomWithOneStory();
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'selectStory',
-          payload: {
-            storyId: storyId
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Visitors cannot select current story!');
   });
 });

@@ -1,9 +1,7 @@
 import {v4 as uuid} from 'uuid';
 import {prepOneUserInOneRoom} from '../testUtils';
 
-
 test('toggleExclude  -> excluded', async () => {
-
   const {userId, processor, roomId} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
@@ -29,9 +27,7 @@ test('toggleExclude  -> excluded', async () => {
   });
 });
 
-
 test('toggleExclude  -> included', async () => {
-
   const {userId, processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
 
   mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));

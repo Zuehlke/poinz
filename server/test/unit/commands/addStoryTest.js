@@ -79,24 +79,24 @@ test('Should produce storyAdded event', async () => {
     });
 });
 
-describe('preconditions', () => {
-  test('Should throw if user is a visitor', async () => {
-    const {userId, roomId, processor, mockRoomsStore} = await prepOneUserInOneRoom();
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
+test('users excluded from estimations can still add stories', async () => {
+  const {userId, roomId, processor, mockRoomsStore} = await prepOneUserInOneRoom();
 
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId,
-          name: 'addStory',
-          payload: {
-            title: 'SuperStory 232',
-            description: 'This will be awesome'
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Visitors cannot add stories!');
-  });
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'addStory',
+      payload: {
+        title: 'SuperStory 232',
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  ).then(({producedEvents}) =>
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded', 'storySelected')
+  );
 });

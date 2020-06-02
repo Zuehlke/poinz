@@ -2,11 +2,7 @@
  * A user selected a story (marked it as the "current" story to estimate)
  */
 const selectStoryCommandHandler = {
-  preCondition: (room, command, userId) => {
-    if (room.getIn(['users', userId, 'visitor'])) {
-      throw new Error('Visitors cannot select current story!');
-    }
-
+  preCondition: (room, command) => {
     // check that id in payload is one of the stories in room
     if (!room.getIn(['stories', command.payload.storyId])) {
       throw new Error(

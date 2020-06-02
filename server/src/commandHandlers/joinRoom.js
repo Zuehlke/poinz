@@ -57,7 +57,7 @@ function getUserObject(room, command) {
   let matchingExistingUser = room.getIn(['users', command.payload.userId]);
 
   if (matchingExistingUser) {
-    // use the already matching user (re-use already existing state like "visitor" flag etc.)
+    // use the already matching user (re-use already existing state like "excluded" flag etc.)
     // override the username if the "joinRoom" command contained a username.
 
     matchingExistingUser = matchingExistingUser.toJS();

@@ -35,6 +35,35 @@ test('Should produce storyChanged event', async () => {
   });
 });
 
+test('Users marked as excluded can still change stories', async () => {
+  const {
+    processor,
+    roomId,
+    userId,
+    storyId,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'changeStory',
+      payload: {
+        storyId,
+        title: 'NewTitle',
+        description: 'New Description'
+      }
+    },
+    userId
+  ).then(({producedEvents}) =>
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged')
+  );
+});
+
 describe('preconditions', () => {
   test('Should throw if room does not contain matching story', async () => {
     const {processor, roomId, userId} = await prepTwoUsersInOneRoomWithOneStory(
@@ -57,32 +86,5 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow('Cannot change unknown story some-unknown-story');
-  });
-
-  test('Should throw if user is a visitor', async () => {
-    const {
-      processor,
-      roomId,
-      userId,
-      storyId,
-      mockRoomsStore
-    } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'changeStory',
-          payload: {
-            storyId,
-            title: 'SuperStory 232',
-            description: 'This will be awesome'
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Visitors cannot change stories!');
   });
 });

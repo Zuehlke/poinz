@@ -28,6 +28,29 @@ test('Should produce revealed event', async () => {
   });
 });
 
+test('Users marked as excluded should still be able to reveal', async () => {
+  const {
+    roomId,
+    userId,
+    storyId,
+    processor,
+    mockRoomsStore
+  } = await prepOneUserInOneRoomWithOneStory();
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'reveal',
+      payload: {
+        storyId: storyId
+      }
+    },
+    userId
+  ).then(({producedEvents}) => expect(producedEvents).toMatchEvents(commandId, roomId, 'revealed'));
+});
+
 describe('preconditions', () => {
   test('Should throw if storyId does not match currently selected story', async () => {
     const {roomId, userId, processor} = await prepOneUserInOneRoomWithOneStory();
@@ -45,30 +68,5 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow('Can only reveal currently selected story!');
-  });
-
-  test('Should throw if user is visitor', async () => {
-    const {
-      roomId,
-      storyId,
-      userId,
-      processor,
-      mockRoomsStore
-    } = await prepOneUserInOneRoomWithOneStory();
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'visitor'], true));
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'reveal',
-          payload: {
-            storyId: storyId
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Visitors cannot reveal stories!');
   });
 });

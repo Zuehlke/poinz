@@ -12,10 +12,9 @@ const toggleExcludeCommandHandler = {
     }
   },
   fn: (room, command) => {
-
-    if(room.getIn(['users',command.payload.userId,'excluded'])){
+    if (room.getIn(['users', command.payload.userId, 'excluded'])) {
       room.applyEvent('includedInEstimations', {userId: command.payload.userId});
-    }else{
+    } else {
       room.applyEvent('excludedFromEstimations', {userId: command.payload.userId});
     }
   }

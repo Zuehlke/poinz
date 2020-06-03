@@ -1,9 +1,12 @@
 const landingPage = require('./pages/landingPage');
+const testUtils = require('./testUtils');
 
 describe('Set Username', () => {
   it('in user menu', () => {
     landingPage.goTo();
     landingPage.createRoomAndSetOwnUsername('e2eTestUser');
+
+    testUtils.waitForElement(by.css('.top-bar'));
 
     element(by.css('.user-menu-toggle')).click();
 

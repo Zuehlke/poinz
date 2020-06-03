@@ -5,7 +5,7 @@ describe('Join Room', () => {
     // first a room must exist...
 
     landingPage.goTo();
-    landingPage.createRoomAndSetOwnUsername('e2eTestUser');
+    await landingPage.createRoomAndSetOwnUsername('e2eTestUser');
 
     // now get assigned (random, unique) roomId from url
     const url = await browser.getCurrentUrl();
@@ -17,6 +17,6 @@ describe('Join Room', () => {
 
     expect(element(by.css('.top-bar .quick-menu .whoami-simple')).getText()).toContain(
       'e2eTestUser'
-    ); // top-bar displays room
+    ); // top-bar displays username
   });
 });

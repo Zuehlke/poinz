@@ -33,7 +33,6 @@
     "no-use-before-define": 0
   },
   "globals": {
-    "__POINZ_CONFIG__": false,
-    "beforeEach": false
+    "__POINZ_CONFIG__": false
   }
 }

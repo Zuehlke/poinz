@@ -1,7 +1,8 @@
+const testUtils = require('../testUtils');
 module.exports = {
   goTo,
   addStory,
-  selectedStoryElement,
+  selectedStoryElementLocator,
   getSelectedStoryTitle,
   getSelectedStoryDescription
 };
@@ -10,20 +11,22 @@ function goTo(roomId) {
   return browser.get('/' + roomId);
 }
 
-function addStory(title, description) {
+async function addStory(title, description) {
+  await testUtils.waitForElement(by.css('.board .backlog .story-add-form'));
+
   element(by.css('.backlog .story-add-form input')).sendKeys(title);
   element(by.css('.backlog .story-add-form textarea')).sendKeys(description);
   element(by.css('.backlog .story-add-form button')).click();
 }
 
-function selectedStoryElement() {
-  return element(by.css('.stories .story-selected'));
+function selectedStoryElementLocator() {
+  return by.css('.stories .story-selected');
 }
 
 function getSelectedStoryTitle() {
-  return selectedStoryElement().element(by.css('h4')).getText();
+  return element(selectedStoryElementLocator()).element(by.css('h4')).getText();
 }
 
 function getSelectedStoryDescription() {
-  return selectedStoryElement().element(by.css('.story-text')).getText();
+  return element(selectedStoryElementLocator()).element(by.css('.story-text')).getText();
 }

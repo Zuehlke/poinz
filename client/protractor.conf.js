@@ -26,17 +26,14 @@ var exportsConfig = {
   specs: [
     'test/e2e/**/_setup.js',
     'test/e2e/**/*Spec.js'
-    //   'test/e2e/**/addStorySpec.js'
-    //   'test/e2e/**/joinRoomSpec.js'
   ],
 
   capabilities: {
     browserName: 'chrome'
   },
 
-  onPrepare: function () {
-    // since we have a ReactJS application (no angular), we need to disable sync.
-    browser.ignoreSynchronization = true;
+  onPrepare: async function () {
+    await browser.waitForAngularEnabled(false);     // since we have a ReactJS application (no angular), we need to disable sync.
   },
 
   baseUrl: e2eBaseUrl,

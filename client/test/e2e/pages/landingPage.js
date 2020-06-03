@@ -1,24 +1,27 @@
-const until = protractor.ExpectedConditions;
+const testUtils = require('../testUtils');
 
 module.exports = {
   goTo,
-  createRoomAndSetOwnUsername
+  createRoomAndSetOwnUsername,
+  enterOwnUsername
 };
 
 function goTo() {
   return browser.get('/');
 }
 
-function createRoomAndSetOwnUsername(username) {
+async function createRoomAndSetOwnUsername(username) {
   element(by.css('.create-room-button')).click();
 
-  browser.wait(
-    until.presenceOf(element(by.css('.username-wrapper'))),
-    5000,
-    'Element taking too long to appear in the DOM'
-  );
+  await enterOwnUsername(username, browser);
+}
+
+async function enterOwnUsername(username, browserInstance) {
+  await testUtils.waitForElement(by.css('.username-wrapper'), browserInstance);
 
   // set username (still landing page, username field displayed since no preset in localstorage)
-  element(by.css('.username-wrapper input#username')).sendKeys(username);
-  element(by.css('.username-wrapper .pure-button.button-save')).click();
+  browserInstance.element(by.css('.username-wrapper input#username')).sendKeys(username);
+  browserInstance.element(by.css('.username-wrapper .pure-button.button-save')).click();
+
+  await testUtils.waitForElement(by.css('.board .backlog'), browserInstance);
 }

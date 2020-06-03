@@ -18,47 +18,58 @@ const execPromised = Promise.promisify(exec);
 
 const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
 
-// -- first let's clean up
-del(['./deploy/', './deploy/package.json', '!./client/dist/index.html', './client/dist/**/*'])
-  // -- client
-  .then(() => {
-    console.log('installing npm dependencies for client...');
-    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../client')});
-  })
-  .then(() => {
-    console.log('building client with webpack...');
-    return spawnAndPrint(
-      './node_modules/.bin/webpack',
-      '-p --colors --bail --config webpack.production.config.js'.split(' '),
-      {cwd: path.resolve(__dirname, '../client')}
-    );
-  })
-  .then(() => fs.copy('./client/dist', './deploy/public/assets'))
-  .then(() => fs.copy('./client/index.html', './deploy/public/index.html'))
+const clientDirPath = path.resolve(__dirname, '../client');
+const serverDirPath = path.resolve(__dirname, '../server');
 
-  // -- server
-  .then(() => {
-    console.log('installing npm dependencies for server...');
-    return spawnAndPrint('npm', ['install'], {cwd: path.resolve(__dirname, '../server')});
-  })
-  .then(() => {
-    console.log('building backend (babel transpile)...');
-    return spawnAndPrint('./node_modules/.bin/babel', './src/ -d ./lib'.split(' '), {
-      cwd: path.resolve(__dirname, '../server')
-    });
-  })
-  .then(() => fs.copy('./server/lib', './deploy/lib')) // copy transpiled backend files to deploy folder
-  .then(() => fs.copy('./server/resources', './deploy/resources'))
-  .then(() => fs.copy('./server/package.json', './deploy/package.json'))
-
-  // -- docker image
-  .then(getGitInformation)
-  .then(startBuildingDockerImage)
+build()
+  .then(() => process.exit(0))
   .catch((error) => {
     console.error(error);
     console.error(error.stack);
     process.exit(1);
   });
+
+async function build() {
+  // -- first let's clean up
+  await del([
+    './deploy/',
+    './deploy/package.json',
+    '!./client/dist/index.html',
+    './client/dist/**/*'
+  ]);
+
+  // -- client
+  console.log('installing npm dependencies for client...');
+  await spawnAndPrint('npm', ['install'], {cwd: clientDirPath});
+
+  console.log('building client with webpack...');
+  await spawnAndPrint(
+    './node_modules/.bin/webpack',
+    '-p --colors --bail --config webpack.production.config.js'.split(' '),
+    {cwd: path.resolve(__dirname, '../client')}
+  );
+
+  console.log('copying built client to ./deploy/public');
+  await fs.copy('./client/dist', './deploy/public/assets');
+  await fs.copy('./client/index.html', './deploy/public/index.html');
+
+  // -- server
+  console.log('installing npm dependencies for server...');
+  await spawnAndPrint('npm', ['install'], {cwd: serverDirPath});
+
+  console.log('building backend (babel transpile)...');
+  await spawnAndPrint('./node_modules/.bin/babel', './src/ -d ./lib'.split(' '), {
+    cwd: serverDirPath
+  });
+
+  // copy transpiled backend files, resources and package.sjon to deploy folder
+  await fs.copy('./server/lib', './deploy/lib');
+  await fs.copy('./server/resources', './deploy/resources');
+  await fs.copy('./server/package.json', './deploy/package.json');
+
+  const gitInfo = await getGitInformation();
+  await startBuildingDockerImage(gitInfo);
+}
 
 /**
  * spawns a child process (nodejs' child_process.spawn)

@@ -32,7 +32,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
       {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate} />}
 
-      {userCanCurrentlyEstimate && (
+      {!revealed && (
         <div className="board-actions">
           <button
             type="button"

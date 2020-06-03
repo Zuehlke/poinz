@@ -15,8 +15,14 @@ const settings = {
     }
   },
 
-  // if set to false, in-memory store is used. (currently only option. no working implementation for persistent store...)
+  // if set to false, in-memory store is used.
   persistentStore: false
+  /*
+  persistentStore: {
+    connectionURI: process.env.MONGODB_URI, // this is set by heroku mLab MonogDb add-on
+    dbName: 'poinz'
+  }
+  */
 };
 
 export default settings;

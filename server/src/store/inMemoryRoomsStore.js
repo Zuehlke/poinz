@@ -1,5 +1,6 @@
-import Promise from 'bluebird';
 import Immutable from 'immutable';
+
+import getLogger from '../getLogger';
 
 /**
  *  This is the non-persistent (in-memory) roomsStore implementation.
@@ -8,39 +9,56 @@ import Immutable from 'immutable';
 
 let rooms = new Immutable.Map();
 
+const LOGGER = getLogger('inMemoryRoomsStore');
+
 export default {
   init,
+  close,
   getRoomById,
   getRoomByAlias,
   saveRoom,
-  getAllRooms
+  getAllRooms,
+  housekeeping
 };
 
-function init() {
+async function init() {
+  // nothing to do here
+  LOGGER.info('using in memory storage');
+}
+
+async function close() {
   // nothing to do here
 }
 
-function getRoomById(roomId) {
+async function housekeeping() {
+  // nothing to do here so far. currently we assume that since this is in memory, storage gets erased regularly on application restart.
+  // since this currently happens at least once a day (since current deployment kills app if not used), no action needed here
+  return {
+    markedForDeletion: [],
+    deleted: []
+  };
+}
+
+async function getRoomById(roomId) {
   if (!roomId) {
-    return Promise.resolve(undefined);
+    return undefined;
   }
 
-  return Promise.resolve(rooms.get(roomId));
+  return rooms.get(roomId);
 }
 
-function getRoomByAlias(alias) {
+async function getRoomByAlias(alias) {
   if (!alias) {
-    return Promise.resolve(undefined);
+    return undefined;
   }
 
-  return Promise.resolve(rooms.find((room) => room.get('alias') === alias));
+  return rooms.find((room) => room.get('alias') === alias);
 }
 
-function saveRoom(room) {
+async function saveRoom(room) {
   rooms = rooms.set(room.get('id'), room);
-  return Promise.resolve();
 }
 
-function getAllRooms() {
-  return Promise.resolve(rooms);
+async function getAllRooms() {
+  return rooms;
 }

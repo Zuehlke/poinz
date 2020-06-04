@@ -14,7 +14,8 @@ import eventHandlers from '../../src/eventHandlers/eventHandlers';
 test('1000 "addStory" commands/events', async () => {
   const userId = uuid();
 
-  const processor = processorFactory(commandHandlers, eventHandlers, roomStoreFactory(false));
+  const store = await roomStoreFactory(false);
+  const processor = processorFactory(commandHandlers, eventHandlers, store);
 
   const totalEvents = 1000;
   let eventCounter = 0;

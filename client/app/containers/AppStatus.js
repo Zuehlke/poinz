@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import appConfig from '../services/appConfig';
-import {formatDateTime, secondsToDaysHoursMinutes} from '../services/timeUtil';
+import {formatDateTime, secondsToDaysHoursMinutes, timeAgo} from '../services/timeUtil';
 import {fetchStatus} from '../actions';
 
 /**
@@ -23,7 +23,7 @@ class AppStatus extends React.Component {
   render() {
     const {fetchStatus, appStatus} = this.props;
     if (!appStatus) {
-      // this is an operations UI, it's ok to display a empty page during data loading...
+      // this is an operations UI, it's ok to display an empty page during data loading...
       return null;
     }
 
@@ -102,6 +102,7 @@ const TableHeaders = () => (
     <div>Stories</div>
     <div>Created</div>
     <div>Last Activity</div>
+    <div>Marked for deletion</div>
   </li>
 );
 
@@ -114,8 +115,9 @@ const RoomItem = ({room}) => (
       {room.userCountDisconnected} / {room.userCount}
     </div>
     <div>{room.storyCount}</div>
-    <div>{formatDateTime(room.created)}</div>
-    <div>{formatDateTime(room.lastActivity)}</div>
+    <div title={formatDateTime(room.created)}>{timeAgo(room.created)}</div>
+    <div title={formatDateTime(room.lastActivity)}>{timeAgo(room.lastActivity)}</div>
+    <div>{room.markedForDeletion && <i className="fa fa-circle-o"></i>}</div>
   </li>
 );
 

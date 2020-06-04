@@ -1,7 +1,11 @@
 import {MongoClient} from 'mongodb';
 import Immutable from 'immutable';
 
+import getLogger from '../getLogger';
+
 const COLLECTION_NAME = 'rooms';
+
+const LOGGER = getLogger('persistentRoomsStore');
 
 let clientInstance;
 let dbInstance;
@@ -9,6 +13,12 @@ let roomsCollection;
 
 /**
  * implementation of a persistent room storage using mongoDB
+ *
+ *
+ * see https://www.npmjs.com/package/mongodb
+ *
+ * v3.5  http://mongodb.github.io/node-mongodb-native/3.5/    and    http://mongodb.github.io/node-mongodb-native/3.5/api/
+ *
  */
 export default {
   init,
@@ -23,9 +33,6 @@ async function init(config) {
   if (!config.connectionURI) {
     throw new Error('Please provide "connectionURI"');
   }
-  if (!config.dbName) {
-    throw new Error('Please provide "dbName"');
-  }
 
   clientInstance = new MongoClient(config.connectionURI, {
     useNewUrlParser: true,
@@ -35,8 +42,10 @@ async function init(config) {
 
   try {
     await clientInstance.connect();
-    dbInstance = clientInstance.db(config.dbName);
-
+    dbInstance = clientInstance.db(); // connection string contains db name
+    LOGGER.info(
+      `connected to mongodb on   ${clientInstance.s.url}, dbName ${clientInstance.s.options.dbName}`
+    );
     roomsCollection = dbInstance.collection(COLLECTION_NAME);
 
     await roomsCollection.createIndex('id', {unique: true, name: 'id_roomId'});

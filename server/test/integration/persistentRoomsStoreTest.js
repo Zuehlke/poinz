@@ -9,8 +9,7 @@ const LOCAL_MONGODB_TEST_DB_NAME = 'poinz_integration_test';
 describe('initialization', () => {
   test('should connect to running mongoDB instance', async () => {
     await persistentRoomsStore.init({
-      connectionURI: LOCAL_MONGODB_CONNECTION_URI,
-      dbName: LOCAL_MONGODB_TEST_DB_NAME
+      connectionURI: LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
     });
 
     await persistentRoomsStore.close();
@@ -19,8 +18,7 @@ describe('initialization', () => {
   test('should reject with connectionURI that points to a nonexisting mongoDB instance', async () => {
     return expect(
       persistentRoomsStore.init({
-        connectionURI: 'mongodb://localhost:62222',
-        dbName: 'someName'
+        connectionURI: 'mongodb://localhost:62222/' + LOCAL_MONGODB_TEST_DB_NAME
       })
     ).rejects.toThrow(/Could not connect to persistent Storage mongodb:\/\/localhost:62222/);
   }, 10000);
@@ -28,21 +26,12 @@ describe('initialization', () => {
   test('should reject with missing connectionURI in config', async () => {
     return expect(persistentRoomsStore.init({})).rejects.toThrow(/Please provide "connectionURI"/);
   });
-
-  test('should reject with missing dbName in config', async () => {
-    return expect(
-      persistentRoomsStore.init({
-        connectionURI: 'someURI'
-      })
-    ).rejects.toThrow(/Please provide "dbName"/);
-  });
 });
 
 describe('save, update and fetch', () => {
   beforeAll(async () => {
     await persistentRoomsStore.init({
-      connectionURI: LOCAL_MONGODB_CONNECTION_URI,
-      dbName: LOCAL_MONGODB_TEST_DB_NAME
+      connectionURI: LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
     });
   });
 

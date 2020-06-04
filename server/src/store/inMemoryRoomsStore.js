@@ -1,12 +1,16 @@
 import Promise from 'bluebird';
 import Immutable from 'immutable';
 
+import getLogger from '../getLogger';
+
 /**
  *  This is the non-persistent (in-memory) roomsStore implementation.
  *  Switch between persistent / non-persistent store is done in settings.js
  */
 
 let rooms = new Immutable.Map();
+
+const LOGGER = getLogger('inMemoryRoomsStore');
 
 export default {
   init,
@@ -19,6 +23,7 @@ export default {
 
 function init() {
   // nothing to do here
+  LOGGER.info('using in memory storage');
   return Promise.resolve();
 }
 

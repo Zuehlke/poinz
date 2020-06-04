@@ -31,6 +31,7 @@ function init(app, store) {
               userCountDisconnected: room.get('users').filter((user) => user.get('disconnected'))
                 .size,
               lastActivity: room.get('lastActivity'),
+              markedForDeletion: room.get('markedForDeletion'),
               created: room.get('created')
             })
         )

@@ -18,7 +18,8 @@ export default {
   getRoomById,
   getRoomByAlias,
   saveRoom,
-  getAllRooms
+  getAllRooms,
+  housekeeping
 };
 
 function init() {
@@ -30,6 +31,15 @@ function init() {
 function close() {
   // nothing to do here
   return Promise.resolve();
+}
+
+function housekeeping() {
+  // nothing to do here so far. currently we assume that since this is in memory, storage gets erased regularly on application restart.
+  // since this currently happens at least once a day (since current deployment kills app if not used), no action needed here
+  return Promise.resolve({
+    markedForDeletion: [],
+    deleted: []
+  });
 }
 
 function getRoomById(roomId) {

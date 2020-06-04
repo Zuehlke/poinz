@@ -13,30 +13,36 @@ import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = getLogger('server');
 
-const store = roomsStoreFactory(settings.persistentStore);
-const app = express();
-
-// setup REST api
-rest.init(app, store);
-
-// serve static client files
-app.use(express.static(path.resolve(__dirname, '../public')));
-// enable html5 history mode by "forwarding" every unmatched route to the index.html file
-app.get('*', function (request, response) {
-  response.sendFile(path.resolve(__dirname, '../public/index.html'));
+startup().catch((err) => {
+  throw new Error(err);
 });
 
-const commandProcessor = commandProcessorFactory(commandHandlers, eventHandlers, store);
+async function startup() {
+  const store = await roomsStoreFactory(settings.persistentStore);
+  const app = express();
 
-const httpServer = http.createServer(app);
-socketServer.init(httpServer, commandProcessor);
+  // setup REST api
+  rest.init(app, store);
 
-httpServer.listen(settings.serverPort, () =>
-  LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`)
-);
+  // serve static client files
+  app.use(express.static(path.resolve(__dirname, '../public')));
+  // enable html5 history mode by "forwarding" every unmatched route to the index.html file
+  app.get('*', function (request, response) {
+    response.sendFile(path.resolve(__dirname, '../public/index.html'));
+  });
 
-process.on('SIGINT', () => {
-  LOGGER.info('-- SERVER RECEIVED SIGINT, shutting down --');
-  socketServer.close();
-  httpServer.close(() => process.exit(0));
-});
+  const commandProcessor = commandProcessorFactory(commandHandlers, eventHandlers, store);
+
+  const httpServer = http.createServer(app);
+  socketServer.init(httpServer, commandProcessor);
+
+  httpServer.listen(settings.serverPort, () =>
+    LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`)
+  );
+
+  process.on('SIGINT', () => {
+    LOGGER.info('-- SERVER RECEIVED SIGINT, shutting down --');
+    socketServer.close();
+    httpServer.close(() => process.exit(0));
+  });
+}

@@ -72,7 +72,7 @@ describe('serverPerformance', () => {
         done
       );
     });
-  });
+  }, 50000);
 
   test('should handle 4000 "setUsername" commands', (done) => {
     prep((err, roomId) => {
@@ -88,7 +88,7 @@ describe('serverPerformance', () => {
         done
       );
     });
-  });
+  }, 50000);
 
   /**
    * sends multiple commands to the given socket in sequence.

@@ -1,6 +1,6 @@
 import persistentRoomsStore from './persistentRoomsStore';
 import inMemoryRoomsStore from './inMemoryRoomsStore';
-import getLogger from "../getLogger";
+import getLogger from '../getLogger';
 
 const LOGGER = getLogger('roomStoreFactory');
 
@@ -20,5 +20,11 @@ export default async function getNewRoomsStore(persistent) {
 }
 
 function logHouseKeepingResult(result) {
-  LOGGER.info(`houskeeping for roomStore done. Marked rooms for deletion ${JSON.stringify(result.markedForDeletion)} (${result.markedForDeletion.length}). Deleted rooms ${JSON.stringify(result.deleted)} (${result.deleted.length}).`)
+  LOGGER.info(
+    `houskeeping for roomStore done. Marked rooms for deletion ${JSON.stringify(
+      result.markedForDeletion
+    )} (${result.markedForDeletion.length}). Deleted rooms ${JSON.stringify(result.deleted)} (${
+      result.deleted.length
+    }).`
+  );
 }

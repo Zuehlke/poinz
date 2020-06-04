@@ -20,7 +20,9 @@ describe('initialization', () => {
       persistentRoomsStore.init({
         connectionURI: 'mongodb://localhost:62222/' + LOCAL_MONGODB_TEST_DB_NAME
       })
-    ).rejects.toThrow(/Could not connect to persistent Storage mongodb:\/\/localhost:62222\/poinz_integration_test/);
+    ).rejects.toThrow(
+      /Could not connect to persistent Storage mongodb:\/\/localhost:62222\/poinz_integration_test/
+    );
   }, 10000);
 
   test('should reject with missing connectionURI in config', async () => {

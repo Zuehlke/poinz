@@ -1,5 +1,4 @@
 import {v4 as uuid} from 'uuid';
-import Promise from 'bluebird';
 import {newMockRoomsStore} from './testUtils';
 import processorFactory from '../../src/commandProcessor';
 

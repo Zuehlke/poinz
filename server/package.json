@@ -32,7 +32,6 @@
     ]
   },
   "dependencies": {
-    "bluebird": "3.7.2",
     "express": "4.17.1",
     "glob": "7.1.6",
     "immutable": "4.0.0-rc.12",

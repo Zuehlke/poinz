@@ -1,5 +1,4 @@
 import util from 'util';
-import Promise from 'bluebird';
 import Immutable from 'immutable';
 import {v4 as uuid} from 'uuid';
 

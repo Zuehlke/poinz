@@ -107,8 +107,12 @@ const TableHeaders = () => (
 
 const RoomItem = ({room}) => (
   <li>
-    <div>{room.userCount -room.userCountDisconnected} / {room.userCount}</div>
-    <div>{room.userCountDisconnected} / {room.userCount}</div>
+    <div>
+      {room.userCount - room.userCountDisconnected} / {room.userCount}
+    </div>
+    <div>
+      {room.userCountDisconnected} / {room.userCount}
+    </div>
     <div>{room.storyCount}</div>
     <div>{formatDateTime(room.created)}</div>
     <div>{formatDateTime(room.lastActivity)}</div>

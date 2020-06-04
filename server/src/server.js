@@ -1,4 +1,5 @@
 import path from 'path';
+import http from 'http';
 import express from 'express';
 
 import settings from './settings';
@@ -12,9 +13,8 @@ import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = getLogger('server');
 
-const app = express();
-
 const store = roomsStoreFactory(settings.persistentStore);
+const app = express();
 
 // setup REST api
 rest.init(app, store);
@@ -28,9 +28,15 @@ app.get('*', function (request, response) {
 
 const commandProcessor = commandProcessorFactory(commandHandlers, eventHandlers, store);
 
-const server = socketServer.init(app, commandProcessor);
-server.listen(settings.serverPort, () =>
+const httpServer = http.createServer(app);
+socketServer.init(httpServer, commandProcessor);
+
+httpServer.listen(settings.serverPort, () =>
   LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`)
 );
 
-process.on('SIGINT', () => server.close(() => process.exit(0)));
+process.on('SIGINT', () => {
+  LOGGER.info('-- SERVER RECEIVED SIGINT, shutting down --');
+  socketServer.close();
+  httpServer.close(() => process.exit(0));
+});

@@ -1,4 +1,3 @@
-import http from 'http';
 import {v4 as uuid} from 'uuid';
 import socketIo from 'socket.io';
 import getLogger from './getLogger';
@@ -10,14 +9,19 @@ let io, commandProcessor;
 const socketToUserIdMap = {},
   socketToRoomMap = {};
 
-export default {init};
+export default {
+  init,
+  close
+};
 
-function init(app, cmdProcessor) {
-  const server = http.createServer(app);
-  io = socketIo(server);
+function init(httpServer, cmdProcessor) {
+  io = socketIo(httpServer);
   io.on('connect', handleNewConnection);
   commandProcessor = cmdProcessor;
-  return server;
+}
+
+function close() {
+  io.close();
 }
 
 function handleNewConnection(socket) {

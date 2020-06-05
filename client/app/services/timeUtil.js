@@ -1,5 +1,6 @@
 import isDate from 'date-fns/isDate';
 import format from 'date-fns/format';
+import formatDistance from 'date-fns/formatDistance';
 import log from 'loglevel';
 
 /**
@@ -16,6 +17,10 @@ export function secondsToDaysHoursMinutes(inSeconds) {
   return `${days} day${days > 1 ? 's' : ''} ${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${
     minutes > 1 ? 's' : ''
   }`;
+}
+
+export function timeAgo(dateOrTs) {
+  return formatDistance(normalizeDateOrTs(dateOrTs), new Date(), {addSuffix: true});
 }
 
 export function formatDateTime(dateOrTs) {

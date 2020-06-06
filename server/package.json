@@ -14,15 +14,18 @@
   "scripts": {
     "build": "babel src -d lib",
     "test": "jest './test/unit'",
+    "test:docu": "jest './test/unit' --collectCoverage",
     "test:integration": "jest './test/integration'",
     "pretest": "npm run lint",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
     "start": "node lib/server.js"
   },
   "jest": {
+    "coverageReporters": [],
     "setupFilesAfterEnv": [
-      "./test/unit/setup.js"
+      "<rootDir>/test/unit/setup.js"
     ],
+    "globalTeardown": "<rootDir>/test/unit/globalTeardown.js",
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/"

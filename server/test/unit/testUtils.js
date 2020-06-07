@@ -5,8 +5,7 @@ import Immutable from 'immutable';
 // we want to test with our real command- and event handlers.
 import commandHandlers from '../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../src/eventHandlers/eventHandlers';
-
-import {commandProcessorFactory} from './commandAndEventDocuGenerator';
+import commandProcessorFactory from '../../src/commandProcessor';
 
 export const EXPECT_UUID_MATCHING = expect.stringMatching(
   new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)

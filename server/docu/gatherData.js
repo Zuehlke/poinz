@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const path = require('path');
 const fs = require('fs');
 const babel = require('@babel/core');
@@ -71,6 +72,9 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
     );
 
     evt.description = getFirstBlockComment(parseResult);
+    if (!evt.description) {
+      console.log(`   EventHandler "${filePath}" has no descriptive comment... :( `);
+    }
     evt.relativeFilePath = getPoinzRelativePath(filePath);
     return evt;
   }
@@ -120,8 +124,6 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
       })
     );
 
-    // console.log(`---- traversing ${filePath} ---`);
-
     const schema = await getValidationSchemaForCommand(commandName);
     const cmdHandlerInfo = {
       filePath,
@@ -134,16 +136,15 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
     cmdHandlerInfo.description = getFirstBlockComment(parseResult);
 
     babel.traverse(parseResult, {
-      enter: function (path) {
-        // console.log(path.node.type, path.node.loc.start.line, path.node.loc.end.line);
-      },
       CallExpression: function ({node}) {
         const {callee, arguments, loc} = node;
 
         if (callee.type === 'MemberExpression' && callee.property.name === 'applyEvent') {
           const eventName = arguments[0].value;
           console.log(
-            `commandHandler file ${filePath} produces event "${eventName}" on line ${loc.start.line}`
+            `   commandHandler file ${filePath} produces event "${chalk.yellow.bold(
+              eventName
+            )}" on line ${loc.start.line}`
           );
           cmdHandlerInfo.events.push(eventName);
         }

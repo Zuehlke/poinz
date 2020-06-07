@@ -53,11 +53,14 @@ ${commandHandlerInfo.description}
 
 Produces: ${commandHandlerInfo.events.map((e) => `**[${e}](#${e})**`).join(',')}
 
-Schema
-
+<details><summary>Schema</summary>
+<p>
 \`\`\`json
 ${JSON.stringify(commandHandlerInfo.schema, null, 4)}
 \`\`\`
+</p>
+</details>
+
  `;
 };
 

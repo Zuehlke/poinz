@@ -18,7 +18,7 @@ generate().catch((err) => {
 async function generate() {
   console.log(chalk.blue.bold('Generating commands and events documentation for Poinz:'));
   console.log(
-    `  Expecting commandHandlers in "${cmdHandlersDirPath}"\n  Expecting validationSchemas in "${validationSchemasDirPath}"\n  Expecting eventHandlers in "${evtHandlersDirPath}"`
+    `  Expecting commandHandlers in "${cmdHandlersDirPath}"\n  Expecting validationSchemas in "${validationSchemasDirPath}"\n  Expecting eventHandlers in "${evtHandlersDirPath}"\n\n`
   );
 
   const data = await gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandlersDirPath);

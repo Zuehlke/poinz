@@ -92,6 +92,6 @@ Our backend handles commands sent by the client over a websocket connection.
 Every command produces one or multiple events that modify the respective room (aka "aggregate").
 Then the events are sent back to the client.
 
-(Somewhat inspired by (CQRS)[https://martinfowler.com/bliki/CQRS.html].)
+(Somewhat inspired by [CQRS](https://martinfowler.com/bliki/CQRS.html).)
 
 See the generated [command and event docu](/server/docu/commandAndEventDocu.md);

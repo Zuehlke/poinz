@@ -58,18 +58,7 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
   async function handleSingleEvtHandlerFile(evt) {
     const filePath = path.join(evtHandlersDirPath, evt.eventName + '.js');
 
-    const source = await fs.promises.readFile(filePath, 'utf-8');
-
-    const parseResult = await new Promise((resolve, reject) =>
-      babel.parse(source, (err, result) => {
-        if (err) {
-          console.warn(`PARSE ERROR in file ${filePath}`);
-          console.warn(err);
-          reject(err);
-        }
-        resolve(result);
-      })
-    );
+    const parseResult = await parseFile(filePath);
 
     evt.description = getFirstBlockComment(parseResult);
     if (!evt.description) {
@@ -100,6 +89,18 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
     return absPath.substring(absPath.lastIndexOf('poinz') + 5);
   }
 
+  async function parseFile(filePath){
+    const source = await fs.promises.readFile(filePath, 'utf-8');
+    return await new Promise((resolve, reject) =>
+      babel.parse(source, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(result);
+      })
+    );
+  }
+
   /**
    *  parse given commandHandler file with babel. pull information from AST
    */
@@ -111,19 +112,7 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
       return undefined;
     }
 
-    const source = await fs.promises.readFile(filePath, 'utf-8');
-
-    const parseResult = await new Promise((resolve, reject) =>
-      babel.parse(source, (err, result) => {
-        if (err) {
-          console.warn(`PARSE ERROR in file ${filePath}`);
-          console.warn(err);
-          reject(err);
-        }
-        resolve(result);
-      })
-    );
-
+    const parseResult = await parseFile(filePath);
     const schema = await getValidationSchemaForCommand(commandName);
     const cmdHandlerInfo = {
       filePath,

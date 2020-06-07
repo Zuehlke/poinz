@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-
 const chalk = require('chalk');
 
 const gatherData = require('./gatherData');
@@ -15,6 +14,10 @@ generate().catch((err) => {
   process.exit(1);
 });
 
+/**
+ * Parses commandHandlers, validationSchemas and eventHandlers to gather information about commands and generated events.
+ * Writes documentation to markdown file.
+ */
 async function generate() {
   console.log(chalk.blue.bold('Generating commands and events documentation for Poinz:'));
   console.log(

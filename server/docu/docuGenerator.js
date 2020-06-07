@@ -26,7 +26,7 @@ async function generate() {
 
   const data = await gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandlersDirPath);
 
-  const markdownString = renderDocu(data);
+  const markdownString = await renderDocu(data);
   await fs.promises.writeFile(
     path.join(__dirname, './commandAndEventDocu.md'),
     markdownString,

@@ -89,7 +89,7 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
     return absPath.substring(absPath.lastIndexOf('poinz') + 5);
   }
 
-  async function parseFile(filePath){
+  async function parseFile(filePath) {
     const source = await fs.promises.readFile(filePath, 'utf-8');
     return await new Promise((resolve, reject) =>
       babel.parse(source, (err, result) => {

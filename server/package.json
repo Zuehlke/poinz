@@ -15,13 +15,14 @@
     "build": "babel src -d lib",
     "test": "jest './test/unit'",
     "test:integration": "jest './test/integration'",
+    "docu": "node ./docu/docuGenerator.js",
     "pretest": "npm run lint",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
     "start": "node lib/server.js"
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "./test/unit/setup.js"
+      "<rootDir>/test/unit/setup.js"
     ],
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
@@ -49,6 +50,8 @@
     "@babel/preset-env": "7.10.1",
     "@babel/register": "7.10.1",
     "babel-jest": "^26.0.1",
+    "chalk": "^4.0.0",
+    "ejs": "^3.1.3",
     "eslint": "7.1.0",
     "jest": "^26.0.1",
     "socket.io-client": "2.3.0"

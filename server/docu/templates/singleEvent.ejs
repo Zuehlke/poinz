@@ -1,0 +1,14 @@
+### Event "<%= evtInfo.eventName %>" <a name="<%= evtInfo.eventName %>"></a>
+
+Source: [<%= evtInfo.relativeFilePath %>](<%= evtInfo.relativeFilePath %>)
+
+Produced by: <% evtInfo.byCommands.forEach((c) => { -%>
+**[<%= c %>](#<%= c %>)** <% }) -%>
+
+
+Description
+
+```text
+<%-evtInfo.description%>
+```
+

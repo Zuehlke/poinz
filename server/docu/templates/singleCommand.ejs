@@ -1,0 +1,24 @@
+### Command "<%=  cmdInfo.commandName %>" <a name="<%=cmdInfo.commandName%>"></a>
+
+Source: [<%=cmdInfo.relativeFilePath %>](<%=cmdInfo.relativeFilePath %>)
+
+Description
+
+```text
+<%- cmdInfo.description %>
+```
+
+Produces: <%  cmdInfo.events.forEach( (e) => { -%>
+**[<%= e %>](#<%= e %>)**, <% })-%>
+
+
+<details><summary>Schema</summary>
+    <p>
+
+```json
+<%- JSON.stringify(cmdInfo.schema, null, 4)%>
+```
+    </p>
+</details>
+
+

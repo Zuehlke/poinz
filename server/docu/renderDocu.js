@@ -20,14 +20,14 @@ ${eventList.map(singleEventToMarkdown).join('\n')}
 
 const singleEventToMarkdown = (e) => {
   const anchor = `<a name="${e.eventName}"></a>`;
-  const cmdList = e.byCommands.map((cmd) => `[${cmd}](#${cmd})`).join(', ');
+  const cmdList = e.byCommands.map((cmd) => `**[${cmd}](#${cmd})**`).join(', ');
 
   return `
 ### Event "${e.eventName}" ${anchor}
 
-[source](${e.relativeFilePath})
+Source: [${e.relativeFilePath}](${e.relativeFilePath})
 
-produced by command(s): ${cmdList}
+Produced by: ${cmdList}
 
 Description
 
@@ -43,7 +43,7 @@ const singleCommandHandlerInfoToMarkdown = (commandHandlerInfo) => {
   return `
 ### Command "${commandHandlerInfo.commandName}" ${anchor}
 
-[source](${commandHandlerInfo.relativeFilePath})
+Source: [${commandHandlerInfo.relativeFilePath}](${commandHandlerInfo.relativeFilePath})
 
 Description
 
@@ -51,9 +51,7 @@ Description
 ${commandHandlerInfo.description}
 \`\`\`
 
-Produces
-
-${commandHandlerInfo.events.map((e) => `* **[${e}](#${e})**`).join('\n')}
+Produces: ${commandHandlerInfo.events.map((e) => `**[${e}](#${e})**`).join(',')}
 
 Schema
 

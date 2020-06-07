@@ -93,7 +93,7 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
   function getPoinzRelativePath(filePath) {
     const absPath = path.resolve(filePath);
 
-    return absPath.substring(absPath.lastIndexOf('poinz') + 6);
+    return absPath.substring(absPath.lastIndexOf('poinz') + 5);
   }
 
   /**

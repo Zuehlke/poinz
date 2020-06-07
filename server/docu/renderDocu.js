@@ -24,7 +24,10 @@ const singleEventToMarkdown = (e) => {
 
   return `
 ### Event "${e.eventName}" ${anchor}
-produced by ${cmdList}
+
+[source](${e.relativeFilePath})
+
+produced by command(s): ${cmdList}
 
 Description
 

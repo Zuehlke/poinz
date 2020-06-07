@@ -1,6 +1,11 @@
 import Immutable from 'immutable';
 
-// here we create the room object
+/**
+ * A room was created. Creates a new default room object
+ * @param room
+ * @param eventPayload
+ * @return {*}
+ */
 const roomCreatedEventHandler = (room, eventPayload) =>
   Immutable.fromJS({
     id: eventPayload.id,

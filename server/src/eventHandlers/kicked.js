@@ -1,3 +1,7 @@
+/**
+ * removes user from "users" list
+ * removes estimations on all stories that were given by user
+ */
 const kickedEventHandler = (room, eventPayload) =>
   room
     .update('stories', (stories) =>

@@ -117,17 +117,17 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
   /**
    * 3. Load Room object by command.roomId
    *
-   * By Default, the command must have a roomId and the matching room object must exist in the store.
-   * For some commands, it is valid that no roomId is given. Then a roomId is generated and an "empty" room created.
+   * By Default, a room object must exist in the store that matches the given roomId in the command.
+   * For some commands, it is valid that no matching room must exist. Then an "empty" room with the given roomId is created.
    * Command handlers must specify this with "canCreateRoom:true"
    *
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
   async function loadRoom(ctx, cmd) {
     if (!cmd.roomId) {
-      newEmptyRoom(ctx, cmd);
-      cmd.roomId = ctx.room.get('id');
-      return;
+      throw new Error(
+        'No roomId given in Command. this is invalid and should have been caught by command validation (schema).'
+      );
     }
 
     // try loading by id
@@ -137,24 +137,14 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       return;
     }
 
-    // try loading by alias
-    room = await store.getRoomByAlias(cmd.roomId);
-    if (room) {
-      ctx.room = room;
-      return;
-    }
-
-    throw new Error(`Specified room "${cmd.roomId}" does not exist. ("${cmd.name}")`);
-  }
-
-  function newEmptyRoom(ctx, cmd) {
+    // room does not yet exist. if handler allows it, we create it.
     if (!ctx.handler.canCreateRoom) {
       throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`);
     }
 
-    // command is allowed to create new room. generate random id
+    // command is allowed to create new room.
     ctx.room = new Immutable.Map({
-      id: uuid()
+      id: cmd.roomId
     });
   }
 

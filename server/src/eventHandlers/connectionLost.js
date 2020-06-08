@@ -1,3 +1,6 @@
+/**
+ * Marks user as "disconnected".
+ */
 const connectionLostEventHandler = (room, eventPayload) => {
   const matchingUser = room.getIn(['users', eventPayload.userId]);
   if (matchingUser) {

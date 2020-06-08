@@ -12,13 +12,15 @@ Produces: <%  cmdInfo.events.forEach( (e) => { -%>
 **[<%= e %>](#<%= e %>)**, <% })-%>
 
 
-<details><summary>Schema</summary>
-    <p>
+<details>
+<summary>Schema</summary>
+<p>
 
 ```json
 <%- JSON.stringify(cmdInfo.schema, null, 4)%>
 ```
-    </p>
+
+</p>
 </details>
 
 

@@ -18,7 +18,6 @@ const LOGGER = getLogger('commandProcessor');
  * @returns {function} the processCommand function
  */
 export default function commandProcessorFactory(commandHandlers, eventHandlers, store) {
-  // setup sequence queue
   const queue = queueFactory(jobHandler);
 
   /**
@@ -54,54 +53,59 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * queue job handler
    *
    * @param {object} job
-   * @param {function} proceed function to proceed the queue (handle the next job)
+   * @param {function} proceed function to proceed the queue (handle the next job/command)
    */
-  function jobHandler(job, proceed) {
+  async function jobHandler(job, proceed) {
     const {command, userId} = job;
     const context = {userId};
 
     LOGGER.debug('HANDLING COMMAND', command.name, command);
 
-    validate(command)
-      .then(() => findMatchingCommandHandler(context, command))
-      .then(() => loadRoom(context, command))
-      .then(() => preConditions(context, command))
-      .then(() => handle(context, command))
-      .then(() => applyEvents(context))
-      .then(() => saveRoomBackToStore(context))
-      .then(() => {
-        proceed();
+    try {
+      const steps = [
+        validate,
+        findMatchingCommandHandler,
+        loadRoom,
+        preConditions,
+        handle,
+        applyEvents,
+        saveRoomBackToStore
+      ];
 
-        if (LOGGER.isLevelEnabled('debug')) {
-          LOGGER.debug(
-            'PRODUCED EVENTS',
-            context.eventsToSend.map((e) => e.name).join(', '),
-            context.eventsToSend
-          );
-        }
+      await steps.reduce((p, step) => p.then(() => step(context, command)), Promise.resolve(null));
+    } catch (err) {
+      proceed(err); // proceed with next job in queue
+      job.reject(err);
+      return;
+    }
 
-        job.resolve({
-          producedEvents: context.eventsToSend,
-          room: context.room.toJS()
-        });
-      })
-      .catch((err) => {
-        proceed(err);
-        job.reject(err);
-      });
+    if (LOGGER.isLevelEnabled('debug')) {
+      LOGGER.debug(
+        'PRODUCED EVENTS',
+        context.eventsToSend.map((e) => e.name).join(', '),
+        context.eventsToSend
+      );
+    }
+
+    job.resolve({
+      producedEvents: context.eventsToSend,
+      room: context.room.toJS()
+    });
+
+    proceed(); // proceed with next job in queue
   }
 
-  /** 1. Validate incoming command (syntactically, against schema) **/
-  function validate(cmd) {
-    // use "new Promise" instead of "Promise.resolve" -> errors thrown in invocation of "commandSchemaValidator" should
-    // reject returned promise.
-    return new Promise((resolve) => resolve(validateCommand(cmd)));
+  /**
+   * 1. Validate incoming command (syntactically, against schema)
+   */
+  async function validate(context, cmd) {
+    validateCommand(cmd);
   }
 
   /**
    * 2. Find matching command handler according to command name.
    * */
-  function findMatchingCommandHandler(ctx, cmd) {
+  async function findMatchingCommandHandler(ctx, cmd) {
     const handler = commandHandlers[cmd.name];
 
     if (!handler) {
@@ -117,55 +121,48 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * For some commands, it is valid that no roomId is given. Then a roomId is generated and an "empty" room created.
    * Command handlers must specify this with "canCreateRoom:true"
    *
-   * @param {object} ctx context object that is used to hold state between processing steps
-   * @param {object} cmd
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
-  function loadRoom(ctx, cmd) {
+  async function loadRoom(ctx, cmd) {
     if (!cmd.roomId) {
-      return newEmptyRoom(ctx, cmd);
+      newEmptyRoom(ctx, cmd);
+      cmd.roomId = ctx.room.get('id');
+      return;
     }
 
-    return store.getRoomById(cmd.roomId).then((room) => {
-      if (room) {
-        ctx.room = room;
-        return;
-      }
+    // try loading by id
+    let room = await store.getRoomById(cmd.roomId);
+    if (room) {
+      ctx.room = room;
+      return;
+    }
 
-      return store.getRoomByAlias(cmd.roomId).then((room) => {
-        if (room) {
-          ctx.room = room;
-          return;
-        }
+    // try loading by alias
+    room = await store.getRoomByAlias(cmd.roomId);
+    if (room) {
+      ctx.room = room;
+      return;
+    }
 
-        throw new Error(`Specified room "${cmd.roomId}" does not exist. ("${cmd.name}")`);
-      });
-    });
+    throw new Error(`Specified room "${cmd.roomId}" does not exist. ("${cmd.name}")`);
   }
 
   function newEmptyRoom(ctx, cmd) {
-    return new Promise((resolve, reject) => {
-      if (!ctx.handler.canCreateRoom) {
-        reject(new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`));
-        return;
-      }
+    if (!ctx.handler.canCreateRoom) {
+      throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`);
+    }
 
-      cmd.roomId = uuid(); // command is allowed to create new room. generate random id
-      ctx.room = new Immutable.Map({
-        id: cmd.roomId
-      });
-      resolve();
+    // command is allowed to create new room. generate random id
+    ctx.room = new Immutable.Map({
+      id: uuid()
     });
   }
 
   /**
    * 4. Run command preconditions which are defined in commandHandlers.
    * Preconditions receive the room, the command and the userId and can do some semantic checks.
-   *
-   * @param {object} ctx context object that is used to hold state between processing steps
-   * @param {object} cmd
    */
-  function preConditions(ctx, cmd) {
+  async function preConditions(ctx, cmd) {
     if (!ctx.handler.preCondition) {
       return;
     }
@@ -180,11 +177,8 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    *  5. Handle the command by invoking the handler function.
    *  The handler function receives the room and the command.
    *  The handler function produces events
-   *
-   * @param {object} ctx context object that is used to hold state between processing steps
-   * @param {object} cmd
    */
-  function handle(ctx, cmd) {
+  async function handle(ctx, cmd) {
     ctx.eventHandlingQueue = [];
     ctx.eventsToSend = [];
 
@@ -225,10 +219,8 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * 6. Apply events to the room.
    * Events modify the room state.
    * All produced events are applied in-order.
-   *
-   * @param {object} ctx context object that is used to hold state between processing steps
    */
-  function applyEvents(ctx) {
+  async function applyEvents(ctx) {
     ctx.eventHandlingQueue.forEach((evtHandler) => (ctx.room = evtHandler(ctx.room)));
   }
 
@@ -237,14 +229,13 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    *  Command was processed successfully and all produced events were applied and modified the room object.
    *  Now store the new state.
    *
-   *  @param {object} ctx context object that is used to hold state between processing steps
    *  @returns {Promise} returns a promise that resolves as soon as the room is stored
    */
-  function saveRoomBackToStore(ctx) {
+  async function saveRoomBackToStore(ctx) {
     // TODO: can eventHandlers "delete" the room? then ctx.room would be undefined here?
     ctx.room = ctx.room.set('lastActivity', Date.now()).set('markedForDeletion', false);
 
-    return store.saveRoom(ctx.room);
+    await store.saveRoom(ctx.room);
   }
 }
 

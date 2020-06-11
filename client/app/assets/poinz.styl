@@ -641,6 +641,8 @@ $backlogWidth = 300px
     padding 8px
     padding-top 27px
     background $zuehlkeBackgroundGrey
+    display flex
+    flex-direction column
 
     &:after {
       content: "";
@@ -685,7 +687,8 @@ $backlogWidth = 300px
     }
 
     .stories {
-      margin-top 16px
+      margin-top 10px
+      overflow auto
 
       .story {
         position relative
@@ -850,16 +853,13 @@ $backlogWidth = 300px
 }
 
 .feedback-hint {
-  position absolute
-  bottom 0
-  left 0
-  right 1px
   background $zuehlkeBlue
   padding 8px
   color white
   display flex
   font-size 13px
   align-items center
+  margin-top 2px
 
   > span {
     display inline-block

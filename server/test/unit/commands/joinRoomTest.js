@@ -1,54 +1,78 @@
 import {v4 as uuid} from 'uuid';
 
-import {prepOneUserInOneRoomWithOneStory} from '../testUtils';
+import {prepEmpty, prepOneUserInOneRoom} from '../testUtils';
 
-test('Should produce 3 events for a already existing room', async () => {
-  const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
+test('nonexisting room  ', () => {
+  const {processor} = prepEmpty();
+
+  const roomId = uuid();
   const commandId = uuid();
-
+  const userId = uuid();
   return processor(
     {
       id: commandId,
       roomId,
       name: 'joinRoom',
       payload: {
-        userId,
-        email: 'j.doe@gmail.com',
-        username: 'something'
+        username: 'tester',
+        email: 'super@test.com'
       }
     },
     userId
-  ).then(({producedEvents}) => {
+  ).then(({producedEvents, room}) => {
     expect(producedEvents).toMatchEvents(
       commandId,
       roomId,
+      'roomCreated',
       'joinedRoom',
       'usernameSet',
       'emailSet'
     );
+    const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
 
-    const [joinedRoomEvent, usernameSetEvent, emailSet] = producedEvents;
+    expect(roomCreatedEvent.userId).toEqual(userId);
+    expect(roomCreatedEvent.payload).toEqual({});
 
-    expect(joinedRoomEvent.payload.userId).toEqual(userId);
-    expect(joinedRoomEvent.payload.users[userId]).toMatchObject({
-      email: 'j.doe@gmail.com',
-      id: userId,
-      username: 'something'
+    expect(joinedRoomEvent.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload).toEqual({
+      stories: {},
+      selectedStory: undefined,
+      users: {
+        [userId]: {
+          disconnected: false,
+          email: 'super@test.com',
+          id: userId,
+          username: 'tester'
+        }
+      }
     });
 
-    expect(usernameSetEvent.payload.userId).toEqual(userId);
-    expect(usernameSetEvent.payload.username).toEqual('something');
+    expect(usernameSetEvent.userId).toEqual(userId);
+    expect(usernameSetEvent.payload).toEqual({
+      username: 'tester'
+    });
 
-    expect(emailSet.payload.userId).toEqual(userId);
-    expect(emailSet.payload.email).toEqual('j.doe@gmail.com');
+    expect(emailSetEvent.userId).toEqual(userId);
+    expect(emailSetEvent.payload).toEqual({
+      email: 'super@test.com'
+    });
+
+    // check room structure and data
+    expect(room).toMatchObject({
+      id: roomId,
+      users: {
+        [userId]: {
+          id: userId
+        }
+      },
+      stories: {}
+      // and some timestamps properties: created, lastActivity
+    });
   });
 });
 
-test('Should persist excluded flag on rejoin of disconnected user', async () => {
-  const {userId, processor, roomId, mockRoomsStore} = await prepOneUserInOneRoomWithOneStory();
-
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'disconnected'], true));
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+test('existing room with user match', async () => {
+  const {processor, userId, roomId} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
   return processor(
@@ -57,41 +81,12 @@ test('Should persist excluded flag on rejoin of disconnected user', async () => 
       roomId,
       name: 'joinRoom',
       payload: {
-        userId,
-        username: 'something'
+        username: 'tester',
+        email: 'super@test.com'
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(
-      commandId,
-      roomId,
-      'joinedRoom',
-      'usernameSet',
-      'excludedFromEstimations'
-    );
-  });
-});
-
-test('Should be able to join room by alias', async () => {
-  const {userId, processor, mockRoomsStore} = await prepOneUserInOneRoomWithOneStory();
-  mockRoomsStore.manipulate((room) => room.set('alias', 'custom.room.alias'));
-
-  const commandId = uuid();
-  return processor(
-    {
-      id: commandId,
-      roomId: 'custom.room.alias', // <- this is not the roomId but the alias
-      name: 'joinRoom',
-      payload: {
-        userId: userId,
-        email: 'j.doe@gmail.com',
-        username: 'something'
-      }
-    },
-    userId
-  ).then(({producedEvents}) => {
-    const roomId = producedEvents[0].roomId;
+  ).then(({producedEvents, room}) => {
     expect(producedEvents).toMatchEvents(
       commandId,
       roomId,
@@ -99,9 +94,111 @@ test('Should be able to join room by alias', async () => {
       'usernameSet',
       'emailSet'
     );
+    const [joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
 
-    const [joinedRoomEvent] = producedEvents;
+    expect(joinedRoomEvent.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload).toEqual({
+      stories: {},
+      selectedStory: undefined,
+      users: {
+        [userId]: {
+          disconnected: false,
+          email: 'super@test.com',
+          id: userId,
+          username: 'tester'
+        }
+      }
+    });
 
-    expect(joinedRoomEvent.payload.alias).toEqual('custom.room.alias');
+    expect(usernameSetEvent.userId).toEqual(userId);
+    expect(usernameSetEvent.payload).toEqual({
+      username: 'tester'
+    });
+
+    expect(emailSetEvent.userId).toEqual(userId);
+    expect(emailSetEvent.payload).toEqual({
+      email: 'super@test.com'
+    });
+
+    // check room structure and data
+    expect(room).toMatchObject({
+      id: roomId,
+      users: {
+        [userId]: {
+          id: userId
+        }
+      },
+      stories: {}
+      // and some timestamps properties: created, lastActivity
+    });
+  });
+});
+
+test('existing room with user match, command has no preset properties', async () => {
+  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom(
+    'custom-user-name'
+  );
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'email'], 'super@test.com'));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'disconnected'], true));
+
+  const commandId = uuid();
+
+  // user rejoins room
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        // for some reason, no preset username and email (which is totally valid)
+      }
+    },
+    userId
+  ).then(({producedEvents, room}) => {
+    expect(producedEvents).toMatchEvents(
+      commandId,
+      roomId,
+      'joinedRoom',
+      'usernameSet', // still usernameSet and emailSet should be produced, since backend "knows" user in this room and has stored these two properties
+      'emailSet'
+    );
+    const [joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
+
+    expect(joinedRoomEvent.userId).toEqual(userId);
+    expect(joinedRoomEvent.payload).toEqual({
+      stories: {},
+      selectedStory: undefined,
+      users: {
+        [userId]: {
+          disconnected: false,
+          email: 'super@test.com',
+          id: userId,
+          username: 'custom-user-name'
+        }
+      }
+    });
+
+    expect(usernameSetEvent.userId).toEqual(userId);
+    expect(usernameSetEvent.payload).toEqual({
+      username: 'custom-user-name'
+    });
+
+    expect(emailSetEvent.userId).toEqual(userId);
+    expect(emailSetEvent.payload).toEqual({
+      email: 'super@test.com'
+    });
+
+    // check room structure and data
+    expect(room).toMatchObject({
+      id: roomId,
+      users: {
+        [userId]: {
+          id: userId
+        }
+      },
+      stories: {}
+      // and some timestamps properties: created, lastActivity
+    });
   });
 });

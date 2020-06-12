@@ -15,7 +15,6 @@ export default {
   init,
   close,
   getRoomById,
-  getRoomByAlias,
   saveRoom,
   getAllRooms,
   housekeeping
@@ -45,14 +44,6 @@ async function getRoomById(roomId) {
   }
 
   return rooms.get(roomId);
-}
-
-async function getRoomByAlias(alias) {
-  if (!alias) {
-    return undefined;
-  }
-
-  return rooms.find((room) => room.get('alias') === alias);
 }
 
 async function saveRoom(room) {

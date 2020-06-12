@@ -40,6 +40,10 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    *  @returns {Promise<object[]>} Promise that resolves to a list of events that were produced by this command. (they are already applied to the room state)
    */
   return function processCommand(command, userId) {
+    if (!userId) {
+      throw new Error('Fatal! socketServer has to provide userId!');
+    }
+
     /**
      * In a scenario where two commands for the same room arrive only a few ms apart, both command handlers
      * would receive the same room object from the store. the second command would override the state manipulations of the first.
@@ -131,7 +135,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     }
 
     // try loading by id
-    let room = await store.getRoomById(cmd.roomId);
+    const room = await store.getRoomById(cmd.roomId);
     if (room) {
       ctx.room = room;
       return;
@@ -144,7 +148,8 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
     // command is allowed to create new room.
     ctx.room = new Immutable.Map({
-      id: cmd.roomId
+      id: cmd.roomId,
+      pristine: true
     });
   }
 
@@ -185,7 +190,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
       // events are handled sequentially since events most often update the state of the room ("are applied to the room")
       ctx.eventHandlingQueue.push((currentRoom) => {
-        const updatedRoom = eventHandler(currentRoom, eventPayload);
+        const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
 
         // build the event object that is sent back to clients
         ctx.eventsToSend.push({
@@ -202,7 +207,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     };
 
     // invoke the command handler function (will produce events by calling "applyEvent")
-    ctx.handler.fn(ctx.room, cmd);
+    ctx.handler.fn(ctx.room, cmd, ctx.userId);
   }
 
   /**

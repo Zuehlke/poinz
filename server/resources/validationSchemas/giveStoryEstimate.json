@@ -12,17 +12,12 @@
               "type": "string",
               "minLength": 1
             },
-            "userId": {
-              "type": "string",
-              "minLength": 1
-            },
             "value": {
               "type": "number"
             }
           },
           "required": [
             "storyId",
-            "userId",
             "value"
           ],
           "additionalProperties": false

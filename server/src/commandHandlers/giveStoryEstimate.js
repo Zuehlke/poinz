@@ -6,10 +6,6 @@
  */
 const giveStoryEstimateCommandHandler = {
   preCondition: (room, command, userId) => {
-    if (command.payload.userId !== userId) {
-      throw new Error('Can only give estimate if userId in command payload matches!');
-    }
-
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only give estimation for currently selected story!');
     }
@@ -22,19 +18,19 @@ const giveStoryEstimateCommandHandler = {
       throw new Error('Users that are excluded from estimations cannot give estimations!');
     }
   },
-  fn: (room, command) => {
+  fn: (room, command, userId) => {
     // currently estimation value is also sent to clients (hidden there)
     // user could "sniff" network traffic and see estimations of colleagues...
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
-    if (allValidUsersEstimated(room, command.payload.storyId, command.payload.userId)) {
+    if (allValidUsersEstimated(room, command.payload.storyId, userId)) {
       room.applyEvent('revealed', {
         storyId: command.payload.storyId,
         manually: false
       });
 
-      if (allValidUsersEstimatedSame(room, command.payload)) {
+      if (allValidUsersEstimatedSame(room, command.payload, userId)) {
         room.applyEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value
@@ -63,10 +59,10 @@ function allValidUsersEstimated(room, storyId, userId) {
   return estimationCount === possibleEstimationCount;
 }
 
-function allValidUsersEstimatedSame(room, cmdPayload) {
+function allValidUsersEstimatedSame(room, cmdPayload, userId) {
   let estimations = room.getIn(['stories', cmdPayload.storyId, 'estimations']);
   // Add our user's estimation manually to the estimationMap .. (event will be applied later)
-  estimations = estimations.set(cmdPayload.userId, cmdPayload.value);
+  estimations = estimations.set(userId, cmdPayload.value);
 
   const estValues = estimations.valueSeq();
   const firstValue = estValues.get(0);

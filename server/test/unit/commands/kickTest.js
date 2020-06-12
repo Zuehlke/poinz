@@ -29,7 +29,8 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
 
     const [kickedEvent] = producedEvents;
 
-    expect(kickedEvent.payload.userId).toEqual(userIdTwo);
+    expect(kickedEvent.userId).toEqual(userIdOne); // the user that kicked
+    expect(kickedEvent.payload.userId).toEqual(userIdTwo); // user that was kicked
 
     // user is removed from room
     expect(room.users[userIdTwo]).toBeUndefined();

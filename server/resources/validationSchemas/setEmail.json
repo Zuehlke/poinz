@@ -8,17 +8,13 @@
         "payload": {
           "type": "object",
           "properties": {
-            "userId": {
-              "type": "string"
-            },
             "email": {
               "type": "string",
               "format": "email"
             }
           },
-          "required": [
-            "userId"
-          ],
+          "comment": "do not set email as required. if not set or empty string (or falsy value) will reset email",
+          "required": [],
           "additionalProperties": false
         }
       }

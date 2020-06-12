@@ -12,7 +12,6 @@ test('Should produce storyEstimateGiven event', async () => {
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userId,
         value: 2
       }
     },
@@ -22,7 +21,7 @@ test('Should produce storyEstimateGiven event', async () => {
 
     const [storyEstimateGivenEvent] = producedEvents;
 
-    expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
+    expect(storyEstimateGivenEvent.userId).toEqual(userId);
     expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
     expect(storyEstimateGivenEvent.payload.value).toBe(2);
   });
@@ -45,11 +44,10 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userIdOne, // first user estimates story
         value: 4
       }
     },
-    userIdOne
+    userIdOne // first user estimates story
   )
     .then(() =>
       processor(
@@ -59,11 +57,10 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userIdTwo, // second user estimates story
             value: 2
           }
         },
-        userIdTwo
+        userIdTwo // second user estimates story
       )
     )
 
@@ -97,11 +94,10 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userIdOne, // first user estimates "2"
         value: 2
       }
     },
-    userIdOne
+    userIdOne // first user estimates "2"
   )
     .then(() =>
       processor(
@@ -111,11 +107,10 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userIdTwo, // second user estimates "2"
             value: 2
           }
         },
-        userIdTwo
+        userIdTwo // second user estimates "2"
       )
     )
 
@@ -156,7 +151,6 @@ test('Should not produce revealed event if user changes his estimation', async (
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userId,
         value: 2
       }
     },
@@ -167,7 +161,7 @@ test('Should not produce revealed event if user changes his estimation', async (
 
       const [storyEstimateGivenEvent] = producedEvents;
 
-      expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
+      expect(storyEstimateGivenEvent.userId).toEqual(userId);
       expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
       expect(storyEstimateGivenEvent.payload.value).toBe(2);
 
@@ -182,7 +176,6 @@ test('Should not produce revealed event if user changes his estimation', async (
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userId,
             value: 5
           }
         },
@@ -194,7 +187,7 @@ test('Should not produce revealed event if user changes his estimation', async (
 
       const [storyEstimateGivenEvent] = producedEvents;
 
-      expect(storyEstimateGivenEvent.payload.userId).toEqual(userId);
+      expect(storyEstimateGivenEvent.userId).toEqual(userId);
       expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
       expect(storyEstimateGivenEvent.payload.value).toBe(5);
 
@@ -223,7 +216,6 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userId,
         value: 2
       }
     },
@@ -259,7 +251,6 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
       name: 'giveStoryEstimate',
       payload: {
         storyId: storyId,
-        userId: userId,
         value: 2
       }
     },
@@ -276,32 +267,7 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
 });
 
 describe('preconditions', () => {
-  test('Should throw if userId does not match', async () => {
-    const {
-      roomId,
-      storyId,
-      userIdOne: userId,
-      processor
-    } = await prepTwoUsersInOneRoomWithOneStory();
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'giveStoryEstimate',
-          payload: {
-            storyId: storyId,
-            userId: 'unknown',
-            value: 2
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Can only give estimate if userId in command payload matches');
-  });
-
-  test('Should throw if storyId does not match', async () => {
+  test('Should throw if storyId does not match "selectedStory"', async () => {
     const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
 
     return expect(
@@ -312,7 +278,6 @@ describe('preconditions', () => {
           name: 'giveStoryEstimate',
           payload: {
             storyId: 'unknown',
-            userId: userId,
             value: 2
           }
         },
@@ -339,7 +304,6 @@ describe('preconditions', () => {
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userId,
             value: 2
           }
         },
@@ -366,7 +330,6 @@ describe('preconditions', () => {
           name: 'giveStoryEstimate',
           payload: {
             storyId: storyId,
-            userId: userId,
             value: 2
           }
         },

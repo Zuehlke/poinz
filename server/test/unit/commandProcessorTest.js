@@ -24,7 +24,6 @@ test('process a dummy command successfully: create room on the fly', () => {
       id: commandId,
       name: 'setUsername',
       payload: {
-        userId: 'abc',
         username: 'john'
       }
     },
@@ -38,6 +37,7 @@ test('process a dummy command successfully: create room on the fly', () => {
 
     expect(room).toBeDefined();
     expect(room.id).toBe('custom-room-id');
+    expect(room.pristine).toBe(true);
     expect(room.test).toEqual('data.from.evt.handler');
   });
 });
@@ -67,7 +67,6 @@ test('process a dummy command successfully: room loading by id', () => {
       roomId: roomId,
       name: 'setUsername',
       payload: {
-        userId: 'abc',
         username: 'john'
       }
     },
@@ -101,7 +100,9 @@ test('process a dummy command with No Handler', () => {
         id: uuid(),
         roomId: 'my-test-room',
         name: 'setUsername',
-        payload: {userId: 'abc', username: 'john'}
+        payload: {
+          username: 'john'
+        }
       },
       'abc'
     )
@@ -128,7 +129,9 @@ test('process a dummy command where command handler produced unknown event', () 
         id: uuid(),
         roomId: 'some-room-id',
         name: 'setUsername',
-        payload: {userId: 'abc', username: 'john'}
+        payload: {
+          username: 'john'
+        }
       },
       'abc'
     )
@@ -157,7 +160,9 @@ test('process a dummy command where command precondition throws', () => {
         id: uuid(),
         roomId: 'some-room-id',
         name: 'setUsername',
-        payload: {userId: 'abc', username: 'john'}
+        payload: {
+          username: 'john'
+        }
       },
       'abc'
     )
@@ -213,7 +218,9 @@ test('process a dummy command without roomId: where room must exist', () => {
         id: uuid(),
         roomId: 'some-room-id',
         name: 'setUsername',
-        payload: {userId: 'abc', username: 'john'}
+        payload: {
+          username: 'john'
+        }
       },
       'abc'
     )
@@ -240,7 +247,9 @@ test('process a dummy command with roomId: where room must exist', () => {
         id: uuid(),
         roomId: 'rm_' + uuid(),
         name: 'setUsername',
-        payload: {userId: 'abc', username: 'john'}
+        payload: {
+          username: 'john'
+        }
       },
       'abc'
     )
@@ -279,7 +288,9 @@ test('concurrency handling', () => {
       id: uuid(),
       roomId: 'concurrencyTestRoom',
       name: 'setUsername',
-      payload: {userId: '1', username: 'tom'}
+      payload: {
+        username: 'tom'
+      }
     },
     '1'
   );
@@ -288,7 +299,9 @@ test('concurrency handling', () => {
       id: uuid(),
       roomId: 'concurrencyTestRoom',
       name: 'setUsername',
-      payload: {userId: '1', username: 'jerry'}
+      payload: {
+        username: 'jerry'
+      }
     },
     '1'
   );

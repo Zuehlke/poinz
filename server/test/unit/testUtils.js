@@ -33,12 +33,6 @@ export function newMockRoomsStore(initialRoom) {
       }
       return Promise.resolve(room);
     },
-    getRoomByAlias: (alias) => {
-      if (!room || room.get('alias') !== alias) {
-        return Promise.resolve(undefined);
-      }
-      return Promise.resolve(room);
-    },
     saveRoom: (rm) => {
       room = rm;
       return Promise.resolve();
@@ -57,23 +51,21 @@ export function prepEmpty() {
  * create mock room store with one user in one room
  */
 export async function prepOneUserInOneRoom(username = 'firstUser') {
-  const userId = uuid();
-
   const {mockRoomsStore, processor} = prepEmpty();
 
-  const {producedEvents: crEvents} = await processor(
+  const roomId = uuid();
+  const userId = uuid();
+  await processor(
     {
       id: uuid(),
-      name: 'createRoom',
+      roomId,
+      name: 'joinRoom',
       payload: {
-        userId,
         username
       }
     },
     userId
   );
-
-  const roomId = crEvents[1].roomId;
 
   return {userId, roomId, processor, mockRoomsStore};
 }
@@ -118,7 +110,6 @@ export async function prepTwoUsersInOneRoomWithOneStoryAndEstimate(
       roomId: roomId,
       name: 'giveStoryEstimate',
       payload: {
-        userId: userIdOne,
         storyId: storyId,
         value: estimationValue
       }
@@ -136,23 +127,22 @@ export async function prepTwoUsersInOneRoomWithOneStory(
   username = 'firstUser',
   storyTitle = 'new super story'
 ) {
-  const userIdOne = uuid();
-  const userIdTwo = uuid();
-
   const {mockRoomsStore, processor} = prepEmpty();
 
-  const {producedEvents: crEvents} = await processor(
+  const roomId = uuid();
+  const userIdOne = uuid();
+  const userIdTwo = uuid();
+  await processor(
     {
       id: uuid(),
-      name: 'createRoom',
+      roomId,
+      name: 'joinRoom',
       payload: {
-        userId: userIdOne,
         username
       }
     },
     userIdOne
   );
-  const roomId = crEvents[1].roomId;
 
   await processor(
     {
@@ -160,7 +150,6 @@ export async function prepTwoUsersInOneRoomWithOneStory(
       roomId,
       name: 'joinRoom',
       payload: {
-        userId: userIdTwo,
         username: 'secondUser'
       }
     },
@@ -170,7 +159,7 @@ export async function prepTwoUsersInOneRoomWithOneStory(
   const {producedEvents: adEvents} = await processor(
     {
       id: uuid(),
-      roomId: roomId,
+      roomId,
       name: 'addStory',
       payload: {
         title: storyTitle,

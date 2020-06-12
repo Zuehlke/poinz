@@ -25,7 +25,6 @@ export default {
   close,
   saveRoom,
   getRoomById,
-  getRoomByAlias,
   getAllRooms,
   housekeeping
 };
@@ -149,17 +148,6 @@ async function getRoomById(roomId) {
   if (room) {
     delete room._id; // we don't want to return the room with the mongodb internal id
     return Immutable.fromJS(room);
-  } else {
-    return undefined;
-  }
-}
-
-async function getRoomByAlias(roomAlias) {
-  const rooms = await roomsCollection.find({alias: roomAlias}).toArray();
-
-  if (rooms.length > 0) {
-    delete rooms[0]._id; // we don't want to return the room with the mongodb internal id
-    return Immutable.fromJS(rooms[0]);
   } else {
     return undefined;
   }

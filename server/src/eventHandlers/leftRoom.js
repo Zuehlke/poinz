@@ -2,11 +2,12 @@
  * removes user from "users" list
  * removes estimations on all stories that were given by user
  */
-const leftRoomEventHandler = (room, eventPayload) =>
+const leftRoomEventHandler = (room, eventPayload, userId) =>
   room
-    .update('stories', (stories) =>
-      stories.map((story) => story.removeIn(['estimations', eventPayload.userId]))
-    ) // remove leaving user's estimations from all stories
-    .removeIn(['users', eventPayload.userId]); // then remove user from room
+
+    // remove leaving user's estimations from all stories
+    .update('stories', (stories) => stories.map((story) => story.removeIn(['estimations', userId])))
+    // then remove user from room
+    .removeIn(['users', userId]);
 
 export default leftRoomEventHandler;

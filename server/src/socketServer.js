@@ -30,19 +30,44 @@ function handleNewConnection(socket) {
 }
 
 function handleIncomingCommand(socket, msg) {
-  commandProcessor(msg, socketToUserIdMap[socket.id])
+  const matchingUserId = getMatchingUserIdForSocketMessage(socket, msg);
+
+  commandProcessor(msg, matchingUserId)
     .then(({producedEvents}) => {
-      const joinedRoomEvent = producedEvents.find((ev) => ev.name === 'joinedRoom');
-      if (joinedRoomEvent) {
-        registerUserWithSocket(joinedRoomEvent, socket, joinedRoomEvent.payload.userId);
-      }
       if (producedEvents && producedEvents.length) {
+        if (!socketToUserIdMap[socket.id]) {
+          registerUserWithSocket(producedEvents[0].roomId, socket, matchingUserId);
+        }
         sendEvents(producedEvents, producedEvents[0].roomId);
       }
     })
     .catch((commandProcessingError) =>
       handleCommandProcessingError(commandProcessingError, msg, socket)
     );
+}
+
+/**
+ * lookup of already set userId for given socket.
+ * if no match found, check if it is the special case of a "joinRoom" command.
+ * this is the only command where the client can preset a userId.
+ * If it is present, use it, otherwise generate a new unique userId.
+ *
+ * @param socket
+ * @param msg
+ * @return {string} the userId
+ */
+function getMatchingUserIdForSocketMessage(socket, msg) {
+  const matchingUserId = socketToUserIdMap[socket.id];
+  if (matchingUserId) {
+    return matchingUserId;
+  }
+
+  // TODO:   this is before command validation via json schema, should we validate here?
+  if (msg.name === 'joinRoom' && msg.payload && msg.payload.userId) {
+    return msg.payload.userId;
+  }
+
+  return uuid();
 }
 
 /**
@@ -60,7 +85,7 @@ function sendEvents(producedEvents, roomId) {
  *
  */
 function handleCommandProcessingError(error, command, socket) {
-  LOGGER.error(error.stack);
+  LOGGER.error(error.message + '\n' + error.stack);
   const commandRejectedEvent = {
     name: 'commandRejected',
     id: uuid(),
@@ -77,26 +102,24 @@ function handleCommandProcessingError(error, command, socket) {
 }
 
 /**
- * at this point, we know that the join was successful.
- * we need do keep the mapping of a socket to room and userId - so that we can produce "user left" events
- * on socket disconnect.
+ * we need do keep the mapping of a socket to room and userId, so that we can
+ * - for every command on a socket, know the userId
+ * - produce "user left" events on socket disconnect.
  *
- * @param {object} joinedRoomEvent the handled joinedRoomEvent event
+ * @param {string} roomId
  * @param socket
  * @param userIdToStore
  */
-function registerUserWithSocket(joinedRoomEvent, socket, userIdToStore) {
+function registerUserWithSocket(roomId, socket, userIdToStore) {
   if (!userIdToStore) {
     throw new Error('No userId after "joinedRoom" to put into socketToUserIdMap!');
   }
-  socketToRoomMap[socket.id] = joinedRoomEvent.roomId;
+  socketToRoomMap[socket.id] = roomId;
   socketToUserIdMap[socket.id] = userIdToStore;
 
   // put socket into socket.io room with given id
-  socket.join(joinedRoomEvent.roomId, () =>
-    LOGGER.debug(
-      `User ${userIdToStore} on socket ${socket.id} joined room ${joinedRoomEvent.roomId}`
-    )
+  socket.join(roomId, () =>
+    LOGGER.debug(`User ${userIdToStore} on socket ${socket.id} joined room ${roomId}`)
   );
 }
 
@@ -123,7 +146,6 @@ function onSocketDisconnect(socket) {
       roomId: roomId,
       name: 'leaveRoom',
       payload: {
-        userId,
         connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
       }
     };

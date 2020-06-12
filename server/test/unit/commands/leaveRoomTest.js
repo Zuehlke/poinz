@@ -11,9 +11,7 @@ test('Should produce leftRoom event', async () => {
       id: commandId,
       roomId,
       name: 'leaveRoom',
-      payload: {
-        userId: userIdTwo
-      }
+      payload: {}
     },
     userIdTwo
   ).then(({producedEvents, room}) => {
@@ -21,7 +19,7 @@ test('Should produce leftRoom event', async () => {
 
     const [leftRoomEvent] = producedEvents;
 
-    expect(leftRoomEvent.payload.userId).toEqual(userIdTwo);
+    expect(leftRoomEvent.userId).toEqual(userIdTwo);
 
     expect(room.users[userIdTwo]).toBeUndefined();
     expect(Object.values(room.users).length).toBe(1);
@@ -38,7 +36,6 @@ test('Should produce connectionLost event', async () => {
       roomId,
       name: 'leaveRoom',
       payload: {
-        userId: userIdTwo,
         connectionLost: true
       }
     },
@@ -48,7 +45,7 @@ test('Should produce connectionLost event', async () => {
 
     const [connectionLostEvent] = producedEvents;
 
-    expect(connectionLostEvent.payload.userId).toEqual(userIdTwo);
+    expect(connectionLostEvent.userId).toEqual(userIdTwo);
 
     expect(room.users[userIdTwo]).toBeDefined();
     expect(room.users[userIdTwo]).toMatchObject({
@@ -57,27 +54,5 @@ test('Should produce connectionLost event', async () => {
       username: 'secondUser'
     });
     expect(Object.values(room.users).length).toBe(2);
-  });
-});
-
-describe('preconditions', () => {
-  test('Should throw if userIds do not match', async () => {
-    const {userIdOne, userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();
-    const commandId = uuid();
-    return expect(
-      processor(
-        {
-          id: commandId,
-          roomId,
-          name: 'leaveRoom',
-          payload: {
-            userId: userIdTwo
-          }
-        },
-        userIdOne
-      )
-    ).rejects.toThrow(
-      'Precondition Error during "leaveRoom": Can only leave if userId in command payload matches!'
-    );
   });
 });

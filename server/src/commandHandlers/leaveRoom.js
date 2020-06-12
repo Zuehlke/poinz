@@ -4,16 +4,11 @@
  *
  */
 const leaveRoomCommandHandler = {
-  preCondition: (room, command, userId) => {
-    if (command.payload.userId !== userId) {
-      throw new Error('Can only leave if userId in command payload matches!');
-    }
-  },
   fn: (room, command) => {
     if (command.payload.connectionLost) {
-      room.applyEvent('connectionLost', {userId: command.payload.userId});
+      room.applyEvent('connectionLost', {});
     } else {
-      room.applyEvent('leftRoom', {userId: command.payload.userId});
+      room.applyEvent('leftRoom', {});
     }
   }
 };

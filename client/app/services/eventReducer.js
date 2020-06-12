@@ -104,7 +104,7 @@ const eventActionHandlers = {
       if (state.userId) {
         // if our client state has already a userId set, this event indicates that someone else joined
         const modifiedUsers = {...state.users};
-        modifiedUsers[payload.userId] = payload.users[payload.userId];
+        modifiedUsers[event.userId] = payload.users[event.userId];
         return {
           ...state,
           users: modifiedUsers
@@ -115,33 +115,27 @@ const eventActionHandlers = {
         // set the page title
         document.title = `PoinZ - ${event.roomId}`;
 
-        clientSettingsStore.setPresetUserId(payload.userId);
+        clientSettingsStore.setPresetUserId(event.userId);
 
         // server sends current room state (users, stories, etc.)
         return {
           ...state,
-          alias: payload.alias,
           roomId: event.roomId,
-          userId: payload.userId,
+          userId: event.userId,
           selectedStory: payload.selectedStory,
           users: payload.users || {},
           stories: payload.stories || {}
         };
       }
     },
-    log: (username, payload, oldState, newState) => {
+    log: (username, payload, oldState, newState, event) => {
       const youJoined = !oldState.userId;
-      const hasAlias = !!newState.alias;
 
       if (youJoined) {
-        if (hasAlias) {
-          return `You joined room "${newState.alias}" (${newState.roomId})`;
-        } else {
-          return `You joined room "${newState.roomId}"`;
-        }
+        return `You joined room "${newState.roomId}"`;
       }
 
-      return `User ${newState.users[payload.userId].username || ''} joined`; // cannot directly use parameter "username". event is not yet reduced.
+      return `User ${newState.users[event.userId].username || ''} joined`; // cannot directly use parameter "username". event is not yet reduced.
     }
   },
 
@@ -149,8 +143,8 @@ const eventActionHandlers = {
    * A user left the room. This can be either your own user. Or someone else left the room.
    */
   [EVENT_ACTION_TYPES.leftRoom]: {
-    fn: (state, payload) => {
-      const isOwnUser = state.userId === payload.userId;
+    fn: (state, payload, event) => {
+      const isOwnUser = state.userId === event.userId;
 
       if (isOwnUser) {
         // you (or you in another browser) left the room
@@ -165,25 +159,25 @@ const eventActionHandlers = {
 
         const modifiedStories = Object.values(state.stories).reduce((result, currentStory) => {
           const leavingUserHasEstimatedStory = Object.keys(currentStory.estimations).find(
-            (userId) => userId === payload.userId
+            (userId) => userId === event.userId
           );
           if (!leavingUserHasEstimatedStory) {
             result[currentStory.id] = currentStory;
           } else {
             const modifiedEstimations = {...currentStory.estimations};
-            delete modifiedEstimations[payload.userId];
+            delete modifiedEstimations[event.userId];
             result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
           }
           return result;
         }, {});
         const modifiedUsers = {...state.users};
-        delete modifiedUsers[payload.userId];
+        delete modifiedUsers[event.userId];
 
         return {...state, stories: modifiedStories, users: modifiedUsers};
       }
     },
-    log: (username, payload, oldState) =>
-      `User ${oldState.users[payload.userId].username} left the room`
+    log: (username, payload, oldState, newState, event) =>
+      `User ${oldState.users[event.userId].username} left the room`
   },
 
   /**
@@ -192,6 +186,7 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.kicked]: {
     fn: (state, payload) => {
       const modifiedStories = Object.values(state.stories).reduce((result, currentStory) => {
+        // one of the few places, where we need to take the userId from the payload (the user that was kicked, not the "kicking" user)
         const leavingUserHasEstimatedStory = Object.keys(currentStory.estimations).find(
           (userId) => userId === payload.userId
         );
@@ -210,7 +205,7 @@ const eventActionHandlers = {
       return {...state, stories: modifiedStories, users: modifiedUsers};
     },
     log: (username, payload, oldState, modifiedState, event) =>
-      `User "${oldState.users[payload.userId].username}" was kicked from the room by user "${
+      `User "${oldState.users[event.userId].username}" was kicked from the room by user "${
         oldState.users[event.userId].username
       }"`
   },
@@ -219,13 +214,13 @@ const eventActionHandlers = {
    * A user in the room lost the connection to the server.
    */
   [EVENT_ACTION_TYPES.connectionLost]: {
-    fn: (state, payload) => {
-      if (state.users[payload.userId]) {
+    fn: (state, payload, event) => {
+      if (state.users[event.userId]) {
         return {
           ...state,
           users: {
             ...state.users,
-            [payload.userId]: {...state.users[payload.userId], disconnected: true}
+            [event.userId]: {...state.users[event.userId], disconnected: true}
           }
         };
       } else {
@@ -284,8 +279,8 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.usernameSet]: {
-    fn: (state, payload) => {
-      const isOwnUser = state.userId === payload.userId;
+    fn: (state, payload, event) => {
+      const isOwnUser = state.userId === event.userId;
 
       if (isOwnUser) {
         clientSettingsStore.setPresetUsername(payload.username);
@@ -293,7 +288,7 @@ const eventActionHandlers = {
 
       const modifiedUsers = {
         ...state.users,
-        [payload.userId]: {...state.users[payload.userId], username: payload.username}
+        [event.userId]: {...state.users[event.userId], username: payload.username}
       };
       return {
         ...state,
@@ -301,19 +296,19 @@ const eventActionHandlers = {
         presetUsername: isOwnUser ? payload.username : state.presetUsername
       };
     },
-    log: (username, payload, oldState) => {
-      const oldUsername = oldState.users[payload.userId].username;
+    log: (username, payload, oldState, newState, event) => {
+      const oldUsername = oldState.users[event.userId].username;
       const newUsername = payload.username;
 
       if (oldUsername && oldUsername !== newUsername) {
-        return `"${oldState.users[payload.userId].username}" is now called "${newUsername}"`;
+        return `"${oldState.users[event.userId].username}" is now called "${newUsername}"`;
       }
     }
   },
 
   [EVENT_ACTION_TYPES.emailSet]: {
-    fn: (state, payload) => {
-      const isOwnUser = state.userId === payload.userId;
+    fn: (state, payload, event) => {
+      const isOwnUser = state.userId === event.userId;
 
       if (isOwnUser) {
         clientSettingsStore.setPresetEmail(payload.email);
@@ -323,24 +318,24 @@ const eventActionHandlers = {
         ...state,
         users: {
           ...state.users,
-          [payload.userId]: {...state.users[payload.userId], email: payload.email}
+          [event.userId]: {...state.users[event.userId], email: payload.email}
         },
         presetEmail: isOwnUser ? payload.email : state.presetEmail
       };
     },
-    log: (username, payload, oldState) =>
-      `${oldState.users[payload.userId].username} set his/her email address`
+    log: (username, payload, oldState, newState, event) =>
+      `${oldState.users[event.userId].username} set his/her email address`
   },
 
   /**
    * user was excluded from estimations (flag for a user was set / toggled on)
    */
   [EVENT_ACTION_TYPES.excludedFromEstimations]: {
-    fn: (state, payload) => ({
+    fn: (state, payload, event) => ({
       ...state,
       users: {
         ...state.users,
-        [payload.userId]: {...state.users[payload.userId], excluded: true}
+        [event.userId]: {...state.users[event.userId], excluded: true}
       }
     }),
     log: (username) => `${username} is now excluded from estimations`
@@ -350,18 +345,18 @@ const eventActionHandlers = {
    * user was included in estimations (flag for a user was unset / toggled off)
    */
   [EVENT_ACTION_TYPES.includedInEstimations]: {
-    fn: (state, payload) => ({
+    fn: (state, payload, event) => ({
       ...state,
       users: {
         ...state.users,
-        [payload.userId]: {...state.users[payload.userId], excluded: false}
+        [event.userId]: {...state.users[event.userId], excluded: false}
       }
     }),
     log: (username) => `${username} is no longer excluded from estimations`
   },
 
   [EVENT_ACTION_TYPES.storyEstimateGiven]: {
-    fn: (state, payload) => ({
+    fn: (state, payload, event) => ({
       ...state,
       stories: {
         ...state.stories,
@@ -369,7 +364,7 @@ const eventActionHandlers = {
           ...state.stories[payload.storyId],
           estimations: {
             ...state.stories[payload.storyId].estimations,
-            [payload.userId]: payload.value
+            [event.userId]: payload.value
           }
         }
       }
@@ -400,9 +395,9 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {
-    fn: (state, payload) => {
+    fn: (state, payload, event) => {
       const modifiedEstimations = {...state.stories[payload.storyId].estimations};
-      delete modifiedEstimations[payload.userId];
+      delete modifiedEstimations[event.userId];
 
       return {
         ...state,

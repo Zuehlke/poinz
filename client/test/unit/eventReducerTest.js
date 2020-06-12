@@ -110,11 +110,15 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
       type: EVENT_ACTION_TYPES.joinedRoom,
       event: {
         roomId: 'ourRoom',
+        userId: 'theNewUser',
         payload: {
-          userId: 'theNewUser',
           users: {
-            myUserId: {},
-            theNewUser: {}
+            myUserId: {
+              id: 'myUserId'
+            },
+            theNewUser: {
+              id: 'theNewUser'
+            }
           }
         }
       }
@@ -122,8 +126,12 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
 
     expect(modifiedState.users).toEqual(
       {
-        myUserId: {username: 'tester1'},
-        theNewUser: {}
+        myUserId: {
+          username: 'tester1'
+        },
+        theNewUser: {
+          id: 'theNewUser'
+        }
       },
       'The new user must be added to the room.users object. Nothing else must be changed.'
     );
@@ -139,14 +147,16 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
       type: EVENT_ACTION_TYPES.joinedRoom,
       event: {
         roomId: 'myRoom',
+        userId: 'myUserId',
         payload: {
-          userId: 'myUserId',
           selectedStory: 'storyOne',
           stories: {
             storyOne: {}
           },
           users: {
-            myUserId: {}
+            myUserId: {
+              id: 'myUserId'
+            }
           }
         }
       }
@@ -159,7 +169,9 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
       storyOne: {}
     });
     expect(modifiedState.users).toEqual({
-      myUserId: {}
+      myUserId: {
+        id: 'myUserId'
+      }
     });
   });
 });
@@ -190,10 +202,9 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
     const modifiedState = eventReducer(startingState, {
       type: EVENT_ACTION_TYPES.leftRoom,
       event: {
+        userId: 'someoneElse',
         roomId: 'myRoom',
-        payload: {
-          userId: 'someoneElse'
-        }
+        payload: {}
       }
     });
 
@@ -216,9 +227,8 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
       type: EVENT_ACTION_TYPES.leftRoom,
       event: {
         roomId: 'myRoom',
-        payload: {
-          userId: 'myUser'
-        }
+        userId: 'myUser',
+        payload: {}
       }
     });
 

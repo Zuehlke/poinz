@@ -2,16 +2,18 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {createRoom} from '../actions';
+import {joinRoom} from '../actions';
 
 /**
- * The form on the landing page where the user can create a new room
+ * The form on the landing page where the user can join a room.
+ * By default a new room (roomId is randomly generated in the ui).
+ * User can optionally set a own roomId "roomName")
  */
-const CreateRoomForm = ({t, presetUsername, createRoom}) => {
+const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   const [showExtended, setShowExtended] = useState(false);
-  const [alias, setAlias] = useState('');
+  const [customRoomId, setCustomRoomId] = useState('');
 
-  let aliasInputField;
+  let roomIdInputField;
 
   return (
     <div className="eyecatcher create-room-form">
@@ -23,7 +25,7 @@ const CreateRoomForm = ({t, presetUsername, createRoom}) => {
               {t('welcomeBack')}, {presetUsername}!
             </h5>
           )}
-          <h4>{t('createRoomInfo')}</h4>
+          <h4>{t('joinRoomAndStart')}</h4>
           <p>{t('joinRoomInfo')}</p>
         </div>
       </div>
@@ -32,9 +34,9 @@ const CreateRoomForm = ({t, presetUsername, createRoom}) => {
         <button
           type="button"
           className="create-room-button pure-button pure-button-primary"
-          onClick={onCreateButtonClick}
+          onClick={onJoinButtonClick}
         >
-          {t('createNewRoom')}
+          {customRoomId ? t('join') : t('joinNewRoom')}
         </button>
 
         <button
@@ -47,29 +49,29 @@ const CreateRoomForm = ({t, presetUsername, createRoom}) => {
       </div>
 
       {showExtended && (
-        <div className="room-alias-wrapper">
+        <div className="custom-room-name-wrapper">
           <input
             type="text"
-            id="alias"
-            placeholder={t('alias')}
-            value={alias}
-            onChange={(e) => setAlias(e.target.value.toLowerCase())}
-            ref={(ref) => (aliasInputField = ref)}
+            id="custom-room-id"
+            placeholder={t('customRoomName')}
+            value={customRoomId}
+            onChange={(e) => setCustomRoomId(e.target.value.toLowerCase())}
+            ref={(ref) => (roomIdInputField = ref)}
           />
         </div>
       )}
     </div>
   );
 
-  function onCreateButtonClick() {
-    createRoom(aliasInputField ? aliasInputField.value : '');
+  function onJoinButtonClick() {
+    joinRoom(roomIdInputField ? roomIdInputField.value : undefined);
   }
 };
 
-CreateRoomForm.propTypes = {
+JoinRoomForm.propTypes = {
   t: PropTypes.func,
   presetUsername: PropTypes.string,
-  createRoom: PropTypes.func
+  joinRoom: PropTypes.func
 };
 
 export default connect(
@@ -77,5 +79,5 @@ export default connect(
     t: state.translator,
     presetUsername: state.presetUsername
   }),
-  {createRoom}
-)(CreateRoomForm);
+  {joinRoom}
+)(JoinRoomForm);

@@ -63,7 +63,6 @@ describe('websocket endpoint', () => {
 
       expect(msg.correlationId).toEqual(commandId);
       expect(msg.roomId).toBeDefined();
-      eventCount++;
 
       if (eventCount === 0) {
         expect(msg.name).toEqual('roomCreated');
@@ -75,13 +74,15 @@ describe('websocket endpoint', () => {
 
         done();
       }
+
+      eventCount++;
     });
 
     socket.on('connect', () =>
       socket.emit('command', {
         id: commandId,
         name: 'joinRoom',
-        roomId: 'myCustomRoom',
+        roomId: 'my-custom-room_' + uuid(),
         payload: {}
       })
     );

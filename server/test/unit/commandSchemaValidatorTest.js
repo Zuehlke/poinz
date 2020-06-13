@@ -62,3 +62,27 @@ test('throws on invalid roomId', () => {
     /Format validation failed \(must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -\) in \/roomId/
   );
 });
+
+test('throws on invalid userId', () => {
+  expect(() =>
+    commandSchemaValidator({
+      id: uuid(),
+      roomId: 'custom-room-id',
+      name: 'joinRoom',
+      payload: {
+        userId: 'sdgdgkjslgjslkjglskgjdlksjgl'
+      }
+    })
+  ).toThrow(/Format validation failed \(must be a valid uuid v4\) in \/payload\/userId/);
+});
+
+test('works with valid userId', () => {
+  commandSchemaValidator({
+    id: uuid(),
+    roomId: 'custom-room-id',
+    name: 'joinRoom',
+    payload: {
+      userId: uuid()
+    }
+  });
+});

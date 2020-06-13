@@ -74,7 +74,7 @@ describe('preconditions', () => {
           roomId,
           name: 'kick',
           payload: {
-            userId: 'unknown'
+            userId: uuid() // new random userId, not part of our room
           }
         },
         userIdOne

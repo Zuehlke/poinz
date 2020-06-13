@@ -16,7 +16,8 @@
               "format": "email"
             },
             "userId": {
-              "type": "string"
+              "type": "string",
+              "format": "uuidv4"
             }
           },
           "additionalProperties": false

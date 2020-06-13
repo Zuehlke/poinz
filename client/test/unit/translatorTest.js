@@ -28,7 +28,17 @@ test('unknown key', () => {
 });
 
 test('interpolation', () => {
-  const {t, setLanguage} = translatorFactory(dictionary, 'de');
+  const {t, setLanguage} = translatorFactory(
+    {
+      de: {
+        joinRoomname: '%{roomName} beitreten'
+      },
+      en: {
+        joinRoomname: 'Join %{roomName}'
+      }
+    },
+    'de'
+  );
 
   let translated = t('joinRoomname', {roomName: 'Custom-Room'});
   expect(translated).toBe('Custom-Room beitreten');

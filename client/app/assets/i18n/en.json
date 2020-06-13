@@ -3,7 +3,6 @@
   "joinRoomInfo": "You can also join an existing room by link. Ask the creator of the room for the address.",
   "createNewRoom": "Create new room",
   "join": "Join",
-  "joinRoomname": "Join %{roomName}",
   "name": "Name...",
   "addStory": "Add Story",
   "newRound": "New Round",

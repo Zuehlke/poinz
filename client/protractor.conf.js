@@ -2,7 +2,7 @@
 
 /**
  * setup:
- * ```$  ./node_modules/.bin/webdriver-manager update --chrome --standalone```
+ * ```$ ./node_modules/.bin/webdriver-manager update --chrome --standalone --versions.chrome=81.0.4044.138```
  */
 
 // either start Poinz from your "deploy" folder, or start a docker container (if run from docker container, make sure to use localhost:8080 for e2eBaseUrl)

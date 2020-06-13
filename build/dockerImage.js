@@ -96,7 +96,7 @@ function startBuildingDockerImage(gitInfo) {
   console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch}`);
 
   const userAndProject = 'xeronimus/poinz';
-  const cmdArgs = `build -t ${userAndProject}:latest -t ${userAndProject}:${gitInfo.branch} -t ${userAndProject}:${gitInfo.hash} -t ${HEROKU_DEPLOYMENT_TAG} .`;
+  const cmdArgs = `build -t ${userAndProject}:latest -t ${HEROKU_DEPLOYMENT_TAG} .`;
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
 }

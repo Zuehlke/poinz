@@ -245,19 +245,10 @@ export const kick = (userId) => (dispatch, getState) => {
   );
 };
 
-export const leaveRoom = () => (dispatch, getState) => {
-  history.push({
-    pathname: '/'
-  });
-  const state = getState();
-  hub.sendCommand(
-    {
-      name: 'leaveRoom',
-      roomId: state.roomId,
-      payload: {}
-    },
-    dispatch
-  );
+export const leaveRoom = () => () => {
+  // we only need to navigate to the landing page
+  // locationChanged will trigger sending "leaveRoom" command to backend
+  history.push('/');
 };
 
 export const changeStory = (storyId, title, description) => (dispatch, getState) => {

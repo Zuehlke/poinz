@@ -1,32 +1,14 @@
-import log from 'loglevel';
+import Polyglot from 'node-polyglot';
 
-import translationsEN from '../assets/i18n/en.json';
-import translationsDE from '../assets/i18n/de.json';
+export default function translatorFactory(dictionary, language) {
+  const polyglot = new Polyglot({phrases: dictionary[language]});
 
-const dictionary = {
-  en: translationsEN,
-  de: translationsDE
-};
+  return {
+    t: translatorFunction,
+    setLanguage: (lang) => polyglot.replace(dictionary[lang])
+  };
 
-/**
- * Performs a lookup of a translation with the given key for the given language.
- *
- * @param translationKey
- * @param language
- * @returns {string}
- */
-export default function lookup(translationKey, language) {
-  const translations = dictionary[language];
-
-  if (!translations) {
-    log.error(`Unknown language '${language}'`);
-    return `!!!${translationKey}!!!`;
+  function translatorFunction(translationKey, data) {
+    return polyglot.t(translationKey, {...data, _: `!!!${translationKey}!!!`});
   }
-
-  const translation = translations[translationKey];
-  if (!translation) {
-    return `!!!${translationKey}!!!`;
-  }
-
-  return translation;
 }

@@ -3,6 +3,7 @@
     "node": true
   },
   "globals": {
+    "jest": false,
     "test": false,
     "expect": false,
     "beforeEach": false,

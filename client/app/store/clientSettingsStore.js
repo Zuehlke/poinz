@@ -11,26 +11,41 @@ function setItem(key, value) {
 function getPresetUsername() {
   return getItem('presetUserName');
 }
+
 function setPresetUsername(username) {
   setItem('presetUserName', username);
 }
+
 function getPresetLanguage() {
   return getItem('presetLanguage');
 }
+
 function setPresetLanguage(language) {
   setItem('presetLanguage', language);
 }
+
 function getPresetEmail() {
   return getItem('presetEmail');
 }
+
 function setPresetEmail(email) {
   setItem('presetEmail', email);
 }
+
 function getPresetUserId() {
   return getItem('presetUserId');
 }
+
 function setPresetUserId(username) {
   setItem('presetUserId', username);
+}
+
+function getHideNewUserHints() {
+  return getItem('hideNewUserHints') === 'true';
+}
+
+function setHideNewUserHints(flag) {
+  setItem('hideNewUserHints', flag);
 }
 
 export default {
@@ -41,5 +56,7 @@ export default {
   getPresetEmail,
   setPresetEmail,
   getPresetUserId,
-  setPresetUserId
+  setPresetUserId,
+  getHideNewUserHints,
+  setHideNewUserHints
 };

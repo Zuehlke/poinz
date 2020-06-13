@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import Stories from './Stories';
 import StoryAddForm from './StoryAddForm';
-import Avatar from './Avatar';
+import FeedbackHint from './FeedbackHint';
 
 /**
  * The backlog contains a form to add new stories
@@ -29,19 +29,7 @@ const Backlog = ({stories, backlogShown}) => {
         </div>
       )}
 
-      <div className="feedback-hint">
-        <Avatar user={{email: 'set@zuehlke.com'}} index={0} />
-        <span>
-          Hey there! Do you use Poinz on a regular basis? I would be very interested in your{' '}
-          <a
-            href="https://github.com/Zuehlke/poinz/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            feedback!
-          </a>
-        </span>
-      </div>
+      <FeedbackHint />
     </div>
   );
 };

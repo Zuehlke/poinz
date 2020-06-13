@@ -34,6 +34,7 @@ const INITIAL_STATE = () => ({
     {label: '55', value: 55, color: '#6a80ab'},
     {label: 'BIG', value: -1, color: '#1d508f'}
   ],
+  hideNewUserHints: clientSettingsStore.getHideNewUserHints(),
   presetUsername: clientSettingsStore.getPresetUsername(),
   presetEmail: clientSettingsStore.getPresetEmail(),
   presetUserId: clientSettingsStore.getPresetUserId(),

@@ -36,7 +36,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
           className="create-room-button pure-button pure-button-primary"
           onClick={onJoinButtonClick}
         >
-          {customRoomId ? t('join') : t('joinNewRoom')}
+          {customRoomId ? t('joinWithRoomName', {room: customRoomId}) : t('joinNewRoom')}
         </button>
 
         <button
@@ -44,7 +44,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
           className="create-room-extend-button pure-button pure-button-primary"
           onClick={() => setShowExtended(!showExtended)}
         >
-          <i className={`fa fa-angle-double-${showExtended ? 'up' : 'down'}`} />
+          <i className={`fa fa-angle-double-${showExtended ? 'up' : 'down'}`}/>
         </button>
       </div>
 

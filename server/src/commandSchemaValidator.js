@@ -83,8 +83,24 @@ function parseSchemaFile(schemaFileContent, schemaFileName) {
 }
 
 const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+const ROOMID_REGEX = /^[-a-z0-9_]+$/;
+
 function registerCustomFormats() {
   tv4.addFormat('email', validateEmail);
+  tv4.addFormat('roomId', validateRoomId);
+}
+
+function validateRoomId(data) {
+  if (!data) {
+    // allow empty string, undefined, null
+    return;
+  }
+
+  if (typeof data === 'string' && ROOMID_REGEX.test(data)) {
+    return null;
+  }
+
+  return 'must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -';
 }
 
 function validateEmail(data) {
@@ -105,4 +121,5 @@ function CommandValidationError(err, cmd) {
   this.name = this.constructor.name;
   this.message = `Command validation Error during "${cmd.name}": ${err.message}`;
 }
+
 util.inherits(CommandValidationError, Error);

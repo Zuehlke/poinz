@@ -3,6 +3,7 @@
   "joinRoomInfo": "Du kannst auch einen bereits existierenden Raum betreten, wenn du den Namen kennst. Frage den Ersteller für den Link.",
   "joinNewRoom": "Neuer Raum betreten",
   "join": "Beitreten",
+  "joinWithRoomName": "%{room} beitreten",
   "name": "Name...",
   "addStory": "Story hinzufügen",
   "newRound": "Neue Runde",

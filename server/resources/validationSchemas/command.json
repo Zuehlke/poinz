@@ -12,7 +12,8 @@
     },
     "roomId": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "format": "roomId"
     },
     "payload": {
       "type": "object"

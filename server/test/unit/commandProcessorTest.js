@@ -43,7 +43,7 @@ test('process a dummy command successfully: create room on the fly', () => {
 });
 
 test('process a dummy command successfully: room loading by id', () => {
-  const roomId = 'someRoomId_' + uuid();
+  const roomId = 'some-room-id_' + uuid();
   const roomStore = newMockRoomsStore({
     id: roomId
   });
@@ -264,7 +264,7 @@ test('process a dummy command with roomId: where room must exist', () => {
  */
 test('concurrency handling', () => {
   const mockRoomsStore = newMockRoomsStore({
-    id: 'concurrencyTestRoom',
+    id: 'concurrency-test-room',
     manipulationCount: 0
   });
 
@@ -286,7 +286,7 @@ test('concurrency handling', () => {
   const eventPromiseOne = processor(
     {
       id: uuid(),
-      roomId: 'concurrencyTestRoom',
+      roomId: 'concurrency-test-room',
       name: 'setUsername',
       payload: {
         username: 'tom'
@@ -297,7 +297,7 @@ test('concurrency handling', () => {
   const eventPromiseTwo = processor(
     {
       id: uuid(),
-      roomId: 'concurrencyTestRoom',
+      roomId: 'concurrency-test-room',
       name: 'setUsername',
       payload: {
         username: 'jerry'
@@ -307,6 +307,6 @@ test('concurrency handling', () => {
   );
 
   return Promise.all([eventPromiseOne, eventPromiseTwo])
-    .then(() => mockRoomsStore.getRoomById('concurrencyTestRoom'))
+    .then(() => mockRoomsStore.getRoomById('concurrency-test-room'))
     .then((room) => expect(room.get('manipulationCount')).toBe(2));
 });

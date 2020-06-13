@@ -13,8 +13,6 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   const [showExtended, setShowExtended] = useState(false);
   const [customRoomId, setCustomRoomId] = useState('');
 
-  let roomIdInputField;
-
   return (
     <div className="eyecatcher create-room-form">
       <div className="info-text">
@@ -36,7 +34,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
           className="create-room-button pure-button pure-button-primary"
           onClick={onJoinButtonClick}
         >
-          {customRoomId ? t('join') : t('joinNewRoom')}
+          {customRoomId ? t('joinWithRoomName', {room: customRoomId}) : t('joinNewRoom')}
         </button>
 
         <button
@@ -55,16 +53,30 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
             id="custom-room-id"
             placeholder={t('customRoomName')}
             value={customRoomId}
-            onChange={(e) => setCustomRoomId(e.target.value.toLowerCase())}
-            ref={(ref) => (roomIdInputField = ref)}
+            onChange={onRoomIdChange}
+            onKeyPress={onRoomKeyPress}
           />
         </div>
       )}
     </div>
   );
 
+  function onRoomKeyPress(e) {
+    if (e.key === 'Enter') {
+      onJoinButtonClick();
+    }
+  }
+
+  function onRoomIdChange(ev) {
+    const ROOM_ID_REGEX = /^[-a-z0-9_]+$/;
+    const lowercaseRoomName = ev.target.value.toLowerCase();
+    if (ROOM_ID_REGEX.test(lowercaseRoomName)) {
+      setCustomRoomId(lowercaseRoomName);
+    }
+  }
+
   function onJoinButtonClick() {
-    joinRoom(roomIdInputField ? roomIdInputField.value : undefined);
+    joinRoom(customRoomId ? customRoomId : undefined);
   }
 };
 

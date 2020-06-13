@@ -1,6 +1,8 @@
+import {v4 as uuid} from 'uuid';
+
 import eventReducer from '../../app/services/eventReducer';
 import {EVENT_ACTION_TYPES} from '../../app/actions/types';
-import initialState from '../../app/store/initialState';
+import clientSettingsStore from '../../app/store/clientSettingsStore';
 
 /**
  * Tests the event reducing functions for various events.
@@ -213,6 +215,14 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
   });
 
   test('you left', () => {
+    // populate localstorage manually
+    const userId = 'userId_' + uuid();
+    const username = 'userId_' + uuid();
+    const email = 'userId_' + uuid();
+    clientSettingsStore.setPresetUserId(userId);
+    clientSettingsStore.setPresetUsername(username);
+    clientSettingsStore.setPresetEmail(email);
+
     const startingState = {
       userId: 'myUser',
       roomId: 'myRoom',
@@ -234,7 +244,14 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
 
     // manually remove action log.  will have additional items in it, which is expected
     modifiedState.actionLog = [];
-    expect(modifiedState).toEqual(initialState);
+    expect(modifiedState).toMatchObject({
+      presetUsername: username,
+      presetEmail: email,
+      presetUserId: userId,
+      userMenuShown: false,
+      actionLog: [],
+      pendingCommands: {}
+    });
   });
 });
 

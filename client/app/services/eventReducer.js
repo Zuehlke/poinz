@@ -153,7 +153,7 @@ const eventActionHandlers = {
         document.title = 'PoinZ';
 
         // let's reset our state
-        return {...initialState};
+        return {...initialState()};
       } else {
         // someone else left the room
 

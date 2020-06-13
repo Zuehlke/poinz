@@ -9,6 +9,7 @@ export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
 export const STATUS_FETCHED = 'STATUS_FETCHED';
 export const LOCATION_CHANGED = 'LOCATION_CHANGED';
+export const HIDE_NEW_USER_HINTS = 'HIDE_NEW_USER_HINTS';
 
 /**
  * Action types for backend events

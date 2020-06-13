@@ -9,7 +9,8 @@ import {
   EVENT_RECEIVED,
   STATUS_FETCHED,
   SET_LANGUAGE,
-  LOCATION_CHANGED
+  LOCATION_CHANGED,
+  HIDE_NEW_USER_HINTS
 } from '../actions/types';
 
 /**
@@ -89,6 +90,9 @@ export default function clientActionReducer(state, action) {
       return {...state, language};
     }
 
+    case HIDE_NEW_USER_HINTS: {
+      return {...state, hideNewUserHints: true};
+    }
     case LOCATION_CHANGED: {
       return {...state, pathname: action.pathname};
     }

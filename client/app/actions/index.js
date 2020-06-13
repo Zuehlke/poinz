@@ -16,8 +16,10 @@ import {
   STATUS_FETCHED,
   SET_LANGUAGE,
   EVENT_RECEIVED,
-  EVENT_ACTION_TYPES
+  EVENT_ACTION_TYPES,
+  HIDE_NEW_USER_HINTS
 } from './types';
+import clientSettingsStore from '../store/clientSettingsStore';
 
 /**
  * store current pathname in our redux store, join or leave room if necessary
@@ -298,3 +300,7 @@ export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
 export const setLanguage = (language) => ({type: SET_LANGUAGE, language});
+export const hideNewUserHints = () => {
+  clientSettingsStore.setHideNewUserHints(true);
+  return {type: HIDE_NEW_USER_HINTS};
+};

@@ -850,20 +850,24 @@ $backlogWidth = 300px
 }
 
 .feedback-hint {
-  position absolute
-  bottom 0
-  left 0
-  right 1px
-  background $zuehlkeBlue
+  position relative
+  border 1px solid $zuehlkeBlue
+  background white
   padding 8px
-  color white
   display flex
   font-size 13px
   align-items center
+  margin-top: 28px
 
   > span {
-    display inline-block
+    display block
     margin 0 0 0 8px
+  }
+
+  > i {
+    position absolute
+    top 4px
+    right 4px
   }
 
   .avatar {

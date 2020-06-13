@@ -3,7 +3,7 @@ const path = require('path');
 const glob = Promise.promisify(require('glob'));
 const fs = Promise.promisifyAll(require('fs-extra'));
 
-const TRANSLATION_INVOKE_PATTERN = /[\{|\s*]t\('([^\)]*)'\)/g;
+const TRANSLATION_INVOKE_PATTERN = /[\{|\s*]t\('([^\)]*)'[,|\)]/g;
 
 const DEFINED_KEYS_EN = Object.keys(require('../client/app/assets/i18n/en.json'));
 const DEFINED_KEYS_DE = Object.keys(require('../client/app/assets/i18n/de.json'));

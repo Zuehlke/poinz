@@ -11,7 +11,7 @@ test('validates successfully ', () => {
   commandSchemaValidator({
     id: uuid(),
     name: 'setUsername',
-    roomId: 'some-Room',
+    roomId: 'some-room',
     payload: {username: 'Thom'}
   });
 });
@@ -35,4 +35,30 @@ test('throws on invalid command (payload misses property)', () => {
       payload: {}
     })
   ).toThrow(/Missing required property: username/);
+});
+
+test('throws on invalid email', () => {
+  expect(() =>
+    commandSchemaValidator({
+      id: uuid(),
+      roomId: 'some-room',
+      name: 'setEmail',
+      payload: {
+        email: 'tisodgjfkjhlk'
+      }
+    })
+  ).toThrow(/Format validation failed \(must be a valid email-address\) in \/payload\/email/);
+});
+
+test('throws on invalid roomId', () => {
+  expect(() =>
+    commandSchemaValidator({
+      id: uuid(),
+      roomId: 'SomeRoom.?with&invalid¼chars#',
+      name: 'joinRoom',
+      payload: {}
+    })
+  ).toThrow(
+    /Format validation failed \(must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -\) in \/roomId/
+  );
 });

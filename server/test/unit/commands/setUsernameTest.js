@@ -10,7 +10,6 @@ test('Should produce usernameSet event', async () => {
       roomId: roomId,
       name: 'setUsername',
       payload: {
-        userId: userId,
         username: 'John Doe'
       }
     },
@@ -21,29 +20,8 @@ test('Should produce usernameSet event', async () => {
     const [usernameSetEvent] = producedEvents;
 
     expect(usernameSetEvent.payload.username).toEqual('John Doe');
-    expect(usernameSetEvent.payload.userId).toEqual(userId);
+    expect(usernameSetEvent.userId).toEqual(userId);
 
     expect(room.users[userId].username).toEqual('John Doe');
-  });
-});
-
-describe('preconditions', () => {
-  test('Should throw if userId does not match', async () => {
-    const {processor, roomId, userId} = await prepOneUserInOneRoom();
-    const commandId = uuid();
-    return expect(
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'setUsername',
-          payload: {
-            userId: 'unknown',
-            username: 'Mikey'
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Can only set username for own user!');
   });
 });

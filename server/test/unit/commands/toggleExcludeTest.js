@@ -10,9 +10,7 @@ test('toggleExclude  -> excluded', async () => {
       id: commandId,
       roomId,
       name: 'toggleExclude',
-      payload: {
-        userId
-      }
+      payload: {}
     },
     userId
   ).then(({producedEvents, room}) => {
@@ -20,7 +18,7 @@ test('toggleExclude  -> excluded', async () => {
 
     const [excludedFromEstimationsEvent] = producedEvents;
 
-    expect(excludedFromEstimationsEvent.payload.userId).toEqual(userId);
+    expect(excludedFromEstimationsEvent.userId).toEqual(userId);
 
     // flag is set on user in room
     expect(room.users[userId].excluded).toBe(true);
@@ -38,9 +36,7 @@ test('toggleExclude  -> included', async () => {
       id: commandId,
       roomId,
       name: 'toggleExclude',
-      payload: {
-        userId
-      }
+      payload: {}
     },
     userId
   ).then(({producedEvents, room}) => {
@@ -48,26 +44,9 @@ test('toggleExclude  -> included', async () => {
 
     const [includedInEstimationsEvent] = producedEvents;
 
-    expect(includedInEstimationsEvent.payload.userId).toEqual(userId);
+    expect(includedInEstimationsEvent.userId).toEqual(userId);
 
     // flag is set to false on user in room
     expect(room.users[userId].excluded).toBe(false);
   });
-});
-
-test('Should throw if userId does not match (another user wants to mark somebody else as excluded)', async () => {
-  const {userId, processor, roomId} = await prepOneUserInOneRoom();
-  return expect(
-    processor(
-      {
-        id: uuid(),
-        roomId: roomId,
-        name: 'toggleExclude',
-        payload: {
-          userId: 'unknown'
-        }
-      },
-      userId
-    )
-  ).rejects.toThrow('Can only exclude or include own user from estimations');
 });

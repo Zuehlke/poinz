@@ -8,15 +8,11 @@
         "payload": {
           "type": "object",
           "properties": {
-            "userId": {
-              "type": "string"
-            },
             "connectionLost": {
               "type": "boolean"
             }
           },
           "required": [
-            "userId"
           ],
           "additionalProperties": false
         }

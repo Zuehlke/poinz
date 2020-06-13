@@ -2,7 +2,7 @@ import {v4 as uuid} from 'uuid';
 import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyChanged event', async () => {
-  const {processor, roomId, userId, storyId} = await prepTwoUsersInOneRoomWithOneStory(
+  const {processor, roomId, userIdOne, storyId} = await prepTwoUsersInOneRoomWithOneStory(
     'mySuperUser',
     'nice Story'
   );
@@ -18,7 +18,7 @@ test('Should produce storyChanged event', async () => {
         description: 'New Description'
       }
     },
-    userId
+    userIdOne
   ).then(({producedEvents, room}) => {
     expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged');
 
@@ -39,12 +39,12 @@ test('Users marked as excluded can still change stories', async () => {
   const {
     processor,
     roomId,
-    userId,
+    userIdOne,
     storyId,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdOne, 'excluded'], true));
 
   const commandId = uuid();
   return processor(
@@ -58,7 +58,7 @@ test('Users marked as excluded can still change stories', async () => {
         description: 'New Description'
       }
     },
-    userId
+    userIdOne
   ).then(({producedEvents}) =>
     expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged')
   );
@@ -66,7 +66,7 @@ test('Users marked as excluded can still change stories', async () => {
 
 describe('preconditions', () => {
   test('Should throw if room does not contain matching story', async () => {
-    const {processor, roomId, userId} = await prepTwoUsersInOneRoomWithOneStory(
+    const {processor, roomId, userIdOne} = await prepTwoUsersInOneRoomWithOneStory(
       'mySuperUser',
       'nice Story'
     );
@@ -83,7 +83,7 @@ describe('preconditions', () => {
             description: 'New Description'
           }
         },
-        userId
+        userIdOne
       )
     ).rejects.toThrow('Cannot change unknown story some-unknown-story');
   });

@@ -12,11 +12,11 @@ test('validates successfully ', () => {
     id: uuid(),
     name: 'setUsername',
     roomId: 'some-Room',
-    payload: {userId: '123', username: 'Thom'}
+    payload: {username: 'Thom'}
   });
 });
 
-test('throws on invalid command (id)', () => {
+test('throws on invalid command (id missing)', () => {
   expect(() =>
     commandSchemaValidator({
       roomId: 'some-room',
@@ -26,7 +26,7 @@ test('throws on invalid command (id)', () => {
   ).toThrow(/Missing required property: id/);
 });
 
-test('throws on invalid command (payload)', () => {
+test('throws on invalid command (payload misses property)', () => {
   expect(() =>
     commandSchemaValidator({
       id: uuid(),
@@ -34,5 +34,5 @@ test('throws on invalid command (payload)', () => {
       name: 'setUsername',
       payload: {}
     })
-  ).toThrow(/Missing required property: userId/);
+  ).toThrow(/Missing required property: username/);
 });

@@ -1,6 +1,8 @@
+import {v4 as uuid} from 'uuid';
+
 import eventReducer from '../../app/services/eventReducer';
 import {EVENT_ACTION_TYPES} from '../../app/actions/types';
-import initialState from '../../app/store/initialState';
+import clientSettingsStore from '../../app/store/clientSettingsStore';
 
 /**
  * Tests the event reducing functions for various events.
@@ -110,11 +112,15 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
       type: EVENT_ACTION_TYPES.joinedRoom,
       event: {
         roomId: 'ourRoom',
+        userId: 'theNewUser',
         payload: {
-          userId: 'theNewUser',
           users: {
-            myUserId: {},
-            theNewUser: {}
+            myUserId: {
+              id: 'myUserId'
+            },
+            theNewUser: {
+              id: 'theNewUser'
+            }
           }
         }
       }
@@ -122,8 +128,12 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
 
     expect(modifiedState.users).toEqual(
       {
-        myUserId: {username: 'tester1'},
-        theNewUser: {}
+        myUserId: {
+          username: 'tester1'
+        },
+        theNewUser: {
+          id: 'theNewUser'
+        }
       },
       'The new user must be added to the room.users object. Nothing else must be changed.'
     );
@@ -139,14 +149,16 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
       type: EVENT_ACTION_TYPES.joinedRoom,
       event: {
         roomId: 'myRoom',
+        userId: 'myUserId',
         payload: {
-          userId: 'myUserId',
           selectedStory: 'storyOne',
           stories: {
             storyOne: {}
           },
           users: {
-            myUserId: {}
+            myUserId: {
+              id: 'myUserId'
+            }
           }
         }
       }
@@ -159,7 +171,9 @@ describe(EVENT_ACTION_TYPES.joinedRoom, () => {
       storyOne: {}
     });
     expect(modifiedState.users).toEqual({
-      myUserId: {}
+      myUserId: {
+        id: 'myUserId'
+      }
     });
   });
 });
@@ -190,10 +204,9 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
     const modifiedState = eventReducer(startingState, {
       type: EVENT_ACTION_TYPES.leftRoom,
       event: {
+        userId: 'someoneElse',
         roomId: 'myRoom',
-        payload: {
-          userId: 'someoneElse'
-        }
+        payload: {}
       }
     });
 
@@ -202,6 +215,14 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
   });
 
   test('you left', () => {
+    // populate localstorage manually
+    const userId = 'userId_' + uuid();
+    const username = 'userId_' + uuid();
+    const email = 'userId_' + uuid();
+    clientSettingsStore.setPresetUserId(userId);
+    clientSettingsStore.setPresetUsername(username);
+    clientSettingsStore.setPresetEmail(email);
+
     const startingState = {
       userId: 'myUser',
       roomId: 'myRoom',
@@ -216,15 +237,21 @@ describe(EVENT_ACTION_TYPES.leftRoom, () => {
       type: EVENT_ACTION_TYPES.leftRoom,
       event: {
         roomId: 'myRoom',
-        payload: {
-          userId: 'myUser'
-        }
+        userId: 'myUser',
+        payload: {}
       }
     });
 
     // manually remove action log.  will have additional items in it, which is expected
     modifiedState.actionLog = [];
-    expect(modifiedState).toEqual(initialState);
+    expect(modifiedState).toMatchObject({
+      presetUsername: username,
+      presetEmail: email,
+      presetUserId: userId,
+      userMenuShown: false,
+      actionLog: [],
+      pendingCommands: {}
+    });
   });
 });
 

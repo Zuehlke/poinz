@@ -8,16 +8,12 @@
         "payload": {
           "type": "object",
           "properties": {
-            "userId": {
-              "type": "string"
-            },
             "username": {
               "type": "string",
               "minLength": 2
             }
           },
           "required": [
-            "userId",
             "username"
           ],
           "additionalProperties": false

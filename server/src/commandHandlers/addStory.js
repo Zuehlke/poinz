@@ -7,11 +7,12 @@ const addStoryCommandHandler = {
   fn: (room, command) => {
     const newStoryId = uuid();
 
-    const eventPayload = {...command.payload};
-    eventPayload.id = newStoryId;
-    eventPayload.estimations = {};
-    eventPayload.createdAt = new Date().getTime();
-    room.applyEvent('storyAdded', eventPayload);
+    room.applyEvent('storyAdded', {
+      ...command.payload,
+      id: newStoryId,
+      estimations: {},
+      createdAt: Date.now()
+    });
 
     if (!room.get('stories') || !room.get('stories').first()) {
       // this is the first story that gets added

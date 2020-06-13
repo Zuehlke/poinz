@@ -8,15 +8,15 @@
         "payload": {
           "type": "object",
           "properties": {
-            "userId": {
-              "type": "string"
-            },
             "username": {
               "type": "string"
             },
             "email": {
               "type": "string",
               "format": "email"
+            },
+            "userId": {
+              "type": "string"
             }
           },
           "additionalProperties": false

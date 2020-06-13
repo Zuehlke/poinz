@@ -18,7 +18,7 @@ const {t, setLanguage} = translatorFactory(
 /**
  * The initial state that is loaded into the redux store on (client) application load.
  */
-const INITIAL_STATE = {
+const INITIAL_STATE = () => ({
   // TODO: evaluate if creator of room must be able to choose card values. store creator's selection to local storage and use as default
   cardConfig: [
     {label: '?', value: -2, color: '#bdbfbf'},
@@ -43,6 +43,6 @@ const INITIAL_STATE = {
   language: userLanguage || DEFAULT_LANGUAGE,
   translator: t,
   setLanguage
-};
+});
 
 export default INITIAL_STATE;

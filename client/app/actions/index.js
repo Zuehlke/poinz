@@ -1,3 +1,4 @@
+import {v4 as uuid} from 'uuid';
 import axios from 'axios';
 import log from 'loglevel';
 
@@ -36,9 +37,7 @@ export const locationChanged = (pathname) => (dispatch, getState) => {
       {
         name: 'leaveRoom',
         roomId: state.roomId,
-        payload: {
-          userId: state.userId
-        }
+        payload: {}
       },
       dispatch
     );
@@ -75,11 +74,7 @@ export const eventReceived = (event) => (dispatch) => {
   });
 
   if (event.name === 'joinedRoom') {
-    if (event.payload.alias) {
-      history.push('/' + event.payload.alias);
-    } else {
-      history.push('/' + event.roomId);
-    }
+    history.push('/' + event.roomId);
   }
 };
 
@@ -88,35 +83,8 @@ export const eventReceived = (event) => (dispatch) => {
  * They produce commands and pass them to the hub for sending.
  */
 
-export const createRoom = (alias) => (dispatch, getState) => {
-  const cmdPayload = {};
-  const state = getState();
-
-  if (state.presetUserId) {
-    cmdPayload.userId = state.presetUserId;
-  }
-  if (state.presetUsername) {
-    cmdPayload.username = state.presetUsername;
-  }
-  if (state.presetEmail) {
-    cmdPayload.email = state.presetEmail;
-  }
-
-  if (alias) {
-    cmdPayload.alias = alias;
-  }
-
-  hub.sendCommand(
-    {
-      name: 'createRoom',
-      payload: cmdPayload
-    },
-    dispatch
-  );
-};
-
 export const joinRoom = (roomId) => (dispatch, getState) => {
-  const normalizedRoomId = roomId.toLowerCase();
+  const normalizedRoomId = roomId ? roomId.toLowerCase() : uuid();
 
   const joinCommandPayload = {};
   const state = getState();
@@ -181,7 +149,6 @@ export const giveStoryEstimate = (storyId, value) => (dispatch, getState) => {
     roomId: state.roomId,
     payload: {
       value: value,
-      userId: state.userId,
       storyId: storyId
     }
   };
@@ -231,7 +198,6 @@ export const setUsername = (username) => (dispatch, getState) => {
       name: 'setUsername',
       roomId: state.roomId,
       payload: {
-        userId: state.userId,
         username: username
       }
     },
@@ -246,7 +212,6 @@ export const setEmail = (email) => (dispatch, getState) => {
       name: 'setEmail',
       roomId: state.roomId,
       payload: {
-        userId: state.userId,
         email: email
       }
     },
@@ -260,9 +225,7 @@ export const toggleExcluded = () => (dispatch, getState) => {
     {
       name: 'toggleExclude',
       roomId: state.roomId,
-      payload: {
-        userId: state.userId
-      }
+      payload: {}
     },
     dispatch
   );
@@ -282,21 +245,10 @@ export const kick = (userId) => (dispatch, getState) => {
   );
 };
 
-export const leaveRoom = () => (dispatch, getState) => {
-  history.push({
-    pathname: '/'
-  });
-  const state = getState();
-  hub.sendCommand(
-    {
-      name: 'leaveRoom',
-      roomId: state.roomId,
-      payload: {
-        userId: state.userId
-      }
-    },
-    dispatch
-  );
+export const leaveRoom = () => () => {
+  // we only need to navigate to the landing page
+  // locationChanged will trigger sending "leaveRoom" command to backend
+  history.push('/');
 };
 
 export const changeStory = (storyId, title, description) => (dispatch, getState) => {

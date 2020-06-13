@@ -82,27 +82,6 @@ describe('save, update and fetch', () => {
     expect(retrievedRoom.get('additional')).toBe('....data...');
   });
 
-  test('should save and get room by alias', async () => {
-    const roomObject = new Immutable.Map({
-      id: uuid(),
-      users: {},
-      alias: 'some-custom-alias',
-      other: 'data'
-    });
-    await persistentRoomsStore.saveRoom(roomObject);
-
-    const retrievedRoom = await persistentRoomsStore.getRoomByAlias(roomObject.get('alias'));
-
-    expect(retrievedRoom).toBeDefined(); // currently it is not guaranteed, that we get our room object back. could be another one with the same alias. alias uniqueness is not enforced
-    expect(retrievedRoom.has('_id')).toBe(false);
-  });
-
-  test('should resolve to undefined if no room with alias exists', async () => {
-    const retrievedRoom = await persistentRoomsStore.getRoomByAlias('no-room-has-this-alias');
-
-    expect(retrievedRoom).toBeUndefined();
-  });
-
   test('should return all Rooms', async () => {
     const roomObject = new Immutable.Map({
       id: uuid(),

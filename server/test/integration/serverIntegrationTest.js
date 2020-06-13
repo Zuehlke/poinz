@@ -58,21 +58,21 @@ describe('websocket endpoint', () => {
 
     socket.on('event', (msg) => {
       expect(msg).toBeDefined();
+
+      expect(msg.name).not.toBe('commandRejected');
+
       expect(msg.correlationId).toEqual(commandId);
       expect(msg.roomId).toBeDefined();
       eventCount++;
 
-      if (eventCount === 1) {
+      if (eventCount === 0) {
         expect(msg.name).toEqual('roomCreated');
-        expect(msg.payload.userId).toBeDefined();
-      } else if (eventCount === 2) {
+        expect(msg.userId).toBeDefined();
+      } else if (eventCount === 1) {
         expect(msg.name).toEqual('joinedRoom');
-        expect(msg.payload.userId).toBeDefined();
+        expect(msg.userId).toBeDefined();
         expect(msg.payload.users).toBeDefined();
-      } else if (eventCount === 3) {
-        expect(msg.name).toEqual('usernameSet');
-        expect(msg.payload.userId).toBeDefined();
-        expect(msg.payload.username).toBeDefined();
+
         done();
       }
     });
@@ -80,11 +80,9 @@ describe('websocket endpoint', () => {
     socket.on('connect', () =>
       socket.emit('command', {
         id: commandId,
-        name: 'createRoom',
-        payload: {
-          userId: uuid(),
-          username: 'something'
-        }
+        name: 'joinRoom',
+        roomId: 'myCustomRoom',
+        payload: {}
       })
     );
   });

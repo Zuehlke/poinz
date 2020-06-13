@@ -4,10 +4,6 @@
  */
 const clearStoryEstimateCommandHandler = {
   preCondition: (room, command, userId) => {
-    if (command.payload.userId !== userId) {
-      throw new Error('Can only clear estimate if userId in command payload matches!');
-    }
-
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only clear estimation for currently selected story!');
     }

@@ -40,6 +40,10 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    *  @returns {Promise<object[]>} Promise that resolves to a list of events that were produced by this command. (they are already applied to the room state)
    */
   return function processCommand(command, userId) {
+    if (!userId) {
+      throw new Error('Fatal! socketServer has to provide userId!');
+    }
+
     /**
      * In a scenario where two commands for the same room arrive only a few ms apart, both command handlers
      * would receive the same room object from the store. the second command would override the state manipulations of the first.
@@ -117,44 +121,35 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
   /**
    * 3. Load Room object by command.roomId
    *
-   * By Default, the command must have a roomId and the matching room object must exist in the store.
-   * For some commands, it is valid that no roomId is given. Then a roomId is generated and an "empty" room created.
+   * By Default, a room object must exist in the store that matches the given roomId in the command.
+   * For some commands, it is valid that no matching room must exist. Then an "empty" room with the given roomId is created.
    * Command handlers must specify this with "canCreateRoom:true"
    *
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
   async function loadRoom(ctx, cmd) {
     if (!cmd.roomId) {
-      newEmptyRoom(ctx, cmd);
-      cmd.roomId = ctx.room.get('id');
-      return;
+      throw new Error(
+        'No roomId given in Command. this is invalid and should have been caught by command validation (schema).'
+      );
     }
 
     // try loading by id
-    let room = await store.getRoomById(cmd.roomId);
+    const room = await store.getRoomById(cmd.roomId);
     if (room) {
       ctx.room = room;
       return;
     }
 
-    // try loading by alias
-    room = await store.getRoomByAlias(cmd.roomId);
-    if (room) {
-      ctx.room = room;
-      return;
-    }
-
-    throw new Error(`Specified room "${cmd.roomId}" does not exist. ("${cmd.name}")`);
-  }
-
-  function newEmptyRoom(ctx, cmd) {
+    // room does not yet exist. if handler allows it, we create it.
     if (!ctx.handler.canCreateRoom) {
       throw new Error(`Command "${cmd.name}" only wants to get handled for an existing room!`);
     }
 
-    // command is allowed to create new room. generate random id
+    // command is allowed to create new room.
     ctx.room = new Immutable.Map({
-      id: uuid()
+      id: cmd.roomId,
+      pristine: true
     });
   }
 
@@ -195,7 +190,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
       // events are handled sequentially since events most often update the state of the room ("are applied to the room")
       ctx.eventHandlingQueue.push((currentRoom) => {
-        const updatedRoom = eventHandler(currentRoom, eventPayload);
+        const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
 
         // build the event object that is sent back to clients
         ctx.eventsToSend.push({
@@ -212,7 +207,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     };
 
     // invoke the command handler function (will produce events by calling "applyEvent")
-    ctx.handler.fn(ctx.room, cmd);
+    ctx.handler.fn(ctx.room, cmd, ctx.userId);
   }
 
   /**

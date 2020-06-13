@@ -8,7 +8,6 @@ const TopBar = ({
   t,
   roomId,
   username,
-  alias,
   leaveRoom,
   toggleBacklog,
   toggleUserMenu,
@@ -17,7 +16,7 @@ const TopBar = ({
   logShown,
   backlogShown
 }) => {
-  const roomLink = <a href={'/' + (alias ? alias : roomId)}>{alias ? alias : roomId}</a>;
+  const roomLink = <a href={'/' + roomId}>{roomId}</a>;
 
   return (
     <div className="top-bar">
@@ -79,7 +78,6 @@ TopBar.propTypes = {
   backlogShown: PropTypes.bool,
   logShown: PropTypes.bool,
   username: PropTypes.string,
-  alias: PropTypes.string,
   roomId: PropTypes.string,
   toggleBacklog: PropTypes.func,
   toggleUserMenu: PropTypes.func,
@@ -94,7 +92,6 @@ export default connect(
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
-    alias: state.alias,
     username: state.users && state.users[state.userId] ? state.users[state.userId].username : '-'
   }),
   {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom}

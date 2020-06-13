@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import CreateRoomForm from '../components/CreateRoomForm';
+import JoinRoomForm from '../components/JoinRoomForm';
 import GithubRibbon from '../components/GithubRibbon';
 
 /**
@@ -13,7 +13,7 @@ const Landing = ({t, waitingForJoin}) => {
     <div className="landing">
       <GithubRibbon />
       <div className="landing-inner">
-        {!waitingForJoin && <CreateRoomForm />}
+        {!waitingForJoin && <JoinRoomForm />}
         {waitingForJoin && <Loader t={t} />}
 
         <div className="eyecatcher disclaimer-text">

@@ -16,8 +16,7 @@ test('Should produce storyEstimateCleared event', async () => {
       roomId: roomId,
       name: 'clearStoryEstimate',
       payload: {
-        storyId: storyId,
-        userId: userId
+        storyId: storyId
       }
     },
     userId
@@ -26,7 +25,6 @@ test('Should produce storyEstimateCleared event', async () => {
 
     const [storyEstimateClearedEvent] = producedEvents;
 
-    expect(storyEstimateClearedEvent.payload.userId).toEqual(userId);
     expect(storyEstimateClearedEvent.payload.storyId).toEqual(storyId);
 
     // should clear value
@@ -35,31 +33,7 @@ test('Should produce storyEstimateCleared event', async () => {
 });
 
 describe('preconditions', () => {
-  test('Should throw if userId does not match', async () => {
-    const {
-      roomId,
-      storyId,
-      userIdOne: userId,
-      processor
-    } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'clearStoryEstimate',
-          payload: {
-            storyId: storyId,
-            userId: 'unknown'
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow('Can only clear estimate if userId in command payload matches!');
-  });
-
-  test('Should throw if storyId does not match', async () => {
+  test('Should throw if storyId does not match a story in the room', async () => {
     const {
       roomId,
       userIdOne: userId,
@@ -73,8 +47,7 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'clearStoryEstimate',
           payload: {
-            storyId: 'unknown',
-            userId: userId
+            storyId: 'unknown'
           }
         },
         userId
@@ -100,8 +73,7 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'clearStoryEstimate',
           payload: {
-            storyId: storyId,
-            userId: userId
+            storyId: storyId
           }
         },
         userId
@@ -127,8 +99,7 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'clearStoryEstimate',
           payload: {
-            storyId: storyId,
-            userId: userId
+            storyId: storyId
           }
         },
         userId

@@ -1,4 +1,3 @@
-import createRoom from './createRoom';
 import addStory from './addStory';
 import changeStory from './changeStory';
 import deleteStory from './deleteStory';
@@ -15,7 +14,6 @@ import setEmail from './setEmail';
 import toggleExclude from './toggleExclude';
 
 export default {
-  createRoom,
   addStory,
   changeStory,
   deleteStory,

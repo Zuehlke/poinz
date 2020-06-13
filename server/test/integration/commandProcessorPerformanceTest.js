@@ -14,6 +14,8 @@ import eventHandlers from '../../src/eventHandlers/eventHandlers';
 test('1000 "addStory" commands/events', async () => {
   const userId = uuid();
 
+  const roomId = 'customRoom_' + uuid();
+
   const store = await roomStoreFactory(false);
   const processor = processorFactory(commandHandlers, eventHandlers, store);
 
@@ -21,28 +23,23 @@ test('1000 "addStory" commands/events', async () => {
   let eventCounter = 0;
   let commandCounter = 0;
 
-  const {producedEvents} = await processor(
+  await processor(
     {
       id: uuid(),
-      name: 'createRoom',
-      payload: {
-        userId: userId
-      }
+      name: 'joinRoom',
+      roomId,
+      payload: {}
     },
     userId
   );
 
-  const roomId = producedEvents[0].roomId;
-
-  console.log(
-    `--- Starting test with "addStory" on roomId ${roomId},  until ${totalEvents} events are received --`
-  );
+  console.log(`--- Starting test with "addStory" until ${totalEvents} events are received --`);
   console.time('commandProcessorPerformance');
 
   return processor(
     {
       id: uuid(),
-      roomId: roomId,
+      roomId,
       name: 'joinRoom',
       payload: {}
     },
@@ -70,7 +67,7 @@ test('1000 "addStory" commands/events', async () => {
     return processor(
       {
         id: uuid(),
-        roomId: roomId,
+        roomId,
         name: 'addStory',
         payload: {
           title: `SuperStory_${commandCounter}`,

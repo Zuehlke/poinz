@@ -21,7 +21,7 @@ if (appConfig.env === 'dev') {
   log.setLevel('error');
 }
 
-const store = configureStore(initialState);
+const store = configureStore(initialState());
 render(
   <Provider store={store}>
     <Main />

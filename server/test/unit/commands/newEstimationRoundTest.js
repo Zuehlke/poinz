@@ -6,7 +6,7 @@ test('Should produce newEstimationRoundStarted event', async () => {
     processor,
     roomId,
     storyId,
-    userId,
+    userIdOne,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
   mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'consensus'], 4));
@@ -21,7 +21,7 @@ test('Should produce newEstimationRoundStarted event', async () => {
         storyId
       }
     },
-    userId
+    userIdOne
   ).then(({producedEvents, room}) => {
     expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted');
 
@@ -48,11 +48,11 @@ test('Users marked as excluded can still start new estimation round', async () =
     processor,
     roomId,
     storyId,
-    userId,
+    userIdOne,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdOne, 'excluded'], true));
 
   const commandId = uuid();
   return processor(
@@ -64,7 +64,7 @@ test('Users marked as excluded can still start new estimation round', async () =
         storyId
       }
     },
-    userId
+    userIdOne
   ).then(({producedEvents}) =>
     expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted')
   );
@@ -72,7 +72,7 @@ test('Users marked as excluded can still start new estimation round', async () =
 
 describe('preconditions', () => {
   test('Should throw if storyId does not match currently selected story', async () => {
-    const {processor, roomId, userId} = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+    const {processor, roomId, userIdOne} = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
     const commandId = uuid();
     return expect(
       processor(
@@ -84,7 +84,7 @@ describe('preconditions', () => {
             storyId: 'anotherStory'
           }
         },
-        userId
+        userIdOne
       )
     ).rejects.toThrow('Can only start a new round for currently selected story!');
   });

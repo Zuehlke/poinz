@@ -854,14 +854,20 @@ $backlogWidth = 300px
   border 1px solid $zuehlkeBlue
   background white
   padding 8px
-  display flex
   font-size 13px
-  align-items center
-  margin-top: 28px
+  margin-top 28px
 
-  > span {
-    display block
-    margin 0 0 0 8px
+  display flex
+
+  img.avatar {
+    width 40px
+    height 40px
+    border-width 1px
+    box-sizing border-box
+    margin 0 8px 0 0
+  }
+
+  > div {
   }
 
   > i {
@@ -870,12 +876,7 @@ $backlogWidth = 300px
     right 4px
   }
 
-  .avatar {
-    display block
-    width 40px
-    height 40px
-    border-width 1px
-  }
+
 }
 
 // on screens bigger than 48em width

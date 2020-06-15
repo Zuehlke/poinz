@@ -269,15 +269,14 @@ export const changeStory = (storyId, title, description) => (dispatch, getState)
   );
 };
 
-export const deleteStory = (storyId, title) => (dispatch, getState) => {
+export const deleteStory = (storyId) => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand(
     {
       name: 'deleteStory',
       roomId: state.roomId,
       payload: {
-        storyId,
-        title
+        storyId
       }
     },
     dispatch

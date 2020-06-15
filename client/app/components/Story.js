@@ -62,7 +62,7 @@ const Story = ({
 
   function triggerDelete(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
-    deleteStory(story.id, story.title);
+    deleteStory(story.id);
   }
 };
 

@@ -3,6 +3,7 @@ import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
 import {getCardConfigForValue} from './getCardConfigForValue';
+import clearStoryEstimationsOfUser from './clearStoryEstimationsOfUser';
 
 /**
  * The event reducer handles backend-event actions.
@@ -144,37 +145,22 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.leftRoom]: {
     fn: (state, payload, event) => {
-      const isOwnUser = state.userId === event.userId;
-
-      if (isOwnUser) {
-        // you (or you in another browser) left the room
-
-        // set the page title
+      // If your user (in this or in another browser) left the room
+      if (state.userId === event.userId) {
         document.title = 'PoinZ';
-
-        // let's reset our state
         return {...initialState()};
-      } else {
-        // someone else left the room
-
-        const modifiedStories = Object.values(state.stories).reduce((result, currentStory) => {
-          const leavingUserHasEstimatedStory = Object.keys(currentStory.estimations).find(
-            (userId) => userId === event.userId
-          );
-          if (!leavingUserHasEstimatedStory) {
-            result[currentStory.id] = currentStory;
-          } else {
-            const modifiedEstimations = {...currentStory.estimations};
-            delete modifiedEstimations[event.userId];
-            result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
-          }
-          return result;
-        }, {});
-        const modifiedUsers = {...state.users};
-        delete modifiedUsers[event.userId];
-
-        return {...state, stories: modifiedStories, users: modifiedUsers};
       }
+
+      // If someone else left the room
+      const modifiedStories = clearStoryEstimationsOfUser(state.stories, event.userId);
+      const modifiedUsers = {...state.users};
+      delete modifiedUsers[event.userId];
+
+      return {
+        ...state,
+        stories: modifiedStories,
+        users: modifiedUsers
+      };
     },
     log: (username, payload, oldState, newState, event) =>
       `User ${oldState.users[event.userId].username} left the room`
@@ -185,24 +171,16 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.kicked]: {
     fn: (state, payload) => {
-      const modifiedStories = Object.values(state.stories).reduce((result, currentStory) => {
-        // one of the few places, where we need to take the userId from the payload (the user that was kicked, not the "kicking" user)
-        const leavingUserHasEstimatedStory = Object.keys(currentStory.estimations).find(
-          (userId) => userId === payload.userId
-        );
-        if (!leavingUserHasEstimatedStory) {
-          result[currentStory.id] = currentStory;
-        } else {
-          const modifiedEstimations = {...currentStory.estimations};
-          delete modifiedEstimations[payload.userId];
-          result[currentStory.id] = {...currentStory, estimations: modifiedEstimations};
-        }
-        return result;
-      }, {});
+      // We need to take the userId from the payload (the user that was kicked, not the "kicking" user)
+      const modifiedStories = clearStoryEstimationsOfUser(state.stories, payload.userId);
       const modifiedUsers = {...state.users};
       delete modifiedUsers[payload.userId];
 
-      return {...state, stories: modifiedStories, users: modifiedUsers};
+      return {
+        ...state,
+        stories: modifiedStories,
+        users: modifiedUsers
+      };
     },
     log: (username, payload, oldState, modifiedState, event) =>
       `User "${oldState.users[event.userId].username}" was kicked from the room by user "${
@@ -215,17 +193,20 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.connectionLost]: {
     fn: (state, payload, event) => {
-      if (state.users[event.userId]) {
-        return {
-          ...state,
-          users: {
-            ...state.users,
-            [event.userId]: {...state.users[event.userId], disconnected: true}
-          }
-        };
-      } else {
+      if (!state.users || !state.users[event.userId]) {
         return state;
       }
+
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          [event.userId]: {
+            ...state.users[event.userId],
+            disconnected: true
+          }
+        }
+      };
     },
     log: (username) => `${username} lost the connection`
   },

@@ -69,6 +69,8 @@ async function build() {
 
   const gitInfo = await getGitInformation();
   await startBuildingDockerImage(gitInfo);
+
+  console.log('Done.\nRun docker run -p 3000:3000 -d xeronimus/poinz');
 }
 
 /**

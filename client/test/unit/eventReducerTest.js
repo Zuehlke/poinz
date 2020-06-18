@@ -2,349 +2,60 @@ import {v4 as uuid} from 'uuid';
 
 import eventReducer from '../../app/services/eventReducer';
 import {EVENT_ACTION_TYPES} from '../../app/actions/types';
-import clientSettingsStore from '../../app/store/clientSettingsStore';
+import initialState from '../../app/store/initialState.js';
 
-/**
- * Tests the event reducing functions for various events.
- *
- * Ensures that events modify the client app state as expected.
- *
- * // TODO: test every incoming event?
- **/
-test(EVENT_ACTION_TYPES.roomCreated, () => {
-  const startingState = {
-    roomId: 'myRoom',
-    actionLog: []
-  };
-  const modifiedState = eventReducer(startingState, {
-    type: EVENT_ACTION_TYPES.roomCreated,
-    event: {
-      roomId: 'myRoom',
-      payload: {}
-    }
-  });
-  expect(modifiedState.roomId).toEqual(startingState.roomId);
-});
+test('happy case: reduces an eventAction and writes log item', () => {
+  const roomId = uuid();
 
-test(EVENT_ACTION_TYPES.storyAdded, () => {
   const startingState = {
-    roomId: 'someRoom',
-    stories: {},
-    actionLog: []
-  };
-  const modifiedState = eventReducer(startingState, {
-    type: EVENT_ACTION_TYPES.storyAdded,
-    event: {
-      roomId: 'someRoom',
-      payload: {
-        id: 'story334',
-        title: 'the new feature x',
-        description: 'will be great!',
-        estimations: {}
-      }
-    }
-  });
-  expect(modifiedState.stories).toEqual({
-    story334: {
-      description: 'will be great!',
-      estimations: {},
-      id: 'story334',
-      title: 'the new feature x'
-    }
-  });
-});
-
-test(EVENT_ACTION_TYPES.storyDeleted, () => {
-  const startingState = {
-    roomId: 'someRoom',
-    stories: {
-      story01: {
-        title: 'aaaa',
-        description: '',
-        id: 'e9eaee24-92c2-410a-a7b4-e9c796d68369',
-        estimations: {},
-        createdAt: 1485359114569
-      },
-      story02: {
-        title: 'asdf',
-        description: 'af',
-        id: '3b8b38dd-1456-46d8-8174-2e981ad746f1',
-        estimations: {},
-        createdAt: 1485425539399
-      }
-    }
+    ...initialState(),
+    roomId,
+    users: {}
   };
 
   const modifiedState = eventReducer(startingState, {
-    type: EVENT_ACTION_TYPES.storyDeleted,
     event: {
-      roomId: 'someRoom',
-      payload: {
-        storyId: 'story01'
-      }
+      userId: uuid(),
+      roomId
+    },
+    type: EVENT_ACTION_TYPES.connectionLost
+  });
+
+  expect(modifiedState).toBeDefined();
+  expect(modifiedState.actionLog.length).toBe(1);
+});
+
+test('ignores actions where roomId does not match', () => {
+  const roomId = uuid();
+
+  const startingState = {
+    ...initialState(),
+    roomId
+  };
+
+  const modifiedState = eventReducer(startingState, {
+    event: {
+      roomId: 'not-matching-room'
     }
   });
 
-  expect(modifiedState.stories).toEqual({
-    story02: {
-      title: 'asdf',
-      description: 'af',
-      id: '3b8b38dd-1456-46d8-8174-2e981ad746f1',
-      estimations: {},
-      createdAt: 1485425539399
-    }
-  });
+  expect(modifiedState).toBe(startingState);
 });
 
-describe(EVENT_ACTION_TYPES.joinedRoom, () => {
-  test('someone else joined', () => {
-    const startingState = {
-      userId: 'myUserId',
-      roomId: 'ourRoom',
-      users: {
-        myUserId: {
-          username: 'tester1'
-        }
-      }
-    };
+test('ignores actions where no matching eventAction handler', () => {
+  const roomId = uuid();
 
-    const modifiedState = eventReducer(startingState, {
-      type: EVENT_ACTION_TYPES.joinedRoom,
-      event: {
-        roomId: 'ourRoom',
-        userId: 'theNewUser',
-        payload: {
-          users: {
-            myUserId: {
-              id: 'myUserId'
-            },
-            theNewUser: {
-              id: 'theNewUser'
-            }
-          }
-        }
-      }
-    });
+  const startingState = {
+    ...initialState(),
+    roomId
+  };
 
-    expect(modifiedState.users).toEqual(
-      {
-        myUserId: {
-          username: 'tester1'
-        },
-        theNewUser: {
-          id: 'theNewUser'
-        }
-      },
-      'The new user must be added to the room.users object. Nothing else must be changed.'
-    );
+  const modifiedState = eventReducer(startingState, {
+    event: {
+      roomId
+    },
+    type: 'does notmatch'
   });
 
-  test('you joined', () => {
-    const startingState = {
-      roomId: 'myRoom',
-      waitingForJoin: true
-    };
-
-    const modifiedState = eventReducer(startingState, {
-      type: EVENT_ACTION_TYPES.joinedRoom,
-      event: {
-        roomId: 'myRoom',
-        userId: 'myUserId',
-        payload: {
-          selectedStory: 'storyOne',
-          stories: {
-            storyOne: {}
-          },
-          users: {
-            myUserId: {
-              id: 'myUserId'
-            }
-          }
-        }
-      }
-    });
-
-    expect(modifiedState.roomId).toEqual('myRoom');
-    expect(modifiedState.userId).toEqual('myUserId');
-    expect(modifiedState.selectedStory).toEqual('storyOne');
-    expect(modifiedState.stories).toEqual({
-      storyOne: {}
-    });
-    expect(modifiedState.users).toEqual({
-      myUserId: {
-        id: 'myUserId'
-      }
-    });
-  });
+  expect(modifiedState).toBe(startingState);
 });
-
-describe(EVENT_ACTION_TYPES.leftRoom, () => {
-  test('someone else left', () => {
-    const startingState = {
-      userId: 'myUser',
-      roomId: 'myRoom',
-      users: {
-        myUser: {username: 'My User'},
-        someoneElse: {username: 'Someone Else'} // <<-- this user will leave
-      },
-      stories: {
-        someStoryId: {
-          title: 'testTitle',
-          description: 'testDescr',
-          id: 'someStoryId',
-          estimations: {
-            someoneElse: 1 // <<--  the other user has an estimation
-          },
-          createdAt: 1579874949137,
-          revealed: true
-        }
-      }
-    };
-
-    const modifiedState = eventReducer(startingState, {
-      type: EVENT_ACTION_TYPES.leftRoom,
-      event: {
-        userId: 'someoneElse',
-        roomId: 'myRoom',
-        payload: {}
-      }
-    });
-
-    expect(modifiedState.users).toEqual({myUser: {username: 'My User'}});
-    expect(modifiedState.stories.someStoryId.estimations).toEqual({}); // <<- estimation of leaving user must be removed
-  });
-
-  test('you left', () => {
-    // populate localstorage manually
-    const userId = 'userId_' + uuid();
-    const username = 'userId_' + uuid();
-    const email = 'userId_' + uuid();
-    clientSettingsStore.setPresetUserId(userId);
-    clientSettingsStore.setPresetUsername(username);
-    clientSettingsStore.setPresetEmail(email);
-
-    const startingState = {
-      userId: 'myUser',
-      roomId: 'myRoom',
-      users: {
-        myUser: {username: 'My User'},
-        someoneElse: {username: 'Someone Else'}
-      },
-      stories: {}
-    };
-
-    const modifiedState = eventReducer(startingState, {
-      type: EVENT_ACTION_TYPES.leftRoom,
-      event: {
-        roomId: 'myRoom',
-        userId: 'myUser',
-        payload: {}
-      }
-    });
-
-    // manually remove action log.  will have additional items in it, which is expected
-    modifiedState.actionLog = [];
-    expect(modifiedState).toMatchObject({
-      presetUsername: username,
-      presetEmail: email,
-      presetUserId: userId,
-      userMenuShown: false,
-      actionLog: [],
-      pendingCommands: {}
-    });
-  });
-});
-
-describe(EVENT_ACTION_TYPES.kicked, () => {
-  test('someone kicked a disconnected user from the room', () => {
-    const startingState = {
-      userId: 'myUser',
-      roomId: 'myRoom',
-      users: {
-        myUser: {},
-        someoneElse: {}
-      },
-      stories: {}
-    };
-
-    const modifiedState = eventReducer(startingState, {
-      type: EVENT_ACTION_TYPES.kicked,
-      event: {
-        roomId: 'myRoom',
-        payload: {
-          userId: 'someoneElse'
-        },
-        userId: 'myUser'
-      }
-    });
-
-    expect(modifiedState.users).toEqual({myUser: {}});
-  });
-});
-
-describe(
-  EVENT_ACTION_TYPES.includedInEstimations + ' ' + EVENT_ACTION_TYPES.excludedFromEstimations,
-  () => {
-    test('someone marked himself as included in estimations', () => {
-      const startingState = {
-        userId: 'myUser',
-        roomId: 'myRoom',
-        users: {
-          myUser: {
-            excluded: true
-          },
-          someoneElse: {}
-        },
-        stories: {}
-      };
-
-      const modifiedState = eventReducer(startingState, {
-        type: EVENT_ACTION_TYPES.includedInEstimations,
-        event: {
-          roomId: 'myRoom',
-          payload: {
-            userId: 'myUser'
-          },
-          userId: 'myUser'
-        }
-      });
-
-      expect(modifiedState.users).toEqual({
-        myUser: {
-          excluded: false
-        },
-        someoneElse: {}
-      });
-    });
-
-    test('someone marked himself as excluded from estimations', () => {
-      const startingState = {
-        userId: 'myUser',
-        roomId: 'myRoom',
-        users: {
-          myUser: {},
-          someoneElse: {}
-        },
-        stories: {}
-      };
-
-      const modifiedState = eventReducer(startingState, {
-        type: EVENT_ACTION_TYPES.excludedFromEstimations,
-        event: {
-          roomId: 'myRoom',
-          payload: {
-            userId: 'myUser'
-          },
-          userId: 'myUser'
-        }
-      });
-
-      expect(modifiedState.users).toEqual({
-        myUser: {
-          excluded: true
-        },
-        someoneElse: {}
-      });
-    });
-  }
-);

@@ -11,8 +11,7 @@ test('Should produce storyDeleted event', async () => {
       roomId,
       name: 'deleteStory',
       payload: {
-        storyId,
-        title: 'SuperStory 444'
+        storyId
       }
     },
     userId
@@ -22,7 +21,6 @@ test('Should produce storyDeleted event', async () => {
     const [storyDeletedEvent] = producedEvents;
 
     expect(storyDeletedEvent.payload.storyId).toEqual(storyId);
-    expect(storyDeletedEvent.payload.title).toEqual('SuperStory 444');
 
     // story is removed from room
     expect(room.stories[storyId]).toBeUndefined();
@@ -47,8 +45,7 @@ test('users marked as excluded can still delete stories', async () => {
       roomId,
       name: 'deleteStory',
       payload: {
-        storyId,
-        title: 'SuperStory 444'
+        storyId
       }
     },
     userId
@@ -67,8 +64,7 @@ describe('preconditions', () => {
           roomId,
           name: 'deleteStory',
           payload: {
-            storyId: 'some-unknown-story',
-            title: 'SuperStory 444'
+            storyId: 'some-unknown-story'
           }
         },
         userId

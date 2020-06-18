@@ -9,7 +9,8 @@
           "type": "object",
           "properties": {
             "userId": {
-              "type": "string"
+              "type": "string",
+              "format": "uuidv4"
             }
           },
           "required": [

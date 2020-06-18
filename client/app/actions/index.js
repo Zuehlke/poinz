@@ -269,15 +269,14 @@ export const changeStory = (storyId, title, description) => (dispatch, getState)
   );
 };
 
-export const deleteStory = (storyId, title) => (dispatch, getState) => {
+export const deleteStory = (storyId) => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand(
     {
       name: 'deleteStory',
       roomId: state.roomId,
       payload: {
-        storyId,
-        title
+        storyId
       }
     },
     dispatch
@@ -299,7 +298,10 @@ export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
 export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
-export const setLanguage = (language) => ({type: SET_LANGUAGE, language});
+export const setLanguage = (language) => {
+  clientSettingsStore.setPresetLanguage(language);
+  return {type: SET_LANGUAGE, language};
+};
 export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};

@@ -1,4 +1,3 @@
-import clientSettingsStore from '../store/clientSettingsStore';
 import {
   TOGGLE_BACKLOG,
   TOGGLE_USER_MENU,
@@ -85,7 +84,6 @@ export default function clientActionReducer(state, action) {
     }
     case SET_LANGUAGE: {
       const language = action.language;
-      clientSettingsStore.setPresetLanguage(language);
       state.setLanguage(language);
       return {...state, language};
     }

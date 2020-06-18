@@ -8,6 +8,10 @@ import getLogger from './getLogger';
 
 const LOGGER = getLogger('commandSchemaValidator');
 
+const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+const ROOMID_REGEX = /^[-a-z0-9_]+$/;
+const UUIDv4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+
 const schemas = gatherSchemas();
 
 registerCustomFormats();
@@ -82,38 +86,35 @@ function parseSchemaFile(schemaFileContent, schemaFileName) {
   }
 }
 
-const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
-const ROOMID_REGEX = /^[-a-z0-9_]+$/;
-
 function registerCustomFormats() {
-  tv4.addFormat('email', validateEmail);
-  tv4.addFormat('roomId', validateRoomId);
+  tv4.addFormat(
+    'email',
+    validateStringFormat.bind(undefined, EMAIL_REGEX, 'must be a valid email-address')
+  );
+  tv4.addFormat(
+    'roomId',
+    validateStringFormat.bind(
+      undefined,
+      ROOMID_REGEX,
+      'must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -'
+    )
+  );
+  tv4.addFormat(
+    'uuidv4',
+    validateStringFormat.bind(undefined, UUIDv4_REGEX, 'must be a valid uuid v4')
+  );
 }
 
-function validateRoomId(data) {
+function validateStringFormat(formatRegex, errorMsg, data) {
   if (!data) {
-    // allow empty string, undefined, null
-    return;
+    return; // allow empty string, undefined, null
   }
 
-  if (typeof data === 'string' && ROOMID_REGEX.test(data)) {
+  if (typeof data === 'string' && formatRegex.test(data)) {
     return null;
   }
 
-  return 'must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -';
-}
-
-function validateEmail(data) {
-  if (!data) {
-    // allow empty string, undefined, null
-    return;
-  }
-
-  if (typeof data === 'string' && EMAIL_REGEX.test(data)) {
-    return null;
-  }
-
-  return 'must be a valid email-address';
+  return errorMsg;
 }
 
 function CommandValidationError(err, cmd) {

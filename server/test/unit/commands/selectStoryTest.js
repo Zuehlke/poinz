@@ -71,7 +71,7 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow(
-      'Precondition Error during "selectStory": Story story-not-in-room cannot be selected. It is not part of room'
+      /Precondition Error during "selectStory": Given story story-not-in-room does not belong to room .*/
     );
   });
 });

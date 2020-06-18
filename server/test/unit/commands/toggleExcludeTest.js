@@ -50,3 +50,25 @@ test('toggleExclude  -> included', async () => {
     expect(room.users[userId].excluded).toBe(false);
   });
 });
+
+describe('precondition', () => {
+  test('Should fail, if userId does not match user in room', async () => {
+    const {processor, roomId} = await prepOneUserInOneRoom();
+    const commandId = uuid();
+    const nonMatchingUserId = uuid();
+
+    return expect(
+      processor(
+        {
+          id: commandId,
+          roomId: roomId,
+          name: 'toggleExclude',
+          payload: {}
+        },
+        nonMatchingUserId
+      )
+    ).rejects.toThrow(
+      /Precondition Error during "toggleExclude": Given user .* does not belong to room .*/
+    );
+  });
+});

@@ -4,13 +4,19 @@
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
+import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+
 const giveStoryEstimateCommandHandler = {
   preCondition: (room, command, userId) => {
-    if (room.get('selectedStory') !== command.payload.storyId) {
+    const storyId = command.payload.storyId;
+
+    throwIfStoryIdNotFoundInRoom(room, storyId);
+
+    if (room.get('selectedStory') !== storyId) {
       throw new Error('Can only give estimation for currently selected story!');
     }
 
-    if (room.getIn(['stories', command.payload.storyId, 'revealed'])) {
+    if (room.getIn(['stories', storyId, 'revealed'])) {
       throw new Error('You cannot give an estimate for a story that was revealed!');
     }
 

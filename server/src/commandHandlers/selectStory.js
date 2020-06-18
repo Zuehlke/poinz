@@ -1,16 +1,11 @@
 /**
  * A user selected a story (marked it as the "current" story to estimate)
  */
+import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+
 const selectStoryCommandHandler = {
   preCondition: (room, command) => {
-    // check that id in payload is one of the stories in room
-    if (!room.getIn(['stories', command.payload.storyId])) {
-      throw new Error(
-        `Story ${command.payload.storyId} cannot be selected. It is not part of room ${room.get(
-          'id'
-        )}`
-      );
-    }
+    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
   },
   fn: (room, command) => {
     room.applyEvent('storySelected', {storyId: command.payload.storyId});

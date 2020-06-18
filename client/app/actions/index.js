@@ -298,7 +298,10 @@ export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
 export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
-export const setLanguage = (language) => ({type: SET_LANGUAGE, language});
+export const setLanguage = (language) => {
+  clientSettingsStore.setPresetLanguage(language);
+  return {type: SET_LANGUAGE, language};
+};
 export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};

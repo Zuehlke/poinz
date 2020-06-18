@@ -144,6 +144,7 @@ test('Editing stories', () => {
       selectedStory: firstStoryId,
       stories: {
         [secondStoryId]: {
+          editMode: true,
           createdAt: 1592115972307,
           description: 'dscription second... from other john',
           estimations: {},
@@ -151,6 +152,7 @@ test('Editing stories', () => {
           title: 'Second story'
         },
         [firstStoryId]: {
+          editMode: true,
           createdAt: 1592115935676,
           description: 'description one',
           estimations: {},

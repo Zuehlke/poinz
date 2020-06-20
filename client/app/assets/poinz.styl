@@ -168,6 +168,10 @@ a {
     .user-name {
       text-align center
       margin 4px 0
+      max-width 10vh
+      text-overflow ellipsis
+      white-space nowrap
+      overflow hidden
     }
 
     .user-estimation {
@@ -199,6 +203,12 @@ a {
         color $zuehlkeLightGrey
         border 4px solid white
       }
+    }
+
+    img.avatar {
+      // for mobile screens, do not show avatars, (still display the user name)
+      // for larger screens display=block, see media query
+      display none
     }
 
     .excluded-badge, .disconnected-badge {
@@ -306,13 +316,23 @@ a {
 
 
   .quick-menu {
-    display block
+    display: flex;
+    align-items: center;
 
     .whoami {
       padding 0 8px
+      display block
 
       .whoami-extended {
         display none
+      }
+
+      .whoami-simple {
+        max-width: 10vh;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        white-space: nowrap;
       }
 
       &:hover {
@@ -331,7 +351,7 @@ a {
     // list  icon to toggle action log
 
     a.user-menu-toggle, a.log-toggle, a.leave-room {
-      display inline-block
+      display block
       width 34px
       height 34px
       font-size 22px
@@ -340,7 +360,6 @@ a {
       color white
       border-radius 0
       background $zuehlkeBlue
-
     }
 
   }
@@ -901,6 +920,9 @@ $backlogWidth = 300px
     }
   }
 
+  .users .user img.avatar {
+    display block
+  }
 
   .board .estimation .cards {
     button.card, button.card:focus {

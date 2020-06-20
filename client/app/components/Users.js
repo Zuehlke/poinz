@@ -7,18 +7,25 @@ import User from './User';
 /**
  * The list of users (avatars) and their estimations.
  */
-const Users = ({users}) => (
-  <div className="users">
-    {Object.values(users).map((user, index) => (
-      <User key={user.id} index={index} user={user} />
-    ))}
-  </div>
-);
+const Users = ({users, ownUserId}) => {
+  const userArray = Object.values(users);
+  userArray.sort((uOne, uTwo) => (uOne.id === ownUserId ? -1 : uTwo.id === ownUserId ? 1 : 0));
+
+  return (
+    <div className="users">
+      {userArray.map((user, index) => (
+        <User key={user.id} index={index} user={user} />
+      ))}
+    </div>
+  );
+};
 
 Users.propTypes = {
-  users: PropTypes.object
+  users: PropTypes.object,
+  ownUserId: PropTypes.string
 };
 
 export default connect((state) => ({
-  users: state.users
+  users: state.users,
+  ownUserId: state.userId
 }))(Users);

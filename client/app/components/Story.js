@@ -5,7 +5,7 @@ import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
 import {selectStory, editStory, deleteStory} from '../actions';
-import {getCardConfigForValue} from '../services/getCardConfigForValue';
+import ConsensusBadge from './ConsensusBadge';
 
 /**
  * One story in the backlog
@@ -86,20 +86,3 @@ export default connect(
   }),
   {selectStory, editStory, deleteStory}
 )(Story);
-
-const ConsensusBadge = ({cardConfig, consensusValue}) => {
-  const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
-
-  return (
-    <div
-      className="consensus-badge"
-      style={{background: matchingCardConfig ? matchingCardConfig.color : '#bdbfbf'}}
-    >
-      <div>{matchingCardConfig.label}</div>
-    </div>
-  );
-};
-ConsensusBadge.propTypes = {
-  cardConfig: PropTypes.array,
-  consensusValue: PropTypes.number
-};

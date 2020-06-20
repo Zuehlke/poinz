@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import {newEstimationRound, reveal} from '../actions';
 
 import Cards from './Cards';
+import ConsensusBadge from './ConsensusBadge';
 
 /**
  * Displays
@@ -14,7 +15,7 @@ import Cards from './Cards';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
+const Estimation = ({t, selectedStory, user, cardConfig, newEstimationRound, reveal}) => {
   const ownEstimate = selectedStory.estimations[user.id];
 
   const revealed = selectedStory.revealed;
@@ -24,7 +25,12 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
   return (
     <div className="estimation">
       <div className="selected-story">
-        <h4>{selectedStory.title}</h4>
+        <h4>
+          {selectedStory.title}
+          {selectedStory.consensus && (
+            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
+          )}
+        </h4>
         <div className="story-text">
           <Anchorify text={selectedStory.description} />
         </div>
@@ -63,6 +69,7 @@ const Estimation = ({t, selectedStory, user, newEstimationRound, reveal}) => {
 
 Estimation.propTypes = {
   t: PropTypes.func,
+  cardConfig: PropTypes.array,
   selectedStory: PropTypes.object,
   user: PropTypes.object,
   newEstimationRound: PropTypes.func,
@@ -73,7 +80,8 @@ export default connect(
   (state) => ({
     t: state.translator,
     selectedStory: state.stories[state.selectedStory],
-    user: state.users[state.userId]
+    user: state.users[state.userId],
+    cardConfig: state.cardConfig
   }),
   {newEstimationRound, reveal}
 )(Estimation);

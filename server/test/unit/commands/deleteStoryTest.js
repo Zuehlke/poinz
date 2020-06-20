@@ -69,6 +69,8 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('Cannot delete unknown story some-unknown-story');
+    ).rejects.toThrow(
+      /Precondition Error during "deleteStory": Given story some-unknown-story does not belong to room .*/
+    );
   });
 });

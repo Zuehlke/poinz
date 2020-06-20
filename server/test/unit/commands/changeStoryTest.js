@@ -85,6 +85,8 @@ describe('preconditions', () => {
         },
         userIdOne
       )
-    ).rejects.toThrow('Cannot change unknown story some-unknown-story');
+    ).rejects.toThrow(
+      /Precondition Error during "changeStory": Given story some-unknown-story does not belong to room .*/
+    );
   });
 });

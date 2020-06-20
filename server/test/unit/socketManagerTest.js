@@ -45,32 +45,7 @@ test('registering new socket, new user, new room successfully', async () => {
   expect(socket.join.mock.calls[0][0]).toEqual(joinedRoomEvent.roomId);
 });
 
-test('should throw if produced joinedRoom event has no roomId', async () => {
-  const sendEventToRoom = jest.fn();
-
-  const joinedRoomEvent = {
-    /* for some reason, no roomId*/
-    name: 'joinedRoom'
-  };
-
-  const socketManager = socketManagerFactory(
-    getMockCmdProcessor([joinedRoomEvent]),
-    sendEventToRoom
-  );
-
-  const socket = getMockSocketObject();
-  const dummyCommand = {
-    id: uuid()
-  };
-
-  await socketManager.handleIncomingCommand(socket, dummyCommand);
-  expectEmittedCommandRejected(
-    socket,
-    'Fatal!  No roomId after "joinedRoom" to put into socketToRoomMap!'
-  );
-});
-
-test('should correctly handle joining & leaving  multiple rooms in sequence', async () => {
+test('should correctly handle joining & leaving multiple rooms in sequence', async () => {
   const sendEventToRoom = jest.fn();
   const mockCmdProcessor = jest.fn().mockName('mockCommandProcessor');
   const socketManager = socketManagerFactory(mockCmdProcessor, sendEventToRoom);
@@ -146,17 +121,6 @@ test('should handle disconnect', async () => {
 
   await socketManager.onDisconnect(getMockSocketObject());
 });
-
-function expectEmittedCommandRejected(socket, reason) {
-  expect(socket.emit.mock.calls.length).toBe(1);
-  expect(socket.emit.mock.calls[0][0]).toEqual('event');
-  expect(socket.emit.mock.calls[0][1]).toMatchObject({
-    name: 'commandRejected',
-    payload: {
-      reason
-    }
-  });
-}
 
 function getMockCmdProcessor(producedEvents) {
   return jest

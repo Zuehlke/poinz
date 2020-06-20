@@ -168,6 +168,10 @@ a {
     .user-name {
       text-align center
       margin 4px 0
+      max-width 10vh
+      text-overflow ellipsis
+      white-space nowrap
+      overflow hidden
     }
 
     .user-estimation {
@@ -199,6 +203,12 @@ a {
         color $zuehlkeLightGrey
         border 4px solid white
       }
+    }
+
+    img.avatar {
+      // for mobile screens, do not show avatars, (still display the user name)
+      // for larger screens display=block, see media query
+      display none
     }
 
     .excluded-badge, .disconnected-badge {
@@ -306,13 +316,23 @@ a {
 
 
   .quick-menu {
-    display block
+    display: flex;
+    align-items: center;
 
     .whoami {
       padding 0 8px
+      display block
 
       .whoami-extended {
         display none
+      }
+
+      .whoami-simple {
+        max-width: 10vh;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        white-space: nowrap;
       }
 
       &:hover {
@@ -331,7 +351,7 @@ a {
     // list  icon to toggle action log
 
     a.user-menu-toggle, a.log-toggle, a.leave-room {
-      display inline-block
+      display block
       width 34px
       height 34px
       font-size 22px
@@ -340,7 +360,6 @@ a {
       color white
       border-radius 0
       background $zuehlkeBlue
-
     }
 
   }
@@ -718,25 +737,6 @@ $backlogWidth = 300px
           }
         }
 
-        .consensus-badge {
-          display flex
-          width 24px
-          height 24px
-          border-radius 50%
-          margin-left 8px
-
-          justify-content center
-          align-items center
-
-          > div {
-            font-size 12px
-            color white
-            font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
-          }
-
-
-        }
-
         &.story-selected {
           border-left 2px solid $zuehlkeOrange
         }
@@ -752,8 +752,9 @@ $backlogWidth = 300px
         h4 {
           line-height 24px
           display flex
-          margin-top 8px
+          margin-top 12px
           margin-bottom 0
+          justify-content space-between
         }
 
         .story-text {
@@ -776,6 +777,9 @@ $backlogWidth = 300px
       h4 {
         margin-top 8px
         margin-bottom 0
+        line-height 24px
+        display flex
+        justify-content space-between
       }
 
       .story-text {
@@ -783,6 +787,8 @@ $backlogWidth = 300px
         white-space pre-wrap
         display inline-block
       }
+
+
     }
 
     .board-actions {
@@ -875,7 +881,24 @@ $backlogWidth = 300px
     top 4px
     right 4px
   }
+}
 
+
+.consensus-badge {
+  display flex
+  width 24px
+  height 24px
+  border-radius 50%
+  margin-left 8px
+
+  justify-content center
+  align-items center
+
+  > div {
+    font-size 12px
+    color white
+    font-family "aa_zuehlke_otpsregular", "Helvetica Neue", Helvetica, Arial, sans-serif
+  }
 
 }
 
@@ -897,6 +920,9 @@ $backlogWidth = 300px
     }
   }
 
+  .users .user img.avatar {
+    display block
+  }
 
   .board .estimation .cards {
     button.card, button.card:focus {

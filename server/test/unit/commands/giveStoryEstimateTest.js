@@ -1,4 +1,6 @@
 import {v4 as uuid} from 'uuid';
+import Immutable from 'immutable';
+
 import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyEstimateGiven event', async () => {
@@ -268,6 +270,44 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
 
 describe('preconditions', () => {
   test('Should throw if storyId does not match "selectedStory"', async () => {
+    const {
+      roomId,
+      userIdOne: userId,
+      processor,
+      mockRoomsStore
+    } = await prepTwoUsersInOneRoomWithOneStory();
+
+    const secondStoryId = uuid();
+
+    mockRoomsStore.manipulate((room) =>
+      room.setIn(
+        ['stories', secondStoryId],
+        new Immutable.Map({
+          id: secondStoryId,
+          title: 'second story'
+        })
+      )
+    );
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId: roomId,
+          name: 'giveStoryEstimate',
+          payload: {
+            storyId: secondStoryId,
+            value: 2
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow(
+      /Precondition Error during "giveStoryEstimate": Can only give estimation for currently selected story/
+    );
+  });
+
+  test('Should throw if storyId does not belong to room', async () => {
     const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
 
     return expect(
@@ -283,7 +323,9 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('Can only give estimation for currently selected story!');
+    ).rejects.toThrow(
+      /Precondition Error during "giveStoryEstimate": Given story unknown does not belong to room .*/
+    );
   });
 
   test('Should throw if story already revealed', async () => {

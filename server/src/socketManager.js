@@ -1,12 +1,14 @@
 import {v4 as uuid} from 'uuid';
 
 import getLogger from './getLogger';
+import socketRegistryFactory from './socketRegistry';
 
 const LOGGER = getLogger('socketManager');
 
+LOGGER.transports[0].level = 'debug';
+
 export default function socketManagerFactory(commandProcessor, sendEventToRoom) {
-  const socketToUserIdMap = {};
-  const socketToRoomMap = {};
+  const registry = socketRegistryFactory();
 
   return {
     handleIncomingCommand,
@@ -23,20 +25,28 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
         return;
       }
 
-      const joinedRoomEvent = getJoinedRoomEvent(producedEvents);
-      if (joinedRoomEvent) {
-        registerUserWithSocket(socket.id, matchingUserId);
-        registerSocketWithRoom(joinedRoomEvent.roomId, socket);
-      }
-
-      if (hasLeftRoomEvent(producedEvents)) {
-        unregisterUserWithSocket(socket.id);
-        unregisterSocketWithRoom(socket.id);
-      }
+      updateSocketRegistry(matchingUserId, producedEvents, socket);
 
       sendEvents(producedEvents, producedEvents[0].roomId);
     } catch (commandProcessingError) {
       handleCommandProcessingError(commandProcessingError, msg, socket);
+    }
+  }
+
+  function updateSocketRegistry(userId, producedEvents, socket) {
+    const joinedRoomEvent = getJoinedRoomEvent(producedEvents);
+    if (joinedRoomEvent) {
+      registry.registerSocketMapping(socket, userId, joinedRoomEvent.roomId);
+    }
+
+    const leftRoomEvent = getLeftRoomEvent(producedEvents);
+    if (leftRoomEvent) {
+      registry.removeSocketMapping(socket.id, leftRoomEvent.userId, leftRoomEvent.roomId);
+    } else {
+      const kickedRoomEvent = getKickedRoomEvent(producedEvents);
+      if (kickedRoomEvent) {
+        registry.removeSocketMapping(socket.id, kickedRoomEvent.userId, kickedRoomEvent.roomId);
+      }
     }
   }
 
@@ -47,11 +57,18 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
     return producedEvents.find((e) => e.name === 'joinedRoom');
   }
 
-  function hasLeftRoomEvent(producedEvents) {
+  function getLeftRoomEvent(producedEvents) {
     if (!producedEvents) {
       return undefined;
     }
-    return !!producedEvents.find((e) => e.name === 'leftRoom');
+    return producedEvents.find((e) => e.name === 'leftRoom');
+  }
+
+  function getKickedRoomEvent(producedEvents) {
+    if (!producedEvents) {
+      return undefined;
+    }
+    return producedEvents.find((e) => e.name === 'kicked');
   }
 
   /**
@@ -65,9 +82,9 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
    * @return {string} the userId
    */
   function getUserIdForMessage(socketId, msg) {
-    const matchingUserId = socketToUserIdMap[socketId];
-    if (matchingUserId) {
-      return matchingUserId;
+    const mapping = registry.getMapping(socketId);
+    if (mapping && mapping.userId) {
+      return mapping.userId;
     }
 
     if (msg.name === 'joinRoom' && msg.payload && msg.payload.userId) {
@@ -109,51 +126,24 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
   }
 
   /**
-   * we need do keep the mapping of a socket to userId,
-   * so that we can retrieve the userId for any message (command) sent on this socket
-   */
-  function registerUserWithSocket(socketId, userId) {
-    socketToUserIdMap[socketId] = userId;
-  }
-
-  function unregisterUserWithSocket(socketId) {
-    delete socketToUserIdMap[socketId];
-  }
-
-  /**
-   * we need do keep the mapping of a socket to room,
-   * so that we can produce "user left" events on socket disconnect.
-   *
-   * also join sockets together in a socket.io "room" , so that we can emit messages to all sockets in that room
-   */
-  function registerSocketWithRoom(roomId, socket) {
-    if (!roomId) {
-      throw new Error('Fatal!  No roomId after "joinedRoom" to put into socketToRoomMap!');
-    }
-    socketToRoomMap[socket.id] = roomId;
-
-    socket.join(roomId, () => LOGGER.debug(`Socket ${socket.id} joined room ${roomId}`));
-  }
-
-  function unregisterSocketWithRoom(socketId) {
-    delete socketToRoomMap[socketId];
-  }
-
-  /**
    * if the socket is disconnected (e.g. user closed browser tab), manually produce and handle
    * a "leaveRoom" command that will mark the user.
    */
   async function onDisconnect(socket) {
-    const userId = socketToUserIdMap[socket.id];
-    const roomId = socketToRoomMap[socket.id]; // socket.rooms is at this moment already emptied. so we have to use our own map
+    // socket.rooms is at this moment already emptied
+    const mapping = registry.getMapping(socket.id);
 
-    if (!userId || !roomId) {
+    if (!mapping) {
       // this happens if user is on landing page, socket is opened, then leaves, never joined a room. perfectly fine.
-      LOGGER.debug(`Socket disconnected. no mapping to userId (${userId}) or roomId (${roomId})`);
+      LOGGER.debug(`Socket ${socket.id} disconnected. no mapping...`);
       return;
     }
 
-    if (isLastSocketForUserId(userId)) {
+    const {userId, roomId} = mapping;
+
+    LOGGER.debug(`Socket ${socket.id} disconnected. Mapping to user ${userId} in room ${roomId}`);
+
+    if (registry.isLastSocketForUserId(userId)) {
       const leaveRoomCommand = {
         id: uuid(),
         roomId: roomId,
@@ -163,13 +153,11 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
         }
       };
       await handleIncomingCommand(socket, leaveRoomCommand);
+    } else {
+      LOGGER.debug(
+        `User ${userId} in room ${roomId}, has more open sockets. Removing mapping for socket ${socket.id}`
+      );
+      registry.removeSocketMapping(socket.id, userId, roomId);
     }
-  }
-
-  function isLastSocketForUserId(userId) {
-    const socketsOfThatUser = Object.values(socketToUserIdMap).filter(
-      (socketUserId) => socketUserId === userId
-    );
-    return socketsOfThatUser.length === 1;
   }
 }

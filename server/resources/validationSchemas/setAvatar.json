@@ -1,0 +1,23 @@
+{
+  "allOf": [
+    {
+      "$ref": "command"
+    },
+    {
+      "properties": {
+        "payload": {
+          "type": "object",
+          "properties": {
+            "avatar": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "avatar"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

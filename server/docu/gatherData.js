@@ -6,6 +6,25 @@ const babel = require('@babel/core');
 module.exports = gatherData;
 
 /**
+ * use "import" statements in file "commandHandlers.js" to find all commandHandlers
+ * we cannot "readDir" the cmdHandlersDirPath, since it contains also other files...
+ *
+ * @return {string[]} list of filenames
+ */
+async function getListOfCommandHandlerFiles(cmdHandlersDirPath) {
+  const parseResult = await parseFile(path.join(cmdHandlersDirPath, 'commandHandlers.js'));
+  const imports = [];
+  babel.traverse(parseResult, {
+    ImportDeclaration: (nodePath) => {
+      imports.push(nodePath.node.source.value + '.js');
+    }
+  });
+
+  imports.sort();
+  return imports;
+}
+
+/**
  * gathers command and event metadata from our sources
  *
  * @param {string} cmdHandlersDirPath
@@ -14,7 +33,7 @@ module.exports = gatherData;
  * @return {Promise<{commandHandlerFileData: any, eventList: *}>}
  */
 async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandlersDirPath) {
-  const commandHandlerFilenames = await fs.promises.readdir(cmdHandlersDirPath);
+  const commandHandlerFilenames = await getListOfCommandHandlerFiles(cmdHandlersDirPath);
   let commandHandlerFileData = await Promise.all(
     commandHandlerFilenames.map(
       async (f) => await handleSingleCmdHandlerFile(path.join(cmdHandlersDirPath, f))
@@ -83,35 +102,11 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
     return '';
   }
 
-  function getPoinzRelativePath(filePath) {
-    const absPath = path.resolve(filePath);
-
-    return absPath.substring(absPath.lastIndexOf('poinz') + 5);
-  }
-
-  async function parseFile(filePath) {
-    const source = await fs.promises.readFile(filePath, 'utf-8');
-    return await new Promise((resolve, reject) =>
-      babel.parse(source, (err, result) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(result);
-      })
-    );
-  }
-
   /**
    *  parse given commandHandler file with babel. pull information from AST
    */
   async function handleSingleCmdHandlerFile(filePath) {
     const commandName = path.basename(filePath, '.js');
-
-    if (commandName === 'commandHandlers') {
-      // special "indexing" file is not a command handler
-      return undefined;
-    }
-
     const parseResult = await parseFile(filePath);
     const schema = await getValidationSchemaForCommand(commandName);
     const cmdHandlerInfo = {
@@ -147,10 +142,36 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
    * load matching validation schema json file for given command
    */
   async function getValidationSchemaForCommand(commandName) {
-    const validationSchemaFileContent = await fs.promises.readFile(
-      path.join(validationSchemasDirPath, commandName + '.json'),
-      'utf-8'
-    );
-    return JSON.parse(validationSchemaFileContent);
+    const validationSchemaFileName = path.join(validationSchemasDirPath, commandName + '.json');
+    try {
+      const validationSchemaFileContent = await fs.promises.readFile(
+        validationSchemaFileName,
+        'utf-8'
+      );
+      return JSON.parse(validationSchemaFileContent);
+    } catch (readError) {
+      console.error(
+        `Could not read validationSchema for command "${commandName}"! Expected it to be here :  ${validationSchemaFileName}`
+      );
+      return {};
+    }
   }
+}
+
+function getPoinzRelativePath(filePath) {
+  const absPath = path.resolve(filePath);
+
+  return absPath.substring(absPath.lastIndexOf('poinz') + 5);
+}
+
+async function parseFile(filePath) {
+  const source = await fs.promises.readFile(filePath, 'utf-8');
+  return await new Promise((resolve, reject) =>
+    babel.parse(source, (err, result) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(result);
+    })
+  );
 }

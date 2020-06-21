@@ -621,6 +621,10 @@ $userMenuWidth = 300px
     content " "
   }
 
+  &.card-inner:before {
+    border-radius 12px
+  }
+
   &:after {
     -webkit-animation fa-spin 2s infinite linear
     animation fa-spin 2s infinite linear
@@ -775,7 +779,7 @@ $backlogWidth = 300px
       padding 8px
       position relative
 
-      > .applause-highlight{
+      > .applause-highlight {
         position absolute
         top 0
         left 0
@@ -948,29 +952,4 @@ $backlogWidth = 300px
 // in every screen-size, if backlog-active class is set, show menu
 .board .backlog.backlog-active {
   left $backlogWidth
-}
-
-
-//@keyframes flash_border {
-//  0% {
-//    border-color: rgb(201, 200, 87);
-//  }
-//  50% {
-//    border-color: $zuehlkeLighterGrey;
-//  }
-//  100% {
-//    border-color: rgb(201, 200, 87);
-//  }
-//}
-
-@keyframes flash_shadow {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }

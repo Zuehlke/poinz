@@ -8,21 +8,13 @@
         "payload": {
           "type": "object",
           "properties": {
-            "username": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string",
-              "format": "email"
-            },
             "avatar": {
               "type": "number"
-            },
-            "userId": {
-              "type": "string",
-              "format": "uuidv4"
             }
           },
+          "required": [
+            "avatar"
+          ],
           "additionalProperties": false
         }
       }

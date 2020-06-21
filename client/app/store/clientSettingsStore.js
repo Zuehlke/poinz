@@ -32,6 +32,14 @@ function setPresetEmail(email) {
   setItem('presetEmail', email);
 }
 
+function getPresetAvatar() {
+  return parseInt(getItem('presetAvatar'), 10);
+}
+
+function setPresetAvatar(avatar) {
+  setItem('presetAvatar', avatar);
+}
+
 function getPresetUserId() {
   return getItem('presetUserId');
 }
@@ -55,6 +63,8 @@ export default {
   setPresetLanguage,
   getPresetEmail,
   setPresetEmail,
+  getPresetAvatar,
+  setPresetAvatar,
   getPresetUserId,
   setPresetUserId,
   getHideNewUserHints,

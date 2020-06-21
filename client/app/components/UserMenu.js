@@ -3,12 +3,14 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import {toggleExcluded, setUsername, setEmail, leaveRoom, setLanguage} from '../actions';
+import avatarIcons from '../assets/avatars';
+
+import {toggleExcluded, setUsername, setEmail, leaveRoom, setLanguage, setAvatar} from '../actions';
 
 /**
- * The user menu displays a form for changing the username and the vistitor flag.
- *
- * It also dispalys a "leave room" button.
+ * The user menu allows customizing Poinz
+ * - changing the username, avatar
+ * - changing language
  */
 const UserMenu = ({
   t,
@@ -16,6 +18,7 @@ const UserMenu = ({
   user,
   setUsername,
   setEmail,
+  setAvatar,
   toggleExcluded,
   setLanguage,
   userMenuShown
@@ -55,7 +58,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary button-save button-save-username"
               onClick={saveUsername}
             >
-              {t('save')}
+              <i className="fa fa-save" />
             </button>
           </div>
         </div>
@@ -88,7 +91,20 @@ const UserMenu = ({
         </div>
 
         <div className="user-menu-section">
-          <h5>{t('gravatar')}</h5>
+          <h5>{t('avatar')}</h5>
+          {t('avatarInfo')}
+
+          <div className="avatar-grid">
+            {avatarIcons.map((aIcn, index) => (
+              <img
+                className={user.avatar === index ? 'selected' : ''}
+                src={aIcn}
+                key={'aIcn_' + aIcn}
+                onClick={() => setAvatar(index)}
+              />
+            ))}
+          </div>
+
           {t('gravatarInfo')}
 
           <div className="email-wrapper">
@@ -105,7 +121,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary button-save button-save-email"
               onClick={saveEmail}
             >
-              {t('save')}
+              <i className="fa fa-save" />
             </button>
           </div>
         </div>
@@ -155,6 +171,7 @@ UserMenu.propTypes = {
   leaveRoom: PropTypes.func,
   setLanguage: PropTypes.func,
   setUsername: PropTypes.func,
+  setAvatar: PropTypes.func,
   setEmail: PropTypes.func
 };
 
@@ -170,6 +187,7 @@ export default connect(
     leaveRoom,
     setUsername,
     setEmail,
+    setAvatar,
     setLanguage
   }
 )(UserMenu);

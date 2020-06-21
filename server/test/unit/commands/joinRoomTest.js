@@ -15,7 +15,8 @@ test('nonexisting room  ', () => {
       name: 'joinRoom',
       payload: {
         username: 'tester',
-        email: 'super@test.com'
+        email: 'super@test.com',
+        avatar: 6
       }
     },
     userId
@@ -26,9 +27,16 @@ test('nonexisting room  ', () => {
       'roomCreated',
       'joinedRoom',
       'usernameSet',
-      'emailSet'
+      'emailSet',
+      'avatarSet'
     );
-    const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
+    const [
+      roomCreatedEvent,
+      joinedRoomEvent,
+      usernameSetEvent,
+      emailSetEvent,
+      avatarSetEvent
+    ] = producedEvents;
 
     expect(roomCreatedEvent.userId).toEqual(userId);
     expect(roomCreatedEvent.payload).toEqual({});
@@ -42,7 +50,8 @@ test('nonexisting room  ', () => {
           disconnected: false,
           email: 'super@test.com',
           id: userId,
-          username: 'tester'
+          username: 'tester',
+          avatar: 6
         }
       }
     });
@@ -57,12 +66,20 @@ test('nonexisting room  ', () => {
       email: 'super@test.com'
     });
 
+    expect(avatarSetEvent.userId).toEqual(userId);
+    expect(avatarSetEvent.payload).toEqual({
+      avatar: 6
+    });
+
     // check room structure and data
     expect(room).toMatchObject({
       id: roomId,
       users: {
         [userId]: {
-          id: userId
+          id: userId,
+          avatar: 6,
+          email: 'super@test.com',
+          username: 'tester'
         }
       },
       stories: {}
@@ -82,7 +99,8 @@ test('existing room with user match', async () => {
       name: 'joinRoom',
       payload: {
         username: 'tester',
-        email: 'super@test.com'
+        email: 'super@test.com',
+        avatar: 4
       }
     },
     userId
@@ -92,9 +110,10 @@ test('existing room with user match', async () => {
       roomId,
       'joinedRoom',
       'usernameSet',
-      'emailSet'
+      'emailSet',
+      'avatarSet'
     );
-    const [joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
+    const [joinedRoomEvent, usernameSetEvent, emailSetEvent, avatarSetEvent] = producedEvents;
 
     expect(joinedRoomEvent.userId).toEqual(userId);
     expect(joinedRoomEvent.payload).toEqual({
@@ -105,7 +124,8 @@ test('existing room with user match', async () => {
           disconnected: false,
           email: 'super@test.com',
           id: userId,
-          username: 'tester'
+          username: 'tester',
+          avatar: 4
         }
       }
     });
@@ -120,12 +140,20 @@ test('existing room with user match', async () => {
       email: 'super@test.com'
     });
 
+    expect(avatarSetEvent.userId).toEqual(userId);
+    expect(avatarSetEvent.payload).toEqual({
+      avatar: 4
+    });
+
     // check room structure and data
     expect(room).toMatchObject({
       id: roomId,
       users: {
         [userId]: {
-          id: userId
+          id: userId,
+          avatar: 4,
+          username: 'tester',
+          email: 'super@test.com'
         }
       },
       stories: {}
@@ -140,6 +168,7 @@ test('existing room with user match, command has no preset properties', async ()
   );
 
   mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'email'], 'super@test.com'));
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'avatar'], 1));
   mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'disconnected'], true));
 
   const commandId = uuid();
@@ -151,7 +180,7 @@ test('existing room with user match, command has no preset properties', async ()
       roomId,
       name: 'joinRoom',
       payload: {
-        // for some reason, no preset username and email (which is totally valid)
+        // no preset username and email (which is totally valid)  e.g. first-time user
       }
     },
     userId
@@ -160,10 +189,11 @@ test('existing room with user match, command has no preset properties', async ()
       commandId,
       roomId,
       'joinedRoom',
-      'usernameSet', // still usernameSet and emailSet should be produced, since backend "knows" user in this room and has stored these two properties
-      'emailSet'
+      'usernameSet', // still usernameSet, emailSet and avatarSet should be produced, since backend "knows" user in this room and has stored these three properties
+      'emailSet',
+      'avatarSet'
     );
-    const [joinedRoomEvent, usernameSetEvent, emailSetEvent] = producedEvents;
+    const [joinedRoomEvent, usernameSetEvent, emailSetEvent, avatarSetEvent] = producedEvents;
 
     expect(joinedRoomEvent.userId).toEqual(userId);
     expect(joinedRoomEvent.payload).toEqual({
@@ -174,7 +204,8 @@ test('existing room with user match, command has no preset properties', async ()
           disconnected: false,
           email: 'super@test.com',
           id: userId,
-          username: 'custom-user-name'
+          username: 'custom-user-name',
+          avatar: 1
         }
       }
     });
@@ -188,13 +219,20 @@ test('existing room with user match, command has no preset properties', async ()
     expect(emailSetEvent.payload).toEqual({
       email: 'super@test.com'
     });
+    expect(avatarSetEvent.userId).toEqual(userId);
+    expect(avatarSetEvent.payload).toEqual({
+      avatar: 1
+    });
 
     // check room structure and data
     expect(room).toMatchObject({
       id: roomId,
       users: {
         [userId]: {
-          id: userId
+          id: userId,
+          email: 'super@test.com',
+          username: 'custom-user-name',
+          avatar: 1
         }
       },
       stories: {}

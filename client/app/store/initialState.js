@@ -38,6 +38,7 @@ const INITIAL_STATE = () => ({
   presetUsername: clientSettingsStore.getPresetUsername(),
   presetEmail: clientSettingsStore.getPresetEmail(),
   presetUserId: clientSettingsStore.getPresetUserId(),
+  presetAvatar: clientSettingsStore.getPresetAvatar(),
   userMenuShown: false,
   actionLog: [], // will contain human readable "log messages" of actions that did take place in the current room
   pendingCommands: {}, // will contain pending commands (commands for which no event is received yet)

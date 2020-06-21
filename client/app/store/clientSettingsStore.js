@@ -36,8 +36,8 @@ function getPresetUserId() {
   return getItem('presetUserId');
 }
 
-function setPresetUserId(username) {
-  setItem('presetUserId', username);
+function setPresetUserId(userId) {
+  setItem('presetUserId', userId);
 }
 
 function getHideNewUserHints() {

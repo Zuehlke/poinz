@@ -4,13 +4,14 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import {changeStory, cancelEditStory} from '../actions';
+import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
 const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
   const classes = classnames('story', {
-    waiting: Object.values(pendingChangeCommands).find((cmd) => cmd.payload.storyId === story.id)
+    waiting: pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id)
   });
 
   let titleInputField, descriptionInputField;
@@ -67,9 +68,7 @@ StoryEditForm.propTypes = {
 
 export default connect(
   (state) => ({
-    pendingChangeCommands: Object.values(state.pendingCommands).filter(
-      (cmd) => cmd.name === 'changeStory'
-    )
+    pendingChangeCommands: getAllMatchingPendingCommands(state, 'changeStory')
   }),
   {changeStory, cancelEditStory}
 )(StoryEditForm);

@@ -7,10 +7,14 @@ import reduceMultipleEventActions from './reduceMultipleEventActions';
 import eventReducer from '../../../app/services/eventReducer';
 
 test('You joining a new room', () => {
-  const startingState = initialState();
+  const cmdId = uuid();
+
+  const startingState = {
+    ...initialState(),
+    pendingJoinCommandId: cmdId
+  };
   let modifiedState;
 
-  const cmdId = uuid();
   const userId = uuid();
   const roomId = uuid();
   const eventActions = [

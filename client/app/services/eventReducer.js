@@ -102,19 +102,8 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.joinedRoom]: {
     fn: (state, payload, event) => {
-      if (state.userId) {
-        // if our client state has already a userId set, this event indicates that someone else joined
-        const modifiedUsers = {...state.users};
-        modifiedUsers[event.userId] = payload.users[event.userId];
-        return {
-          ...state,
-          users: modifiedUsers
-        };
-      } else {
+      if (state.pendingJoinCommandId && state.pendingJoinCommandId === event.correlationId) {
         // you joined
-
-        // set the page title
-        document.title = `PoinZ - ${event.roomId}`;
 
         clientSettingsStore.setPresetUserId(event.userId);
 
@@ -125,7 +114,16 @@ const eventActionHandlers = {
           userId: event.userId,
           selectedStory: payload.selectedStory,
           users: payload.users || {},
-          stories: payload.stories || {}
+          stories: payload.stories || {},
+          pendingJoinCommand: undefined
+        };
+      } else {
+        // if our client state has already a userId set, this event indicates that someone else joined
+        const modifiedUsers = {...state.users};
+        modifiedUsers[event.userId] = payload.users[event.userId];
+        return {
+          ...state,
+          users: modifiedUsers
         };
       }
     },
@@ -147,7 +145,6 @@ const eventActionHandlers = {
     fn: (state, payload, event) => {
       // If your user (in this or in another browser) left the room
       if (state.userId === event.userId) {
-        document.title = 'PoinZ';
         return {...initialState()};
       }
 
@@ -254,7 +251,11 @@ const eventActionHandlers = {
    * the selected story was set (i.e. the one that can be currently estimated by the team)
    */
   [EVENT_ACTION_TYPES.storySelected]: {
-    fn: (state, payload) => ({...state, selectedStory: payload.storyId}),
+    fn: (state, payload) => ({
+      ...state,
+      selectedStory: payload.storyId,
+      applause: false
+    }),
     log: (username, payload, oldState, newState) =>
       `${username} selected current story "${newState.stories[payload.storyId].title}"`
   },
@@ -356,6 +357,7 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.consensusAchieved]: {
     fn: (state, payload) => ({
       ...state,
+      applause: true,
       stories: {
         ...state.stories,
         [payload.storyId]: {
@@ -415,6 +417,7 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {
     fn: (state, payload) => ({
       ...state,
+      applause: false,
       stories: {
         ...state.stories,
         [payload.storyId]: {

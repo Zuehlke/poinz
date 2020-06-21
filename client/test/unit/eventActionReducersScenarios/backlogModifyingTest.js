@@ -182,6 +182,19 @@ test('Editing stories', () => {
     {
       event: {
         id: uuid(),
+        userId: ownUserId,
+        correlationId: uuid(),
+        name: 'storySelected',
+        roomId,
+        payload: {
+          storyId: secondStoryId
+        }
+      },
+      type: EVENT_ACTION_TYPES.storySelected
+    },
+    {
+      event: {
+        id: uuid(),
         userId: otherUserId,
         correlationId: uuid(),
         name: 'storyChanged',
@@ -197,7 +210,8 @@ test('Editing stories', () => {
   ];
 
   modifiedState = reduceMultipleEventActions(startingState, eventActions);
-  expect(modifiedState.selectedStory).toEqual(firstStoryId);
+  expect(modifiedState.selectedStory).toEqual(secondStoryId);
+  expect(modifiedState.applause).toEqual(false);
   expect(modifiedState.stories).toEqual({
     [secondStoryId]: {
       createdAt: 1592115972307,

@@ -4,13 +4,14 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {addStory} from '../actions';
+import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
 
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({t, addStory, pendingAddCommands}) => {
+const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
   const classes = classnames('pure-form story-add-form', {
-    waiting: pendingAddCommands
+    waiting: hasPendingAddCommands
   });
   let titleInputField, descriptionInputField;
 
@@ -62,15 +63,13 @@ const StoryAddForm = ({t, addStory, pendingAddCommands}) => {
 StoryAddForm.propTypes = {
   t: PropTypes.func,
   addStory: PropTypes.func,
-  pendingAddCommands: PropTypes.bool
+  hasPendingAddCommands: PropTypes.bool
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
-    pendingAddCommands: !!Object.values(state.pendingCommands).find(
-      (cmd) => cmd.name === 'addStory'
-    )
+    hasPendingAddCommands: hasMatchingPendingCommand(state, 'addStory')
   }),
   {addStory}
 )(StoryAddForm);

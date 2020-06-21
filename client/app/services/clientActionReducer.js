@@ -32,6 +32,18 @@ export default function clientActionReducer(state, action) {
         ...state.pendingCommands,
         [action.command.id]: action.command
       };
+
+      if (action.command.name === 'joinRoom') {
+        // special case, we need to remember that we are joining / waiting for "joinedRoom"
+        // if first-time user, we don't have a userId. we need to know, if it is "us" that joins...
+
+        return {
+          ...state,
+          pendingCommands: modifiedPendingCommands,
+          pendingJoinCommandId: action.command.id
+        };
+      }
+
       return {...state, pendingCommands: modifiedPendingCommands};
     }
     case EVENT_RECEIVED: {

@@ -621,6 +621,10 @@ $userMenuWidth = 300px
     content " "
   }
 
+  &.card-inner:before {
+    border-radius 12px
+  }
+
   &:after {
     -webkit-animation fa-spin 2s infinite linear
     animation fa-spin 2s infinite linear
@@ -771,8 +775,22 @@ $backlogWidth = 300px
 
     .selected-story {
       background white
-      border: 1px solid $zuehlkeLighterGrey
+      border 1px solid $zuehlkeLighterGrey
       padding 8px
+      position relative
+
+      > .applause-highlight {
+        position absolute
+        top 0
+        left 0
+        width 100%
+        height 100%
+        border 1px solid $zuehlkeLighterGrey
+        animation-name flash_shadow
+        animation-duration 2s
+        animation-timing-function linear
+        animation-iteration-count 3
+      }
 
       h4 {
         margin-top 8px

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import JoinRoomForm from '../components/JoinRoomForm';
 import GithubRibbon from '../components/GithubRibbon';
+import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
 
 /**
  * The "landing" page where the user can enter a room name to join
@@ -34,7 +35,7 @@ Landing.propTypes = {
 
 export default connect((state) => ({
   t: state.translator,
-  waitingForJoin: !!Object.values(state.pendingCommands).find((cmd) => cmd.name === 'joinRoom')
+  waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
 }))(Landing);
 
 const Loader = ({t}) => <div className="eyecatcher loading">{t('loading')}</div>;

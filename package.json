@@ -16,7 +16,8 @@
     "prebuild": "node build/checkTranslationKeys.js && cd server/ && npm run docu",
     "build": "node build/dockerImage.js",
     "dependencyCheck": "ncu --packageFile ./package.json > npm_dependencies_report.poinz.md && ncu --packageFile ./client/package.json > npm_dependencies_report.poinz-client.md && ncu --packageFile ./server/package.json > npm_dependencies_report.poinz-server.md ",
-    "postinstall": "cd client/ && npm i && cd ../server && npm i"
+    "postinstall": "cd client/ && npm i && cd ../server && npm i",
+    "docu": "cd server/ && npm run docu"
   },
   "devDependencies": {
     "bluebird": "3.7.2",

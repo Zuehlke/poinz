@@ -309,6 +309,27 @@ const eventActionHandlers = {
       `${oldState.users[event.userId].username} set his/her email address`
   },
 
+  [EVENT_ACTION_TYPES.avatarSet]: {
+    fn: (state, payload, event) => {
+      const isOwnUser = state.userId === event.userId;
+
+      if (isOwnUser) {
+        clientSettingsStore.setPresetAvatar(payload.avatar);
+      }
+
+      return {
+        ...state,
+        users: {
+          ...state.users,
+          [event.userId]: {...state.users[event.userId], avatar: payload.avatar}
+        },
+        presetAvatar: isOwnUser ? payload.avatar : state.presetAvatar
+      };
+    },
+    log: (username, payload, oldState, newState, event) =>
+      `${oldState.users[event.userId].username} set his/her avatar`
+  },
+
   /**
    * user was excluded from estimations (flag for a user was set / toggled on)
    */

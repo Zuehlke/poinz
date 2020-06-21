@@ -100,6 +100,9 @@ export const joinRoom = (roomId) => (dispatch, getState) => {
   if (state.presetEmail) {
     joinCommandPayload.email = state.presetEmail;
   }
+  if (state.presetAvatar) {
+    joinCommandPayload.avatar = state.presetAvatar;
+  }
 
   hub.sendCommand(
     {
@@ -215,6 +218,20 @@ export const setEmail = (email) => (dispatch, getState) => {
       roomId: state.roomId,
       payload: {
         email: email
+      }
+    },
+    dispatch
+  );
+};
+
+export const setAvatar = (avatar) => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand(
+    {
+      name: 'setAvatar',
+      roomId: state.roomId,
+      payload: {
+        avatar
       }
     },
     dispatch

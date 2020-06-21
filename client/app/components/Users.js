@@ -7,22 +7,46 @@ import User from './User';
 /**
  * The list of users (avatars) and their estimations.
  */
-const Users = ({users}) => {
+const Users = ({users, ownUserId}) => {
   const userArray = Object.values(users);
+
+  userArray.sort(userComparator.bind(undefined, ownUserId));
 
   return (
     <div className="users">
-      {userArray.map((user, index) => (
-        <User key={user.id} index={index} user={user} />
+      {userArray.map((user) => (
+        <User key={'usr_' + user.id} user={user} />
       ))}
     </div>
   );
 };
 
 Users.propTypes = {
-  users: PropTypes.object
+  users: PropTypes.object,
+  ownUserId: PropTypes.string
 };
 
 export default connect((state) => ({
+  ownUserId: state.userId,
   users: state.users
 }))(Users);
+
+function userComparator(ownUserId, userA, userB) {
+  if (userA.id === ownUserId) {
+    return -1;
+  }
+  if (userB.id === ownUserId) {
+    return 1;
+  }
+
+  if (userA.username && userB.username) {
+    return userA.username.localeCompare(userB.username);
+  }
+
+  if (userA.username) {
+    return -1;
+  }
+  if (userB.username) {
+    return 1;
+  }
+}

@@ -289,6 +289,7 @@ a {
   }
 }
 
+
 .top-bar {
   z-index 1003
   display flex
@@ -313,7 +314,6 @@ a {
       color $zuehlkePurple
     }
   }
-
 
   .quick-menu {
     display: flex;
@@ -364,29 +364,6 @@ a {
 
   }
 
-  .language-selector ul {
-    list-style-type none
-    margin 0
-    padding 0
-
-    li {
-      margin 0
-      padding 0
-      display inline-block
-      cursor pointer
-
-      &:after {
-        content "|"
-        width 16px
-        display inline-block
-        text-align center
-      }
-
-      &:last-child:after {
-        display none
-      }
-    }
-  }
 }
 
 // hamburger icon to toggle backlog on small screens
@@ -482,6 +459,33 @@ $userMenuWidth = 300px
         padding 1px 0
         margin-right 4px
       }
+    }
+
+    .avatar-grid {
+      margin-top 24px
+      margin-bottom 24px
+
+      display flex
+      flex-wrap wrap
+
+      img {
+        cursor pointer
+        width 32px
+        height 32px
+        margin-right 4px
+        border-radius 50%
+        border 2px solid transparent
+        padding 2px
+
+        &:hover, &.selected {
+          border 2px solid $zuehlkeOrange
+        }
+      }
+    }
+
+    .license-hint {
+      font-size small
+      margin-bottom 12px
     }
 
     .language-selector-wrapper {
@@ -871,6 +875,9 @@ $backlogWidth = 300px
   font-size 9px
   color $zuehlkeFontGrey
 
+  > div {
+    margin-right 16px
+  }
 }
 
 .feedback-hint {
@@ -953,3 +960,17 @@ $backlogWidth = 300px
 .board .backlog.backlog-active {
   left $backlogWidth
 }
+
+
+@keyframes flash_shadow {
+  0% {
+    opacity 1
+  }
+  50% {
+    opacity 0
+  }
+  100% {
+    opacity 1
+  }
+}
+

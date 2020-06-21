@@ -25,10 +25,7 @@ test('You joining a new room', () => {
         correlationId: cmdId,
         name: 'roomCreated',
         roomId,
-        payload: {
-          username: 'Chrome',
-          email: 'test@super.com'
-        }
+        payload: {}
       },
       type: EVENT_ACTION_TYPES.roomCreated
     },
@@ -43,7 +40,8 @@ test('You joining a new room', () => {
           users: {
             [userId]: {
               disconnected: false,
-              id: userId
+              id: userId,
+              avatar: 4
             }
           },
           stories: {}
@@ -76,6 +74,19 @@ test('You joining a new room', () => {
         }
       },
       type: EVENT_ACTION_TYPES.emailSet
+    },
+    {
+      event: {
+        id: uuid(),
+        userId: userId,
+        correlationId: uuid(),
+        name: 'avatarSet',
+        roomId,
+        payload: {
+          avatar: 4
+        }
+      },
+      type: EVENT_ACTION_TYPES.avatarSet
     }
   ];
 
@@ -88,13 +99,15 @@ test('You joining a new room', () => {
       disconnected: false,
       id: userId,
       username: 'Chrome',
-      email: 'test@super.com'
+      email: 'test@super.com',
+      avatar: 4
     }
   });
 
   expect(clientSettingsStore.getPresetUserId()).toEqual(userId);
   expect(clientSettingsStore.getPresetUsername()).toEqual('Chrome');
   expect(clientSettingsStore.getPresetEmail()).toEqual('test@super.com');
+  expect(clientSettingsStore.getPresetAvatar()).toEqual(4);
 });
 
 test('You in a room, other user joins', () => {

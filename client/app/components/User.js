@@ -7,7 +7,7 @@ import {kick} from '../actions';
 import Avatar from './Avatar.js';
 import {getCardConfigForValue} from '../services/getCardConfigForValue';
 
-const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
+const User = ({user, selectedStory, ownUserId, cardConfig, kick}) => {
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
   const revealed = selectedStory && selectedStory.revealed;
@@ -51,7 +51,7 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
         </span>
       )}
 
-      <Avatar user={user} index={index} />
+      <Avatar user={user} />
       <div className="user-name">{user.username || '-'}</div>
 
       {isDisconnected && (
@@ -78,7 +78,6 @@ const User = ({user, index, selectedStory, ownUserId, cardConfig, kick}) => {
 
 User.propTypes = {
   user: PropTypes.object,
-  index: PropTypes.number,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
   cardConfig: PropTypes.array,

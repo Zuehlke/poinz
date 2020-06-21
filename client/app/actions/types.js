@@ -25,6 +25,7 @@ export const EVENT_ACTION_TYPES = {
   storySelected: 'STORY_SELECTED',
   usernameSet: 'USERNAME_SET',
   emailSet: 'EMAIL_SET',
+  avatarSet: 'AVATAR_SET',
   storyEstimateGiven: 'STORY_ESTIMATE_GIVEN',
   consensusAchieved: 'CONSENSUS_ACHIEVED',
   storyEstimateCleared: 'STORY_ESTIMATE_CLEARED',

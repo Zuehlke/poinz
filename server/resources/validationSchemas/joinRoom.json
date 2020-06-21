@@ -15,6 +15,9 @@
               "type": "string",
               "format": "email"
             },
+            "avatar": {
+              "type": "number"
+            },
             "userId": {
               "type": "string",
               "format": "uuidv4"

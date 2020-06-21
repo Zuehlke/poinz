@@ -33,7 +33,8 @@ function joinNewRoom(room, command, userId) {
         disconnected: false,
         id: userId,
         username: command.payload.username,
-        email: command.payload.email
+        email: command.payload.email,
+        avatar: command.payload.avatar
       }
     },
     stories: {},
@@ -50,6 +51,12 @@ function joinNewRoom(room, command, userId) {
   if (command.payload.email) {
     room.applyEvent('emailSet', {
       email: command.payload.email
+    });
+  }
+
+  if (command.payload.avatar) {
+    room.applyEvent('avatarSet', {
+      avatar: command.payload.avatar
     });
   }
 }
@@ -84,6 +91,12 @@ function joinExistingRoom(room, command, userId) {
     });
   }
 
+  if (userObject.avatar) {
+    room.applyEvent('avatarSet', {
+      avatar: userObject.avatar
+    });
+  }
+
   if (userObject.excluded) {
     room.applyEvent('excludedFromEstimations', {});
   }
@@ -108,6 +121,9 @@ function getMatchingUserObjectFromRoom(room, command, userId) {
     if (command.payload.email) {
       matchingExistingUser.email = command.payload.email;
     }
+    if (command.payload.avatar) {
+      matchingExistingUser.avatar = command.payload.avatar;
+    }
 
     matchingExistingUser.disconnected = false;
 
@@ -117,6 +133,7 @@ function getMatchingUserObjectFromRoom(room, command, userId) {
       id: userId,
       username: command.payload.username,
       email: command.payload.email,
+      avatar: command.payload.avatar,
       disconnected: false,
       excluded: false
     };

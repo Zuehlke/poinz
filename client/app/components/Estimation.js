@@ -7,6 +7,7 @@ import {newEstimationRound, reveal} from '../actions';
 
 import Cards from './Cards';
 import ConsensusBadge from './ConsensusBadge';
+import {getCardConfigForValue} from '../services/getCardConfigForValue';
 
 /**
  * Displays
@@ -15,7 +16,7 @@ import ConsensusBadge from './ConsensusBadge';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({t, selectedStory, user, cardConfig, newEstimationRound, reveal}) => {
+const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimationRound, reveal}) => {
   const ownEstimate = selectedStory.estimations[user.id];
 
   const revealed = selectedStory.revealed;
@@ -24,16 +25,25 @@ const Estimation = ({t, selectedStory, user, cardConfig, newEstimationRound, rev
 
   return (
     <div className="estimation">
-      <div className="selected-story">
+      <div
+        className={`selected-story ${selectedStory.consensus ? 'selected-story-consensus' : ''} ${
+          selectedStory.applause ? 'applause' : ''
+        }`}
+      >
         <h4>
           {selectedStory.title}
           {selectedStory.consensus && (
             <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
           )}
         </h4>
+
         <div className="story-text">
           <Anchorify text={selectedStory.description} />
         </div>
+
+        {selectedStory.consensus && applause && (
+          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
+        )}
       </div>
 
       {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate} />}
@@ -71,6 +81,7 @@ Estimation.propTypes = {
   t: PropTypes.func,
   cardConfig: PropTypes.array,
   selectedStory: PropTypes.object,
+  applause: PropTypes.bool,
   user: PropTypes.object,
   newEstimationRound: PropTypes.func,
   reveal: PropTypes.func
@@ -81,7 +92,28 @@ export default connect(
     t: state.translator,
     selectedStory: state.stories[state.selectedStory],
     user: state.users[state.userId],
+    applause: state.applause,
     cardConfig: state.cardConfig
   }),
   {newEstimationRound, reveal}
 )(Estimation);
+
+const ApplauseHighlight = ({cardConfig, consensusValue}) => {
+  if (!consensusValue) {
+    return null;
+  }
+
+  const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
+  const highlightColor = matchingCardConfig.color;
+  return (
+    <div
+      className="applause-highlight"
+      style={{boxShadow: '0 0 10px ' + highlightColor, border: '1px solid ' + highlightColor}}
+    ></div>
+  );
+};
+
+ApplauseHighlight.propTypes = {
+  cardConfig: PropTypes.array,
+  consensusValue: PropTypes.number
+};

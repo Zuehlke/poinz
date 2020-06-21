@@ -183,6 +183,8 @@ test('Estimation with two users', () => {
     id: firstStoryId,
     title: 'FirstStory'
   });
+
+  expect(modifiedState.applause).toBe(true);
 });
 
 test('New estimation round with two users', () => {
@@ -216,6 +218,7 @@ test('New estimation round with two users', () => {
         }
       },
       selectedStory: firstStoryId,
+      applause: true,
       stories: {
         [firstStoryId]: {
           createdAt: 1592115935676,
@@ -259,4 +262,6 @@ test('New estimation round with two users', () => {
       title: 'FirstStory'
     }
   });
+
+  expect(modifiedState.applause).toBe(false);
 });

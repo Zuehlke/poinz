@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import {selectStory, editStory, deleteStory} from '../actions';
 import ConsensusBadge from './ConsensusBadge';
+import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 
 /**
  * One story in the backlog
@@ -17,13 +18,16 @@ const Story = ({
   selectStory,
   editStory,
   deleteStory,
-  pendingSelectCommands
+  pendingSelectCommands,
+  pendingDeleteCommands
 }) => {
   const isSelected = selectedStoryId === story.id;
 
   const classes = classnames('story clickable', {
     'story-selected': isSelected,
-    waiting: Object.values(pendingSelectCommands).find((cmd) => cmd.payload.storyId === story.id)
+    waiting:
+      pendingSelectCommands.find((cmd) => cmd.payload.storyId === story.id) ||
+      pendingDeleteCommands.find((cmd) => cmd.payload.storyId === story.id)
   });
 
   return (
@@ -73,16 +77,16 @@ Story.propTypes = {
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
   deleteStory: PropTypes.func,
-  pendingSelectCommands: PropTypes.array
+  pendingSelectCommands: PropTypes.array,
+  pendingDeleteCommands: PropTypes.array
 };
 
 export default connect(
   (state) => ({
     cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
-    pendingSelectCommands: Object.values(state.pendingCommands).filter(
-      (cmd) => cmd.name === 'selectStory'
-    )
+    pendingSelectCommands: getAllMatchingPendingCommands(state, 'selectStory'),
+    pendingDeleteCommands: getAllMatchingPendingCommands(state, 'deleteStory')
   }),
   {selectStory, editStory, deleteStory}
 )(Story);

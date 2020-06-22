@@ -10,7 +10,7 @@
           "properties": {
             "storyId": {
               "type": "string",
-              "minLength": 1
+              "format": "uuidv4"
             }
           },
           "required": [

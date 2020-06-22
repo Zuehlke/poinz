@@ -2,8 +2,16 @@ import {v4 as uuid} from 'uuid';
 import {prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyDeleted event', async () => {
-  const {userId, processor, roomId, storyId} = await prepOneUserInOneRoomWithOneStory();
+  const {
+    userId,
+    processor,
+    roomId,
+    storyId,
+    mockRoomsStore
+  } = await prepOneUserInOneRoomWithOneStory();
   const commandId = uuid();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
 
   return processor(
     {
@@ -37,6 +45,7 @@ test('users marked as excluded can still delete stories', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
 
   const commandId = uuid();
   return processor(
@@ -54,7 +63,43 @@ test('users marked as excluded can still delete stories', async () => {
   );
 });
 
+test('Should throw if storyId is not uuid v4 format', async () => {
+  const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
+  return expect(
+    processor(
+      {
+        id: uuid(),
+        roomId,
+        name: 'deleteStory',
+        payload: {
+          storyId: 'some-unknown-story'
+        }
+      },
+      userId
+    )
+  ).rejects.toThrow(/Format validation failed \(must be a valid uuid v4\) in \/payload\/storyId/);
+});
+
 describe('preconditions', () => {
+  test('Should throw if story is not marked as "trashed"', async () => {
+    const {userId, processor, roomId, storyId} = await prepOneUserInOneRoomWithOneStory();
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'deleteStory',
+          payload: {
+            storyId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow(
+      /Precondition Error during "deleteStory": Given story .* in room .* is not marked as "trashed". cannot delete it!/
+    );
+  });
+
   test('Should throw if room does not contain matching story', async () => {
     const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
     return expect(
@@ -64,13 +109,13 @@ describe('preconditions', () => {
           roomId,
           name: 'deleteStory',
           payload: {
-            storyId: 'some-unknown-story'
+            storyId: uuid()
           }
         },
         userId
       )
     ).rejects.toThrow(
-      /Precondition Error during "deleteStory": Given story some-unknown-story does not belong to room .*/
+      /Precondition Error during "deleteStory": Given story .* does not belong to room .*/
     );
   });
 });

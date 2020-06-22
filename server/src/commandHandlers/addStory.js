@@ -14,8 +14,14 @@ const addStoryCommandHandler = {
       createdAt: Date.now()
     });
 
-    if (!room.get('stories') || !room.get('stories').first()) {
-      // this is the first story that gets added
+    if (
+      !room.get('stories') ||
+      !room
+        .get('stories')
+        .filter((s) => !s.get('trashed'))
+        .first()
+    ) {
+      // this is the first story that gets added (or all other stories are "trashed")
       room.applyEvent('storySelected', {storyId: newStoryId});
     }
   }

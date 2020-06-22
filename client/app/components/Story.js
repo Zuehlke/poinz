@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {selectStory, editStory, deleteStory} from '../actions';
+import {selectStory, editStory, trashStory} from '../actions';
 import ConsensusBadge from './ConsensusBadge';
 import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 
@@ -17,9 +17,9 @@ const Story = ({
   cardConfig,
   selectStory,
   editStory,
-  deleteStory,
+  trashStory,
   pendingSelectCommands,
-  pendingDeleteCommands
+  pendingTrashCommands
 }) => {
   const isSelected = selectedStoryId === story.id;
 
@@ -27,14 +27,14 @@ const Story = ({
     'story-selected': isSelected,
     waiting:
       pendingSelectCommands.find((cmd) => cmd.payload.storyId === story.id) ||
-      pendingDeleteCommands.find((cmd) => cmd.payload.storyId === story.id)
+      pendingTrashCommands.find((cmd) => cmd.payload.storyId === story.id)
   });
 
   return (
     <div className={classes} onClick={triggerSelect}>
       <div className="story-toolbar">
         <i className="fa fa-pencil story-edit" onClick={triggerEdit}></i>
-        <i className="fa fa-trash story-delete" onClick={triggerDelete} />
+        <i className="fa fa-trash story-trash" onClick={triggerTrash} />
       </div>
 
       <h4>
@@ -64,9 +64,9 @@ const Story = ({
     editStory(story.id);
   }
 
-  function triggerDelete(e) {
+  function triggerTrash(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
-    deleteStory(story.id);
+    trashStory(story.id);
   }
 };
 
@@ -76,9 +76,9 @@ Story.propTypes = {
   selectedStoryId: PropTypes.string,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
-  deleteStory: PropTypes.func,
+  trashStory: PropTypes.func,
   pendingSelectCommands: PropTypes.array,
-  pendingDeleteCommands: PropTypes.array
+  pendingTrashCommands: PropTypes.array
 };
 
 export default connect(
@@ -86,7 +86,7 @@ export default connect(
     cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
     pendingSelectCommands: getAllMatchingPendingCommands(state, 'selectStory'),
-    pendingDeleteCommands: getAllMatchingPendingCommands(state, 'deleteStory')
+    pendingTrashCommands: getAllMatchingPendingCommands(state, 'trashStory')
   }),
-  {selectStory, editStory, deleteStory}
+  {selectStory, editStory, trashStory}
 )(Story);

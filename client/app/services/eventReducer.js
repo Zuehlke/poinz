@@ -234,6 +234,47 @@ const eventActionHandlers = {
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
+  [EVENT_ACTION_TYPES.storyTrashed]: {
+    fn: (state, payload) => {
+      const modifiedStory = {
+        ...state.stories[payload.storyId],
+        trashed: true
+      };
+
+      return {
+        ...state,
+        stories: {
+          ...state.stories,
+          [payload.storyId]: modifiedStory
+        }
+      };
+    },
+    log: (username, payload) => `${username} moved story "${payload.title}" to trash`
+  },
+
+  [EVENT_ACTION_TYPES.storyRestored]: {
+    fn: (state, payload) => {
+      const modifiedStory = {
+        ...state.stories[payload.storyId],
+        trashed: false
+      };
+
+      const modifiedStories = {
+        ...state.stories,
+        [payload.storyId]: modifiedStory
+      };
+
+      const selectedStory = !state.selectedStory ? payload.storyId : state.selectedStory;
+
+      return {
+        ...state,
+        selectedStory,
+        stories: modifiedStories
+      };
+    },
+    log: (username, payload) => `${username} moved story "${payload.title}" to trash`
+  },
+
   [EVENT_ACTION_TYPES.storyDeleted]: {
     fn: (state, payload) => {
       const modifiedStories = {...state.stories};

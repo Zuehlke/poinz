@@ -34,6 +34,8 @@ async function init(config) {
     throw new Error('Please provide "connectionURI"');
   }
 
+  LOGGER.info('Using persistent storage');
+
   clientInstance = new MongoClient(config.connectionURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,

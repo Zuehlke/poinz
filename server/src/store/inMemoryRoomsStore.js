@@ -22,7 +22,7 @@ export default {
 
 async function init() {
   // nothing to do here
-  LOGGER.info('using in memory storage');
+  LOGGER.info('Using in-memory storage');
 }
 
 async function close() {

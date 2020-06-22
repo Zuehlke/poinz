@@ -9,7 +9,9 @@ import {
   STATUS_FETCHED,
   SET_LANGUAGE,
   LOCATION_CHANGED,
-  HIDE_NEW_USER_HINTS
+  HIDE_NEW_USER_HINTS,
+  SHOW_TRASH,
+  HIDE_TRASH
 } from '../actions/types';
 
 /**
@@ -99,12 +101,17 @@ export default function clientActionReducer(state, action) {
       state.setLanguage(language);
       return {...state, language};
     }
-
     case HIDE_NEW_USER_HINTS: {
       return {...state, hideNewUserHints: true};
     }
     case LOCATION_CHANGED: {
       return {...state, pathname: action.pathname};
+    }
+    case SHOW_TRASH: {
+      return {...state, trashShown: true};
+    }
+    case HIDE_TRASH: {
+      return {...state, trashShown: false};
     }
 
     default:

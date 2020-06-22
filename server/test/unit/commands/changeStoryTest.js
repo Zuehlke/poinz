@@ -89,4 +89,34 @@ describe('preconditions', () => {
       /Precondition Error during "changeStory": Given story some-unknown-story does not belong to room .*/
     );
   });
+
+  test('Should throw if story is trashed', async () => {
+    const {
+      processor,
+      roomId,
+      storyId,
+      userIdOne,
+      mockRoomsStore
+    } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
+
+    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'changeStory',
+          payload: {
+            storyId,
+            title: 'NewTitle',
+            description: 'New Description'
+          }
+        },
+        userIdOne
+      )
+    ).rejects.toThrow(
+      /Precondition Error during "changeStory": Given story .* is marked as "trashed" and cannot be selected or manipulated.*/
+    );
+  });
 });

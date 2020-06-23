@@ -15,7 +15,7 @@ import BacklogTrash from './BacklogTrash';
  * if trash is active, only a list of "trashed" stories is displayed
  *
  */
-const Backlog = ({t, backlogShown, trashShown, showTrash, hideTrash}) => {
+const Backlog = ({t, backlogShown, trashShown, showTrash, hideTrash, trashedStoriesCount, activeStoriesCount}) => {
   const backlogClasses = classnames('backlog', {
     'backlog-active': backlogShown // if true, show menu also in small screens (menu toggle)
   });
@@ -27,12 +27,14 @@ const Backlog = ({t, backlogShown, trashShown, showTrash, hideTrash}) => {
         onShowBacklog={hideTrash}
         onShowTrash={showTrash}
         trashShown={trashShown}
+        trashedStoriesCount={trashedStoriesCount}
+        activeStoriesCount={activeStoriesCount}
       />
 
-      {trashShown && <BacklogTrash />}
-      {!trashShown && <BacklogActive />}
+      {trashShown && <BacklogTrash/>}
+      {!trashShown && <BacklogActive/>}
 
-      <FeedbackHint />
+      <FeedbackHint/>
     </div>
   );
 };
@@ -42,19 +44,23 @@ Backlog.propTypes = {
   backlogShown: PropTypes.bool,
   trashShown: PropTypes.bool,
   showTrash: PropTypes.func.isRequired,
-  hideTrash: PropTypes.func.isRequired
+  hideTrash: PropTypes.func.isRequired,
+  trashedStoriesCount: PropTypes.number.isRequired,
+  activeStoriesCount: PropTypes.number.isRequired
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
     trashShown: state.trashShown,
-    backlogShown: state.backlogShown
+    backlogShown: state.backlogShown,
+    trashedStoriesCount: state.stories ? Object.values(state.stories).filter((s) => s.trashed).length : 0,
+    activeStoriesCount: state.stories ? Object.values(state.stories).filter((s) => !s.trashed).length : 0
   }),
   {showTrash, hideTrash}
 )(Backlog);
 
-const BacklogModeButtons = ({t, onShowBacklog, onShowTrash, trashShown}) => (
+const BacklogModeButtons = ({t, onShowBacklog, onShowTrash, trashShown, trashedStoriesCount, activeStoriesCount}) => (
   <div className="backlog-filters">
     <button
       title={t('backlog')}
@@ -62,7 +68,7 @@ const BacklogModeButtons = ({t, onShowBacklog, onShowTrash, trashShown}) => (
       className={'pure-button pure-button-stripped ' + (trashShown ? '' : 'active')}
       onClick={onShowBacklog}
     >
-      <i className="fa fa-list-ul"></i> {t('backlog')}
+      <i className="fa fa-list-ul"></i> {t('backlog')} ({activeStoriesCount})
     </button>
     <button
       title={t('trash')}
@@ -70,7 +76,7 @@ const BacklogModeButtons = ({t, onShowBacklog, onShowTrash, trashShown}) => (
       className={'pure-button pure-button-stripped ' + (trashShown ? 'active' : '')}
       onClick={onShowTrash}
     >
-      <i className="fa fa-trash"></i> {t('trash')}
+      <i className="fa fa-trash"></i> {t('trash')} ({trashedStoriesCount})
     </button>
   </div>
 );
@@ -79,5 +85,7 @@ BacklogModeButtons.propTypes = {
   t: PropTypes.func.isRequired,
   trashShown: PropTypes.bool,
   onShowBacklog: PropTypes.func.isRequired,
-  onShowTrash: PropTypes.func.isRequired
+  onShowTrash: PropTypes.func.isRequired,
+  trashedStoriesCount: PropTypes.number.isRequired,
+  activeStoriesCount: PropTypes.number.isRequired
 };

@@ -28,5 +28,11 @@
   "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is publicly available!",
   "markExcluded": "Mark as excluded",
   "excludedInfo": "Excluded users cannot participate in estimations. They still can add and modify stories.",
-  "excluded": "Excluded from estimations"
+  "excluded": "Excluded from estimations",
+  "backlog": "Backlog",
+  "delete": "Delete",
+  "restore": "Restore",
+  "trash": "Trash",
+  "noActiveStories": "There are currently no stories in the estimation backlog...",
+  "trashEmpty": "Trash is empty..."
 }

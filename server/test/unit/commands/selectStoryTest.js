@@ -74,4 +74,30 @@ describe('preconditions', () => {
       /Precondition Error during "selectStory": Given story story-not-in-room does not belong to room .*/
     );
   });
+
+  test('Should throw if story is marked as "trashed"', async () => {
+    const {
+      roomId,
+      userId,
+      storyId,
+      processor,
+      mockRoomsStore
+    } = await prepOneUserInOneRoomWithOneStory();
+    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'selectStory',
+          payload: {
+            storyId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow(
+      /Precondition Error during "selectStory": Given story .* is marked as "trashed" and cannot be selected or manipulated/
+    );
+  });
 });

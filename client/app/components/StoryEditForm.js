@@ -10,7 +10,7 @@ import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
 const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
-  const classes = classnames('story', {
+  const classes = classnames('story story-edit-mode', {
     waiting: pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id)
   });
 

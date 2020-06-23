@@ -15,11 +15,13 @@ const settings = {
     }
   },
 
-  // if set to false, in-memory store is used.
-  persistentStore: false
-  // persistentStore: {
-  //   connectionURI: process.env.MONGODB_URI // this is set by heroku mLab MonogDb add-on
-  // }
+  // if environment variable "MONGODB_URI" is set (like in heroku prod deployment), persistent store is used.
+  // if env variable is not set, "persistentStore" is false and in-memory store is used.
+  persistentStore: process.env.MONGODB_URI
+    ? {
+        connectionURI: process.env.MONGODB_URI
+      }
+    : false
 };
 
 export default settings;

@@ -1,7 +1,7 @@
 import {v4 as uuid} from 'uuid';
-import {prepOneUserInOneRoomWithOneStory} from '../testUtils';
+import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
-test('Should produce storyDeleted event', async () => {
+test('Should produce storyRestored event', async () => {
   const {
     userId,
     processor,
@@ -17,25 +17,31 @@ test('Should produce storyDeleted event', async () => {
     {
       id: commandId,
       roomId,
-      name: 'deleteStory',
+      name: 'restoreStory',
       payload: {
         storyId
       }
     },
     userId
   ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored');
 
-    const [storyDeletedEvent] = producedEvents;
+    const [storyRestoredEvent] = producedEvents;
 
-    expect(storyDeletedEvent.payload.storyId).toEqual(storyId);
+    expect(storyRestoredEvent.payload.storyId).toEqual(storyId);
 
-    // story is removed from room
-    expect(room.stories[storyId]).toBeUndefined();
+    // story is still in room, "trashed" set to false
+    expect(room.stories[storyId]).toMatchObject({
+      id: EXPECT_UUID_MATCHING,
+      estimations: {},
+      title: 'the title',
+      description: 'This will be awesome',
+      trashed: false
+    });
   });
 });
 
-test('users marked as excluded can still delete stories', async () => {
+test('users marked as excluded can still restore stories', async () => {
   const {
     userId,
     processor,
@@ -52,14 +58,14 @@ test('users marked as excluded can still delete stories', async () => {
     {
       id: commandId,
       roomId,
-      name: 'deleteStory',
+      name: 'restoreStory',
       payload: {
         storyId
       }
     },
     userId
   ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted')
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored')
   );
 });
 
@@ -70,7 +76,7 @@ test('Should throw if storyId is not uuid v4 format', async () => {
       {
         id: uuid(),
         roomId,
-        name: 'deleteStory',
+        name: 'restoreStory',
         payload: {
           storyId: 'some-unknown-story'
         }
@@ -88,7 +94,7 @@ describe('preconditions', () => {
         {
           id: uuid(),
           roomId,
-          name: 'deleteStory',
+          name: 'restoreStory',
           payload: {
             storyId
           }
@@ -96,7 +102,7 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow(
-      /Precondition Error during "deleteStory": Given story .* in room .* is not marked as "trashed". cannot delete it!/
+      /Precondition Error during "restoreStory": Given story .* in room .* is not marked as "trashed". Nothing to restore\.\.\./
     );
   });
 
@@ -107,7 +113,7 @@ describe('preconditions', () => {
         {
           id: uuid(),
           roomId,
-          name: 'deleteStory',
+          name: 'restoreStory',
           payload: {
             storyId: uuid()
           }
@@ -115,7 +121,7 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow(
-      /Precondition Error during "deleteStory": Given story .* does not belong to room .*/
+      /Precondition Error during "restoreStory": Given story .* does not belong to room .*/
     );
   });
 });

@@ -232,7 +232,7 @@ test('Editing stories', () => {
   });
 });
 
-test('Deleting stories', () => {
+test('Trashing, Restoring and Deleting stories', () => {
   let modifiedState;
 
   const ownUserId = uuid();
@@ -283,6 +283,55 @@ test('Deleting stories', () => {
     }
   };
 
+  const firstStoryTrashedAction = {
+    event: {
+      id: uuid(),
+      userId: otherUserId,
+      correlationId: uuid(),
+      name: 'storyTrashed',
+      roomId,
+      payload: {
+        storyId: firstStoryId
+      }
+    },
+    type: EVENT_ACTION_TYPES.storyTrashed
+  };
+
+  modifiedState = eventReducer(startingState, firstStoryTrashedAction);
+  expect(modifiedState.stories).toEqual({
+    [firstStoryId]: {
+      ...startingState.stories[firstStoryId],
+      trashed: true
+    },
+    [secondStoryId]: startingState.stories[secondStoryId]
+  });
+
+  const secondStoryTrashedAction = {
+    event: {
+      id: uuid(),
+      userId: otherUserId,
+      correlationId: uuid(),
+      name: 'storyTrashed',
+      roomId,
+      payload: {
+        storyId: secondStoryId
+      }
+    },
+    type: EVENT_ACTION_TYPES.storyTrashed
+  };
+
+  modifiedState = eventReducer(modifiedState, secondStoryTrashedAction);
+  expect(modifiedState.stories).toEqual({
+    [firstStoryId]: {
+      ...startingState.stories[firstStoryId],
+      trashed: true
+    },
+    [secondStoryId]: {
+      ...startingState.stories[secondStoryId],
+      trashed: true
+    }
+  });
+
   const storyDeletedAction = {
     event: {
       id: uuid(),
@@ -291,16 +340,40 @@ test('Deleting stories', () => {
       name: 'storyDeleted',
       roomId,
       payload: {
-        storyId: firstStoryId,
-        title: 'sdgasdg'
+        storyId: firstStoryId
       }
     },
     type: EVENT_ACTION_TYPES.storyDeleted
   };
 
-  modifiedState = eventReducer(startingState, storyDeletedAction);
-  expect(modifiedState.selectedStory).toEqual(firstStoryId);
+  modifiedState = eventReducer(modifiedState, storyDeletedAction);
   expect(modifiedState.stories).toEqual({
-    [secondStoryId]: startingState.stories[secondStoryId]
+    // first story is no longer in room
+    [secondStoryId]: {
+      ...startingState.stories[secondStoryId],
+      trashed: true
+    }
+  });
+
+  const storyRestoredAction = {
+    event: {
+      id: uuid(),
+      userId: otherUserId,
+      correlationId: uuid(),
+      name: 'storyRestored',
+      roomId,
+      payload: {
+        storyId: secondStoryId
+      }
+    },
+    type: EVENT_ACTION_TYPES.storyRestored
+  };
+
+  modifiedState = eventReducer(modifiedState, storyRestoredAction);
+  expect(modifiedState.stories).toEqual({
+    [secondStoryId]: {
+      ...startingState.stories[secondStoryId],
+      trashed: false
+    }
   });
 });

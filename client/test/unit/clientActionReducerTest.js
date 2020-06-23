@@ -11,7 +11,9 @@ import {
   STATUS_FETCHED,
   TOGGLE_BACKLOG,
   TOGGLE_LOG,
-  TOGGLE_USER_MENU
+  TOGGLE_USER_MENU,
+  SHOW_TRASH,
+  HIDE_TRASH
 } from '../../app/actions/types';
 import initialState from '../../app/store/initialState';
 import clientActionReducer from '../../app/services/clientActionReducer';
@@ -19,7 +21,9 @@ import {
   cancelEditStory,
   editStory,
   hideNewUserHints,
+  hideTrash,
   setLanguage,
+  showTrash,
   toggleBacklog,
   toggleLog,
   toggleUserMenu
@@ -196,6 +200,7 @@ test(STATUS_FETCHED, () => {
     some: 'data'
   });
 });
+
 test(LOCATION_CHANGED, () => {
   const startingState = initialState();
 
@@ -204,4 +209,13 @@ test(LOCATION_CHANGED, () => {
     pathname: 'somePathName'
   });
   expect(modifiedState.pathname).toEqual('somePathName');
+});
+
+test(SHOW_TRASH + ' and ' + HIDE_TRASH, () => {
+  const startingState = initialState();
+
+  let modifiedState = clientActionReducer(startingState, showTrash());
+  expect(modifiedState.trashShown).toBe(true);
+  modifiedState = clientActionReducer(modifiedState, hideTrash());
+  expect(modifiedState.trashShown).toBe(false);
 });

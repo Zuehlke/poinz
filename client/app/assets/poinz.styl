@@ -44,6 +44,22 @@ body {
   i.button-icon-right {
     padding-left 8px
   }
+
+  &.pure-button-stripped {
+    background none
+    border none
+    box-shadow none
+    opacity 0.6
+
+    &:hover {
+      opacity 1
+    }
+
+    &.active {
+      opacity 1
+      color $zuehlkeOrange
+    }
+  }
 }
 
 a {
@@ -666,7 +682,7 @@ $backlogWidth = 300px
     -webkit-overflow-scrolling touch
     box-sizing border-box
     padding 8px
-    padding-top 27px
+    padding-top 44px
     background $zuehlkeBackgroundGrey
 
     &:after {
@@ -692,7 +708,7 @@ $backlogWidth = 300px
       background white;
       border: 1px solid $zuehlkeLighterGrey
       padding 8px 16px 16px 16px
-      margin 16px 0 16px 0
+      margin 3px 0 16px 0
       box-sizing border-box
       border-radius 2px
     }
@@ -734,19 +750,40 @@ $backlogWidth = 300px
             margin 0 4px
             opacity 0 // do not show by default
             display block
+            padding 6px
+            width 18px
+            height 18px
+            line-height 18px
+            cursor pointer
+            text-align center
+            vertical-align middle
           }
+        }
+
+        &:hover {
+          box-shadow  inset 0 82px 50px -60px rgba(194, 194, 194, 0.45)
         }
 
         &:hover > .story-toolbar i {
           opacity 0.6
+          background white
+          border-radius 50%
 
           &:hover {
             opacity 1 // show the pencil with full opacity when icon is hovered
+
+            &.story-delete {
+              color #ee3f21;
+            }
           }
         }
 
         &.story-selected {
           border-left 2px solid $zuehlkeOrange
+        }
+
+        &.story-edit-mode:hover {
+          box-shadow none
         }
 
         &.story-waiting {

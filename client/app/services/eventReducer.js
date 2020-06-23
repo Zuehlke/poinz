@@ -234,6 +234,48 @@ const eventActionHandlers = {
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
+  [EVENT_ACTION_TYPES.storyTrashed]: {
+    fn: (state, payload) => {
+      const modifiedStory = {
+        ...state.stories[payload.storyId],
+        trashed: true
+      };
+
+      return {
+        ...state,
+        stories: {
+          ...state.stories,
+          [payload.storyId]: modifiedStory
+        }
+      };
+    },
+    log: (username, payload, oldState) => {
+      const storyTitle = oldState.stories[payload.storyId].title;
+      return `${username} moved story "${storyTitle}" to trash`;
+    }
+  },
+
+  [EVENT_ACTION_TYPES.storyRestored]: {
+    fn: (state, payload) => {
+      const modifiedStory = {
+        ...state.stories[payload.storyId],
+        trashed: false
+      };
+
+      return {
+        ...state,
+        stories: {
+          ...state.stories,
+          [payload.storyId]: modifiedStory
+        }
+      };
+    },
+    log: (username, payload, oldState) => {
+      const storyTitle = oldState.stories[payload.storyId].title;
+      return `${username} restored story "${storyTitle}" from trash`;
+    }
+  },
+
   [EVENT_ACTION_TYPES.storyDeleted]: {
     fn: (state, payload) => {
       const modifiedStories = {...state.stories};
@@ -244,7 +286,15 @@ const eventActionHandlers = {
         stories: modifiedStories
       };
     },
-    log: (username, payload) => `${username} deleted story "${payload.title}"`
+    log: (username, payload, oldState) => {
+      const storyTitle = oldState.stories[payload.storyId].title;
+      const consensus = oldState.stories[payload.storyId].consensus;
+      let logline = `${username} deleted story "${storyTitle}"`;
+      if (consensus) {
+        logline = logline + `. It was estimated ${consensus}`;
+      }
+      return logline;
+    }
   },
 
   /**
@@ -257,7 +307,9 @@ const eventActionHandlers = {
       applause: false
     }),
     log: (username, payload, oldState, newState) =>
-      `${username} selected current story "${newState.stories[payload.storyId].title}"`
+      payload.storyId
+        ? `${username} selected current story "${newState.stories[payload.storyId].title}"`
+        : 'Currently no story is selected'
   },
 
   [EVENT_ACTION_TYPES.usernameSet]: {

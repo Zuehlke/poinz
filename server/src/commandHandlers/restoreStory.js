@@ -1,11 +1,11 @@
 import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
 
 /**
- * A user deletes a story.
- * A story must be first marked as "trashed", before it can be deleted.
- * Story will be completely removed from room.
+ * A user restores a story.
+ * A story must be first marked as "trashed", before it can be restored.
+ * Story will no longer be marked as "trashed".
  */
-const deleteStoryCommandHandler = {
+const restoreStoryCommandHandler = {
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
 
@@ -14,13 +14,13 @@ const deleteStoryCommandHandler = {
       throw new Error(
         `Given story ${command.payload.storyId} in room ${room.get(
           'id'
-        )} is not marked as "trashed". cannot delete it!`
+        )} is not marked as "trashed". Nothing to restore...`
       );
     }
   },
   fn: (room, command) => {
-    room.applyEvent('storyDeleted', command.payload);
+    room.applyEvent('storyRestored', command.payload);
   }
 };
 
-export default deleteStoryCommandHandler;
+export default restoreStoryCommandHandler;

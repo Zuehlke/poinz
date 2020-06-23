@@ -28,5 +28,11 @@
   "disclaimer": "Die Benützung von Poinz erfolgt auf eigenes Risiko! Jegliche eingetragene informationen sind möglicherweise öffentlich abrufbar.",
   "markExcluded": "Von Schätzungen ausschliessen ",
   "excludedInfo": "Ausgeschlossene Benutzer können keine Stories schätzen. Sie können aber nach wie vor Stories hinzufügen und editieren.",
-  "excluded": "Von Schätzungen ausgeschlossen"
+  "excluded": "Von Schätzungen ausgeschlossen",
+  "backlog": "Backlog",
+  "delete": "Löschen",
+  "restore": "Wiederherstellen",
+  "trash": "Papierkorb",
+  "noActiveStories": "Keine Stories im Backlog...",
+  "trashEmpty": "Papierkorb ist leer..."
 }

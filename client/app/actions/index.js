@@ -17,7 +17,9 @@ import {
   SET_LANGUAGE,
   EVENT_RECEIVED,
   EVENT_ACTION_TYPES,
-  HIDE_NEW_USER_HINTS
+  HIDE_NEW_USER_HINTS,
+  SHOW_TRASH,
+  HIDE_TRASH
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
 
@@ -286,6 +288,34 @@ export const changeStory = (storyId, title, description) => (dispatch, getState)
   );
 };
 
+export const trashStory = (storyId) => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand(
+    {
+      name: 'trashStory',
+      roomId: state.roomId,
+      payload: {
+        storyId
+      }
+    },
+    dispatch
+  );
+};
+
+export const restoreStory = (storyId) => (dispatch, getState) => {
+  const state = getState();
+  hub.sendCommand(
+    {
+      name: 'restoreStory',
+      roomId: state.roomId,
+      payload: {
+        storyId
+      }
+    },
+    dispatch
+  );
+};
+
 export const deleteStory = (storyId) => (dispatch, getState) => {
   const state = getState();
   hub.sendCommand(
@@ -311,6 +341,8 @@ export const fetchStatus = () => (dispatch) => {
 
 // ui-only actions (client-side view state)
 export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
+export const showTrash = () => ({type: SHOW_TRASH});
+export const hideTrash = () => ({type: HIDE_TRASH});
 export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
 export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});

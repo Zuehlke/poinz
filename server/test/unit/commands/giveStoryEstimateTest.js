@@ -307,27 +307,6 @@ describe('preconditions', () => {
     );
   });
 
-  test('Should throw if storyId does not belong to room', async () => {
-    const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'giveStoryEstimate',
-          payload: {
-            storyId: 'unknown',
-            value: 2
-          }
-        },
-        userId
-      )
-    ).rejects.toThrow(
-      /Precondition Error during "giveStoryEstimate": Given story unknown does not belong to room .*/
-    );
-  });
-
   test('Should throw if story already revealed', async () => {
     const {
       roomId,

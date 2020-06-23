@@ -102,7 +102,7 @@ export const joinRoom = (roomId) => (dispatch, getState) => {
   if (state.presetEmail) {
     joinCommandPayload.email = state.presetEmail;
   }
-  if (state.presetAvatar) {
+  if (Number.isInteger(state.presetAvatar)) {
     joinCommandPayload.avatar = state.presetAvatar;
   }
 

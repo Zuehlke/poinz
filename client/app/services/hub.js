@@ -30,13 +30,11 @@ function Hub() {
   this.io.on('connect', () => log.info('socket connected to server'));
   this.io.on('disconnect', () => log.info('socket from server disconnected'));
 
-    this.io.on('event', (ev) => {
+  this.io.on('event', (ev) => {
+    debugReceivedEvent(ev);
 
-      debugReceivedEvent(ev);
-
-      this.emit('event', ev);
-    });
-
+    this.emit('event', ev);
+  });
 }
 
 inherits(Hub, EventEmitter);

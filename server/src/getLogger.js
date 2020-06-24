@@ -17,22 +17,18 @@ function getLogger(loggerName) {
   const formatter = (info) => {
     const splat = info[Symbol.for('splat')] || info.splat || [];
 
-    return `${info.timestamp} ${info.level}: [${loggerName}] ${info.message}  ${
+    return `${info.timestamp} ${info.level}: |POINZ| [${loggerName}] ${info.message}  ${
       splat && splat.length ? splat.map((s) => JSON.stringify(s, null, 4)) : ''
     }  ${info.stack ? ' ' + info.stack : ''}`;
   };
 
   return winston.loggers.add(loggerName, {
     transports: [
+      // in prod deployment on heroku, the console gets streamed to Logz.io (ELK stack)
       new winston.transports.Console({
         level: settings.log.console.level,
         handleExceptions: true,
-        format: format.combine(
-          format.colorize(),
-          format.timestamp(),
-          format.align(),
-          format.printf(formatter)
-        )
+        format: format.combine(format.timestamp(), format.align(), format.printf(formatter))
       }),
       new DailyRotateFile({
         filename: settings.log.file.name,

@@ -63,7 +63,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     const {command, userId} = job;
     const context = {userId};
 
-    LOGGER.debug('HANDLING COMMAND', command.name, command);
+    logCommand(command, userId);
 
     try {
       const steps = [
@@ -83,13 +83,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       return;
     }
 
-    if (LOGGER.isLevelEnabled('debug')) {
-      LOGGER.debug(
-        'PRODUCED EVENTS',
-        context.eventsToSend.map((e) => e.name).join(', '),
-        context.eventsToSend
-      );
-    }
+    logEvents(context, command.id);
 
     job.resolve({
       producedEvents: context.eventsToSend,
@@ -231,6 +225,34 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     ctx.room = ctx.room.set('lastActivity', Date.now()).set('markedForDeletion', false);
 
     await store.saveRoom(ctx.room);
+  }
+}
+
+function logCommand(command, userId) {
+  if (LOGGER.isLevelEnabled('debug')) {
+    LOGGER.debug(
+      `HANDLING COMMAND user=${userId} room=${command.roomId}  ` + command.name,
+      command
+    );
+  } else if (LOGGER.isLevelEnabled('info')) {
+    LOGGER.info(`HANDLING COMMAND user=${userId} room=${command.roomId}  ` + command.name);
+  }
+}
+
+function logEvents(context, correlationId) {
+  if (LOGGER.isLevelEnabled('debug')) {
+    LOGGER.debug(
+      `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}` +
+        context.eventsToSend.map((e) => e.name).join(', '),
+      context.eventsToSend,
+      `correlationId=${correlationId}`
+    );
+  } else if (LOGGER.isLevelEnabled('info')) {
+    LOGGER.info(
+      `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}  ` +
+        context.eventsToSend.map((e) => e.name).join(', ') +
+        `  correlationId=${correlationId}`
+    );
   }
 }
 

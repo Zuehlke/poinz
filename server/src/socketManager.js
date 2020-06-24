@@ -5,8 +5,6 @@ import socketRegistryFactory from './socketRegistry';
 
 const LOGGER = getLogger('socketManager');
 
-LOGGER.transports[0].level = 'debug';
-
 export default function socketManagerFactory(commandProcessor, sendEventToRoom) {
   const registry = socketRegistryFactory();
 

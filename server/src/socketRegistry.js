@@ -2,8 +2,6 @@ import getLogger from './getLogger';
 
 const LOGGER = getLogger('socketRegistry');
 
-LOGGER.transports[0].level = 'debug';
-
 /**
  * we need do keep the mapping of a socket to userId,
  * so that we can retrieve the userId for any message (command) sent on this socket.

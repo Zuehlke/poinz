@@ -231,11 +231,11 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 function logCommand(command, userId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
-      `HANDLING COMMAND user=${userId} room=${command.roomId}  ` + command.name,
+      `HANDLING COMMAND user=${userId} room=${command.roomId} ${command.name} ${command.id}`,
       command
     );
   } else if (LOGGER.isLevelEnabled('info')) {
-    LOGGER.info(`HANDLING COMMAND user=${userId} room=${command.roomId}  ` + command.name);
+    LOGGER.info(`HANDLING COMMAND user=${userId} room=${command.roomId} ${command.name} ${command.id}`);
   }
 }
 
@@ -243,15 +243,15 @@ function logEvents(context, correlationId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
       `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}` +
-        context.eventsToSend.map((e) => e.name).join(', '),
+      context.eventsToSend.map((e) => e.name).join(', '),
       context.eventsToSend,
       `correlationId=${correlationId}`
     );
   } else if (LOGGER.isLevelEnabled('info')) {
     LOGGER.info(
       `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}  ` +
-        context.eventsToSend.map((e) => e.name).join(', ') +
-        `  correlationId=${correlationId}`
+      context.eventsToSend.map((e) => e.name).join(', ') +
+      `  correlationId=${correlationId}`
     );
   }
 }

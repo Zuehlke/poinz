@@ -9,7 +9,7 @@ import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeCommands}) => {
+const StoryEditForm = ({t, story, changeStory, cancelEditStory, pendingChangeCommands}) => {
   const classes = classnames('story story-edit-mode', {
     waiting: pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id)
   });
@@ -37,7 +37,7 @@ const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeComman
           />
         </fieldset>
 
-        <StoryEditFormButtonGroup onSave={triggerChange} onCancel={triggerCancel} />
+        <StoryEditFormButtonGroup t={t} onSave={triggerChange} onCancel={triggerCancel} />
       </div>
     </div>
   );
@@ -60,6 +60,7 @@ const StoryEditForm = ({story, changeStory, cancelEditStory, pendingChangeComman
 };
 
 StoryEditForm.propTypes = {
+  t: PropTypes.func.isRequired,
   story: PropTypes.object,
   changeStory: PropTypes.func,
   cancelEditStory: PropTypes.func,
@@ -68,16 +69,17 @@ StoryEditForm.propTypes = {
 
 export default connect(
   (state) => ({
+    t: state.translator,
     pendingChangeCommands: getAllMatchingPendingCommands(state, 'changeStory')
   }),
   {changeStory, cancelEditStory}
 )(StoryEditForm);
 
-const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
+const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
   <div className="pure-g button-group">
     <div className="pure-u-1-2">
       <button type="button" className="pure-button pure-input-1" onClick={onCancel}>
-        Cancel
+        {t('cancel')}
         <i className="fa fa-times button-icon-right"></i>
       </button>
     </div>
@@ -87,14 +89,15 @@ const StoryEditFormButtonGroup = ({onSave, onCancel}) => (
         className="pure-button pure-input-1 pure-button-primary"
         onClick={onSave}
       >
-        Save
-        <i className="fa fa-pencil button-icon-right"></i>
+        {t('save')}
+        <i className="fa fa-save button-icon-right"></i>
       </button>
     </div>
   </div>
 );
 
 StoryEditFormButtonGroup.propTypes = {
+  t: PropTypes.func.isRequired,
   onSave: PropTypes.func,
   onCancel: PropTypes.func
 };

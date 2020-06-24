@@ -193,7 +193,7 @@ a {
     .user-estimation {
       transition all 0.2s ease-out
       height 100px
-      width 60px
+      width 76px
       margin 0 auto
       text-align center
       padding 28px 0
@@ -681,7 +681,6 @@ $backlogWidth = 300px
     overflow-y auto
     -webkit-overflow-scrolling touch
     box-sizing border-box
-    padding 8px
     padding-top 44px
     background $zuehlkeBackgroundGrey
 
@@ -692,6 +691,13 @@ $backlogWidth = 300px
       right: 0;
       position: absolute;
       bottom: 20px;
+    }
+
+    .backlog-mode-buttons {
+
+      button.pure-button.pure-button-stripped.active {
+
+      }
     }
 
     .story-hint {
@@ -708,7 +714,7 @@ $backlogWidth = 300px
       background white;
       border: 1px solid $zuehlkeLighterGrey
       padding 8px 16px 16px 16px
-      margin 3px 0 16px 0
+      margin 3px 8px 16px 8px
       box-sizing border-box
       border-radius 2px
     }
@@ -728,7 +734,7 @@ $backlogWidth = 300px
     }
 
     .stories {
-      margin-top 16px
+      margin 16px 8px 0 8px
 
       .story {
         position relative

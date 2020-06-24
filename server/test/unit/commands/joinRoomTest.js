@@ -2,7 +2,7 @@ import {v4 as uuid} from 'uuid';
 
 import {prepEmpty, prepOneUserInOneRoom} from '../testUtils';
 
-test('nonexisting room  ', () => {
+test('nonexisting room', () => {
   const {processor} = prepEmpty();
 
   const roomId = uuid();
@@ -16,7 +16,7 @@ test('nonexisting room  ', () => {
       payload: {
         username: 'tester',
         email: 'super@test.com',
-        avatar: 6
+        avatar: 0 // 0 = currently the "anonymous" avatar.   0 as number is falsy, should still produce "avatarSet" event
       }
     },
     userId
@@ -51,7 +51,7 @@ test('nonexisting room  ', () => {
           email: 'super@test.com',
           id: userId,
           username: 'tester',
-          avatar: 6
+          avatar: 0
         }
       }
     });
@@ -68,7 +68,7 @@ test('nonexisting room  ', () => {
 
     expect(avatarSetEvent.userId).toEqual(userId);
     expect(avatarSetEvent.payload).toEqual({
-      avatar: 6
+      avatar: 0
     });
 
     // check room structure and data
@@ -77,7 +77,7 @@ test('nonexisting room  ', () => {
       users: {
         [userId]: {
           id: userId,
-          avatar: 6,
+          avatar: 0,
           email: 'super@test.com',
           username: 'tester'
         }
@@ -100,7 +100,7 @@ test('existing room with user match', async () => {
       payload: {
         username: 'tester',
         email: 'super@test.com',
-        avatar: 4
+        avatar: 0
       }
     },
     userId
@@ -125,7 +125,7 @@ test('existing room with user match', async () => {
           email: 'super@test.com',
           id: userId,
           username: 'tester',
-          avatar: 4
+          avatar: 0
         }
       }
     });
@@ -142,7 +142,7 @@ test('existing room with user match', async () => {
 
     expect(avatarSetEvent.userId).toEqual(userId);
     expect(avatarSetEvent.payload).toEqual({
-      avatar: 4
+      avatar: 0
     });
 
     // check room structure and data
@@ -151,7 +151,7 @@ test('existing room with user match', async () => {
       users: {
         [userId]: {
           id: userId,
-          avatar: 4,
+          avatar: 0,
           username: 'tester',
           email: 'super@test.com'
         }
@@ -180,7 +180,7 @@ test('existing room with user match, command has no preset properties', async ()
       roomId,
       name: 'joinRoom',
       payload: {
-        // no preset username and email (which is totally valid)  e.g. first-time user
+        // no preset username, email, avatar (which is totally valid)  e.g. first-time user
       }
     },
     userId

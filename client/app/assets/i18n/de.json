@@ -34,5 +34,7 @@
   "restore": "Wiederherstellen",
   "trash": "Papierkorb",
   "noActiveStories": "Keine Stories im Backlog...",
-  "trashEmpty": "Papierkorb ist leer..."
+  "trashEmpty": "Papierkorb ist leer...",
+  "save": "Speichern",
+  "cancel": "Verwerfen"
 }

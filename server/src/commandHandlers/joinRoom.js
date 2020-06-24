@@ -24,6 +24,8 @@ export default joinRoomCommandHandler;
 function joinNewRoom(room, command, userId) {
   room.applyEvent('roomCreated', {});
 
+  const avatar = Number.isInteger(command.payload.avatar) ? command.payload.avatar : 0;
+
   // produce a "roomJoined" event for our new room
   // this event must contain all information about the room, such that every joining user gets the current room state!
   // since it is a new room, no stories , no selectedStory, only one (our) user
@@ -34,7 +36,7 @@ function joinNewRoom(room, command, userId) {
         id: userId,
         username: command.payload.username,
         email: command.payload.email,
-        avatar: command.payload.avatar
+        avatar
       }
     },
     stories: {},
@@ -54,11 +56,9 @@ function joinNewRoom(room, command, userId) {
     });
   }
 
-  if (command.payload.avatar) {
-    room.applyEvent('avatarSet', {
-      avatar: command.payload.avatar
-    });
-  }
+  room.applyEvent('avatarSet', {
+    avatar
+  });
 }
 
 function joinExistingRoom(room, command, userId) {
@@ -91,11 +91,9 @@ function joinExistingRoom(room, command, userId) {
     });
   }
 
-  if (userObject.avatar) {
-    room.applyEvent('avatarSet', {
-      avatar: userObject.avatar
-    });
-  }
+  room.applyEvent('avatarSet', {
+    avatar: userObject.avatar
+  });
 
   if (userObject.excluded) {
     room.applyEvent('excludedFromEstimations', {});
@@ -121,7 +119,8 @@ function getMatchingUserObjectFromRoom(room, command, userId) {
     if (command.payload.email) {
       matchingExistingUser.email = command.payload.email;
     }
-    if (command.payload.avatar) {
+
+    if (Number.isInteger(command.payload.avatar)) {
       matchingExistingUser.avatar = command.payload.avatar;
     }
 

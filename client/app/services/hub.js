@@ -30,16 +30,11 @@ function Hub() {
   this.io.on('connect', () => log.info('socket connected to server'));
   this.io.on('disconnect', () => log.info('socket from server disconnected'));
 
-  if (log.getLevel() <= log.levels.DEBUG) {
-    this.io.on('event', (ev) => {
-      console.groupCollapsed('%c %s', 'color:blue', ev.name);
-      console.dir(ev);
-      console.groupEnd();
-      this.emit('event', ev);
-    });
-  } else {
-    this.io.on('event', this.emit.bind(this, 'event'));
-  }
+  this.io.on('event', (ev) => {
+    debugReceivedEvent(ev);
+
+    this.emit('event', ev);
+  });
 }
 
 inherits(Hub, EventEmitter);
@@ -51,7 +46,10 @@ inherits(Hub, EventEmitter);
  */
 Hub.prototype.sendCommand = function sendCommand(command, dispatch) {
   command.id = uuid();
+
   this.io.emit('command', command);
+
+  debugSentCommand(command);
 
   dispatch({
     type: COMMAND_SENT,
@@ -62,3 +60,23 @@ Hub.prototype.sendCommand = function sendCommand(command, dispatch) {
 const hubInstance = new Hub();
 
 export default hubInstance;
+
+function debugSentCommand(command) {
+  if (log.getLevel() > log.levels.DEBUG) {
+    return;
+  }
+
+  console.groupCollapsed('%c %s', 'color:#2b827b', command.name);
+  console.dir(command);
+  console.groupEnd();
+}
+
+function debugReceivedEvent(ev) {
+  if (log.getLevel() > log.levels.DEBUG) {
+    return;
+  }
+
+  console.groupCollapsed('%c %s', 'color:#2b4e82', ev.name);
+  console.dir(ev);
+  console.groupEnd();
+}

@@ -34,5 +34,7 @@
   "restore": "Restore",
   "trash": "Trash",
   "noActiveStories": "There are currently no stories in the estimation backlog...",
-  "trashEmpty": "Trash is empty..."
+  "trashEmpty": "Trash is empty...",
+  "save": "Save",
+  "cancel": "Cancel"
 }

@@ -235,7 +235,9 @@ function logCommand(command, userId) {
       command
     );
   } else if (LOGGER.isLevelEnabled('info')) {
-    LOGGER.info(`HANDLING COMMAND user=${userId} room=${command.roomId} ${command.name} ${command.id}`);
+    LOGGER.info(
+      `HANDLING COMMAND user=${userId} room=${command.roomId} ${command.name} ${command.id}`
+    );
   }
 }
 
@@ -243,15 +245,15 @@ function logEvents(context, correlationId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
       `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}` +
-      context.eventsToSend.map((e) => e.name).join(', '),
+        context.eventsToSend.map((e) => e.name).join(', '),
       context.eventsToSend,
       `correlationId=${correlationId}`
     );
   } else if (LOGGER.isLevelEnabled('info')) {
     LOGGER.info(
       `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}  ` +
-      context.eventsToSend.map((e) => e.name).join(', ') +
-      `  correlationId=${correlationId}`
+        context.eventsToSend.map((e) => e.name).join(', ') +
+        `  correlationId=${correlationId}`
     );
   }
 }

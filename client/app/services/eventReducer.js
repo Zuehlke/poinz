@@ -1,4 +1,5 @@
 import log from 'loglevel';
+
 import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
@@ -164,10 +165,15 @@ const eventActionHandlers = {
   },
 
   /**
-   * A disconnected user was kicked from the room.
+   * A user was kicked from the room.
    */
   [EVENT_ACTION_TYPES.kicked]: {
     fn: (state, payload) => {
+      if (payload.userId === state.userId) {
+        // you got kicked ;)
+        return {...initialState()};
+      }
+
       // We need to take the userId from the payload (the user that was kicked, not the "kicking" user)
       const modifiedStories = clearStoryEstimationsOfUser(state.stories, payload.userId);
       const modifiedUsers = {...state.users};
@@ -180,7 +186,7 @@ const eventActionHandlers = {
       };
     },
     log: (username, payload, oldState, modifiedState, event) =>
-      `User "${oldState.users[event.userId].username}" was kicked from the room by user "${
+      `User "${oldState.users[payload.userId].username}" was kicked from the room by user "${
         oldState.users[event.userId].username
       }"`
   },

@@ -5,11 +5,12 @@ import PropTypes from 'prop-types';
 import JoinRoomForm from '../components/JoinRoomForm';
 import GithubRibbon from '../components/GithubRibbon';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
+import {formatTime} from '../services/timeUtil';
 
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({t, waitingForJoin}) => {
+const Landing = ({t, waitingForJoin, actionLog}) => {
   return (
     <div className="landing">
       <GithubRibbon />
@@ -23,6 +24,19 @@ const Landing = ({t, waitingForJoin}) => {
             {t('disclaimer')}
           </div>
         </div>
+
+        {actionLog && actionLog.length > 0 && (
+          <div className="eyecatcher action-log-landing">
+            <ul>
+              {actionLog.map((entry, index) => (
+                <li key={`logline_${index}`}>
+                  <span>{formatTime(entry.tstamp)}</span>
+                  <span>{entry.message}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -30,11 +44,13 @@ const Landing = ({t, waitingForJoin}) => {
 
 Landing.propTypes = {
   t: PropTypes.func,
-  waitingForJoin: PropTypes.bool
+  waitingForJoin: PropTypes.bool,
+  actionLog: PropTypes.array
 };
 
 export default connect((state) => ({
   t: state.translator,
+  actionLog: state.actionLog,
   waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
 }))(Landing);
 

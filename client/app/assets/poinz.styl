@@ -176,6 +176,7 @@ a {
   padding-top 48px
 
   .user {
+    cursor pointer
     padding 0 8px
     display inline-block
     position relative
@@ -184,7 +185,7 @@ a {
     .user-name {
       text-align center
       margin 4px 0
-      max-width 10vh
+      max-width 90px
       text-overflow ellipsis
       white-space nowrap
       overflow hidden
@@ -235,6 +236,7 @@ a {
 
     &.user-own {
       color $zuehlkeOrange
+      cursor inherit
 
       .avatar {
         border 2px solid $zuehlkeOrange
@@ -250,32 +252,50 @@ a {
       }
     }
 
-    &.user-disconnected {
+    .kick-overlay {
+      position absolute
+      top 0
+      width 72px
+      height 72px
+      font-size 64px
+      display flex
+      justify-content space-around
+      align-items center
+      left 50%
+      margin-left -36px
+
+      > i {
+        display inline-block
+        font-size 22px
+        cursor pointer
+        padding 6px
+        width 18px
+        height 18px
+        line-height 18px
+        text-align center
+        vertical-align middle
+        background white
+        border-radius 50%
+        opacity 0.9
+        color $zuehlkeLightGrey
+
+        &:hover {
+          opacity 1
+
+          &.fa-sign-out {
+            color #ee3f21
+          }
+        }
+      }
+    }
+
+
+    &.user-disconnected, &.user-marked-kick {
       color $zuehlkeLightGrey
 
       .avatar {
         -webkit-filter grayscale(100%)
         filter gray;
-      }
-
-      .disconnected-kick-overlay {
-        position absolute
-        top 0
-        width 72px
-        height 72px
-        text-align center
-        font-size 64px
-        color $zuehlkeOrange
-        display none
-      }
-
-      &:hover {
-
-        .disconnected-kick-overlay {
-          display block
-        }
-
-        cursor pointer
       }
 
     }
@@ -586,7 +606,6 @@ $userMenuWidth = 300px
 
         > span {
           display block
-          margin-right 4px
         }
 
         > span:first-child {
@@ -597,6 +616,30 @@ $userMenuWidth = 300px
         &:first-child {
           border-left 2px solid $zuehlkeOrange
         }
+      }
+    }
+  }
+}
+
+// action log also displayed on landing page, styled differently
+.landing .action-log-landing {
+  ul {
+    width 100%
+    margin 0
+    padding 0
+    list-style-type none
+
+    li {
+      padding 4px
+      margin-bottom 8px
+      box-sizing border-box
+
+      > span {
+        display block
+      }
+
+      > span:first-child {
+        font-size 12px
       }
     }
   }
@@ -662,6 +705,7 @@ $userMenuWidth = 300px
 }
 
 $backlogWidth = 300px
+
 .board {
   transition all 0.2s ease-out
   position relative
@@ -767,7 +811,7 @@ $backlogWidth = 300px
         }
 
         &:hover {
-          box-shadow  inset 0 82px 50px -60px rgba(194, 194, 194, 0.45)
+          box-shadow inset 0 82px 50px -60px rgba(194, 194, 194, 0.45)
         }
 
         &:hover > .story-toolbar i {
@@ -1000,6 +1044,7 @@ $backlogWidth = 300px
 }
 
 // in every screen-size, if backlog-active class is set, show menu
+
 .board .backlog.backlog-active {
   left $backlogWidth
 }

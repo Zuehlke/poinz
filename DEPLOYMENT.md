@@ -20,6 +20,6 @@ PoinZ is currently deployed on a free-tier heroku dyno. (currently without persi
 A more suitable deployment might be needed in the future.
 
  
-## Heroku log monitoring with Logz.io
+### Heroku log monitoring with Logz.io
 
 ```$  heroku drains:add "https://listener-nl.logz.io:8081?token=[TOKEN]" -a poinz```

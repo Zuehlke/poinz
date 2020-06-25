@@ -5,8 +5,18 @@ import socketRegistryFactory from './socketRegistry';
 
 const LOGGER = getLogger('socketManager');
 
-export default function socketManagerFactory(commandProcessor, sendEventToRoom) {
-  const registry = socketRegistryFactory();
+/**
+ *
+ * @param commandProcessor
+ * @param {function} sendEventToRoom
+ * @param {function} removeSocketFromRoomByIds
+ */
+export default function socketManagerFactory(
+  commandProcessor,
+  sendEventToRoom,
+  removeSocketFromRoomByIds
+) {
+  const registry = socketRegistryFactory(removeSocketFromRoomByIds);
 
   return {
     handleIncomingCommand,
@@ -23,27 +33,35 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
         return;
       }
 
-      updateSocketRegistry(matchingUserId, producedEvents, socket);
+      updateSocketRegistryJoining(matchingUserId, producedEvents, socket);
 
       sendEvents(producedEvents, producedEvents[0].roomId);
+
+      updateSocketRegistryLeaving(matchingUserId, producedEvents, socket);
     } catch (commandProcessingError) {
       handleCommandProcessingError(commandProcessingError, msg, socket);
     }
   }
 
-  function updateSocketRegistry(userId, producedEvents, socket) {
+  function updateSocketRegistryJoining(userId, producedEvents, socket) {
     const joinedRoomEvent = getJoinedRoomEvent(producedEvents);
     if (joinedRoomEvent) {
       registry.registerSocketMapping(socket, userId, joinedRoomEvent.roomId);
     }
+  }
 
+  function updateSocketRegistryLeaving(userId, producedEvents, socket) {
     const leftRoomEvent = getLeftRoomEvent(producedEvents);
     if (leftRoomEvent) {
       registry.removeSocketMapping(socket.id, leftRoomEvent.userId, leftRoomEvent.roomId);
     } else {
       const kickedRoomEvent = getKickedRoomEvent(producedEvents);
       if (kickedRoomEvent) {
-        registry.removeSocketMapping(socket.id, kickedRoomEvent.userId, kickedRoomEvent.roomId);
+        // find sockets that match room and userId ( for the kicked user, not the kicking user )
+        registry.removeMatchingSocketMappings(
+          kickedRoomEvent.payload.userId,
+          kickedRoomEvent.roomId
+        );
       }
     }
   }
@@ -89,7 +107,9 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
       return msg.payload.userId;
     }
 
-    return uuid();
+    const newUserId = uuid();
+    LOGGER.warn(`New userId ${newUserId} generated for socket ${socketId}. msg.name=${msg.name}`);
+    return newUserId;
   }
 
   /**
@@ -139,7 +159,9 @@ export default function socketManagerFactory(commandProcessor, sendEventToRoom) 
 
     const {userId, roomId} = mapping;
 
-    LOGGER.debug(`Socket ${socket.id} disconnected. Mapping to user ${userId} in room ${roomId}`);
+    LOGGER.debug(
+      `Socket ${socket.id} disconnected. Socket is currently mapping to user ${userId} in room ${roomId}`
+    );
 
     if (registry.isLastSocketForUserId(userId)) {
       const leaveRoomCommand = {

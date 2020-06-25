@@ -15,7 +15,15 @@ function init(httpServer, cmdProcessor) {
 
   const sendEventToRoom = (roomId, event) => io.to(roomId).emit('event', event);
 
-  socketManager = socketManagerFactory(cmdProcessor, sendEventToRoom);
+  // we dont want to pass "io" down to factory and registry. pass down a cb instead...
+  const removeSocketFromRoomByIds = (socketId, roomId) => {
+    const connectedSocket = io.sockets.connected[socketId];
+    if (connectedSocket) {
+      connectedSocket.leave(roomId);
+    }
+  };
+
+  socketManager = socketManagerFactory(cmdProcessor, sendEventToRoom, removeSocketFromRoomByIds);
 
   io.on('connect', (socket) => {
     socket.on('disconnect', () => socketManager.onDisconnect(socket));

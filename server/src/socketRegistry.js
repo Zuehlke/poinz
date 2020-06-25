@@ -10,13 +10,16 @@ const LOGGER = getLogger('socketRegistry');
  * so that we can produce "user left" events on socket disconnect.
  *
  * maps socket IDs  to userIds and roomIds
+ *
+ * @param {function} removeSocketFromRoomByIds
  */
-export default function socketRegistryFactory() {
+export default function socketRegistryFactory(removeSocketFromRoomByIds) {
   const registry = {};
 
   return {
     registerSocketMapping,
     removeSocketMapping,
+    removeMatchingSocketMappings,
     isLastSocketForUserId,
     getMapping
   };
@@ -58,7 +61,24 @@ export default function socketRegistryFactory() {
       );
     }
 
+    // also remove socket.io sockets from socket.io "room" , so that they no longer receive events from the room, they left (or were kicked from)
+    removeSocketFromRoomByIds(socketId, roomId);
+
     delete registry[socketId];
+  }
+
+  /**
+   * will remove all mappings
+   * @param userId
+   * @param roomId
+   */
+  function removeMatchingSocketMappings(userId, roomId) {
+    LOGGER.debug(`Removing all mappings for  user ${userId}, room ${roomId}`);
+    const matchingSocketEntries = Object.entries(registry).filter(
+      (entry) => entry[1].userId === userId && entry[1].roomId === roomId
+    );
+
+    matchingSocketEntries.forEach((entry) => removeSocketMapping(entry[0], userId, roomId));
   }
 
   function isLastSocketForUserId(userId) {

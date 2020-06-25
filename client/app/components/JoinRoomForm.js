@@ -14,7 +14,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   const [customRoomId, setCustomRoomId] = useState('');
 
   return (
-    <div className="eyecatcher create-room-form">
+    <div className="eyecatcher join-room-form">
       <div className="info-text">
         <i className="fa fa-users leading-paragraph-icon"></i>
         <div>

@@ -11,7 +11,8 @@ import {
   LOCATION_CHANGED,
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
-  HIDE_TRASH
+  HIDE_TRASH,
+  TOGGLE_MARK_FOR_KICK
 } from '../actions/types';
 
 /**
@@ -112,6 +113,18 @@ export default function clientActionReducer(state, action) {
     }
     case HIDE_TRASH: {
       return {...state, trashShown: false};
+    }
+    case TOGGLE_MARK_FOR_KICK: {
+      if (state.userId === action.userId) {
+        return state; // no use in marking myself.. backend will prevent "kick" command for my own user anyways
+      }
+      const doMark = !state.users[action.userId].markedForKick;
+
+      const modifiedUsers = {
+        ...state.users,
+        [action.userId]: {...state.users[action.userId], markedForKick: doMark}
+      };
+      return {...state, users: modifiedUsers};
     }
 
     default:

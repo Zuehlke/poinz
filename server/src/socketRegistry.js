@@ -44,6 +44,10 @@ export default function socketRegistryFactory(removeSocketFromRoomByIds) {
   }
 
   function removeSocketMapping(socketId, userId, roomId) {
+    if (!registry[socketId]) {
+      return;
+    }
+
     LOGGER.debug(`Removing mapping: socket ${socketId} -> [user ${userId}, room ${roomId}]`);
 
     if (registry[socketId].userId !== userId) {

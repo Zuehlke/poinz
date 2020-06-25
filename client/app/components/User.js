@@ -3,19 +3,21 @@ import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {kick} from '../actions';
+import {kick, toggleMarkForKick} from '../actions';
 import Avatar from './Avatar.js';
 import {getCardConfigForValue} from '../services/getCardConfigForValue';
 
-const User = ({user, selectedStory, ownUserId, cardConfig, kick}) => {
+const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKick}) => {
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
+  const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
 
   const classes = classnames('user user-' + user.id, {
     'user-own': user.id === ownUserId,
     'user-excluded': isExcluded,
-    'user-disconnected': isDisconnected
+    'user-disconnected': isDisconnected,
+    'user-marked-kick': isMarkedForKick
   });
 
   const userEstimationValue = selectedStory && selectedStory.estimations[user.id];
@@ -38,7 +40,7 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick}) => {
       : {};
 
   return (
-    <div className={classes}>
+    <div className={classes} onClick={onMarkForKick}>
       {!isDisconnected && isExcluded && (
         <span className="excluded-badge">
           <i className="fa fa-eye"></i>
@@ -54,9 +56,9 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick}) => {
       <Avatar user={user} />
       <div className="user-name">{user.username || '-'}</div>
 
-      {isDisconnected && (
-        <span onClick={kickUser} className="disconnected-kick-overlay">
-          <i className="fa fa-ban"></i>
+      {isMarkedForKick && (
+        <span className="kick-overlay">
+          <i className="fa fa-sign-out" onClick={() => kick(user.id)}></i>
         </span>
       )}
 
@@ -68,11 +70,8 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick}) => {
     </div>
   );
 
-  function kickUser() {
-    if (isDisconnected) {
-      // is also verified by backend precondition. but we can already test here in order to prevent precondition error
-      kick(user.id);
-    }
+  function onMarkForKick() {
+    toggleMarkForKick(user.id);
   }
 };
 
@@ -81,7 +80,8 @@ User.propTypes = {
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
   cardConfig: PropTypes.array,
-  kick: PropTypes.func
+  kick: PropTypes.func.isRequired,
+  toggleMarkForKick: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -90,5 +90,5 @@ export default connect(
     ownUserId: state.userId,
     selectedStory: state.stories[state.selectedStory]
   }),
-  {kick}
+  {kick, toggleMarkForKick}
 )(User);

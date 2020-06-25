@@ -19,7 +19,8 @@ import {
   EVENT_ACTION_TYPES,
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
-  HIDE_TRASH
+  HIDE_TRASH,
+  TOGGLE_MARK_FOR_KICK
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
 
@@ -347,6 +348,7 @@ export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
 export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
+export const toggleMarkForKick = (userId) => ({type: TOGGLE_MARK_FOR_KICK, userId});
 export const setLanguage = (language) => {
   clientSettingsStore.setPresetLanguage(language);
   return {type: SET_LANGUAGE, language};

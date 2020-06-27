@@ -1,20 +1,37 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {useDropzone} from 'react-dropzone';
 
 import StoryAddForm from './StoryAddForm';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 
+import {importCsvFile} from '../actions';
+
 /**
  * show the story add form and list of active stories
  */
-const BacklogActive = ({t, stories}) => {
+const BacklogActive = ({t, stories, importCsvFile}) => {
   const activeStories = stories ? Object.values(stories).filter((s) => !s.trashed) : [];
   const hasActiveStories = activeStories.length > 0;
 
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      importCsvFile(acceptedFiles[0]);
+    }
+  }, []);
+  const {getRootProps, isDragActive} = useDropzone({onDrop});
+
   return (
-    <React.Fragment>
+    <div
+      {...getRootProps()}
+      className={'story-drop-zone ' + (isDragActive ? 'story-drop-zone-active' : '')}
+    >
+      <div className="drag-overlay">
+        <i className="fa fa-caret-square-o-down"></i>
+      </div>
+
       <StoryAddForm />
 
       {hasActiveStories && (
@@ -30,16 +47,20 @@ const BacklogActive = ({t, stories}) => {
       )}
 
       {!hasActiveStories && <div className="story-hint">{t('noActiveStories')}</div>}
-    </React.Fragment>
+    </div>
   );
 };
 
 BacklogActive.propTypes = {
   t: PropTypes.func.isRequired,
-  stories: PropTypes.object
+  stories: PropTypes.object,
+  importCsvFile: PropTypes.func.isRequired
 };
 
-export default connect((state) => ({
-  t: state.translator,
-  stories: state.stories
-}))(BacklogActive);
+export default connect(
+  (state) => ({
+    t: state.translator,
+    stories: state.stories
+  }),
+  {importCsvFile}
+)(BacklogActive);

@@ -749,6 +749,35 @@ $backlogWidth = 300px
       text-align center
     }
 
+    .story-drop-zone {
+
+      outline: none;
+      border: none;
+      min-height: 90%;
+
+      .drag-overlay {
+        display none
+        position absolute
+        left 0
+        right 0
+        top 33px
+        bottom 0
+        margin 4px
+        border 4px dashed rgba(0, 153, 204, 0.25)
+        font-size 62px
+        color rgba(0, 153, 204, 0.25)
+        z-index 0
+      }
+
+      &.story-drop-zone-active .drag-overlay {
+        z-index 1000
+        display: flex;
+        justify-content center
+        align-items center
+
+      }
+    }
+
     .button-group > div {
       padding 0 4px
       box-sizing border-box

@@ -10,6 +10,7 @@ import storyChanged from './storyChanged';
 import storyDeleted from './storyDeleted';
 import storyTrashed from './storyTrashed';
 import storyRestored from './storyRestored';
+import importFailed from './importFailed';
 import storyEstimateCleared from './storyEstimateCleared';
 import storyEstimateGiven from './storyEstimateGiven';
 import storySelected from './storySelected';
@@ -33,6 +34,7 @@ export default {
   storyDeleted,
   storyTrashed,
   storyRestored,
+  importFailed,
   storyEstimateCleared,
   storyEstimateGiven,
   consensusAchieved,

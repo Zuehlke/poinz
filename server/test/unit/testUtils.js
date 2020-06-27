@@ -11,6 +11,11 @@ export const EXPECT_UUID_MATCHING = expect.stringMatching(
   new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
 );
 
+export function textToCsvDataUrl(csvContent) {
+  const base64data = Buffer.from(csvContent).toString('base64');
+  return 'data:text/csv;base64,' + base64data;
+}
+
 /**
  * our mock roomsStore contains only one room.
  * commandProcessor will load this room (if set), and store back manipulated room.

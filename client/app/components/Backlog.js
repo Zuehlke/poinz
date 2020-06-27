@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
-import FeedbackHint from './FeedbackHint';
-
 import {showTrash, hideTrash} from '../actions';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
@@ -41,8 +39,6 @@ const Backlog = ({
 
       {trashShown && <BacklogTrash />}
       {!trashShown && <BacklogActive />}
-
-      <FeedbackHint />
     </div>
   );
 };

@@ -26,6 +26,7 @@ export const EVENT_ACTION_TYPES = {
   commandRejected: 'COMMAND_REJECTED',
   storyAdded: 'STORY_ADDED',
   storySelected: 'STORY_SELECTED',
+  importFailed: 'IMPORT_FAILED',
   usernameSet: 'USERNAME_SET',
   emailSet: 'EMAIL_SET',
   avatarSet: 'AVATAR_SET',

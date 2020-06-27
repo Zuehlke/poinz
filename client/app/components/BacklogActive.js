@@ -1,20 +1,44 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {useDropzone} from 'react-dropzone';
+import classnames from 'classnames';
 
 import StoryAddForm from './StoryAddForm';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 
+import {importCsvFile} from '../actions';
+
 /**
  * show the story add form and list of active stories
  */
-const BacklogActive = ({t, stories}) => {
+const BacklogActive = ({t, stories, importCsvFile}) => {
   const activeStories = stories ? Object.values(stories).filter((s) => !s.trashed) : [];
   const hasActiveStories = activeStories.length > 0;
 
+  const onDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      importCsvFile(acceptedFiles[0]);
+    }
+  }, []);
+  const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDropzone({
+    onDrop,
+    multiple: false,
+    noClick: true,
+    maxSize: 200000,
+    accept: 'text/csv'
+  });
+
+  const dropzoneClassnames = classnames('story-drop-zone', {
+    'story-drop-zone-active': isDragActive,
+    'story-drop-zone-accept': isDragAccept,
+    'story-drop-zone-reject': isDragReject
+  });
   return (
-    <React.Fragment>
+    <div {...getRootProps()} className={dropzoneClassnames}>
+      <div className="drag-overlay"></div>
+
       <StoryAddForm />
 
       {hasActiveStories && (
@@ -30,16 +54,20 @@ const BacklogActive = ({t, stories}) => {
       )}
 
       {!hasActiveStories && <div className="story-hint">{t('noActiveStories')}</div>}
-    </React.Fragment>
+    </div>
   );
 };
 
 BacklogActive.propTypes = {
   t: PropTypes.func.isRequired,
-  stories: PropTypes.object
+  stories: PropTypes.object,
+  importCsvFile: PropTypes.func.isRequired
 };
 
-export default connect((state) => ({
-  t: state.translator,
-  stories: state.stories
-}))(BacklogActive);
+export default connect(
+  (state) => ({
+    t: state.translator,
+    stories: state.stories
+  }),
+  {importCsvFile}
+)(BacklogActive);

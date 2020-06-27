@@ -135,6 +135,11 @@ const UserMenu = ({
           </p>
         </div>
       </div>
+
+      <div className="license-hint">
+        Avatar Icons (c) by DELEKET{' '}
+        <a href="https://www.deviantart.com/deleket">https://www.deviantart.com/deleket</a>
+      </div>
     </div>
   );
 

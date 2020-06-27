@@ -11,6 +11,7 @@ const LOGGER = getLogger('commandSchemaValidator');
 const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 const ROOMID_REGEX = /^[-a-z0-9_]+$/;
 const UUIDv4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+const CsvDATAURL_REGEX = /^data:text\/csv;base64,/;
 
 const schemas = gatherSchemas();
 
@@ -102,6 +103,10 @@ function registerCustomFormats() {
   tv4.addFormat(
     'uuidv4',
     validateStringFormat.bind(undefined, UUIDv4_REGEX, 'must be a valid uuid v4')
+  );
+  tv4.addFormat(
+    'csvDataUrl',
+    validateStringFormat.bind(undefined, CsvDATAURL_REGEX, 'must be a valid text/csv data url')
   );
 }
 

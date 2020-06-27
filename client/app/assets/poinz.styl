@@ -474,6 +474,13 @@ $userMenuWidth = 300px
     margin-top: 0
   }
 
+  .license-hint {
+    font-size small
+    margin-bottom 12px
+    position absolute
+    bottom 7px
+  }
+
   .pure-form {
 
     .user-menu-section {
@@ -517,11 +524,6 @@ $userMenuWidth = 300px
           border 2px solid $zuehlkeOrange
         }
       }
-    }
-
-    .license-hint {
-      font-size small
-      margin-bottom 12px
     }
 
     .language-selector-wrapper {
@@ -749,6 +751,42 @@ $backlogWidth = 300px
       text-align center
     }
 
+    .story-drop-zone {
+
+      outline: none;
+      border: none;
+      min-height: 90%;
+
+      .drag-overlay {
+        display none
+        position absolute
+        left 0
+        right 0
+        top 33px
+        height calc(100% - 51px)
+        margin 4px
+        font-size 62px
+        border 4px dashed rgba(0, 153, 204, 0.25)
+        color rgba(0, 153, 204, 0.25)
+        z-index 0
+      }
+
+      &.story-drop-zone-active .drag-overlay {
+        z-index 1000
+        display block
+      }
+
+      &.story-drop-zone-active.story-drop-zone-accept .drag-overlay {
+        border 4px dashed rgba(0, 153, 204, 0.25)
+        background rgba(0, 153, 204, 0.02)
+      }
+
+      &.story-drop-zone-active.story-drop-zone-reject .drag-overlay {
+        border 4px dashed rgba(255, 130, 10, 0.3)
+        background rgba(255, 130, 10, 0.06)
+      }
+    }
+
     .button-group > div {
       padding 0 4px
       box-sizing border-box
@@ -968,14 +1006,17 @@ $backlogWidth = 300px
 }
 
 .feedback-hint {
-  position relative
+  position absolute
   border 1px solid $zuehlkeBlue
-  background white
+  background #fff
   padding 8px
   font-size 13px
   margin-top 28px
-
   display flex
+  bottom 30px
+  right 20px
+  width 245px
+  padding-right 20px
 
   img.avatar {
     width 40px

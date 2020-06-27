@@ -23,6 +23,7 @@ import {
   TOGGLE_MARK_FOR_KICK
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
+import readDroppedFile from '../services/readDroppedFile';
 
 /**
  * store current pathname in our redux store, join or leave room if necessary
@@ -329,6 +330,22 @@ export const deleteStory = (storyId) => (dispatch, getState) => {
     },
     dispatch
   );
+};
+
+export const importCsvFile = (file) => (dispatch, getState) => {
+  readDroppedFile(file).then((content) => {
+    const state = getState();
+    hub.sendCommand(
+      {
+        name: 'importStories',
+        roomId: state.roomId,
+        payload: {
+          data: content
+        }
+      },
+      dispatch
+    );
+  });
 };
 
 export const fetchStatus = () => (dispatch) => {

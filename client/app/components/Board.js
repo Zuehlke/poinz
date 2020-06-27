@@ -8,6 +8,7 @@ import ActionLog from '../components/ActionLog';
 import Users from '../components/Users';
 
 import Estimation from '../components/Estimation';
+import FeedbackHint from './FeedbackHint';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -25,6 +26,8 @@ const Board = ({roomId, isAStorySelected}) => (
     <ActionLog />
     <Backlog />
     {isAStorySelected && <Estimation />}
+
+    <FeedbackHint />
   </div>
 );
 

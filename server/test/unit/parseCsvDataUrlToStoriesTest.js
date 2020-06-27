@@ -1,14 +1,15 @@
 import {promises as fs} from 'fs';
 import path from 'path';
-import parseToStories from '../../src/commandHandlers/storyImportParser';
-import {EXPECT_UUID_MATCHING} from './testUtils';
+
+import parseCsvDataUrlToStories from '../../src/commandHandlers/parseCsvDataUrlToStories';
+import {EXPECT_UUID_MATCHING, textToCsvDataUrl} from './testUtils';
 
 test('parse real jira csv', async () => {
   const csvContent = await fs.readFile(path.join(__dirname, './testJiraIssueExport.csv'), 'utf-8');
   const base64data = Buffer.from(csvContent).toString('base64');
   const dataUrl = 'data:text/csv;base64,' + base64data;
 
-  const stories = parseToStories(dataUrl);
+  const stories = parseCsvDataUrlToStories(dataUrl);
 
   expect(stories.length).toBe(4);
 
@@ -39,7 +40,7 @@ Sdgsdgsdg
 Much appreciated! =)`,
     estimations: {},
     id: EXPECT_UUID_MATCHING,
-    title: 'SMRGR-2643 timezone from AWST to HKT/SGT '
+    title: 'SMRGR-2643 timezone from AWST to HKT/SGT'
   });
   expect(stories[3]).toMatchObject({
     description: `Use cases:
@@ -57,11 +58,23 @@ Dsfh`,
 });
 
 test('parse csv with missing fields: should skip stories without title', async () => {
-  const csvContent = 'Summary,Issue key,Other Field\n,,foo\nsumsum,key,bar';
-  const base64data = Buffer.from(csvContent).toString('base64');
-  const dataUrl = 'data:text/csv;base64,' + base64data;
+  const dataUrl = textToCsvDataUrl('Summary,Issue key,Other Field\n,,foo\nsumsum,key,bar');
 
-  const stories = parseToStories(dataUrl);
+  const stories = parseCsvDataUrlToStories(dataUrl);
 
   expect(stories.length).toBe(1);
+});
+
+test('parse csv with generic fields: "title" "description"  "key"', async () => {
+  const dataUrl = textToCsvDataUrl('title,key,description\nfirst story,PRJ-123,this is a test');
+
+  const stories = parseCsvDataUrlToStories(dataUrl);
+
+  expect(stories.length).toBe(1);
+  expect(stories[0]).toMatchObject({
+    description: 'this is a test',
+    estimations: {},
+    id: EXPECT_UUID_MATCHING,
+    title: 'PRJ-123 first story'
+  });
 });

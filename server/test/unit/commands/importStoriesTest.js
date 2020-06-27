@@ -1,12 +1,11 @@
 import {promises as fs} from 'fs';
 import path from 'path';
 import {v4 as uuid} from 'uuid';
-import {prepOneUserInOneRoom} from '../testUtils';
+import {prepOneUserInOneRoom, textToCsvDataUrl} from '../testUtils';
 
 test('Should produce storyAdded events for all stories in data', async () => {
   const csvContent = await fs.readFile(path.join(__dirname, '../testJiraIssueExport.csv'), 'utf-8');
-  const base64data = Buffer.from(csvContent).toString('base64');
-  const dataUrl = 'data:text/csv;base64,' + base64data;
+  const dataUrl = textToCsvDataUrl(csvContent);
 
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 
@@ -49,8 +48,7 @@ test('Should produce storyAdded events for all stories in data', async () => {
 test('Should produce importFailed event', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 
-  const base64data = Buffer.from('this,is,a,csv\nbut,not,expected format,').toString('base64');
-  const dataUrl = 'data:text/csv;base64,' + base64data;
+  const dataUrl = textToCsvDataUrl('this,is,a,csv\nbut,not,expected format,');
 
   const commandId = uuid();
   return processor(

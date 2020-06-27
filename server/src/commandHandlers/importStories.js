@@ -1,4 +1,4 @@
-import parseToStories from './storyImportParser';
+import parseCsvDataUrlToStories from './parseCsvDataUrlToStories';
 
 /**
  * A user wants to import multiple stories.
@@ -11,7 +11,7 @@ import parseToStories from './storyImportParser';
 const importStoriesCommandHandler = {
   fn: (room, command) => {
     try {
-      const stories = parseToStories(command.payload.data);
+      const stories = parseCsvDataUrlToStories(command.payload.data);
 
       if (stories.length < 1) {
         applyFailed(room, new Error('No Stories in payload'));

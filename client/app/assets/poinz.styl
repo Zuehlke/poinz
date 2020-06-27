@@ -763,7 +763,7 @@ $backlogWidth = 300px
         left 0
         right 0
         top 33px
-        bottom 0
+        height calc(100% - 51px)
         margin 4px
         font-size 62px
         border 4px dashed rgba(0, 153, 204, 0.25)
@@ -771,22 +771,19 @@ $backlogWidth = 300px
         z-index 0
       }
 
-      &.story-drop-zone-active.story-drop-zone-accept .drag-overlay {
+      &.story-drop-zone-active .drag-overlay {
         z-index 1000
-        display: flex;
-        justify-content center
-        align-items center
+        display block
+      }
+
+      &.story-drop-zone-active.story-drop-zone-accept .drag-overlay {
         border 4px dashed rgba(0, 153, 204, 0.25)
-        color rgba(0, 153, 204, 0.25)
+        background rgba(0, 153, 204, 0.02)
       }
 
       &.story-drop-zone-active.story-drop-zone-reject .drag-overlay {
-        z-index 1000
-        display: flex;
-        justify-content center
-        align-items center
         border 4px dashed rgba(255, 130, 10, 0.3)
-        color rgba(255, 130, 10, 0.3)
+        background rgba(255, 130, 10, 0.06)
       }
     }
 

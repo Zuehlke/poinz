@@ -2,6 +2,7 @@ import React, {useCallback} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
+import classnames from 'classnames';
 
 import StoryAddForm from './StoryAddForm';
 import StoryEditForm from './StoryEditForm';
@@ -21,16 +22,22 @@ const BacklogActive = ({t, stories, importCsvFile}) => {
       importCsvFile(acceptedFiles[0]);
     }
   }, []);
-  const {getRootProps, isDragActive} = useDropzone({onDrop});
+  const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDropzone({
+    onDrop,
+    multiple: false,
+    noClick: true,
+    maxSize: 200000,
+    accept: 'text/csv'
+  });
 
+  const dropzoneClassnames = classnames('story-drop-zone', {
+    'story-drop-zone-active': isDragActive,
+    'story-drop-zone-accept': isDragAccept,
+    'story-drop-zone-reject': isDragReject
+  });
   return (
-    <div
-      {...getRootProps()}
-      className={'story-drop-zone ' + (isDragActive ? 'story-drop-zone-active' : '')}
-    >
-      <div className="drag-overlay">
-        <i className="fa fa-caret-square-o-down"></i>
-      </div>
+    <div {...getRootProps()} className={dropzoneClassnames}>
+      <div className="drag-overlay"></div>
 
       <StoryAddForm />
 

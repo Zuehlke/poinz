@@ -13,7 +13,9 @@ const FeedbackHint = ({hideHints, hideNewUserHints}) => {
   return (
     <div className="feedback-hint">
       <i className="fa fa-times hide-hints" onClick={() => hideNewUserHints()}></i>
-      <Avatar user={{email: 'set@zuehlke.com'}} index={0} />
+      <div style={{width: '45px'}}>
+        <Avatar user={{email: 'set@zuehlke.com'}} index={0} />
+      </div>
       <div>
         Hey there! Do you use Poinz on a regular basis? I would be very interested in your{' '}
         <a href="https://github.com/Zuehlke/poinz/issues" target="_blank" rel="noopener noreferrer">

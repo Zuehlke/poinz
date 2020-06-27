@@ -318,6 +318,14 @@ const eventActionHandlers = {
         : 'Currently no story is selected'
   },
 
+  /**
+   * the story csv import failed
+   */
+  [EVENT_ACTION_TYPES.importFailed]: {
+    fn: (state) => state,
+    log: (username, payload) => 'CSV import failed. ' + payload.message
+  },
+
   [EVENT_ACTION_TYPES.usernameSet]: {
     fn: (state, payload, event) => {
       const isOwnUser = state.userId === event.userId;

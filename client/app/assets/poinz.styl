@@ -474,6 +474,13 @@ $userMenuWidth = 300px
     margin-top: 0
   }
 
+  .license-hint {
+    font-size small
+    margin-bottom 12px
+    position absolute
+    bottom 7px
+  }
+
   .pure-form {
 
     .user-menu-section {
@@ -517,11 +524,6 @@ $userMenuWidth = 300px
           border 2px solid $zuehlkeOrange
         }
       }
-    }
-
-    .license-hint {
-      font-size small
-      margin-bottom 12px
     }
 
     .language-selector-wrapper {
@@ -763,18 +765,28 @@ $backlogWidth = 300px
         top 33px
         bottom 0
         margin 4px
-        border 4px dashed rgba(0, 153, 204, 0.25)
         font-size 62px
+        border 4px dashed rgba(0, 153, 204, 0.25)
         color rgba(0, 153, 204, 0.25)
         z-index 0
       }
 
-      &.story-drop-zone-active .drag-overlay {
+      &.story-drop-zone-active.story-drop-zone-accept .drag-overlay {
         z-index 1000
         display: flex;
         justify-content center
         align-items center
+        border 4px dashed rgba(0, 153, 204, 0.25)
+        color rgba(0, 153, 204, 0.25)
+      }
 
+      &.story-drop-zone-active.story-drop-zone-reject .drag-overlay {
+        z-index 1000
+        display: flex;
+        justify-content center
+        align-items center
+        border 4px dashed rgba(255, 130, 10, 0.3)
+        color rgba(255, 130, 10, 0.3)
       }
     }
 
@@ -997,14 +1009,17 @@ $backlogWidth = 300px
 }
 
 .feedback-hint {
-  position relative
+  position absolute
   border 1px solid $zuehlkeBlue
-  background white
+  background #fff
   padding 8px
   font-size 13px
   margin-top 28px
-
   display flex
+  bottom 30px
+  right 20px
+  width 245px
+  padding-right 20px
 
   img.avatar {
     width 40px

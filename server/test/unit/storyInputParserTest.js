@@ -55,3 +55,13 @@ Dsfh`,
     title: 'SMRGR-2151 Optimize messages'
   });
 });
+
+test('parse csv with missing fields: should skip stories without title', async () => {
+  const csvContent = 'Summary,Issue key,Other Field\n,,foo\nsumsum,key,bar';
+  const base64data = Buffer.from(csvContent).toString('base64');
+  const dataUrl = 'data:text/csv;base64,' + base64data;
+
+  const stories = parseToStories(dataUrl);
+
+  expect(stories.length).toBe(1);
+});

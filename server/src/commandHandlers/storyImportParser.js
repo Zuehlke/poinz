@@ -21,15 +21,21 @@ export default function parseToStories(data) {
       throw new Error('Got errors from parsing or input got truncated...');
     }
 
-    return results.data.map(jiraIssueObjectToStory);
+    return results.data.map(jiraIssueObjectToStory).filter((story) => !!story);
   } catch (err) {
     throw new Error('Could not parse to stories ' + err);
   }
 }
 
 function jiraIssueObjectToStory(jiraIssueObject) {
+  const title = getTitleFromJiraIssueObject(jiraIssueObject);
+
+  if (!title) {
+    return undefined;
+  }
+
   return {
-    title: getTitleFromJiraIssueObject(jiraIssueObject),
+    title,
     description: getDescriptionFromJiraIssueObject(jiraIssueObject),
     id: uuid(),
     estimations: {},

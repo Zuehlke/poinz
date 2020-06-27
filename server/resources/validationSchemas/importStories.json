@@ -1,0 +1,23 @@
+{
+  "allOf": [
+    {
+      "$ref": "command"
+    },
+    {
+      "properties": {
+        "payload": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ]
+}

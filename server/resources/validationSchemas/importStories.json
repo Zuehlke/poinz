@@ -9,7 +9,8 @@
           "type": "object",
           "properties": {
             "data": {
-              "type": "string"
+              "type": "string",
+              "format": "csvDataUrl"
             }
           },
           "required": [

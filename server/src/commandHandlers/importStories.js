@@ -1,7 +1,12 @@
 import parseToStories from './storyImportParser';
 
 /**
- * A user adds wants to import multiple stories
+ * A user wants to import multiple stories.
+ * payload.data is expected to be a base64 encoded "data url" (something like   data:text/csv;base64,U3VtbWFyeSxJc3N1ZSBrZXksSXNzdW.......   )
+ *
+ * Will trigger "storyAdded" events for all successfully parsed stories
+ * Will trigger "storySelected" event, if no story is selected
+ *
  */
 const importStoriesCommandHandler = {
   fn: (room, command) => {

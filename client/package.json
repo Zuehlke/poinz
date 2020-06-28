@@ -24,11 +24,8 @@
       "**/test/unit/**/*Test.js"
     ]
   },
-  "dependencies": {
-    "react-dropzone": "^11.0.1"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "node-polyglot": "^2.4.0",
     "@babel/core": "^7.10.1",
     "@babel/preset-env": "^7.10.1",
     "@babel/preset-react": "7.10.1",
@@ -36,6 +33,8 @@
     "axios": "0.19.2",
     "babel-jest": "^26.0.1",
     "babel-loader": "8.1.0",
+    "babel-plugin-styled-components": "^1.10.7",
+    "@quickbaseoss/babel-plugin-styled-components-css-namespace": "^1.0.1",
     "blueimp-md5": "2.16.0",
     "classnames": "2.2.6",
     "css-loader": "3.5.3",
@@ -47,10 +46,13 @@
     "history": "4.10.1",
     "jest": "^26.0.1",
     "loglevel": "1.6.8",
+    "node-polyglot": "^2.4.0",
     "protractor": "^7.0.0",
     "purecss": "2.0.3",
     "react": "16.13.1",
     "react-anchorify-text": "2.4.1",
+    "react-dropzone": "^11.0.1",
+    "styled-components": "^5.1.1",
     "react-dom": "16.13.1",
     "react-redux": "7.2.0",
     "redux": "4.0.5",

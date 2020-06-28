@@ -1,5 +1,11 @@
 // properties / settings for PoinZ backend
 
+if (!process.env.NODE_ENV) {
+  throw new Error(
+    'Specify NODE_ENV environment variable. Either set to "development" or "production"'
+  );
+}
+
 const settings = {
   // port for webserver & socketserver
   serverPort: process.env.PORT || 3000,

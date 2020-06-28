@@ -1,6 +1,7 @@
 import path from 'path';
 import http from 'http';
 import express from 'express';
+import sslifyEnforce from 'express-sslify';
 
 import settings from './settings';
 import socketServer from './socketServer';
@@ -20,6 +21,11 @@ startup().catch((err) => {
 async function startup() {
   const store = await roomsStoreFactory(settings.persistentStore);
   const app = express();
+
+  if (process.env.NODE_ENV === 'production') {
+    LOGGER.info('enabling HTTPS enforce...');
+    app.use(sslifyEnforce.HTTPS({trustProtoHeader: true}));
+  }
 
   // setup REST api
   rest.init(app, store);

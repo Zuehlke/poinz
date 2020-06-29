@@ -4,6 +4,13 @@ import PropTypes from 'prop-types';
 
 import {setUsername} from '../actions';
 import GithubRibbon from '../components/GithubRibbon';
+import {
+  StyledEyecatcher,
+  StyledLandingInner,
+  StyledLanding,
+  StyledInfoText,
+  StyledLandingForm
+} from '../styled/Landing';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
@@ -13,18 +20,17 @@ const WhoAreYou = ({t, setUsername}) => {
   let usernameInputField;
 
   return (
-    <div className="landing">
+    <StyledLanding>
       <GithubRibbon />
-      <div className="landing-inner">
-        <div className="eyecatcher">
-          <div className="info-text">
-            <i className="fa fa-user-secret leading-paragraph-icon"></i>
+      <StyledLandingInner>
+        <StyledEyecatcher>
+          <StyledInfoText>
+            <i className="fa fa-user-secret"></i>
             <p>{t('provideUsernameInfo')}</p>
-          </div>
-          <div className="username-wrapper">
+          </StyledInfoText>
+          <StyledLandingForm>
             <input
               type="text"
-              id="username"
               placeholder={t('name')}
               ref={(ref) => (usernameInputField = ref)}
               onKeyPress={handleUsernameKeyPress}
@@ -33,10 +39,10 @@ const WhoAreYou = ({t, setUsername}) => {
             <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>
               {t('join')}
             </button>
-          </div>
-        </div>
-      </div>
-    </div>
+          </StyledLandingForm>
+        </StyledEyecatcher>
+      </StyledLandingInner>
+    </StyledLanding>
   );
 
   function handleUsernameKeyPress(e) {

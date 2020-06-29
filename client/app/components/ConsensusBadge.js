@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {getCardConfigForValue} from '../services/getCardConfigForValue';
+import {StyledConsensusBadge} from '../styled/ConsensusBadge';
 
 const ConsensusBadge = ({cardConfig, consensusValue}) => {
   const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
 
   return (
-    <div
-      className="consensus-badge"
-      style={{background: matchingCardConfig ? matchingCardConfig.color : '#bdbfbf'}}
-    >
+    <StyledConsensusBadge cardColor={matchingCardConfig && matchingCardConfig.color}>
       <div>{matchingCardConfig.label}</div>
-    </div>
+    </StyledConsensusBadge>
   );
 };
 ConsensusBadge.propTypes = {

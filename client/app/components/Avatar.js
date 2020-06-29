@@ -3,13 +3,14 @@ import md5 from 'blueimp-md5';
 import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
+import {StyledAvatar} from '../styled/Avatar';
 
-const Avatar = ({user}) => {
+const Avatar = ({user, isOwn, shaded}) => {
   const avatarImageSource = user.email
     ? createGravatarUrl(user.email)
     : avatarIcons[user.avatar || 0];
 
-  return <img className="avatar" src={avatarImageSource} />;
+  return <StyledAvatar className="avatar" src={avatarImageSource} isOwn={isOwn} shaded={shaded} />;
 };
 
 function createGravatarUrl(email) {
@@ -18,7 +19,9 @@ function createGravatarUrl(email) {
 }
 
 Avatar.propTypes = {
-  user: PropTypes.object
+  user: PropTypes.object,
+  isOwn: PropTypes.bool,
+  shaded: PropTypes.bool
 };
 
 export default Avatar;

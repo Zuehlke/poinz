@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import {showTrash, hideTrash} from '../actions';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
+import {StyledBacklog} from '../styled/Backlog';
 
 /**
  * The backlog contains two display modes:  active and trash
@@ -22,12 +22,8 @@ const Backlog = ({
   trashedStoriesCount,
   activeStoriesCount
 }) => {
-  const backlogClasses = classnames('backlog', {
-    'backlog-active': backlogShown // if true, show menu also in small screens (menu toggle)
-  });
-
   return (
-    <div className={backlogClasses}>
+    <StyledBacklog shown={backlogShown}>
       <BacklogModeButtons
         t={t}
         onShowBacklog={hideTrash}
@@ -39,7 +35,7 @@ const Backlog = ({
 
       {trashShown && <BacklogTrash />}
       {!trashShown && <BacklogActive />}
-    </div>
+    </StyledBacklog>
   );
 };
 

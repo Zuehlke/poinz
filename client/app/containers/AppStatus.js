@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import appConfig from '../services/appConfig';
 import {formatDateTime, secondsToDaysHoursMinutes, timeAgo} from '../services/timeUtil';
 import {fetchStatus} from '../actions';
+import {StyledAppStatus, StyledRoomsList} from '../styled/AppStatus';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
@@ -38,7 +39,7 @@ class AppStatus extends React.Component {
       .sort(roomComparator);
 
     return (
-      <div className="app-status">
+      <StyledAppStatus>
         <div className="top-bar">
           <div className="left-logo-container">
             <div className="poinz-logo">PoinZ</div>
@@ -58,21 +59,22 @@ class AppStatus extends React.Component {
         <p>Total rooms: {appStatus.roomCount}</p>
 
         <h5>Active Rooms</h5>
-        <ul className="rooms rooms-active">
+
+        <StyledRoomsList>
           <TableHeaders />
           {sortedActiveRooms.map((room, index) => (
             <RoomItem key={index} index={index} room={room} />
           ))}
-        </ul>
+        </StyledRoomsList>
 
         <h5>Inactive Rooms</h5>
-        <ul className="rooms rooms-active">
+        <StyledRoomsList>
           <TableHeaders />
           {sortedInActiveRooms.map((room, index) => (
             <RoomItem key={index} room={room} />
           ))}
-        </ul>
-      </div>
+        </StyledRoomsList>
+      </StyledAppStatus>
     );
   }
 }

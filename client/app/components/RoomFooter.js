@@ -2,14 +2,15 @@ import React from 'react';
 
 import appConfig from '../services/appConfig';
 import {formatDateTime} from '../services/timeUtil';
+import {StyledRoomFooter} from '../styled/RoomFooter';
 
 const RoomFooter = () => (
-  <div className="room-footer">
+  <StyledRoomFooter>
     <div className="version-info">
       {appConfig.version}
       {formatDateTime(appConfig.buildTime)}
     </div>
-  </div>
+  </StyledRoomFooter>
 );
 
 export default RoomFooter;

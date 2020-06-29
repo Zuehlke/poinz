@@ -8,6 +8,14 @@ import {newEstimationRound, reveal} from '../actions';
 import Cards from './Cards';
 import ConsensusBadge from './ConsensusBadge';
 import {getCardConfigForValue} from '../services/getCardConfigForValue';
+import {
+  BoardActionButtons,
+  StyledApplauseHighlight,
+  StyledEstimation,
+  StyledSelectedStory,
+  StyledStoryText
+} from '../styled/Board';
+import {StyledStoryTitle} from '../styled/StyledStoryTitle';
 
 /**
  * Displays
@@ -24,32 +32,28 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
   const userCanCurrentlyEstimate = !revealed && !isExcluded;
 
   return (
-    <div className="estimation">
-      <div
-        className={`selected-story ${selectedStory.consensus ? 'selected-story-consensus' : ''} ${
-          selectedStory.applause ? 'applause' : ''
-        }`}
-      >
-        <h4>
+    <StyledEstimation>
+      <StyledSelectedStory>
+        <StyledStoryTitle>
           {selectedStory.title}
           {selectedStory.consensus && (
             <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
           )}
-        </h4>
+        </StyledStoryTitle>
 
-        <div className="story-text">
+        <StyledStoryText>
           <Anchorify text={selectedStory.description} />
-        </div>
+        </StyledStoryText>
 
         {selectedStory.consensus && applause && (
           <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
         )}
-      </div>
+      </StyledSelectedStory>
 
       {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate} />}
 
       {!revealed && (
-        <div className="board-actions">
+        <BoardActionButtons>
           <button
             type="button"
             className="pure-button pure-button-primary"
@@ -58,11 +62,11 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
             {t('revealManually')}
             <i className="fa fa-hand-paper-o button-icon-right"></i>
           </button>
-        </div>
+        </BoardActionButtons>
       )}
 
       {revealed && (
-        <div className="board-actions">
+        <BoardActionButtons>
           <button
             type="button"
             className="pure-button pure-button-primary"
@@ -71,9 +75,9 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
             {t('newRound')}
             <i className="fa fa-undo  button-icon-right"></i>
           </button>
-        </div>
+        </BoardActionButtons>
       )}
-    </div>
+    </StyledEstimation>
   );
 };
 
@@ -106,10 +110,9 @@ const ApplauseHighlight = ({cardConfig, consensusValue}) => {
   const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
   const highlightColor = matchingCardConfig.color;
   return (
-    <div
-      className="applause-highlight"
+    <StyledApplauseHighlight
       style={{boxShadow: '0 0 10px ' + highlightColor, border: '1px solid ' + highlightColor}}
-    ></div>
+    ></StyledApplauseHighlight>
   );
 };
 

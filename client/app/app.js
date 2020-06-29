@@ -6,13 +6,13 @@ import log from 'loglevel';
 import 'purecss';
 import '../node_modules/purecss/build/grids-responsive-min.css';
 import '../node_modules/font-awesome/css/font-awesome.min.css';
-import './assets/poinz.styl';
 
 import appConfig from './services/appConfig';
 import initialState from './store/initialState';
 import configureStore from './store/configureStore';
 
 import Main from './containers/Main';
+import Global from './styled/Global';
 
 if (appConfig.env === 'dev') {
   log.setLevel('debug');
@@ -24,6 +24,7 @@ if (appConfig.env === 'dev') {
 const store = configureStore(initialState());
 render(
   <Provider store={store}>
+    <Global />
     <Main />
   </Provider>,
   document.getElementById('app-root')

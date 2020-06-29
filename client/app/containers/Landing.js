@@ -6,39 +6,47 @@ import JoinRoomForm from '../components/JoinRoomForm';
 import GithubRibbon from '../components/GithubRibbon';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
 import {formatTime} from '../services/timeUtil';
+import {
+  StyledActionLog,
+  StyledEyecatcher,
+  StyledLandingInner,
+  StyledLanding,
+  StyledLargeFontEyecatcher,
+  StyledInfoText
+} from '../styled/Landing';
 
 /**
  * The "landing" page where the user can enter a room name to join
  */
 const Landing = ({t, waitingForJoin, actionLog}) => {
   return (
-    <div className="landing">
+    <StyledLanding>
       <GithubRibbon />
-      <div className="landing-inner">
+      <StyledLandingInner>
         {!waitingForJoin && <JoinRoomForm />}
         {waitingForJoin && <Loader t={t} />}
 
-        <div className="eyecatcher disclaimer-text">
-          <div className="info-text">
-            <i className="fa fa-warning leading-paragraph-icon-small"></i>
+        <StyledEyecatcher>
+          <StyledInfoText small={true}>
+            <i className="fa fa-warning"></i>
             {t('disclaimer')}
-          </div>
-        </div>
+          </StyledInfoText>
+        </StyledEyecatcher>
 
         {actionLog && actionLog.length > 0 && (
-          <div className="eyecatcher action-log-landing">
-            <ul>
+          <StyledEyecatcher>
+            <StyledActionLog>
               {actionLog.map((entry, index) => (
                 <li key={`logline_${index}`}>
                   <span>{formatTime(entry.tstamp)}</span>
                   <span>{entry.message}</span>
                 </li>
               ))}
-            </ul>
-          </div>
+            </StyledActionLog>
+          </StyledEyecatcher>
         )}
-      </div>
-    </div>
+      </StyledLandingInner>
+    </StyledLanding>
   );
 };
 
@@ -54,7 +62,7 @@ export default connect((state) => ({
   waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
 }))(Landing);
 
-const Loader = ({t}) => <div className="eyecatcher loading">{t('loading')}</div>;
+const Loader = ({t}) => <StyledLargeFontEyecatcher>{t('loading')}</StyledLargeFontEyecatcher>;
 
 Loader.propTypes = {
   t: PropTypes.func

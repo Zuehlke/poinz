@@ -3,6 +3,18 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom} from '../actions';
+import {
+  StyledBacklogToggle,
+  StyledBacklogToggleIcon,
+  StyledTopLeft,
+  StyledPoinzLogo,
+  StyledTopRight,
+  StyledQuickMenuButton,
+  StyledTopBar,
+  StyledWhoAmI,
+  StyledWhoAmIExtended,
+  StyledWhoAmISimple
+} from '../styled/TopBar';
 
 const TopBar = ({
   t,
@@ -19,56 +31,55 @@ const TopBar = ({
   const roomLink = <a href={'/' + roomId}>{roomId}</a>;
 
   return (
-    <div className="top-bar">
-      <div className="left-logo-container">
-        <a
-          className={`backlog-toggle clickable ${backlogShown ? 'pure-button-active' : ''}`}
+    <StyledTopBar>
+      <StyledTopLeft>
+        <StyledBacklogToggle
+          className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
           onClick={toggleBacklog}
         >
-          <span className="menu-link-inner">
+          <StyledBacklogToggleIcon>
             <span></span>
-          </span>
-        </a>
-        <div className="poinz-logo">PoinZ</div>
-      </div>
+          </StyledBacklogToggleIcon>
+        </StyledBacklogToggle>
+        <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
+      </StyledTopLeft>
 
-      <div className="quick-menu">
-        <span className="whoami">
-          <span className="whoami-simple">{username}</span>
-
-          <span className="whoami-extended">
+      <StyledTopRight>
+        <StyledWhoAmI>
+          <StyledWhoAmISimple>{username}</StyledWhoAmISimple>
+          <StyledWhoAmIExtended>
             {username} @ {roomLink}
-          </span>
-        </span>
+          </StyledWhoAmIExtended>
+        </StyledWhoAmI>
 
-        <a
-          className={`user-menu-toggle clickable pure-button pure-button-primary ${
+        <StyledQuickMenuButton
+          className={`clickable pure-button pure-button-primary ${
             userMenuShown ? 'pure-button-active' : ''
           } `}
           onClick={toggleUserMenu}
           title={t('toggleMenu')}
         >
           <i className="fa fa-cog"></i>
-        </a>
-        <a
-          className={`log-toggle clickable pure-button pure-button-primary ${
+        </StyledQuickMenuButton>
+        <StyledQuickMenuButton
+          className={`clickable pure-button pure-button-primary ${
             logShown ? 'pure-button-active' : ''
           }`}
           onClick={toggleLog}
           title={t('toggleLog')}
         >
           <i className="fa fa-list"></i>
-        </a>
+        </StyledQuickMenuButton>
 
-        <a
-          className="leave-room clickable pure-button pure-button-primary"
+        <StyledQuickMenuButton
+          className="clickable pure-button pure-button-primary"
           onClick={leaveRoom}
           title={t('leaveRoom')}
         >
           <i className="fa fa-sign-out"></i>
-        </a>
-      </div>
-    </div>
+        </StyledQuickMenuButton>
+      </StyledTopRight>
+    </StyledTopBar>
   );
 };
 

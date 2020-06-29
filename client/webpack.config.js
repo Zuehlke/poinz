@@ -31,12 +31,7 @@ module.exports = {
 
   module: {
     rules: [
-      {
-        // process stylus files (to css) on the fly
-        // stylus files will end up as <style> tags (pure css) in the DOM
-        test: /\.styl$/,
-        use: ['style-loader', 'css-loader', 'stylus-loader']
-      },
+
       {
         // load css files and put them as <style> tags in the DOM
         test: /\.css$/,

@@ -1,12 +1,13 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
 import {selectStory, editStory, trashStory} from '../actions';
 import ConsensusBadge from './ConsensusBadge';
 import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
+import {StyledStoryToolbar, StyledStory} from '../styled/Story';
+import {StyledStoryTitle} from '../styled/StyledStoryTitle';
 
 /**
  * One story in the backlog
@@ -22,27 +23,27 @@ const Story = ({
   pendingTrashCommands
 }) => {
   const isSelected = selectedStoryId === story.id;
-
-  const classes = classnames('story clickable', {
-    'story-selected': isSelected,
-    waiting:
-      pendingSelectCommands.find((cmd) => cmd.payload.storyId === story.id) ||
-      pendingTrashCommands.find((cmd) => cmd.payload.storyId === story.id)
-  });
+  const isWaiting =
+    pendingSelectCommands.find((cmd) => cmd.payload.storyId === story.id) ||
+    pendingTrashCommands.find((cmd) => cmd.payload.storyId === story.id);
 
   return (
-    <div className={classes} onClick={triggerSelect}>
-      <div className="story-toolbar">
-        <i className="fa fa-pencil story-edit" onClick={triggerEdit}></i>
+    <StyledStory
+      onClick={triggerSelect}
+      selected={isSelected}
+      className={isWaiting ? 'waiting-spinner' : ''}
+    >
+      <StyledStoryToolbar>
+        <i className="fa fa-pencil story-edit" onClick={triggerEdit} />
         <i className="fa fa-trash story-trash" onClick={triggerTrash} />
-      </div>
+      </StyledStoryToolbar>
 
-      <h4>
+      <StyledStoryTitle>
         <div>{story.title}</div>
         {story.consensus && (
           <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
         )}
-      </h4>
+      </StyledStoryTitle>
 
       {
         // only display story text for selected story. improves overall readibility / usability (see #24)
@@ -52,7 +53,7 @@ const Story = ({
           </div>
         )
       }
-    </div>
+    </StyledStory>
   );
 
   function triggerSelect() {

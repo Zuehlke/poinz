@@ -1,22 +1,23 @@
 import React from 'react';
-import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {addStory} from '../actions';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
+import {StyledAddForm} from '../styled/Backlog';
 
 /**
  * Form for adding stories to the backlog
  */
 const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
-  const classes = classnames('pure-form story-add-form', {
-    waiting: hasPendingAddCommands
-  });
+  const waiting = hasPendingAddCommands;
   let titleInputField, descriptionInputField;
 
   return (
-    <div className={classes}>
+    <StyledAddForm
+      className={`pure-form ${waiting ? 'waiting-spinner' : ''}`}
+      onSubmit={(e) => e.preventDefault()}
+    >
       <fieldset className="pure-group">
         <input
           type="text"
@@ -42,7 +43,7 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
         {t('addStory')}
         <i className="fa fa-plus  button-icon-right"></i>
       </button>
-    </div>
+    </StyledAddForm>
   );
 
   function handleTitleKeyEvent(keyEvent) {

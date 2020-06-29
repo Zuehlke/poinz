@@ -1,24 +1,23 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import {changeStory, cancelEditStory} from '../actions';
 import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
+import {StyledStory} from '../styled/Story';
+import {StyledEditFormButtonGroup, StyledEditForm} from '../styled/Backlog';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
 const StoryEditForm = ({t, story, changeStory, cancelEditStory, pendingChangeCommands}) => {
-  const classes = classnames('story story-edit-mode', {
-    waiting: pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id)
-  });
+  const waiting = pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id);
 
   let titleInputField, descriptionInputField;
 
   return (
-    <div className={classes}>
-      <div className="pure-form">
+    <StyledStory noShadow={true} className={waiting ? 'waiting-spinner' : ''}>
+      <StyledEditForm className="pure-form" onSubmit={(e) => e.preventDefault()}>
         <fieldset className="pure-group">
           <input
             type="text"
@@ -38,8 +37,8 @@ const StoryEditForm = ({t, story, changeStory, cancelEditStory, pendingChangeCom
         </fieldset>
 
         <StoryEditFormButtonGroup t={t} onSave={triggerChange} onCancel={triggerCancel} />
-      </div>
-    </div>
+      </StyledEditForm>
+    </StyledStory>
   );
 
   function handleTitleKeyEvent(keyEvent) {
@@ -76,7 +75,7 @@ export default connect(
 )(StoryEditForm);
 
 const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
-  <div className="pure-g button-group">
+  <StyledEditFormButtonGroup className="pure-g ">
     <div className="pure-u-1-2">
       <button type="button" className="pure-button pure-input-1" onClick={onCancel}>
         {t('cancel')}
@@ -93,7 +92,7 @@ const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
         <i className="fa fa-save button-icon-right"></i>
       </button>
     </div>
-  </div>
+  </StyledEditFormButtonGroup>
 );
 
 StoryEditFormButtonGroup.propTypes = {

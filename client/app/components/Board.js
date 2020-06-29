@@ -9,6 +9,7 @@ import Users from '../components/Users';
 
 import Estimation from '../components/Estimation';
 import FeedbackHint from './FeedbackHint';
+import {StyledBoard} from '../styled/Board';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -20,7 +21,7 @@ import FeedbackHint from './FeedbackHint';
  * - cards
  */
 const Board = ({roomId, isAStorySelected}) => (
-  <div className="board" id={roomId}>
+  <StyledBoard id={roomId}>
     <Users />
     <UserMenu />
     <ActionLog />
@@ -28,7 +29,7 @@ const Board = ({roomId, isAStorySelected}) => (
     {isAStorySelected && <Estimation />}
 
     <FeedbackHint />
-  </div>
+  </StyledBoard>
 );
 
 Board.propTypes = {
@@ -38,5 +39,5 @@ Board.propTypes = {
 
 export default connect((state) => ({
   roomId: state.roomId,
-  isAStorySelected: !!state.stories[state.selectedStory]
+  isAStorySelected: state.stories && state.selectedStory && !!state.stories[state.selectedStory]
 }))(Board);

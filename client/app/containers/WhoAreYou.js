@@ -30,13 +30,18 @@ const WhoAreYou = ({t, setUsername}) => {
           </StyledInfoText>
           <StyledLandingForm>
             <input
+              data-testid="usernameInput"
               type="text"
               placeholder={t('name')}
               ref={(ref) => (usernameInputField = ref)}
               onKeyPress={handleUsernameKeyPress}
             />
 
-            <button className="pure-button pure-button-primary button-save" onClick={saveUsername}>
+            <button
+              data-testid="joinButton"
+              className="pure-button pure-button-primary button-save"
+              onClick={saveUsername}
+            >
               {t('join')}
             </button>
           </StyledLandingForm>

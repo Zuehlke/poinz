@@ -29,6 +29,7 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
 
   return (
     <StyledUser
+      data-testid="user"
       onClick={onMarkForKick}
       isOwn={user.id === ownUserId}
       shaded={isDisconnected || isMarkedForKick}

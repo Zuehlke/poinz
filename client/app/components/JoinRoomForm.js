@@ -38,6 +38,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
       <StyledLandingForm className="pure-form">
         <div>
           <StyledLandingDoubleButtonL
+            data-testid="joinButton"
             type="button"
             className=" pure-button pure-button-primary"
             onClick={onJoinButtonClick}

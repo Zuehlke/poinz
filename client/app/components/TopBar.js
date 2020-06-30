@@ -31,7 +31,7 @@ const TopBar = ({
   const roomLink = <a href={'/' + roomId}>{roomId}</a>;
 
   return (
-    <StyledTopBar>
+    <StyledTopBar data-testid="topBar">
       <StyledTopLeft>
         <StyledBacklogToggle
           className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
@@ -46,13 +46,14 @@ const TopBar = ({
 
       <StyledTopRight>
         <StyledWhoAmI>
-          <StyledWhoAmISimple>{username}</StyledWhoAmISimple>
+          <StyledWhoAmISimple data-testid="whoamiSimple">{username}</StyledWhoAmISimple>
           <StyledWhoAmIExtended>
             {username} @ {roomLink}
           </StyledWhoAmIExtended>
         </StyledWhoAmI>
 
         <StyledQuickMenuButton
+          data-testid="userMenuToggle"
           className={`clickable pure-button pure-button-primary ${
             userMenuShown ? 'pure-button-active' : ''
           } `}

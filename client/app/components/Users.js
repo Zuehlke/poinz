@@ -14,7 +14,7 @@ const Users = ({users, ownUserId}) => {
   userArray.sort(userComparator.bind(undefined, ownUserId));
 
   return (
-    <StyledUsers>
+    <StyledUsers data-testid="users">
       {userArray.map((user) => (
         <User key={'usr_' + user.id} user={user} />
       ))}

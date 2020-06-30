@@ -13,10 +13,7 @@ describe('Join Room', () => {
 
     browser.get('/' + roomId);
 
-    expect(browser.getTitle()).toEqual('PoinZ - ' + roomId); // page title is set
-
-    expect(element(by.css('.top-bar .quick-menu .whoami-simple')).getText()).toContain(
-      'e2eTestUser'
-    ); // top-bar displays username
+    // top-bar displays username
+    expect(element(by.css('[data-testid="whoamiSimple"]')).getText()).toContain('e2eTestUser');
   });
 });

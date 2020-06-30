@@ -45,6 +45,7 @@ const UserMenu = ({
 
           <StyledTextInput>
             <input
+              data-testid="usernameInput"
               type="text"
               id="username"
               placeholder={t('name')}
@@ -54,7 +55,8 @@ const UserMenu = ({
             />
 
             <button
-              className="pure-button pure-button-primary button-save button-save-username"
+              data-testid="saveUsernameButton"
+              className="pure-button pure-button-primary"
               onClick={saveUsername}
             >
               <i className="fa fa-save" />
@@ -116,10 +118,7 @@ const UserMenu = ({
               onKeyPress={handleEmailKeypress}
             />
 
-            <button
-              className="pure-button pure-button-primary button-save button-save-email"
-              onClick={saveEmail}
-            >
+            <button className="pure-button pure-button-primary" onClick={saveEmail}>
               <i className="fa fa-save" />
             </button>
           </StyledTextInput>

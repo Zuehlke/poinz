@@ -15,6 +15,7 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
 
   return (
     <StyledAddForm
+      data-testid="storyAddForm"
       className={`pure-form ${waiting ? 'waiting-spinner' : ''}`}
       onSubmit={(e) => e.preventDefault()}
     >

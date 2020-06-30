@@ -23,7 +23,7 @@ const Backlog = ({
   activeStoriesCount
 }) => {
   return (
-    <StyledBacklog shown={backlogShown}>
+    <StyledBacklog shown={backlogShown} data-testid="backlog">
       <BacklogModeButtons
         t={t}
         onShowBacklog={hideTrash}

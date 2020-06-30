@@ -29,6 +29,7 @@ const Story = ({
 
   return (
     <StyledStory
+      data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={triggerSelect}
       selected={isSelected}
       className={isWaiting ? 'waiting-spinner' : ''}
@@ -48,7 +49,7 @@ const Story = ({
       {
         // only display story text for selected story. improves overall readibility / usability (see #24)
         isSelected && (
-          <div className="story-text">
+          <div data-testid="storyText">
             <Anchorify text={story.description} />
           </div>
         )

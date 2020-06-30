@@ -33,7 +33,7 @@ describe('mutliUser Join Room', () => {
     // testUtils.saveScreenShotOf(appRoot, 'multiUser.joinRoom.png')
 
     // now check if initial browser (creator) sees all other users
-    element.all(by.css('.users .user')).then((items) => {
+    element.all(by.css('[data-testid="users"] [data-testid="user"]')).then((items) => {
       expect(items.length).toBe(additionalJoinerCount + 1); // creator plus additionalJoinerCount
     });
 

@@ -6,17 +6,17 @@ describe('Set Username', () => {
     landingPage.goTo();
     landingPage.createRoomAndSetOwnUsername('e2eTestUser');
 
-    testUtils.waitForElement(by.css('.top-bar'));
+    testUtils.waitForElement(by.css('[data-testid="topBar"]'));
 
-    element(by.css('.user-menu-toggle')).click();
+    element(by.css('[data-testid="userMenuToggle"]')).click();
 
-    element(by.css('.user-menu input#username')).sendKeys('myNew Username');
-    element(by.css('.user-menu button.button-save.button-save-username')).click();
+    element(by.css('[data-testid="usernameInput"]')).sendKeys('myNew Username');
+    element(by.css('[data-testid="saveUsernameButton"]')).click();
 
     // top bar now displays username
-    expect(element(by.css('.top-bar .whoami-simple')).getText()).toContain('myNew Username');
+    expect(element(by.css('[data-testid="whoamiSimple"]')).getText()).toContain('myNew Username');
 
     // user list (avatars) on board also displays username
-    expect(element(by.css('.board .users')).getText()).toContain('myNew Username');
+    expect(element(by.css('[data-testid="users"]')).getText()).toContain('myNew Username');
   });
 });

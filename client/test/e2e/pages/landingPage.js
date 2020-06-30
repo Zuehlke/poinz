@@ -11,17 +11,17 @@ function goTo() {
 }
 
 async function createRoomAndSetOwnUsername(username) {
-  element(by.css('.create-room-button')).click();
+  element(by.css('[data-testid="joinButton"]')).click();
 
   await enterOwnUsername(username, browser);
 }
 
 async function enterOwnUsername(username, browserInstance) {
-  await testUtils.waitForElement(by.css('.username-wrapper'), browserInstance);
+  await testUtils.waitForElement(by.css('[data-testid="usernameInput"]'), browserInstance);
 
   // set username (still landing page, username field displayed since no preset in localstorage)
-  browserInstance.element(by.css('.username-wrapper input#username')).sendKeys(username);
-  browserInstance.element(by.css('.username-wrapper .pure-button.button-save')).click();
+  browserInstance.element(by.css('[data-testid="usernameInput"]')).sendKeys(username);
+  browserInstance.element(by.css('[data-testid="joinButton"]')).click();
 
-  await testUtils.waitForElement(by.css('.board .backlog'), browserInstance);
+  await testUtils.waitForElement(by.css('[data-testid="backlog"]'), browserInstance);
 }

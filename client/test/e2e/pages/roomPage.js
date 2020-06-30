@@ -12,15 +12,15 @@ function goTo(roomId) {
 }
 
 async function addStory(title, description) {
-  await testUtils.waitForElement(by.css('.board .backlog .story-add-form'));
+  await testUtils.waitForElement(by.css('[data-testid="storyAddForm"]'));
 
-  element(by.css('.backlog .story-add-form input')).sendKeys(title);
-  element(by.css('.backlog .story-add-form textarea')).sendKeys(description);
-  element(by.css('.backlog .story-add-form button')).click();
+  element(by.css('[data-testid="storyAddForm"] input')).sendKeys(title);
+  element(by.css('[data-testid="storyAddForm"] textarea')).sendKeys(description);
+  element(by.css('[data-testid="storyAddForm"] button')).click();
 }
 
 function selectedStoryElementLocator() {
-  return by.css('.stories .story-selected');
+  return by.css('[data-testid="storySelected"]');
 }
 
 function getSelectedStoryTitle() {
@@ -28,5 +28,7 @@ function getSelectedStoryTitle() {
 }
 
 function getSelectedStoryDescription() {
-  return element(selectedStoryElementLocator()).element(by.css('.story-text')).getText();
+  return element(selectedStoryElementLocator())
+    .element(by.css('[data-testid="storyText"]'))
+    .getText();
 }

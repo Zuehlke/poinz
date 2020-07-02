@@ -29,6 +29,7 @@ const Story = ({
 
   return (
     <StyledStory
+      id={'story.' + story.id}
       data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={triggerSelect}
       selected={isSelected}

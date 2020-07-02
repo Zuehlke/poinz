@@ -2,13 +2,18 @@ import React, {useCallback} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
-import classnames from 'classnames';
 
 import StoryAddForm from './StoryAddForm';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 
 import {importCsvFile} from '../actions';
+import {
+  StyledStories,
+  StyledFileImportDropZone,
+  StyledFileImportDropZoneOverlay,
+  StyledBacklogInfoText
+} from '../styled/Backlog';
 
 /**
  * show the story add form and list of active stories
@@ -30,19 +35,18 @@ const BacklogActive = ({t, stories, importCsvFile}) => {
     accept: 'text/csv'
   });
 
-  const dropzoneClassnames = classnames('story-drop-zone', {
-    'story-drop-zone-active': isDragActive,
-    'story-drop-zone-accept': isDragAccept,
-    'story-drop-zone-reject': isDragReject
-  });
   return (
-    <div {...getRootProps()} className={dropzoneClassnames}>
-      <div className="drag-overlay"></div>
+    <StyledFileImportDropZone {...getRootProps()}>
+      <StyledFileImportDropZoneOverlay
+        active={isDragActive}
+        isAccept={isDragAccept}
+        isReject={isDragReject}
+      ></StyledFileImportDropZoneOverlay>
 
       <StoryAddForm />
 
       {hasActiveStories && (
-        <div className="stories">
+        <StyledStories>
           {activeStories.map((story) =>
             story.editMode ? (
               <StoryEditForm key={story.id} story={story} />
@@ -50,11 +54,11 @@ const BacklogActive = ({t, stories, importCsvFile}) => {
               <Story key={story.id} story={story} />
             )
           )}
-        </div>
+        </StyledStories>
       )}
 
-      {!hasActiveStories && <div className="story-hint">{t('noActiveStories')}</div>}
-    </div>
+      {!hasActiveStories && <StyledBacklogInfoText>{t('noActiveStories')}</StyledBacklogInfoText>}
+    </StyledFileImportDropZone>
   );
 };
 

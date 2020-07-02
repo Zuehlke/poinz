@@ -1,11 +1,19 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
 
 import {toggleExcluded, setUsername, setEmail, leaveRoom, setLanguage, setAvatar} from '../actions';
+import {
+  StyledAvatarGrid,
+  StyledLicenseHint,
+  StyledRadioButton,
+  StyledTextInput,
+  StyledSection,
+  StyledUserMenu,
+  StyledMiniAvatar
+} from '../styled/UserMenu';
 
 /**
  * The user menu allows customizing Poinz
@@ -27,25 +35,17 @@ const UserMenu = ({
   const email = user.email;
   const excluded = user.excluded;
 
-  const menuClasses = classnames('user-menu', {
-    'user-menu-active': userMenuShown
-  });
-
-  const excludedCheckboxClasses = classnames('fa', {
-    'fa-square-o': !excluded,
-    'fa-check-square-o': excluded
-  });
-
   let usernameInputField, emailInputField;
 
   return (
-    <div className={menuClasses}>
+    <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
       <div className="pure-form">
-        <div className="user-menu-section">
+        <StyledSection>
           <h5>{t('username')}</h5>
 
-          <div className="username-wrapper">
+          <StyledTextInput>
             <input
+              data-testid="usernameInput"
               type="text"
               id="username"
               placeholder={t('name')}
@@ -55,17 +55,18 @@ const UserMenu = ({
             />
 
             <button
-              className="pure-button pure-button-primary button-save button-save-username"
+              data-testid="saveUsernameButton"
+              className="pure-button pure-button-primary"
               onClick={saveUsername}
             >
               <i className="fa fa-save" />
             </button>
-          </div>
-        </div>
+          </StyledTextInput>
+        </StyledSection>
 
-        <div className="user-menu-section">
+        <StyledSection>
           <h5>{t('language')}</h5>
-          <div className="language-selector-wrapper">
+          <StyledRadioButton>
             <label htmlFor="language-selector-en">
               <input
                 type="radio"
@@ -87,28 +88,29 @@ const UserMenu = ({
               />
               {t('german')}
             </label>
-          </div>
-        </div>
+          </StyledRadioButton>
+        </StyledSection>
 
-        <div className="user-menu-section">
+        <StyledSection>
           <h5>{t('avatar')}</h5>
           {t('avatarInfo')}
 
-          <div className="avatar-grid">
+          <StyledAvatarGrid data-testid="avatarGrid">
             {avatarIcons.map((aIcn, index) => (
-              <img
-                className={user.avatar === index ? 'selected' : ''}
+              <StyledMiniAvatar
+                selected={user.avatar === index}
                 src={aIcn}
                 key={'aIcn_' + aIcn}
                 onClick={() => setAvatar(index)}
               />
             ))}
-          </div>
+          </StyledAvatarGrid>
 
           {t('gravatarInfo')}
 
-          <div className="email-wrapper">
+          <StyledTextInput>
             <input
+              data-testid="gravatarEmailInput"
               type="text"
               id="email"
               placeholder="Email..."
@@ -118,29 +120,31 @@ const UserMenu = ({
             />
 
             <button
-              className="pure-button pure-button-primary button-save button-save-email"
+              className="pure-button pure-button-primary"
               onClick={saveEmail}
+              data-testid="saveEmailButton"
             >
               <i className="fa fa-save" />
             </button>
-          </div>
-        </div>
+          </StyledTextInput>
+        </StyledSection>
 
-        <div className="user-menu-section">
+        <StyledSection>
           <h5>{t('markExcluded')}</h5>
           {t('excludedInfo')}
 
-          <p onClick={toggleExcluded} className="clickable">
-            <i className={excludedCheckboxClasses}></i> {t('excluded')}
+          <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
+            <i className={'fa ' + (excluded ? 'fa-check-square-o' : 'fa-square-o')}></i>{' '}
+            {t('excluded')}
           </p>
-        </div>
+        </StyledSection>
       </div>
 
-      <div className="license-hint">
+      <StyledLicenseHint>
         Avatar Icons (c) by DELEKET{' '}
         <a href="https://www.deviantart.com/deleket">https://www.deviantart.com/deleket</a>
-      </div>
-    </div>
+      </StyledLicenseHint>
+    </StyledUserMenu>
   );
 
   function handleUsernameKeyPress(e) {

@@ -3,6 +3,13 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {joinRoom} from '../actions';
+import {
+  StyledEyecatcher,
+  StyledInfoText,
+  StyledLandingDoubleButtonL,
+  StyledLandingDoubleButtonR,
+  StyledLandingForm
+} from '../styled/Landing';
 
 /**
  * The form on the landing page where the user can join a room.
@@ -14,9 +21,9 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   const [customRoomId, setCustomRoomId] = useState('');
 
   return (
-    <div className="eyecatcher join-room-form">
-      <div className="info-text">
-        <i className="fa fa-users leading-paragraph-icon"></i>
+    <StyledEyecatcher>
+      <StyledInfoText>
+        <i className="fa fa-users"></i>
         <div>
           {presetUsername && (
             <h5>
@@ -26,39 +33,41 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
           <h4>{t('joinRoomAndStart')}</h4>
           <p>{t('joinRoomInfo')}</p>
         </div>
-      </div>
+      </StyledInfoText>
 
-      <div>
-        <button
-          type="button"
-          className="create-room-button pure-button pure-button-primary"
-          onClick={onJoinButtonClick}
-        >
-          {customRoomId ? t('joinWithRoomName', {room: customRoomId}) : t('joinNewRoom')}
-        </button>
+      <StyledLandingForm className="pure-form">
+        <div>
+          <StyledLandingDoubleButtonL
+            data-testid="joinButton"
+            type="button"
+            className=" pure-button pure-button-primary"
+            onClick={onJoinButtonClick}
+          >
+            {customRoomId ? t('joinWithRoomName', {room: customRoomId}) : t('joinNewRoom')}
+          </StyledLandingDoubleButtonL>
 
-        <button
-          type="button"
-          className="create-room-extend-button pure-button pure-button-primary"
-          onClick={() => setShowExtended(!showExtended)}
-        >
-          <i className={`fa fa-angle-double-${showExtended ? 'up' : 'down'}`} />
-        </button>
-      </div>
+          <StyledLandingDoubleButtonR
+            data-testid="extendButton"
+            type="button"
+            className="pure-button pure-button-primary"
+            onClick={() => setShowExtended(!showExtended)}
+          >
+            <i className={`fa fa-angle-double-${showExtended ? 'up' : 'down'}`} />
+          </StyledLandingDoubleButtonR>
+        </div>
 
-      {showExtended && (
-        <div className="custom-room-name-wrapper">
+        {showExtended && (
           <input
+            data-testid="customRoomNameInput"
             type="text"
-            id="custom-room-id"
             placeholder={t('customRoomName')}
             value={customRoomId}
             onChange={onRoomIdChange}
             onKeyPress={onRoomKeyPress}
           />
-        </div>
-      )}
-    </div>
+        )}
+      </StyledLandingForm>
+    </StyledEyecatcher>
   );
 
   function onRoomKeyPress(e) {

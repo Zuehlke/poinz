@@ -3,17 +3,18 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Card from './Card';
+import {StyledCards} from '../styled/Board';
 
 /**
  * All estimation cards on the board.
  * (number of available cards and their value is set in cardConfig)
  */
 const Cards = ({cardConfig}) => (
-  <div className="cards">
+  <StyledCards>
     {cardConfig.map((config, index) => (
       <Card key={'card_' + index} card={config} />
     ))}
-  </div>
+  </StyledCards>
 );
 
 Cards.propTypes = {

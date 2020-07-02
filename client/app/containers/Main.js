@@ -16,8 +16,8 @@ const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
  * If the user did never set his username/name in a previous session, display "whoAreYou" with a username input field.
  * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
  */
-const Main = ({roomId, users, presetUsername, pathname}) => {
-  const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0;
+const Main = ({roomId, users, userId, presetUsername, pathname}) => {
+  const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0 && userId;
   if (getNormalizedRoomId(pathname) === appConfig.APP_STATUS_IDENTIFIER) {
     return <AppStatus />;
   } else if (hasRoomIdAndUsers && presetUsername) {
@@ -35,6 +35,7 @@ Main.propTypes = {
   roomId: PropTypes.string,
   pathname: PropTypes.string,
   users: PropTypes.object,
+  userId: PropTypes.string,
   presetUsername: PropTypes.string
 };
 
@@ -43,6 +44,7 @@ export default connect(
     pathname: state.pathname,
     roomId: state.roomId,
     users: state.users,
+    userId: state.userId,
     presetUsername: state.presetUsername
   }),
   {joinRoom, locationChanged}

@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import User from './User';
+import {StyledUsers} from '../styled/Users';
 
 /**
  * The list of users (avatars) and their estimations.
@@ -13,11 +14,11 @@ const Users = ({users, ownUserId}) => {
   userArray.sort(userComparator.bind(undefined, ownUserId));
 
   return (
-    <div className="users">
+    <StyledUsers data-testid="users">
       {userArray.map((user) => (
         <User key={'usr_' + user.id} user={user} />
       ))}
-    </div>
+    </StyledUsers>
   );
 };
 

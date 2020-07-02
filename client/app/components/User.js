@@ -1,11 +1,19 @@
 import React from 'react';
-import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {kick, toggleMarkForKick} from '../actions';
 import Avatar from './Avatar.js';
 import {getCardConfigForValue} from '../services/getCardConfigForValue';
+import {
+  StyledUser,
+  StyledUserName,
+  StyledUserBadge,
+  StyledUserEstimation,
+  StyledUserEstimationGiven,
+  StyledUserEstimationExcluded,
+  StyledUserKickOverlay
+} from '../styled/User';
 
 const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKick}) => {
   const isExcluded = user.excluded;
@@ -13,61 +21,61 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
   const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
 
-  const classes = classnames('user user-' + user.id, {
-    'user-own': user.id === ownUserId,
-    'user-excluded': isExcluded,
-    'user-disconnected': isDisconnected,
-    'user-marked-kick': isMarkedForKick
-  });
-
   const userEstimationValue = selectedStory && selectedStory.estimations[user.id];
   const userHasEstimation = userEstimationValue !== undefined; // value could be "0" which is falsy, check for undefined
-
-  const estimationClasses = classnames('user-estimation', {
-    'user-estimation-given': userHasEstimation,
-    revealed: revealed
-  });
 
   const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
 
-  const customCardStyle =
-    userHasEstimation && revealed && matchingCardConfig.color
-      ? {
-          background: matchingCardConfig.color,
-          color: 'white'
-        }
-      : {};
-
   return (
-    <div className={classes} onClick={onMarkForKick}>
+    <StyledUser
+      data-testid="user"
+      onClick={onMarkForKick}
+      isOwn={user.id === ownUserId}
+      shaded={isDisconnected || isMarkedForKick}
+    >
       {!isDisconnected && isExcluded && (
-        <span className="excluded-badge">
+        <StyledUserBadge>
           <i className="fa fa-eye"></i>
-        </span>
+        </StyledUserBadge>
       )}
 
       {isDisconnected && (
-        <span className="disconnected-badge">
+        <StyledUserBadge>
           <i className="fa fa-flash"></i>
-        </span>
+        </StyledUserBadge>
       )}
 
-      <Avatar user={user} />
-      <div className="user-name">{user.username || '-'}</div>
+      <Avatar
+        user={user}
+        isOwn={user.id === ownUserId}
+        shaded={isDisconnected || isMarkedForKick}
+      />
+      <StyledUserName>{user.username || '-'}</StyledUserName>
 
       {isMarkedForKick && (
-        <span className="kick-overlay">
+        <StyledUserKickOverlay>
           <i className="fa fa-sign-out" onClick={() => kick(user.id)}></i>
-        </span>
+        </StyledUserKickOverlay>
       )}
 
-      {selectedStory && (
-        <div className={estimationClasses} style={customCardStyle}>
-          {estimationValueToDisplay}
-        </div>
+      {selectedStory && isExcluded && (
+        <StyledUserEstimationExcluded>{estimationValueToDisplay}</StyledUserEstimationExcluded>
       )}
-    </div>
+
+      {selectedStory && !userHasEstimation && !isExcluded && (
+        <StyledUserEstimation revealed={revealed}>
+          {' '}
+          {estimationValueToDisplay}{' '}
+        </StyledUserEstimation>
+      )}
+
+      {selectedStory && userHasEstimation && !isExcluded && (
+        <StyledUserEstimationGiven revealed={revealed} valueColor={matchingCardConfig.color}>
+          {estimationValueToDisplay}
+        </StyledUserEstimationGiven>
+      )}
+    </StyledUser>
   );
 
   function onMarkForKick() {

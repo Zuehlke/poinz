@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 import {giveStoryEstimate} from '../actions';
@@ -8,6 +7,7 @@ import {
   getMatchingPendingCommand,
   hasMatchingPendingCommand
 } from '../services/queryPendingCommands';
+import {StyledCardInner, StyledCard} from '../styled/Board';
 
 /**
  * One estimation card on the board.
@@ -20,21 +20,22 @@ const Card = ({
   hasPendingClearCommand,
   giveStoryEstimate
 }) => {
-  const cardClasses = classnames('card clickable', {
-    'card-selected': card.value === ownEstimate
-  });
-  const cardInnerClasses = classnames('card-inner', {
-    waiting:
-      card.value === estimationWaiting || (hasPendingClearCommand && card.value === ownEstimate)
-  });
+  const isWaiting =
+    card.value === estimationWaiting || (hasPendingClearCommand && card.value === ownEstimate);
 
-  const customCardStyle = card.color ? {background: card.color, color: 'white'} : {};
   return (
-    <button className={cardClasses} onClick={() => giveStoryEstimate(selectedStoryId, card.value)}>
-      <div className={cardInnerClasses} style={customCardStyle}>
+    <StyledCard
+      onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
+      data-testid={'estimationCard.' + card.value}
+    >
+      <StyledCardInner
+        className={isWaiting ? 'waiting-spinner' : ''}
+        cardColor={card.color}
+        selected={card.value === ownEstimate}
+      >
         {card.label}
-      </div>
-    </button>
+      </StyledCardInner>
+    </StyledCard>
   );
 };
 

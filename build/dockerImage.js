@@ -62,7 +62,7 @@ async function build() {
     cwd: serverDirPath
   });
 
-  // copy transpiled backend files, resources and package.sjon to deploy folder
+  // copy transpiled backend files, resources and package.json to deploy folder
   await fs.copy('./server/lib', './deploy/lib');
   await fs.copy('./server/resources', './deploy/resources');
   await fs.copy('./server/package.json', './deploy/package.json');
@@ -70,7 +70,7 @@ async function build() {
   const gitInfo = await getGitInformation();
   await startBuildingDockerImage(gitInfo);
 
-  console.log('Done.\nRun docker run -p 3000:3000 -d xeronimus/poinz');
+  console.log('Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 -d xeronimus/poinz');
 }
 
 /**

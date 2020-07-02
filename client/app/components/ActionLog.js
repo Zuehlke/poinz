@@ -1,33 +1,29 @@
 import React from 'react';
-import classnames from 'classnames';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+
 import {formatTime} from '../services/timeUtil';
+import {StyledActionLogInner, StyledActionLogList, StyledActionLog} from '../styled/ActionLog';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
  */
-const ActionLog = ({t, actionLog, logShown}) => {
-  const actionLogClasses = classnames('action-log', {
-    'action-log-active': logShown
-  });
+const ActionLog = ({t, actionLog, logShown}) => (
+  <StyledActionLog shown={logShown}>
+    <h5>{t('log')}</h5>
 
-  return (
-    <div className={actionLogClasses}>
-      <h5>{t('log')}</h5>
-      <div className="action-log-wrapper">
-        <ul>
-          {actionLog.map((entry, index) => (
-            <li key={`logline_${index}`}>
-              <span>{formatTime(entry.tstamp)}</span>
-              <span>{entry.message}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
-};
+    <StyledActionLogInner>
+      <StyledActionLogList>
+        {actionLog.map((entry, index) => (
+          <li key={`logline_${index}`}>
+            <span>{formatTime(entry.tstamp)}</span>
+            <span>{entry.message}</span>
+          </li>
+        ))}
+      </StyledActionLogList>
+    </StyledActionLogInner>
+  </StyledActionLog>
+);
 
 ActionLog.propTypes = {
   t: PropTypes.func,

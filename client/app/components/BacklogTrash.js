@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
+import {StyledBacklogInfoText, StyledStories} from '../styled/Backlog';
 
 /**
  *
@@ -14,13 +15,13 @@ const BacklogTrash = ({t, stories}) => {
   return (
     <React.Fragment>
       {hasTrashedStories && (
-        <div className="stories">
+        <StyledStories>
           {trashedStories.map((story) => (
             <TrashedStory story={story} key={story.id} />
           ))}
-        </div>
+        </StyledStories>
       )}
-      {!hasTrashedStories && <div className="story-hint">{t('trashEmpty')}</div>}
+      {!hasTrashedStories && <StyledBacklogInfoText>{t('trashEmpty')}</StyledBacklogInfoText>}
     </React.Fragment>
   );
 };

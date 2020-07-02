@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 
 import ConsensusBadge from './ConsensusBadge';
 import {restoreStory, deleteStory} from '../actions';
+import {StyledStoryToolbar, StyledStory} from '../styled/Story';
 
 /**
  * One Trashed Story in the Trash
  */
 const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
   return (
-    <div className="story">
-      <div className="story-toolbar">
+    <StyledStory>
+      <StyledStoryToolbar>
         <i
           title={t('restore')}
           className="fa fa-level-up story-restore"
@@ -22,7 +23,7 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
           className="fa fa-minus-circle story-delete"
           onClick={() => deleteStory(story.id)}
         />
-      </div>
+      </StyledStoryToolbar>
 
       <h4>
         <div>{story.title}</div>
@@ -30,7 +31,7 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
           <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
         )}
       </h4>
-    </div>
+    </StyledStory>
   );
 };
 

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import Avatar from './Avatar';
 import {hideNewUserHints} from '../actions';
+import {StyledFeedbackHint} from '../styled/FeedbackHint';
 
 const FeedbackHint = ({hideHints, hideNewUserHints}) => {
   if (hideHints) {
@@ -11,7 +12,7 @@ const FeedbackHint = ({hideHints, hideNewUserHints}) => {
   }
 
   return (
-    <div className="feedback-hint">
+    <StyledFeedbackHint>
       <i className="fa fa-times hide-hints" onClick={() => hideNewUserHints()}></i>
       <div style={{width: '45px'}}>
         <Avatar user={{email: 'set@zuehlke.com'}} index={0} />
@@ -22,7 +23,7 @@ const FeedbackHint = ({hideHints, hideNewUserHints}) => {
           feedback!
         </a>
       </div>
-    </div>
+    </StyledFeedbackHint>
   );
 };
 

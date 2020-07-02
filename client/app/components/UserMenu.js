@@ -38,7 +38,7 @@ const UserMenu = ({
   let usernameInputField, emailInputField;
 
   return (
-    <StyledUserMenu shown={userMenuShown}>
+    <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
       <div className="pure-form">
         <StyledSection>
           <h5>{t('username')}</h5>
@@ -95,7 +95,7 @@ const UserMenu = ({
           <h5>{t('avatar')}</h5>
           {t('avatarInfo')}
 
-          <StyledAvatarGrid>
+          <StyledAvatarGrid data-testid="avatarGrid">
             {avatarIcons.map((aIcn, index) => (
               <StyledMiniAvatar
                 selected={user.avatar === index}
@@ -110,6 +110,7 @@ const UserMenu = ({
 
           <StyledTextInput>
             <input
+              data-testid="gravatarEmailInput"
               type="text"
               id="email"
               placeholder="Email..."
@@ -118,7 +119,11 @@ const UserMenu = ({
               onKeyPress={handleEmailKeypress}
             />
 
-            <button className="pure-button pure-button-primary" onClick={saveEmail}>
+            <button
+              className="pure-button pure-button-primary"
+              onClick={saveEmail}
+              data-testid="saveEmailButton"
+            >
               <i className="fa fa-save" />
             </button>
           </StyledTextInput>
@@ -128,7 +133,7 @@ const UserMenu = ({
           <h5>{t('markExcluded')}</h5>
           {t('excludedInfo')}
 
-          <p onClick={toggleExcluded} className="clickable">
+          <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
             <i className={'fa ' + (excluded ? 'fa-check-square-o' : 'fa-square-o')}></i>{' '}
             {t('excluded')}
           </p>

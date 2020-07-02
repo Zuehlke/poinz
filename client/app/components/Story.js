@@ -35,8 +35,16 @@ const Story = ({
       className={isWaiting ? 'waiting-spinner' : ''}
     >
       <StyledStoryToolbar>
-        <i className="fa fa-pencil story-edit" onClick={triggerEdit} />
-        <i className="fa fa-trash story-trash" onClick={triggerTrash} />
+        <i
+          className="fa fa-pencil story-edit"
+          onClick={triggerEdit}
+          data-testid="editStoryButton"
+        />
+        <i
+          className="fa fa-trash story-trash"
+          onClick={triggerTrash}
+          data-testid="trashStoryButton"
+        />
       </StyledStoryToolbar>
 
       <StyledStoryTitle>

@@ -47,6 +47,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
           </StyledLandingDoubleButtonL>
 
           <StyledLandingDoubleButtonR
+            data-testid="extendButton"
             type="button"
             className="pure-button pure-button-primary"
             onClick={() => setShowExtended(!showExtended)}
@@ -57,6 +58,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
 
         {showExtended && (
           <input
+            data-testid="customRoomNameInput"
             type="text"
             placeholder={t('customRoomName')}
             value={customRoomId}

@@ -10,13 +10,25 @@ import {StyledEditFormButtonGroup, StyledEditForm} from '../styled/Backlog';
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({t, story, changeStory, cancelEditStory, pendingChangeCommands}) => {
+const StoryEditForm = ({
+  t,
+  story,
+  selectedStoryId,
+  changeStory,
+  cancelEditStory,
+  pendingChangeCommands
+}) => {
+  const isSelected = selectedStoryId === story.id;
   const waiting = pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id);
 
   let titleInputField, descriptionInputField;
 
   return (
-    <StyledStory noShadow={true} className={waiting ? 'waiting-spinner' : ''}>
+    <StyledStory
+      noShadow={true}
+      className={waiting ? 'waiting-spinner' : ''}
+      data-testid={isSelected ? 'storySelected' : 'story'}
+    >
       <StyledEditForm className="pure-form" onSubmit={(e) => e.preventDefault()}>
         <fieldset className="pure-group">
           <input
@@ -61,6 +73,7 @@ const StoryEditForm = ({t, story, changeStory, cancelEditStory, pendingChangeCom
 StoryEditForm.propTypes = {
   t: PropTypes.func.isRequired,
   story: PropTypes.object,
+  selectedStoryId: PropTypes.string,
   changeStory: PropTypes.func,
   cancelEditStory: PropTypes.func,
   pendingChangeCommands: PropTypes.array
@@ -69,6 +82,7 @@ StoryEditForm.propTypes = {
 export default connect(
   (state) => ({
     t: state.translator,
+    selectedStoryId: state.selectedStory,
     pendingChangeCommands: getAllMatchingPendingCommands(state, 'changeStory')
   }),
   {changeStory, cancelEditStory}
@@ -87,6 +101,7 @@ const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
         type="button"
         className="pure-button pure-input-1 pure-button-primary"
         onClick={onSave}
+        data-testId="saveStoryChangesButton"
       >
         {t('save')}
         <i className="fa fa-save button-icon-right"></i>

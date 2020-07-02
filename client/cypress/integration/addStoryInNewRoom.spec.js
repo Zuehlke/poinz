@@ -1,9 +1,8 @@
-const BASE_URL = 'http://localhost:9000';
 
 import {asTid} from '../support/commands';
 
 it('join new room, add a story with a title and description', () => {
-  cy.visit(BASE_URL);
+  cy.visit('/');
   cy.getTID('joinButton').click();
   cy.getTID('usernameInput').type('e2e-cypress-test-user');
   cy.getTID('joinButton').click();

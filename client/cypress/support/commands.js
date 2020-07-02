@@ -23,3 +23,9 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+export const asTid = (tid) => `[data-testid="${tid}"]`;
+
+Cypress.Commands.add('getTID', (tid, moreSelectors) => {
+  return cy.get(`${asTid(tid)}${moreSelectors ? ' ' + moreSelectors : ''}`);
+});

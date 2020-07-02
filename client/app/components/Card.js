@@ -24,7 +24,10 @@ const Card = ({
     card.value === estimationWaiting || (hasPendingClearCommand && card.value === ownEstimate);
 
   return (
-    <StyledCard onClick={() => giveStoryEstimate(selectedStoryId, card.value)}>
+    <StyledCard
+      onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
+      data-testid={'estimationCard.' + card.value}
+    >
       <StyledCardInner
         className={isWaiting ? 'waiting-spinner' : ''}
         cardColor={card.color}

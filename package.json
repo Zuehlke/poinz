@@ -11,7 +11,7 @@
     "url": "https://github.com/Zuehlke/poinz.git"
   },
   "scripts": {
-    "format": "prettier --write \"client/app/**/*.js\" \"client/test/**/*.js\" \"build/*.js\" \"server/src/**/*.js\" \"server/test/**/*.js\" \"server/docu/**/*.js\"",
+    "format": "prettier --write \"client/app/**/*.js\" \"client/cypress/**/*.js\" \"client/test/**/*.js\" \"build/*.js\" \"server/src/**/*.js\" \"server/test/**/*.js\" \"server/docu/**/*.js\"",
     "test": "cd client/ && npm test &&  cd ../server && npm test",
     "prebuild": "node build/checkTranslationKeys.js && cd server/ && npm run docu",
     "build": "node build/dockerImage.js",

@@ -1,4 +1,3 @@
-
 it('landing page and join new random room', () => {
   cy.visit('/');
   cy.getTID('joinButton').click();

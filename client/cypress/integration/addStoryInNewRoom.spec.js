@@ -1,4 +1,3 @@
-
 import {asTid} from '../support/commands';
 
 it('join new room, add a story with a title and description', () => {

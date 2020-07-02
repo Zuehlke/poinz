@@ -1,4 +1,3 @@
-
 it('join new room, add a story, estimate the story (alone)', () => {
   cy.visit('/');
   cy.getTID('joinButton').click();

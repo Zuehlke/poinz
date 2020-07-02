@@ -1,4 +1,3 @@
-
 it('join room, open user menu and change username', () => {
   cy.visit('/');
   cy.getTID('joinButton').click();

@@ -13,6 +13,7 @@
   "scripts": {
     "start": "npm run serve",
     "lint": "eslint 'app/**/*.js' 'test/**/*.js' 'cypress/**/*.js'",
+    "format": "prettier --write \"app/**/*.js\" \"cypress/**/*.js\" \"test/**/*.js\"",
     "test": "jest",
     "test:e2e": "npm run cypress:run",
     "pretest": "npm run lint",

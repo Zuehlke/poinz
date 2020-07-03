@@ -18,6 +18,7 @@
     "docu": "node ./docu/docuGenerator.js",
     "pretest": "npm run lint",
     "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"docu/**/*.js\"",
     "start": "node lib/server.js"
   },
   "jest": {

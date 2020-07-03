@@ -19,8 +19,8 @@
     "pretest": "npm run lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "serve": "webpack-dev-server --progress --colors --port 9000",
-    "build": "webpack --progress --colors --bail --json > webpack-build-stats.json"
+    "serve": "BABEL_ENV=development webpack-dev-server --progress --colors --port 9000",
+    "build": "BABEL_ENV=production webpack --progress --colors --bail --json --config  webpack.production.config.js > webpack-build-stats.json"
   },
   "jest": {
     "testMatch": [

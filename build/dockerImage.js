@@ -43,11 +43,7 @@ async function build() {
   await spawnAndPrint('npm', ['install'], {cwd: clientDirPath});
 
   console.log('building client with webpack...');
-  await spawnAndPrint(
-    './node_modules/.bin/webpack',
-    '-p --colors --bail --config webpack.production.config.js'.split(' '),
-    {cwd: path.resolve(__dirname, '../client')}
-  );
+  await spawnAndPrint('npm', 'run build'.split(' '), {cwd: path.resolve(__dirname, '../client')});
 
   console.log('copying built client to ./deploy/public');
   await fs.copy('./client/dist', './deploy/public/assets');

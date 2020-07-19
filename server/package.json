@@ -17,7 +17,7 @@
     "test:integration": "jest './test/integration'",
     "docu": "node ./docu/docuGenerator.js",
     "pretest": "npm run lint",
-    "lint": "eslint 'src/**/*.js' 'test/**/*.js'",
+    "lint": "eslint src/**/*.js test/**/*.js",
     "start": "node lib/server.js"
   },
   "jest": {

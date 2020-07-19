@@ -4,14 +4,15 @@
  *  1. clean-up output directories
  *  2. build poinz client (webpack)
  *  3. transpile backend sources
- *  3. copy client and backend to "deploy" folder
- *  4. build docker image (see Dockerfile)
+ *  4. copy client and backend to "deploy" folder
+ *  5. build docker image (see Dockerfile)
  *
  * */
 const path = require('path');
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs-extra'));
-const {spawn, exec} = require('child_process');
+const {exec} = require('child_process');
+const {spawn} = require('cross-spawn');
 const del = require('del');
 
 const execPromised = Promise.promisify(exec);
@@ -30,7 +31,8 @@ build()
   });
 
 async function build() {
-  // -- first let's clean up
+  // 1. clean-up output directories
+  console.log('clean up deploy and distubtion');
   await del([
     './deploy/',
     './deploy/package.json',
@@ -38,7 +40,7 @@ async function build() {
     './client/dist/**/*'
   ]);
 
-  // -- client
+  // 2. build poinz client (webpack)
   console.log('installing npm dependencies for client...');
   await spawnAndPrint('npm', ['install'], {cwd: clientDirPath});
 
@@ -53,7 +55,7 @@ async function build() {
   await fs.copy('./client/dist', './deploy/public/assets');
   await fs.copy('./client/index.html', './deploy/public/index.html');
 
-  // -- server
+  // 3. transpile backend sources
   console.log('installing npm dependencies for server...');
   await spawnAndPrint('npm', ['install'], {cwd: serverDirPath});
 
@@ -62,11 +64,12 @@ async function build() {
     cwd: serverDirPath
   });
 
-  // copy transpiled backend files, resources and package.json to deploy folder
+  // 4. copy client and backend to "deploy" folder
   await fs.copy('./server/lib', './deploy/lib');
   await fs.copy('./server/resources', './deploy/resources');
   await fs.copy('./server/package.json', './deploy/package.json');
 
+  //  5. build docker image (see Dockerfile)
   const gitInfo = await getGitInformation();
   await startBuildingDockerImage(gitInfo);
 

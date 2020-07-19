@@ -12,7 +12,7 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "lint": "eslint 'app/**/*.js' 'test/**/*.js' 'cypress/**/*.js'",
+    "lint": "eslint app/**/*.js test/**/*.js cypress/**/*.js",
     "test": "jest",
     "test:e2e": "npm run cypress:run",
     "pretest": "npm run lint",

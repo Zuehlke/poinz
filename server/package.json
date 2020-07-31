@@ -12,7 +12,7 @@
   },
   "main": "lib/server.js",
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "babel src -d lib --source-maps true",
     "test": "jest './test/unit'",
     "test:integration": "jest './test/integration'",
     "docu": "node ./docu/docuGenerator.js",

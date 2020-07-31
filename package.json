@@ -22,9 +22,9 @@
   "devDependencies": {
     "bluebird": "3.7.2",
     "del": "5.1.0",
-    "fs-extra": "9.0.0",
+    "fs-extra": "9.0.1",
     "glob": "^7.1.6",
-    "npm-check-updates": "4.1.2",
+    "npm-check-updates": "7.0.2",
     "prettier": "^2.0.5",
     "cross-spawn": "^7.0.3"
   },

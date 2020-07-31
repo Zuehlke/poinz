@@ -32,7 +32,7 @@ const BacklogActive = ({t, stories, importCsvFile}) => {
     multiple: false,
     noClick: true,
     maxSize: 200000,
-    accept: 'text/csv'
+    accept: 'text/csv, application/vnd.ms-excel, application/csv, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values'
   });
 
   return (

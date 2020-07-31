@@ -77,7 +77,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   }
 
   function onRoomIdChange(ev) {
-    const ROOM_ID_REGEX = /^[-a-z0-9_]+$/;
+    const ROOM_ID_REGEX = /^[-a-z0-9_]*$/;
     const lowercaseRoomName = ev.target.value.toLowerCase();
     if (ROOM_ID_REGEX.test(lowercaseRoomName)) {
       setCustomRoomId(lowercaseRoomName);

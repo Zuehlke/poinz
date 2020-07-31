@@ -24,7 +24,7 @@ export default function configureStore(initialState) {
   const boundActions = bindActionCreators({locationChanged, eventReceived}, store.dispatch);
 
   // "sync" url changes to our redux store. if location changes -> store pathname in state
-  history.listen((location) => boundActions.locationChanged(location.pathname));
+  history.listen(({location}) => boundActions.locationChanged(location.pathname));
 
   // and fire it once initially, so that the pathname on first page load is stored
   boundActions.locationChanged(history.location.pathname);

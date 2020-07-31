@@ -12,14 +12,15 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "lint": "eslint app/**/*.js test/**/*.js cypress/**/*.js",
+    "lint": "eslint \"app/**/*.js\" \"test/**/*.js\" \"cypress/**/*.js\"",
+    "format": "prettier --write \"app/**/*.js\" \"cypress/**/*.js\" \"test/**/*.js\"",
     "test": "jest",
     "test:e2e": "npm run cypress:run",
     "pretest": "npm run lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "serve": "webpack-dev-server --progress --colors --port 9000",
-    "build": "webpack --progress --colors --bail --json > webpack-build-stats.json"
+    "serve": "BABEL_ENV=development webpack-dev-server --progress --colors --port 9000",
+    "build": "BABEL_ENV=production webpack --progress --colors --bail --json --config  webpack.production.config.js > webpack-build-stats.json"
   },
   "jest": {
     "testMatch": [

@@ -17,11 +17,13 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
           title={t('restore')}
           className="fa fa-level-up story-restore"
           onClick={() => restoreStory(story.id)}
+          data-testid="restoreStoryButton"
         ></i>
         <i
           title={t('delete')}
           className="fa fa-minus-circle story-delete"
           onClick={() => deleteStory(story.id)}
+          data-testid="deleteStoryButton"
         />
       </StyledStoryToolbar>
 

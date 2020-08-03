@@ -78,6 +78,7 @@ const BacklogModeButtons = ({
       type="button"
       className={'pure-u-1-2 pure-button pure-button-stripped ' + (trashShown ? '' : 'active')}
       onClick={onShowBacklog}
+      data-testid="backlogModeActiveStories"
     >
       <i className="fa fa-list-ul"></i> {t('backlog')} ({activeStoriesCount})
     </button>
@@ -86,6 +87,7 @@ const BacklogModeButtons = ({
       type="button"
       className={'pure-u-1-2 pure-button pure-button-stripped ' + (trashShown ? 'active' : '')}
       onClick={onShowTrash}
+      data-testid="backlogModeTrashedStories"
     >
       <i className="fa fa-trash"></i> {t('trash')} ({trashedStoriesCount})
     </button>

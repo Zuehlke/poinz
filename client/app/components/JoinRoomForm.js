@@ -72,6 +72,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
 
   function onRoomKeyPress(e) {
     if (e.key === 'Enter') {
+      e.preventDefault();
       onJoinButtonClick();
     }
   }

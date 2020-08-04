@@ -12,6 +12,7 @@ test('Should produce storyRestored event', async () => {
   const commandId = uuid();
 
   mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
+  mockRoomsStore.manipulate((room) => room.set('selectedStory', undefined));
 
   return processor(
     {
@@ -24,13 +25,14 @@ test('Should produce storyRestored event', async () => {
     },
     userId
   ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored');
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored', 'storySelected');
 
-    const [storyRestoredEvent] = producedEvents;
+    const [storyRestoredEvent, storySelectedEvent] = producedEvents;
 
     expect(storyRestoredEvent.payload.storyId).toEqual(storyId);
+    expect(storySelectedEvent.payload.storyId).toEqual(storyId);
 
-    // story is still in room, "trashed" set to false
+    // story is in room, "trashed" flag set to false
     expect(room.stories[storyId]).toMatchObject({
       id: EXPECT_UUID_MATCHING,
       estimations: {},
@@ -38,6 +40,8 @@ test('Should produce storyRestored event', async () => {
       description: 'This will be awesome',
       trashed: false
     });
+
+    expect(room.selectedStory).toEqual(storyRestoredEvent.payload.storyId);
   });
 });
 

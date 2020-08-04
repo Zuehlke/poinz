@@ -20,6 +20,10 @@ const restoreStoryCommandHandler = {
   },
   fn: (room, command) => {
     room.applyEvent('storyRestored', command.payload);
+
+    if (!room.get('selectedStory')) {
+      room.applyEvent('storySelected', {storyId: command.payload.storyId});
+    }
   }
 };
 

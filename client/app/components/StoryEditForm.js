@@ -101,7 +101,7 @@ const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
         type="button"
         className="pure-button pure-input-1 pure-button-primary"
         onClick={onSave}
-        data-testId="saveStoryChangesButton"
+        data-testid="saveStoryChangesButton"
       >
         {t('save')}
         <i className="fa fa-save button-icon-right"></i>

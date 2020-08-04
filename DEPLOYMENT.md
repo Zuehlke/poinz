@@ -19,6 +19,11 @@ PoinZ is currently deployed on a free-tier heroku dyno. (currently without persi
 
 A more suitable deployment might be needed in the future.
 
+### MongoDB
+
+in August 2020 we had to switch from mLab to mongoDB Atlas.
+
+Environment variable "ATLAS_DB_URI" is set via heroku dashboard. It's read in settings.js and toggles persistent storage.
  
 ### Heroku log monitoring with Logz.io
 

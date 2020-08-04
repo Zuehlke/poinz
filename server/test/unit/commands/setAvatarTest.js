@@ -43,7 +43,9 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('Command validation Error during "setAvatar": Command validation failed');
+    ).rejects.toThrow(
+      'Command validation Error during "setAvatar": Invalid type: string (expected number) in /payload/avatar'
+    );
   });
 
   test('Should fail, if userId does not match user in room', async () => {

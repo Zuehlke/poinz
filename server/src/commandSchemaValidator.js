@@ -41,10 +41,7 @@ function validate(cmd) {
 
   const result = tv4.validateMultiple(cmd, schema);
   if (!result.valid) {
-    throw new CommandValidationError(
-      new Error('Command validation failed!\n' + serializeErrors(result.errors)),
-      cmd
-    );
+    throw new CommandValidationError(new Error(serializeErrors(result.errors)), cmd);
   }
 }
 

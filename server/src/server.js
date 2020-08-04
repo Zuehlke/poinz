@@ -32,10 +32,11 @@ async function startup() {
 
   // serve static client files
   app.use(express.static(path.resolve(__dirname, '../public')));
+
   // enable html5 history mode by "forwarding" every unmatched route to the index.html file
-  app.get('*', function (request, response) {
-    response.sendFile(path.resolve(__dirname, '../public/index.html'));
-  });
+  app.get('*', (request, response) =>
+    response.sendFile(path.resolve(__dirname, '../public/index.html'))
+  );
 
   const commandProcessor = commandProcessorFactory(commandHandlers, eventHandlers, store);
 

@@ -48,4 +48,42 @@ describe('preconditions', () => {
       /Precondition Error during "setUsername": Given user .* does not belong to room .*/
     );
   });
+
+  test('Should fail, if username is too short (less than 3 chars)', async () => {
+    const {processor, roomId, userId} = await prepOneUserInOneRoom();
+    const commandId = uuid();
+
+    return expect(
+      processor(
+        {
+          id: commandId,
+          roomId: roomId,
+          name: 'setUsername',
+          payload: {
+            username: 'ab'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('String is too short (2 chars), minimum 3 in /payload/username');
+  });
+
+  test('Should fail, if username is too long (more than 80 chars)', async () => {
+    const {processor, roomId, userId} = await prepOneUserInOneRoom();
+    const commandId = uuid();
+
+    return expect(
+      processor(
+        {
+          id: commandId,
+          roomId: roomId,
+          name: 'setUsername',
+          payload: {
+            username: 'b'.repeat(81)
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('String is too long (81 chars), maximum 80 in /payload/username');
+  });
 });

@@ -9,7 +9,9 @@
           "type": "object",
           "properties": {
             "username": {
-              "type": "string"
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 80
             },
             "email": {
               "type": "string",

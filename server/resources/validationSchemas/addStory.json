@@ -10,10 +10,13 @@
           "properties": {
             "title": {
               "type": "string",
-              "minLength": 1
+              "minLength": 1,
+              "maxLength": 200
             },
             "description": {
-              "type": "string"
+              "type": "string",
+              "minLength": 0,
+              "maxLength": 2000
             }
           },
           "required": [

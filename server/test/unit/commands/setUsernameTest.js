@@ -10,7 +10,7 @@ test('Should produce usernameSet event', async () => {
       roomId: roomId,
       name: 'setUsername',
       payload: {
-        username: 'John Doe'
+        username: 'John.Doe'
       }
     },
     userId
@@ -19,10 +19,10 @@ test('Should produce usernameSet event', async () => {
 
     const [usernameSetEvent] = producedEvents;
 
-    expect(usernameSetEvent.payload.username).toEqual('John Doe');
+    expect(usernameSetEvent.payload.username).toEqual('John.Doe');
     expect(usernameSetEvent.userId).toEqual(userId);
 
-    expect(room.users[userId].username).toEqual('John Doe');
+    expect(room.users[userId].username).toEqual('John.Doe');
   });
 });
 
@@ -39,7 +39,7 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'setUsername',
           payload: {
-            username: 'John Doe'
+            username: 'John.Doe'
           }
         },
         nonMatchingUserId
@@ -65,7 +65,7 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('String is too short (2 chars), minimum 3 in /payload/username');
+    ).rejects.toThrow('Format validation failed (must be a valid username) in /payload/username');
   });
 
   test('Should fail, if username is too long (more than 80 chars)', async () => {
@@ -84,6 +84,6 @@ describe('preconditions', () => {
         },
         userId
       )
-    ).rejects.toThrow('String is too long (81 chars), maximum 80 in /payload/username');
+    ).rejects.toThrow('Format validation failed (must be a valid username) in /payload/username');
   });
 });

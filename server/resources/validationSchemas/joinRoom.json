@@ -10,8 +10,7 @@
           "properties": {
             "username": {
               "type": "string",
-              "minLength": 3,
-              "maxLength": 80
+              "format": "username"
             },
             "email": {
               "type": "string",

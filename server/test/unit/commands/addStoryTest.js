@@ -121,7 +121,7 @@ describe('preconditions', () => {
     ).rejects.toThrow('String is too short (0 chars), minimum 1 in /payload/title');
   });
 
-  test('Should fail, if story title is too long (more than 200 chars)', async () => {
+  test('Should fail, if story title is too long (more than 100 chars)', async () => {
     const {processor, roomId, userId} = await prepOneUserInOneRoom();
     const commandId = uuid();
 
@@ -132,12 +132,12 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'addStory',
           payload: {
-            title: 't'.repeat(201)
+            title: 't'.repeat(101)
           }
         },
         userId
       )
-    ).rejects.toThrow('String is too long (201 chars), maximum 200 in /payload/title');
+    ).rejects.toThrow('String is too long (101 chars), maximum 100 in /payload/title');
   });
 
   test('Should fail, if story description is too long (more than 2k chars)', async () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -6,6 +6,11 @@ import {changeStory, cancelEditStory} from '../actions';
 import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 import {StyledStory} from '../styled/Story';
 import {StyledEditFormButtonGroup, StyledEditForm} from '../styled/Backlog';
+import ValidatedInput from './ValidatedInput';
+import ValidatedTextarea from './ValidatedTextarea';
+
+const REGEX_STORY_TITLE = /^.{1,100}$/;
+const REGEX_STORY_DESCR = /^.{1,2000}$/;
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
@@ -21,7 +26,8 @@ const StoryEditForm = ({
   const isSelected = selectedStoryId === story.id;
   const waiting = pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id);
 
-  let titleInputField, descriptionInputField;
+  const [storyTitle, setStoryTitle] = useState(story.title);
+  const [storyDescr, setStoryDescr] = useState(story.description);
 
   return (
     <StyledStory
@@ -31,20 +37,22 @@ const StoryEditForm = ({
     >
       <StyledEditForm className="pure-form" onSubmit={(e) => e.preventDefault()}>
         <fieldset className="pure-group">
-          <input
+          <ValidatedInput
             type="text"
             className="pure-input-1"
-            defaultValue={story.title}
-            ref={(ref) => (titleInputField = ref)}
-            onKeyPress={handleTitleKeyEvent}
+            fieldValue={storyTitle}
+            setFieldValue={setStoryTitle}
+            regexPattern={REGEX_STORY_TITLE}
+            onEnter={triggerChange}
           />
 
-          <textarea
+          <ValidatedTextarea
             className="pure-input-1"
             rows="1"
-            placeholder="Description / URL / etc."
-            defaultValue={story.description}
-            ref={(ref) => (descriptionInputField = ref)}
+            placeholder={t('description')}
+            fieldValue={storyDescr}
+            setFieldValue={setStoryDescr}
+            regexPattern={REGEX_STORY_DESCR}
           />
         </fieldset>
 
@@ -53,15 +61,9 @@ const StoryEditForm = ({
     </StyledStory>
   );
 
-  function handleTitleKeyEvent(keyEvent) {
-    if (keyEvent.key === 'Enter') {
-      triggerChange();
-    }
-  }
-
   function triggerChange() {
-    if (titleInputField.value) {
-      changeStory(story.id, titleInputField.value, descriptionInputField.value);
+    if (storyTitle) {
+      changeStory(story.id, storyTitle, storyDescr ? storyDescr : '');
     }
   }
 

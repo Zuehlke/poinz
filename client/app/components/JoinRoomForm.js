@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import ValidatedInput from './ValidatedInput';
 import {joinRoom} from '../actions';
 import {
   StyledEyecatcher,
@@ -10,6 +11,8 @@ import {
   StyledLandingDoubleButtonR,
   StyledLandingForm
 } from '../styled/Landing';
+
+const ROOM_ID_REGEX = /^[-a-z0-9_]*$/;
 
 /**
  * The form on the landing page where the user can join a room.
@@ -41,7 +44,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
             data-testid="joinButton"
             type="button"
             className=" pure-button pure-button-primary"
-            onClick={onJoinButtonClick}
+            onClick={onTriggerJoin}
           >
             {customRoomId ? t('joinWithRoomName', {room: customRoomId}) : t('joinNewRoom')}
           </StyledLandingDoubleButtonL>
@@ -57,35 +60,22 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
         </div>
 
         {showExtended && (
-          <input
+          <ValidatedInput
             data-testid="customRoomNameInput"
             type="text"
             placeholder={t('customRoomName')}
-            value={customRoomId}
-            onChange={onRoomIdChange}
-            onKeyPress={onRoomKeyPress}
+            fieldValue={customRoomId}
+            setFieldValue={setCustomRoomId}
+            regexPattern={ROOM_ID_REGEX}
+            onEnter={onTriggerJoin}
+            allLowercase={true}
           />
         )}
       </StyledLandingForm>
     </StyledEyecatcher>
   );
 
-  function onRoomKeyPress(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      onJoinButtonClick();
-    }
-  }
-
-  function onRoomIdChange(ev) {
-    const ROOM_ID_REGEX = /^[-a-z0-9_]*$/;
-    const lowercaseRoomName = ev.target.value.toLowerCase();
-    if (ROOM_ID_REGEX.test(lowercaseRoomName)) {
-      setCustomRoomId(lowercaseRoomName);
-    }
-  }
-
-  function onJoinButtonClick() {
+  function onTriggerJoin() {
     joinRoom(customRoomId ? customRoomId : undefined);
   }
 };

@@ -28,3 +28,7 @@ Environment variable "ATLAS_DB_URI" is set via heroku dashboard. It's read in se
 ### Heroku log monitoring with Logz.io
 
 ```$  heroku drains:add "https://listener-nl.logz.io:8081?token=[TOKEN]" -a poinz```
+
+If you want to manually analyze production logs on heroku, use the heroku cli on your dev machine:
+
+```$ heroku logs -n 200 -a poinz --source app```

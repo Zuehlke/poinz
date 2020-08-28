@@ -29,7 +29,7 @@ export default function socketManagerFactory(
     try {
       const {producedEvents} = await commandProcessor(msg, matchingUserId);
 
-      if (!producedEvents) {
+      if (!producedEvents || producedEvents.length < 1) {
         return;
       }
 
@@ -129,7 +129,6 @@ export default function socketManagerFactory(
   function handleCommandProcessingError(error, command, socket) {
     // for debugging, you might want to log error.stack  LOGGER.error(error.message + '\n' + error.stack);
     LOGGER.warn(error.message);
-
 
     const commandRejectedEvent = {
       name: 'commandRejected',

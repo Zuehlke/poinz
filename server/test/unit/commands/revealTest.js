@@ -59,7 +59,7 @@ describe('preconditions', () => {
       processor(
         {
           id: uuid(),
-          roomId: roomId,
+          roomId,
           name: 'reveal',
           payload: {
             storyId: 'anotherStory'
@@ -68,5 +68,31 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow('Can only reveal currently selected story!');
+  });
+
+  test('Should throw if story is already revealed', async () => {
+    const {
+      roomId,
+      userId,
+      processor,
+      storyId,
+      mockRoomsStore
+    } = await prepOneUserInOneRoomWithOneStory();
+
+    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'revealed'], true));
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'reveal',
+          payload: {
+            storyId
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Story is already revealed');
   });
 });

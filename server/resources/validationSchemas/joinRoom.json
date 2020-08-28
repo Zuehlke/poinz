@@ -9,7 +9,8 @@
           "type": "object",
           "properties": {
             "username": {
-              "type": "string"
+              "type": "string",
+              "format": "username"
             },
             "email": {
               "type": "string",

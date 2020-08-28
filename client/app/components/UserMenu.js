@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -14,6 +14,10 @@ import {
   StyledUserMenu,
   StyledMiniAvatar
 } from '../styled/UserMenu';
+import ValidatedInput from './ValidatedInput';
+
+const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{1,80}$/;
+const EMAIL_REGEX = /^[-a-zA-Z0-9._@*]{1,245}$/; // do not check for correct/valid email regex here. this regex gets validated after every keypress
 
 /**
  * The user menu allows customizing Poinz
@@ -35,7 +39,8 @@ const UserMenu = ({
   const email = user.email;
   const excluded = user.excluded;
 
-  let usernameInputField, emailInputField;
+  const [myUsername, setMyUsername] = useState(username);
+  const [myEmail, setMyEmail] = useState(email);
 
   return (
     <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
@@ -44,14 +49,15 @@ const UserMenu = ({
           <h5>{t('username')}</h5>
 
           <StyledTextInput>
-            <input
+            <ValidatedInput
               data-testid="usernameInput"
               type="text"
               id="username"
               placeholder={t('name')}
-              defaultValue={username}
-              ref={(ref) => (usernameInputField = ref)}
-              onKeyPress={handleUsernameKeyPress}
+              fieldValue={myUsername}
+              setFieldValue={setMyUsername}
+              regexPattern={USERNAME_REGEX}
+              onEnter={saveUsername}
             />
 
             <button
@@ -109,14 +115,15 @@ const UserMenu = ({
           {t('gravatarInfo')}
 
           <StyledTextInput>
-            <input
+            <ValidatedInput
               data-testid="gravatarEmailInput"
               type="text"
               id="email"
               placeholder="Email..."
-              defaultValue={email}
-              ref={(ref) => (emailInputField = ref)}
-              onKeyPress={handleEmailKeypress}
+              fieldValue={myEmail}
+              setFieldValue={setMyEmail}
+              regexPattern={EMAIL_REGEX}
+              onEnter={saveEmail}
             />
 
             <button
@@ -147,27 +154,18 @@ const UserMenu = ({
     </StyledUserMenu>
   );
 
-  function handleUsernameKeyPress(e) {
-    if (e.key === 'Enter') {
-      saveUsername();
-    }
-  }
-
   function saveUsername() {
-    // username length minimum is 2 characters
-    if (usernameInputField.value && usernameInputField.value.length > 1) {
-      setUsername(usernameInputField.value);
-    }
-  }
-
-  function handleEmailKeypress(e) {
-    if (e.key === 'Enter') {
-      saveEmail();
+    // username length minimum is 3 characters
+    if (myUsername && myUsername.length > 2) {
+      setUsername(myUsername);
     }
   }
 
   function saveEmail() {
-    setEmail(emailInputField.value);
+    // myEmail length minimum is 6 characters
+    if (myEmail && myEmail.length > 5) {
+      setEmail(myEmail);
+    }
   }
 };
 

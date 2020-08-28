@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -17,7 +17,7 @@ import {
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
 const WhoAreYou = ({t, setUsername}) => {
-  let usernameInputField;
+  const [myUsername, setMyUsername] = useState('');
 
   return (
     <StyledLanding>
@@ -33,11 +33,13 @@ const WhoAreYou = ({t, setUsername}) => {
               data-testid="usernameInput"
               type="text"
               placeholder={t('name')}
-              ref={(ref) => (usernameInputField = ref)}
-              onKeyPress={handleUsernameKeyPress}
+              value={myUsername}
+              onChange={onUsernameChange}
+              onKeyPress={onUsernameKeyPress}
             />
 
             <button
+              type="button"
               data-testid="joinButton"
               className="pure-button pure-button-primary button-save"
               onClick={saveUsername}
@@ -50,16 +52,25 @@ const WhoAreYou = ({t, setUsername}) => {
     </StyledLanding>
   );
 
-  function handleUsernameKeyPress(e) {
+  function onUsernameKeyPress(e) {
     if (e.key === 'Enter') {
+      e.preventDefault();
       saveUsername();
     }
   }
 
+  function onUsernameChange(ev) {
+    const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{1,80}$/;
+    const usernameValue = ev.target.value;
+    if (USERNAME_REGEX.test(usernameValue)) {
+      setMyUsername(usernameValue);
+    }
+  }
+
   function saveUsername() {
-    // username length minimum is 2 characters
-    if (usernameInputField.value && usernameInputField.value.length > 1) {
-      setUsername(usernameInputField.value);
+    // username length minimum is 3 characters
+    if (myUsername && myUsername.length > 2) {
+      setUsername(myUsername);
     }
   }
 };

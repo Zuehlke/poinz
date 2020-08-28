@@ -11,11 +11,11 @@ it('join room, open user menu and change settings', () => {
   cy.get(tid('userMenuToggle')).click();
 
   // -- set a new username
-  cy.get(tid('usernameInput')).type('{selectall}changed username');
+  cy.get(tid('usernameInput')).type('{selectall}changed-username');
   cy.get(tid('saveUsernameButton')).click();
 
-  cy.get(tid('whoamiSimple')).contains('changed username');
-  cy.get(tid('users')).contains('changed username');
+  cy.get(tid('whoamiSimple')).contains('changed-username');
+  cy.get(tid('users')).contains('changed-username');
 
   // -- switch language
   cy.get(tid('userMenu') + ' #language-selector-de').click();

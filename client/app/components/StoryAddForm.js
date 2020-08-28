@@ -1,17 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {addStory} from '../actions';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
 import {StyledAddForm} from '../styled/Backlog';
+import ValidatedInput from './ValidatedInput';
+import ValidatedTextarea from './ValidatedTextarea';
+
+const REGEX_STORY_TITLE = /^.{1,100}$/;
+const REGEX_STORY_DESCR = /^.{1,2000}$/;
 
 /**
  * Form for adding stories to the backlog
  */
 const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
   const waiting = hasPendingAddCommands;
-  let titleInputField, descriptionInputField;
+
+  const [storyTitle, setStoryTitle] = useState('');
+  const [storyDescr, setStoryDescr] = useState('');
 
   return (
     <StyledAddForm
@@ -20,19 +27,23 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
       onSubmit={(e) => e.preventDefault()}
     >
       <fieldset className="pure-group">
-        <input
+        <ValidatedInput
           type="text"
           className="pure-input-1"
           placeholder={t('storyTitle')}
-          ref={(ref) => (titleInputField = ref)}
-          onKeyPress={handleTitleKeyEvent}
+          fieldValue={storyTitle}
+          setFieldValue={setStoryTitle}
+          regexPattern={REGEX_STORY_TITLE}
+          onEnter={triggerAddAndClearForm}
         />
 
-        <textarea
+        <ValidatedTextarea
           className="pure-input-1"
           rows="1"
           placeholder={t('description')}
-          ref={(ref) => (descriptionInputField = ref)}
+          fieldValue={storyDescr}
+          setFieldValue={setStoryDescr}
+          regexPattern={REGEX_STORY_DESCR}
         />
       </fieldset>
 
@@ -47,17 +58,11 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
     </StyledAddForm>
   );
 
-  function handleTitleKeyEvent(keyEvent) {
-    if (keyEvent.key === 'Enter') {
-      triggerAddAndClearForm();
-    }
-  }
-
   function triggerAddAndClearForm() {
-    if (titleInputField.value) {
-      addStory(titleInputField.value, descriptionInputField.value);
-      titleInputField.value = '';
-      descriptionInputField.value = '';
+    if (storyTitle) {
+      addStory(storyTitle, storyDescr);
+      setStoryTitle('');
+      setStoryDescr('');
     }
   }
 };

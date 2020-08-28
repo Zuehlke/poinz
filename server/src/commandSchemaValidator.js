@@ -9,9 +9,12 @@ import getLogger from './getLogger';
 const LOGGER = getLogger('commandSchemaValidator');
 
 const EMAIL_REGEX = /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+const EMAIL_MAX_LENGTH = 254;
 const ROOMID_REGEX = /^[-a-z0-9_]+$/;
 const UUIDv4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 const CsvDATAURL_REGEX = /^data:(text\/csv|application\/vnd.ms-excel|application\/csv|text\/x-csv|application\/x-csv|text\/comma-separated-values|text\/x-comma-separated-values);base64,/;
+const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{3,80}$/;
+const USERNAME_MAX_LENGTH = 200;
 const schemas = gatherSchemas();
 
 registerCustomFormats();
@@ -41,10 +44,7 @@ function validate(cmd) {
 
   const result = tv4.validateMultiple(cmd, schema);
   if (!result.valid) {
-    throw new CommandValidationError(
-      new Error('Command validation failed!\n' + serializeErrors(result.errors)),
-      cmd
-    );
+    throw new CommandValidationError(new Error(serializeErrors(result.errors)), cmd);
   }
 }
 
@@ -87,10 +87,12 @@ function parseSchemaFile(schemaFileContent, schemaFileName) {
 }
 
 function registerCustomFormats() {
-  tv4.addFormat(
-    'email',
-    validateStringFormat.bind(undefined, EMAIL_REGEX, 'must be a valid email-address')
-  );
+  tv4.addFormat('email', (data) => {
+    if (data.length > EMAIL_MAX_LENGTH) {
+      return `string must not be more than ${EMAIL_MAX_LENGTH} characters`;
+    }
+    return validateStringFormat(EMAIL_REGEX, 'must be a valid email-address', data);
+  });
   tv4.addFormat(
     'roomId',
     validateStringFormat.bind(
@@ -107,6 +109,12 @@ function registerCustomFormats() {
     'csvDataUrl',
     validateStringFormat.bind(undefined, CsvDATAURL_REGEX, 'must be a valid text/csv data url')
   );
+  tv4.addFormat('username', (data) => {
+    if (data.length > USERNAME_MAX_LENGTH) {
+      return `string must not be more than ${USERNAME_MAX_LENGTH} characters`;
+    }
+    return validateStringFormat(USERNAME_REGEX, 'must be a valid username', data);
+  });
 }
 
 function validateStringFormat(formatRegex, errorMsg, data) {

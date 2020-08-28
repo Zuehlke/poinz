@@ -10,7 +10,7 @@
           "properties": {
             "username": {
               "type": "string",
-              "minLength": 2
+              "format": "username"
             }
           },
           "required": [

@@ -10,7 +10,7 @@ test('Should produce usernameSet event', async () => {
       roomId: roomId,
       name: 'setUsername',
       payload: {
-        username: 'John Doe'
+        username: 'John.Doe'
       }
     },
     userId
@@ -19,10 +19,10 @@ test('Should produce usernameSet event', async () => {
 
     const [usernameSetEvent] = producedEvents;
 
-    expect(usernameSetEvent.payload.username).toEqual('John Doe');
+    expect(usernameSetEvent.payload.username).toEqual('John.Doe');
     expect(usernameSetEvent.userId).toEqual(userId);
 
-    expect(room.users[userId].username).toEqual('John Doe');
+    expect(room.users[userId].username).toEqual('John.Doe');
   });
 });
 
@@ -39,7 +39,7 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'setUsername',
           payload: {
-            username: 'John Doe'
+            username: 'John.Doe'
           }
         },
         nonMatchingUserId
@@ -47,5 +47,43 @@ describe('preconditions', () => {
     ).rejects.toThrow(
       /Precondition Error during "setUsername": Given user .* does not belong to room .*/
     );
+  });
+
+  test('Should fail, if username is too short (less than 3 chars)', async () => {
+    const {processor, roomId, userId} = await prepOneUserInOneRoom();
+    const commandId = uuid();
+
+    return expect(
+      processor(
+        {
+          id: commandId,
+          roomId: roomId,
+          name: 'setUsername',
+          payload: {
+            username: 'ab'
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Format validation failed (must be a valid username) in /payload/username');
+  });
+
+  test('Should fail, if username is too long (more than 80 chars)', async () => {
+    const {processor, roomId, userId} = await prepOneUserInOneRoom();
+    const commandId = uuid();
+
+    return expect(
+      processor(
+        {
+          id: commandId,
+          roomId: roomId,
+          name: 'setUsername',
+          payload: {
+            username: 'b'.repeat(81)
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow('Format validation failed (must be a valid username) in /payload/username');
   });
 });

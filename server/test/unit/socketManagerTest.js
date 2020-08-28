@@ -3,8 +3,13 @@ import socketManagerFactory from '../../src/socketManager';
 
 test('init without errors', () => {
   const sendEventToRoom = jest.fn();
+  const removeSocketFromRoomByIds = jest.fn();
 
-  const socketManager = socketManagerFactory(getMockCmdProcessor([]), sendEventToRoom);
+  const socketManager = socketManagerFactory(
+    getMockCmdProcessor([]),
+    sendEventToRoom,
+    removeSocketFromRoomByIds
+  );
   expect(socketManager).toBeDefined();
   expect(socketManager.handleIncomingCommand).toBeDefined();
   expect(socketManager.onDisconnect).toBeDefined();
@@ -12,8 +17,13 @@ test('init without errors', () => {
 
 test('handle incoming command without errors', () => {
   const sendEventToRoom = jest.fn();
+  const removeSocketFromRoomByIds = jest.fn();
 
-  const socketManager = socketManagerFactory(getMockCmdProcessor(), sendEventToRoom);
+  const socketManager = socketManagerFactory(
+    getMockCmdProcessor(),
+    sendEventToRoom,
+    removeSocketFromRoomByIds
+  );
 
   const socket = getMockSocketObject();
   const dummyCommand = {
@@ -24,6 +34,7 @@ test('handle incoming command without errors', () => {
 
 test('registering new socket, new user, new room successfully', async () => {
   const sendEventToRoom = jest.fn();
+  const removeSocketFromRoomByIds = jest.fn();
 
   const joinedRoomEvent = {
     roomId: uuid(),
@@ -32,7 +43,8 @@ test('registering new socket, new user, new room successfully', async () => {
 
   const socketManager = socketManagerFactory(
     getMockCmdProcessor([joinedRoomEvent]),
-    sendEventToRoom
+    sendEventToRoom,
+    removeSocketFromRoomByIds
   );
 
   const socket = getMockSocketObject();
@@ -47,8 +59,14 @@ test('registering new socket, new user, new room successfully', async () => {
 
 test('should correctly handle joining & leaving multiple rooms in sequence', async () => {
   const sendEventToRoom = jest.fn();
+  const removeSocketFromRoomByIds = jest.fn();
+
   const mockCmdProcessor = jest.fn().mockName('mockCommandProcessor');
-  const socketManager = socketManagerFactory(mockCmdProcessor, sendEventToRoom);
+  const socketManager = socketManagerFactory(
+    mockCmdProcessor,
+    sendEventToRoom,
+    removeSocketFromRoomByIds
+  );
 
   const socket = getMockSocketObject();
   const dummyCommand = {
@@ -116,8 +134,13 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
 
 test('should handle disconnect', async () => {
   const sendEventToRoom = jest.fn();
+  const removeSocketFromRoomByIds = jest.fn();
   const mockCmdProcessor = jest.fn().mockName('mockCommandProcessor');
-  const socketManager = socketManagerFactory(mockCmdProcessor, sendEventToRoom);
+  const socketManager = socketManagerFactory(
+    mockCmdProcessor,
+    sendEventToRoom,
+    removeSocketFromRoomByIds
+  );
 
   await socketManager.onDisconnect(getMockSocketObject());
 });

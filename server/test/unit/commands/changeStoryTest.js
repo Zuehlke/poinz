@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import { prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyChanged event', async () => {
   const {processor, roomId, userIdOne, storyId} = await prepTwoUsersInOneRoomWithOneStory(
@@ -119,7 +119,6 @@ describe('preconditions', () => {
       /Precondition Error during "changeStory": Given story .* is marked as "trashed" and cannot be selected or manipulated.*/
     );
   });
-
 
   test('Should fail, if story title is too long (more than 100 chars)', async () => {
     const {processor, roomId, storyId, userIdOne} = await prepTwoUsersInOneRoomWithOneStory(

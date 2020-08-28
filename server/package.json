@@ -19,7 +19,8 @@
     "pretest": "npm run lint",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"docu/**/*.js\"",
-    "start": "node lib/server.js"
+    "start": "node lib/server.js",
+    "start:dev": "node src/server.dev.js"
   },
   "jest": {
     "setupFilesAfterEnv": [

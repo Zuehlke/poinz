@@ -108,7 +108,12 @@ export default function socketManagerFactory(
     }
 
     const newUserId = uuid();
-    LOGGER.warn(`New userId ${newUserId} generated for socket ${socketId}. msg.name=${msg.name}`);
+
+    if (msg.name !== 'joinRoom') {
+      // in case of joinRoom it's expected.  warn if this happens with any other command
+      LOGGER.warn(`New userId ${newUserId} generated for socket ${socketId}. msg.name=${msg.name}`);
+    }
+
     return newUserId;
   }
 

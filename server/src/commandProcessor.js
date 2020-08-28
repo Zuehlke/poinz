@@ -231,12 +231,12 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 function logCommand(command, userId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
-      `HANDLING COMMAND user=${userId} room=${command.roomId} ${command.name} ${command.id}`,
+      `HANDLING COMMAND user=${userId} room=${command.roomId} commandName=${command.name} commandId=${command.id}`,
       command
     );
   } else if (LOGGER.isLevelEnabled('info')) {
     LOGGER.info(
-      `HANDLING COMMAND user=${userId} room=${command.roomId} ${command.name} ${command.id}`
+      `HANDLING COMMAND user=${userId} room=${command.roomId} commandName=${command.name} commandId=${command.id}`
     );
   }
 }

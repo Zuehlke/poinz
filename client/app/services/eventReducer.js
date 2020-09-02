@@ -17,6 +17,13 @@ import clearStoryEstimationsOfUser from './clearStoryEstimationsOfUser';
 export default function eventReducer(state, action) {
   const {event} = action;
 
+  // with issue #99 we introduced a new validation for usernames.
+  // if the preset username (previously stored in localStorage) does not match the new format, joinRoom will fail.
+  if (isFailedJoinRoom(event)) {
+    clientSettingsStore.setPresetUsername('');
+    return {...state, presetUsername: ''};
+  }
+
   // if we created a new room, and then joined, we don't have a roomId yet
   if (!state.roomId && event.name === 'joinedRoom') {
     state.roomId = event.roomId;
@@ -39,6 +46,15 @@ export default function eventReducer(state, action) {
   let modifiedState = matchingHandler.fn(state, event.payload, event) || state;
   modifiedState = updateActionLog(matchingHandler.log, state, modifiedState, event);
   return modifiedState;
+}
+
+function isFailedJoinRoom(event) {
+  return (
+    event.name === 'commandRejected' &&
+    event.payload &&
+    event.payload.command &&
+    event.payload.command.name === 'joinRoom'
+  );
 }
 
 /**

@@ -61,6 +61,7 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
         };
       }
       total[event].byCommands.push(commandName);
+      total[event].byCommands = uniqueArray(total[event].byCommands);
       return total;
     };
 
@@ -175,3 +176,5 @@ async function parseFile(filePath) {
     })
   );
 }
+
+const uniqueArray = (array) => array.filter((cmd, index, self) => self.indexOf(cmd) === index);

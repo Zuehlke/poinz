@@ -48,7 +48,7 @@ Fork & checkout the repository then install all npm dependencies.
 
 Start the backend
 
-`$ cd server/ && npm start:dev`
+`$ cd server/ && npm run start:dev`
 
 Start the client-serving in dev mode via webpack-dev-server
 

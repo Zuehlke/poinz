@@ -47,7 +47,7 @@ function sendObjectAsJsonFile(res, data, filename) {
   const readStream = new stream.PassThrough();
   readStream.end(fileContents);
   res.set('Content-disposition', 'attachment; filename=' + filename);
-  res.set('Content-Type', 'text/plain');
+  res.set('Content-Type', 'application/json');
   readStream.pipe(res);
 }
 

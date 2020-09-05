@@ -1,5 +1,6 @@
 import Immutable from 'immutable';
 import express from 'express';
+import stream from 'stream';
 
 /**
  * This module handles incoming requests to the REST api.
@@ -23,10 +24,15 @@ function init(app, store) {
   );
   restRouter.get('/room/:roomId', (req, res) =>
     buildRoomExportObject(store, req.params.roomId).then((roomExport) => {
-      if (roomExport) {
-        res.json(roomExport);
-      } else {
+      if (!roomExport) {
         res.status(404).json({message: 'room not found'});
+        return;
+      }
+
+      if (req.query && req.query.mode === 'file') {
+        sendObjectAsJsonFile(res, roomExport, `poinz_${roomExport.roomId}.json`);
+      } else {
+        res.json(roomExport);
       }
     })
   );
@@ -35,6 +41,15 @@ function init(app, store) {
 }
 
 export default {init};
+
+function sendObjectAsJsonFile(res, data, filename) {
+  const fileContents = Buffer.from(JSON.stringify(data, null, 4), 'utf-8');
+  const readStream = new stream.PassThrough();
+  readStream.end(fileContents);
+  res.set('Content-disposition', 'attachment; filename=' + filename);
+  res.set('Content-Type', 'text/plain');
+  readStream.pipe(res);
+}
 
 export async function buildStatusObject(store) {
   const allRooms = await store.getAllRooms();

@@ -42,6 +42,14 @@ export function newMockRoomsStore(initialRoom) {
       room = rm;
       return Promise.resolve();
     },
+    getAllRooms: () => {
+      const allRooms = new Immutable.Map();
+      if (!room) {
+        return Promise.resolve(allRooms);
+      }
+
+      return Promise.resolve(allRooms.set(room.get('id'), room));
+    },
     manipulate: (fn) => (room = fn(room))
   };
 }

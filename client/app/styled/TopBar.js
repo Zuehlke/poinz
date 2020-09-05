@@ -56,7 +56,7 @@ export const StyledWhoAmIExtended = styled.span`
   }
 `;
 
-// three buttons on the top right (user menu, aciont log, leave room)
+// three buttons on the top right (user menu, action log, leave room)
 export const StyledQuickMenuButton = styled.a`
   display: block;
   width: 34px;

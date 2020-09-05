@@ -12,7 +12,8 @@ import {
   StyledTextInput,
   StyledSection,
   StyledUserMenu,
-  StyledMiniAvatar
+  StyledMiniAvatar,
+  StyledLinkButton
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
 
@@ -33,7 +34,8 @@ const UserMenu = ({
   setAvatar,
   toggleExcluded,
   setLanguage,
-  userMenuShown
+  userMenuShown,
+  roomId
 }) => {
   const username = user.username;
   const email = user.email;
@@ -145,6 +147,18 @@ const UserMenu = ({
             {t('excluded')}
           </p>
         </StyledSection>
+
+        <StyledSection>
+          <h5>{t('export')}</h5>
+          {t('exportInfo')}
+
+          <p>
+            <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
+              {' '}
+              {t('exportLinkText')} <i className="fa fa-download"></i>{' '}
+            </StyledLinkButton>
+          </p>
+        </StyledSection>
       </div>
 
       <StyledLicenseHint>
@@ -179,7 +193,8 @@ UserMenu.propTypes = {
   setLanguage: PropTypes.func,
   setUsername: PropTypes.func,
   setAvatar: PropTypes.func,
-  setEmail: PropTypes.func
+  setEmail: PropTypes.func,
+  roomId: PropTypes.string
 };
 
 export default connect(
@@ -187,7 +202,8 @@ export default connect(
     t: state.translator,
     language: state.language,
     user: state.users[state.userId],
-    userMenuShown: state.userMenuShown
+    userMenuShown: state.userMenuShown,
+    roomId: state.roomId
   }),
   {
     toggleExcluded,

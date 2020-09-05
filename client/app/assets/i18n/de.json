@@ -36,5 +36,8 @@
   "noActiveStories": "Keine Stories im Backlog...",
   "trashEmpty": "Papierkorb ist leer...",
   "save": "Speichern",
-  "cancel": "Verwerfen"
+  "cancel": "Verwerfen",
+  "export": "Exportieren",
+  "exportInfo": "Du kannst die Stories und Schätzungen als json Datei exportieren.",
+  "exportLinkText": "Download"
 }

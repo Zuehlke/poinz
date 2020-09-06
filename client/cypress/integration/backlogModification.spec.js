@@ -8,7 +8,8 @@ it('join new room, add a story with a title and description, modify it', () => {
 
   cy.get(tid('storyAddForm') + ' input[type="text"]').type('My First Test Story');
   cy.get(tid('storyAddForm') + ' textarea').type(
-    'A Nice description:  http://test.jira.com/ISSUE-123'
+    `A Nice description:  http://test.jira.com/ISSUE-123
+    With a linebreak!`
   );
   cy.get(tid('storyAddForm') + ' button').click();
 
@@ -17,16 +18,19 @@ it('join new room, add a story with a title and description, modify it', () => {
 
   cy.get(tid('storySelected') + ' h4').contains('My First Test Story');
   cy.get(tid('storySelected', 'storyText')).contains('A Nice description:');
+  cy.get(tid('storySelected', 'storyText')).contains('linebreak');
   cy.get(tid('storySelected', 'storyText') + ' a'); // dummy jira url in description is correctly rendered as link ( <a ...> tag)
 
   cy.get(tid('storySelected', 'editStoryButton')).click();
   cy.get(tid('storySelected') + ' input[type="text"]').type('Changed Story Title');
-  cy.get(tid('storySelected') + ' textarea').type('...Changed  http://test.jira.com/ISSUE-456');
+  cy.get(tid('storySelected') + ' textarea').clear().type(`Changed  http://test.jira.com/ISSUE-456
+  ... newline`);
   cy.get(tid('storySelected', 'saveStoryChangesButton')).click();
 
   // changes are saved
   cy.get(tid('storySelected') + ' h4').contains('Changed Story Title');
-  cy.get(tid('storySelected', 'storyText')).contains('...Changed');
+  cy.get(tid('storySelected', 'storyText')).contains('Changed');
+  cy.get(tid('storySelected', 'storyText')).contains('... newline');
 });
 
 it('join new room, add a story trash it, restore it, trash it again and delete it', () => {

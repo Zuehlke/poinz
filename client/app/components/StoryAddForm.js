@@ -8,8 +8,8 @@ import {StyledAddForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
 import ValidatedTextarea from './ValidatedTextarea';
 
-const REGEX_STORY_TITLE = /^.{1,100}$/;
-const REGEX_STORY_DESCR = /^.{1,2000}$/;
+const REGEX_STORY_TITLE = /^.{0,100}$/;
+const REGEX_STORY_DESCR = /^.{0,2000}$/;
 
 /**
  * Form for adding stories to the backlog

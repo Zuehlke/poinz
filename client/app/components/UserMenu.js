@@ -17,8 +17,8 @@ import {
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
 
-const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{1,80}$/;
-const EMAIL_REGEX = /^[-a-zA-Z0-9._@*]{1,245}$/; // do not check for correct/valid email regex here. this regex gets validated after every keypress
+const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{0,80}$/;
+const EMAIL_REGEX = /^[-a-zA-Z0-9._@*]{0,245}$/; // do not check for correct/valid email regex here. this regex gets validated after every keypress
 
 /**
  * The user menu allows customizing Poinz
@@ -42,7 +42,7 @@ const UserMenu = ({
   const excluded = user.excluded;
 
   const [myUsername, setMyUsername] = useState(username);
-  const [myEmail, setMyEmail] = useState(email);
+  const [myEmail, setMyEmail] = useState(email || '');
 
   return (
     <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
@@ -169,17 +169,13 @@ const UserMenu = ({
   );
 
   function saveUsername() {
-    // username length minimum is 3 characters
-    if (myUsername && myUsername.length > 2) {
+    if (myUsername && myUsername.length) {
       setUsername(myUsername);
     }
   }
 
   function saveEmail() {
-    // myEmail length minimum is 6 characters
-    if (myEmail && myEmail.length > 5) {
-      setEmail(myEmail);
-    }
+    setEmail(myEmail);
   }
 };
 

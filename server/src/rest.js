@@ -85,6 +85,7 @@ export async function buildRoomExportObject(store, roomId) {
 
   return {
     roomId: room.get('id'),
+    exportedAt: Date.now(),
     stories: Object.values(room.get('stories').toJS()).map((story) =>
       buildStoryExportObject(story, users)
     )

@@ -68,6 +68,7 @@ test('buildRoomExportObject', async () => {
 
   expect(roomExport).toMatchObject({
     roomId: '1b370339-a8f9-411c-8a42-540609a2bcdb',
+    exportedAt: expect.any(Number),
     stories: [
       {
         title: 'second',

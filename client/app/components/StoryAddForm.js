@@ -6,10 +6,9 @@ import {addStory} from '../actions';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
 import {StyledAddForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
-import ValidatedTextarea from './ValidatedTextarea';
 
 const REGEX_STORY_TITLE = /^.{0,100}$/;
-const REGEX_STORY_DESCR = /^.{0,2000}$/;
+const MAX_DESCRIPTION_LENGTH = 2000;
 
 /**
  * Form for adding stories to the backlog
@@ -37,13 +36,12 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
           onEnter={triggerAddAndClearForm}
         />
 
-        <ValidatedTextarea
+        <textarea
           className="pure-input-1"
           rows="1"
           placeholder={t('description')}
-          fieldValue={storyDescr}
-          setFieldValue={setStoryDescr}
-          regexPattern={REGEX_STORY_DESCR}
+          value={storyDescr}
+          onChange={onDescriptionChange}
         />
       </fieldset>
 
@@ -57,6 +55,13 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
       </button>
     </StyledAddForm>
   );
+
+  function onDescriptionChange(ev) {
+    const val = ev.target.value;
+    if (val.length <= MAX_DESCRIPTION_LENGTH) {
+      setStoryDescr(val);
+    }
+  }
 
   function triggerAddAndClearForm() {
     if (storyTitle) {

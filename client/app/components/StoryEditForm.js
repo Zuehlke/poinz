@@ -7,10 +7,9 @@ import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 import {StyledStory} from '../styled/Story';
 import {StyledEditFormButtonGroup, StyledEditForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
-import ValidatedTextarea from './ValidatedTextarea';
 
 const REGEX_STORY_TITLE = /^.{0,100}$/;
-const REGEX_STORY_DESCR = /^.{0,2000}$/;
+const MAX_DESCRIPTION_LENGTH = 2000;
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
@@ -46,13 +45,12 @@ const StoryEditForm = ({
             onEnter={triggerChange}
           />
 
-          <ValidatedTextarea
+          <textarea
             className="pure-input-1"
             rows="1"
             placeholder={t('description')}
-            fieldValue={storyDescr}
-            setFieldValue={setStoryDescr}
-            regexPattern={REGEX_STORY_DESCR}
+            value={storyDescr}
+            onChange={onDescriptionChange}
           />
         </fieldset>
 
@@ -60,6 +58,13 @@ const StoryEditForm = ({
       </StyledEditForm>
     </StyledStory>
   );
+
+  function onDescriptionChange(ev) {
+    const val = ev.target.value;
+    if (val.length <= MAX_DESCRIPTION_LENGTH) {
+      setStoryDescr(val);
+    }
+  }
 
   function triggerChange() {
     if (storyTitle) {

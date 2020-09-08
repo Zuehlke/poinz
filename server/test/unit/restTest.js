@@ -56,6 +56,14 @@ test('buildRoomExportObject', async () => {
         },
         createdAt: 1599237066010,
         revealed: true
+      },
+      'b3f1cf71-9d04-4e14-9785-696401552561': {
+        title: 'trashed',
+        description: '',
+        id: 'b3f1cf71-9d04-4e14-9785-696401552561',
+        estimations: {},
+        createdAt: 1599544313982,
+        trashed: true
       }
     },
     created: 1599237063876,
@@ -98,6 +106,7 @@ test('buildRoomExportObject', async () => {
           }
         ]
       }
+      // export must not include the "trashed" story
     ]
   });
 });

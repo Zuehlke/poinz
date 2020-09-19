@@ -6,6 +6,7 @@ import {showTrash, hideTrash} from '../actions';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
 import {StyledBacklog} from '../styled/Backlog';
+import StoryAddForm from './StoryAddForm';
 
 /**
  * The backlog contains two display modes:  active and trash
@@ -34,6 +35,7 @@ const Backlog = ({
       />
 
       {trashShown && <BacklogTrash />}
+      {!trashShown && <StoryAddForm />}
       {!trashShown && <BacklogActive />}
     </StyledBacklog>
   );

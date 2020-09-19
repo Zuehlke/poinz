@@ -6,6 +6,13 @@ import appConfig from '../services/appConfig';
 import {formatDateTime, secondsToDaysHoursMinutes, timeAgo} from '../services/timeUtil';
 import {fetchStatus} from '../actions';
 import {StyledAppStatus, StyledRoomsList} from '../styled/AppStatus';
+import {
+  StyledPoinzLogo,
+  StyledQuickMenuButton,
+  StyledTopBar,
+  StyledTopLeft,
+  StyledTopRight
+} from '../styled/TopBar';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
@@ -30,27 +37,30 @@ class AppStatus extends React.Component {
 
     const uptime = secondsToDaysHoursMinutes(appStatus.uptime);
 
-    const sortedActiveRooms = appStatus.rooms
-      .filter((room) => room.userCount > room.userCountDisconnected)
-      .sort(roomComparator);
-
-    const sortedInActiveRooms = appStatus.rooms
-      .filter((room) => room.userCount <= room.userCountDisconnected)
-      .sort(roomComparator);
+    const sortedRooms = appStatus.rooms.sort(roomComparator);
 
     return (
       <StyledAppStatus>
-        <div className="top-bar">
-          <div className="left-logo-container">
-            <div className="poinz-logo">PoinZ</div>
-          </div>
-        </div>
+        <StyledTopBar data-testid="topBar">
+          <StyledTopLeft>
+            <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
+          </StyledTopLeft>
 
-        <button className="pure-button pure-button-primary" onClick={fetchStatus}>
-          <i className="fa fa-refresh"></i>
-        </button>
+          <StyledTopRight>
+            <StyledQuickMenuButton
+              data-testid="reloadDataButton"
+              className="clickable pure-button pure-button-primary"
+              onClick={fetchStatus}
+            >
+              <i className="fa fa-refresh"></i>
+            </StyledQuickMenuButton>
+            <StyledQuickMenuButton className="clickable pure-button pure-button-primary" href="/">
+              <i className="fa fa-sign-out"></i>
+            </StyledQuickMenuButton>
+          </StyledTopRight>
+        </StyledTopBar>
 
-        <h4>PoinZ Application Status</h4>
+        <h2>PoinZ Application Status</h2>
 
         <p>
           Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
@@ -58,19 +68,11 @@ class AppStatus extends React.Component {
         <p>Uptime: {uptime}</p>
         <p>Total rooms: {appStatus.roomCount}</p>
 
-        <h5>Active Rooms</h5>
+        <h3>Rooms</h3>
 
         <StyledRoomsList>
           <TableHeaders />
-          {sortedActiveRooms.map((room, index) => (
-            <RoomItem key={index} index={index} room={room} />
-          ))}
-        </StyledRoomsList>
-
-        <h5>Inactive Rooms</h5>
-        <StyledRoomsList>
-          <TableHeaders />
-          {sortedInActiveRooms.map((room, index) => (
+          {sortedRooms.map((room, index) => (
             <RoomItem key={index} room={room} />
           ))}
         </StyledRoomsList>
@@ -99,8 +101,8 @@ export default connect(
 
 const TableHeaders = () => (
   <li className="headers">
-    <div>Active users</div>
-    <div>Disconnected users</div>
+    <div>Users</div>
+    <div>Active</div>
     <div>Stories</div>
     <div>Created</div>
     <div>Last Activity</div>
@@ -110,12 +112,8 @@ const TableHeaders = () => (
 
 const RoomItem = ({room}) => (
   <li>
-    <div>
-      {room.userCount - room.userCountDisconnected} / {room.userCount}
-    </div>
-    <div>
-      {room.userCountDisconnected} / {room.userCount}
-    </div>
+    <div>{room.userCount}</div>
+    <div>{room.userCount - room.userCountDisconnected}</div>
     <div>{room.storyCount}</div>
     <div title={formatDateTime(room.created)}>{timeAgo(room.created)}</div>
     <div title={formatDateTime(room.lastActivity)}>{timeAgo(room.lastActivity)}</div>

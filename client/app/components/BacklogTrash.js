@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
-import {StyledBacklogInfoText, StyledStories} from '../styled/Backlog';
+import {StyledBacklogInfoText, StyledStoriesScrolling} from '../styled/Backlog';
 
 /**
  *
@@ -15,11 +15,11 @@ const BacklogTrash = ({t, stories}) => {
   return (
     <React.Fragment>
       {hasTrashedStories && (
-        <StyledStories>
+        <StyledStoriesScrolling>
           {trashedStories.map((story) => (
             <TrashedStory story={story} key={story.id} />
           ))}
-        </StyledStories>
+        </StyledStoriesScrolling>
       )}
       {!hasTrashedStories && <StyledBacklogInfoText>{t('trashEmpty')}</StyledBacklogInfoText>}
     </React.Fragment>

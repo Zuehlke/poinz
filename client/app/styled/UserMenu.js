@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {COLOR_BACKGROUND_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './colors';
+import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './colors';
 import {RIGHT_MENU_WIDTH} from './dimensions';
 
 export const StyledUserMenu = styled.div`
@@ -91,5 +91,19 @@ export const StyledMiniAvatar = styled.img`
 
   &:hover {
     box-shadow: inset 0 82px 15px -60px rgba(194, 194, 194, 0.65);
+  }
+`;
+
+export const StyledLinkButton = styled.a`
+  padding: 0.5em 1em;
+  box-sizing: border-box;
+  color: white;
+  border-radius: 2px;
+  background: ${COLOR_BLUE};
+  text-decoration: none;
+  font-size: 100%;
+
+  &:hover {
+    background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   }
 `;

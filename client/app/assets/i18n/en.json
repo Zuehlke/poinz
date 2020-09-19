@@ -36,5 +36,8 @@
   "noActiveStories": "There are currently no stories in the estimation backlog...",
   "trashEmpty": "Trash is empty...",
   "save": "Save",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "export": "Export",
+  "exportInfo": "You can export the stories and estimations in your room as json file.",
+  "exportLinkText": "Download"
 }

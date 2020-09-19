@@ -90,7 +90,7 @@ describe('websocket endpoint', () => {
 });
 
 describe('REST endpoint', () => {
-  test('should return all rooms ', (done) => {
+  test('should return backend status', (done) => {
     httpGetJSON(
       {
         host: 'localhost',
@@ -106,6 +106,26 @@ describe('REST endpoint', () => {
         expect(statusCode).toBe(200);
         expect(body.roomCount).toBeDefined();
         expect(body.rooms.length).toBeDefined();
+        done();
+      }
+    );
+  });
+
+  test('should return 404 if room does not exist', (done) => {
+    httpGetJSON(
+      {
+        host: 'localhost',
+        port: 3000,
+        path: '/api/room/1234',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      (err, statusCode, body) => {
+        expect(err).toBeFalsy();
+        expect(statusCode).toBe(404);
+        expect(body.message).toBeDefined();
         done();
       }
     );

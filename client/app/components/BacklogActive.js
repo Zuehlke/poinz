@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
-import StoryAddForm from './StoryAddForm';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 
@@ -43,8 +42,6 @@ const BacklogActive = ({t, stories, importCsvFile}) => {
         isAccept={isDragAccept}
         isReject={isDragReject}
       ></StyledFileImportDropZoneOverlay>
-
-      <StoryAddForm />
 
       {hasActiveStories && (
         <StyledStories>

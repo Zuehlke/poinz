@@ -12,10 +12,13 @@ export const StyledBacklog = styled.div`
   left: ${({shown}) => (shown ? LEFT_MENU_WIDTH + 'px' : '0')};
   bottom: 0;
   z-index: 1000;
-  overflow-y: auto;
   box-sizing: border-box;
   padding-top: 44px;
   background: ${COLOR_BACKGROUND_GREY};
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
 
   @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
     left: ${LEFT_MENU_WIDTH}px;
@@ -33,6 +36,10 @@ export const StyledBacklog = styled.div`
 
 export const StyledStories = styled.div`
   margin: 16px 8px 0 8px;
+`;
+
+export const StyledStoriesScrolling = styled(StyledStories)`
+  overflow-y: auto;
 `;
 
 export const StyledEditForm = styled.form`
@@ -74,7 +81,8 @@ export const StyledBacklogInfoText = styled.div`
 export const StyledFileImportDropZone = styled.div`
   outline: none;
   border: none;
-  min-height: 90%;
+  overflow: auto;
+  flex-grow: 1;
 `;
 
 const dzOverlayAcceptBorder = '4px dashed rgba(0, 153, 204, 0.25)';

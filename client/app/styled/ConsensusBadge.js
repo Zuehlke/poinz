@@ -9,6 +9,7 @@ export const StyledConsensusBadge = styled.div`
   height: 24px;
   border-radius: 50%;
   margin-left: 8px;
+  flex-shrink: 0;
   background: ${({cardColor}) => (cardColor ? cardColor : COLOR_LIGHTER_GREY)};
   justify-content: center;
   align-items: center;

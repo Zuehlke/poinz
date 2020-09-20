@@ -10,6 +10,7 @@
  */
 const joinRoomCommandHandler = {
   canCreateRoom: true,
+  skipUserIdRoomCheck: true,
   fn: (room, command, userId) => {
     if (room.get('pristine')) {
       joinNewRoom(room, command, userId);

@@ -47,26 +47,4 @@ describe('preconditions', () => {
       'Command validation Error during "setAvatar": Invalid type: string (expected number) in /payload/avatar'
     );
   });
-
-  test('Should fail, if userId does not match user in room', async () => {
-    const {processor, roomId} = await prepOneUserInOneRoom();
-    const commandId = uuid();
-    const nonMatchingUserId = uuid();
-
-    return expect(
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'setAvatar',
-          payload: {
-            avatar: 1
-          }
-        },
-        nonMatchingUserId
-      )
-    ).rejects.toThrow(
-      /Precondition Error during "setAvatar": Given user .* does not belong to room .*/
-    );
-  });
 });

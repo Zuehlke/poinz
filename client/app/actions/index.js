@@ -2,7 +2,6 @@ import {v4 as uuid} from 'uuid';
 import axios from 'axios';
 import log from 'loglevel';
 
-import hub from '../services/hub';
 import history from '../services/getBrowserHistory';
 import appConfig from '../services/appConfig';
 
@@ -28,7 +27,7 @@ import readDroppedFile from '../services/readDroppedFile';
 /**
  * store current pathname in our redux store, join or leave room if necessary
  */
-export const locationChanged = (pathname) => (dispatch, getState) => {
+export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
 
   if (
@@ -37,16 +36,13 @@ export const locationChanged = (pathname) => (dispatch, getState) => {
     pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER &&
     !state.roomId
   ) {
-    joinRoom(pathname.substring(1))(dispatch, getState);
+    joinRoom(pathname.substring(1))(dispatch, getState, sendCommand);
   } else if (!pathname || (pathname.length < 2 && state.userId && state.roomId)) {
-    hub.sendCommand(
-      {
-        name: 'leaveRoom',
-        roomId: state.roomId,
-        payload: {}
-      },
-      dispatch
-    );
+    sendCommand({
+      name: 'leaveRoom',
+      roomId: state.roomId,
+      payload: {}
+    });
   }
 
   dispatch({
@@ -89,7 +85,7 @@ export const eventReceived = (event) => (dispatch) => {
  * They produce commands and pass them to the hub for sending.
  */
 
-export const joinRoom = (roomId) => (dispatch, getState) => {
+export const joinRoom = (roomId) => (dispatch, getState, sendCommand) => {
   const normalizedRoomId = roomId ? roomId.toLowerCase() : uuid();
 
   const joinCommandPayload = {};
@@ -115,43 +111,37 @@ export const joinRoom = (roomId) => (dispatch, getState) => {
     joinCommand.userId = state.presetUserId;
   }
 
-  hub.sendCommand(joinCommand, dispatch);
+  sendCommand(joinCommand);
 };
 
-export const addStory = (storyTitle, storyDescription) => (dispatch, getState) => {
+export const addStory = (storyTitle, storyDescription) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'addStory',
-      roomId: state.roomId,
-      payload: {
-        title: storyTitle,
-        description: storyDescription
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'addStory',
+    roomId: state.roomId,
+    payload: {
+      title: storyTitle,
+      description: storyDescription
+    }
+  });
 };
 
-export const selectStory = (storyId) => (dispatch, getState) => {
+export const selectStory = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
   if (state.selectedStory === storyId) {
     return;
   }
 
-  hub.sendCommand(
-    {
-      name: 'selectStory',
-      roomId: state.roomId,
-      payload: {
-        storyId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'selectStory',
+    roomId: state.roomId,
+    payload: {
+      storyId
+    }
+  });
 };
 
-export const giveStoryEstimate = (storyId, value) => (dispatch, getState) => {
+export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCommand) => {
   const state = getState();
 
   const command = {
@@ -169,103 +159,82 @@ export const giveStoryEstimate = (storyId, value) => (dispatch, getState) => {
     command.name = 'giveStoryEstimate';
   }
 
-  hub.sendCommand(command, dispatch);
+  sendCommand(command);
 };
 
-export const newEstimationRound = (storyId) => (dispatch, getState) => {
+export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'newEstimationRound',
-      roomId: state.roomId,
-      payload: {
-        storyId: storyId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'newEstimationRound',
+    roomId: state.roomId,
+    payload: {
+      storyId: storyId
+    }
+  });
 };
 
-export const reveal = (storyId) => (dispatch, getState) => {
+export const reveal = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'reveal',
-      roomId: state.roomId,
-      payload: {
-        storyId: storyId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'reveal',
+    roomId: state.roomId,
+    payload: {
+      storyId: storyId
+    }
+  });
 };
 
-export const setUsername = (username) => (dispatch, getState) => {
+export const setUsername = (username) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'setUsername',
-      roomId: state.roomId,
-      payload: {
-        username: username
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'setUsername',
+    roomId: state.roomId,
+    payload: {
+      username: username
+    }
+  });
 };
 
-export const setEmail = (email) => (dispatch, getState) => {
+export const setEmail = (email) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'setEmail',
-      roomId: state.roomId,
-      payload: {
-        email: email
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'setEmail',
+    roomId: state.roomId,
+    payload: {
+      email: email
+    }
+  });
 };
 
-export const setAvatar = (avatar) => (dispatch, getState) => {
+export const setAvatar = (avatar) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'setAvatar',
-      roomId: state.roomId,
-      payload: {
-        avatar
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'setAvatar',
+    roomId: state.roomId,
+    payload: {
+      avatar
+    }
+  });
 };
 
-export const toggleExcluded = () => (dispatch, getState) => {
+export const toggleExcluded = () => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'toggleExclude',
-      roomId: state.roomId,
-      payload: {}
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'toggleExclude',
+    roomId: state.roomId,
+    payload: {}
+  });
 };
 
-export const kick = (userId) => (dispatch, getState) => {
+export const kick = (userId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'kick',
-      roomId: state.roomId,
-      payload: {
-        userId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'kick',
+    roomId: state.roomId,
+    payload: {
+      userId
+    }
+  });
 };
 
 export const leaveRoom = () => () => {
@@ -274,77 +243,62 @@ export const leaveRoom = () => () => {
   history.push('/');
 };
 
-export const changeStory = (storyId, title, description) => (dispatch, getState) => {
+export const changeStory = (storyId, title, description) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'changeStory',
-      roomId: state.roomId,
-      payload: {
-        storyId,
-        title,
-        description
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'changeStory',
+    roomId: state.roomId,
+    payload: {
+      storyId,
+      title,
+      description
+    }
+  });
 };
 
-export const trashStory = (storyId) => (dispatch, getState) => {
+export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'trashStory',
-      roomId: state.roomId,
-      payload: {
-        storyId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'trashStory',
+    roomId: state.roomId,
+    payload: {
+      storyId
+    }
+  });
 };
 
-export const restoreStory = (storyId) => (dispatch, getState) => {
+export const restoreStory = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'restoreStory',
-      roomId: state.roomId,
-      payload: {
-        storyId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'restoreStory',
+    roomId: state.roomId,
+    payload: {
+      storyId
+    }
+  });
 };
 
-export const deleteStory = (storyId) => (dispatch, getState) => {
+export const deleteStory = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  hub.sendCommand(
-    {
-      name: 'deleteStory',
-      roomId: state.roomId,
-      payload: {
-        storyId
-      }
-    },
-    dispatch
-  );
+  sendCommand({
+    name: 'deleteStory',
+    roomId: state.roomId,
+    payload: {
+      storyId
+    }
+  });
 };
 
-export const importCsvFile = (file) => (dispatch, getState) => {
+export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
   readDroppedFile(file).then((content) => {
     const state = getState();
-    hub.sendCommand(
-      {
-        name: 'importStories',
-        roomId: state.roomId,
-        payload: {
-          data: content
-        }
-      },
-      dispatch
-    );
+    sendCommand({
+      name: 'importStories',
+      roomId: state.roomId,
+      payload: {
+        data: content
+      }
+    });
   });
 };
 

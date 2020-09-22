@@ -18,10 +18,6 @@
             },
             "avatar": {
               "type": "number"
-            },
-            "userId": {
-              "type": "string",
-              "format": "uuidv4"
             }
           },
           "additionalProperties": false

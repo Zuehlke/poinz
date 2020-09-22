@@ -27,7 +27,8 @@ test('handle incoming command without errors', () => {
 
   const socket = getMockSocketObject();
   const dummyCommand = {
-    id: uuid()
+    id: uuid(),
+    userId: uuid()
   };
   return socketManager.handleIncomingCommand(socket, dummyCommand);
 });
@@ -49,7 +50,8 @@ test('registering new socket, new user, new room successfully', async () => {
 
   const socket = getMockSocketObject();
   const dummyCommand = {
-    id: uuid()
+    id: uuid(),
+    userId: uuid()
   };
   await socketManager.handleIncomingCommand(socket, dummyCommand);
 
@@ -69,11 +71,11 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
   );
 
   const socket = getMockSocketObject();
-  const dummyCommand = {
-    id: uuid()
-  };
-
   const userId = uuid();
+  const dummyCommand = {
+    id: uuid(),
+    userId
+  };
 
   mockCmdProcessor.mockReturnValueOnce(
     Promise.resolve({

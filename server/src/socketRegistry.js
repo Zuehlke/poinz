@@ -68,7 +68,7 @@ export default function socketRegistryFactory(removeSocketFromRoomByIds) {
   }
 
   /**
-   * will remove all mappings
+   * will remove all mappings that match given userId and roomId
    * @param userId
    * @param roomId
    */

@@ -47,6 +47,10 @@ inherits(Hub, EventEmitter);
 Hub.prototype.sendCommand = function sendCommand(command, dispatch) {
   command.id = uuid();
 
+  if (!command.userId) {
+    command.userId = this.getUserId();
+  }
+
   this.io.emit('command', command);
 
   debugSentCommand(command);
@@ -55,6 +59,14 @@ Hub.prototype.sendCommand = function sendCommand(command, dispatch) {
     type: COMMAND_SENT,
     command
   });
+};
+
+Hub.prototype.getUserId = function () {
+  return undefined;
+};
+
+Hub.prototype.registerUserIdCb = function registerUserIdCb(getUserIdCb) {
+  this.getUserId = getUserIdCb;
 };
 
 const hubInstance = new Hub();

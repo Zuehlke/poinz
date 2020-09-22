@@ -32,5 +32,8 @@ export default function configureStore(initialState) {
   // Backend events that are received by the hub are dispatched to our redux store
   hub.on('event', (event) => boundActions.eventReceived(event));
 
+  // hub needs access to the userId from our redux state
+  hub.registerUserIdCb(() => store.getState().userId);
+
   return store;
 }

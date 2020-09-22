@@ -95,9 +95,6 @@ export const joinRoom = (roomId) => (dispatch, getState) => {
   const joinCommandPayload = {};
   const state = getState();
 
-  if (state.presetUserId) {
-    joinCommandPayload.userId = state.presetUserId;
-  }
   if (state.presetUsername) {
     joinCommandPayload.username = state.presetUsername;
   }
@@ -108,14 +105,17 @@ export const joinRoom = (roomId) => (dispatch, getState) => {
     joinCommandPayload.avatar = state.presetAvatar;
   }
 
-  hub.sendCommand(
-    {
-      name: 'joinRoom',
-      roomId: normalizedRoomId,
-      payload: joinCommandPayload
-    },
-    dispatch
-  );
+  const joinCommand = {
+    name: 'joinRoom',
+    roomId: normalizedRoomId,
+    payload: joinCommandPayload
+  };
+
+  if (state.presetUserId) {
+    joinCommand.userId = state.presetUserId;
+  }
+
+  hub.sendCommand(joinCommand, dispatch);
 };
 
 export const addStory = (storyTitle, storyDescription) => (dispatch, getState) => {

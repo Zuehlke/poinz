@@ -24,20 +24,19 @@ export default function socketManagerFactory(
   };
 
   async function handleIncomingCommand(socket, msg) {
-    const matchingUserId = getUserIdForMessage(socket.id, msg);
-
     try {
-      const {producedEvents} = await commandProcessor(msg, matchingUserId);
+      const userId = getUserIdForMessage(socket.id, msg);
+      const {producedEvents} = await commandProcessor(msg, userId);
 
       if (!producedEvents || producedEvents.length < 1) {
         return;
       }
 
-      updateSocketRegistryJoining(matchingUserId, producedEvents, socket);
+      updateSocketRegistryJoining(userId, producedEvents, socket);
 
       sendEvents(producedEvents, producedEvents[0].roomId);
 
-      updateSocketRegistryLeaving(matchingUserId, producedEvents, socket);
+      updateSocketRegistryLeaving(userId, producedEvents, socket);
     } catch (commandProcessingError) {
       handleCommandProcessingError(commandProcessingError, msg, socket);
     }
@@ -54,15 +53,13 @@ export default function socketManagerFactory(
     const leftRoomEvent = getLeftRoomEvent(producedEvents);
     if (leftRoomEvent) {
       registry.removeSocketMapping(socket.id, leftRoomEvent.userId, leftRoomEvent.roomId);
-    } else {
-      const kickedRoomEvent = getKickedRoomEvent(producedEvents);
-      if (kickedRoomEvent) {
-        // find sockets that match room and userId ( for the kicked user, not the kicking user )
-        registry.removeMatchingSocketMappings(
-          kickedRoomEvent.payload.userId,
-          kickedRoomEvent.roomId
-        );
-      }
+      return;
+    }
+
+    const kickedRoomEvent = getKickedRoomEvent(producedEvents);
+    if (kickedRoomEvent) {
+      // find and remove sockets that match room and userId (for the kicked user, not the kicking user)
+      registry.removeMatchingSocketMappings(kickedRoomEvent.payload.userId, kickedRoomEvent.roomId);
     }
   }
 
@@ -88,33 +85,25 @@ export default function socketManagerFactory(
   }
 
   /**
-   * lookup of already set userId for given socket.
-   * if no match found, check if it is the special case of a "joinRoom" command.
-   * this is the only command where the client can preset a userId.
-   * If it is present, use it, otherwise generate a new unique userId.
+   * By default, the message contains the userId.
+   * only for "joinRoom" the userId can be undefined / not set, then we generate a new userId here
    *
    * @param {string} socketId
    * @param msg
    * @return {string} the userId
    */
   function getUserIdForMessage(socketId, msg) {
-    const mapping = registry.getMapping(socketId);
-    if (mapping && mapping.userId) {
-      return mapping.userId;
+    if (msg.userId) {
+      // message provides userId, this is given for most commands.
+      return msg.userId;
     }
 
-    if (msg.name === 'joinRoom' && msg.payload && msg.payload.userId) {
-      return msg.payload.userId;
+    if (msg.name === 'joinRoom') {
+      // if no userId is given, it must be a joinRoom command. this is the only command that allows that.
+      return uuid();
     }
 
-    const newUserId = uuid();
-
-    if (msg.name !== 'joinRoom') {
-      // in case of joinRoom it's expected.  warn if this happens with any other command
-      LOGGER.warn(`New userId ${newUserId} generated for socket ${socketId}. msg.name=${msg.name}`);
-    }
-
-    return newUserId;
+    throw new Error(`Command must provide userId. msg.name=${msg.name}`);
   }
 
   /**
@@ -155,7 +144,7 @@ export default function socketManagerFactory(
    * a "leaveRoom" command that will mark the user.
    */
   async function onDisconnect(socket) {
-    // socket.rooms is at this moment already emptied
+    // socket.rooms is at this moment already emptied (by socketIO)
     const mapping = registry.getMapping(socket.id);
 
     if (!mapping) {
@@ -171,6 +160,7 @@ export default function socketManagerFactory(
     );
 
     if (registry.isLastSocketForUserId(userId)) {
+      // we "manually" trigger a "leaveRoom" command
       const leaveRoomCommand = {
         id: uuid(),
         roomId: roomId,

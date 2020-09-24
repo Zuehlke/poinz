@@ -17,6 +17,12 @@ it('join room, open user menu and change settings', () => {
   cy.get(tid('whoamiSimple')).contains('changed-username');
   cy.get(tid('users')).contains('changed-username');
 
+  cy.get(tid('usernameInput')).type('{selectall}username whitespace (allowed)');
+  cy.get(tid('saveUsernameButton')).click();
+
+  cy.get(tid('whoamiSimple')).contains('username whitespace (allowed)');
+  cy.get(tid('users')).contains('username whitespace (allowed)');
+
   // -- switch language
   cy.get(tid('userMenu') + ' #language-selector-de').click();
   cy.get(tid('userMenu')).contains('Benutzername');

@@ -6,9 +6,7 @@ import {addStory} from '../actions';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
 import {StyledAddForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
-
-const REGEX_STORY_TITLE = /^.{0,100}$/;
-const MAX_DESCRIPTION_LENGTH = 2000;
+import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../services/frontendInputValidation';
 
 /**
  * Form for adding stories to the backlog
@@ -32,7 +30,7 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
           placeholder={t('storyTitle')}
           fieldValue={storyTitle}
           setFieldValue={setStoryTitle}
-          regexPattern={REGEX_STORY_TITLE}
+          regexPattern={STORY_TITLE_REGEX}
           onEnter={triggerAddAndClearForm}
         />
 
@@ -58,7 +56,7 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
 
   function onDescriptionChange(ev) {
     const val = ev.target.value;
-    if (val.length <= MAX_DESCRIPTION_LENGTH) {
+    if (val.length <= STORY_DESCRIPTION_MAX_LENGTH) {
       setStoryDescr(val);
     }
   }

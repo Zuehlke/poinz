@@ -11,6 +11,7 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from '../styled/Landing';
+import {USERNAME_REGEX} from '../services/frontendInputValidation';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
@@ -60,7 +61,6 @@ const WhoAreYou = ({t, setUsername}) => {
   }
 
   function onUsernameChange(ev) {
-    const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{1,80}$/;
     const usernameValue = ev.target.value;
     if (USERNAME_REGEX.test(usernameValue)) {
       setMyUsername(usernameValue);

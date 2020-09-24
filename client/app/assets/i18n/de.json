@@ -31,6 +31,7 @@
   "excluded": "Von Schätzungen ausgeschlossen",
   "backlog": "Backlog",
   "delete": "Löschen",
+  "edit": "Bearbeiten",
   "restore": "Wiederherstellen",
   "trash": "Papierkorb",
   "noActiveStories": "Keine Stories im Backlog...",
@@ -39,5 +40,6 @@
   "cancel": "Verwerfen",
   "export": "Exportieren",
   "exportInfo": "Du kannst die Stories und Schätzungen als json Datei exportieren.",
-  "exportLinkText": "Download"
+  "exportLinkText": "Download",
+  "kickUser": "Benutzer rauswerfen"
 }

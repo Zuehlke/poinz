@@ -5,12 +5,20 @@ import PropTypes from 'prop-types';
 import avatarIcons from '../assets/avatars';
 import {StyledAvatar} from '../styled/Avatar';
 
-const Avatar = ({user, isOwn, shaded}) => {
+const Avatar = ({user, isOwn, shaded, onClick}) => {
   const avatarImageSource = user.email
     ? createGravatarUrl(user.email)
     : avatarIcons[user.avatar || 0];
 
-  return <StyledAvatar className="avatar" src={avatarImageSource} isOwn={isOwn} shaded={shaded} />;
+  return (
+    <StyledAvatar
+      className="avatar"
+      src={avatarImageSource}
+      isOwn={isOwn}
+      shaded={shaded}
+      onClick={onClick}
+    />
+  );
 };
 
 function createGravatarUrl(email) {
@@ -21,7 +29,8 @@ function createGravatarUrl(email) {
 Avatar.propTypes = {
   user: PropTypes.object,
   isOwn: PropTypes.bool,
-  shaded: PropTypes.bool
+  shaded: PropTypes.bool,
+  onClick: PropTypes.func
 };
 
 export default Avatar;

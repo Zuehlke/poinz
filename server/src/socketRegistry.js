@@ -3,23 +3,24 @@ import getLogger from './getLogger';
 const LOGGER = getLogger('socketRegistry');
 
 /**
- * we need do keep the mapping of a socket to userId,
- * so that we can retrieve the userId for any message (command) sent on this socket.
  *
- * we need do keep the mapping of a socket to room,
- * so that we can produce "user left" events on socket disconnect.
+ * The socketRegistry maps socketIds to userId & RoomId
  *
- * maps socket IDs  to userIds and roomIds
+ * socketId -> [userId,RoomId]
  *
- * @param {function} removeSocketFromRoomByIds
+ *
+ * we need do keep the mapping of a socket to userId and roomId
+ * so that we can remove users from rooms if the socket disconnects.
+ *
+ *
  */
-export default function socketRegistryFactory(removeSocketFromRoomByIds) {
+export default function socketRegistryFactory() {
   const registry = {};
 
   return {
     registerSocketMapping,
     removeSocketMapping,
-    removeMatchingSocketMappings,
+    removeAllMatchingSocketMappings,
     isLastSocketForUserId,
     getMapping
   };
@@ -28,57 +29,48 @@ export default function socketRegistryFactory(removeSocketFromRoomByIds) {
     return registry[socketId];
   }
 
-  function registerSocketMapping(socket, userId, roomId) {
-    LOGGER.debug(`Registering socket ${socket.id} : user ${userId} and room ${roomId}`);
+  function registerSocketMapping(socketId, userId, roomId) {
+    LOGGER.debug(`Registering socket ${socketId} : user ${userId} and room ${roomId}`);
 
-    if (registry[socket.id]) {
-      LOGGER.warn(`Overriding old mapping for socket ${socket.id}`);
+    if (registry[socketId]) {
+      LOGGER.warn(`Overriding old mapping for socket ${socketId}`);
     }
-    registry[socket.id] = {
+
+    registry[socketId] = {
       userId,
       roomId
     };
-
-    // also join sockets together in a socket.io "room" , so that we can emit messages to all sockets in that room
-    socket.join(roomId);
   }
 
-  function removeSocketMapping(socketId, userId, roomId) {
-    if (!registry[socketId]) {
+  function removeSocketMapping(socketId) {
+    const mapping = getMapping(socketId);
+    if (!mapping) {
       return;
     }
 
-    LOGGER.debug(`Removing mapping: socket ${socketId} -> [user ${userId}, room ${roomId}]`);
-
-    if (registry[socketId].userId !== userId) {
-      LOGGER.warn(
-        `socket to userId mapping mismatch:    socket ${socketId} maps to user ${registry[socketId].userId}.   expected user ${userId}`
-      );
-    }
-    if (registry[socketId].roomId !== roomId) {
-      LOGGER.warn(
-        `socket to roomId mapping mismatch:    socket ${socketId} maps to room ${registry[socketId].roomId}.   expected room ${roomId}`
-      );
-    }
-
-    // also remove socket.io sockets from socket.io "room" , so that they no longer receive events from the room, they left (or were kicked from)
-    removeSocketFromRoomByIds(socketId, roomId);
+    LOGGER.debug(
+      `Removing mapping: socket ${socketId} -> [user ${mapping.userId}, room ${mapping.roomId}]`
+    );
 
     delete registry[socketId];
   }
 
   /**
    * will remove all mappings that match given userId and roomId
+   *
    * @param userId
    * @param roomId
+   * @return {string[]} Array of removed socketIds
    */
-  function removeMatchingSocketMappings(userId, roomId) {
+  function removeAllMatchingSocketMappings(userId, roomId) {
     LOGGER.debug(`Removing all mappings for  user ${userId}, room ${roomId}`);
     const matchingSocketEntries = Object.entries(registry).filter(
       (entry) => entry[1].userId === userId && entry[1].roomId === roomId
     );
 
     matchingSocketEntries.forEach((entry) => removeSocketMapping(entry[0], userId, roomId));
+
+    return matchingSocketEntries.map((e) => e[0]);
   }
 
   function isLastSocketForUserId(userId) {

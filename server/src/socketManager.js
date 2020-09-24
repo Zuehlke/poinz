@@ -16,7 +16,7 @@ export default function socketManagerFactory(
   sendEventToRoom,
   removeSocketFromRoomByIds
 ) {
-  const registry = socketRegistryFactory(removeSocketFromRoomByIds);
+  const registry = socketRegistryFactory();
 
   return {
     handleIncomingCommand,
@@ -36,7 +36,8 @@ export default function socketManagerFactory(
 
       sendEvents(producedEvents, producedEvents[0].roomId);
 
-      updateSocketRegistryLeaving(userId, producedEvents, socket);
+      updateSocketRegistryLeavingOrConnectionLost(userId, producedEvents, socket);
+      updateSocketRegistryKicking(userId, producedEvents);
     } catch (commandProcessingError) {
       handleCommandProcessingError(commandProcessingError, msg, socket);
     }
@@ -45,21 +46,35 @@ export default function socketManagerFactory(
   function updateSocketRegistryJoining(userId, producedEvents, socket) {
     const joinedRoomEvent = getJoinedRoomEvent(producedEvents);
     if (joinedRoomEvent) {
-      registry.registerSocketMapping(socket, userId, joinedRoomEvent.roomId);
+      registry.registerSocketMapping(socket.id, userId, joinedRoomEvent.roomId);
+
+      // also join sockets together in a socket.io "room" , so that we can emit messages to all sockets in that room
+      socket.join(joinedRoomEvent.roomId);
     }
   }
 
-  function updateSocketRegistryLeaving(userId, producedEvents, socket) {
-    const leftRoomEvent = getLeftRoomEvent(producedEvents);
-    if (leftRoomEvent) {
-      registry.removeSocketMapping(socket.id, leftRoomEvent.userId, leftRoomEvent.roomId);
-      return;
+  function updateSocketRegistryLeavingOrConnectionLost(userId, producedEvents, socket) {
+    const leftRoomOrConnectionLostEvent = getLeftRoomOrConnectionLostEvent(producedEvents);
+    if (leftRoomOrConnectionLostEvent) {
+      registry.removeSocketMapping(
+        socket.id,
+        leftRoomOrConnectionLostEvent.userId,
+        leftRoomOrConnectionLostEvent.roomId
+      );
+      removeSocketFromRoomByIds(socket.id, leftRoomOrConnectionLostEvent.roomId);
     }
+  }
 
+  function updateSocketRegistryKicking(userId, producedEvents) {
     const kickedRoomEvent = getKickedRoomEvent(producedEvents);
     if (kickedRoomEvent) {
       // find and remove sockets that match room and userId (for the kicked user, not the kicking user)
-      registry.removeMatchingSocketMappings(kickedRoomEvent.payload.userId, kickedRoomEvent.roomId);
+      // user could have opened multiple sockets, remove all that match userId and roomId
+      const socketIds = registry.removeAllMatchingSocketMappings(
+        kickedRoomEvent.payload.userId,
+        kickedRoomEvent.roomId
+      );
+      socketIds.forEach((socketId) => removeSocketFromRoomByIds(socketId, kickedRoomEvent.roomId));
     }
   }
 
@@ -70,11 +85,11 @@ export default function socketManagerFactory(
     return producedEvents.find((e) => e.name === 'joinedRoom');
   }
 
-  function getLeftRoomEvent(producedEvents) {
+  function getLeftRoomOrConnectionLostEvent(producedEvents) {
     if (!producedEvents) {
       return undefined;
     }
-    return producedEvents.find((e) => e.name === 'leftRoom');
+    return producedEvents.find((e) => e.name === 'leftRoom' || e.name === 'connectionLost');
   }
 
   function getKickedRoomEvent(producedEvents) {
@@ -160,13 +175,14 @@ export default function socketManagerFactory(
     );
 
     if (registry.isLastSocketForUserId(userId)) {
-      // we "manually" trigger a "leaveRoom" command
+      // we trigger a "leaveRoom" command
       const leaveRoomCommand = {
         id: uuid(),
         roomId: roomId,
+        userId,
         name: 'leaveRoom',
         payload: {
-          connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
+          connectionLost: true // user did not send "leaveRoom" command. But connection was lost (e.g. browser closed)
         }
       };
       await handleIncomingCommand(socket, leaveRoomCommand);
@@ -174,7 +190,10 @@ export default function socketManagerFactory(
       LOGGER.debug(
         `User ${userId} in room ${roomId}, has more open sockets. Removing mapping for socket ${socket.id}`
       );
-      registry.removeSocketMapping(socket.id, userId, roomId);
+      registry.removeSocketMapping(socket.id);
+
+      // also remove socket.io sockets from socket.io "room" , so that they no longer receive events from the room, they left (or were kicked from)
+      removeSocketFromRoomByIds(socket.id, roomId);
     }
   }
 }

@@ -26,7 +26,8 @@
   "required": [
     "id",
     "roomId",
-    "name"
+    "name",
+    "payload"
   ],
   "additionalProperties": false
 }

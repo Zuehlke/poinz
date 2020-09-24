@@ -16,9 +16,7 @@ import {
   StyledLinkButton
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
-
-const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{0,80}$/;
-const EMAIL_REGEX = /^[-a-zA-Z0-9._@*]{0,245}$/; // do not check for correct/valid email regex here. this regex gets validated after every keypress
+import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
 
 /**
  * The user menu allows customizing Poinz

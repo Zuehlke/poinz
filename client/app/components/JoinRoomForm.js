@@ -11,8 +11,7 @@ import {
   StyledLandingDoubleButtonR,
   StyledLandingForm
 } from '../styled/Landing';
-
-const ROOM_ID_REGEX = /^[-a-z0-9_]*$/;
+import {ROOM_ID_REGEX} from '../services/frontendInputValidation';
 
 /**
  * The form on the landing page where the user can join a room.

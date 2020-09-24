@@ -41,6 +41,7 @@ describe('websocket endpoint', () => {
       socket.emit('command', {
         id: commandId,
         name: 'unknownCommand',
+        userId: uuid(),
         payload: {}
       })
     );

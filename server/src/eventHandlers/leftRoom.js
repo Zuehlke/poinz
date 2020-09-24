@@ -3,11 +3,10 @@
  * removes estimations on all stories that were given by user
  */
 const leftRoomEventHandler = (room, eventPayload, userId) =>
-  room
+  // Do not remove estimations. "moderator" might want to export stories and estimations after participants left the room.
+  // this means, we keep part of the "history".. on export we will not be able to export the username, we are left with the userId...
 
-    // remove leaving user's estimations from all stories
-    .update('stories', (stories) => stories.map((story) => story.removeIn(['estimations', userId])))
-    // then remove user from room
-    .removeIn(['users', userId]);
+  // remove user from room
+  room.removeIn(['users', userId]);
 
 export default leftRoomEventHandler;

@@ -26,6 +26,44 @@ test('Should produce leftRoom event', async () => {
   });
 });
 
+test('Should keep estimations on stories after user left', async () => {
+  const {
+    userIdTwo,
+    processor,
+    roomId,
+    storyId,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStory();
+  const commandId = uuid();
+
+  const estimatedValue = 3;
+  mockRoomsStore.manipulate((room) =>
+    room.setIn(['stories', storyId, 'estimations', userIdTwo], estimatedValue)
+  );
+
+  return processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'leaveRoom',
+      payload: {}
+    },
+    userIdTwo
+  ).then(({producedEvents, room}) => {
+    expect(producedEvents).toMatchEvents(commandId, roomId, 'leftRoom');
+
+    const [leftRoomEvent] = producedEvents;
+
+    expect(leftRoomEvent.userId).toEqual(userIdTwo);
+
+    expect(room.users[userIdTwo]).toBeUndefined();
+    expect(Object.values(room.users).length).toBe(1);
+
+    // but estimation on story is preserved
+    expect(room.stories[storyId].estimations[userIdTwo]).toBe(estimatedValue);
+  });
+});
+
 test('Should produce connectionLost event', async () => {
   const {userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();

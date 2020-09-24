@@ -268,6 +268,41 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
   );
 });
 
+test('Should produce additional "revealed" and "consensusAchieved" events if all users estimated (other user is disconnected)', async () => {
+  const {
+    roomId,
+    storyId,
+    userIdOne: userId,
+    userIdTwo,
+    processor,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
+
+  const commandId = uuid();
+  return processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 2
+      }
+    },
+    userId
+  ).then(({producedEvents}) =>
+    expect(producedEvents).toMatchEvents(
+      commandId,
+      roomId,
+      'storyEstimateGiven',
+      'revealed',
+      'consensusAchieved'
+    )
+  );
+});
+
 describe('preconditions', () => {
   test('Should throw if storyId does not match "selectedStory"', async () => {
     const {

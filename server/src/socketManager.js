@@ -79,24 +79,15 @@ export default function socketManagerFactory(
   }
 
   function getJoinedRoomEvent(producedEvents) {
-    if (!producedEvents) {
-      return undefined;
-    }
-    return producedEvents.find((e) => e.name === 'joinedRoom');
+    return (producedEvents || []).find((e) => e.name === 'joinedRoom');
   }
 
   function getLeftRoomOrConnectionLostEvent(producedEvents) {
-    if (!producedEvents) {
-      return undefined;
-    }
-    return producedEvents.find((e) => e.name === 'leftRoom' || e.name === 'connectionLost');
+    return (producedEvents || []).find((e) => e.name === 'leftRoom' || e.name === 'connectionLost');
   }
 
   function getKickedRoomEvent(producedEvents) {
-    if (!producedEvents) {
-      return undefined;
-    }
-    return producedEvents.find((e) => e.name === 'kicked');
+    return (producedEvents || []).find((e) => e.name === 'kicked');
   }
 
   /**

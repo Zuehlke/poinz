@@ -7,9 +7,7 @@ import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
 import {StyledStory} from '../styled/Story';
 import {StyledEditFormButtonGroup, StyledEditForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
-
-const REGEX_STORY_TITLE = /^.{0,100}$/;
-const MAX_DESCRIPTION_LENGTH = 2000;
+import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../services/frontendInputValidation';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
@@ -41,7 +39,7 @@ const StoryEditForm = ({
             className="pure-input-1"
             fieldValue={storyTitle}
             setFieldValue={setStoryTitle}
-            regexPattern={REGEX_STORY_TITLE}
+            regexPattern={STORY_TITLE_REGEX}
             onEnter={triggerChange}
           />
 
@@ -61,7 +59,7 @@ const StoryEditForm = ({
 
   function onDescriptionChange(ev) {
     const val = ev.target.value;
-    if (val.length <= MAX_DESCRIPTION_LENGTH) {
+    if (val.length <= STORY_DESCRIPTION_MAX_LENGTH) {
       setStoryDescr(val);
     }
   }

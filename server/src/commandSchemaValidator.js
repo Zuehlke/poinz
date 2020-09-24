@@ -13,8 +13,7 @@ const EMAIL_MAX_LENGTH = 254;
 const ROOMID_REGEX = /^[-a-z0-9_]+$/;
 const UUIDv4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 const CsvDATAURL_REGEX = /^data:(text\/csv|application\/vnd.ms-excel|application\/csv|text\/x-csv|application\/x-csv|text\/comma-separated-values|text\/x-comma-separated-values);base64,/;
-const USERNAME_REGEX = /^[-a-zA-Z0-9._*]{3,80}$/;
-const USERNAME_MAX_LENGTH = 200;
+const USERNAME_REGEX = /^.{3,80}$/;
 const schemas = gatherSchemas();
 
 registerCustomFormats();
@@ -109,12 +108,10 @@ function registerCustomFormats() {
     'csvDataUrl',
     validateStringFormat.bind(undefined, CsvDATAURL_REGEX, 'must be a valid text/csv data url')
   );
-  tv4.addFormat('username', (data) => {
-    if (data.length > USERNAME_MAX_LENGTH) {
-      return `string must not be more than ${USERNAME_MAX_LENGTH} characters`;
-    }
-    return validateStringFormat(USERNAME_REGEX, 'must be a valid username', data);
-  });
+  tv4.addFormat(
+    'username',
+    validateStringFormat.bind(undefined, USERNAME_REGEX, 'must be a valid username')
+  );
 }
 
 function validateStringFormat(formatRegex, errorMsg, data) {

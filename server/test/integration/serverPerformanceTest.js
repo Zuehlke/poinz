@@ -27,18 +27,23 @@ describe('serverPerformance', () => {
       eventCount++;
       if (eventCount === 1) {
         // this is the "roomCreated" event
+        expect(event.name).toBe('roomCreated');
+      }
+      if (eventCount === 2) {
+        // this is the "roomJoined" event
+        expect(event.name).toBe('joinedRoom');
         done(null, event.roomId);
       }
     });
 
-    // let's create a room
+    // let's join a room
     socket.on('connect', () =>
       socket.emit('command', {
         id: uuid(),
-        name: 'createRoom',
-        payload: {
-          userId
-        }
+        roomId: uuid(),
+        name: 'joinRoom',
+        userId,
+        payload: {}
       })
     );
   }
@@ -82,8 +87,7 @@ describe('serverPerformance', () => {
         4000,
         'setUsername',
         {
-          username: 'jimmy',
-          userId
+          username: 'jimmy'
         },
         done
       );
@@ -116,7 +120,9 @@ describe('serverPerformance', () => {
     console.time(testRunUniqueId);
     send();
 
-    socket.on('event', () => {
+    socket.on('event', (ev) => {
+      expect(ev.name).not.toBe('commandRejected');
+
       eventCount++;
 
       if (isDone) {
@@ -142,7 +148,8 @@ describe('serverPerformance', () => {
       commandCount++;
       socket.emit('command', {
         id: uuid(),
-        roomId: roomId,
+        roomId,
+        userId,
         name: commandName,
         payload: commandPayload
       });

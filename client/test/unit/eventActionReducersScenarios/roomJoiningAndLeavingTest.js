@@ -267,7 +267,7 @@ test('Two users in a room, the other leaves', () => {
       description: 'With description',
       id: storyId,
       estimations: {
-        /* estimations from leaving user are removed */
+        [otherUserId]: 8 // we keep estimations of users.  mainly because we want to still have these values when exporting (to json file)
       },
       createdAt: 1592120422988
     }

@@ -4,7 +4,6 @@ import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
 import {getCardConfigForValue} from './getCardConfigForValue';
-import clearStoryEstimationsOfUser from './clearStoryEstimationsOfUser';
 
 /**
  * The event reducer handles backend-event actions.
@@ -166,13 +165,11 @@ const eventActionHandlers = {
       }
 
       // If someone else left the room
-      const modifiedStories = clearStoryEstimationsOfUser(state.stories, event.userId);
       const modifiedUsers = {...state.users};
       delete modifiedUsers[event.userId];
 
       return {
         ...state,
-        stories: modifiedStories,
         users: modifiedUsers
       };
     },
@@ -191,13 +188,11 @@ const eventActionHandlers = {
       }
 
       // We need to take the userId from the payload (the user that was kicked, not the "kicking" user)
-      const modifiedStories = clearStoryEstimationsOfUser(state.stories, payload.userId);
       const modifiedUsers = {...state.users};
       delete modifiedUsers[payload.userId];
 
       return {
         ...state,
-        stories: modifiedStories,
         users: modifiedUsers
       };
     },

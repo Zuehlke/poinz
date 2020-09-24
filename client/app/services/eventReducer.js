@@ -151,7 +151,7 @@ const eventActionHandlers = {
         return `You joined room "${newState.roomId}"`;
       }
 
-      return `User ${newState.users[event.userId].username || ''} joined`; // cannot directly use parameter "username". event is not yet reduced.
+      return `${newState.users[event.userId].username || 'New user'} joined`; // cannot directly use parameter "username". event is not yet reduced.
     }
   },
 
@@ -177,7 +177,7 @@ const eventActionHandlers = {
       };
     },
     log: (username, payload, oldState, newState, event) =>
-      `User ${oldState.users[event.userId].username} left the room`
+      `${oldState.users[event.userId].username || 'New user'} left the room`
   },
 
   /**
@@ -202,9 +202,9 @@ const eventActionHandlers = {
       };
     },
     log: (username, payload, oldState, modifiedState, event) =>
-      `User "${oldState.users[payload.userId].username}" was kicked from the room by user "${
+      `${oldState.users[payload.userId].username || 'New user'} was kicked from the room by ${
         oldState.users[event.userId].username
-      }"`
+      }`
   },
 
   /**
@@ -227,7 +227,7 @@ const eventActionHandlers = {
         }
       };
     },
-    log: (username) => `${username} lost the connection`
+    log: (username) => `${username || 'New user'} lost the connection`
   },
 
   [EVENT_ACTION_TYPES.storyAdded]: {
@@ -367,6 +367,11 @@ const eventActionHandlers = {
       if (oldUsername && oldUsername !== newUsername) {
         return `"${oldState.users[event.userId].username}" is now called "${newUsername}"`;
       }
+
+      if (!oldUsername && newUsername) {
+        // user set his username after first join, where user is in room, but username is not yet set (=undefined).
+        return `New user is now called "${newUsername}"`;
+      }
     }
   },
 
@@ -409,7 +414,7 @@ const eventActionHandlers = {
       };
     },
     log: (username, payload, oldState, newState, event) =>
-      `${oldState.users[event.userId].username} set his/her avatar`
+      `${oldState.users[event.userId].username || 'New user'} set his/her avatar`
   },
 
   /**

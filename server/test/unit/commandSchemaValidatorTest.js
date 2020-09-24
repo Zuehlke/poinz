@@ -79,6 +79,7 @@ test('works with valid userId', () => {
     id: uuid(),
     roomId: 'custom-room-id',
     name: 'joinRoom',
-    userId: uuid()
+    userId: uuid(),
+    payload: {}
   });
 });

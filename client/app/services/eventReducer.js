@@ -4,7 +4,6 @@ import {EVENT_ACTION_TYPES} from '../actions/types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
 import {getCardConfigForValue} from './getCardConfigForValue';
-import clearStoryEstimationsOfUser from './clearStoryEstimationsOfUser';
 
 /**
  * The event reducer handles backend-event actions.
@@ -151,7 +150,7 @@ const eventActionHandlers = {
         return `You joined room "${newState.roomId}"`;
       }
 
-      return `User ${newState.users[event.userId].username || ''} joined`; // cannot directly use parameter "username". event is not yet reduced.
+      return `${newState.users[event.userId].username || 'New user'} joined`; // cannot directly use parameter "username". event is not yet reduced.
     }
   },
 
@@ -166,18 +165,16 @@ const eventActionHandlers = {
       }
 
       // If someone else left the room
-      const modifiedStories = clearStoryEstimationsOfUser(state.stories, event.userId);
       const modifiedUsers = {...state.users};
       delete modifiedUsers[event.userId];
 
       return {
         ...state,
-        stories: modifiedStories,
         users: modifiedUsers
       };
     },
     log: (username, payload, oldState, newState, event) =>
-      `User ${oldState.users[event.userId].username} left the room`
+      `${oldState.users[event.userId].username || 'New user'} left the room`
   },
 
   /**
@@ -191,20 +188,18 @@ const eventActionHandlers = {
       }
 
       // We need to take the userId from the payload (the user that was kicked, not the "kicking" user)
-      const modifiedStories = clearStoryEstimationsOfUser(state.stories, payload.userId);
       const modifiedUsers = {...state.users};
       delete modifiedUsers[payload.userId];
 
       return {
         ...state,
-        stories: modifiedStories,
         users: modifiedUsers
       };
     },
     log: (username, payload, oldState, modifiedState, event) =>
-      `User "${oldState.users[payload.userId].username}" was kicked from the room by user "${
+      `${oldState.users[payload.userId].username || 'New user'} was kicked from the room by ${
         oldState.users[event.userId].username
-      }"`
+      }`
   },
 
   /**
@@ -227,7 +222,7 @@ const eventActionHandlers = {
         }
       };
     },
-    log: (username) => `${username} lost the connection`
+    log: (username) => `${username || 'New user'} lost the connection`
   },
 
   [EVENT_ACTION_TYPES.storyAdded]: {
@@ -367,6 +362,11 @@ const eventActionHandlers = {
       if (oldUsername && oldUsername !== newUsername) {
         return `"${oldState.users[event.userId].username}" is now called "${newUsername}"`;
       }
+
+      if (!oldUsername && newUsername) {
+        // user set his username after first join, where user is in room, but username is not yet set (=undefined).
+        return `New user is now called "${newUsername}"`;
+      }
     }
   },
 
@@ -409,7 +409,7 @@ const eventActionHandlers = {
       };
     },
     log: (username, payload, oldState, newState, event) =>
-      `${oldState.users[event.userId].username} set his/her avatar`
+      `${oldState.users[event.userId].username || 'New user'} set his/her avatar`
   },
 
   /**

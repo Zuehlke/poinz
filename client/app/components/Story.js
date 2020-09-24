@@ -13,6 +13,7 @@ import {StyledStoryTitle} from '../styled/StyledStoryTitle';
  * One story in the backlog
  */
 const Story = ({
+  t,
   story,
   selectedStoryId,
   cardConfig,
@@ -40,11 +41,13 @@ const Story = ({
           className="fa fa-pencil story-edit"
           onClick={triggerEdit}
           data-testid="editStoryButton"
+          title={t('edit')}
         />
         <i
           className="fa fa-trash story-trash"
           onClick={triggerTrash}
           data-testid="trashStoryButton"
+          title={t('trash')}
         />
       </StyledStoryToolbar>
 
@@ -89,11 +92,13 @@ Story.propTypes = {
   editStory: PropTypes.func,
   trashStory: PropTypes.func,
   pendingSelectCommands: PropTypes.array,
-  pendingTrashCommands: PropTypes.array
+  pendingTrashCommands: PropTypes.array,
+  t: PropTypes.func
 };
 
 export default connect(
   (state) => ({
+    t: state.translator,
     cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
     pendingSelectCommands: getAllMatchingPendingCommands(state, 'selectStory'),

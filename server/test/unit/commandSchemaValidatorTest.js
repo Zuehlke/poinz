@@ -69,11 +69,9 @@ test('throws on invalid userId', () => {
       id: uuid(),
       roomId: 'custom-room-id',
       name: 'joinRoom',
-      payload: {
-        userId: 'sdgdgkjslgjslkjglskgjdlksjgl'
-      }
+      userId: 'sdgdgkjslgjslkjglskgjdlksjgl'
     })
-  ).toThrow(/Format validation failed \(must be a valid uuid v4\) in \/payload\/userId/);
+  ).toThrow(/Format validation failed \(must be a valid uuid v4\) in \/userId/);
 });
 
 test('works with valid userId', () => {
@@ -81,8 +79,7 @@ test('works with valid userId', () => {
     id: uuid(),
     roomId: 'custom-room-id',
     name: 'joinRoom',
-    payload: {
-      userId: uuid()
-    }
+    userId: uuid(),
+    payload: {}
   });
 });

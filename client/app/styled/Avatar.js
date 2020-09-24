@@ -12,4 +12,5 @@ export const StyledAvatar = styled.img`
   display: block;
   margin: 0 auto;
   filter: ${({shaded}) => (shaded ? 'grayscale(100%)' : 'none')};
+  opacity: ${({shaded}) => (shaded ? '0.6' : '1')};
 `;

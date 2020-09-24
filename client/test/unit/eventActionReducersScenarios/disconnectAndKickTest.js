@@ -106,8 +106,9 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
     [ownUserId]: startingState.users[ownUserId]
   });
 
-  // now the estimation of the kicked user was removed
+  // estimation values are kept, even for kicked users
   expect(modifiedState.stories[storyId].estimations).toEqual({
+    [otherUserId]: 8,
     [ownUserId]: 5
   });
 });

@@ -16,7 +16,7 @@ export default function socketManagerFactory(
   sendEventToRoom,
   removeSocketFromRoomByIds
 ) {
-  const registry = socketRegistryFactory(removeSocketFromRoomByIds);
+  const registry = socketRegistryFactory();
 
   return {
     handleIncomingCommand,
@@ -24,20 +24,20 @@ export default function socketManagerFactory(
   };
 
   async function handleIncomingCommand(socket, msg) {
-    const matchingUserId = getUserIdForMessage(socket.id, msg);
-
     try {
-      const {producedEvents} = await commandProcessor(msg, matchingUserId);
+      const userId = getUserIdForMessage(socket.id, msg);
+      const {producedEvents} = await commandProcessor(msg, userId);
 
       if (!producedEvents || producedEvents.length < 1) {
         return;
       }
 
-      updateSocketRegistryJoining(matchingUserId, producedEvents, socket);
+      updateSocketRegistryJoining(userId, producedEvents, socket);
 
       sendEvents(producedEvents, producedEvents[0].roomId);
 
-      updateSocketRegistryLeaving(matchingUserId, producedEvents, socket);
+      updateSocketRegistryLeavingOrConnectionLost(userId, producedEvents, socket);
+      updateSocketRegistryKicking(userId, producedEvents);
     } catch (commandProcessingError) {
       handleCommandProcessingError(commandProcessingError, msg, socket);
     }
@@ -46,75 +46,70 @@ export default function socketManagerFactory(
   function updateSocketRegistryJoining(userId, producedEvents, socket) {
     const joinedRoomEvent = getJoinedRoomEvent(producedEvents);
     if (joinedRoomEvent) {
-      registry.registerSocketMapping(socket, userId, joinedRoomEvent.roomId);
+      registry.registerSocketMapping(socket.id, userId, joinedRoomEvent.roomId);
+
+      // also join sockets together in a socket.io "room" , so that we can emit messages to all sockets in that room
+      socket.join(joinedRoomEvent.roomId);
     }
   }
 
-  function updateSocketRegistryLeaving(userId, producedEvents, socket) {
-    const leftRoomEvent = getLeftRoomEvent(producedEvents);
-    if (leftRoomEvent) {
-      registry.removeSocketMapping(socket.id, leftRoomEvent.userId, leftRoomEvent.roomId);
-    } else {
-      const kickedRoomEvent = getKickedRoomEvent(producedEvents);
-      if (kickedRoomEvent) {
-        // find sockets that match room and userId ( for the kicked user, not the kicking user )
-        registry.removeMatchingSocketMappings(
-          kickedRoomEvent.payload.userId,
-          kickedRoomEvent.roomId
-        );
-      }
+  function updateSocketRegistryLeavingOrConnectionLost(userId, producedEvents, socket) {
+    const leftRoomOrConnectionLostEvent = getLeftRoomOrConnectionLostEvent(producedEvents);
+    if (leftRoomOrConnectionLostEvent) {
+      registry.removeSocketMapping(
+        socket.id,
+        leftRoomOrConnectionLostEvent.userId,
+        leftRoomOrConnectionLostEvent.roomId
+      );
+      removeSocketFromRoomByIds(socket.id, leftRoomOrConnectionLostEvent.roomId);
+    }
+  }
+
+  function updateSocketRegistryKicking(userId, producedEvents) {
+    const kickedRoomEvent = getKickedRoomEvent(producedEvents);
+    if (kickedRoomEvent) {
+      // find and remove sockets that match room and userId (for the kicked user, not the kicking user)
+      // user could have opened multiple sockets, remove all that match userId and roomId
+      const socketIds = registry.removeAllMatchingSocketMappings(
+        kickedRoomEvent.payload.userId,
+        kickedRoomEvent.roomId
+      );
+      socketIds.forEach((socketId) => removeSocketFromRoomByIds(socketId, kickedRoomEvent.roomId));
     }
   }
 
   function getJoinedRoomEvent(producedEvents) {
-    if (!producedEvents) {
-      return undefined;
-    }
-    return producedEvents.find((e) => e.name === 'joinedRoom');
+    return (producedEvents || []).find((e) => e.name === 'joinedRoom');
   }
 
-  function getLeftRoomEvent(producedEvents) {
-    if (!producedEvents) {
-      return undefined;
-    }
-    return producedEvents.find((e) => e.name === 'leftRoom');
+  function getLeftRoomOrConnectionLostEvent(producedEvents) {
+    return (producedEvents || []).find((e) => e.name === 'leftRoom' || e.name === 'connectionLost');
   }
 
   function getKickedRoomEvent(producedEvents) {
-    if (!producedEvents) {
-      return undefined;
-    }
-    return producedEvents.find((e) => e.name === 'kicked');
+    return (producedEvents || []).find((e) => e.name === 'kicked');
   }
 
   /**
-   * lookup of already set userId for given socket.
-   * if no match found, check if it is the special case of a "joinRoom" command.
-   * this is the only command where the client can preset a userId.
-   * If it is present, use it, otherwise generate a new unique userId.
+   * By default, the message contains the userId.
+   * only for "joinRoom" the userId can be undefined / not set, then we generate a new userId here
    *
    * @param {string} socketId
    * @param msg
    * @return {string} the userId
    */
   function getUserIdForMessage(socketId, msg) {
-    const mapping = registry.getMapping(socketId);
-    if (mapping && mapping.userId) {
-      return mapping.userId;
+    if (msg.userId) {
+      // message provides userId, this is given for most commands.
+      return msg.userId;
     }
 
-    if (msg.name === 'joinRoom' && msg.payload && msg.payload.userId) {
-      return msg.payload.userId;
+    if (msg.name === 'joinRoom') {
+      // if no userId is given, it must be a joinRoom command. this is the only command that allows that.
+      return uuid();
     }
 
-    const newUserId = uuid();
-
-    if (msg.name !== 'joinRoom') {
-      // in case of joinRoom it's expected.  warn if this happens with any other command
-      LOGGER.warn(`New userId ${newUserId} generated for socket ${socketId}. msg.name=${msg.name}`);
-    }
-
-    return newUserId;
+    throw new Error(`Command must provide userId. msg.name=${msg.name}`);
   }
 
   /**
@@ -155,7 +150,7 @@ export default function socketManagerFactory(
    * a "leaveRoom" command that will mark the user.
    */
   async function onDisconnect(socket) {
-    // socket.rooms is at this moment already emptied
+    // socket.rooms is at this moment already emptied (by socketIO)
     const mapping = registry.getMapping(socket.id);
 
     if (!mapping) {
@@ -171,12 +166,14 @@ export default function socketManagerFactory(
     );
 
     if (registry.isLastSocketForUserId(userId)) {
+      // we trigger a "leaveRoom" command
       const leaveRoomCommand = {
         id: uuid(),
         roomId: roomId,
+        userId,
         name: 'leaveRoom',
         payload: {
-          connectionLost: true // user did not send "leaveRoom" command manually. But connection was lost (e.g. browser closed)
+          connectionLost: true // user did not send "leaveRoom" command. But connection was lost (e.g. browser closed)
         }
       };
       await handleIncomingCommand(socket, leaveRoomCommand);
@@ -184,7 +181,10 @@ export default function socketManagerFactory(
       LOGGER.debug(
         `User ${userId} in room ${roomId}, has more open sockets. Removing mapping for socket ${socket.id}`
       );
-      registry.removeSocketMapping(socket.id, userId, roomId);
+      registry.removeSocketMapping(socket.id);
+
+      // also remove socket.io sockets from socket.io "room" , so that they no longer receive events from the room, they left (or were kicked from)
+      removeSocketFromRoomByIds(socket.id, roomId);
     }
   }
 }

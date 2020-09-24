@@ -27,28 +27,6 @@ test('Should produce usernameSet event', async () => {
 });
 
 describe('preconditions', () => {
-  test('Should fail, if userId does not match user in room', async () => {
-    const {processor, roomId} = await prepOneUserInOneRoom();
-    const commandId = uuid();
-    const nonMatchingUserId = uuid();
-
-    return expect(
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'setUsername',
-          payload: {
-            username: 'John.Doe'
-          }
-        },
-        nonMatchingUserId
-      )
-    ).rejects.toThrow(
-      /Precondition Error during "setUsername": Given user .* does not belong to room .*/
-    );
-  });
-
   test('Should fail, if username is too short (less than 3 chars)', async () => {
     const {processor, roomId, userId} = await prepOneUserInOneRoom();
     const commandId = uuid();

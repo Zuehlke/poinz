@@ -6,6 +6,10 @@
       "type": "string",
       "minLength": 1
     },
+    "userId": {
+      "type": "string",
+      "format": "uuidv4"
+    },
     "name": {
       "type": "string",
       "minLength": 1
@@ -22,7 +26,8 @@
   "required": [
     "id",
     "roomId",
-    "name"
+    "name",
+    "payload"
   ],
   "additionalProperties": false
 }

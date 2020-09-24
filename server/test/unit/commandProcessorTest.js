@@ -7,6 +7,7 @@ test('process a dummy command successfully: create room on the fly', () => {
     {
       setUsername: {
         canCreateRoom: true,
+        skipUserIdRoomCheck: true,
         fn: (room, command) => room.applyEvent('usernameSet', command.payload)
       }
     },
@@ -51,6 +52,7 @@ test('process a dummy command successfully: room loading by id', () => {
     {
       setUsername: {
         canCreateRoom: false,
+        skipUserIdRoomCheck: true,
         fn: (room, command) => room.applyEvent('usernameSet', command.payload)
       }
     },
@@ -114,6 +116,7 @@ test('process a dummy command where command handler produced unknown event', () 
     {
       setUsername: {
         canCreateRoom: true,
+        skipUserIdRoomCheck: true,
         fn: (room) => room.applyEvent('unknownEvent', {})
       }
     },
@@ -143,6 +146,7 @@ test('process a dummy command where command precondition throws', () => {
     {
       setUsername: {
         canCreateRoom: true,
+        skipUserIdRoomCheck: true,
         preCondition: () => {
           throw new Error('Uh-uh. nono!');
         }
@@ -167,6 +171,37 @@ test('process a dummy command where command precondition throws', () => {
       'abc'
     )
   ).rejects.toThrow('Precondition Error during "setUsername": Uh-uh. nono!');
+});
+
+test('process a dummy command where user does not belong to room', () => {
+  const processor = processorFactory(
+    {
+      setUsername: {
+        canCreateRoom: true
+        // here "skipUserIdRoomCheck" flag is not set (like for most handlers)
+      }
+    },
+    {
+      // no event handlers
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        id: uuid(),
+        roomId: 'some-room-id',
+        name: 'setUsername',
+        payload: {
+          username: 'john'
+        }
+      },
+      'abc'
+    )
+  ).rejects.toThrow(
+    'Precondition Error during "setUsername": Given user abc does not belong to room some-room-id'
+  );
 });
 
 test('process a dummy command where command validation fails', () => {
@@ -271,6 +306,7 @@ test('concurrency handling', () => {
   const processor = processorFactory(
     {
       setUsername: {
+        skipUserIdRoomCheck: true,
         fn: (room, command) => room.applyEvent('usernameSet', command.payload)
       }
     },

@@ -31,6 +31,7 @@
   "excluded": "Excluded from estimations",
   "backlog": "Backlog",
   "delete": "Delete",
+  "edit": "Edit",
   "restore": "Restore",
   "trash": "Trash",
   "noActiveStories": "There are currently no stories in the estimation backlog...",
@@ -39,5 +40,6 @@
   "cancel": "Cancel",
   "export": "Export",
   "exportInfo": "You can export the stories and estimations in your room as json file.",
-  "exportLinkText": "Download"
+  "exportLinkText": "Download",
+  "kickUser": "Kick User"
 }

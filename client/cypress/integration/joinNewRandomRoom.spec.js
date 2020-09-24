@@ -29,3 +29,14 @@ it('create new room (custom name) via landing, then join by url', () => {
 
   cy.get(tid('whoamiSimple')).contains('e2e-cypress-test-user');
 });
+
+it('create new room (custom name) on the fly when joining by url', () => {
+  const customRoomName = 'e2e-room-' + uuid();
+
+  cy.visit('/' + customRoomName);
+
+  cy.get(tid('usernameInput')).type('e2e-cypress-test-user');
+  cy.get(tid('joinButton')).click();
+
+  cy.get(tid('whoamiSimple')).contains('e2e-cypress-test-user');
+});

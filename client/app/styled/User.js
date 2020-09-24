@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
-import {COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE, COLOR_WARNING} from './colors';
+import {
+  COLOR_FONT_GREY,
+  COLOR_LIGHT_GREY,
+  COLOR_LIGHTER_GREY,
+  COLOR_ORANGE,
+  COLOR_WARNING
+} from './colors';
 import {ZuehlkeFont} from './dimensions';
 
 export const StyledUser = styled.div`
@@ -62,14 +68,13 @@ export const StyledUserKickOverlay = styled.span`
   top: 0;
   width: 72px;
   height: 72px;
-  font-size: 64px;
   display: flex;
   justify-content: space-around;
   align-items: center;
   left: 50%;
   margin-left: -36px;
 
-  > i {
+  i {
     display: inline-block;
     font-size: 22px;
     cursor: pointer;
@@ -84,10 +89,14 @@ export const StyledUserKickOverlay = styled.span`
     opacity: 0.9;
     color: ${COLOR_LIGHT_GREY};
   }
-  > i:hover {
+
+  i:hover {
     opacity: 1;
   }
-  > i:hover.fa-sign-out {
+  i:hover.fa-sign-out {
     color: ${COLOR_WARNING};
+  }
+  i:hover.fa-cross {
+    color: ${COLOR_FONT_GREY};
   }
 `;

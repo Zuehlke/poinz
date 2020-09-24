@@ -68,26 +68,4 @@ describe('preconditions', () => {
       'Format validation failed (string must not be more than 254 characters) in /payload/email'
     );
   });
-
-  test('Should fail, if userId does not match user in room', async () => {
-    const {processor, roomId} = await prepOneUserInOneRoom();
-    const commandId = uuid();
-    const nonMatchingUserId = uuid();
-
-    return expect(
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'setEmail',
-          payload: {
-            email: 'test@test.com'
-          }
-        },
-        nonMatchingUserId
-      )
-    ).rejects.toThrow(
-      /Precondition Error during "setEmail": Given user .* does not belong to room .*/
-    );
-  });
 });

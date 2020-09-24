@@ -5,6 +5,7 @@ import {v4 as uuid} from 'uuid';
 import queueFactory from './sequenceQueue';
 import validateCommand from './commandSchemaValidator';
 import getLogger from './getLogger';
+import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
 
 const LOGGER = getLogger('commandProcessor');
 
@@ -152,10 +153,15 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * Preconditions receive the room, the command and the userId and can do some semantic checks.
    */
   async function preConditions(ctx, cmd) {
-    if (!ctx.handler.preCondition) {
-      return;
-    }
     try {
+      if (!ctx.handler.skipUserIdRoomCheck) {
+        throwIfUserIdNotFoundInRoom(ctx.room, ctx.userId);
+      }
+
+      if (!ctx.handler.preCondition) {
+        return;
+      }
+
       ctx.handler.preCondition(ctx.room, cmd, ctx.userId);
     } catch (pcError) {
       throw new PreconditionError(pcError, cmd);

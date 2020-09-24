@@ -15,7 +15,7 @@ import {
   StyledUserKickOverlay
 } from '../styled/User';
 
-const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKick}) => {
+const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKick}) => {
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
   const isMarkedForKick = user.markedForKick;
@@ -30,7 +30,6 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
   return (
     <StyledUser
       data-testid="user"
-      onClick={onMarkForKick}
       isOwn={user.id === ownUserId}
       shaded={isDisconnected || isMarkedForKick}
     >
@@ -47,6 +46,7 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
       )}
 
       <Avatar
+        onClick={onMarkForKick}
         user={user}
         isOwn={user.id === ownUserId}
         shaded={isDisconnected || isMarkedForKick}
@@ -55,7 +55,8 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
 
       {isMarkedForKick && (
         <StyledUserKickOverlay>
-          <i className="fa fa-sign-out" onClick={() => kick(user.id)}></i>
+          <i className="fa fa-times" onClick={onMarkForKick} title={t('cancel')}></i>
+          <i className="fa fa-sign-out" onClick={() => kick(user.id)} title={t('kickUser')}></i>
         </StyledUserKickOverlay>
       )}
 
@@ -64,10 +65,7 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
       )}
 
       {selectedStory && !userHasEstimation && !isExcluded && (
-        <StyledUserEstimation revealed={revealed}>
-          {' '}
-          {estimationValueToDisplay}{' '}
-        </StyledUserEstimation>
+        <StyledUserEstimation revealed={revealed}>{estimationValueToDisplay}</StyledUserEstimation>
       )}
 
       {selectedStory && userHasEstimation && !isExcluded && (
@@ -84,6 +82,7 @@ const User = ({user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKi
 };
 
 User.propTypes = {
+  t: PropTypes.func,
   user: PropTypes.object,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
@@ -94,6 +93,7 @@ User.propTypes = {
 
 export default connect(
   (state) => ({
+    t: state.translator,
     cardConfig: state.cardConfig,
     ownUserId: state.userId,
     selectedStory: state.stories[state.selectedStory]

@@ -1,4 +1,5 @@
 import Immutable from 'immutable';
+import defaultCardConfig from '../defaultCardConfig';
 
 /**
  * A room was created. Creates a new default room object
@@ -9,6 +10,7 @@ const roomCreatedEventHandler = (room) =>
     id: room.get('id'),
     users: {},
     stories: {},
+    cardConfig: defaultCardConfig,
     created: Date.now()
   });
 

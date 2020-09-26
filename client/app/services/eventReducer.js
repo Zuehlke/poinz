@@ -131,7 +131,8 @@ const eventActionHandlers = {
           selectedStory: payload.selectedStory,
           users: payload.users || {},
           stories: payload.stories || {},
-          pendingJoinCommand: undefined
+          pendingJoinCommand: undefined,
+          cardConfig: payload.cardConfig
         };
       } else {
         // if our client state has already a userId set, this event indicates that someone else joined

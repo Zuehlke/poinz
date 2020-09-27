@@ -14,6 +14,9 @@ export const StyledUserMenu = styled.div`
   background: ${COLOR_BACKGROUND_GREY};
   box-sizing: border-box;
   padding: 27px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   &:after {
     content: '';
@@ -29,6 +32,9 @@ export const StyledUserMenu = styled.div`
     font-weight: 700;
     margin-bottom: 8px;
     margin-top: 0;
+  }
+  .pure-form {
+    overflow-y: auto;
   }
 `;
 
@@ -69,8 +75,7 @@ export const StyledRadioButton = styled.div`
 export const StyledLicenseHint = styled.div`
   font-size: small;
   margin-bottom: 12px;
-  position: absolute;
-  bottom: 7px;
+  margin-top: 12px;
 `;
 
 export const StyledAvatarGrid = styled.div`
@@ -106,4 +111,16 @@ export const StyledLinkButton = styled.a`
   &:hover {
     background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   }
+`;
+
+export const StyledTextarea = styled.textarea`
+  width: 100%;
+  font-family: monospace;
+  min-height: 300px;
+`;
+
+export const StyledExpandButton = styled.button`
+  padding: 3px;
+  font-size: small;
+  margin:0 4px;
 `;

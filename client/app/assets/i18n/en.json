@@ -41,5 +41,8 @@
   "export": "Export",
   "exportInfo": "You can export the stories and estimations in your room as json file.",
   "exportLinkText": "Download",
-  "kickUser": "Kick User"
+  "kickUser": "Kick User",
+  "customCards": "Custom Cards",
+  "customCardsInfo": "Use a custom set of estimation cards. If the room contains already estimated stories, you might get unexpected results...",
+  "iKnowWhatImDoin": "I know what I'm doing..."
 }

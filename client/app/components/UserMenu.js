@@ -4,7 +4,15 @@ import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
 
-import {toggleExcluded, setUsername, setEmail, leaveRoom, setLanguage, setAvatar} from '../actions';
+import {
+  toggleExcluded,
+  setUsername,
+  setEmail,
+  leaveRoom,
+  setLanguage,
+  setAvatar,
+  setCardConfig
+} from '../actions';
 import {
   StyledAvatarGrid,
   StyledLicenseHint,
@@ -13,7 +21,9 @@ import {
   StyledSection,
   StyledUserMenu,
   StyledMiniAvatar,
-  StyledLinkButton
+  StyledLinkButton,
+  StyledTextarea,
+  StyledExpandButton
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
@@ -24,23 +34,29 @@ import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
  * - changing language
  */
 const UserMenu = ({
-  t,
-  language,
-  user,
-  setUsername,
-  setEmail,
-  setAvatar,
-  toggleExcluded,
-  setLanguage,
-  userMenuShown,
-  roomId
-}) => {
+                    t,
+                    language,
+                    user,
+                    setUsername,
+                    setEmail,
+                    setAvatar,
+                    toggleExcluded,
+                    setLanguage,
+                    userMenuShown,
+                    cardConfig,
+                    setCardConfig,
+                    roomId
+                  }) => {
   const username = user.username;
   const email = user.email;
   const excluded = user.excluded;
 
   const [myUsername, setMyUsername] = useState(username);
   const [myEmail, setMyEmail] = useState(email || '');
+  const [customCardConfigString, setCustomCardConfigString] = useState(
+    JSON.stringify(cardConfig, null, 4)
+  );
+  const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
 
   return (
     <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
@@ -65,7 +81,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary"
               onClick={saveUsername}
             >
-              <i className="fa fa-save" />
+              <i className="fa fa-save"/>
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -131,7 +147,7 @@ const UserMenu = ({
               onClick={saveEmail}
               data-testid="saveEmailButton"
             >
-              <i className="fa fa-save" />
+              <i className="fa fa-save"/>
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -152,10 +168,44 @@ const UserMenu = ({
 
           <p>
             <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
-              {' '}
               {t('exportLinkText')} <i className="fa fa-download"></i>{' '}
             </StyledLinkButton>
           </p>
+        </StyledSection>
+
+        <StyledSection>
+          <h5>{t('customCards')}</h5>
+          {t('customCardsInfo')}
+
+          {!customCardConfigExpanded && (
+            <StyledExpandButton
+              type="button"
+              className="pure-button pure-button-primary"
+              onClick={() => setCustomCardConfigExpanded(true)}
+            >
+              <i className="fa fa-chevron-down"></i>
+            </StyledExpandButton>
+          )}
+
+          {customCardConfigExpanded && (
+            <div>
+              <p>
+                <StyledTextarea
+                  value={customCardConfigString}
+                  onChange={(e) => setCustomCardConfigString(e.target.value)}
+                ></StyledTextarea>
+              </p>
+              <p>
+                <button
+                  type="button"
+                  className="pure-button pure-button-primary"
+                  onClick={setCustomCardConfiguration}
+                >
+                  {t('iKnowWhatImDoin')} <i className="fa fa-save"/>
+                </button>
+              </p>
+            </div>
+          )}
         </StyledSection>
       </div>
 
@@ -175,6 +225,15 @@ const UserMenu = ({
   function saveEmail() {
     setEmail(myEmail);
   }
+
+  function setCustomCardConfiguration() {
+    try {
+      const customCc = JSON.parse(customCardConfigString);
+      setCardConfig(customCc);
+    } catch (e) {
+      console.warn('cardConfig is invalid json...');
+    }
+  }
 };
 
 UserMenu.propTypes = {
@@ -187,13 +246,16 @@ UserMenu.propTypes = {
   setLanguage: PropTypes.func,
   setUsername: PropTypes.func,
   setAvatar: PropTypes.func,
+  setCardConfig: PropTypes.func,
   setEmail: PropTypes.func,
+  cardConfig: PropTypes.array,
   roomId: PropTypes.string
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
+    cardConfig: state.cardConfig,
     language: state.language,
     user: state.users[state.userId],
     userMenuShown: state.userMenuShown,
@@ -205,6 +267,7 @@ export default connect(
     setUsername,
     setEmail,
     setAvatar,
-    setLanguage
+    setLanguage,
+    setCardConfig
   }
 )(UserMenu);

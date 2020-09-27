@@ -289,6 +289,17 @@ export const deleteStory = (storyId) => (dispatch, getState, sendCommand) => {
   });
 };
 
+export const setCardConfig = (cardConfig) => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  sendCommand({
+    name: 'setCardConfig',
+    roomId: state.roomId,
+    payload: {
+      cardConfig
+    }
+  });
+};
+
 export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
   readDroppedFile(file).then((content) => {
     const state = getState();

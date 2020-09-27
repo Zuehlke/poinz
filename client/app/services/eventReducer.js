@@ -538,6 +538,14 @@ const eventActionHandlers = {
       }"`
   },
 
+  [EVENT_ACTION_TYPES.cardConfigSet]: {
+    fn: (state, payload) => ({
+      ...state,
+      cardConfig: payload.cardConfig
+    }),
+    log: (username) => `${username} set new custom card configuration for this room`
+  },
+
   [EVENT_ACTION_TYPES.commandRejected]: {
     fn: (state, payload, event) => log.error(event),
     log: (username, payload) => `An error occurred: ${payload.reason}`

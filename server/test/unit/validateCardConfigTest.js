@@ -1,5 +1,5 @@
 import {validateCardConfig} from '../../src/commandSchemaValidator';
-import defaultCardConfig from "../../src/defaultCardConfig";
+import defaultCardConfig from '../../src/defaultCardConfig';
 
 test('valid defaultConfig', () => {
   const res = validateCardConfig(defaultCardConfig);

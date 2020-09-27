@@ -88,6 +88,9 @@ test('nonexisting room', () => {
       cardConfig: defaultCardConfig
       // and some timestamps properties: created, lastActivity
     });
+
+    // make sure that "pristine" flag is not persisted
+    expect(room.pristine).toBeUndefined();
   });
 });
 

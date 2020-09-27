@@ -16,6 +16,7 @@ import setUsername from './setUsername';
 import setEmail from './setEmail';
 import setAvatar from './setAvatar';
 import toggleExclude from './toggleExclude';
+import setCardConfig from './setCardConfig';
 
 export default {
   addStory,
@@ -35,5 +36,6 @@ export default {
   setUsername,
   setEmail,
   setAvatar,
-  toggleExclude
+  toggleExclude,
+  setCardConfig
 };

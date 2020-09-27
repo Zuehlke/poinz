@@ -112,6 +112,42 @@ function registerCustomFormats() {
     'username',
     validateStringFormat.bind(undefined, USERNAME_REGEX, 'must be a valid username')
   );
+  tv4.addFormat('cardConfig', validateCardConfig);
+}
+
+export function validateCardConfig(data) {
+  if (!Array.isArray(data)) {
+    return 'Given cardConfig is not an array!';
+  }
+
+  if (data.length < 1) {
+    return 'Given cardConfig must not be an empty array!';
+  }
+
+  return data.map(validateSingleCardConfigItem).find((i) => i);
+}
+
+function validateSingleCardConfigItem(ccItem) {
+  const itemProps = Object.keys(ccItem).sort();
+
+  if (
+    itemProps.length !== 3 ||
+    itemProps[0] !== 'color' ||
+    itemProps[1] !== 'label' ||
+    itemProps[2] !== 'value'
+  ) {
+    return 'A card in cardConfig must be an object with these exact 3 properties "color", "label" and "value"';
+  }
+
+  if (!Number.isFinite(ccItem.value)) {
+    return 'Property "value" on a card in cardConfig must be a number';
+  }
+  if (typeof ccItem.label !== 'string') {
+    return 'Property "label" on a card in cardConfig must be a string';
+  }
+  if (typeof ccItem.color !== 'string') {
+    return 'Property "color" on a card in cardConfig must be a string';
+  }
 }
 
 function validateStringFormat(formatRegex, errorMsg, data) {

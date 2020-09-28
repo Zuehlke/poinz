@@ -4,7 +4,31 @@
  * If story is already revealed, reject command.
  *
  */
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              minLength: 1
+            }
+          },
+          required: ['storyId'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const revealCommandHandler = {
+  schema,
   preCondition: (room, command) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only reveal currently selected story!');

@@ -8,9 +8,39 @@
  * Produces also events for additional properties if they are preset "usernameSet", "emailSet", "excludedFromEstimations".
  *
  */
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            username: {
+              type: 'string',
+              format: 'username'
+            },
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            avatar: {
+              type: 'number'
+            }
+          },
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const joinRoomCommandHandler = {
   canCreateRoom: true,
   skipUserIdRoomCheck: true,
+  schema,
   fn: (room, command, userId) => {
     if (room.get('pristine')) {
       joinNewRoom(room, command, userId);

@@ -4,7 +4,35 @@
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              minLength: 1
+            },
+            value: {
+              type: 'number'
+            }
+          },
+          required: ['storyId', 'value'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const giveStoryEstimateCommandHandler = {
+  schema,
   preCondition: (room, command, userId) => {
     const storyId = command.payload.storyId;
 

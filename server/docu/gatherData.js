@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const babel = require('@babel/core');
 
+const vm = require('vm');
+
 module.exports = gatherData;
 
 /**
@@ -12,9 +14,9 @@ module.exports = gatherData;
  * @return {string[]} list of filenames
  */
 async function getListOfCommandHandlerFiles(cmdHandlersDirPath) {
-  const parseResult = await parseFile(path.join(cmdHandlersDirPath, 'commandHandlers.js'));
+  const {result} = await parseFile(path.join(cmdHandlersDirPath, 'commandHandlers.js'));
   const imports = [];
-  babel.traverse(parseResult, {
+  babel.traverse(result, {
     ImportDeclaration: (nodePath) => {
       imports.push(nodePath.node.source.value + '.js');
     }
@@ -28,11 +30,10 @@ async function getListOfCommandHandlerFiles(cmdHandlersDirPath) {
  * gathers command and event metadata from our sources
  *
  * @param {string} cmdHandlersDirPath
- * @param {string} validationSchemasDirPath
  * @param {string} evtHandlersDirPath
  * @return {Promise<{commandHandlerFileData: any, eventList: *}>}
  */
-async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandlersDirPath) {
+async function gatherData(cmdHandlersDirPath, evtHandlersDirPath) {
   const commandHandlerFilenames = await getListOfCommandHandlerFiles(cmdHandlersDirPath);
   let commandHandlerFileData = await Promise.all(
     commandHandlerFilenames.map(
@@ -78,9 +79,9 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
   async function handleSingleEvtHandlerFile(evt) {
     const filePath = path.join(evtHandlersDirPath, evt.eventName + '.js');
 
-    const parseResult = await parseFile(filePath);
+    const {result} = await parseFile(filePath);
 
-    evt.description = getFirstBlockComment(parseResult);
+    evt.description = getFirstBlockComment(result);
     if (!evt.description) {
       console.log(`   EventHandler "${filePath}" has no descriptive comment... :( `);
     }
@@ -108,19 +109,19 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
    */
   async function handleSingleCmdHandlerFile(filePath) {
     const commandName = path.basename(filePath, '.js');
-    const parseResult = await parseFile(filePath);
-    const schema = await getValidationSchemaForCommand(commandName);
+    const {result, source} = await parseFile(filePath);
+
     const cmdHandlerInfo = {
       filePath,
       relativeFilePath: getPoinzRelativePath(filePath),
       commandName,
-      schema,
       events: []
     };
 
-    cmdHandlerInfo.description = getFirstBlockComment(parseResult);
+    cmdHandlerInfo.description = getFirstBlockComment(result);
 
-    babel.traverse(parseResult, {
+    babel.traverse(result, {
+      // Find all calls to .applyEvent(...) abd extract name of event
       CallExpression: function ({node}) {
         const {callee, arguments, loc} = node;
 
@@ -133,29 +134,35 @@ async function gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandl
           );
           cmdHandlerInfo.events.push(eventName);
         }
+      },
+      // find "const schema = {.....}"  variable declarations and extract validation schema
+      VariableDeclaration: function ({node}) {
+        if (
+          node.kind === 'const' &&
+          node.declarations &&
+          node.declarations.length > 0 &&
+          node.declarations[0].id.name === 'schema'
+        ) {
+          const firstDeclaration = node.declarations[0];
+          const schemaObjectLiteralSourceString = source.substring(
+            firstDeclaration.init.start,
+            firstDeclaration.init.end
+          );
+          const sourceToEvaluate = `schema = ${schemaObjectLiteralSourceString}`;
+          const ctx = {schema: {}};
+          vm.createContext(ctx);
+          vm.runInContext(sourceToEvaluate, ctx);
+          cmdHandlerInfo.schema = ctx.schema;
+        }
       }
     });
 
-    return cmdHandlerInfo;
-  }
-
-  /**
-   * load matching validation schema json file for given command
-   */
-  async function getValidationSchemaForCommand(commandName) {
-    const validationSchemaFileName = path.join(validationSchemasDirPath, commandName + '.json');
-    try {
-      const validationSchemaFileContent = await fs.promises.readFile(
-        validationSchemaFileName,
-        'utf-8'
-      );
-      return JSON.parse(validationSchemaFileContent);
-    } catch (readError) {
+    if (!cmdHandlerInfo.schema) {
       console.error(
-        `Could not read validationSchema for command "${commandName}"! Expected it to be here :  ${validationSchemaFileName}`
+        `Could not get validationSchema for command "${commandName}"! Expected it to be defined as "const schema = {......}" `
       );
-      return {};
     }
+    return cmdHandlerInfo;
   }
 }
 
@@ -172,7 +179,7 @@ async function parseFile(filePath) {
       if (err) {
         reject(err);
       }
-      resolve(result);
+      resolve({result, source});
     })
   );
 }

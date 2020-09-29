@@ -79,7 +79,7 @@ function joinExistingRoom(room, command, userId) {
     users: room.get('users').set(userObject.id, userObject).toJS(), // and all users that were already in that room
     stories: room.get('stories').toJS(),
     selectedStory: room.get('selectedStory'),
-    cardConfig: room.get('cardConfig').toJS()
+    cardConfig: room.get('cardConfig') ? room.get('cardConfig').toJS() : defaultCardConfig
   };
 
   room.applyEvent('joinedRoom', joinedRoomEventPayload);

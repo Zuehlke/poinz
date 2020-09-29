@@ -140,7 +140,10 @@ function validateSingleCardConfigItem(ccItem) {
   }
 
   if (!Number.isFinite(ccItem.value)) {
-    return 'Property "value" on a card in cardConfig must be a number';
+    const parsedValue = parseFloat(ccItem.value);
+    if (isNaN(parsedValue)) {
+      return 'Property "value" on a card in cardConfig must be a number';
+    }
   }
   if (typeof ccItem.label !== 'string') {
     return 'Property "label" on a card in cardConfig must be a string';

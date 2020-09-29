@@ -53,11 +53,39 @@ test('missing property', () => {
 });
 
 test('"value" not a Number', () => {
-  const res = validateCardConfig([{label: '1', value: '1', color: 'red'}]);
+  const res = validateCardConfig([{label: '1', value: 'sfdhsdfhsdfhsdfh', color: 'red'}]);
 
   expect(res).not.toBeFalsy();
 
   expect(res).toBe('Property "value" on a card in cardConfig must be a number');
+});
+
+test('"value" not a Number (object)', () => {
+  const res = validateCardConfig([
+    {
+      label: '1',
+      value: {
+        /**...something else **/
+      },
+      color: 'red'
+    }
+  ]);
+
+  expect(res).not.toBeFalsy();
+
+  expect(res).toBe('Property "value" on a card in cardConfig must be a number');
+});
+
+test('"value" a string, but parseable to a Number', () => {
+  const res = validateCardConfig([{label: '1', value: '1', color: 'red'}]);
+
+  expect(res).toBeUndefined(); // allow numbers as strings.
+});
+
+test('"value" a string, but parseable to a Number', () => {
+  const res = validateCardConfig([{label: '1', value: '0.5', color: 'red'}]);
+
+  expect(res).toBeUndefined(); // allow numbers as strings.
 });
 
 test('"label" not a String', () => {

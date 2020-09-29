@@ -6,7 +6,8 @@ test('Should produce cardConfigSet event', async () => {
 
   const customCc = [
     {label: '?', value: -2, color: '#bdbfbf'},
-    {label: '1/2', value: 0.5, color: '#667a66'}
+    {label: '1/2', value: '0.5', color: '#667a66'}, // <<-  allow strings representing a number (can be parsed to a number)
+    {label: '1', value: '1', color: '#667a66'} // <<-  allow strings representing a number (can be parsed to a number)
   ];
 
   const commandId = uuid();
@@ -25,8 +26,14 @@ test('Should produce cardConfigSet event', async () => {
 
     const [cardConfigSetEvent] = producedEvents;
 
-    expect(cardConfigSetEvent.payload.cardConfig).toEqual(customCc);
-    expect(room.cardConfig).toEqual(customCc);
+    const sanitizedConfig = [
+      {label: '?', value: -2, color: '#bdbfbf'},
+      {label: '1/2', value: 0.5, color: '#667a66'}, // we expect that the "value" properties are numbers, no longer strings
+      {label: '1', value: 1, color: '#667a66'}
+    ];
+
+    expect(cardConfigSetEvent.payload.cardConfig).toEqual(sanitizedConfig);
+    expect(room.cardConfig).toEqual(sanitizedConfig);
   });
 });
 

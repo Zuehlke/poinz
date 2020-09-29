@@ -1,7 +1,8 @@
+import {throwIfStoryIdNotFoundInRoom, throwIfStoryTrashed} from './commonPreconditions';
+
 /**
  * A user selected a story (marked it as the "current" story to estimate)
  */
-import {throwIfStoryIdNotFoundInRoom, throwIfStoryTrashed} from './commonPreconditions';
 
 const schema = {
   allOf: [

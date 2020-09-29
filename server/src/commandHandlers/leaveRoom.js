@@ -3,6 +3,7 @@
  * Is also produced by the socketServer itself on connection lost!
  *
  */
+
 const schema = {
   allOf: [
     {

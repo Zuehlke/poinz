@@ -5,6 +5,7 @@
  *
  * Can only be done for the currently selected story.
  */
+
 const schema = {
   allOf: [
     {

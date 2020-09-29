@@ -1,6 +1,7 @@
 /**
  * A user sets his username.
  */
+
 const schema = {
   allOf: [
     {

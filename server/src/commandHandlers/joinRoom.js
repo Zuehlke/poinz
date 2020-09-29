@@ -8,6 +8,7 @@
  * Produces also events for additional properties if they are preset "usernameSet", "emailSet", "excludedFromEstimations".
  *
  */
+
 const schema = {
   allOf: [
     {

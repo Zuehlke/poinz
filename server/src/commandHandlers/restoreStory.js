@@ -5,6 +5,7 @@ import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
  * A story must be first marked as "trashed", before it can be restored.
  * Story will no longer be marked as "trashed".
  */
+
 const schema = {
   allOf: [
     {

@@ -4,6 +4,7 @@
  * If story is already revealed, reject command.
  *
  */
+
 const schema = {
   allOf: [
     {

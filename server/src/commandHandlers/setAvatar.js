@@ -3,6 +3,7 @@
  * Only the client (App) knows which and how many avatars exist and also which number maps to which avatar.
  * Currently 0 is the "anonymous" avatar and used by default.
  */
+
 const schema = {
   allOf: [
     {

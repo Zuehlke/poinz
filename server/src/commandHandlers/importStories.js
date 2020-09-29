@@ -8,6 +8,7 @@ import parseCsvDataUrlToStories from './parseCsvDataUrlToStories';
  * Will trigger "storySelected" event, if no story is selected
  *
  */
+
 const schema = {
   allOf: [
     {

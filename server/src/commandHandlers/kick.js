@@ -2,6 +2,7 @@
  * A user removes a disconnected user from the room.
  *
  */
+
 const schema = {
   allOf: [
     {

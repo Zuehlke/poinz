@@ -7,19 +7,19 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from './colors';
-import {RIGHT_MENU_WIDTH} from './dimensions';
+import {RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
 
 export const StyledUserMenu = styled.div`
   z-index: 10;
   position: fixed;
   width: ${RIGHT_MENU_WIDTH}px;
-  top: 0;
+  top: ${TOPBAR_HEIGHT}px;
   bottom: 0;
   right: ${(props) => (props.shown ? '0' : RIGHT_MENU_WIDTH * -1 + 'px')};
   transition: all 0.2s ease-out;
   background: ${COLOR_BACKGROUND_GREY};
   box-sizing: border-box;
-  padding: 27px 8px 8px;
+  padding: 10px 8px 0 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -27,7 +27,7 @@ export const StyledUserMenu = styled.div`
   &:after {
     content: '';
     border-right: 1px solid ${COLOR_LIGHTER_GREY};
-    top: 44px;
+    top: 10px;
     left: 0;
     position: absolute;
     bottom: 20px;
@@ -48,7 +48,7 @@ export const StyledSection = styled.div`
   background: white;
   border: 1px solid ${COLOR_LIGHTER_GREY};
   padding: 8px;
-  margin: 16px 0;
+  margin: 0 0 16px 0;
 `;
 
 export const StyledTextInput = styled.div`

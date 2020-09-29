@@ -95,7 +95,9 @@ test('nonexisting room', () => {
 });
 
 test('existing room with user match', async () => {
-  const {processor, userId, roomId} = await prepOneUserInOneRoom();
+  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+
+  mockRoomsStore.manipulate((room) => room.set('cardConfig', undefined)); // simulate an "old" room that was created before #103
 
   const commandId = uuid();
   return processor(

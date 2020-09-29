@@ -41,5 +41,9 @@
   "export": "Exportieren",
   "exportInfo": "Du kannst die Stories und Schätzungen als json Datei exportieren.",
   "exportLinkText": "Download",
-  "kickUser": "Benutzer rauswerfen"
+  "kickUser": "Benutzer rauswerfen",
+  "customCards": "Benutzerdefinierte Karten",
+  "customCardsInfo": "Wähle ein benutzerdefiniertes set an Karten. Wenn im Raum schon geschätzte Stories vorhanden sind, kann dies zu unerwarteten Resultaten führen...",
+  "iKnowWhatImDoin": "Ich weiss, was ich tue...",
+  "customCardsJsonError": "Entschuldigung, wir können den Input nicht parsen. Invalides JSON!"
 }

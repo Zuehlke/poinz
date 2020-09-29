@@ -44,5 +44,6 @@
   "kickUser": "Kick User",
   "customCards": "Custom Cards",
   "customCardsInfo": "Use a custom set of estimation cards. If the room contains already estimated stories, you might get unexpected results...",
-  "iKnowWhatImDoin": "I know what I'm doing..."
+  "iKnowWhatImDoin": "I know what I'm doing...",
+  "customCardsJsonError": "Sorry, we cannot parse the input to JSON!"
 }

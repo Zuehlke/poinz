@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
-import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './colors';
+import {
+  COLOR_BACKGROUND_GREY,
+  COLOR_BLUE,
+  COLOR_LIGHTER_GREY,
+  COLOR_ORANGE,
+  COLOR_WARNING
+} from './colors';
 import {RIGHT_MENU_WIDTH} from './dimensions';
 
 export const StyledUserMenu = styled.div`
@@ -122,5 +128,11 @@ export const StyledTextarea = styled.textarea`
 export const StyledExpandButton = styled.button`
   padding: 3px;
   font-size: small;
-  margin:0 4px;
+  margin: 0 4px;
+`;
+
+export const ErrorMsg = styled.p`
+  color: ${COLOR_WARNING};
+  margin-bottom: 2px;
+  font-size: small;
 `;

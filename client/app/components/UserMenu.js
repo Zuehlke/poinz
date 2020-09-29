@@ -23,7 +23,8 @@ import {
   StyledMiniAvatar,
   StyledLinkButton,
   StyledTextarea,
-  StyledExpandButton
+  StyledExpandButton,
+  ErrorMsg
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
@@ -34,29 +35,35 @@ import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
  * - changing language
  */
 const UserMenu = ({
-                    t,
-                    language,
-                    user,
-                    setUsername,
-                    setEmail,
-                    setAvatar,
-                    toggleExcluded,
-                    setLanguage,
-                    userMenuShown,
-                    cardConfig,
-                    setCardConfig,
-                    roomId
-                  }) => {
+  t,
+  language,
+  user,
+  setUsername,
+  setEmail,
+  setAvatar,
+  toggleExcluded,
+  setLanguage,
+  userMenuShown,
+  cardConfig,
+  setCardConfig,
+  roomId
+}) => {
   const username = user.username;
   const email = user.email;
   const excluded = user.excluded;
 
   const [myUsername, setMyUsername] = useState(username);
   const [myEmail, setMyEmail] = useState(email || '');
+
+  // custom card configuration section
   const [customCardConfigString, setCustomCardConfigString] = useState(
     JSON.stringify(cardConfig, null, 4)
   );
+  React.useEffect(() => {
+    setCustomCardConfigString(JSON.stringify(cardConfig, null, 4));
+  }, [cardConfig]);
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
+  const [customCardConfigJsonError, setCustomCardConfigJsonError] = useState(false);
 
   return (
     <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
@@ -81,7 +88,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary"
               onClick={saveUsername}
             >
-              <i className="fa fa-save"/>
+              <i className="fa fa-save" />
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -147,7 +154,7 @@ const UserMenu = ({
               onClick={saveEmail}
               data-testid="saveEmailButton"
             >
-              <i className="fa fa-save"/>
+              <i className="fa fa-save" />
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -195,13 +202,14 @@ const UserMenu = ({
                   onChange={(e) => setCustomCardConfigString(e.target.value)}
                 ></StyledTextarea>
               </p>
+              {customCardConfigJsonError && <ErrorMsg>{t('customCardsJsonError')}</ErrorMsg>}
               <p>
                 <button
                   type="button"
                   className="pure-button pure-button-primary"
                   onClick={setCustomCardConfiguration}
                 >
-                  {t('iKnowWhatImDoin')} <i className="fa fa-save"/>
+                  {t('iKnowWhatImDoin')} <i className="fa fa-save" />
                 </button>
               </p>
             </div>
@@ -229,9 +237,10 @@ const UserMenu = ({
   function setCustomCardConfiguration() {
     try {
       const customCc = JSON.parse(customCardConfigString);
+      setCustomCardConfigJsonError(false);
       setCardConfig(customCc);
     } catch (e) {
-      console.warn('cardConfig is invalid json...');
+      setCustomCardConfigJsonError(true);
     }
   }
 };

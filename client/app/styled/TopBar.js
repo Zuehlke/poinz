@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE} from './colors';
-import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH, ZuehlkeFont} from './dimensions';
+import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH, TOPBAR_HEIGHT, ZuehlkeFont} from './dimensions';
 
 export const StyledTopBar = styled.div`
   z-index: 1003;
@@ -12,7 +12,7 @@ export const StyledTopBar = styled.div`
   top: 0;
   left: 0;
   right: 0;
-  height: 34px;
+  height: ${TOPBAR_HEIGHT}px;
   padding: 0;
   box-sizing: border-box;
 `;

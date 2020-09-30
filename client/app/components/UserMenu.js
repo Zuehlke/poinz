@@ -4,7 +4,15 @@ import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
 
-import {toggleExcluded, setUsername, setEmail, leaveRoom, setLanguage, setAvatar} from '../actions';
+import {
+  toggleExcluded,
+  setUsername,
+  setEmail,
+  leaveRoom,
+  setLanguage,
+  setAvatar,
+  setCardConfig
+} from '../actions';
 import {
   StyledAvatarGrid,
   StyledLicenseHint,
@@ -13,7 +21,10 @@ import {
   StyledSection,
   StyledUserMenu,
   StyledMiniAvatar,
-  StyledLinkButton
+  StyledLinkButton,
+  StyledTextarea,
+  StyledExpandButton,
+  ErrorMsg
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
@@ -33,6 +44,8 @@ const UserMenu = ({
   toggleExcluded,
   setLanguage,
   userMenuShown,
+  cardConfig,
+  setCardConfig,
   roomId
 }) => {
   const username = user.username;
@@ -41,6 +54,16 @@ const UserMenu = ({
 
   const [myUsername, setMyUsername] = useState(username);
   const [myEmail, setMyEmail] = useState(email || '');
+
+  // custom card configuration section
+  const [customCardConfigString, setCustomCardConfigString] = useState(
+    JSON.stringify(cardConfig, null, 4)
+  );
+  React.useEffect(() => {
+    setCustomCardConfigString(JSON.stringify(cardConfig, null, 4));
+  }, [cardConfig]);
+  const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
+  const [customCardConfigJsonError, setCustomCardConfigJsonError] = useState(false);
 
   return (
     <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
@@ -152,10 +175,45 @@ const UserMenu = ({
 
           <p>
             <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
-              {' '}
               {t('exportLinkText')} <i className="fa fa-download"></i>{' '}
             </StyledLinkButton>
           </p>
+        </StyledSection>
+
+        <StyledSection>
+          <h5>{t('customCards')}</h5>
+          {t('customCardsInfo')}
+
+          {!customCardConfigExpanded && (
+            <StyledExpandButton
+              type="button"
+              className="pure-button pure-button-primary"
+              onClick={() => setCustomCardConfigExpanded(true)}
+            >
+              <i className="fa fa-chevron-down"></i>
+            </StyledExpandButton>
+          )}
+
+          {customCardConfigExpanded && (
+            <div>
+              <p>
+                <StyledTextarea
+                  value={customCardConfigString}
+                  onChange={(e) => setCustomCardConfigString(e.target.value)}
+                ></StyledTextarea>
+              </p>
+              {customCardConfigJsonError && <ErrorMsg>{t('customCardsJsonError')}</ErrorMsg>}
+              <p>
+                <button
+                  type="button"
+                  className="pure-button pure-button-primary"
+                  onClick={setCustomCardConfiguration}
+                >
+                  {t('iKnowWhatImDoin')} <i className="fa fa-save" />
+                </button>
+              </p>
+            </div>
+          )}
         </StyledSection>
       </div>
 
@@ -175,6 +233,16 @@ const UserMenu = ({
   function saveEmail() {
     setEmail(myEmail);
   }
+
+  function setCustomCardConfiguration() {
+    try {
+      const customCc = JSON.parse(customCardConfigString);
+      setCustomCardConfigJsonError(false);
+      setCardConfig(customCc);
+    } catch (e) {
+      setCustomCardConfigJsonError(true);
+    }
+  }
 };
 
 UserMenu.propTypes = {
@@ -187,13 +255,16 @@ UserMenu.propTypes = {
   setLanguage: PropTypes.func,
   setUsername: PropTypes.func,
   setAvatar: PropTypes.func,
+  setCardConfig: PropTypes.func,
   setEmail: PropTypes.func,
+  cardConfig: PropTypes.array,
   roomId: PropTypes.string
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
+    cardConfig: state.cardConfig,
     language: state.language,
     user: state.users[state.userId],
     userMenuShown: state.userMenuShown,
@@ -205,6 +276,7 @@ export default connect(
     setUsername,
     setEmail,
     setAvatar,
-    setLanguage
+    setLanguage,
+    setCardConfig
   }
 )(UserMenu);

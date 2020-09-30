@@ -20,6 +20,7 @@ import avatarSet from './avatarSet';
 import excludedFromEstimations from './excludedFromEstimations';
 import includedInEstimations from './includedInEstimations';
 import consensusAchieved from './consensusAchieved';
+import cardConfigSet from './cardConfigSet';
 
 export default {
   connectionLost,
@@ -43,5 +44,6 @@ export default {
   emailSet,
   avatarSet,
   excludedFromEstimations,
-  includedInEstimations
+  includedInEstimations,
+  cardConfigSet
 };

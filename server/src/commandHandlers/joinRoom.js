@@ -1,3 +1,5 @@
+import defaultCardConfig from '../defaultCardConfig';
+
 /**
  * A user joins a room.
  *
@@ -40,7 +42,7 @@ const schema = {
 
 const joinRoomCommandHandler = {
   canCreateRoom: true,
-  skipUserIdRoomCheck: true,
+  skipUserIdRoomCheck: true, // will not check whether userId is part of the room.  for most other commands this is a precondition. not for "joinRoom".
   schema,
   fn: (room, command, userId) => {
     if (room.get('pristine')) {
@@ -72,7 +74,8 @@ function joinNewRoom(room, command, userId) {
       }
     },
     stories: {},
-    selectedStory: undefined
+    selectedStory: undefined,
+    cardConfig: defaultCardConfig
   };
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
@@ -106,7 +109,8 @@ function joinExistingRoom(room, command, userId) {
   const joinedRoomEventPayload = {
     users: room.get('users').set(userObject.id, userObject).toJS(), // and all users that were already in that room
     stories: room.get('stories').toJS(),
-    selectedStory: room.get('selectedStory')
+    selectedStory: room.get('selectedStory'),
+    cardConfig: room.get('cardConfig') ? room.get('cardConfig').toJS() : defaultCardConfig
   };
 
   room.applyEvent('joinedRoom', joinedRoomEventPayload);

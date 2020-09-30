@@ -131,7 +131,8 @@ const eventActionHandlers = {
           selectedStory: payload.selectedStory,
           users: payload.users || {},
           stories: payload.stories || {},
-          pendingJoinCommand: undefined
+          pendingJoinCommand: undefined,
+          cardConfig: payload.cardConfig
         };
       } else {
         // if our client state has already a userId set, this event indicates that someone else joined
@@ -535,6 +536,14 @@ const eventActionHandlers = {
       `${username} started a new estimation round for story "${
         modifiedState.stories[payload.storyId].title
       }"`
+  },
+
+  [EVENT_ACTION_TYPES.cardConfigSet]: {
+    fn: (state, payload) => ({
+      ...state,
+      cardConfig: payload.cardConfig
+    }),
+    log: (username) => `${username} set new custom card configuration for this room`
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {

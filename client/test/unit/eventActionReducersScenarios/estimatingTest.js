@@ -52,7 +52,8 @@ test('Estimation with two users', () => {
           id: firstStoryId,
           title: 'FirstStory'
         }
-      }
+      },
+      cardConfig: []
     }
   };
 

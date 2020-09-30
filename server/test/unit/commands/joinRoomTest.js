@@ -1,6 +1,7 @@
 import {v4 as uuid} from 'uuid';
 
 import {prepEmpty, prepOneUserInOneRoom} from '../testUtils';
+import defaultCardConfig from '../../../src/defaultCardConfig';
 
 test('nonexisting room', () => {
   const {processor} = prepEmpty();
@@ -53,7 +54,8 @@ test('nonexisting room', () => {
           username: 'tester',
           avatar: 0
         }
-      }
+      },
+      cardConfig: defaultCardConfig
     });
 
     expect(usernameSetEvent.userId).toEqual(userId);
@@ -82,14 +84,20 @@ test('nonexisting room', () => {
           username: 'tester'
         }
       },
-      stories: {}
+      stories: {},
+      cardConfig: defaultCardConfig
       // and some timestamps properties: created, lastActivity
     });
+
+    // make sure that "pristine" flag is not persisted
+    expect(room.pristine).toBeUndefined();
   });
 });
 
 test('existing room with user match', async () => {
-  const {processor, userId, roomId} = await prepOneUserInOneRoom();
+  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+
+  mockRoomsStore.manipulate((room) => room.set('cardConfig', undefined)); // simulate an "old" room that was created before #103
 
   const commandId = uuid();
   return processor(
@@ -127,7 +135,8 @@ test('existing room with user match', async () => {
           username: 'tester',
           avatar: 0
         }
-      }
+      },
+      cardConfig: defaultCardConfig
     });
 
     expect(usernameSetEvent.userId).toEqual(userId);
@@ -207,7 +216,8 @@ test('existing room with user match, command has no preset properties', async ()
           username: 'custom-user-name',
           avatar: 1
         }
-      }
+      },
+      cardConfig: defaultCardConfig
     });
 
     expect(usernameSetEvent.userId).toEqual(userId);

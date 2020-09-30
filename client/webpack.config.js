@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const execSync = require('child_process').execSync;
 
 const packageInformation = require('./package.json');
 
@@ -11,13 +12,14 @@ const definePlugin = new webpack.DefinePlugin({
   __POINZ_CONFIG__: JSON.stringify({
     env: 'dev',
     version: packageInformation.version + '-dev', // PoinZ version that is displayed in the ui
+    vcsInfo: getGitInformation(),
     buildTime: Date.now(),
     wsUrl: 'http://localhost:3000' // backend websocket endpoint
   })
 });
 
 module.exports = {
-  mode:'development',
+  mode: 'development',
 
   entry: './app/app.js',
 
@@ -31,7 +33,6 @@ module.exports = {
 
   module: {
     rules: [
-
       {
         // load css files and put them as <style> tags in the DOM
         test: /\.css$/,
@@ -117,5 +118,15 @@ module.exports = {
       }
     }
   }
-
 };
+
+function getGitInformation() {
+  const gitExecOptions = {cwd: __dirname, timeout: 1000, encoding: 'utf-8'};
+  const abbrev = execSync('git rev-parse --abbrev-ref HEAD', gitExecOptions);
+  const short = execSync('git rev-parse --short HEAD', gitExecOptions);
+
+  return {
+    branch: abbrev.split('\n').join(''),
+    hash: short.split('\n').join('')
+  };
+}

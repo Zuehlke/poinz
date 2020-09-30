@@ -34,6 +34,7 @@ const TopBar = ({
     <StyledTopBar data-testid="topBar">
       <StyledTopLeft>
         <StyledBacklogToggle
+          data-testid="backlogToggle"
           className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
           onClick={toggleBacklog}
         >
@@ -63,6 +64,7 @@ const TopBar = ({
           <i className="fa fa-cog"></i>
         </StyledQuickMenuButton>
         <StyledQuickMenuButton
+          data-testid="actionLogToggle"
           className={`clickable pure-button pure-button-primary ${
             logShown ? 'pure-button-active' : ''
           }`}

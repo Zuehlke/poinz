@@ -117,36 +117,73 @@ test(EVENT_RECEIVED, () => {
 test(TOGGLE_BACKLOG, () => {
   const startingState = initialState();
 
+  // usermenu (settings) is currently shown, hide it
+  startingState.userMenuShown = true;
   let modifiedState = clientActionReducer(startingState, toggleBacklog());
   expect(modifiedState.backlogShown).toBe(true);
+  expect(modifiedState.userMenuShown).toBe(false);
 
   modifiedState = clientActionReducer(modifiedState, toggleBacklog());
   expect(modifiedState.backlogShown).toBe(false);
+  expect(modifiedState.userMenuShown).toBe(false);
+
+  // if action log is currently shown, hide it
+  startingState.logShown = true;
+  modifiedState = clientActionReducer(startingState, toggleBacklog());
+  expect(modifiedState.backlogShown).toBe(true);
+  expect(modifiedState.logShown).toBe(false);
+
+  modifiedState = clientActionReducer(modifiedState, toggleBacklog());
+  expect(modifiedState.backlogShown).toBe(false);
+  expect(modifiedState.logShown).toBe(false);
 });
 
-test(TOGGLE_USER_MENU + ' and ' + TOGGLE_LOG, () => {
+test(TOGGLE_USER_MENU, () => {
   const startingState = initialState();
 
+  // if backlog (stories) is currently shown, hide it
+  startingState.backlogShown = true;
   let modifiedState = clientActionReducer(startingState, toggleUserMenu());
   expect(modifiedState.userMenuShown).toBe(true);
-  expect(modifiedState.logShown).toBe(false);
-
-  modifiedState = clientActionReducer(modifiedState, toggleLog());
-  expect(modifiedState.userMenuShown).toBe(false);
-  expect(modifiedState.logShown).toBe(true);
+  expect(modifiedState.backlogShown).toBe(false);
 
   modifiedState = clientActionReducer(modifiedState, toggleUserMenu());
+  expect(modifiedState.userMenuShown).toBe(false);
+  expect(modifiedState.backlogShown).toBe(false);
+
+  // if action log is currently shown, hide it
+  startingState.logShown = true;
+  modifiedState = clientActionReducer(startingState, toggleUserMenu());
   expect(modifiedState.userMenuShown).toBe(true);
   expect(modifiedState.logShown).toBe(false);
 
   modifiedState = clientActionReducer(modifiedState, toggleUserMenu());
   expect(modifiedState.userMenuShown).toBe(false);
   expect(modifiedState.logShown).toBe(false);
+});
+
+test(TOGGLE_LOG, () => {
+  const startingState = initialState();
+
+  // if backlog (stories) is currently shown, hide it
+  startingState.backlogShown = true;
+  let modifiedState = clientActionReducer(startingState, toggleLog());
+  expect(modifiedState.logShown).toBe(true);
+  expect(modifiedState.backlogShown).toBe(false);
 
   modifiedState = clientActionReducer(modifiedState, toggleLog());
-  modifiedState = clientActionReducer(modifiedState, toggleLog());
-  expect(modifiedState.userMenuShown).toBe(false);
   expect(modifiedState.logShown).toBe(false);
+  expect(modifiedState.backlogShown).toBe(false);
+
+  // usermenu (settings) is currently shown, hide it
+  startingState.userMenuShown = true;
+  modifiedState = clientActionReducer(startingState, toggleLog());
+  expect(modifiedState.logShown).toBe(true);
+  expect(modifiedState.userMenuShown).toBe(false);
+
+  modifiedState = clientActionReducer(modifiedState, toggleLog());
+  expect(modifiedState.logShown).toBe(false);
+  expect(modifiedState.userMenuShown).toBe(false);
 });
 
 test(EDIT_STORY + ' and ' + CANCEL_EDIT_STORY, () => {

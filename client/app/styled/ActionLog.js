@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
-import {RIGHT_MENU_WIDTH} from './dimensions';
+import {MEDIA_MIN_WIDTH_THRESH, RIGHT_MENU_WIDTH} from './dimensions';
 import {COLOR_BACKGROUND_GREY, COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './colors';
 
 export const StyledActionLog = styled.div`
   z-index: 10;
   position: fixed;
-  width: ${RIGHT_MENU_WIDTH}px;
+  width: ${(props) => (props.shown ? '100%' : RIGHT_MENU_WIDTH + 'px')};
   top: 0;
   bottom: 0;
   right: ${(props) => (props.shown ? '0' : RIGHT_MENU_WIDTH * -1 + 'px')};
@@ -15,6 +15,10 @@ export const StyledActionLog = styled.div`
   box-sizing: border-box;
   padding: 27px 8px 8px;
   background: ${COLOR_BACKGROUND_GREY};
+
+  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+    width: ${RIGHT_MENU_WIDTH}px;
+  }
 
   &:after {
     content: '';

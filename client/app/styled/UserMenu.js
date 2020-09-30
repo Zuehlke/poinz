@@ -7,12 +7,12 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from './colors';
-import {RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
+import {MEDIA_MIN_WIDTH_THRESH, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
 
 export const StyledUserMenu = styled.div`
   z-index: 10;
   position: fixed;
-  width: ${RIGHT_MENU_WIDTH}px;
+  width: ${(props) => (props.shown ? '100%' : RIGHT_MENU_WIDTH + 'px')};
   top: ${TOPBAR_HEIGHT}px;
   bottom: 0;
   right: ${(props) => (props.shown ? '0' : RIGHT_MENU_WIDTH * -1 + 'px')};
@@ -24,13 +24,20 @@ export const StyledUserMenu = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
+  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+    width: ${RIGHT_MENU_WIDTH}px;
+  }
+
   &:after {
     content: '';
-    border-right: 1px solid ${COLOR_LIGHTER_GREY};
     top: 10px;
     left: 0;
     position: absolute;
     bottom: 20px;
+
+    @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+      border-right: 1px solid ${COLOR_LIGHTER_GREY};
+    }
   }
 
   h5 {

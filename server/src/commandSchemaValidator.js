@@ -1,11 +1,9 @@
-import path from 'path';
-import fs from 'fs';
 import util from 'util';
 import tv4 from 'tv4';
 
 import getLogger from './getLogger';
 
-import commandHandlers from './commandHandlers/commandHandlers';
+import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers';
 
 const LOGGER = getLogger('commandSchemaValidator');
 
@@ -54,14 +52,12 @@ function serializeErrors(tv4Errors) {
 }
 
 /**
- * loads all json schemas
+ * loads all command validation schemas
  */
 function gatherSchemas() {
   LOGGER.info('loading command schemas defined in command handlers...');
 
-  const handlerEntries = Object.entries(commandHandlers);
-
-  const schemaMap = handlerEntries.reduce((total, currentEntry) => {
+  const schemaMap = Object.entries(commandHandlers).reduce((total, currentEntry) => {
     if (!currentEntry[1].schema) {
       throw new Error(
         `Fatal error: CommandHandler "${currentEntry[0]}" does not define "schema" !`
@@ -72,9 +68,7 @@ function gatherSchemas() {
   }, {});
 
   // add the base command schema, which is referenced from all others (    $ref: 'command'    )
-  const baseCommandSchema = path.resolve(__dirname, './commandHandlers/command.json');
-  const schemaFileContent = fs.readFileSync(baseCommandSchema, 'utf-8');
-  tv4.addSchema(JSON.parse(schemaFileContent));
+  tv4.addSchema(baseCommandSchema);
 
   return schemaMap;
 }

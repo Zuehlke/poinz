@@ -35,13 +35,13 @@ const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkFo
     >
       {!isDisconnected && isExcluded && (
         <StyledUserBadge>
-          <i className="fa fa-eye"></i>
+          <i className="icon-eye"></i>
         </StyledUserBadge>
       )}
 
       {isDisconnected && (
         <StyledUserBadge>
-          <i className="fa fa-flash"></i>
+          <i className="icon-flash"></i>
         </StyledUserBadge>
       )}
 
@@ -55,8 +55,8 @@ const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkFo
 
       {isMarkedForKick && (
         <StyledUserKickOverlay>
-          <i className="fa fa-times" onClick={onMarkForKick} title={t('cancel')}></i>
-          <i className="fa fa-sign-out" onClick={() => kick(user.id)} title={t('kickUser')}></i>
+          <i className="icon-cancel" onClick={onMarkForKick} title={t('cancel')}></i>
+          <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
         </StyledUserKickOverlay>
       )}
 

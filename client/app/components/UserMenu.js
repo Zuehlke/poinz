@@ -97,7 +97,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary"
               onClick={saveUsername}
             >
-              <i className="fa fa-save" />
+              <i className="icon-floppy" />
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -163,7 +163,7 @@ const UserMenu = ({
               onClick={saveEmail}
               data-testid="saveEmailButton"
             >
-              <i className="fa fa-save" />
+              <i className="icon-floppy" />
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -173,8 +173,7 @@ const UserMenu = ({
           {t('excludedInfo')}
 
           <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
-            <i className={'fa ' + (excluded ? 'fa-check-square-o' : 'fa-square-o')}></i>{' '}
-            {t('excluded')}
+            <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('excluded')}
           </p>
         </StyledSection>
 
@@ -184,7 +183,7 @@ const UserMenu = ({
 
           <p>
             <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
-              {t('exportLinkText')} <i className="fa fa-download"></i>{' '}
+              {t('exportLinkText')} <i className="icon-download-cloud"></i>
             </StyledLinkButton>
           </p>
         </StyledSection>
@@ -199,7 +198,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary"
               onClick={() => setCustomCardConfigExpanded(true)}
             >
-              <i className="fa fa-chevron-down"></i>
+              <i className="icon-angle-double-down"></i>
             </StyledExpandButton>
           )}
 
@@ -218,7 +217,7 @@ const UserMenu = ({
                   className="pure-button pure-button-primary"
                   onClick={setCustomCardConfiguration}
                 >
-                  {t('iKnowWhatImDoin')} <i className="fa fa-save" />
+                  {t('iKnowWhatImDoin')} <i className="icon-floppy" />
                 </button>
               </p>
             </div>

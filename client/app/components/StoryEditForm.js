@@ -98,7 +98,7 @@ const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
     <div className="pure-u-1-2">
       <button type="button" className="pure-button pure-input-1" onClick={onCancel}>
         {t('cancel')}
-        <i className="fa fa-times button-icon-right"></i>
+        <i className="icon-cancel button-icon-right"></i>
       </button>
     </div>
     <div className="pure-u-1-2">
@@ -109,7 +109,7 @@ const StoryEditFormButtonGroup = ({t, onSave, onCancel}) => (
         data-testid="saveStoryChangesButton"
       >
         {t('save')}
-        <i className="fa fa-save button-icon-right"></i>
+        <i className="icon-floppy button-icon-right"></i>
       </button>
     </div>
   </StyledEditFormButtonGroup>

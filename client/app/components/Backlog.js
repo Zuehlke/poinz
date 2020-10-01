@@ -82,7 +82,7 @@ const BacklogModeButtons = ({
       onClick={onShowBacklog}
       data-testid="backlogModeActiveStories"
     >
-      <i className="fa fa-list-ul"></i> {t('backlog')} ({activeStoriesCount})
+      <i className="icon-list-bullet"></i> {t('backlog')} ({activeStoriesCount})
     </button>
     <button
       title={t('trash')}
@@ -91,7 +91,7 @@ const BacklogModeButtons = ({
       onClick={onShowTrash}
       data-testid="backlogModeTrashedStories"
     >
-      <i className="fa fa-trash"></i> {t('trash')} ({trashedStoriesCount})
+      <i className="icon-trash-empty"></i> {t('trash')} ({trashedStoriesCount})
     </button>
   </div>
 );

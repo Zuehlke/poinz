@@ -61,7 +61,7 @@ const TopBar = ({
           onClick={toggleUserMenu}
           title={t('toggleMenu')}
         >
-          <i className="fa fa-cog"></i>
+          <i className="icon-cog"></i>
         </StyledQuickMenuButton>
         <StyledQuickMenuButton
           data-testid="actionLogToggle"
@@ -71,7 +71,7 @@ const TopBar = ({
           onClick={toggleLog}
           title={t('toggleLog')}
         >
-          <i className="fa fa-list"></i>
+          <i className="icon-doc-text"></i>
         </StyledQuickMenuButton>
 
         <StyledQuickMenuButton
@@ -79,7 +79,7 @@ const TopBar = ({
           onClick={leaveRoom}
           title={t('leaveRoom')}
         >
-          <i className="fa fa-sign-out"></i>
+          <i className="icon-logout"></i>
         </StyledQuickMenuButton>
       </StyledTopRight>
     </StyledTopBar>

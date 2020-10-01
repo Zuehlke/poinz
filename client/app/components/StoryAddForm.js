@@ -49,7 +49,7 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
         onClick={triggerAddAndClearForm}
       >
         {t('addStory')}
-        <i className="fa fa-plus  button-icon-right"></i>
+        <i className="icon-plus button-icon-right"></i>
       </button>
     </StyledAddForm>
   );

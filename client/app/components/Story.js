@@ -38,13 +38,13 @@ const Story = ({
     >
       <StyledStoryToolbar>
         <i
-          className="fa fa-pencil story-edit"
+          className="icon-pencil story-edit"
           onClick={triggerEdit}
           data-testid="editStoryButton"
           title={t('edit')}
         />
         <i
-          className="fa fa-trash story-trash"
+          className="icon-trash story-trash"
           onClick={triggerTrash}
           data-testid="trashStoryButton"
           title={t('trash')}

@@ -60,7 +60,7 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
             onClick={() => reveal(selectedStory.id)}
           >
             {t('revealManually')}
-            <i className="fa fa-hand-paper-o button-icon-right"></i>
+            <i className="icon-hand-paper-o button-icon-right"></i>
           </button>
         </BoardActionButtons>
       )}
@@ -73,7 +73,7 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
             onClick={() => newEstimationRound(selectedStory.id)}
           >
             {t('newRound')}
-            <i className="fa fa-undo  button-icon-right"></i>
+            <i className="icon-ccw button-icon-right"></i>
           </button>
         </BoardActionButtons>
       )}

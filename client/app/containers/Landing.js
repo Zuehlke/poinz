@@ -28,7 +28,7 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
 
         <StyledEyecatcher>
           <StyledInfoText small={true}>
-            <i className="fa fa-warning"></i>
+            <i className="icon-attention"></i>
             {t('disclaimer')}
           </StyledInfoText>
         </StyledEyecatcher>

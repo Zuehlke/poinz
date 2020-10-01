@@ -383,7 +383,11 @@ const eventActionHandlers = {
         ...state,
         users: {
           ...state.users,
-          [event.userId]: {...state.users[event.userId], email: payload.email}
+          [event.userId]: {
+            ...state.users[event.userId],
+            email: payload.email,
+            emailHash: payload.emailHash
+          }
         },
         presetEmail: isOwnUser ? payload.email : state.presetEmail
       };

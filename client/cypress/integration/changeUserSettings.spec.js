@@ -35,6 +35,9 @@ it('join room, open user menu and change settings', () => {
   // -- set gravatar email address
   cy.get(tid('userMenu', 'gravatarEmailInput')).type('test@gmail.com');
   cy.get(tid('saveEmailButton')).click();
+  cy.wait(400);
+  cy.get(tid('userMenu', 'gravatarEmailInput')).type('{selectall}set@zuehlke.com');
+  cy.get(tid('saveEmailButton')).click();
 
   // -- mark as excluded / included
   cy.get(tid('userMenu', 'excludedToggle')).click();

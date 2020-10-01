@@ -21,9 +21,11 @@ test('Should produce emailSet event', async () => {
     const [emailSetEvent] = producedEvents;
 
     expect(emailSetEvent.payload.email).toEqual('j.doe@gmail.com');
+    expect(emailSetEvent.payload.emailHash).toEqual('8115b7da7fff37aeaec18779411a1042');
     expect(emailSetEvent.userId).toEqual(userId);
 
     expect(room.users[userId].email).toEqual('j.doe@gmail.com');
+    expect(room.users[userId].emailHash).toEqual('8115b7da7fff37aeaec18779411a1042');
   });
 });
 

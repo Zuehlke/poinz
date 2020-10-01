@@ -1,5 +1,4 @@
 import React from 'react';
-import md5 from 'blueimp-md5';
 import PropTypes from 'prop-types';
 
 import avatarIcons from '../assets/avatars';
@@ -7,7 +6,7 @@ import {StyledAvatar} from '../styled/Avatar';
 
 const Avatar = ({user, isOwn, shaded, onClick}) => {
   const avatarImageSource = user.email
-    ? createGravatarUrl(user.email)
+    ? createGravatarUrl(user.emailHash)
     : avatarIcons[user.avatar || 0];
 
   return (
@@ -21,9 +20,8 @@ const Avatar = ({user, isOwn, shaded, onClick}) => {
   );
 };
 
-function createGravatarUrl(email) {
-  const hash = md5(email.trim().toLowerCase());
-  return `https://www.gravatar.com/avatar/${hash}?size=60`;
+function createGravatarUrl(emailHash) {
+  return `https://www.gravatar.com/avatar/${emailHash}?size=60`;
 }
 
 Avatar.propTypes = {

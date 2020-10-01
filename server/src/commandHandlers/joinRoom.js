@@ -1,4 +1,5 @@
 import defaultCardConfig from '../defaultCardConfig';
+import {calcEmailHash} from './setEmail';
 
 /**
  * A user joins a room.
@@ -68,8 +69,6 @@ function joinNewRoom(room, command, userId) {
       [userId]: {
         disconnected: false,
         id: userId,
-        username: command.payload.username,
-        email: command.payload.email,
         avatar
       }
     },
@@ -87,7 +86,8 @@ function joinNewRoom(room, command, userId) {
 
   if (command.payload.email) {
     room.applyEvent('emailSet', {
-      email: command.payload.email
+      email: command.payload.email,
+      emailHash: calcEmailHash(command.payload.email)
     });
   }
 
@@ -123,7 +123,8 @@ function joinExistingRoom(room, command, userId) {
 
   if (userObject.email) {
     room.applyEvent('emailSet', {
-      email: userObject.email
+      email: userObject.email,
+      emailHash: calcEmailHash(userObject.email)
     });
   }
 

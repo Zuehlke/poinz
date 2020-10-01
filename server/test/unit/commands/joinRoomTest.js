@@ -49,9 +49,7 @@ test('nonexisting room', () => {
       users: {
         [userId]: {
           disconnected: false,
-          email: 'super@test.com',
           id: userId,
-          username: 'tester',
           avatar: 0
         }
       },
@@ -65,7 +63,8 @@ test('nonexisting room', () => {
 
     expect(emailSetEvent.userId).toEqual(userId);
     expect(emailSetEvent.payload).toEqual({
-      email: 'super@test.com'
+      email: 'super@test.com',
+      emailHash: '230016156266ce4617c6a181f81b6ee1'
     });
 
     expect(avatarSetEvent.userId).toEqual(userId);
@@ -81,6 +80,7 @@ test('nonexisting room', () => {
           id: userId,
           avatar: 0,
           email: 'super@test.com',
+          emailHash: '230016156266ce4617c6a181f81b6ee1',
           username: 'tester'
         }
       },
@@ -94,8 +94,10 @@ test('nonexisting room', () => {
   });
 });
 
-test('existing room with user match', async () => {
-  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+test('existing room with matching user already in room (re-join) ', async () => {
+  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom(
+    'username-from-previous-join'
+  );
 
   mockRoomsStore.manipulate((room) => room.set('cardConfig', undefined)); // simulate an "old" room that was created before #103
 
@@ -106,7 +108,7 @@ test('existing room with user match', async () => {
       roomId,
       name: 'joinRoom',
       payload: {
-        username: 'tester',
+        username: 'tester', // command overrides already set username
         email: 'super@test.com',
         avatar: 0
       }
@@ -132,7 +134,7 @@ test('existing room with user match', async () => {
           disconnected: false,
           email: 'super@test.com',
           id: userId,
-          username: 'tester',
+          username: 'tester', // <- the payload of the join command takes precedence
           avatar: 0
         }
       },
@@ -146,7 +148,8 @@ test('existing room with user match', async () => {
 
     expect(emailSetEvent.userId).toEqual(userId);
     expect(emailSetEvent.payload).toEqual({
-      email: 'super@test.com'
+      email: 'super@test.com',
+      emailHash: '230016156266ce4617c6a181f81b6ee1'
     });
 
     expect(avatarSetEvent.userId).toEqual(userId);
@@ -162,7 +165,8 @@ test('existing room with user match', async () => {
           id: userId,
           avatar: 0,
           username: 'tester',
-          email: 'super@test.com'
+          email: 'super@test.com',
+          emailHash: '230016156266ce4617c6a181f81b6ee1'
         }
       },
       stories: {}
@@ -189,7 +193,7 @@ test('existing room with user match, command has no preset properties', async ()
       roomId,
       name: 'joinRoom',
       payload: {
-        // no preset username, email, avatar (which is totally valid)  e.g. first-time user
+        // no preset username, email, avatar (which is valid) (user has cleared local storage manually?)
       }
     },
     userId
@@ -227,7 +231,8 @@ test('existing room with user match, command has no preset properties', async ()
 
     expect(emailSetEvent.userId).toEqual(userId);
     expect(emailSetEvent.payload).toEqual({
-      email: 'super@test.com'
+      email: 'super@test.com',
+      emailHash: '230016156266ce4617c6a181f81b6ee1'
     });
     expect(avatarSetEvent.userId).toEqual(userId);
     expect(avatarSetEvent.payload).toEqual({
@@ -241,6 +246,7 @@ test('existing room with user match, command has no preset properties', async ()
         [userId]: {
           id: userId,
           email: 'super@test.com',
+          emailHash: '230016156266ce4617c6a181f81b6ee1',
           username: 'custom-user-name',
           avatar: 1
         }

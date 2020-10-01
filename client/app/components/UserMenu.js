@@ -52,10 +52,19 @@ const UserMenu = ({
   const email = user.email;
   const excluded = user.excluded;
 
-  const [myUsername, setMyUsername] = useState(username);
-  const [myEmail, setMyEmail] = useState(email || '');
+  // derive username for input field from prop
+  const [myUsername, setMyUsername] = useState(username || '');
+  React.useEffect(() => {
+    setMyUsername(user.username || '');
+  }, [user.username]);
 
-  // custom card configuration section
+  // derive email for input field from prop
+  const [myEmail, setMyEmail] = useState(email || '');
+  React.useEffect(() => {
+    setMyEmail(user.email || '');
+  }, [user.email]);
+
+  // derive custom card config for textarea   from prop
   const [customCardConfigString, setCustomCardConfigString] = useState(
     JSON.stringify(cardConfig, null, 4)
   );

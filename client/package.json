@@ -39,7 +39,6 @@
     "babel-jest": "^26.3.0",
     "babel-loader": "8.1.0",
     "babel-plugin-styled-components": "^1.11.1",
-    "blueimp-md5": "2.18.0",
     "css-loader": "4.3.0",
     "cypress": "^5.2.0",
     "date-fns": "^2.16.1",

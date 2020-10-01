@@ -20,7 +20,8 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "serve": "BABEL_ENV=development webpack-dev-server --progress --colors --port 9000",
-    "build": "BABEL_ENV=production webpack --progress --colors --bail --json --config  webpack.production.config.js > webpack-build-stats.json"
+    "build": "BABEL_ENV=production webpack --progress --colors --bail --json --config  webpack.production.config.js > webpack-build-stats.json",
+    "build:analyze": "BABEL_ENV=production webpack --progress --colors --bail --config  webpack.analysis.config.js"
   },
   "jest": {
     "testMatch": [
@@ -64,6 +65,7 @@
     "url-loader": "4.1.0",
     "uuid": "8.3.0",
     "webpack": "4.44.2",
+    "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0"
   },

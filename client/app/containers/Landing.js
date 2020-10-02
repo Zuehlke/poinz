@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import JoinRoomForm from '../components/JoinRoomForm';
 import GithubRibbon from '../components/GithubRibbon';
 import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
-import {formatTime} from '../services/timeUtil';
 import {
   StyledActionLog,
   StyledEyecatcher,
@@ -38,7 +37,7 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
             <StyledActionLog>
               {actionLog.map((entry, index) => (
                 <li key={`logline_${index}`}>
-                  <span>{formatTime(entry.tstamp)}</span>
+                  <span>{entry.tstamp}</span>
                   <span>{entry.message}</span>
                 </li>
               ))}

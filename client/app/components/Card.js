@@ -3,11 +3,9 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {giveStoryEstimate} from '../actions';
-import {
-  getMatchingPendingCommand,
-  hasMatchingPendingCommand
-} from '../services/queryPendingCommands';
+import {isThisCardWaiting} from '../services/selectors';
 import {StyledCardInner, StyledCard} from '../styled/Board';
+import {getOwnEstimate} from '../services/selectors';
 
 /**
  * One estimation card on the board.
@@ -36,35 +34,13 @@ Card.propTypes = {
 };
 
 export default connect(
-  (state) => {
-    const pendingEstimationCommand = getMatchingPendingCommand(state, 'giveStoryEstimate');
-
+  (state, props) => {
+    const ownEstimate = getOwnEstimate(state);
     return {
       selectedStoryId: state.selectedStory,
-      ownEstimate:
-        state.estimations &&
-        state.estimations[state.selectedStory] &&
-        state.estimations[state.selectedStory][state.userId],
-      estimationWaiting: pendingEstimationCommand
-        ? pendingEstimationCommand.payload.value
-        : undefined,
-
-      hasPendingClearCommand: hasMatchingPendingCommand(state, 'clearStoryEstimate')
+      ownEstimate,
+      isWaiting: isThisCardWaiting(state, props.card.value, ownEstimate)
     };
   },
-  {giveStoryEstimate},
-  (stateProps, dispatchProps, ownProps) => {
-    const mergedProps = {
-      ...stateProps,
-      ...dispatchProps,
-      ...ownProps,
-      isWaiting:
-        ownProps.card.value === stateProps.estimationWaiting ||
-        (stateProps.hasPendingClearCommand && ownProps.card.value === stateProps.ownEstimate)
-    };
-    delete mergedProps.estimationWaiting;
-    delete mergedProps.hasPendingClearCommand;
-
-    return mergedProps;
-  }
+  {giveStoryEstimate}
 )(Card);

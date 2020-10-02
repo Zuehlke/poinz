@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
 import {StyledBacklogInfoText, StyledStoriesScrolling} from '../styled/Backlog';
+import {getTrashedStories} from '../services/selectors';
 
 /**
  *
@@ -32,5 +33,5 @@ BacklogTrash.propTypes = {
 
 export default connect((state) => ({
   t: state.translator,
-  trashedStories: state.stories ? Object.values(state.stories).filter((s) => s.trashed) : []
+  trashedStories: getTrashedStories(state)
 }))(BacklogTrash);

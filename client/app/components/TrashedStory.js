@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import ConsensusBadge from './ConsensusBadge';
 import {restoreStory, deleteStory} from '../actions';
 import {StyledStoryToolbar, StyledStory} from '../styled/Story';
+import {StyledStoryTitle} from '../styled/StyledStoryTitle';
 
 /**
  * One Trashed Story in the Trash
@@ -27,12 +28,12 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
         />
       </StyledStoryToolbar>
 
-      <h4>
+      <StyledStoryTitle>
         <div>{story.title}</div>
         {story.consensus && (
           <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
         )}
-      </h4>
+      </StyledStoryTitle>
     </StyledStory>
   );
 };

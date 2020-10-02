@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {changeStory, cancelEditStory} from '../actions';
-import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
+import {isThisStoryEditFormWaiting} from '../services/selectors';
 import {StyledStory} from '../styled/Story';
 import {StyledEditFormButtonGroup, StyledEditForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
@@ -12,16 +12,8 @@ import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../services/front
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({
-  t,
-  story,
-  selectedStoryId,
-  changeStory,
-  cancelEditStory,
-  pendingChangeCommands
-}) => {
+const StoryEditForm = ({t, story, selectedStoryId, changeStory, cancelEditStory, isWaiting}) => {
   const isSelected = selectedStoryId === story.id;
-  const waiting = pendingChangeCommands.find((cmd) => cmd.payload.storyId === story.id);
 
   const [storyTitle, setStoryTitle] = useState(story.title);
   const [storyDescr, setStoryDescr] = useState(story.description);
@@ -29,7 +21,7 @@ const StoryEditForm = ({
   return (
     <StyledStory
       noShadow={true}
-      className={waiting ? 'waiting-spinner' : ''}
+      className={isWaiting ? 'waiting-spinner' : ''}
       data-testid={isSelected ? 'storySelected' : 'story'}
     >
       <StyledEditForm className="pure-form" onSubmit={(e) => e.preventDefault()}>
@@ -81,14 +73,14 @@ StoryEditForm.propTypes = {
   selectedStoryId: PropTypes.string,
   changeStory: PropTypes.func,
   cancelEditStory: PropTypes.func,
-  pendingChangeCommands: PropTypes.array
+  isWaiting: PropTypes.bool
 };
 
 export default connect(
-  (state) => ({
+  (state, props) => ({
     t: state.translator,
     selectedStoryId: state.selectedStory,
-    pendingChangeCommands: getAllMatchingPendingCommands(state, 'changeStory')
+    isWaiting: isThisStoryEditFormWaiting(state, props.story.id)
   }),
   {changeStory, cancelEditStory}
 )(StoryEditForm);

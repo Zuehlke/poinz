@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {addStory} from '../actions';
-import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
+import {hasMatchingPendingCommand} from '../services/selectors';
 import {StyledAddForm} from '../styled/Backlog';
 import ValidatedInput from './ValidatedInput';
 import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../services/frontendInputValidation';
@@ -11,9 +11,7 @@ import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../services/front
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
-  const waiting = hasPendingAddCommands;
-
+const StoryAddForm = ({t, addStory, waiting}) => {
   const [storyTitle, setStoryTitle] = useState('');
   const [storyDescr, setStoryDescr] = useState('');
 
@@ -73,13 +71,13 @@ const StoryAddForm = ({t, addStory, hasPendingAddCommands}) => {
 StoryAddForm.propTypes = {
   t: PropTypes.func,
   addStory: PropTypes.func,
-  hasPendingAddCommands: PropTypes.bool
+  waiting: PropTypes.bool
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
-    hasPendingAddCommands: hasMatchingPendingCommand(state, 'addStory')
+    waiting: hasMatchingPendingCommand(state, 'addStory')
   }),
   {addStory}
 )(StoryAddForm);

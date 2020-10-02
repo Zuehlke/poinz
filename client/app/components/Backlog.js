@@ -7,6 +7,7 @@ import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
 import {StyledBacklog} from '../styled/Backlog';
 import StoryAddForm from './StoryAddForm';
+import {getActiveStories, getTrashedStories} from '../services/selectors';
 
 /**
  * The backlog contains two display modes:  active and trash
@@ -56,12 +57,8 @@ export default connect(
     t: state.translator,
     trashShown: state.trashShown,
     backlogShown: state.backlogShown,
-    trashedStoriesCount: state.stories
-      ? Object.values(state.stories).filter((s) => s.trashed).length
-      : 0,
-    activeStoriesCount: state.stories
-      ? Object.values(state.stories).filter((s) => !s.trashed).length
-      : 0
+    trashedStoriesCount: getTrashedStories(state).length,
+    activeStoriesCount: getActiveStories(state).length
   }),
   {showTrash, hideTrash}
 )(Backlog);

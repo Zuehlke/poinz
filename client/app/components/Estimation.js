@@ -24,7 +24,15 @@ import {StyledStoryTitle} from '../styled/StyledStoryTitle';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({t, selectedStory, applause, userCanCurrentlyEstimate, cardConfig, newEstimationRound, reveal}) => {
+const Estimation = ({
+  t,
+  selectedStory,
+  applause,
+  userCanCurrentlyEstimate,
+  cardConfig,
+  newEstimationRound,
+  reveal
+}) => {
   const revealed = selectedStory.revealed;
 
   return (
@@ -33,20 +41,20 @@ const Estimation = ({t, selectedStory, applause, userCanCurrentlyEstimate, cardC
         <StyledStoryTitle>
           {selectedStory.title}
           {selectedStory.consensus && (
-            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus}/>
+            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
           )}
         </StyledStoryTitle>
 
         <StyledStoryText>
-          <Anchorify text={selectedStory.description}/>
+          <Anchorify text={selectedStory.description} />
         </StyledStoryText>
 
         {selectedStory.consensus && applause && (
-          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus}/>
+          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
         )}
       </StyledSelectedStory>
 
-      {userCanCurrentlyEstimate && <Cards/>}
+      {userCanCurrentlyEstimate && <Cards />}
 
       {!revealed && (
         <BoardActionButtons>
@@ -93,13 +101,13 @@ export default connect(
     const isExcluded = state.users[state.userId].excluded;
     const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
 
-    return ({
+    return {
       t: state.translator,
       selectedStory,
       userCanCurrentlyEstimate,
       applause: state.applause,
       cardConfig: state.cardConfig
-    });
+    };
   },
   {newEstimationRound, reveal}
 )(Estimation);

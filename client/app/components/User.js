@@ -100,25 +100,17 @@ User.propTypes = {
 };
 
 export default connect(
-  (state) => ({
-    t: state.translator,
-    cardConfig: state.cardConfig,
-    ownUserId: state.userId,
-    selectedStory: state.stories[state.selectedStory],
-    estimationsForStory: state.estimations && state.estimations[state.selectedStory]
-  }),
-  {kick, toggleMarkForKick},
-  (stateProps, dispatchProps, ownProps) => {
-    const userEstimationValue =
-      stateProps.estimationsForStory && stateProps.estimationsForStory[ownProps.user.id];
-    const mergedProps = {
-      ...stateProps,
-      ...dispatchProps,
-      ...ownProps,
+  (state, props) => {
+    const estimationsForStory = state.estimations && state.estimations[state.selectedStory];
+    const userEstimationValue = estimationsForStory && estimationsForStory[props.user.id];
+
+    return {
+      t: state.translator,
+      cardConfig: state.cardConfig,
+      ownUserId: state.userId,
+      selectedStory: state.stories[state.selectedStory],
       userEstimationValue
     };
-
-    delete mergedProps.estimationsForStory;
-    return mergedProps;
-  }
+  },
+  {kick, toggleMarkForKick}
 )(User);

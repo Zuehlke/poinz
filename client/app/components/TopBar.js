@@ -15,6 +15,7 @@ import {
   StyledWhoAmIExtended,
   StyledWhoAmISimple
 } from '../styled/TopBar';
+import {getOwnUsername} from '../services/selectors';
 
 const TopBar = ({
   t,
@@ -106,7 +107,7 @@ export default connect(
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
-    username: state.users && state.users[state.userId] ? state.users[state.userId].username : '-'
+    username: getOwnUsername(state)
   }),
   {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom}
 )(TopBar);

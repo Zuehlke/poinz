@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import JoinRoomForm from '../components/JoinRoomForm';
 import GithubRibbon from '../components/GithubRibbon';
-import {hasMatchingPendingCommand} from '../services/queryPendingCommands';
+import {hasMatchingPendingCommand} from '../services/selectors';
 import {
   StyledActionLog,
   StyledEyecatcher,

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {selectStory, editStory, trashStory} from '../actions';
 import ConsensusBadge from './ConsensusBadge';
-import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
+import {isThisStoryWaiting} from '../services/selectors';
 import {StyledStoryToolbar, StyledStory} from '../styled/Story';
 import {StyledStoryTitle} from '../styled/StyledStoryTitle';
 
@@ -92,28 +92,11 @@ Story.propTypes = {
 };
 
 export default connect(
-  (state) => ({
+  (state, props) => ({
     t: state.translator,
     cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
-    pendingCommands: {
-      selectStory: getAllMatchingPendingCommands(state, 'selectStory'),
-      trashStory: getAllMatchingPendingCommands(state, 'trashStory')
-    }
+    isWaiting: isThisStoryWaiting(state, props.story.id)
   }),
-  {selectStory, editStory, trashStory},
-  (stateProps, dispatchProps, ownProps) => {
-    const story = ownProps.story;
-
-    const mergedProps = {
-      ...stateProps,
-      ...dispatchProps,
-      ...ownProps,
-      isWaiting:
-        stateProps.pendingCommands.selectStory.find((cmd) => cmd.payload.storyId === story.id) ||
-        stateProps.pendingCommands.trashStory.find((cmd) => cmd.payload.storyId === story.id)
-    };
-    delete mergedProps.pendingCommands;
-    return mergedProps;
-  }
+  {selectStory, editStory, trashStory}
 )(Story);

@@ -13,6 +13,7 @@ import {
   StyledFileImportDropZoneOverlay,
   StyledBacklogInfoText
 } from '../styled/Backlog';
+import {getActiveStories} from '../services/selectors';
 
 /**
  * show the story add form and list of active stories
@@ -68,7 +69,7 @@ BacklogActive.propTypes = {
 export default connect(
   (state) => ({
     t: state.translator,
-    activeStories: state.stories ? Object.values(state.stories).filter((s) => !s.trashed) : []
+    activeStories: getActiveStories(state)
   }),
   {importCsvFile}
 )(BacklogActive);

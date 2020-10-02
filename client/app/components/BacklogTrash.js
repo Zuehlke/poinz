@@ -8,8 +8,7 @@ import {StyledBacklogInfoText, StyledStoriesScrolling} from '../styled/Backlog';
 /**
  *
  */
-const BacklogTrash = ({t, stories}) => {
-  const trashedStories = stories ? Object.values(stories).filter((s) => s.trashed) : [];
+const BacklogTrash = ({t, trashedStories}) => {
   const hasTrashedStories = trashedStories.length > 0;
 
   return (
@@ -28,10 +27,10 @@ const BacklogTrash = ({t, stories}) => {
 
 BacklogTrash.propTypes = {
   t: PropTypes.func.isRequired,
-  stories: PropTypes.object
+  trashedStories: PropTypes.array
 };
 
 export default connect((state) => ({
   t: state.translator,
-  stories: state.stories
+  trashedStories: state.stories ? Object.values(state.stories).filter((s) => s.trashed) : []
 }))(BacklogTrash);

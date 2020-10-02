@@ -12,40 +12,27 @@ import {StyledCardInner, StyledCard} from '../styled/Board';
 /**
  * One estimation card on the board.
  */
-const Card = ({
-  card,
-  selectedStoryId,
-  ownEstimate,
-  estimationWaiting,
-  hasPendingClearCommand,
-  giveStoryEstimate
-}) => {
-  const isWaiting =
-    card.value === estimationWaiting || (hasPendingClearCommand && card.value === ownEstimate);
-
-  return (
-    <StyledCard
-      onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
-      data-testid={'estimationCard.' + card.value}
+const Card = ({card, selectedStoryId, ownEstimate, isWaiting, giveStoryEstimate}) => (
+  <StyledCard
+    onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
+    data-testid={'estimationCard.' + card.value}
+  >
+    <StyledCardInner
+      className={isWaiting ? 'waiting-spinner' : ''}
+      cardColor={card.color}
+      selected={card.value === ownEstimate}
     >
-      <StyledCardInner
-        className={isWaiting ? 'waiting-spinner' : ''}
-        cardColor={card.color}
-        selected={card.value === ownEstimate}
-      >
-        {card.label}
-      </StyledCardInner>
-    </StyledCard>
-  );
-};
+      {card.label}
+    </StyledCardInner>
+  </StyledCard>
+);
 
 Card.propTypes = {
   card: PropTypes.object,
   selectedStoryId: PropTypes.string,
   ownEstimate: PropTypes.number,
-  estimationWaiting: PropTypes.number,
-  hasPendingClearCommand: PropTypes.bool,
-  giveStoryEstimate: PropTypes.func
+  giveStoryEstimate: PropTypes.func,
+  isWaiting: PropTypes.bool
 };
 
 export default connect(
@@ -54,7 +41,10 @@ export default connect(
 
     return {
       selectedStoryId: state.selectedStory,
-      ownEstimate: state.stories[state.selectedStory].estimations[state.userId],
+      ownEstimate:
+        state.estimations &&
+        state.estimations[state.selectedStory] &&
+        state.estimations[state.selectedStory][state.userId],
       estimationWaiting: pendingEstimationCommand
         ? pendingEstimationCommand.payload.value
         : undefined,
@@ -62,5 +52,19 @@ export default connect(
       hasPendingClearCommand: hasMatchingPendingCommand(state, 'clearStoryEstimate')
     };
   },
-  {giveStoryEstimate}
+  {giveStoryEstimate},
+  (stateProps, dispatchProps, ownProps) => {
+    const mergedProps = {
+      ...stateProps,
+      ...dispatchProps,
+      ...ownProps,
+      isWaiting:
+        ownProps.card.value === stateProps.estimationWaiting ||
+        (stateProps.hasPendingClearCommand && ownProps.card.value === stateProps.ownEstimate)
+    };
+    delete mergedProps.estimationWaiting;
+    delete mergedProps.hasPendingClearCommand;
+
+    return mergedProps;
+  }
 )(Card);

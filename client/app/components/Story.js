@@ -20,13 +20,9 @@ const Story = ({
   selectStory,
   editStory,
   trashStory,
-  pendingSelectCommands,
-  pendingTrashCommands
+  isWaiting
 }) => {
   const isSelected = selectedStoryId === story.id;
-  const isWaiting =
-    pendingSelectCommands.find((cmd) => cmd.payload.storyId === story.id) ||
-    pendingTrashCommands.find((cmd) => cmd.payload.storyId === story.id);
 
   return (
     <StyledStory
@@ -86,13 +82,12 @@ const Story = ({
 
 Story.propTypes = {
   story: PropTypes.object,
+  isWaiting: PropTypes.bool,
   cardConfig: PropTypes.array,
   selectedStoryId: PropTypes.string,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
   trashStory: PropTypes.func,
-  pendingSelectCommands: PropTypes.array,
-  pendingTrashCommands: PropTypes.array,
   t: PropTypes.func
 };
 
@@ -101,8 +96,24 @@ export default connect(
     t: state.translator,
     cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
-    pendingSelectCommands: getAllMatchingPendingCommands(state, 'selectStory'),
-    pendingTrashCommands: getAllMatchingPendingCommands(state, 'trashStory')
+    pendingCommands: {
+      selectStory: getAllMatchingPendingCommands(state, 'selectStory'),
+      trashStory: getAllMatchingPendingCommands(state, 'trashStory')
+    }
   }),
-  {selectStory, editStory, trashStory}
+  {selectStory, editStory, trashStory},
+  (stateProps, dispatchProps, ownProps) => {
+    const story = ownProps.story;
+
+    const mergedProps = {
+      ...stateProps,
+      ...dispatchProps,
+      ...ownProps,
+      isWaiting:
+        stateProps.pendingCommands.selectStory.find((cmd) => cmd.payload.storyId === story.id) ||
+        stateProps.pendingCommands.trashStory.find((cmd) => cmd.payload.storyId === story.id)
+    };
+    delete mergedProps.pendingCommands;
+    return mergedProps;
+  }
 )(Story);

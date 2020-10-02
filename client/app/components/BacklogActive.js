@@ -17,8 +17,7 @@ import {
 /**
  * show the story add form and list of active stories
  */
-const BacklogActive = ({t, stories, importCsvFile}) => {
-  const activeStories = stories ? Object.values(stories).filter((s) => !s.trashed) : [];
+const BacklogActive = ({t, activeStories, importCsvFile}) => {
   const hasActiveStories = activeStories.length > 0;
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -62,14 +61,14 @@ const BacklogActive = ({t, stories, importCsvFile}) => {
 
 BacklogActive.propTypes = {
   t: PropTypes.func.isRequired,
-  stories: PropTypes.object,
+  activeStories: PropTypes.array,
   importCsvFile: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
-    stories: state.stories
+    activeStories: state.stories ? Object.values(state.stories).filter((s) => !s.trashed) : []
   }),
   {importCsvFile}
 )(BacklogActive);

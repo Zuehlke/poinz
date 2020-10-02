@@ -126,6 +126,20 @@ const eventActionHandlers = {
 
         clientSettingsStore.setPresetUserId(event.userId);
 
+        const estimations = Object.entries(payload.stories || {}).reduce((total, stry) => {
+          total[stry[0]] = stry[1].estimations;
+          return total;
+        }, {});
+
+        const storiesWithoutEstimations = Object.entries(payload.stories || {}).reduce(
+          (total, stry) => {
+            total[stry[0]] = {...stry[1]};
+            delete total[stry[0]].estimations;
+            return total;
+          },
+          {}
+        );
+
         // server sends current room state (users, stories, etc.)
         return {
           ...state,
@@ -133,7 +147,8 @@ const eventActionHandlers = {
           userId: event.userId,
           selectedStory: payload.selectedStory,
           users: payload.users || {},
-          stories: payload.stories || {},
+          stories: storiesWithoutEstimations,
+          estimations,
           pendingJoinCommand: undefined,
           cardConfig: payload.cardConfig
         };
@@ -451,14 +466,11 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.storyEstimateGiven]: {
     fn: (state, payload, event) => ({
       ...state,
-      stories: {
-        ...state.stories,
+      estimations: {
+        ...state.estimations,
         [payload.storyId]: {
-          ...state.stories[payload.storyId],
-          estimations: {
-            ...state.stories[payload.storyId].estimations,
-            [event.userId]: payload.value
-          }
+          ...state.estimations[payload.storyId],
+          [event.userId]: payload.value
         }
       }
     })
@@ -490,17 +502,14 @@ const eventActionHandlers = {
 
   [EVENT_ACTION_TYPES.storyEstimateCleared]: {
     fn: (state, payload, event) => {
-      const modifiedEstimations = {...state.stories[payload.storyId].estimations};
+      const modifiedEstimations = {...state.estimations[payload.storyId]};
       delete modifiedEstimations[event.userId];
 
       return {
         ...state,
-        stories: {
-          ...state.stories,
-          [payload.storyId]: {
-            ...state.stories[payload.storyId],
-            estimations: modifiedEstimations
-          }
+        estimations: {
+          ...state.estimations,
+          [payload.storyId]: modifiedEstimations
         }
       };
     }
@@ -533,10 +542,13 @@ const eventActionHandlers = {
         ...state.stories,
         [payload.storyId]: {
           ...state.stories[payload.storyId],
-          estimations: {},
           revealed: false,
           consensus: undefined
         }
+      },
+      estimations: {
+        ...state.estimations,
+        [payload.storyId]: undefined
       }
     }),
     log: (username, payload, oldState, modifiedState) =>

@@ -15,13 +15,20 @@ import {
   StyledUserKickOverlay
 } from '../styled/User';
 
-const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKick}) => {
+const User = ({
+  t,
+  user,
+  selectedStory,
+  userEstimationValue,
+  ownUserId,
+  cardConfig,
+  kick,
+  toggleMarkForKick
+}) => {
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
   const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
-
-  const userEstimationValue = selectedStory && selectedStory.estimations[user.id];
   const userHasEstimation = userEstimationValue !== undefined; // value could be "0" which is falsy, check for undefined
 
   const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
@@ -84,6 +91,7 @@ const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkFo
 User.propTypes = {
   t: PropTypes.func,
   user: PropTypes.object,
+  userEstimationValue: PropTypes.number,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
   cardConfig: PropTypes.array,
@@ -96,7 +104,21 @@ export default connect(
     t: state.translator,
     cardConfig: state.cardConfig,
     ownUserId: state.userId,
-    selectedStory: state.stories[state.selectedStory]
+    selectedStory: state.stories[state.selectedStory],
+    estimationsForStory: state.estimations && state.estimations[state.selectedStory]
   }),
-  {kick, toggleMarkForKick}
+  {kick, toggleMarkForKick},
+  (stateProps, dispatchProps, ownProps) => {
+    const userEstimationValue =
+      stateProps.estimationsForStory && stateProps.estimationsForStory[ownProps.user.id];
+    const mergedProps = {
+      ...stateProps,
+      ...dispatchProps,
+      ...ownProps,
+      userEstimationValue
+    };
+
+    delete mergedProps.estimationsForStory;
+    return mergedProps;
+  }
 )(User);

@@ -24,12 +24,8 @@ import {StyledStoryTitle} from '../styled/StyledStoryTitle';
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimationRound, reveal}) => {
-  const ownEstimate = selectedStory.estimations[user.id];
-
+const Estimation = ({t, selectedStory, applause, userCanCurrentlyEstimate, cardConfig, newEstimationRound, reveal}) => {
   const revealed = selectedStory.revealed;
-  const isExcluded = user.excluded;
-  const userCanCurrentlyEstimate = !revealed && !isExcluded;
 
   return (
     <StyledEstimation>
@@ -37,20 +33,20 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
         <StyledStoryTitle>
           {selectedStory.title}
           {selectedStory.consensus && (
-            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
+            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus}/>
           )}
         </StyledStoryTitle>
 
         <StyledStoryText>
-          <Anchorify text={selectedStory.description} />
+          <Anchorify text={selectedStory.description}/>
         </StyledStoryText>
 
         {selectedStory.consensus && applause && (
-          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
+          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus}/>
         )}
       </StyledSelectedStory>
 
-      {userCanCurrentlyEstimate && <Cards ownEstimate={ownEstimate} />}
+      {userCanCurrentlyEstimate && <Cards/>}
 
       {!revealed && (
         <BoardActionButtons>
@@ -84,21 +80,27 @@ const Estimation = ({t, selectedStory, applause, user, cardConfig, newEstimation
 Estimation.propTypes = {
   t: PropTypes.func,
   cardConfig: PropTypes.array,
+  userCanCurrentlyEstimate: PropTypes.bool,
   selectedStory: PropTypes.object,
   applause: PropTypes.bool,
-  user: PropTypes.object,
   newEstimationRound: PropTypes.func,
   reveal: PropTypes.func
 };
 
 export default connect(
-  (state) => ({
-    t: state.translator,
-    selectedStory: state.stories[state.selectedStory],
-    user: state.users[state.userId],
-    applause: state.applause,
-    cardConfig: state.cardConfig
-  }),
+  (state) => {
+    const selectedStory = state.stories[state.selectedStory];
+    const isExcluded = state.users[state.userId].excluded;
+    const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
+
+    return ({
+      t: state.translator,
+      selectedStory,
+      userCanCurrentlyEstimate,
+      applause: state.applause,
+      cardConfig: state.cardConfig
+    });
+  },
   {newEstimationRound, reveal}
 )(Estimation);
 

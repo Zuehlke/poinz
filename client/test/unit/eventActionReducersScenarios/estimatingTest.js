@@ -41,18 +41,17 @@ test('Estimation with two users', () => {
         [secondStoryId]: {
           createdAt: 1592115972307,
           description: 'dscription second... from other john',
-          estimations: {},
           id: secondStoryId,
           title: 'Second story'
         },
         [firstStoryId]: {
           createdAt: 1592115935676,
           description: 'description one',
-          estimations: {},
           id: firstStoryId,
           title: 'FirstStory'
         }
       },
+      estimations: {},
       cardConfig: []
     }
   };
@@ -77,11 +76,11 @@ test('Estimation with two users', () => {
   expect(modifiedState.stories[firstStoryId]).toEqual({
     createdAt: 1592115935676,
     description: 'description one',
-    estimations: {
-      [ownUserId]: 3
-    },
     id: firstStoryId,
     title: 'FirstStory'
+  });
+  expect(modifiedState.estimations[firstStoryId]).toEqual({
+    [ownUserId]: 3
   });
 
   // own user cleares his estimation on firstStory
@@ -100,14 +99,8 @@ test('Estimation with two users', () => {
   };
   modifiedState = eventReducer(startingState, ownUserEstimationClearedAction);
 
-  expect(modifiedState.stories[firstStoryId]).toEqual({
-    createdAt: 1592115935676,
-    description: 'description one',
-    estimations: {
-      // now empty again
-    },
-    id: firstStoryId,
-    title: 'FirstStory'
+  expect(modifiedState.estimations[firstStoryId]).toEqual({
+    // now empty again
   });
 
   // now both users estimate 5 -> revealed and consensusAchieved
@@ -175,14 +168,14 @@ test('Estimation with two users', () => {
   expect(modifiedState.stories[firstStoryId]).toEqual({
     createdAt: 1592115935676,
     description: 'description one',
-    estimations: {
-      [ownUserId]: 5,
-      [otherUserId]: 5
-    },
     revealed: true,
     consensus: 5,
     id: firstStoryId,
     title: 'FirstStory'
+  });
+  expect(modifiedState.estimations[firstStoryId]).toEqual({
+    [ownUserId]: 5,
+    [otherUserId]: 5
   });
 
   expect(modifiedState.applause).toBe(true);
@@ -224,13 +217,15 @@ test('New estimation round with two users', () => {
         [firstStoryId]: {
           createdAt: 1592115935676,
           description: 'description one',
-          estimations: {
-            [ownUserId]: 5,
-            [otherUserId]: 8
-          },
           revealed: true,
           id: firstStoryId,
           title: 'FirstStory'
+        }
+      },
+      estimations: {
+        [firstStoryId]: {
+          [ownUserId]: 5,
+          [otherUserId]: 8
         }
       }
     }
@@ -257,11 +252,14 @@ test('New estimation round with two users', () => {
       createdAt: 1592115935676,
       description: 'description one',
       id: firstStoryId,
-      estimations: {}, // old values removed
       consensus: undefined, // consensus set to undefined
       revealed: false, // revealed flag set to false
       title: 'FirstStory'
     }
+  });
+
+  expect(modifiedState.estimations).toEqual({
+    // old values for first story removed
   });
 
   expect(modifiedState.applause).toBe(false);

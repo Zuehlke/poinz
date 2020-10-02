@@ -110,6 +110,156 @@ test('You joining a new room', () => {
   expect(clientSettingsStore.getPresetAvatar()).toEqual(4);
 });
 
+test('You joining a room with stories', () => {
+  const cmdId = uuid();
+
+  const startingState = {
+    ...initialState(),
+    pendingJoinCommandId: cmdId
+  };
+  let modifiedState;
+
+  const otherUserId = uuid();
+  const userId = uuid();
+  const roomId = uuid();
+  const storyId = uuid();
+
+  const eventActions = [
+    {
+      event: {
+        id: uuid(),
+        userId: userId,
+        correlationId: cmdId,
+        name: 'roomCreated',
+        roomId,
+        payload: {}
+      },
+      type: EVENT_ACTION_TYPES.roomCreated
+    },
+    {
+      event: {
+        id: uuid(),
+        userId: userId,
+        correlationId: cmdId,
+        name: 'joinedRoom',
+        roomId,
+        payload: {
+          users: {
+            [userId]: {
+              disconnected: false,
+              id: userId,
+              avatar: 4
+            },
+            [otherUserId]: {
+              disconnected: false,
+              id: otherUserId,
+              username: 'theOtherOne',
+              avatar: 0
+            }
+          },
+          stories: {
+            [storyId]: {
+              title: 'jgdlkg',
+              id: storyId,
+              description: '',
+              revealed: true,
+              consensus: 3,
+              createdAt: 1601628893157,
+              estimations: {
+                [userId]: 3
+              }
+            }
+          }
+        }
+      },
+      type: EVENT_ACTION_TYPES.joinedRoom
+    },
+    {
+      event: {
+        id: uuid(),
+        userId: userId,
+        correlationId: uuid(),
+        name: 'usernameSet',
+        roomId,
+        payload: {
+          username: 'Chrome'
+        }
+      },
+      type: EVENT_ACTION_TYPES.usernameSet
+    },
+    {
+      event: {
+        id: uuid(),
+        userId: userId,
+        correlationId: uuid(),
+        name: 'emailSet',
+        roomId,
+        payload: {
+          email: 'test@super.com'
+        }
+      },
+      type: EVENT_ACTION_TYPES.emailSet
+    },
+    {
+      event: {
+        id: uuid(),
+        userId: userId,
+        correlationId: uuid(),
+        name: 'avatarSet',
+        roomId,
+        payload: {
+          avatar: 4
+        }
+      },
+      type: EVENT_ACTION_TYPES.avatarSet
+    }
+  ];
+
+  modifiedState = reduceMultipleEventActions(startingState, eventActions);
+
+  expect(modifiedState.roomId).toEqual(roomId);
+  expect(modifiedState.userId).toEqual(userId);
+  expect(modifiedState.users).toEqual({
+    [otherUserId]: {
+      disconnected: false,
+      id: otherUserId,
+      username: 'theOtherOne',
+      avatar: 0
+    },
+    [userId]: {
+      disconnected: false,
+      id: userId,
+      username: 'Chrome',
+      email: 'test@super.com',
+      avatar: 4
+    }
+  });
+
+  // stories without the "estimations" properties
+  expect(modifiedState.stories).toEqual({
+    [storyId]: {
+      id: storyId,
+      title: 'jgdlkg',
+      consensus: 3,
+      createdAt: 1601628893157,
+      description: '',
+      revealed: true
+    }
+  });
+
+  // the estimations in a separate object on the state
+  expect(modifiedState.estimations).toEqual({
+    [storyId]: {
+      [userId]: 3
+    }
+  });
+
+  expect(clientSettingsStore.getPresetUserId()).toEqual(userId);
+  expect(clientSettingsStore.getPresetUsername()).toEqual('Chrome');
+  expect(clientSettingsStore.getPresetEmail()).toEqual('test@super.com');
+  expect(clientSettingsStore.getPresetAvatar()).toEqual(4);
+});
+
 test('You in a room, other user joins', () => {
   let modifiedState;
 

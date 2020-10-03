@@ -2,6 +2,7 @@
   "globals": {
     "it": false,
     "cy": false,
-    "Cypress": false
+    "Cypress": false,
+    "beforeEach": false
   }
 }

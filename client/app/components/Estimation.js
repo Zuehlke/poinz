@@ -15,7 +15,7 @@ import {
   StyledSelectedStory,
   StyledStoryText
 } from '../styled/Board';
-import {StyledStoryTitle} from '../styled/StyledStoryTitle';
+import {StyledStoryTitle} from '../styled/Story';
 
 /**
  * Displays
@@ -36,8 +36,8 @@ const Estimation = ({
   const revealed = selectedStory.revealed;
 
   return (
-    <StyledEstimation>
-      <StyledSelectedStory>
+    <StyledEstimation data-testid="estimationArea">
+      <StyledSelectedStory data-testid="story">
         <StyledStoryTitle>
           {selectedStory.title}
           {selectedStory.consensus && (
@@ -75,6 +75,7 @@ const Estimation = ({
             type="button"
             className="pure-button pure-button-primary"
             onClick={() => newEstimationRound(selectedStory.id)}
+            data-testid="newRoundButton"
           >
             {t('newRound')}
             <i className="icon-ccw button-icon-right"></i>

@@ -33,6 +33,7 @@
     "no-use-before-define": 0
   },
   "globals": {
-    "__POINZ_CONFIG__": false
+    "__POINZ_CONFIG__": false,
+    "io": false
   }
 }

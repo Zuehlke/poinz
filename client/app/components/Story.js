@@ -6,8 +6,7 @@ import PropTypes from 'prop-types';
 import {selectStory, editStory, trashStory} from '../actions';
 import ConsensusBadge from './ConsensusBadge';
 import {isThisStoryWaiting} from '../services/selectors';
-import {StyledStoryToolbar, StyledStory} from '../styled/Story';
-import {StyledStoryTitle} from '../styled/StyledStoryTitle';
+import {StyledStoryToolbar, StyledStory, StyledStoryText, StyledStoryTitle} from '../styled/Story';
 
 /**
  * One story in the backlog
@@ -57,9 +56,9 @@ const Story = ({
       {
         // only display story text for selected story. improves overall readibility / usability (see #24)
         isSelected && (
-          <div data-testid="storyText">
+          <StyledStoryText data-testid="storyText">
             <Anchorify text={story.description} />
-          </div>
+          </StyledStoryText>
         )
       }
     </StyledStory>

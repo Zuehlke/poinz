@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE} from './colors';
+import styled, {keyframes} from 'styled-components';
+import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from './colors';
 import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH, TOPBAR_HEIGHT, ZuehlkeFont} from './dimensions';
 
 export const StyledTopBar = styled.div`
@@ -64,9 +64,36 @@ export const StyledQuickMenuButton = styled.a`
   font-size: 22px;
   padding: 4px 8px;
   box-sizing: border-box;
-  color: white;
+  color: ${({warning}) => (warning ? COLOR_WARNING : 'white')};
   border-radius: 0;
   background: ${COLOR_BLUE};
+  position: relative;
+`;
+
+const shaky = keyframes`
+  10%, 90% {
+    transform: rotate(-10deg);
+  }
+
+  20%, 80% {
+    transform:  rotate(10deg);
+  }
+
+  30%, 50%, 70% {
+    transform:  rotate(-20deg);
+  }
+
+  40%, 60% {
+    transform: rotate(20deg);
+  }
+`;
+
+export const StyledIconExclamation = styled.i`
+  position: absolute;
+  right: 4px;
+  color: ${COLOR_WARNING};
+  animation: ${shaky} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both 4;
+  transform: rotate(0);
 `;
 
 // hamburger icon to toggle backlog on small screens

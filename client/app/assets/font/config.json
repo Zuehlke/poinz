@@ -167,6 +167,18 @@
       "css": "spinner",
       "code": 61712,
       "src": "fontawesome"
+    },
+    {
+      "uid": "00391fac5d419345ffcccd95b6f76263",
+      "css": "attention-alt",
+      "code": 61738,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "b035c28eba2b35c6ffe92aee8b0df507",
+      "css": "attention-circled",
+      "code": 59407,
+      "src": "fontawesome"
     }
   ]
 }

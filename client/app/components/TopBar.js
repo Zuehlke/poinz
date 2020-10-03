@@ -13,7 +13,8 @@ import {
   StyledTopBar,
   StyledWhoAmI,
   StyledWhoAmIExtended,
-  StyledWhoAmISimple
+  StyledWhoAmISimple,
+  StyledIconExclamation
 } from '../styled/TopBar';
 import {getOwnUsername} from '../services/selectors';
 
@@ -27,6 +28,7 @@ const TopBar = ({
   toggleLog,
   userMenuShown,
   logShown,
+  unseenError,
   backlogShown
 }) => {
   const roomLink = <a href={'/' + roomId}>{roomId}</a>;
@@ -69,10 +71,13 @@ const TopBar = ({
           className={`clickable pure-button pure-button-primary ${
             logShown ? 'pure-button-active' : ''
           }`}
+          warning={unseenError}
           onClick={toggleLog}
           title={t('toggleLog')}
         >
           <i className="icon-doc-text"></i>
+
+          {unseenError && <StyledIconExclamation className="icon-attention-alt" />}
         </StyledQuickMenuButton>
 
         <StyledQuickMenuButton
@@ -92,6 +97,7 @@ TopBar.propTypes = {
   userMenuShown: PropTypes.bool,
   backlogShown: PropTypes.bool,
   logShown: PropTypes.bool,
+  unseenError: PropTypes.bool,
   username: PropTypes.string,
   roomId: PropTypes.string,
   toggleBacklog: PropTypes.func,
@@ -107,6 +113,7 @@ export default connect(
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
+    unseenError: state.unseenError,
     username: getOwnUsername(state)
   }),
   {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom}

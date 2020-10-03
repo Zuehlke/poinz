@@ -6,4 +6,5 @@ export const StyledStoryTitle = styled.h4`
   line-height: 24px;
   display: flex;
   justify-content: space-between;
+  overflow-x: hidden;
 `;

@@ -1,11 +1,15 @@
 import {tid} from '../support/commands';
 
-it('load page with mobile screen dimensions and toggle menues in room', () => {
+beforeEach(function () {
+  cy.fixture('users/default.json').then((data) => (this.user = data));
+});
+
+it('load page with mobile screen dimensions and toggle menues in room', function () {
   cy.viewport('iphone-x');
   cy.visit('/');
 
   cy.get(tid('joinButton')).click();
-  cy.get(tid('usernameInput')).type('e2e-cypress-test-user');
+  cy.get(tid('usernameInput')).type(this.user.username);
   cy.get(tid('joinButton')).click();
 
   cy.get(tid('backlogToggle')).click(); // show backlog
@@ -16,7 +20,7 @@ it('load page with mobile screen dimensions and toggle menues in room', () => {
 
   cy.get(tid('userMenuToggle')).click(); // show userMenu (settings)  will hide backlog
 
-  cy.get(tid('usernameInput')).type('{selectall}could-change-username');
+  cy.get(tid('usernameInput')).type('{selectall}can type in here');
 
   cy.get(tid('actionLogToggle')).click(); // show log (actions)  will hide usermenu
 

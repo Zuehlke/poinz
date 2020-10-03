@@ -1,12 +1,18 @@
 import {v4 as uuid} from 'uuid';
 import {tid} from '../support/commands';
 
-it('multi user estimation', () => {
+beforeEach(function () {
+  cy.fixture('users/default.json').then((data) => (this.user = data));
+  cy.fixture('users/sergio.json').then((data) => (this.sergio = data));
+  cy.fixture('stories.json').then((data) => (this.stories = data));
+});
+
+it('multi user estimation', function () {
   const roomId = 'multi-user-e2e_' + uuid();
 
   cy.visit('/' + roomId);
 
-  cy.get(tid('usernameInput')).type('e2e-cypress-test-user');
+  cy.get(tid('usernameInput')).type(this.user.username);
   cy.get(tid('joinButton')).click();
 
   cy.get(tid('whoamiSimple'));
@@ -22,7 +28,7 @@ it('multi user estimation', () => {
       roomId,
       name: 'joinRoom',
       payload: {
-        username: 'theOtherOne',
+        username: this.sergio.username,
         avatar: 3
       }
     }
@@ -30,7 +36,7 @@ it('multi user estimation', () => {
 
   // now we have two users in the room and can do a real estimation round :)
 
-  cy.get(tid('storyAddForm') + ' input[type="text"]').type('A fake story');
+  cy.get(tid('storyAddForm') + ' input[type="text"]').type(this.stories[0].title);
   cy.get(tid('storyAddForm') + ' button').click();
 
   cy.get(tid('estimationCard.5')).click();

@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {formatTime} from '../services/timeUtil';
 import {StyledActionLogInner, StyledActionLogList, StyledActionLog} from '../styled/ActionLog';
 
 /**
@@ -14,9 +13,9 @@ const ActionLog = ({t, actionLog, logShown}) => (
 
     <StyledActionLogInner>
       <StyledActionLogList>
-        {actionLog.map((entry, index) => (
-          <li key={`logline_${index}`}>
-            <span>{formatTime(entry.tstamp)}</span>
+        {actionLog.map((entry) => (
+          <li key={`logline_${entry.logId}`}>
+            <span>{entry.tstamp}</span>
             <span>{entry.message}</span>
           </li>
         ))}

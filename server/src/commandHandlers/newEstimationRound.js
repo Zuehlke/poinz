@@ -5,7 +5,32 @@
  *
  * Can only be done for the currently selected story.
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              minLength: 1
+            }
+          },
+          required: ['storyId'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const newEstimationRoundCommandHandler = {
+  schema,
   preCondition: (room, command) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only start a new round for currently selected story!');

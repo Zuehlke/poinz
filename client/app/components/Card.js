@@ -3,63 +3,43 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {giveStoryEstimate} from '../actions';
-import {
-  getMatchingPendingCommand,
-  hasMatchingPendingCommand
-} from '../services/queryPendingCommands';
+import {isThisCardWaiting} from '../services/selectors';
 import {StyledCardInner, StyledCard} from '../styled/Board';
+import {getOwnEstimate} from '../services/selectors';
 
 /**
  * One estimation card on the board.
  */
-const Card = ({
-  card,
-  selectedStoryId,
-  ownEstimate,
-  estimationWaiting,
-  hasPendingClearCommand,
-  giveStoryEstimate
-}) => {
-  const isWaiting =
-    card.value === estimationWaiting || (hasPendingClearCommand && card.value === ownEstimate);
-
-  return (
-    <StyledCard
-      onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
-      data-testid={'estimationCard.' + card.value}
+const Card = ({card, selectedStoryId, ownEstimate, isWaiting, giveStoryEstimate}) => (
+  <StyledCard
+    onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
+    data-testid={'estimationCard.' + card.value}
+  >
+    <StyledCardInner
+      className={isWaiting ? 'waiting-spinner' : ''}
+      cardColor={card.color}
+      selected={card.value === ownEstimate}
     >
-      <StyledCardInner
-        className={isWaiting ? 'waiting-spinner' : ''}
-        cardColor={card.color}
-        selected={card.value === ownEstimate}
-      >
-        {card.label}
-      </StyledCardInner>
-    </StyledCard>
-  );
-};
+      {card.label}
+    </StyledCardInner>
+  </StyledCard>
+);
 
 Card.propTypes = {
   card: PropTypes.object,
   selectedStoryId: PropTypes.string,
   ownEstimate: PropTypes.number,
-  estimationWaiting: PropTypes.number,
-  hasPendingClearCommand: PropTypes.bool,
-  giveStoryEstimate: PropTypes.func
+  giveStoryEstimate: PropTypes.func,
+  isWaiting: PropTypes.bool
 };
 
 export default connect(
-  (state) => {
-    const pendingEstimationCommand = getMatchingPendingCommand(state, 'giveStoryEstimate');
-
+  (state, props) => {
+    const ownEstimate = getOwnEstimate(state);
     return {
       selectedStoryId: state.selectedStory,
-      ownEstimate: state.stories[state.selectedStory].estimations[state.userId],
-      estimationWaiting: pendingEstimationCommand
-        ? pendingEstimationCommand.payload.value
-        : undefined,
-
-      hasPendingClearCommand: hasMatchingPendingCommand(state, 'clearStoryEstimate')
+      ownEstimate,
+      isWaiting: isThisCardWaiting(state, props.card.value, ownEstimate)
     };
   },
   {giveStoryEstimate}

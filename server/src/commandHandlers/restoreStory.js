@@ -5,7 +5,32 @@ import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
  * A story must be first marked as "trashed", before it can be restored.
  * Story will no longer be marked as "trashed".
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              format: 'uuidv4'
+            }
+          },
+          required: ['storyId'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const restoreStoryCommandHandler = {
+  schema,
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
 

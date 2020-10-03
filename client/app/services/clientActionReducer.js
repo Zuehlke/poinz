@@ -57,13 +57,19 @@ export default function clientActionReducer(state, action) {
       return {...state, pendingCommands: modifiedPendingCommands};
     }
     case TOGGLE_BACKLOG: {
-      return {...state, backlogShown: !state.backlogShown};
+      const showBacklog = !state.backlogShown;
+
+      if (showBacklog) {
+        return {...state, backlogShown: true, userMenuShown: false, logShown: false};
+      } else {
+        return {...state, backlogShown: false};
+      }
     }
     case TOGGLE_USER_MENU: {
       const showMenu = !state.userMenuShown;
 
       if (showMenu) {
-        return {...state, userMenuShown: true, logShown: false};
+        return {...state, userMenuShown: true, logShown: false, backlogShown: false};
       } else {
         return {...state, userMenuShown: false};
       }
@@ -72,7 +78,7 @@ export default function clientActionReducer(state, action) {
       const showLog = !state.logShown;
 
       if (showLog) {
-        return {...state, logShown: true, userMenuShown: false};
+        return {...state, logShown: true, userMenuShown: false, backlogShown: false};
       } else {
         return {...state, logShown: false};
       }

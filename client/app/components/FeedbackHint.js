@@ -13,9 +13,12 @@ const FeedbackHint = ({hideHints, hideNewUserHints}) => {
 
   return (
     <StyledFeedbackHint>
-      <i className="fa fa-times hide-hints" onClick={() => hideNewUserHints()}></i>
+      <i className="icon-cancel hide-hints" onClick={() => hideNewUserHints()}></i>
       <div style={{width: '45px'}}>
-        <Avatar user={{email: 'set@zuehlke.com'}} index={0} />
+        <Avatar
+          user={{email: 'set@zuehlke.com', emailHash: 'd2bb0fb7ae7e208f0a2384ec08d708ef'}}
+          index={0}
+        />
       </div>
       <div>
         Hey there! Do you use Poinz on a regular basis? I would be very interested in your{' '}

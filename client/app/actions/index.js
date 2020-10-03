@@ -152,7 +152,11 @@ export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCo
     }
   };
 
-  if (state.stories[storyId] && state.stories[storyId].estimations[state.userId] === value) {
+  if (
+    state.estimations &&
+    state.estimations[storyId] &&
+    state.estimations[storyId][state.userId] === value
+  ) {
     command.name = 'clearStoryEstimate';
     delete command.payload.value;
   } else {

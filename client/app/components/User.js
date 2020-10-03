@@ -15,13 +15,20 @@ import {
   StyledUserKickOverlay
 } from '../styled/User';
 
-const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkForKick}) => {
+const User = ({
+  t,
+  user,
+  selectedStory,
+  userEstimationValue,
+  ownUserId,
+  cardConfig,
+  kick,
+  toggleMarkForKick
+}) => {
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
   const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
-
-  const userEstimationValue = selectedStory && selectedStory.estimations[user.id];
   const userHasEstimation = userEstimationValue !== undefined; // value could be "0" which is falsy, check for undefined
 
   const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
@@ -35,13 +42,13 @@ const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkFo
     >
       {!isDisconnected && isExcluded && (
         <StyledUserBadge>
-          <i className="fa fa-eye"></i>
+          <i className="icon-eye"></i>
         </StyledUserBadge>
       )}
 
       {isDisconnected && (
         <StyledUserBadge>
-          <i className="fa fa-flash"></i>
+          <i className="icon-flash"></i>
         </StyledUserBadge>
       )}
 
@@ -55,8 +62,8 @@ const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkFo
 
       {isMarkedForKick && (
         <StyledUserKickOverlay>
-          <i className="fa fa-times" onClick={onMarkForKick} title={t('cancel')}></i>
-          <i className="fa fa-sign-out" onClick={() => kick(user.id)} title={t('kickUser')}></i>
+          <i className="icon-cancel" onClick={onMarkForKick} title={t('cancel')}></i>
+          <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
         </StyledUserKickOverlay>
       )}
 
@@ -84,6 +91,7 @@ const User = ({t, user, selectedStory, ownUserId, cardConfig, kick, toggleMarkFo
 User.propTypes = {
   t: PropTypes.func,
   user: PropTypes.object,
+  userEstimationValue: PropTypes.number,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
   cardConfig: PropTypes.array,
@@ -92,11 +100,17 @@ User.propTypes = {
 };
 
 export default connect(
-  (state) => ({
-    t: state.translator,
-    cardConfig: state.cardConfig,
-    ownUserId: state.userId,
-    selectedStory: state.stories[state.selectedStory]
-  }),
+  (state, props) => {
+    const estimationsForStory = state.estimations && state.estimations[state.selectedStory];
+    const userEstimationValue = estimationsForStory && estimationsForStory[props.user.id];
+
+    return {
+      t: state.translator,
+      cardConfig: state.cardConfig,
+      ownUserId: state.userId,
+      selectedStory: state.stories[state.selectedStory],
+      userEstimationValue
+    };
+  },
   {kick, toggleMarkForKick}
 )(User);

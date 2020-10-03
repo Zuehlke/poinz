@@ -1,4 +1,5 @@
 import defaultCardConfig from '../defaultCardConfig';
+import {calcEmailHash} from './setEmail';
 
 /**
  * A user joins a room.
@@ -10,9 +11,40 @@ import defaultCardConfig from '../defaultCardConfig';
  * Produces also events for additional properties if they are preset "usernameSet", "emailSet", "excludedFromEstimations".
  *
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            username: {
+              type: 'string',
+              format: 'username'
+            },
+            email: {
+              type: 'string',
+              format: 'email'
+            },
+            avatar: {
+              type: 'number'
+            }
+          },
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const joinRoomCommandHandler = {
   canCreateRoom: true,
   skipUserIdRoomCheck: true, // will not check whether userId is part of the room.  for most other commands this is a precondition. not for "joinRoom".
+  schema,
   fn: (room, command, userId) => {
     if (room.get('pristine')) {
       joinNewRoom(room, command, userId);
@@ -37,8 +69,6 @@ function joinNewRoom(room, command, userId) {
       [userId]: {
         disconnected: false,
         id: userId,
-        username: command.payload.username,
-        email: command.payload.email,
         avatar
       }
     },
@@ -56,7 +86,8 @@ function joinNewRoom(room, command, userId) {
 
   if (command.payload.email) {
     room.applyEvent('emailSet', {
-      email: command.payload.email
+      email: command.payload.email,
+      emailHash: calcEmailHash(command.payload.email)
     });
   }
 
@@ -92,7 +123,8 @@ function joinExistingRoom(room, command, userId) {
 
   if (userObject.email) {
     room.applyEvent('emailSet', {
-      email: userObject.email
+      email: userObject.email,
+      emailHash: calcEmailHash(userObject.email)
     });
   }
 

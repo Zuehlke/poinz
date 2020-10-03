@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import {selectStory, editStory, trashStory} from '../actions';
 import ConsensusBadge from './ConsensusBadge';
-import {getAllMatchingPendingCommands} from '../services/queryPendingCommands';
+import {isThisStoryWaiting} from '../services/selectors';
 import {StyledStoryToolbar, StyledStory} from '../styled/Story';
 import {StyledStoryTitle} from '../styled/StyledStoryTitle';
 
@@ -20,13 +20,9 @@ const Story = ({
   selectStory,
   editStory,
   trashStory,
-  pendingSelectCommands,
-  pendingTrashCommands
+  isWaiting
 }) => {
   const isSelected = selectedStoryId === story.id;
-  const isWaiting =
-    pendingSelectCommands.find((cmd) => cmd.payload.storyId === story.id) ||
-    pendingTrashCommands.find((cmd) => cmd.payload.storyId === story.id);
 
   return (
     <StyledStory
@@ -38,13 +34,13 @@ const Story = ({
     >
       <StyledStoryToolbar>
         <i
-          className="fa fa-pencil story-edit"
+          className="icon-pencil story-edit"
           onClick={triggerEdit}
           data-testid="editStoryButton"
           title={t('edit')}
         />
         <i
-          className="fa fa-trash story-trash"
+          className="icon-trash story-trash"
           onClick={triggerTrash}
           data-testid="trashStoryButton"
           title={t('trash')}
@@ -86,23 +82,21 @@ const Story = ({
 
 Story.propTypes = {
   story: PropTypes.object,
+  isWaiting: PropTypes.bool,
   cardConfig: PropTypes.array,
   selectedStoryId: PropTypes.string,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
   trashStory: PropTypes.func,
-  pendingSelectCommands: PropTypes.array,
-  pendingTrashCommands: PropTypes.array,
   t: PropTypes.func
 };
 
 export default connect(
-  (state) => ({
+  (state, props) => ({
     t: state.translator,
     cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
-    pendingSelectCommands: getAllMatchingPendingCommands(state, 'selectStory'),
-    pendingTrashCommands: getAllMatchingPendingCommands(state, 'trashStory')
+    isWaiting: isThisStoryWaiting(state, props.story.id)
   }),
   {selectStory, editStory, trashStory}
 )(Story);

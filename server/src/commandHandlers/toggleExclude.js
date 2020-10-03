@@ -5,7 +5,26 @@
  *
  */
 
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {},
+          required: [],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const toggleExcludeCommandHandler = {
+  schema,
   fn: (room, command, userId) => {
     if (room.getIn(['users', userId, 'excluded'])) {
       room.applyEvent('includedInEstimations', {});

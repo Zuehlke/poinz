@@ -5,7 +5,32 @@ import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
  * A story must be first marked as "trashed", before it can be deleted.
  * Story will be completely removed from room.
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              format: 'uuidv4'
+            }
+          },
+          required: ['storyId'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const deleteStoryCommandHandler = {
+  schema,
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
 

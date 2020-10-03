@@ -52,10 +52,10 @@ class AppStatus extends React.Component {
               className="clickable pure-button pure-button-primary"
               onClick={fetchStatus}
             >
-              <i className="fa fa-refresh"></i>
+              <i className="icon-arrows-cw"></i>
             </StyledQuickMenuButton>
             <StyledQuickMenuButton className="clickable pure-button pure-button-primary" href="/">
-              <i className="fa fa-sign-out"></i>
+              <i className="icon-logout"></i>
             </StyledQuickMenuButton>
           </StyledTopRight>
         </StyledTopBar>
@@ -117,7 +117,7 @@ const RoomItem = ({room}) => (
     <div>{room.storyCount}</div>
     <div title={formatDateTime(room.created)}>{timeAgo(room.created)}</div>
     <div title={formatDateTime(room.lastActivity)}>{timeAgo(room.lastActivity)}</div>
-    <div>{room.markedForDeletion && <i className="fa fa-circle-o"></i>}</div>
+    <div>{room.markedForDeletion && <i className="icon-circle-empty"></i>}</div>
   </li>
 );
 

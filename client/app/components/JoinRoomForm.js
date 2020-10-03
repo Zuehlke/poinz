@@ -25,7 +25,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   return (
     <StyledEyecatcher>
       <StyledInfoText>
-        <i className="fa fa-users"></i>
+        <i className="icon-users"></i>
         <div>
           {presetUsername && (
             <h5>
@@ -54,7 +54,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
             className="pure-button pure-button-primary"
             onClick={() => setShowExtended(!showExtended)}
           >
-            <i className={`fa fa-angle-double-${showExtended ? 'up' : 'down'}`} />
+            <i className={`icon-angle-double-${showExtended ? 'up' : 'down'}`} />
           </StyledLandingDoubleButtonR>
         </div>
 

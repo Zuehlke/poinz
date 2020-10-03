@@ -105,10 +105,10 @@ a {
   }
 
   &:after {
-    animation: fa-spin 2s infinite linear;
-    font: normal normal normal 14px / 1 FontAwesome;
+    animation: spin 2s infinite linear;
+    font: normal normal normal 14px / 1 poinz;
     text-rendering: auto;
-    content: "\\F110";
+    content: "\\f110";
     position: absolute;
     left :50%;
     top :50%;

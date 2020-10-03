@@ -1,7 +1,32 @@
 /**
  * A user sets a custom card configuration on the room.
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            cardConfig: {
+              type: 'array',
+              format: 'cardConfig'
+            }
+          },
+          required: ['cardConfig'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const setCardConfigCommandHandler = {
+  schema,
   fn: (room, command) => {
     const cardConfig = sanitizeCardConfig(command.payload.cardConfig);
     room.applyEvent('cardConfigSet', {...command.payload, cardConfig});

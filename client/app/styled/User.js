@@ -93,10 +93,10 @@ export const StyledUserKickOverlay = styled.span`
   i:hover {
     opacity: 1;
   }
-  i:hover.fa-sign-out {
+  i:hover.icon-logout {
     color: ${COLOR_WARNING};
   }
-  i:hover.fa-cross {
+  i:hover.icon-cancel {
     color: ${COLOR_FONT_GREY};
   }
 `;

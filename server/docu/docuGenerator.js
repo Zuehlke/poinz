@@ -6,7 +6,6 @@ const gatherData = require('./gatherData');
 const renderDocu = require('./renderDocu');
 
 const cmdHandlersDirPath = path.join(__dirname, '../src/commandHandlers');
-const validationSchemasDirPath = path.join(__dirname, '../resources/validationSchemas');
 const evtHandlersDirPath = path.join(__dirname, '../src/eventHandlers');
 
 generate().catch((err) => {
@@ -21,10 +20,10 @@ generate().catch((err) => {
 async function generate() {
   console.log(chalk.blue.bold('Generating commands and events documentation for Poinz:'));
   console.log(
-    `  Expecting commandHandlers in "${cmdHandlersDirPath}"\n  Expecting validationSchemas in "${validationSchemasDirPath}"\n  Expecting eventHandlers in "${evtHandlersDirPath}"\n\n`
+    `  Expecting commandHandlers in "${cmdHandlersDirPath}"\n  Expecting eventHandlers in "${evtHandlersDirPath}"\n\n`
   );
 
-  const data = await gatherData(cmdHandlersDirPath, validationSchemasDirPath, evtHandlersDirPath);
+  const data = await gatherData(cmdHandlersDirPath, evtHandlersDirPath);
 
   const markdownString = await renderDocu(data);
   await fs.promises.writeFile(

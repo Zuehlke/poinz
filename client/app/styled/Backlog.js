@@ -6,7 +6,7 @@ import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH} from './dimensions';
 export const StyledBacklog = styled.div`
   transition: all 0.2s ease-out;
   margin-left: ${LEFT_MENU_WIDTH * -1}px;
-  width: ${LEFT_MENU_WIDTH}px;
+  width: ${(props) => (props.shown ? '100%' : LEFT_MENU_WIDTH + 'px')};
   position: fixed;
   top: 0;
   left: ${({shown}) => (shown ? LEFT_MENU_WIDTH + 'px' : '0')};
@@ -22,11 +22,14 @@ export const StyledBacklog = styled.div`
 
   @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
     left: ${LEFT_MENU_WIDTH}px;
+    width: ${LEFT_MENU_WIDTH}px;
   }
 
   &:after {
     content: '';
-    border-right: 1px solid ${COLOR_LIGHTER_GREY};
+    @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+      border-right: 1px solid ${COLOR_LIGHTER_GREY};
+    }
     top: 44px;
     right: 0;
     position: absolute;

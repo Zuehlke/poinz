@@ -10,6 +10,7 @@ import Users from '../components/Users';
 import Estimation from '../components/Estimation';
 import FeedbackHint from './FeedbackHint';
 import {StyledBoard} from '../styled/Board';
+import {isAStorySelected} from '../services/selectors';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -39,5 +40,5 @@ Board.propTypes = {
 
 export default connect((state) => ({
   roomId: state.roomId,
-  isAStorySelected: state.stories && state.selectedStory && !!state.stories[state.selectedStory]
+  isAStorySelected: isAStorySelected(state)
 }))(Board);

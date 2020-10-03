@@ -5,7 +5,32 @@ import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
  *
  * If the story that is "trashed" is the selectedStory in the room, an additional "storySelected" event is produced
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              format: 'uuidv4'
+            }
+          },
+          required: ['storyId'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const trashStoryCommandHandler = {
+  schema,
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
   },

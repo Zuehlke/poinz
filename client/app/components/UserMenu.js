@@ -52,10 +52,19 @@ const UserMenu = ({
   const email = user.email;
   const excluded = user.excluded;
 
-  const [myUsername, setMyUsername] = useState(username);
-  const [myEmail, setMyEmail] = useState(email || '');
+  // derive username for input field from prop
+  const [myUsername, setMyUsername] = useState(username || '');
+  React.useEffect(() => {
+    setMyUsername(user.username || '');
+  }, [user.username]);
 
-  // custom card configuration section
+  // derive email for input field from prop
+  const [myEmail, setMyEmail] = useState(email || '');
+  React.useEffect(() => {
+    setMyEmail(user.email || '');
+  }, [user.email]);
+
+  // derive custom card config for textarea   from prop
   const [customCardConfigString, setCustomCardConfigString] = useState(
     JSON.stringify(cardConfig, null, 4)
   );
@@ -88,7 +97,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary"
               onClick={saveUsername}
             >
-              <i className="fa fa-save" />
+              <i className="icon-floppy" />
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -154,7 +163,7 @@ const UserMenu = ({
               onClick={saveEmail}
               data-testid="saveEmailButton"
             >
-              <i className="fa fa-save" />
+              <i className="icon-floppy" />
             </button>
           </StyledTextInput>
         </StyledSection>
@@ -164,8 +173,7 @@ const UserMenu = ({
           {t('excludedInfo')}
 
           <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
-            <i className={'fa ' + (excluded ? 'fa-check-square-o' : 'fa-square-o')}></i>{' '}
-            {t('excluded')}
+            <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('excluded')}
           </p>
         </StyledSection>
 
@@ -175,7 +183,7 @@ const UserMenu = ({
 
           <p>
             <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
-              {t('exportLinkText')} <i className="fa fa-download"></i>{' '}
+              {t('exportLinkText')} <i className="icon-download-cloud"></i>
             </StyledLinkButton>
           </p>
         </StyledSection>
@@ -190,7 +198,7 @@ const UserMenu = ({
               className="pure-button pure-button-primary"
               onClick={() => setCustomCardConfigExpanded(true)}
             >
-              <i className="fa fa-chevron-down"></i>
+              <i className="icon-angle-double-down"></i>
             </StyledExpandButton>
           )}
 
@@ -209,7 +217,7 @@ const UserMenu = ({
                   className="pure-button pure-button-primary"
                   onClick={setCustomCardConfiguration}
                 >
-                  {t('iKnowWhatImDoin')} <i className="fa fa-save" />
+                  {t('iKnowWhatImDoin')} <i className="icon-floppy" />
                 </button>
               </p>
             </div>

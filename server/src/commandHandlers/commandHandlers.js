@@ -39,3 +39,36 @@ export default {
   toggleExclude,
   setCardConfig
 };
+
+/**
+ * The other command schemas reference this base schema.
+ * Thus every command must also adhere to these properties...
+ */
+export const baseCommandSchema = {
+  id: 'command',
+  type: 'object',
+  properties: {
+    id: {
+      type: 'string',
+      minLength: 1
+    },
+    userId: {
+      type: 'string',
+      format: 'uuidv4'
+    },
+    name: {
+      type: 'string',
+      minLength: 1
+    },
+    roomId: {
+      type: 'string',
+      minLength: 1,
+      format: 'roomId'
+    },
+    payload: {
+      type: 'object'
+    }
+  },
+  required: ['id', 'roomId', 'name', 'payload'],
+  additionalProperties: false
+};

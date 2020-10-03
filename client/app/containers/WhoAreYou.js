@@ -26,7 +26,7 @@ const WhoAreYou = ({t, setUsername}) => {
       <StyledLandingInner>
         <StyledEyecatcher>
           <StyledInfoText>
-            <i className="fa fa-user-secret"></i>
+            <i className="icon-user-secret"></i>
             <p>{t('provideUsernameInfo')}</p>
           </StyledInfoText>
           <StyledLandingForm>

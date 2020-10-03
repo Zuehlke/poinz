@@ -13,14 +13,15 @@
   "scripts": {
     "start": "npm run serve",
     "lint": "eslint \"app/**/*.js\" \"test/**/*.js\" \"cypress/**/*.js\"",
-    "format": "prettier --write \"app/**/*.js\" \"cypress/**/*.js\" \"test/**/*.js\"",
+    "format": "prettier --write \"app/**/*.js\" \"cypress/**/*.js\" \"test/**/*.js\" \"webpack*config.js\"",
     "test": "jest",
     "test:e2e": "npm run cypress:run",
     "pretest": "npm run lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "serve": "BABEL_ENV=development webpack-dev-server --progress --colors --port 9000",
-    "build": "BABEL_ENV=production webpack --progress --colors --bail --json --config  webpack.production.config.js > webpack-build-stats.json"
+    "build": "BABEL_ENV=production webpack --progress --colors --bail --json --config  webpack.production.config.js > webpack-build-stats.json",
+    "build:analyze": "BABEL_ENV=production webpack --progress --colors --bail --config  webpack.analysis.config.js"
   },
   "jest": {
     "testMatch": [
@@ -38,14 +39,12 @@
     "babel-jest": "^26.3.0",
     "babel-loader": "8.1.0",
     "babel-plugin-styled-components": "^1.11.1",
-    "blueimp-md5": "2.18.0",
     "css-loader": "4.3.0",
     "cypress": "^5.2.0",
     "date-fns": "^2.16.1",
     "eslint": "7.9.0",
     "eslint-plugin-react": "7.21.1",
     "file-loader": "6.1.0",
-    "font-awesome": "4.7.0",
     "history": "5.0.0",
     "jest": "^26.4.2",
     "loglevel": "1.7.0",
@@ -58,12 +57,14 @@
     "react-redux": "7.2.1",
     "redux": "4.0.5",
     "redux-thunk": "2.3.0",
+    "reselect": "^4.0.0",
     "socket.io-client": "2.3.0",
     "style-loader": "1.2.1",
     "styled-components": "^5.2.0",
     "url-loader": "4.1.0",
     "uuid": "8.3.0",
     "webpack": "4.44.2",
+    "webpack-bundle-analyzer": "^3.9.0",
     "webpack-cli": "3.3.12",
     "webpack-dev-server": "3.11.0"
   },

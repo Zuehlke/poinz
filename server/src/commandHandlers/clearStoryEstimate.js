@@ -2,7 +2,32 @@
  * A user clears his estimation value for a certain story.
  * Users may only clear estimation for the currently selected story.
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            storyId: {
+              type: 'string',
+              minLength: 1
+            }
+          },
+          required: ['storyId'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const clearStoryEstimateCommandHandler = {
+  schema,
   preCondition: (room, command, userId) => {
     if (room.get('selectedStory') !== command.payload.storyId) {
       throw new Error('Can only clear estimation for currently selected story!');

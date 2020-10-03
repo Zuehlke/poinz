@@ -8,7 +8,32 @@ import parseCsvDataUrlToStories from './parseCsvDataUrlToStories';
  * Will trigger "storySelected" event, if no story is selected
  *
  */
+
+const schema = {
+  allOf: [
+    {
+      $ref: 'command'
+    },
+    {
+      properties: {
+        payload: {
+          type: 'object',
+          properties: {
+            data: {
+              type: 'string',
+              format: 'csvDataUrl'
+            }
+          },
+          required: ['data'],
+          additionalProperties: false
+        }
+      }
+    }
+  ]
+};
+
 const importStoriesCommandHandler = {
+  schema,
   fn: (room, command) => {
     try {
       const stories = parseCsvDataUrlToStories(command.payload.data);

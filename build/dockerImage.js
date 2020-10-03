@@ -62,7 +62,6 @@ async function build() {
 
   // 4. copy client and backend to "deploy" folder
   await fs.copy('./server/lib', './deploy/lib');
-  await fs.copy('./server/resources', './deploy/resources');
   await fs.copy('./server/package.json', './deploy/package.json');
 
   //  5. build docker image (see Dockerfile)

@@ -15,6 +15,7 @@ import {
   StyledWhoAmIExtended,
   StyledWhoAmISimple
 } from '../styled/TopBar';
+import {getOwnUsername} from '../services/selectors';
 
 const TopBar = ({
   t,
@@ -34,6 +35,7 @@ const TopBar = ({
     <StyledTopBar data-testid="topBar">
       <StyledTopLeft>
         <StyledBacklogToggle
+          data-testid="backlogToggle"
           className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
           onClick={toggleBacklog}
         >
@@ -60,16 +62,17 @@ const TopBar = ({
           onClick={toggleUserMenu}
           title={t('toggleMenu')}
         >
-          <i className="fa fa-cog"></i>
+          <i className="icon-cog"></i>
         </StyledQuickMenuButton>
         <StyledQuickMenuButton
+          data-testid="actionLogToggle"
           className={`clickable pure-button pure-button-primary ${
             logShown ? 'pure-button-active' : ''
           }`}
           onClick={toggleLog}
           title={t('toggleLog')}
         >
-          <i className="fa fa-list"></i>
+          <i className="icon-doc-text"></i>
         </StyledQuickMenuButton>
 
         <StyledQuickMenuButton
@@ -77,7 +80,7 @@ const TopBar = ({
           onClick={leaveRoom}
           title={t('leaveRoom')}
         >
-          <i className="fa fa-sign-out"></i>
+          <i className="icon-logout"></i>
         </StyledQuickMenuButton>
       </StyledTopRight>
     </StyledTopBar>
@@ -104,7 +107,7 @@ export default connect(
     userMenuShown: state.userMenuShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
-    username: state.users && state.users[state.userId] ? state.users[state.userId].username : '-'
+    username: getOwnUsername(state)
   }),
   {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom}
 )(TopBar);

@@ -1,10 +1,9 @@
-import path from 'path';
-import fs from 'fs';
 import util from 'util';
-import glob from 'glob';
 import tv4 from 'tv4';
 
 import getLogger from './getLogger';
+
+import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers';
 
 const LOGGER = getLogger('commandSchemaValidator');
 
@@ -53,36 +52,25 @@ function serializeErrors(tv4Errors) {
 }
 
 /**
- * loads all json schemas
+ * loads all command validation schemas
  */
 function gatherSchemas() {
-  LOGGER.info('loading command schemas..');
+  LOGGER.info('loading command schemas defined in command handlers...');
 
-  const schemaMap = {};
-  const schemaFiles = glob.sync(
-    path.resolve(__dirname, '../resources/validationSchemas/**/*.json')
-  );
+  const schemaMap = Object.entries(commandHandlers).reduce((total, currentEntry) => {
+    if (!currentEntry[1].schema) {
+      throw new Error(
+        `Fatal error: CommandHandler "${currentEntry[0]}" does not define "schema" !`
+      );
+    }
+    total[currentEntry[0]] = currentEntry[1].schema;
+    return total;
+  }, {});
 
-  LOGGER.info(`got ${schemaFiles.length} schema files...`);
-
-  schemaFiles.map((schemaFile) => {
-    const schemaFileContent = fs.readFileSync(schemaFile, 'utf-8');
-    const schemaName = path.basename(schemaFile, '.json');
-    schemaMap[schemaName] = parseSchemaFile(schemaFileContent, schemaFile);
-  });
-
-  // add the default command schema, which is referenced from all others ($ref)
-  tv4.addSchema(schemaMap.command);
+  // add the base command schema, which is referenced from all others (    $ref: 'command'    )
+  tv4.addSchema(baseCommandSchema);
 
   return schemaMap;
-}
-
-function parseSchemaFile(schemaFileContent, schemaFileName) {
-  try {
-    return JSON.parse(schemaFileContent);
-  } catch (err) {
-    LOGGER.error(`Could not parse schema file ${schemaFileName}.`, err);
-  }
 }
 
 function registerCustomFormats() {
@@ -124,7 +112,16 @@ export function validateCardConfig(data) {
     return 'Given cardConfig must not be an empty array!';
   }
 
-  return data.map(validateSingleCardConfigItem).find((i) => i);
+  const itemsValidationError = data.map(validateSingleCardConfigItem).find((i) => i);
+  if (itemsValidationError) {
+    return itemsValidationError;
+  }
+
+  const valueArray = data.map(i => i.value);
+  if ((new Set(valueArray)).size !== valueArray.length) {
+    return 'CardConfig must not contain two cards with the same value';
+  }
+
 }
 
 function validateSingleCardConfigItem(ccItem) {

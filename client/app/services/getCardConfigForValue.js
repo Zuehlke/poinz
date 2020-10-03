@@ -1,5 +1,7 @@
 /**
  *
+ * If no matching config is found, a config is created on the fly (warning color and " !" suffix), so that this function never returns undefined.
+ *
  * @param cardConfig {object} The complete cardConfig object from the redux state
  * @param numericValue {number} The numeric value to look up
  */

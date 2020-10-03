@@ -2,7 +2,12 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {StyledActionLogInner, StyledActionLogList, StyledActionLog} from '../styled/ActionLog';
+import {
+  StyledActionLogInner,
+  StyledActionLogList,
+  StyledActionLog,
+  StyledActionLogListItem
+} from '../styled/ActionLog';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
@@ -14,10 +19,10 @@ const ActionLog = ({t, actionLog, logShown}) => (
     <StyledActionLogInner>
       <StyledActionLogList>
         {actionLog.map((entry) => (
-          <li key={`logline_${entry.logId}`}>
+          <StyledActionLogListItem isError={entry.isError} key={`logline_${entry.logId}`}>
             <span>{entry.tstamp}</span>
-            <span>{entry.message}</span>
-          </li>
+            <span style={{whiteSpace: 'pre-line'}}>{entry.message}</span>
+          </StyledActionLogListItem>
         ))}
       </StyledActionLogList>
     </StyledActionLogInner>

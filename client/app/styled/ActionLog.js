@@ -1,7 +1,13 @@
 import styled from 'styled-components';
 
 import {MEDIA_MIN_WIDTH_THRESH, RIGHT_MENU_WIDTH} from './dimensions';
-import {COLOR_BACKGROUND_GREY, COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './colors';
+import {
+  COLOR_BACKGROUND_GREY,
+  COLOR_LIGHT_GREY,
+  COLOR_LIGHTER_GREY,
+  COLOR_ORANGE,
+  COLOR_WARNING
+} from './colors';
 
 export const StyledActionLog = styled.div`
   z-index: 10;
@@ -51,25 +57,22 @@ export const StyledActionLogList = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;
+`;
 
-  li {
-    background: #fff;
-    padding: 4px;
-    margin-bottom: 8px;
-    box-sizing: border-box;
-    border: 1px solid ${COLOR_LIGHTER_GREY};
+export const StyledActionLogListItem = styled.li`
+  background: #fff;
+  padding: 4px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+  border: 1px solid ${COLOR_LIGHTER_GREY};
+  border-left: ${({isError}) => (isError ? '2px solid ' + COLOR_WARNING : 'inherit')};
 
-    > span {
-      display: block;
-    }
+  > span {
+    display: block;
+  }
 
-    > span:first-child {
-      color: ${COLOR_LIGHT_GREY};
-      font-size: 12px;
-    }
-
-    &:first-child {
-      border-left: 2px solid ${COLOR_ORANGE};
-    }
+  > span:first-child {
+    color: ${COLOR_LIGHT_GREY};
+    font-size: 12px;
   }
 `;

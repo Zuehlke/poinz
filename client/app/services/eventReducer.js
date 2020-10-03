@@ -63,7 +63,7 @@ function isFailedJoinRoom(event) {
  *
  * @param {undefined | string | function} logObject defined in event handlers.
  *         If this is a function: username, eventPayload, oldState and newState will be passed.
- *         The function can return undefined or empty string. then no logEntry will be added
+ *         The function can return undefined or empty string/undefined (then no logEntry will be added)
  * @param {object} oldState The state before the action was reduced
  * @param {object} modifiedState The state after the action was reduced
  * @param {object} event
@@ -76,25 +76,29 @@ function updateActionLog(logObject, oldState, modifiedState, event) {
 
   const matchingUser = modifiedState.users && modifiedState.users[event.userId];
   const username = matchingUser ? matchingUser.username || '' : '';
-  const message =
+  const messageObject =
     typeof logObject === 'function'
       ? logObject(username, event.payload, oldState, modifiedState, event)
       : logObject;
 
-  if (!message) {
+  if (!messageObject) {
     return modifiedState;
+  }
+
+  const newLogItem = {
+    tstamp: formatTime(Date.now()),
+    logId: uuid()
+  };
+  if (typeof messageObject === 'string') {
+    newLogItem.message = messageObject;
+  } else {
+    newLogItem.message = messageObject.message;
+    newLogItem.isError = messageObject.isError;
   }
 
   return {
     ...modifiedState,
-    actionLog: [
-      {
-        tstamp: formatTime(Date.now()),
-        message,
-        logId: uuid()
-      },
-      ...(modifiedState.actionLog || [])
-    ]
+    actionLog: [newLogItem, ...(modifiedState.actionLog || [])]
   };
 }
 
@@ -566,7 +570,16 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {
-    fn: (state, payload, event) => log.error(event),
-    log: (username, payload) => `An error occurred: ${payload.reason}`
+    fn: (state, payload, event) => {
+      log.error(event);
+      return {
+        ...state,
+        unseenError: true
+      };
+    },
+    log: (username, payload) => ({
+      message: `Command "${payload.command.name}" was not successful. \n ${payload.reason}`,
+      isError: true
+    })
   }
 };

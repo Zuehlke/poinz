@@ -78,7 +78,13 @@ export default function clientActionReducer(state, action) {
       const showLog = !state.logShown;
 
       if (showLog) {
-        return {...state, logShown: true, userMenuShown: false, backlogShown: false};
+        return {
+          ...state,
+          logShown: true,
+          unseenError: false,
+          userMenuShown: false,
+          backlogShown: false
+        };
       } else {
         return {...state, logShown: false};
       }

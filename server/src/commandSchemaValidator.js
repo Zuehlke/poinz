@@ -112,7 +112,16 @@ export function validateCardConfig(data) {
     return 'Given cardConfig must not be an empty array!';
   }
 
-  return data.map(validateSingleCardConfigItem).find((i) => i);
+  const itemsValidationError = data.map(validateSingleCardConfigItem).find((i) => i);
+  if (itemsValidationError) {
+    return itemsValidationError;
+  }
+
+  const valueArray = data.map(i => i.value);
+  if ((new Set(valueArray)).size !== valueArray.length) {
+    return 'CardConfig must not contain two cards with the same value';
+  }
+
 }
 
 function validateSingleCardConfigItem(ccItem) {

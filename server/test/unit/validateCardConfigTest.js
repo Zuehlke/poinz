@@ -103,3 +103,11 @@ test('"color" not a String', () => {
 
   expect(res).toBe('Property "color" on a card in cardConfig must be a string');
 });
+
+test('duplicate values', () => {
+  const res = validateCardConfig([{label: '1', value: 1, color: 'red'}, {label: '2', value: 1, color: 'blue'}]);
+
+  expect(res).not.toBeFalsy();
+
+  expect(res).toBe('CardConfig must not contain two cards with the same value');
+});

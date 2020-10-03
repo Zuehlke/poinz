@@ -1,4 +1,3 @@
-import socketIo from 'socket.io-client';
 import log from 'loglevel';
 import {v4 as uuid} from 'uuid';
 
@@ -15,26 +14,25 @@ import {COMMAND_SENT} from '../actions/types';
  * @return {{sendCommand: sendCommand, io: {emit: io.emit}, onEvent: onEvent}} a/the Hub instance
  */
 export default function hubFactory(dispatch, getUserId) {
-  let io;
+  let ioInstance;
   let onEventHandler;
 
   if (appConfig.env === 'test') {
     // during test, there is no browser. thus we cannot instantiate socket.io!
-    io = {
+    ioInstance = {
       emit: () => {}
     };
   } else {
-    io = appConfig.wsUrl ? socketIo(appConfig.wsUrl) : socketIo();
-    io.on('connect', () => log.info('socket connected to server'));
-    io.on('disconnect', () => log.info('socket from server disconnected'));
-    io.on('event', (ev) => {
+    ioInstance = appConfig.wsUrl ? io(appConfig.wsUrl) : io();
+    ioInstance.on('connect', () => log.info('socket connected to server'));
+    ioInstance.on('disconnect', () => log.info('socket from server disconnected'));
+    ioInstance.on('event', (ev) => {
       debugReceivedEvent(ev);
       onEventHandler(ev);
     });
   }
 
   return {
-    io,
     onEvent,
     sendCommand
   };
@@ -54,7 +52,7 @@ export default function hubFactory(dispatch, getUserId) {
       command.userId = getUserId();
     }
 
-    io.emit('command', command);
+    ioInstance.emit('command', command);
 
     debugSentCommand(command);
 

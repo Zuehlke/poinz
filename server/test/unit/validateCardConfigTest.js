@@ -105,7 +105,10 @@ test('"color" not a String', () => {
 });
 
 test('duplicate values', () => {
-  const res = validateCardConfig([{label: '1', value: 1, color: 'red'}, {label: '2', value: 1, color: 'blue'}]);
+  const res = validateCardConfig([
+    {label: '1', value: 1, color: 'red'},
+    {label: '2', value: 1, color: 'blue'}
+  ]);
 
   expect(res).not.toBeFalsy();
 

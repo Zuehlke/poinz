@@ -117,11 +117,10 @@ export function validateCardConfig(data) {
     return itemsValidationError;
   }
 
-  const valueArray = data.map(i => i.value);
-  if ((new Set(valueArray)).size !== valueArray.length) {
+  const valueArray = data.map((i) => i.value);
+  if (new Set(valueArray).size !== valueArray.length) {
     return 'CardConfig must not contain two cards with the same value';
   }
-
 }
 
 function validateSingleCardConfigItem(ccItem) {

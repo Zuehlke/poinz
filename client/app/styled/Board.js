@@ -7,9 +7,9 @@ import {ZuehlkeFont} from './dimensions';
 export const StyledBoard = styled.div`
   transition: all 0.2s ease-out;
   position: relative;
-  min-height: 100%;
   height: auto;
   background: ${COLOR_BACKGROUND_GREY};
+  flex-grow: 1;
 
   @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
     padding-left: ${LEFT_MENU_WIDTH}px;

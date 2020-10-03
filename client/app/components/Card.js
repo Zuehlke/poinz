@@ -3,44 +3,38 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {giveStoryEstimate} from '../actions';
-import {isThisCardWaiting} from '../services/selectors';
 import {StyledCardInner, StyledCard} from '../styled/Board';
-import {getOwnEstimate} from '../services/selectors';
+import {isThisCardWaiting} from '../services/selectors';
 
 /**
  * One estimation card on the board.
  */
-const Card = ({card, selectedStoryId, ownEstimate, isWaiting, giveStoryEstimate}) => (
+const Card = ({giveStoryEstimate, isWaiting, isSelected, selectedStoryId, cardCfg}) => (
   <StyledCard
-    onClick={() => giveStoryEstimate(selectedStoryId, card.value)}
-    data-testid={'estimationCard.' + card.value}
+    onClick={() => giveStoryEstimate(selectedStoryId, cardCfg.value)}
+    data-testid={'estimationCard.' + cardCfg.value}
   >
     <StyledCardInner
       className={isWaiting ? 'waiting-spinner' : ''}
-      cardColor={card.color}
-      selected={card.value === ownEstimate}
+      cardColor={cardCfg.color}
+      selected={isSelected}
     >
-      {card.label}
+      {cardCfg.label}
     </StyledCardInner>
   </StyledCard>
 );
 
 Card.propTypes = {
-  card: PropTypes.object,
+  cardCfg: PropTypes.object,
+  isSelected: PropTypes.bool,
   selectedStoryId: PropTypes.string,
-  ownEstimate: PropTypes.number,
-  giveStoryEstimate: PropTypes.func,
-  isWaiting: PropTypes.bool
+  isWaiting: PropTypes.bool,
+  giveStoryEstimate: PropTypes.func
 };
 
 export default connect(
-  (state, props) => {
-    const ownEstimate = getOwnEstimate(state);
-    return {
-      selectedStoryId: state.selectedStory,
-      ownEstimate,
-      isWaiting: isThisCardWaiting(state, props.card.value, ownEstimate)
-    };
-  },
+  (state, props) => ({
+    isWaiting: isThisCardWaiting(state, props.cardCfg.value)
+  }),
   {giveStoryEstimate}
 )(Card);

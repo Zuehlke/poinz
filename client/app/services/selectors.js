@@ -82,7 +82,8 @@ export const getSortedUserArray = createSelector([getUsers, getOwnUserId], (user
  * Returns true if this card (specified by its value) should be shown "waiting".
  * (either because you just estimated or cleared your estimation)
  */
-export const isThisCardWaiting = (state, cardValue, ownEstimate) => {
+export const isThisCardWaiting = (state, cardValue) => {
+  const ownEstimate = getOwnEstimate(state);
   const pendingEstimationCommand = getMatchingPendingCommand(state, 'giveStoryEstimate');
   const estimationWaiting = pendingEstimationCommand
     ? pendingEstimationCommand.payload.value

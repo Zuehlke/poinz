@@ -15,7 +15,7 @@ import {
   StyledSelectedStory,
   StyledStoryText
 } from '../styled/Board';
-import {StyledStoryTitle} from '../styled/StyledStoryTitle';
+import {StyledStoryTitle} from '../styled/Story';
 
 /**
  * Displays

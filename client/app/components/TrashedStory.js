@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 
 import ConsensusBadge from './ConsensusBadge';
 import {restoreStory, deleteStory} from '../actions';
-import {StyledStoryToolbar, StyledStory} from '../styled/Story';
-import {StyledStoryTitle} from '../styled/StyledStoryTitle';
+import {StyledStoryToolbar, StyledStory, StyledStoryTitle} from '../styled/Story';
 
 /**
  * One Trashed Story in the Trash

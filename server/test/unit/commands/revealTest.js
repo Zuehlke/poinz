@@ -36,7 +36,12 @@ test('Users marked as excluded should still be able to reveal', async () => {
     processor,
     mockRoomsStore
   } = await prepOneUserInOneRoomWithOneStory();
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+  mockRoomsStore.manipulate((room) => {
+    room.users[userId].excluded = true;
+    return room;
+  });
+
   const commandId = uuid();
   return processor(
     {
@@ -79,7 +84,10 @@ describe('preconditions', () => {
       mockRoomsStore
     } = await prepOneUserInOneRoomWithOneStory();
 
-    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'revealed'], true));
+    mockRoomsStore.manipulate((room) => {
+      room.stories[storyId].revealed = true;
+      return room;
+    });
 
     return expect(
       processor(

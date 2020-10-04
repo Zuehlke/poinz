@@ -1,4 +1,5 @@
 import parseCsvDataUrlToStories from './parseCsvDataUrlToStories';
+import hasActiveStories from './hasActiveStories';
 
 /**
  * A user wants to import multiple stories.
@@ -47,13 +48,7 @@ const importStoriesCommandHandler = {
         room.applyEvent('storyAdded', story);
       });
 
-      if (
-        !room.get('stories') ||
-        !room
-          .get('stories')
-          .filter((s) => !s.get('trashed'))
-          .first()
-      ) {
+      if (!hasActiveStories(room)) {
         // this is the first story that gets added (or all other stories are "trashed")
         room.applyEvent('storySelected', {storyId: stories[0].id});
       }

@@ -99,7 +99,11 @@ test('existing room with matching user already in room (re-join) ', async () => 
     'username-from-previous-join'
   );
 
-  mockRoomsStore.manipulate((room) => room.set('cardConfig', undefined)); // simulate an "old" room that was created before #103
+  // simulate an "old" room that was created before #103
+  mockRoomsStore.manipulate((room) => {
+    room.cardConfig = undefined;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(
@@ -180,9 +184,12 @@ test('existing room with user match, command has no preset properties', async ()
     'custom-user-name'
   );
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'email'], 'super@test.com'));
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'avatar'], 1));
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'disconnected'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userId].email = 'super@test.com';
+    room.users[userId].avatar = 1;
+    room.users[userId].disconnected = true;
+    return room;
+  });
 
   const commandId = uuid();
 

@@ -26,7 +26,7 @@ const schema = {
 const toggleExcludeCommandHandler = {
   schema,
   fn: (room, command, userId) => {
-    if (room.getIn(['users', userId, 'excluded'])) {
+    if (room.users[userId].excluded) {
       room.applyEvent('includedInEstimations', {});
     } else {
       room.applyEvent('excludedFromEstimations', {});

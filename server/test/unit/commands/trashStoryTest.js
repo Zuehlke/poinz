@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import {v4 as uuid} from 'uuid';
 
 import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../testUtils';
@@ -14,16 +13,17 @@ test('Should produce storyTrashed event', async () => {
 
   // add second story, set second story as selected
   const secondStoryId = uuid();
-  mockRoomsStore.manipulate((room) =>
-    room.setIn(
-      ['stories', secondStoryId],
-      Immutable.fromJS({
-        id: secondStoryId,
-        title: 'secondStory'
-      })
-    )
-  );
-  mockRoomsStore.manipulate((room) => room.set('selectedStory', secondStoryId));
+  mockRoomsStore.manipulate((room) => {
+    room.stories[secondStoryId] = {
+      id: secondStoryId,
+      title: 'secondStory'
+    };
+    return room;
+  });
+  mockRoomsStore.manipulate((room) => {
+    room.selectedStory = secondStoryId;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(
@@ -65,16 +65,15 @@ test('Should produce additional storySelected event if story to trash was the se
 
   // add second story, set our first story as selected
   const secondStoryId = uuid();
-  mockRoomsStore.manipulate((room) =>
-    room.setIn(
-      ['stories', secondStoryId],
-      Immutable.fromJS({
-        id: secondStoryId,
-        title: 'secondStory'
-      })
-    )
-  );
-  mockRoomsStore.manipulate((room) => room.set('selectedStory', storyId));
+
+  mockRoomsStore.manipulate((room) => {
+    room.stories[secondStoryId] = {
+      id: secondStoryId,
+      title: 'secondStory'
+    };
+    room.selectedStory = storyId;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(
@@ -117,7 +116,10 @@ test('users marked as excluded can still trash stories', async () => {
     mockRoomsStore
   } = await prepOneUserInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userId].excluded = true;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(

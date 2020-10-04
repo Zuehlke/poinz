@@ -34,19 +34,17 @@ const restoreStoryCommandHandler = {
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
 
-    const isTrashed = !!room.getIn(['stories', command.payload.storyId, 'trashed']);
+    const isTrashed = !!room.stories[command.payload.storyId].trashed;
     if (!isTrashed) {
       throw new Error(
-        `Given story ${command.payload.storyId} in room ${room.get(
-          'id'
-        )} is not marked as "trashed". Nothing to restore...`
+        `Given story ${command.payload.storyId} in room ${room.id} is not marked as "trashed". Nothing to restore...`
       );
     }
   },
   fn: (room, command) => {
     room.applyEvent('storyRestored', command.payload);
 
-    if (!room.get('selectedStory')) {
+    if (!room.selectedStory) {
       room.applyEvent('storySelected', {storyId: command.payload.storyId});
     }
   }

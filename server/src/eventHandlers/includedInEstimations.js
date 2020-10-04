@@ -1,7 +1,18 @@
 /**
  * Sets "excluded" flag on user to false
  */
-const includedInEstimationsEventHandler = (room, eventPayload, userId) =>
-  room.updateIn(['users', userId], (user) => user.set('excluded', false));
+const includedInEstimationsEventHandler = (room, eventPayload, userId) => {
+  const modifiedUsers = {
+    ...room.users,
+    [userId]: {
+      excluded: false
+    }
+  };
+
+  return {
+    ...room,
+    users: modifiedUsers
+  };
+};
 
 export default includedInEstimationsEventHandler;

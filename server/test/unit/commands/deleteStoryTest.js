@@ -11,7 +11,10 @@ test('Should produce storyDeleted event', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
   const commandId = uuid();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.stories[storyId].trashed = true;
+    return room;
+  });
 
   return processor(
     {
@@ -44,8 +47,11 @@ test('users marked as excluded can still delete stories', async () => {
     mockRoomsStore
   } = await prepOneUserInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
-  mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'trashed'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userId].excluded = true;
+    room.stories[storyId].trashed = true;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(

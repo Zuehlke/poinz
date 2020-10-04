@@ -1,5 +1,4 @@
 import {MongoClient} from 'mongodb';
-import Immutable from 'immutable';
 
 import getLogger from '../getLogger';
 
@@ -131,25 +130,24 @@ async function housekeepingMarkForDeletion() {
 /**
  * saves the given room object (replaces an already existing room with the same unique "id")
  *
- * @param {Immutable.Map} room
+ * @param {object} room
  * @return {Promise<void>}
  */
 async function saveRoom(room) {
-  const roomPlain = room.toJS();
-  await roomsCollection.replaceOne({id: roomPlain.id}, roomPlain, {upsert: true});
+  await roomsCollection.replaceOne({id: room.id}, room, {upsert: true});
 }
 
 /**
  * returns a room by its unique id (the roomId, not the mongodb internal _id)
  * @param {string} roomId
- * @return {Promise<Immutable.Map | undefined>}
+ * @return {Promise<object | undefined>}
  */
 async function getRoomById(roomId) {
   const room = await roomsCollection.findOne({id: roomId});
 
   if (room) {
     delete room._id; // we don't want to return the room with the mongodb internal id
-    return Immutable.fromJS(room);
+    return room;
   } else {
     return undefined;
   }
@@ -162,11 +160,9 @@ async function getRoomById(roomId) {
 async function getAllRooms() {
   const rooms = await roomsCollection.find().toArray();
 
-  const roomsMap = rooms.reduce((roomsMap, currentRoom) => {
+  return rooms.reduce((roomsMap, currentRoom) => {
     delete currentRoom._id;
     roomsMap[currentRoom.id] = currentRoom;
     return roomsMap;
   }, {});
-
-  return Immutable.fromJS(roomsMap);
 }

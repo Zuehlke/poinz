@@ -127,8 +127,9 @@ export default function socketManagerFactory(
    *
    */
   function handleCommandProcessingError(error, command, socket) {
-    // for debugging, you might want to log error.stack  LOGGER.error(error.message + '\n' + error.stack);
-    LOGGER.warn(error.message);
+    // for debugging, you might want to log error.stack
+    LOGGER.error(error.message + '\n' + error.stack);
+    //  LOGGER.warn(error.message);
 
     const commandRejectedEvent = {
       name: 'commandRejected',

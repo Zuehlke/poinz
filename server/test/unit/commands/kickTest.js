@@ -10,7 +10,10 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userIdTwo].disconnected = true;
+    return room;
+  });
 
   const commandId = uuid();
 
@@ -74,8 +77,11 @@ test('Users that are marked as excluded can also kick others (userOne [excluded]
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdOne, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userIdTwo].disconnected = true;
+    room.users[userIdOne].excluded = true;
+    return room;
+  });
 
   const commandId = uuid();
 
@@ -95,6 +101,7 @@ test('Users that are marked as excluded can also kick others (userOne [excluded]
 describe('preconditions', () => {
   test('Should throw if userId does not match any user from the room', async () => {
     const {roomId, userIdOne, processor} = await prepTwoUsersInOneRoomWithOneStory();
+    const userToKick = uuid(); // new random userId, not part of our room
     return expect(
       processor(
         {
@@ -102,12 +109,12 @@ describe('preconditions', () => {
           roomId,
           name: 'kick',
           payload: {
-            userId: uuid() // new random userId, not part of our room
+            userId: userToKick
           }
         },
         userIdOne
       )
-    ).rejects.toThrow('Can only kick user that belongs to the same room!');
+    ).rejects.toThrow(`Given user ${userToKick} does not belong to room ${roomId}`);
   });
 
   test('Should throw if tries to kick himself', async () => {

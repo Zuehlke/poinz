@@ -9,7 +9,7 @@ import commandProcessorFactory from './commandProcessor';
 import getLogger from './getLogger';
 import rest from './rest';
 import roomsStoreFactory from './store/roomStoreFactory';
-import commandHandlers from './commandHandlers/commandHandlers';
+import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers';
 import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = getLogger('server');
@@ -38,7 +38,12 @@ async function startup() {
     response.sendFile(path.resolve(__dirname, '../public/index.html'))
   );
 
-  const commandProcessor = commandProcessorFactory(commandHandlers, eventHandlers, store);
+  const commandProcessor = commandProcessorFactory(
+    commandHandlers,
+    baseCommandSchema,
+    eventHandlers,
+    store
+  );
 
   const httpServer = http.createServer(app);
   socketServer.init(httpServer, commandProcessor);

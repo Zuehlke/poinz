@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import {v4 as uuid} from 'uuid';
 import inMemoryRoomsStore from '../../src/store/inMemoryRoomsStore';
 
@@ -6,14 +5,44 @@ test('should save and retrieve a room', async () => {
   const roomId = uuid();
   await inMemoryRoomsStore.init();
 
-  const roomObject = Immutable.fromJS({
+  const roomObject = {
+    id: roomId,
+    arbitrary: 'data',
+    nestedArray: [{a: 'some'}],
+    nestedObject: {
+      props: 1,
+      properties: 'dklklö'
+    }
+  };
+
+  await inMemoryRoomsStore.saveRoom(roomObject);
+  const retr = await inMemoryRoomsStore.getRoomById(roomId);
+
+  expect(retr).toEqual(roomObject);
+});
+
+test('should "detach" saved object', async () => {
+  const roomId = uuid();
+  await inMemoryRoomsStore.init();
+
+  const roomObject = {
     id: roomId,
     arbitrary: 'data'
-  });
+  };
 
-  return expect(
-    inMemoryRoomsStore.saveRoom(roomObject).then(() => inMemoryRoomsStore.getRoomById(roomId))
-  ).resolves.toBeDefined();
+  await inMemoryRoomsStore.saveRoom(roomObject);
+
+  // manipulate stored room object "outside" the store
+  roomObject.newAttribute = 'some value';
+  const retr = await inMemoryRoomsStore.getRoomById(roomId);
+  expect(retr !== roomObject);
+  expect(Object.prototype.hasOwnProperty.call(retr, 'newAttribute')).toBe(false);
+
+  // manipulate retrieved room object "outside" thestore
+  retr.secondNewAttribtue = 'some nice value';
+  const retr2 = await inMemoryRoomsStore.getRoomById(roomId);
+  expect(retr2 !== retr);
+  expect(Object.prototype.hasOwnProperty.call(retr2, 'secondNewAttribtue')).toBe(false);
 });
 
 test('should return undefined in unknown roomId', async () => {

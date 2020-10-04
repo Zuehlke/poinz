@@ -1,4 +1,5 @@
 import {v4 as uuid} from 'uuid';
+import hasActiveStories from './hasActiveStories';
 
 /**
  * A user adds a story to the estimation backlog of the room
@@ -45,13 +46,7 @@ const addStoryCommandHandler = {
       createdAt: Date.now()
     });
 
-    if (
-      !room.get('stories') ||
-      !room
-        .get('stories')
-        .filter((s) => !s.get('trashed'))
-        .first()
-    ) {
+    if (!hasActiveStories(room)) {
       // this is the first story that gets added (or all other stories are "trashed")
       room.applyEvent('storySelected', {storyId: newStoryId});
     }

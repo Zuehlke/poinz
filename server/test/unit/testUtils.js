@@ -1,9 +1,8 @@
 import {v4 as uuid} from 'uuid';
 import Promise from 'bluebird';
-import Immutable from 'immutable';
 
 // we want to test with our real command- and event handlers.
-import commandHandlers from '../../src/commandHandlers/commandHandlers';
+import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../src/eventHandlers/eventHandlers';
 import commandProcessorFactory from '../../src/commandProcessor';
 
@@ -22,41 +21,51 @@ export function textToCsvDataUrl(csvContent) {
  *
  * room object can be manually manipulated to prepare for different scenarios.
  *
- * @param {Immutable.Map | object} [initialRoom] If not set, room will not exists in store.
+ * @param {object} [initialRoom] If not set, room will not exists in store.
  */
 export function newMockRoomsStore(initialRoom) {
-  let room = initialRoom
-    ? initialRoom.toJS
-      ? initialRoom
-      : Immutable.fromJS(initialRoom)
-    : undefined;
+  let room = initialRoom ? detatchObject(initialRoom) : undefined;
 
   return {
     getRoomById: (id) => {
-      if (!room || room.get('id') !== id) {
+      if (!room || room.id !== id) {
         return Promise.resolve(undefined);
       }
-      return Promise.resolve(room);
+      return Promise.resolve(detatchObject(room));
     },
     saveRoom: (rm) => {
-      room = rm;
+      room = detatchObject(rm);
       return Promise.resolve();
     },
     getAllRooms: () => {
-      const allRooms = new Immutable.Map();
       if (!room) {
-        return Promise.resolve(allRooms);
+        return Promise.resolve({});
       }
 
-      return Promise.resolve(allRooms.set(room.get('id'), room));
+      return Promise.resolve({
+        [room.id]: detatchObject(room)
+      });
     },
-    manipulate: (fn) => (room = fn(room))
+    manipulate: (fn) => {
+      const modifiedRoom = fn(room);
+      if (!modifiedRoom) {
+        throw new Error('Your function in "manipulate" must return the room!');
+      }
+      room = modifiedRoom;
+    }
   };
 }
 
+const detatchObject = (obj) => JSON.parse(JSON.stringify(obj));
+
 export function prepEmpty() {
   const mockRoomsStore = newMockRoomsStore();
-  const processor = commandProcessorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+  const processor = commandProcessorFactory(
+    commandHandlers,
+    baseCommandSchema,
+    eventHandlers,
+    mockRoomsStore
+  );
   return {mockRoomsStore, processor};
 }
 

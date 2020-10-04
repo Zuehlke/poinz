@@ -37,7 +37,7 @@ const trashStoryCommandHandler = {
   fn: (room, command) => {
     room.applyEvent('storyTrashed', command.payload);
 
-    if (room.get('selectedStory') === command.payload.storyId) {
+    if (room.selectedStory === command.payload.storyId) {
       room.applyEvent('storySelected', {storyId: findNextStoryToSelect(room, command)});
     }
   }
@@ -46,14 +46,12 @@ const trashStoryCommandHandler = {
 export default trashStoryCommandHandler;
 
 function findNextStoryToSelect(room, trashCommand) {
-  const remainingStories = room
-    .get('stories')
-    .valueSeq()
-    .filter((story) => !story.get('trashed') && story.get('id') !== trashCommand.payload.storyId);
-  const firstRemainingStory = remainingStories.first();
+  const remainingStories = Object.values(room.stories || {}).filter(
+    (story) => !story.trashed && story.id !== trashCommand.payload.storyId
+  );
 
-  if (firstRemainingStory) {
-    return firstRemainingStory.get('id');
+  if (remainingStories.length > 0) {
+    return remainingStories[0].id;
   }
   return undefined;
 }

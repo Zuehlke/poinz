@@ -46,7 +46,7 @@ const joinRoomCommandHandler = {
   skipUserIdRoomCheck: true, // will not check whether userId is part of the room.  for most other commands this is a precondition. not for "joinRoom".
   schema,
   fn: (room, command, userId) => {
-    if (room.get('pristine')) {
+    if (room.pristine) {
       joinNewRoom(room, command, userId);
     } else {
       joinExistingRoom(room, command, userId);
@@ -107,10 +107,13 @@ function joinExistingRoom(room, command, userId) {
   // produce a "roomJoined" event for an existing room
   // this event must contain all information about the room, such that every joining user gets the current room state!
   const joinedRoomEventPayload = {
-    users: room.get('users').set(userObject.id, userObject).toJS(), // and all users that were already in that room
-    stories: room.get('stories').toJS(),
-    selectedStory: room.get('selectedStory'),
-    cardConfig: room.get('cardConfig') ? room.get('cardConfig').toJS() : defaultCardConfig
+    users: {
+      ...room.users, // and all users that were already in that room
+      [userObject.id]: userObject
+    },
+    stories: {...room.stories},
+    selectedStory: room.selectedStory,
+    cardConfig: room.cardConfig ? room.cardConfig : defaultCardConfig
   };
 
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
@@ -141,13 +144,11 @@ function joinExistingRoom(room, command, userId) {
  *  maybe user already exists in room (clients can reconnect with their userId)
  */
 function getMatchingUserObjectFromRoom(room, command, userId) {
-  let matchingExistingUser = room.getIn(['users', userId]);
+  const matchingExistingUser = room.users && room.users[userId];
 
   if (matchingExistingUser) {
     // use the already matching user (re-use already existing state like "excluded" flag etc.)
     // values from command payload take precedence.
-
-    matchingExistingUser = matchingExistingUser.toJS();
 
     if (command.payload.username) {
       matchingExistingUser.username = command.payload.username;

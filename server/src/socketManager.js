@@ -2,21 +2,27 @@ import {v4 as uuid} from 'uuid';
 
 import getLogger from './getLogger';
 import socketRegistryFactory from './socketRegistry';
+import commandProcessorFactory from './commandProcessor';
+import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers';
+import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = getLogger('socketManager');
 
 /**
  *
- * @param commandProcessor
+ * @param store The rooms store
  * @param {function} sendEventToRoom
  * @param {function} removeSocketFromRoomByIds
  */
-export default function socketManagerFactory(
-  commandProcessor,
-  sendEventToRoom,
-  removeSocketFromRoomByIds
-) {
+export default function socketManagerFactory(store, sendEventToRoom, removeSocketFromRoomByIds) {
   const registry = socketRegistryFactory();
+
+  const commandProcessor = commandProcessorFactory(
+    commandHandlers,
+    baseCommandSchema,
+    eventHandlers,
+    store
+  );
 
   return {
     handleIncomingCommand,

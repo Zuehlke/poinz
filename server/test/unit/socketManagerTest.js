@@ -1,10 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import socketManagerFactory from '../../src/socketManager';
 
-// we want to test with our real command- and event handlers.
-import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
-import eventHandlers from '../../src/eventHandlers/eventHandlers';
-import commandProcessorFactory from '../../src/commandProcessor';
 import {newMockRoomsStore} from './testUtils';
 
 /**
@@ -298,13 +294,5 @@ function initSocketManagerUnderTest(
   sendEventToRoom = jest.fn(),
   removeSocketFromRoomByIds = jest.fn()
 ) {
-  const mockRoomsStore = newMockRoomsStore();
-  const processor = commandProcessorFactory(
-    commandHandlers,
-    baseCommandSchema,
-    eventHandlers,
-    mockRoomsStore
-  );
-
-  return socketManagerFactory(processor, sendEventToRoom, removeSocketFromRoomByIds);
+  return socketManagerFactory(newMockRoomsStore(), sendEventToRoom, removeSocketFromRoomByIds);
 }

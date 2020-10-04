@@ -5,12 +5,9 @@ import sslifyEnforce from 'express-sslify';
 
 import settings from './settings';
 import socketServer from './socketServer';
-import commandProcessorFactory from './commandProcessor';
 import getLogger from './getLogger';
 import rest from './rest';
 import roomsStoreFactory from './store/roomStoreFactory';
-import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers';
-import eventHandlers from './eventHandlers/eventHandlers';
 
 const LOGGER = getLogger('server');
 
@@ -38,15 +35,8 @@ async function startup() {
     response.sendFile(path.resolve(__dirname, '../public/index.html'))
   );
 
-  const commandProcessor = commandProcessorFactory(
-    commandHandlers,
-    baseCommandSchema,
-    eventHandlers,
-    store
-  );
-
   const httpServer = http.createServer(app);
-  socketServer.init(httpServer, commandProcessor);
+  socketServer.init(httpServer, store);
 
   httpServer.listen(settings.serverPort, () =>
     LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`)

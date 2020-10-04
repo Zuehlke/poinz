@@ -10,7 +10,7 @@ export default {
   close: () => io.close()
 };
 
-function init(httpServer, cmdProcessor) {
+function init(httpServer, store) {
   io = socketIo(httpServer);
 
   const sendEventToRoom = (roomId, event) => io.to(roomId).emit('event', event);
@@ -23,7 +23,7 @@ function init(httpServer, cmdProcessor) {
     }
   };
 
-  socketManager = socketManagerFactory(cmdProcessor, sendEventToRoom, removeSocketFromRoomByIds);
+  socketManager = socketManagerFactory(store, sendEventToRoom, removeSocketFromRoomByIds);
 
   io.on('connect', (socket) => {
     socket.on('disconnect', () => socketManager.onDisconnect(socket));

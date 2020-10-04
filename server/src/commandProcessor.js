@@ -11,8 +11,14 @@ import commandSchemaValidatorFactory, {
 const LOGGER = getLogger('commandProcessor');
 
 /**
- * wrapped in a factory function.
- * Allows us to pass in custom list of handlers during tests.
+ * -- "The Core component" of the poinz backend --
+ *
+ * The command processor handles all incoming commands. And performs the same 7 steps for each command (details see below).
+ *
+ * - If a command is processed successfully, a list of produced events is returned (wrapped in a promise)
+ *
+ * - Command processing can fail due to a number of reasons: unknown command, invalid structure, preconditions that fail, etc.
+ *   In this case, the returned promise will reject with an Error
  *
  * @param {object} commandHandlers A collection of command handlers indexed by command name
  * @param {object} baseCommandSchema The base command schema that every command must fulfil. (can be referenced by all commands).
@@ -51,7 +57,7 @@ export default function commandProcessorFactory(
    *  Every step can throw an error which will reject the promise.
    *
    *  @param {object} command
-   *  @param {string} userId The id of the user that sent the command. if command is "joinRoom" user id is not yet given and will be undefined!
+   *  @param {string} userId The id of the user that sent the command
    *  @returns {Promise<object[]>} Promise that resolves to a list of events that were produced by this command. (they are already applied to the room state)
    */
   return function processCommand(command, userId) {

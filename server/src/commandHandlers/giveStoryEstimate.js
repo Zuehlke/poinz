@@ -63,7 +63,7 @@ const giveStoryEstimateCommandHandler = {
         manually: false
       });
 
-      if (allValidUsersEstimatedSame(room, command.payload, userId)) {
+      if (allEstimationsSame(room, command.payload.storyId, userId, command.payload.value)) {
         room.applyEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value
@@ -74,7 +74,7 @@ const giveStoryEstimateCommandHandler = {
 };
 
 /**
- * checks if every user in the room (that is not marked as excluded and is not disconnected)  did estimate the current story
+ * Checks if every user in the room (that is not marked as excluded and is not disconnected) did give an estimate for the specified story
  *
  * @param room
  * @param storyId
@@ -86,21 +86,36 @@ function allValidUsersEstimated(room, storyId, userId) {
 
   const estimations = {
     ...room.stories[storyId].estimations,
-    [userId]: -1 // Add our user's estimation manually to the estimations, because our estimation might not yet be map (event will be applied later)
+    // set our user's estimation manually for counting (the actual value does not matter)
+    // our estimation might be already set from a previous "giveStoryEstimate" commands.
+    // so you cannot just add +1 to the count!
+    [userId]: -1
   };
   const estimationCount = Object.values(estimations).length;
 
   return estimationCount === possibleEstimationCount;
 }
 
-function allValidUsersEstimatedSame(room, cmdPayload, userId) {
-  const estimations = room.stories[cmdPayload.storyId].estimations;
-  estimations[userId] = cmdPayload.value; // Add our user's estimation manually to the estimationMap .. (event will be applied later)
+/**
+ * Checks whether all estimations for the specified story in the room have the same value and match specified "ownEstimate"
+ *
+ * @param {object} room
+ * @param {string} storyId
+ * @param {string} userId
+ * @param {number} ownEstimate
+ * @return {boolean}
+ */
+function allEstimationsSame(room, storyId, userId, ownEstimate) {
+  const estimations = {
+    ...room.stories[storyId].estimations,
+    // Add our user's estimation manually to the estimationMap (since event will be applied later)
+    [userId]: ownEstimate
+  };
 
-  const estValues = Object.values(estimations);
-  const firstValue = estValues[0];
+  const estimationValues = Object.values(estimations);
+  const firstValue = estimationValues[0];
 
-  return estValues.every((est) => est === firstValue);
+  return estimationValues.every((est) => est === firstValue);
 }
 
 const countAllUsersThatCanEstimate = (room) =>

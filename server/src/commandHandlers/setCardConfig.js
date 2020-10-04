@@ -37,9 +37,10 @@ export default setCardConfigCommandHandler;
 
 /**
  * at this point, the command passed validation.
- * cardConfig is an array of objects with "label" "value" and "color" properties
+ * cardConfig is an array of objects with "label" "value" and "color" properties.
+ * We allow "value" passed as string. try to parse them to number
  *
- * @param cc
+ * @param {object[]} cc
  */
 function sanitizeCardConfig(cc) {
   return cc.map((cardConfigItem) => {

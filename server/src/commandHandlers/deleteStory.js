@@ -34,12 +34,10 @@ const deleteStoryCommandHandler = {
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
 
-    const isTrashed = !!room.getIn(['stories', command.payload.storyId, 'trashed']);
+    const isTrashed = !!room.stories[command.payload.storyId].trashed;
     if (!isTrashed) {
       throw new Error(
-        `Given story ${command.payload.storyId} in room ${room.get(
-          'id'
-        )} is not marked as "trashed". cannot delete it!`
+        `Given story ${command.payload.storyId} in room ${room.id} is not marked as "trashed". cannot delete it!`
       );
     }
   },

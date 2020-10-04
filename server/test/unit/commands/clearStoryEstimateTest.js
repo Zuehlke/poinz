@@ -64,7 +64,10 @@ describe('preconditions', () => {
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'revealed'], true));
+    mockRoomsStore.manipulate((room) => {
+      room.stories[storyId].revealed = true;
+      return room;
+    });
 
     return expect(
       processor(
@@ -90,7 +93,10 @@ describe('preconditions', () => {
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+    mockRoomsStore.manipulate((room) => {
+      room.users[userId].excluded = true;
+      return room;
+    });
 
     return expect(
       processor(

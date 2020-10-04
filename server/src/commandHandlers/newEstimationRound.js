@@ -32,7 +32,7 @@ const schema = {
 const newEstimationRoundCommandHandler = {
   schema,
   preCondition: (room, command) => {
-    if (room.get('selectedStory') !== command.payload.storyId) {
+    if (room.selectedStory !== command.payload.storyId) {
       throw new Error('Can only start a new round for currently selected story!');
     }
   },

@@ -1,4 +1,3 @@
-import Immutable from 'immutable';
 import express from 'express';
 import stream from 'stream';
 
@@ -53,20 +52,15 @@ function sendObjectAsJsonFile(res, data, filename) {
 
 export async function buildStatusObject(store) {
   const allRooms = await store.getAllRooms();
-  const rooms = allRooms
-    .map(
-      (room) =>
-        new Immutable.Map({
-          storyCount: room.get('stories').size,
-          userCount: room.get('users').size,
-          userCountDisconnected: room.get('users').filter((user) => user.get('disconnected')).size,
-          lastActivity: room.get('lastActivity'),
-          markedForDeletion: room.get('markedForDeletion'),
-          created: room.get('created')
-        })
-    )
-    .toList()
-    .toJS();
+
+  const rooms = Object.values(allRooms).map((room) => ({
+    storyCount: Object.values(room.stories).length,
+    userCount: Object.values(room.users).length,
+    userCountDisconnected: Object.values(room.users).filter((user) => user.disconnected).length,
+    lastActivity: room.lastActivity,
+    markedForDeletion: room.markedForDeletion,
+    created: room.created
+  }));
 
   return {
     rooms,
@@ -81,14 +75,12 @@ export async function buildRoomExportObject(store, roomId) {
     return undefined;
   }
 
-  const users = room.get('users').toJS();
-
   return {
-    roomId: room.get('id'),
+    roomId: room.id,
     exportedAt: Date.now(),
-    stories: Object.values(room.get('stories').toJS())
+    stories: Object.values(room.stories)
       .filter((story) => !story.trashed)
-      .map((story) => buildStoryExportObject(story, users))
+      .map((story) => buildStoryExportObject(story, room.users))
   };
 }
 

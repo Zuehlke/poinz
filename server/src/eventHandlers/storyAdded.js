@@ -1,17 +1,21 @@
-import Immutable from 'immutable';
-
 /**
  * a new story was added to the room
  */
 const storyAddedEventHandler = (room, eventPayload) => {
-  const newStory = Immutable.fromJS({
+  const newStory = {
     ...eventPayload,
     estimations: {}
-  });
+  };
 
-  return room.update('stories', new Immutable.Map(), (stories) =>
-    stories.set(eventPayload.id, newStory)
-  );
+  const modifiedStories = {
+    ...room.stories,
+    [eventPayload.id]: newStory
+  };
+
+  return {
+    ...room,
+    stories: modifiedStories
+  };
 };
 
 export default storyAddedEventHandler;

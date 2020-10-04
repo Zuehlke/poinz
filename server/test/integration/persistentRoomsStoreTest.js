@@ -1,5 +1,4 @@
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 
 import persistentRoomsStore from '../../src/store/persistentRoomsStore';
 
@@ -42,18 +41,18 @@ describe('save, update and fetch', () => {
   });
 
   test('should save and get room back', async () => {
-    const roomObject = new Immutable.Map({
+    const roomObject = {
       id: uuid(),
       users: {},
       other: 'data'
-    });
+    };
     await persistentRoomsStore.saveRoom(roomObject);
 
-    const retrievedRoom = await persistentRoomsStore.getRoomById(roomObject.get('id'));
+    const retrievedRoom = await persistentRoomsStore.getRoomById(roomObject.id);
 
     expect(retrievedRoom).toBeDefined();
-    expect(retrievedRoom.get('id')).toBe(roomObject.get('id'));
-    expect(retrievedRoom.has('_id')).toBe(false);
+    expect(retrievedRoom.id).toBe(roomObject.id);
+    expect(Object.prototype.hasOwnProperty.call(retrievedRoom, '_id')).toBe(false);
   });
 
   test('should resolve to undefined if room with given id does not exist', async () => {
@@ -63,41 +62,44 @@ describe('save, update and fetch', () => {
   });
 
   test('should save twice (update) and get room back', async () => {
-    const roomObject = new Immutable.Map({
+    const roomObject = {
       id: uuid(),
       users: {},
       other: 'data'
-    });
+    };
     await persistentRoomsStore.saveRoom(roomObject);
 
     // now call saveRoom() again with a new object that has the same "id"
-    const roomObjectModified = roomObject.set('additional', '....data...');
+    const roomObjectModified = {
+      ...roomObject,
+      additional: '....data...'
+    };
     await persistentRoomsStore.saveRoom(roomObjectModified);
 
-    const retrievedRoom = await persistentRoomsStore.getRoomById(roomObject.get('id'));
+    const retrievedRoom = await persistentRoomsStore.getRoomById(roomObject.id);
 
     expect(retrievedRoom).toBeDefined();
-    expect(retrievedRoom.get('id')).toBe(roomObject.get('id'));
-    expect(retrievedRoom.get('other')).toBe('data');
-    expect(retrievedRoom.get('additional')).toBe('....data...');
+    expect(retrievedRoom.id).toBe(roomObject.id);
+    expect(retrievedRoom.other).toBe('data');
+    expect(retrievedRoom.additional).toBe('....data...');
   });
 
   test('should return all Rooms', async () => {
-    const roomObject = new Immutable.Map({
+    const roomObject = {
       id: uuid(),
       users: {},
       other: 'data'
-    });
+    };
     await persistentRoomsStore.saveRoom(roomObject);
 
     const allRooms = await persistentRoomsStore.getAllRooms();
 
     expect(allRooms).toBeDefined();
-    expect(allRooms.size).toBeGreaterThan(0);
+    expect(Object.values(allRooms).length).toBeGreaterThan(0);
 
-    const matchingRoomFromMap = allRooms.get(roomObject.get('id'));
+    const matchingRoomFromMap = allRooms[roomObject.id];
     expect(matchingRoomFromMap).toBeDefined();
-    expect(matchingRoomFromMap.get('id')).toBe(roomObject.get('id'));
+    expect(matchingRoomFromMap.id).toBe(roomObject.id);
   });
 });
 
@@ -113,59 +115,60 @@ describe('housekeeping', () => {
   });
 
   test('should mark for deletion and then delete rooms that have not been used for a long time', async () => {
-    const oldRoomObject = new Immutable.Map({
+    const oldRoomObject = {
       id: uuid(),
       users: {},
       description: 'test room old created and last activity timestamps',
       created: 0,
       lastActivity: 0
-    });
-    const newerRoomObject = new Immutable.Map({
+    };
+    const newerRoomObject = {
       id: uuid(),
       users: {},
       description: 'test room  new',
       created: Date.now(),
       lastActivity: Date.now()
-    });
+    };
     await persistentRoomsStore.saveRoom(oldRoomObject);
     await persistentRoomsStore.saveRoom(newerRoomObject);
 
     let houseKeepingReport = await persistentRoomsStore.housekeeping();
     expect(houseKeepingReport.markedForDeletion.length).toBe(1);
-    expect(houseKeepingReport.markedForDeletion[0]).toEqual(oldRoomObject.get('id'));
+    expect(houseKeepingReport.markedForDeletion[0]).toEqual(oldRoomObject.id);
     expect(houseKeepingReport.deleted.length).toBe(0);
 
     // we can still fetch it, is marked for deletion
-    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.get('id'));
+    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeDefined();
-    expect(retrievedRoom.get('markedForDeletion')).toBe(true);
+    expect(retrievedRoom.markedForDeletion).toBe(true);
 
     // --  call housekeeping a second time
     houseKeepingReport = await persistentRoomsStore.housekeeping();
     expect(houseKeepingReport.markedForDeletion.length).toBe(0);
     expect(houseKeepingReport.deleted.length).toBe(1);
-    expect(houseKeepingReport.deleted[0]).toEqual(oldRoomObject.get('id'));
+    expect(houseKeepingReport.deleted[0]).toEqual(oldRoomObject.id);
 
     // now it no longer exists
-    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.get('id'));
+    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
 
     // just make sure to remove the other room as well to clean up after ourselves.
-    await persistentRoomsStore.saveRoom(newerRoomObject.set('markedForDeletion', true));
+    newerRoomObject.markedForDeletion = true;
+    await persistentRoomsStore.saveRoom(newerRoomObject);
     await persistentRoomsStore.housekeeping();
 
-    retrievedRoom = await persistentRoomsStore.getRoomById(newerRoomObject.get('id'));
+    retrievedRoom = await persistentRoomsStore.getRoomById(newerRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
   });
 
   test('should keep old rooms with recent activity', async () => {
-    const oldRoomObject = new Immutable.Map({
+    const oldRoomObject = {
       id: uuid(),
       users: {},
       description: 'test room old created but recent activity',
       created: 0,
       lastActivity: Date.now()
-    });
+    };
 
     await persistentRoomsStore.saveRoom(oldRoomObject);
 
@@ -175,15 +178,16 @@ describe('housekeeping', () => {
     expect(houseKeepingReport.markedForDeletion.length).toBe(0);
     expect(houseKeepingReport.deleted.length).toBe(0);
 
-    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.get('id'));
+    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeDefined();
-    expect(retrievedRoom.get('markedForDeletion')).toBeUndefined(); // flag never set
+    expect(retrievedRoom.markedForDeletion).toBeUndefined(); // flag never set
 
     // just make sure to remove the added room to clean up after ourselves.
-    await persistentRoomsStore.saveRoom(oldRoomObject.set('markedForDeletion', true));
+    oldRoomObject.markedForDeletion = true;
+    await persistentRoomsStore.saveRoom(oldRoomObject);
     await persistentRoomsStore.housekeeping();
 
-    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.get('id'));
+    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
   });
 });

@@ -1,5 +1,4 @@
 import {v4 as uuid} from 'uuid';
-import Immutable from 'immutable';
 
 import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
@@ -208,7 +207,10 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.removeIn(['users', userIdTwo]));
+  mockRoomsStore.manipulate((room) => {
+    delete room.users[userIdTwo];
+    return room;
+  });
 
   const commandId = uuid();
   return processor(
@@ -243,7 +245,10 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userIdTwo].excluded = true;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(
@@ -278,7 +283,10 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userIdTwo, 'disconnected'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userIdTwo].disconnected = true;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(
@@ -314,15 +322,14 @@ describe('preconditions', () => {
 
     const secondStoryId = uuid();
 
-    mockRoomsStore.manipulate((room) =>
-      room.setIn(
-        ['stories', secondStoryId],
-        new Immutable.Map({
-          id: secondStoryId,
-          title: 'second story'
-        })
-      )
-    );
+    mockRoomsStore.manipulate((room) => {
+      room.stories[secondStoryId] = {
+        id: secondStoryId,
+        title: 'second story'
+      };
+
+      return room;
+    });
 
     return expect(
       processor(
@@ -350,7 +357,11 @@ describe('preconditions', () => {
       processor,
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStory();
-    mockRoomsStore.manipulate((room) => room.setIn(['stories', storyId, 'revealed'], true));
+
+    mockRoomsStore.manipulate((room) => {
+      room.stories[storyId].revealed = true;
+      return room;
+    });
 
     return expect(
       processor(
@@ -376,7 +387,11 @@ describe('preconditions', () => {
       processor,
       mockRoomsStore
     } = await prepTwoUsersInOneRoomWithOneStory();
-    mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+
+    mockRoomsStore.manipulate((room) => {
+      room.users[userId].excluded = true;
+      return room;
+    });
 
     return expect(
       processor(

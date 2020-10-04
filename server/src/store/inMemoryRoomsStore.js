@@ -1,5 +1,3 @@
-import Immutable from 'immutable';
-
 import getLogger from '../getLogger';
 
 /**
@@ -7,7 +5,7 @@ import getLogger from '../getLogger';
  *  Switch between persistent / non-persistent store is done in settings.js
  */
 
-let rooms = new Immutable.Map();
+const rooms = {};
 
 const LOGGER = getLogger('inMemoryRoomsStore');
 
@@ -43,13 +41,27 @@ async function getRoomById(roomId) {
     return undefined;
   }
 
-  return rooms.get(roomId);
+  const room = rooms[roomId];
+  if (!room) {
+    return undefined;
+  }
+
+  return detatchObject(room);
 }
 
 async function saveRoom(room) {
-  rooms = rooms.set(room.get('id'), room);
+  rooms[room.id] = detatchObject(room);
 }
 
 async function getAllRooms() {
   return rooms;
 }
+
+/**
+ * mimick the "detaching" ob objects when they are persisted in a store (e.g. a database)
+ * imperfect: "undefined" properties will be lost, functions will be lost, JS "Date" instances are serialized
+ * Thus, make sure that dates are stored as numbers (unix time)
+ *
+ * Works for our use!
+ */
+const detatchObject = (obj) => JSON.parse(JSON.stringify(obj));

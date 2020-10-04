@@ -4,6 +4,7 @@
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
+import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
 
 const schema = {
   allOf: [
@@ -36,15 +37,17 @@ const giveStoryEstimateCommandHandler = {
   preCondition: (room, command, userId) => {
     const storyId = command.payload.storyId;
 
-    if (room.get('selectedStory') !== storyId) {
+    if (room.selectedStory !== storyId) {
       throw new Error('Can only give estimation for currently selected story!');
     }
 
-    if (room.getIn(['stories', storyId, 'revealed'])) {
+    throwIfStoryIdNotFoundInRoom(room, storyId);
+
+    if (room.stories[storyId].revealed) {
       throw new Error('You cannot give an estimate for a story that was revealed!');
     }
 
-    if (room.getIn(['users', userId, 'excluded'])) {
+    if (room.users[userId].excluded) {
       throw new Error('Users that are excluded from estimations cannot give estimations!');
     }
   },
@@ -79,32 +82,30 @@ const giveStoryEstimateCommandHandler = {
  * @returns {boolean}
  */
 function allValidUsersEstimated(room, storyId, userId) {
-  const possibleEstimationCount = getAllUsersThatCanEstimate(room).keySeq().size;
+  const possibleEstimationCount = countAllUsersThatCanEstimate(room);
 
-  let estimations = room.getIn(['stories', storyId, 'estimations']);
-  // Add our user's estimation manually to the estimationMap with a value of -1 (value does not matter here), because user's estimation might not yet be in map (event will be applied later)
-  estimations = estimations.set(userId, -1);
-  const estimationCount = estimations.size;
+  const estimations = {
+    ...room.stories[storyId].estimations,
+    [userId]: -1 // Add our user's estimation manually to the estimations, because our estimation might not yet be map (event will be applied later)
+  };
+  const estimationCount = Object.values(estimations).length;
 
   return estimationCount === possibleEstimationCount;
 }
 
 function allValidUsersEstimatedSame(room, cmdPayload, userId) {
-  let estimations = room.getIn(['stories', cmdPayload.storyId, 'estimations']);
-  // Add our user's estimation manually to the estimationMap .. (event will be applied later)
-  estimations = estimations.set(userId, cmdPayload.value);
+  const estimations = room.stories[cmdPayload.storyId].estimations;
+  estimations[userId] = cmdPayload.value; // Add our user's estimation manually to the estimationMap .. (event will be applied later)
 
-  const estValues = estimations.valueSeq();
-  const firstValue = estValues.get(0);
+  const estValues = Object.values(estimations);
+  const firstValue = estValues[0];
 
   return estValues.every((est) => est === firstValue);
 }
 
-function getAllUsersThatCanEstimate(room) {
-  return room
-    .get('users')
-    .filter((usr) => !usr.get('excluded'))
-    .filter((usr) => !usr.get('disconnected'));
-}
+const countAllUsersThatCanEstimate = (room) =>
+  Object.values(room.users || {})
+    .filter((usr) => !usr.excluded)
+    .filter((usr) => !usr.disconnected).length;
 
 export default giveStoryEstimateCommandHandler;

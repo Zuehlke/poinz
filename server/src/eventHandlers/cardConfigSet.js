@@ -1,9 +1,9 @@
-import Immutable from 'immutable';
-
 /**
  * user did set custom cardConfig on room
  */
-const cardConfigSetEventHandler = (room, eventPayload) =>
-  room.set('cardConfig', Immutable.fromJS(eventPayload.cardConfig));
+const cardConfigSetEventHandler = (room, eventPayload) => ({
+  ...room,
+  cardConfig: eventPayload.cardConfig
+});
 
 export default cardConfigSetEventHandler;

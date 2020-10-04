@@ -82,7 +82,10 @@ test('Should produce storyAdded event', async () => {
 test('users excluded from estimations can still add stories', async () => {
   const {userId, roomId, processor, mockRoomsStore} = await prepOneUserInOneRoom();
 
-  mockRoomsStore.manipulate((room) => room.setIn(['users', userId, 'excluded'], true));
+  mockRoomsStore.manipulate((room) => {
+    room.users[userId].excluded = true;
+    return room;
+  });
 
   const commandId = uuid();
   return processor(

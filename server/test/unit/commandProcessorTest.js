@@ -12,7 +12,7 @@ test('process a dummy command successfully: create room on the fly', () => {
       }
     },
     {
-      usernameSet: (room) => room.set('test', 'data.from.evt.handler')
+      usernameSet: (room) => ({...room, test: 'data.from.evt.handler'})
     },
     newMockRoomsStore()
     /*  no room exists in store */
@@ -57,7 +57,7 @@ test('process a dummy command successfully: room loading by id', () => {
       }
     },
     {
-      usernameSet: (room) => room.set('test', 'data.from.evt.handler')
+      usernameSet: (room) => ({...room, test: 'data.from.evt.handler'})
     },
     roomStore
   );
@@ -311,10 +311,11 @@ test('concurrency handling', () => {
       }
     },
     {
-      usernameSet: (room, eventPayload) =>
-        room
-          .set('username', eventPayload.username)
-          .set('manipulationCount', room.get('manipulationCount') + 1)
+      usernameSet: (room, eventPayload) => ({
+        ...room,
+        username: eventPayload.username,
+        manipulationCount: room.manipulationCount + 1
+      })
     },
     mockRoomsStore
   );
@@ -344,5 +345,5 @@ test('concurrency handling', () => {
 
   return Promise.all([eventPromiseOne, eventPromiseTwo])
     .then(() => mockRoomsStore.getRoomById('concurrency-test-room'))
-    .then((room) => expect(room.get('manipulationCount')).toBe(2));
+    .then((room) => expect(room.manipulationCount).toBe(2));
 });

@@ -37,9 +37,10 @@ test('Should keep estimations on stories after user left', async () => {
   const commandId = uuid();
 
   const estimatedValue = 3;
-  mockRoomsStore.manipulate((room) =>
-    room.setIn(['stories', storyId, 'estimations', userIdTwo], estimatedValue)
-  );
+  mockRoomsStore.manipulate((room) => {
+    room.stories[storyId].estimations[userIdTwo] = estimatedValue;
+    return room;
+  });
 
   return processor(
     {

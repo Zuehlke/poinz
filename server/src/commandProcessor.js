@@ -1,5 +1,4 @@
 import util from 'util';
-import Immutable from 'immutable';
 import {v4 as uuid} from 'uuid';
 
 import queueFactory from './sequenceQueue';
@@ -88,7 +87,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
 
     job.resolve({
       producedEvents: context.eventsToSend,
-      room: context.room.toJS()
+      room: context.room
     });
 
     proceed(); // proceed with next job in queue
@@ -142,10 +141,10 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
     }
 
     // command is allowed to create new room.
-    ctx.room = new Immutable.Map({
+    ctx.room = {
       id: cmd.roomId,
       pristine: true
-    });
+    };
   }
 
   /**
@@ -158,11 +157,10 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
         throwIfUserIdNotFoundInRoom(ctx.room, ctx.userId);
       }
 
-      if (!ctx.handler.preCondition) {
-        return;
+      if (ctx.handler.preCondition) {
+        ctx.handler.preCondition(ctx.room, cmd, ctx.userId);
       }
 
-      ctx.handler.preCondition(ctx.room, cmd, ctx.userId);
     } catch (pcError) {
       throw new PreconditionError(pcError, cmd);
     }
@@ -192,13 +190,25 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       ctx.eventHandlingQueue.push((currentRoom) => {
         const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
 
+        if (!updatedRoom) {
+          throw new Error(
+            'Fatal error: Event Handlers must return the room object!' + eventName
+          );
+        }
+
+        if (updatedRoom === currentRoom) {
+          throw new Error(
+            'Fatal error: Event Handlers must not return same room object! ' + eventName
+          );
+        }
+
         // build the event object that is sent back to clients
         ctx.eventsToSend.push({
           id: uuid(),
           userId: ctx.userId, // which user triggered the command / is "responsible" for the event
           correlationId: cmd.id,
           name: eventName,
-          roomId: updatedRoom.get('id'),
+          roomId: updatedRoom.id,
           payload: eventPayload
         });
 
@@ -227,9 +237,8 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    *  @returns {Promise} returns a promise that resolves as soon as the room is stored
    */
   async function saveRoomBackToStore(ctx) {
-    // TODO: can eventHandlers "delete" the room? then ctx.room would be undefined here?
-    ctx.room = ctx.room.set('lastActivity', Date.now()).set('markedForDeletion', false);
-
+    ctx.room.lastActivity = Date.now();
+    ctx.room.markedForDeletion = false;
     await store.saveRoom(ctx.room);
   }
 }
@@ -250,16 +259,16 @@ function logCommand(command, userId) {
 function logEvents(context, correlationId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
-      `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}` +
-        context.eventsToSend.map((e) => e.name).join(', '),
+      `PRODUCED EVENTS  user=${context.userId} room=${context.room.id}` +
+      context.eventsToSend.map((e) => e.name).join(', '),
       context.eventsToSend,
       `correlationId=${correlationId}`
     );
   } else if (LOGGER.isLevelEnabled('info')) {
     LOGGER.info(
-      `PRODUCED EVENTS  user=${context.userId} room=${context.room.get('id')}  ` +
-        context.eventsToSend.map((e) => e.name).join(', ') +
-        `  correlationId=${correlationId}`
+      `PRODUCED EVENTS  user=${context.userId} room=${context.room.id}  ` +
+      context.eventsToSend.map((e) => e.name).join(', ') +
+      `  correlationId=${correlationId}`
     );
   }
 }

@@ -25,7 +25,8 @@ export default {
   saveRoom,
   getRoomById,
   getAllRooms,
-  housekeeping
+  housekeeping,
+  getStoreType
 };
 
 async function init(config) {
@@ -165,4 +166,8 @@ async function getAllRooms() {
     roomsMap[currentRoom.id] = currentRoom;
     return roomsMap;
   }, {});
+}
+
+function getStoreType() {
+  return 'PersistentRoomsStore on mongodb';
 }

@@ -191,3 +191,8 @@ describe('housekeeping', () => {
     expect(retrievedRoom).toBeUndefined();
   });
 });
+
+test('has getStoreType() function', async () => {
+  const storeTypeString = persistentRoomsStore.getStoreType();
+  expect(storeTypeString).toBe('PersistentRoomsStore on mongodb');
+});

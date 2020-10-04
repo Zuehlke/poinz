@@ -15,7 +15,8 @@ export default {
   getRoomById,
   saveRoom,
   getAllRooms,
-  housekeeping
+  housekeeping,
+  getStoreType
 };
 
 async function init() {
@@ -55,6 +56,10 @@ async function saveRoom(room) {
 
 async function getAllRooms() {
   return rooms;
+}
+
+function getStoreType() {
+  return 'InMemoryRoomsStore';
 }
 
 /**

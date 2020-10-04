@@ -65,7 +65,8 @@ export async function buildStatusObject(store) {
   return {
     rooms,
     roomCount: rooms.length,
-    uptime: Math.floor(process.uptime())
+    uptime: Math.floor(process.uptime()),
+    storeInfo: store.getStoreType()
   };
 }
 

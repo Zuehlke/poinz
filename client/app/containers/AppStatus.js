@@ -67,6 +67,7 @@ class AppStatus extends React.Component {
         </p>
         <p>Uptime: {uptime}</p>
         <p>Total rooms: {appStatus.roomCount}</p>
+        <p>Running on: {appStatus.storeInfo}</p>
 
         <h3>Rooms</h3>
 

@@ -52,7 +52,8 @@ export function newMockRoomsStore(initialRoom) {
         throw new Error('Your function in "manipulate" must return the room!');
       }
       room = modifiedRoom;
-    }
+    },
+    getStoreType: () => 'MockRoomsStore for unit tests'
   };
 }
 

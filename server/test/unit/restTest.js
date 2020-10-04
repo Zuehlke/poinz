@@ -13,7 +13,8 @@ test('buildStatusObject', async () => {
   expect(statusObject).toMatchObject({
     rooms: [{storyCount: 1, userCount: 2, userCountDisconnected: 1}],
     roomCount: 1,
-    uptime: expect.any(Number)
+    uptime: expect.any(Number),
+    storeInfo: 'MockRoomsStore for unit tests'
   });
 });
 

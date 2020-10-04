@@ -34,8 +34,7 @@ const restoreStoryCommandHandler = {
   preCondition: (room, command) => {
     throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
 
-    const isTrashed = !!room.stories[command.payload.storyId].trashed;
-    if (!isTrashed) {
+    if (!room.stories[command.payload.storyId].trashed) {
       throw new Error(
         `Given story ${command.payload.storyId} in room ${room.id} is not marked as "trashed". Nothing to restore...`
       );

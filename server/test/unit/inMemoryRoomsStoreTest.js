@@ -58,3 +58,9 @@ test('has housekeeping() function', async () => {
   expect(houseKeepingReport.markedForDeletion.length).toBe(0);
   expect(houseKeepingReport.deleted.length).toBe(0);
 });
+
+test('has getStoreType() function', async () => {
+  await inMemoryRoomsStore.init();
+  const storeTypeString = inMemoryRoomsStore.getStoreType();
+  expect(storeTypeString).toBe('InMemoryRoomsStore');
+});

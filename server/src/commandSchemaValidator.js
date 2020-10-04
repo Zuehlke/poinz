@@ -13,21 +13,13 @@ const CsvDATAURL_REGEX = /^data:(text\/csv|application\/vnd.ms-excel|application
 const USERNAME_REGEX = /^.{3,80}$/;
 
 /**
- * loads all command validation schemas
- */
-export function getSchemasFromRealCommandHandlers(commandHandlers) {
-  LOGGER.info('gathering command schemas defined in given command handlers...');
-
-  return Object.entries(commandHandlers).reduce((total, currentEntry) => {
-    total[currentEntry[0]] = currentEntry[1].schema;
-    return total;
-  }, {});
-}
-
-/**
- * creates a new instance of the validator
+ * Creates a new instance of the validator-function
  *
- * @param commandSchemas
+ * Every command that is received by the server is checked for structural integrity (i.e. adheres to its defined schema).
+ * The schema is defined as v4 json schema on the respective commandHandler.
+ * Every command is checked against its schema via "tv4" (See https://github.com/geraintluff/tv4)
+ *
+ * @param {object} commandSchemas An object containing all schemas for all commands
  * @return {function} A new validate function
  */
 export default function commandSchemaValidatorFactory(commandSchemas) {
@@ -39,39 +31,9 @@ export default function commandSchemaValidatorFactory(commandSchemas) {
   }
   tvInstance.addSchema(commandSchemas.command);
 
-  registerCustomFormats();
+  registerCustomFormats(tvInstance);
 
   return validate;
-
-  function registerCustomFormats() {
-    tvInstance.addFormat('email', (data) => {
-      if (data.length > EMAIL_MAX_LENGTH) {
-        return `string must not be more than ${EMAIL_MAX_LENGTH} characters`;
-      }
-      return validateStringFormat(EMAIL_REGEX, 'must be a valid email-address', data);
-    });
-    tvInstance.addFormat(
-      'roomId',
-      validateStringFormat.bind(
-        undefined,
-        ROOMID_REGEX,
-        'must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -'
-      )
-    );
-    tvInstance.addFormat(
-      'uuidv4',
-      validateStringFormat.bind(undefined, UUIDv4_REGEX, 'must be a valid uuid v4')
-    );
-    tvInstance.addFormat(
-      'csvDataUrl',
-      validateStringFormat.bind(undefined, CsvDATAURL_REGEX, 'must be a valid text/csv data url')
-    );
-    tvInstance.addFormat(
-      'username',
-      validateStringFormat.bind(undefined, USERNAME_REGEX, 'must be a valid username')
-    );
-    tvInstance.addFormat('cardConfig', validateCardConfig);
-  }
 
   /**
    * Validates the given command against its schema.
@@ -99,6 +61,52 @@ export default function commandSchemaValidatorFactory(commandSchemas) {
       throw new CommandValidationError(new Error(serializeErrors(result.errors)), cmd);
     }
   }
+}
+
+/**
+ * registers our custom formats like "username" "email" "roomId" "uuid"  with the given tv4 instance
+ * @param tvi
+ */
+function registerCustomFormats(tvi) {
+  tvi.addFormat('email', (data) => {
+    if (data.length > EMAIL_MAX_LENGTH) {
+      return `string must not be more than ${EMAIL_MAX_LENGTH} characters`;
+    }
+    return validateStringFormat(EMAIL_REGEX, 'must be a valid email-address', data);
+  });
+  tvi.addFormat(
+    'roomId',
+    validateStringFormat.bind(
+      undefined,
+      ROOMID_REGEX,
+      'must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -'
+    )
+  );
+  tvi.addFormat(
+    'uuidv4',
+    validateStringFormat.bind(undefined, UUIDv4_REGEX, 'must be a valid uuid v4')
+  );
+  tvi.addFormat(
+    'csvDataUrl',
+    validateStringFormat.bind(undefined, CsvDATAURL_REGEX, 'must be a valid text/csv data url')
+  );
+  tvi.addFormat(
+    'username',
+    validateStringFormat.bind(undefined, USERNAME_REGEX, 'must be a valid username')
+  );
+  tvi.addFormat('cardConfig', validateCardConfig);
+}
+
+/**
+ * loads all command validation schemas
+ */
+export function getSchemasFromRealCommandHandlers(commandHandlers) {
+  LOGGER.info('gathering command schemas defined in given command handlers...');
+
+  return Object.entries(commandHandlers).reduce((total, currentEntry) => {
+    total[currentEntry[0]] = currentEntry[1].schema;
+    return total;
+  }, {});
 }
 
 function serializeErrors(tv4Errors) {

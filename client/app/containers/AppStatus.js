@@ -40,7 +40,7 @@ class AppStatus extends React.Component {
     const sortedRooms = appStatus.rooms.sort(roomComparator);
 
     return (
-      <StyledAppStatus>
+      <StyledAppStatus data-testid="appStatusPage">
         <StyledTopBar data-testid="topBar">
           <StyledTopLeft>
             <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
@@ -67,6 +67,7 @@ class AppStatus extends React.Component {
         </p>
         <p>Uptime: {uptime}</p>
         <p>Total rooms: {appStatus.roomCount}</p>
+        <p>Running on: {appStatus.storeInfo}</p>
 
         <h3>Rooms</h3>
 

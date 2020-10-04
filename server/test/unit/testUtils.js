@@ -2,7 +2,7 @@ import {v4 as uuid} from 'uuid';
 import Promise from 'bluebird';
 
 // we want to test with our real command- and event handlers.
-import commandHandlers from '../../src/commandHandlers/commandHandlers';
+import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../src/eventHandlers/eventHandlers';
 import commandProcessorFactory from '../../src/commandProcessor';
 
@@ -60,7 +60,12 @@ const detatchObject = (obj) => JSON.parse(JSON.stringify(obj));
 
 export function prepEmpty() {
   const mockRoomsStore = newMockRoomsStore();
-  const processor = commandProcessorFactory(commandHandlers, eventHandlers, mockRoomsStore);
+  const processor = commandProcessorFactory(
+    commandHandlers,
+    baseCommandSchema,
+    eventHandlers,
+    mockRoomsStore
+  );
   return {mockRoomsStore, processor};
 }
 

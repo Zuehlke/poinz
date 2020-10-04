@@ -2,9 +2,11 @@ import util from 'util';
 import {v4 as uuid} from 'uuid';
 
 import queueFactory from './sequenceQueue';
-import validateCommand from './commandSchemaValidator';
 import getLogger from './getLogger';
 import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
+import commandSchemaValidatorFactory, {
+  getSchemasFromRealCommandHandlers
+} from './commandSchemaValidator';
 
 const LOGGER = getLogger('commandProcessor');
 
@@ -13,12 +15,25 @@ const LOGGER = getLogger('commandProcessor');
  * Allows us to pass in custom list of handlers during tests.
  *
  * @param {object} commandHandlers A collection of command handlers indexed by command name
+ * @param {object} baseCommandSchema The base command schema that every command must fulfil. (can be referenced by all commands).
  * @param {object} eventHandlers
- * @param {object} store
+ * @param {object} store The Rooms Store
  * @returns {function} the processCommand function
  */
-export default function commandProcessorFactory(commandHandlers, eventHandlers, store) {
+export default function commandProcessorFactory(
+  commandHandlers,
+  baseCommandSchema,
+  eventHandlers,
+  store
+) {
   const queue = queueFactory(jobHandler);
+
+  checkCommandHandlersForStructure(commandHandlers);
+
+  const validateCmd = commandSchemaValidatorFactory({
+    ...getSchemasFromRealCommandHandlers(commandHandlers),
+    command: baseCommandSchema
+  });
 
   /**
    *  The command processor handles incoming commands.
@@ -97,7 +112,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
    * 1. Validate incoming command (syntactically, against schema)
    */
   async function validate(context, cmd) {
-    validateCommand(cmd);
+    validateCmd(cmd);
   }
 
   /**
@@ -160,7 +175,6 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
       if (ctx.handler.preCondition) {
         ctx.handler.preCondition(ctx.room, cmd, ctx.userId);
       }
-
     } catch (pcError) {
       throw new PreconditionError(pcError, cmd);
     }
@@ -191,9 +205,7 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
         const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
 
         if (!updatedRoom) {
-          throw new Error(
-            'Fatal error: Event Handlers must return the room object!' + eventName
-          );
+          throw new Error('Fatal error: Event Handlers must return the room object!' + eventName);
         }
 
         if (updatedRoom === currentRoom) {
@@ -243,6 +255,30 @@ export default function commandProcessorFactory(commandHandlers, eventHandlers, 
   }
 }
 
+function checkCommandHandlersForStructure(cmdHandlers) {
+  const checkSingleCmdHandlerForStructure = (handlerEntry) => {
+    if (!handlerEntry[1].schema) {
+      throw new Error(`Fatal error: CommandHandler "${handlerEntry[0]}" does not define "schema"!`);
+    }
+    if (
+      typeof handlerEntry[1].schema !== 'object' ||
+      handlerEntry[1].schema.constructor !== Object
+    ) {
+      throw new Error(
+        `Fatal error: "schema" on commandHandler "${handlerEntry[0]}" must be an object!`
+      );
+    }
+
+    if (!handlerEntry[1].fn || !(handlerEntry[1].fn instanceof Function)) {
+      throw new Error(
+        `Fatal error: "fn" on commandHandler "${handlerEntry[0]}" must be a function!`
+      );
+    }
+  };
+
+  Object.entries(cmdHandlers).forEach(checkSingleCmdHandlerForStructure);
+}
+
 function logCommand(command, userId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
@@ -260,15 +296,15 @@ function logEvents(context, correlationId) {
   if (LOGGER.isLevelEnabled('debug')) {
     LOGGER.debug(
       `PRODUCED EVENTS  user=${context.userId} room=${context.room.id}` +
-      context.eventsToSend.map((e) => e.name).join(', '),
+        context.eventsToSend.map((e) => e.name).join(', '),
       context.eventsToSend,
       `correlationId=${correlationId}`
     );
   } else if (LOGGER.isLevelEnabled('info')) {
     LOGGER.info(
       `PRODUCED EVENTS  user=${context.userId} room=${context.room.id}  ` +
-      context.eventsToSend.map((e) => e.name).join(', ') +
-      `  correlationId=${correlationId}`
+        context.eventsToSend.map((e) => e.name).join(', ') +
+        `  correlationId=${correlationId}`
     );
   }
 }

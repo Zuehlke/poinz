@@ -40,7 +40,7 @@ class AppStatus extends React.Component {
     const sortedRooms = appStatus.rooms.sort(roomComparator);
 
     return (
-      <StyledAppStatus>
+      <StyledAppStatus data-testid="appStatusPage">
         <StyledTopBar data-testid="topBar">
           <StyledTopLeft>
             <StyledPoinzLogo>PoinZ</StyledPoinzLogo>

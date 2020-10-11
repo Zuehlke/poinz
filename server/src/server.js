@@ -7,7 +7,8 @@ import settings from './settings';
 import socketServer from './socketServer';
 import getLogger from './getLogger';
 import rest from './rest';
-import roomsStoreFactory from './store/roomStoreFactory';
+import storeFactory from './store/storeFactory';
+import authenticatorFactory from './auth/authenticator';
 
 const LOGGER = getLogger('server');
 
@@ -16,7 +17,8 @@ startup().catch((err) => {
 });
 
 async function startup() {
-  const store = await roomsStoreFactory(settings.persistentStore);
+  const store = await storeFactory(settings.persistentStore);
+  const authenticator = await authenticatorFactory(store);
   const app = express();
 
   if (process.env.NODE_ENV === 'production') {
@@ -25,7 +27,7 @@ async function startup() {
   }
 
   // setup REST api
-  rest.init(app, store);
+  rest.init(app, store, authenticator);
 
   // serve static client files
   app.use(express.static(path.resolve(__dirname, '../public')));
@@ -34,6 +36,12 @@ async function startup() {
   app.get('*', (request, response) =>
     response.sendFile(path.resolve(__dirname, '../public/index.html'))
   );
+
+  // generic error handler
+  app.use((err, req, res, next) => {
+    LOGGER.error(err.message + '\n' + err.stack);
+    res.status(500).json({message: 'an error occurred'});
+  });
 
   const httpServer = http.createServer(app);
   socketServer.init(httpServer, store);

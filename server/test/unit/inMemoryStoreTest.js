@@ -1,9 +1,10 @@
 import {v4 as uuid} from 'uuid';
-import inMemoryRoomsStore from '../../src/store/inMemoryRoomsStore';
+
+import inMemoryStore from '../../src/store/inMemoryStore';
 
 test('should save and retrieve a room', async () => {
   const roomId = uuid();
-  await inMemoryRoomsStore.init();
+  await inMemoryStore.init();
 
   const roomObject = {
     id: roomId,
@@ -15,52 +16,64 @@ test('should save and retrieve a room', async () => {
     }
   };
 
-  await inMemoryRoomsStore.saveRoom(roomObject);
-  const retr = await inMemoryRoomsStore.getRoomById(roomId);
+  await inMemoryStore.saveRoom(roomObject);
+  const retr = await inMemoryStore.getRoomById(roomId);
 
   expect(retr).toEqual(roomObject);
 });
 
 test('should "detach" saved object', async () => {
   const roomId = uuid();
-  await inMemoryRoomsStore.init();
+  await inMemoryStore.init();
 
   const roomObject = {
     id: roomId,
     arbitrary: 'data'
   };
 
-  await inMemoryRoomsStore.saveRoom(roomObject);
+  await inMemoryStore.saveRoom(roomObject);
 
   // manipulate stored room object "outside" the store
   roomObject.newAttribute = 'some value';
-  const retr = await inMemoryRoomsStore.getRoomById(roomId);
+  const retr = await inMemoryStore.getRoomById(roomId);
   expect(retr !== roomObject);
   expect(Object.prototype.hasOwnProperty.call(retr, 'newAttribute')).toBe(false);
 
   // manipulate retrieved room object "outside" thestore
   retr.secondNewAttribtue = 'some nice value';
-  const retr2 = await inMemoryRoomsStore.getRoomById(roomId);
+  const retr2 = await inMemoryStore.getRoomById(roomId);
   expect(retr2 !== retr);
   expect(Object.prototype.hasOwnProperty.call(retr2, 'secondNewAttribtue')).toBe(false);
 });
 
 test('should return undefined in unknown roomId', async () => {
-  await inMemoryRoomsStore.init();
-  return expect(inMemoryRoomsStore.getRoomById(uuid())).resolves.toBeUndefined();
+  await inMemoryStore.init();
+  return expect(inMemoryStore.getRoomById(uuid())).resolves.toBeUndefined();
+});
+
+describe('get config values', () => {
+  test('should get all config variables', async () => {
+    await inMemoryStore.init();
+    const config = await inMemoryStore.getAppConfig();
+
+    expect(config).toBeDefined();
+    expect(config.githubAuthClientId).toBeDefined();
+    expect(config.githubAuthSecret).toBeDefined();
+    expect(config.jwtSecret).toBeDefined();
+  });
 });
 
 test('has housekeeping() function', async () => {
-  // just assert that roomsStore interface is complete. currently a no-op for inMemoryRoomsStore
-  await inMemoryRoomsStore.init();
-  const houseKeepingReport = await inMemoryRoomsStore.housekeeping();
+  // just assert that roomsStore interface is complete. currently a no-op for inMemoryStore
+  await inMemoryStore.init();
+  const houseKeepingReport = await inMemoryStore.housekeeping();
 
   expect(houseKeepingReport.markedForDeletion.length).toBe(0);
   expect(houseKeepingReport.deleted.length).toBe(0);
 });
 
 test('has getStoreType() function', async () => {
-  await inMemoryRoomsStore.init();
-  const storeTypeString = inMemoryRoomsStore.getStoreType();
-  expect(storeTypeString).toBe('InMemoryRoomsStore');
+  await inMemoryStore.init();
+  const storeTypeString = inMemoryStore.getStoreType();
+  expect(storeTypeString).toBe('InMemoryStore');
 });

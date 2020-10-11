@@ -8,8 +8,7 @@ import AppStatus from './AppStatus';
 import Landing from './Landing';
 import appConfig from '../services/appConfig';
 import {joinRoom, locationChanged} from '../actions';
-
-const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
+import normalizePathname from '../services/normalizePathname';
 
 /**
  * The Main component decides whether to display the landing page or the poinz estimation board (a room).
@@ -17,8 +16,10 @@ const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
  * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
  */
 const Main = ({roomId, users, userId, presetUsername, pathname}) => {
+  const isAppStatusRoute = normalizePathname(pathname).startsWith(appConfig.APP_STATUS_IDENTIFIER);
   const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0 && userId;
-  if (getNormalizedRoomId(pathname) === appConfig.APP_STATUS_IDENTIFIER) {
+
+  if (isAppStatusRoute) {
     return <AppStatus />;
   } else if (hasRoomIdAndUsers && presetUsername) {
     return <Room />;

@@ -91,7 +91,27 @@ describe('websocket endpoint', () => {
 });
 
 describe('REST endpoint', () => {
-  test('should return backend status', (done) => {
+  test('should return github client id', (done) => {
+    httpGetJSON(
+      {
+        host: 'localhost',
+        port: 3000,
+        path: '/api/auth/config',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      },
+      (err, statusCode, body) => {
+        expect(err).toBeFalsy();
+        expect(statusCode).toBe(200);
+        expect(body.githubClientId).toBeDefined();
+        done();
+      }
+    );
+  });
+
+  test('should return 403 when fetching backend status', (done) => {
     httpGetJSON(
       {
         host: 'localhost',
@@ -104,9 +124,8 @@ describe('REST endpoint', () => {
       },
       (err, statusCode, body) => {
         expect(err).toBeFalsy();
-        expect(statusCode).toBe(200);
-        expect(body.roomCount).toBeDefined();
-        expect(body.rooms.length).toBeDefined();
+        expect(statusCode).toBe(403);
+        expect(body.error).toBe('Not Authorized');
         done();
       }
     );

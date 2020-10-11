@@ -28,15 +28,9 @@ test('Should produce storySelected event', async () => {
 });
 
 test('Users marked as excluded can still select current story', async () => {
-  const {
-    roomId,
-    userId,
-    storyId,
-    processor,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {roomId, userId, storyId, processor, mockStore} = await prepOneUserInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userId].excluded = true;
     return room;
   });
@@ -84,10 +78,10 @@ describe('preconditions', () => {
       userId,
       storyId,
       processor,
-      mockRoomsStore
+      mockStore
     } = await prepOneUserInOneRoomWithOneStory();
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.stories[storyId].trashed = true;
       return room;
     });

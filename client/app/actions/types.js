@@ -13,6 +13,7 @@ export const HIDE_NEW_USER_HINTS = 'HIDE_NEW_USER_HINTS';
 export const SHOW_TRASH = 'SHOW_TRASH';
 export const HIDE_TRASH = 'HIDE_TRASH';
 export const TOGGLE_MARK_FOR_KICK = 'TOGGLE_MARK_FOR_KICK';
+export const JWT_FETCHED = 'JWT_FETCHED';
 
 /**
  * Action types for backend events

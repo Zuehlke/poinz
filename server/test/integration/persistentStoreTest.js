@@ -1,22 +1,22 @@
 import {v4 as uuid} from 'uuid';
 
-import persistentRoomsStore from '../../src/store/persistentRoomsStore';
+import persistentStore from '../../src/store/persistentStore';
 
 const LOCAL_MONGODB_CONNECTION_URI = 'mongodb://localhost:27017';
 const LOCAL_MONGODB_TEST_DB_NAME = 'poinz_integration_test';
 
 describe('initialization', () => {
   test('should connect to running mongoDB instance', async () => {
-    await persistentRoomsStore.init({
+    await persistentStore.init({
       connectionURI: LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
     });
 
-    await persistentRoomsStore.close();
+    await persistentStore.close();
   });
 
   test('should reject with connectionURI that points to a nonexisting mongoDB instance', async () => {
     return expect(
-      persistentRoomsStore.init({
+      persistentStore.init({
         connectionURI: 'mongodb://localhost:62222/' + LOCAL_MONGODB_TEST_DB_NAME
       })
     ).rejects.toThrow(
@@ -25,19 +25,19 @@ describe('initialization', () => {
   }, 10000);
 
   test('should reject with missing connectionURI in config', async () => {
-    return expect(persistentRoomsStore.init({})).rejects.toThrow(/Please provide "connectionURI"/);
+    return expect(persistentStore.init({})).rejects.toThrow(/Please provide "connectionURI"/);
   });
 });
 
-describe('save, update and fetch', () => {
+describe('save, update and fetch rooms', () => {
   beforeAll(async () => {
-    await persistentRoomsStore.init({
+    await persistentStore.init({
       connectionURI: LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
     });
   });
 
   afterAll(async () => {
-    await persistentRoomsStore.close();
+    await persistentStore.close();
   });
 
   test('should save and get room back', async () => {
@@ -46,9 +46,9 @@ describe('save, update and fetch', () => {
       users: {},
       other: 'data'
     };
-    await persistentRoomsStore.saveRoom(roomObject);
+    await persistentStore.saveRoom(roomObject);
 
-    const retrievedRoom = await persistentRoomsStore.getRoomById(roomObject.id);
+    const retrievedRoom = await persistentStore.getRoomById(roomObject.id);
 
     expect(retrievedRoom).toBeDefined();
     expect(retrievedRoom.id).toBe(roomObject.id);
@@ -56,7 +56,7 @@ describe('save, update and fetch', () => {
   });
 
   test('should resolve to undefined if room with given id does not exist', async () => {
-    const retrievedRoom = await persistentRoomsStore.getRoomById('no-room-has-this-id');
+    const retrievedRoom = await persistentStore.getRoomById('no-room-has-this-id');
 
     expect(retrievedRoom).toBeUndefined();
   });
@@ -67,16 +67,16 @@ describe('save, update and fetch', () => {
       users: {},
       other: 'data'
     };
-    await persistentRoomsStore.saveRoom(roomObject);
+    await persistentStore.saveRoom(roomObject);
 
     // now call saveRoom() again with a new object that has the same "id"
     const roomObjectModified = {
       ...roomObject,
       additional: '....data...'
     };
-    await persistentRoomsStore.saveRoom(roomObjectModified);
+    await persistentStore.saveRoom(roomObjectModified);
 
-    const retrievedRoom = await persistentRoomsStore.getRoomById(roomObject.id);
+    const retrievedRoom = await persistentStore.getRoomById(roomObject.id);
 
     expect(retrievedRoom).toBeDefined();
     expect(retrievedRoom.id).toBe(roomObject.id);
@@ -90,9 +90,9 @@ describe('save, update and fetch', () => {
       users: {},
       other: 'data'
     };
-    await persistentRoomsStore.saveRoom(roomObject);
+    await persistentStore.saveRoom(roomObject);
 
-    const allRooms = await persistentRoomsStore.getAllRooms();
+    const allRooms = await persistentStore.getAllRooms();
 
     expect(allRooms).toBeDefined();
     expect(Object.values(allRooms).length).toBeGreaterThan(0);
@@ -105,13 +105,13 @@ describe('save, update and fetch', () => {
 
 describe('housekeeping', () => {
   beforeAll(async () => {
-    await persistentRoomsStore.init({
+    await persistentStore.init({
       connectionURI: LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
     });
   });
 
   afterAll(async () => {
-    await persistentRoomsStore.close();
+    await persistentStore.close();
   });
 
   test('should mark for deletion and then delete rooms that have not been used for a long time', async () => {
@@ -129,35 +129,35 @@ describe('housekeeping', () => {
       created: Date.now(),
       lastActivity: Date.now()
     };
-    await persistentRoomsStore.saveRoom(oldRoomObject);
-    await persistentRoomsStore.saveRoom(newerRoomObject);
+    await persistentStore.saveRoom(oldRoomObject);
+    await persistentStore.saveRoom(newerRoomObject);
 
-    let houseKeepingReport = await persistentRoomsStore.housekeeping();
+    let houseKeepingReport = await persistentStore.housekeeping();
     expect(houseKeepingReport.markedForDeletion.length).toBe(1);
     expect(houseKeepingReport.markedForDeletion[0]).toEqual(oldRoomObject.id);
     expect(houseKeepingReport.deleted.length).toBe(0);
 
     // we can still fetch it, is marked for deletion
-    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
+    let retrievedRoom = await persistentStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeDefined();
     expect(retrievedRoom.markedForDeletion).toBe(true);
 
     // --  call housekeeping a second time
-    houseKeepingReport = await persistentRoomsStore.housekeeping();
+    houseKeepingReport = await persistentStore.housekeeping();
     expect(houseKeepingReport.markedForDeletion.length).toBe(0);
     expect(houseKeepingReport.deleted.length).toBe(1);
     expect(houseKeepingReport.deleted[0]).toEqual(oldRoomObject.id);
 
     // now it no longer exists
-    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
+    retrievedRoom = await persistentStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
 
     // just make sure to remove the other room as well to clean up after ourselves.
     newerRoomObject.markedForDeletion = true;
-    await persistentRoomsStore.saveRoom(newerRoomObject);
-    await persistentRoomsStore.housekeeping();
+    await persistentStore.saveRoom(newerRoomObject);
+    await persistentStore.housekeeping();
 
-    retrievedRoom = await persistentRoomsStore.getRoomById(newerRoomObject.id);
+    retrievedRoom = await persistentStore.getRoomById(newerRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
   });
 
@@ -170,29 +170,52 @@ describe('housekeeping', () => {
       lastActivity: Date.now()
     };
 
-    await persistentRoomsStore.saveRoom(oldRoomObject);
+    await persistentStore.saveRoom(oldRoomObject);
 
     // call housekeeping twice
-    await persistentRoomsStore.housekeeping();
-    const houseKeepingReport = await persistentRoomsStore.housekeeping();
+    await persistentStore.housekeeping();
+    const houseKeepingReport = await persistentStore.housekeeping();
     expect(houseKeepingReport.markedForDeletion.length).toBe(0);
     expect(houseKeepingReport.deleted.length).toBe(0);
 
-    let retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
+    let retrievedRoom = await persistentStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeDefined();
     expect(retrievedRoom.markedForDeletion).toBeUndefined(); // flag never set
 
     // just make sure to remove the added room to clean up after ourselves.
     oldRoomObject.markedForDeletion = true;
-    await persistentRoomsStore.saveRoom(oldRoomObject);
-    await persistentRoomsStore.housekeeping();
+    await persistentStore.saveRoom(oldRoomObject);
+    await persistentStore.housekeeping();
 
-    retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
+    retrievedRoom = await persistentStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
   });
 });
 
+describe('get config values', () => {
+  beforeAll(async () => {
+    await persistentStore.init({
+      connectionURI: LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
+    });
+  });
+
+  afterAll(async () => {
+    await persistentStore.close();
+  });
+
+  test('should get all config variables', async () => {
+    const config = await persistentStore.getAppConfig();
+
+    expect(config).toBeDefined();
+    expect(config.githubAuthClientId).toBeDefined();
+    expect(config.githubAuthSecret).toBeDefined();
+    expect(config.jwtSecret).toBeDefined();
+    expect(config.whitelistedUsers).toBeDefined();
+    expect(config.whitelistedUsers.length).toBeDefined();
+  });
+});
+
 test('has getStoreType() function', async () => {
-  const storeTypeString = persistentRoomsStore.getStoreType();
-  expect(storeTypeString).toBe('PersistentRoomsStore on mongodb');
+  const storeTypeString = persistentStore.getStoreType();
+  expect(storeTypeString).toBe('PersistentStore on mongodb');
 });

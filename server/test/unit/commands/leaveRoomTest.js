@@ -32,12 +32,12 @@ test('Should keep estimations on stories after user left', async () => {
     processor,
     roomId,
     storyId,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
   const estimatedValue = 3;
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.stories[storyId].estimations[userIdTwo] = estimatedValue;
     return room;
   });

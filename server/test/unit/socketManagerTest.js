@@ -1,7 +1,7 @@
 import {v4 as uuid} from 'uuid';
 import socketManagerFactory from '../../src/socketManager';
 
-import {newMockRoomsStore} from './testUtils';
+import {newMockStore} from './testUtils';
 
 /**
  *
@@ -294,5 +294,5 @@ function initSocketManagerUnderTest(
   sendEventToRoom = jest.fn(),
   removeSocketFromRoomByIds = jest.fn()
 ) {
-  return socketManagerFactory(newMockRoomsStore(), sendEventToRoom, removeSocketFromRoomByIds);
+  return socketManagerFactory(newMockStore(), sendEventToRoom, removeSocketFromRoomByIds);
 }

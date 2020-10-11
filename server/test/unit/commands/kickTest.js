@@ -7,10 +7,10 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
     userIdOne,
     userIdTwo,
     processor,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userIdTwo].disconnected = true;
     return room;
   });
@@ -74,10 +74,10 @@ test('Users that are marked as excluded can also kick others (userOne [excluded]
     userIdOne,
     userIdTwo,
     processor,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userIdTwo].disconnected = true;
     room.users[userIdOne].excluded = true;
     return room;

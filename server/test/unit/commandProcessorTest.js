@@ -1,5 +1,6 @@
 import {v4 as uuid} from 'uuid';
-import {newMockRoomsStore} from './testUtils';
+
+import {newMockStore} from './testUtils';
 import processorFactory from '../../src/commandProcessor';
 import {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
 
@@ -21,7 +22,7 @@ test('process a dummy command successfully: create room on the fly', () => {
         test2: eventPayload.payloadProperty
       })
     },
-    newMockRoomsStore() //  no room exists in store
+    newMockStore() //  no room exists in store
   );
 
   const commandId = uuid();
@@ -52,7 +53,7 @@ test('process a dummy command successfully: create room on the fly', () => {
 
 test('process a dummy command successfully: room loading by id', () => {
   const roomId = 'some-room-id_' + uuid();
-  const roomStore = newMockRoomsStore({
+  const store = newMockStore({
     id: roomId
   });
   const processor = processorFactory(
@@ -68,7 +69,7 @@ test('process a dummy command successfully: room loading by id', () => {
     {
       propertySetEvent: (room) => ({...room, test: 'data.from.evt.handler'})
     },
-    roomStore
+    store
   );
 
   const commandId = uuid();
@@ -101,7 +102,7 @@ test('process a dummy command with No Handler ( and thus no schema )', () => {
     },
     baseCommandSchema,
     {},
-    newMockRoomsStore()
+    newMockStore()
   );
 
   return expect(
@@ -133,7 +134,7 @@ test('process a dummy command where command handler produced unknown event', () 
     {
       propertySetEvent: (room) => ({...room, test: 'data.from.evt.handler'})
     },
-    newMockRoomsStore()
+    newMockStore()
   );
 
   return expect(
@@ -168,7 +169,7 @@ test('process a dummy command where command precondition throws', () => {
     {
       propertySetEvent: (room) => ({...room, test: 'data.from.evt.handler'})
     },
-    newMockRoomsStore()
+    newMockStore()
   );
 
   return expect(
@@ -200,7 +201,7 @@ test('process a dummy command where user does not belong to room', () => {
     {
       propertySetEvent: (room) => ({...room, test: 'data.from.evt.handler'})
     },
-    newMockRoomsStore()
+    newMockStore()
   );
 
   return expect(
@@ -221,7 +222,7 @@ test('process a dummy command where user does not belong to room', () => {
 });
 
 test('process a dummy command where command validation fails', () => {
-  const processor = processorFactory({}, {}, newMockRoomsStore());
+  const processor = processorFactory({}, {}, newMockStore());
 
   return expect(
     processor(
@@ -260,7 +261,7 @@ test('process a dummy command where command validation fails (schema)', () => {
         test: 'data.from.evt.handler'
       })
     },
-    newMockRoomsStore() //  no room exists in store
+    newMockStore() //  no room exists in store
   );
 
   return expect(
@@ -288,7 +289,7 @@ test('process a dummy command WITHOUT roomId: where room must exist', () => {
     },
     baseCommandSchema,
     {},
-    newMockRoomsStore()
+    newMockStore()
   );
 
   return expect(
@@ -319,7 +320,7 @@ test('process a dummy command WITH roomId: where room must exist', () => {
     },
     baseCommandSchema,
     {},
-    newMockRoomsStore()
+    newMockStore()
   );
 
   return expect(
@@ -344,7 +345,7 @@ test('process a dummy command WITH roomId: where room must exist', () => {
  * Assures that we handle two "simultaneously" incoming commands correctly.
  */
 test('concurrency handling', () => {
-  const mockRoomsStore = newMockRoomsStore({
+  const mockStore = newMockStore({
     id: 'concurrency-test-room',
     manipulationCount: 0
   });
@@ -365,7 +366,7 @@ test('concurrency handling', () => {
         manipulationCount: room.manipulationCount + 1
       })
     },
-    mockRoomsStore
+    mockStore
   );
 
   const eventPromiseOne = processor(
@@ -392,7 +393,7 @@ test('concurrency handling', () => {
   );
 
   return Promise.all([eventPromiseOne, eventPromiseTwo])
-    .then(() => mockRoomsStore.getRoomById('concurrency-test-room'))
+    .then(() => mockStore.getRoomById('concurrency-test-room'))
     .then((room) => expect(room.manipulationCount).toBe(2));
 });
 
@@ -407,7 +408,7 @@ test('detect structural problems in commandHandlers: no schema', () => {
       },
       baseCommandSchema,
       {},
-      newMockRoomsStore()
+      newMockStore()
     )
   ).toThrow(/Fatal error: CommandHandler "setPropertyCommand" does not define "schema"!/g);
 });
@@ -423,7 +424,7 @@ test('detect structural problems in commandHandlers: schema is not an object, bu
       },
       baseCommandSchema,
       {},
-      newMockRoomsStore()
+      newMockStore()
     )
   ).toThrow(/Fatal error: "schema" on commandHandler "setPropertyCommand" must be an object!/g);
 });
@@ -439,7 +440,7 @@ test('detect structural problems in commandHandlers: schema is not an object, bu
       },
       baseCommandSchema,
       {},
-      newMockRoomsStore()
+      newMockStore()
     )
   ).toThrow(/Fatal error: "schema" on commandHandler "setPropertyCommand" must be an object!/g);
 });
@@ -455,7 +456,7 @@ test('detect structural problems in commandHandlers: "fn" is not a function', ()
       },
       baseCommandSchema,
       {},
-      newMockRoomsStore()
+      newMockStore()
     )
   ).toThrow(/Fatal error: "fn" on commandHandler "setPropertyCommand" must be a function!/g);
 });

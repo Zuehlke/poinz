@@ -56,6 +56,13 @@ function setHideNewUserHints(flag) {
   setItem('hideNewUserHints', flag);
 }
 
+function setGithubLoginState(state) {
+  setItem('githubLoginState', state);
+}
+function getGithubLoginState() {
+  return getItem('githubLoginState');
+}
+
 export default {
   getPresetUsername,
   setPresetUsername,
@@ -68,5 +75,7 @@ export default {
   getPresetUserId,
   setPresetUserId,
   getHideNewUserHints,
-  setHideNewUserHints
+  setHideNewUserHints,
+  getGithubLoginState,
+  setGithubLoginState
 };

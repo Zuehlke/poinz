@@ -3,24 +3,18 @@ import {v4 as uuid} from 'uuid';
 import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyTrashed event', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockStore} = await prepOneUserInOneRoomWithOneStory();
 
   // add second story, set second story as selected
   const secondStoryId = uuid();
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.stories[secondStoryId] = {
       id: secondStoryId,
       title: 'secondStory'
     };
     return room;
   });
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.selectedStory = secondStoryId;
     return room;
   });
@@ -55,18 +49,12 @@ test('Should produce storyTrashed event', async () => {
 });
 
 test('Should produce additional storySelected event if story to trash was the selected one', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockStore} = await prepOneUserInOneRoomWithOneStory();
 
   // add second story, set our first story as selected
   const secondStoryId = uuid();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.stories[secondStoryId] = {
       id: secondStoryId,
       title: 'secondStory'
@@ -108,15 +96,9 @@ test('Should produce additional storySelected event if story to trash was the se
 });
 
 test('users marked as excluded can still trash stories', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockStore} = await prepOneUserInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userId].excluded = true;
     return room;
   });

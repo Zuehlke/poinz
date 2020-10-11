@@ -1,6 +1,7 @@
 import {v4 as uuid} from 'uuid';
-import roomStoreFactory from '../../src/store/roomStoreFactory';
+
 import processorFactory from '../../src/commandProcessor';
+import storeFactory from '../../src/store/storeFactory';
 
 // we want to test with real command- and event handlers!
 import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
@@ -16,7 +17,7 @@ test('1000 "addStory" commands/events', async () => {
 
   const roomId = 'custom-room_' + uuid();
 
-  const store = await roomStoreFactory(false);
+  const store = await storeFactory(false);
   const processor = processorFactory(commandHandlers, baseCommandSchema, eventHandlers, store);
 
   const totalEvents = 1000;

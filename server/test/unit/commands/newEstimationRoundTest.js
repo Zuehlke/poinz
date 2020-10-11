@@ -7,9 +7,9 @@ test('Should produce newEstimationRoundStarted event', async () => {
     roomId,
     storyId,
     userIdOne,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.stories[storyId].consensus = 4;
     return room;
   });
@@ -52,10 +52,10 @@ test('Users marked as excluded can still start new estimation round', async () =
     roomId,
     storyId,
     userIdOne,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userIdOne].excluded = true;
     return room;
   });

@@ -16,14 +16,14 @@ export function textToCsvDataUrl(csvContent) {
 }
 
 /**
- * our mock roomsStore contains only one room.
+ * our mock store contains only one room.
  * commandProcessor will load this room (if set), and store back manipulated room.
  *
  * room object can be manually manipulated to prepare for different scenarios.
  *
  * @param {object} [initialRoom] If not set, room will not exists in store.
  */
-export function newMockRoomsStore(initialRoom) {
+export function newMockStore(initialRoom) {
   let room = initialRoom ? detatchObject(initialRoom) : undefined;
 
   return {
@@ -53,28 +53,28 @@ export function newMockRoomsStore(initialRoom) {
       }
       room = modifiedRoom;
     },
-    getStoreType: () => 'MockRoomsStore for unit tests'
+    getStoreType: () => 'MockStore for unit tests'
   };
 }
 
 const detatchObject = (obj) => JSON.parse(JSON.stringify(obj));
 
 export function prepEmpty() {
-  const mockRoomsStore = newMockRoomsStore();
+  const mockStore = newMockStore();
   const processor = commandProcessorFactory(
     commandHandlers,
     baseCommandSchema,
     eventHandlers,
-    mockRoomsStore
+    mockStore
   );
-  return {mockRoomsStore, processor};
+  return {mockStore, processor};
 }
 
 /**
  * create mock room store with one user in one room
  */
 export async function prepOneUserInOneRoom(username = 'firstUser') {
-  const {mockRoomsStore, processor} = prepEmpty();
+  const {mockStore, processor} = prepEmpty();
 
   const roomId = uuid();
   const userId = uuid();
@@ -90,11 +90,11 @@ export async function prepOneUserInOneRoom(username = 'firstUser') {
     userId
   );
 
-  return {userId, roomId, processor, mockRoomsStore};
+  return {userId, roomId, processor, mockStore};
 }
 
 export async function prepOneUserInOneRoomWithOneStory(username = 'firstUser') {
-  const {userId, roomId, processor, mockRoomsStore} = await prepOneUserInOneRoom(username);
+  const {userId, roomId, processor, mockStore} = await prepOneUserInOneRoom(username);
 
   const {producedEvents: adEvents} = await processor(
     {
@@ -110,7 +110,7 @@ export async function prepOneUserInOneRoomWithOneStory(username = 'firstUser') {
   );
   const storyId = adEvents[0].payload.id;
 
-  return {userId, storyId, roomId, processor, mockRoomsStore};
+  return {userId, storyId, roomId, processor, mockStore};
 }
 
 export async function prepTwoUsersInOneRoomWithOneStoryAndEstimate(
@@ -124,7 +124,7 @@ export async function prepTwoUsersInOneRoomWithOneStoryAndEstimate(
     roomId,
     storyId,
     processor,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory(username, storyTitle);
 
   await processor(
@@ -140,7 +140,7 @@ export async function prepTwoUsersInOneRoomWithOneStoryAndEstimate(
     userIdOne
   );
 
-  return {userIdOne, userIdTwo, roomId, storyId, processor, mockRoomsStore};
+  return {userIdOne, userIdTwo, roomId, storyId, processor, mockStore};
 }
 
 /**
@@ -150,7 +150,7 @@ export async function prepTwoUsersInOneRoomWithOneStory(
   username = 'firstUser',
   storyTitle = 'new super story'
 ) {
-  const {mockRoomsStore, processor} = prepEmpty();
+  const {mockStore, processor} = prepEmpty();
 
   const roomId = uuid();
   const userIdOne = uuid();
@@ -193,5 +193,5 @@ export async function prepTwoUsersInOneRoomWithOneStory(
   );
   const storyId = adEvents[0].payload.id;
 
-  return {userIdOne, userIdTwo, roomId, storyId, processor, mockRoomsStore};
+  return {userIdOne, userIdTwo, roomId, storyId, processor, mockStore};
 }

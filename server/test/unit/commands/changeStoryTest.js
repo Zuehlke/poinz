@@ -41,10 +41,10 @@ test('Users marked as excluded can still change stories', async () => {
     roomId,
     userIdOne,
     storyId,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userIdOne].excluded = true;
     return room;
   });
@@ -99,10 +99,10 @@ describe('preconditions', () => {
       roomId,
       storyId,
       userIdOne,
-      mockRoomsStore
+      mockStore
     } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.stories[storyId].trashed = true;
       return room;
     });

@@ -2,13 +2,15 @@ import {MongoClient} from 'mongodb';
 
 import getLogger from '../getLogger';
 
-const COLLECTION_NAME = 'rooms';
+const ROOMS_COLLECTION_NAME = 'rooms';
+const CONFIG_COLLECTION_NAME = 'appconfig';
 
-const LOGGER = getLogger('persistentRoomsStore');
+const LOGGER = getLogger('persistentStore');
 
 let clientInstance;
 let dbInstance;
 let roomsCollection;
+let configCollection;
 
 /**
  * implementation of a persistent room storage using mongoDB
@@ -26,6 +28,7 @@ export default {
   getRoomById,
   getAllRooms,
   housekeeping,
+  getAppConfig,
   getStoreType
 };
 
@@ -48,7 +51,8 @@ async function init(config) {
     LOGGER.info(
       `connected to mongodb on   ${clientInstance.s.url}, dbName ${clientInstance.s.options.dbName}`
     );
-    roomsCollection = dbInstance.collection(COLLECTION_NAME);
+    roomsCollection = dbInstance.collection(ROOMS_COLLECTION_NAME);
+    configCollection = dbInstance.collection(CONFIG_COLLECTION_NAME);
 
     await roomsCollection.createIndex('id', {unique: true, name: 'id_roomId'});
   } catch (error) {
@@ -168,6 +172,14 @@ async function getAllRooms() {
   }, {});
 }
 
+async function getAppConfig() {
+  const configValues = await configCollection.find().toArray();
+  return configValues.reduce((total, current) => {
+    total[current.key] = current.value;
+    return total;
+  }, {});
+}
+
 function getStoreType() {
-  return 'PersistentRoomsStore on mongodb';
+  return 'PersistentStore on mongodb';
 }

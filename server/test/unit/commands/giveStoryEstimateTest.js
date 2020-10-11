@@ -204,10 +204,10 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     userIdOne: userId,
     userIdTwo,
     processor,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     delete room.users[userIdTwo];
     return room;
   });
@@ -242,10 +242,10 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     userIdOne: userId,
     userIdTwo,
     processor,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userIdTwo].excluded = true;
     return room;
   });
@@ -280,10 +280,10 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     userIdOne: userId,
     userIdTwo,
     processor,
-    mockRoomsStore
+    mockStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userIdTwo].disconnected = true;
     return room;
   });
@@ -317,12 +317,12 @@ describe('preconditions', () => {
       roomId,
       userIdOne: userId,
       processor,
-      mockRoomsStore
+      mockStore
     } = await prepTwoUsersInOneRoomWithOneStory();
 
     const secondStoryId = uuid();
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.stories[secondStoryId] = {
         id: secondStoryId,
         title: 'second story'
@@ -355,10 +355,10 @@ describe('preconditions', () => {
       storyId,
       userIdOne: userId,
       processor,
-      mockRoomsStore
+      mockStore
     } = await prepTwoUsersInOneRoomWithOneStory();
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.stories[storyId].revealed = true;
       return room;
     });
@@ -385,10 +385,10 @@ describe('preconditions', () => {
       storyId,
       userIdOne: userId,
       processor,
-      mockRoomsStore
+      mockStore
     } = await prepTwoUsersInOneRoomWithOneStory();
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.users[userId].excluded = true;
       return room;
     });

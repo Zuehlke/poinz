@@ -95,12 +95,12 @@ test('nonexisting room', () => {
 });
 
 test('existing room with matching user already in room (re-join) ', async () => {
-  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom(
+  const {processor, userId, roomId, mockStore} = await prepOneUserInOneRoom(
     'username-from-previous-join'
   );
 
   // simulate an "old" room that was created before #103
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.cardConfig = undefined;
     return room;
   });
@@ -180,11 +180,9 @@ test('existing room with matching user already in room (re-join) ', async () => 
 });
 
 test('existing room with user match, command has no preset properties', async () => {
-  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom(
-    'custom-user-name'
-  );
+  const {processor, userId, roomId, mockStore} = await prepOneUserInOneRoom('custom-user-name');
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userId].email = 'super@test.com';
     room.users[userId].avatar = 1;
     room.users[userId].disconnected = true;

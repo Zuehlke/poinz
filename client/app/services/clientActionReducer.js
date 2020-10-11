@@ -12,7 +12,8 @@ import {
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
   HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK
+  TOGGLE_MARK_FOR_KICK,
+  JWT_FETCHED
 } from '../actions/types';
 
 /**
@@ -137,6 +138,14 @@ export default function clientActionReducer(state, action) {
         [action.userId]: {...state.users[action.userId], markedForKick: doMark}
       };
       return {...state, users: modifiedUsers};
+    }
+
+    case JWT_FETCHED: {
+      const modifiedSession = {
+        ...state.session,
+        jwt: action.token
+      };
+      return {...state, session: modifiedSession};
     }
 
     default:

@@ -4,6 +4,10 @@ import log from 'loglevel';
 
 import history from '../services/getBrowserHistory';
 import appConfig from '../services/appConfig';
+import clientSettingsStore from '../store/clientSettingsStore';
+import readDroppedFile from '../services/readDroppedFile';
+import {authenticateWithGithub, loadJwtFromPoinzServer} from '../services/authService';
+import normalizePathname from '../services/normalizePathname';
 
 import {
   LOCATION_CHANGED,
@@ -19,24 +23,20 @@ import {
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
   HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK
+  TOGGLE_MARK_FOR_KICK,
+  JWT_FETCHED
 } from './types';
-import clientSettingsStore from '../store/clientSettingsStore';
-import readDroppedFile from '../services/readDroppedFile';
 
 /**
- * store current pathname in our redux store, join or leave room if necessary
+ * Location did change,  join or leave room if necessary.
+ * Store current pathname in our redux store
  */
 export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
 
-  if (
-    pathname &&
-    pathname.length > 1 &&
-    pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER &&
-    !state.roomId
-  ) {
-    joinRoom(pathname.substring(1))(dispatch, getState, sendCommand);
+  const normPathname = normalizePathname(pathname);
+  if (normPathname && !normPathname.startsWith(appConfig.APP_STATUS_IDENTIFIER) && !state.roomId) {
+    joinRoom(normPathname)(dispatch, getState, sendCommand);
   } else if (!pathname || (pathname.length < 2 && state.userId && state.roomId)) {
     sendCommand({
       name: 'leaveRoom',
@@ -244,7 +244,7 @@ export const kick = (userId) => (dispatch, getState, sendCommand) => {
 export const leaveRoom = () => () => {
   // we only need to navigate to the landing page
   // locationChanged will trigger sending "leaveRoom" command to backend
-  history.push('/');
+  goToLanding();
 };
 
 export const changeStory = (storyId, title, description) => (dispatch, getState, sendCommand) => {
@@ -317,14 +317,58 @@ export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const fetchStatus = () => (dispatch) => {
-  axios.get('/api/status').then((response) => {
-    dispatch({
-      type: STATUS_FETCHED,
-      status: response.data
-    });
-  });
+export const doGithubLogin = () => (dispatch) => {
+  const isGithubWebFlowCallback =
+    history.location.pathname && history.location.pathname === '/poinzstatus/authcb';
+
+  if (isGithubWebFlowCallback) {
+    loadJwtFromPoinzServer()
+      .then((jwt) => {
+        dispatch({
+          type: JWT_FETCHED,
+          token: jwt
+        });
+
+        history.push({
+          pathname: '/' + appConfig.APP_STATUS_IDENTIFIER,
+          search: ''
+        });
+      })
+      .catch(() => goToLanding());
+  } else {
+    authenticateWithGithub().catch(() => goToLanding());
+  }
 };
+
+/**
+ * fetch application status (protected endpoint, must be authenticated first)
+ *
+ * @return {function(*, *): void}
+ */
+export const fetchStatus = () => (dispatch, getState) => {
+  const state = getState();
+  if (!state.session || !state.session.jwt) {
+    throw new Error('cannot fetch status when not logged in');
+  }
+
+  axios
+    .get('/api/status', {
+      headers: {Authorization: 'Bearer ' + state.session.jwt}
+    })
+    .then((response) => {
+      dispatch({
+        type: STATUS_FETCHED,
+        status: response.data
+      });
+    })
+    .catch(() => goToLanding());
+};
+
+const goToLanding = () =>
+  history.push({
+    pathname: '/',
+    search: ''
+  });
 
 // ui-only actions (client-side view state)
 export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});

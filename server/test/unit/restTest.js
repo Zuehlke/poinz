@@ -1,26 +1,26 @@
 import {buildRoomExportObject, buildStatusObject} from '../../src/rest';
-import {newMockRoomsStore} from './testUtils';
+import {newMockStore} from './testUtils';
 
 test('buildStatusObject', async () => {
-  const roomsStore = newMockRoomsStore({
+  const store = newMockStore({
     id: 'super-room',
     stories: [{}],
     users: [{id: '1'}, {id: '2', disconnected: true}]
   });
 
-  const statusObject = await buildStatusObject(roomsStore);
+  const statusObject = await buildStatusObject(store);
 
   expect(statusObject).toMatchObject({
     rooms: [{storyCount: 1, userCount: 2, userCountDisconnected: 1}],
     roomCount: 1,
     uptime: expect.any(Number),
-    storeInfo: 'MockRoomsStore for unit tests'
+    storeInfo: 'MockStore for unit tests'
   });
 });
 
 test('buildRoomExportObject', async () => {
   const roomId = '1b370339-a8f9-411c-8a42-540609a2bcdb';
-  const roomsStore = newMockRoomsStore({
+  const store = newMockStore({
     id: roomId,
     users: {
       '8d85c095-87bf-4e8f-9957-1e2b621f83de': {
@@ -73,7 +73,7 @@ test('buildRoomExportObject', async () => {
     selectedStory: 'a4ed287c-1cfd-49d4-b237-577b7190e76e'
   });
 
-  const roomExport = await buildRoomExportObject(roomsStore, roomId);
+  const roomExport = await buildRoomExportObject(store, roomId);
 
   expect(roomExport).toMatchObject({
     roomId: '1b370339-a8f9-411c-8a42-540609a2bcdb',

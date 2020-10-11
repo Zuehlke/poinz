@@ -61,10 +61,10 @@ describe('preconditions', () => {
       userIdOne: userId,
       storyId,
       processor,
-      mockRoomsStore
+      mockStore
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.stories[storyId].revealed = true;
       return room;
     });
@@ -90,10 +90,10 @@ describe('preconditions', () => {
       userIdOne: userId,
       storyId,
       processor,
-      mockRoomsStore
+      mockStore
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
-    mockRoomsStore.manipulate((room) => {
+    mockStore.manipulate((room) => {
       room.users[userId].excluded = true;
       return room;
     });

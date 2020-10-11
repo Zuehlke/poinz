@@ -22,10 +22,12 @@ it('multi user estimation', function () {
 
   // see ../support/commands.js
   const userTwoSocket = uuid();
+  const userTwoUserId = uuid();
   cy.openNewSocket(userTwoSocket);
   cy.sendCommands(userTwoSocket, [
     {
       roomId,
+      userId: userTwoUserId,
       name: 'joinRoom',
       payload: {
         username: this.sergio.username,
@@ -60,6 +62,7 @@ it('multi user estimation', function () {
       cy.sendCommands(userTwoSocket, [
         {
           roomId,
+          userId: userTwoUserId,
           name: 'giveStoryEstimate',
           payload: {
             storyId,
@@ -68,4 +71,9 @@ it('multi user estimation', function () {
         }
       ]);
     });
+
+  cy.get(tid('user')).contains('8');
+  cy.get(tid('user')).contains('3');
+
+  cy.get(tid('estimationArea', 'newRoundButton')); // revealed / round done -> "new Round" button is shown
 });

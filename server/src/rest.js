@@ -1,6 +1,11 @@
 import express from 'express';
 import stream from 'stream';
 
+import caem from './catchAsyncErrorsMiddleware';
+import getLogger from './getLogger';
+
+const LOGGER = getLogger('rest');
+
 /**
  * This module handles incoming requests to the REST api.
  * Currently there is only one endpoint: /api/status
@@ -13,14 +18,63 @@ import stream from 'stream';
 /**
  *
  * @param app the express app object
- * @param store the roomsStore object
+ * @param store
+ * @param authenticator
  */
-function init(app, store) {
+function init(app, store, authenticator) {
   const restRouter = express.Router();
+
+  /**
+   * poinz client needs to know github clientId
+   */
+  restRouter.get(
+    '/auth/config',
+    caem(async (req, res) => {
+      const config = await store.getAppConfig();
+      res.json({githubClientId: config.githubAuthClientId});
+    })
+  );
+
+  /**
+   * client can request a new jwt with a valid github "code"
+   */
+  restRouter.get(
+    '/auth/jwt',
+    caem(async (req, res) => {
+      try {
+        const jwt = await authenticator.requestJWT(req.query.code);
+        res.send(jwt);
+      } catch (e) {
+        LOGGER.info(e.message);
+        res.status(403).send({error: 'Not Authorized'});
+      }
+    })
+  );
+
+  /**
+   * protect route '/status' : request must have valid jwt token in Header:   "Authorization: Bearer [JWT]"
+   */
+  restRouter.use(
+    '/status',
+    caem(async (req, res, next) => {
+      try {
+        const authHeaderField = req.get('Authorization');
+        req.user = await authenticator.validateJWT(authHeaderField);
+        next();
+      } catch (e) {
+        LOGGER.info(e.message);
+        res.status(403).send({error: 'Not Authorized'});
+      }
+    })
+  );
 
   restRouter.get('/status', (req, res) =>
     buildStatusObject(store).then((status) => res.json(status))
   );
+
+  /**
+   * export room (an estimation "session") as json or file
+   */
   restRouter.get('/room/:roomId', (req, res) =>
     buildRoomExportObject(store, req.params.roomId).then((roomExport) => {
       if (!roomExport) {
@@ -54,6 +108,7 @@ export async function buildStatusObject(store) {
   const allRooms = await store.getAllRooms();
 
   const rooms = Object.values(allRooms).map((room) => ({
+    id: room.id,
     storyCount: Object.values(room.stories).length,
     userCount: Object.values(room.users).length,
     userCountDisconnected: Object.values(room.users).filter((user) => user.disconnected).length,

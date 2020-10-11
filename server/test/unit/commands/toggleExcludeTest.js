@@ -26,9 +26,9 @@ test('toggleExclude  -> excluded', async () => {
 });
 
 test('toggleExclude  -> included', async () => {
-  const {userId, processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+  const {userId, processor, roomId, mockStore} = await prepOneUserInOneRoom();
 
-  mockRoomsStore.manipulate((room) => {
+  mockStore.manipulate((room) => {
     room.users[userId].excluded = true;
     return room;
   });

@@ -133,9 +133,11 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
    *
    */
   function handleCommandProcessingError(error, command, socket) {
-    // for debugging, you might want to log error.stack
-    LOGGER.error(error.message + '\n' + error.stack);
-    //  LOGGER.warn(error.message);
+    LOGGER.warn(
+      `CMDPROCERR user=${command.userId ? command.userId : 'n/a'} room=${
+        command.roomId ? command.roomId : 'n/a'
+      } ${error.message}`
+    );
 
     const commandRejectedEvent = {
       name: 'commandRejected',

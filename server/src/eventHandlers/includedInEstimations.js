@@ -5,6 +5,7 @@ const includedInEstimationsEventHandler = (room, eventPayload, userId) => {
   const modifiedUsers = {
     ...room.users,
     [userId]: {
+      ...room.users[userId],
       excluded: false
     }
   };

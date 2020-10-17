@@ -37,14 +37,14 @@ test('You joining a new room', () => {
         name: 'joinedRoom',
         roomId,
         payload: {
-          users: {
-            [userId]: {
+          users: [
+            {
               disconnected: false,
               id: userId,
               avatar: 4
             }
-          },
-          stories: {}
+          ],
+          stories: []
         }
       },
       type: EVENT_ACTION_TYPES.joinedRoom
@@ -144,21 +144,21 @@ test('You joining a room with stories', () => {
         name: 'joinedRoom',
         roomId,
         payload: {
-          users: {
-            [userId]: {
+          users: [
+            {
               disconnected: false,
               id: userId,
               avatar: 4
             },
-            [otherUserId]: {
+            {
               disconnected: false,
               id: otherUserId,
               username: 'theOtherOne',
               avatar: 0
             }
-          },
-          stories: {
-            [storyId]: {
+          ],
+          stories: [
+            {
               title: 'jgdlkg',
               id: storyId,
               description: '',
@@ -169,7 +169,7 @@ test('You joining a room with stories', () => {
                 [userId]: 3
               }
             }
-          }
+          ]
         }
       },
       type: EVENT_ACTION_TYPES.joinedRoom
@@ -278,7 +278,6 @@ test('You in a room, other user joins', () => {
       userId: ownUserId,
       users: {
         [ownUserId]: {
-          disconnected: false,
           id: ownUserId,
           username: 'Jim'
         }
@@ -297,18 +296,18 @@ test('You in a room, other user joins', () => {
         name: 'joinedRoom',
         roomId,
         payload: {
-          users: {
-            [ownUserId]: {
+          users: [
+            {
               id: ownUserId,
               username: 'Jim'
             },
-            [otherUserId]: {
+            {
               id: otherUserId,
               disconnected: false,
               excluded: false
             }
-          },
-          stories: {}
+          ],
+          stories: []
         }
       },
       type: EVENT_ACTION_TYPES.joinedRoom
@@ -340,7 +339,6 @@ test('You in a room, other user joins', () => {
       username: 'Other John'
     },
     [ownUserId]: {
-      disconnected: false,
       id: ownUserId,
       username: 'Jim'
     }

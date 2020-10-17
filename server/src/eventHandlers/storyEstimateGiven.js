@@ -1,22 +1,16 @@
 /**
  * Stores the given estimation value on the story for the given user
  */
-const storyEstimateGivenEventHandler = (room, eventPayload, userId) => {
-  const modifiedStories = {
-    ...room.stories,
-    [eventPayload.storyId]: {
-      ...room.stories[eventPayload.storyId],
-      estimations: {
-        ...room.stories[eventPayload.storyId].estimations,
-        [userId]: eventPayload.value
-      }
-    }
-  };
+import {modifyStory} from './roomModifiers';
 
-  return {
-    ...room,
-    stories: modifiedStories
-  };
+const storyEstimateGivenEventHandler = (room, eventPayload, userId) => {
+  return modifyStory(room, eventPayload.storyId, (story) => ({
+    ...story,
+    estimations: {
+      ...story.estimations,
+      [userId]: eventPayload.value
+    }
+  }));
 };
 
 export default storyEstimateGivenEventHandler;

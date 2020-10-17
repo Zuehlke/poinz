@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 
-import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../testUtils';
+import {prepOneUserInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce storyTrashed event', async () => {
   const {
@@ -14,10 +14,11 @@ test('Should produce storyTrashed event', async () => {
   // add second story, set second story as selected
   const secondStoryId = uuid();
   mockRoomsStore.manipulate((room) => {
-    room.stories[secondStoryId] = {
+    room.stories.push({
       id: secondStoryId,
-      title: 'secondStory'
-    };
+      title: 'secondStory',
+      createdAt: Date.now()
+    });
     return room;
   });
   mockRoomsStore.manipulate((room) => {
@@ -26,7 +27,7 @@ test('Should produce storyTrashed event', async () => {
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -36,21 +37,20 @@ test('Should produce storyTrashed event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyTrashed');
+  );
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyTrashed');
 
-    const [storyTrashedEvent] = producedEvents;
+  const [storyTrashedEvent] = producedEvents;
 
-    expect(storyTrashedEvent.payload.storyId).toEqual(storyId);
+  expect(storyTrashedEvent.payload.storyId).toEqual(storyId);
 
-    // story is still in room, marked as "trashed"
-    expect(room.stories[storyId]).toMatchObject({
-      id: EXPECT_UUID_MATCHING,
-      estimations: {},
-      title: 'the title',
-      description: 'This will be awesome',
-      trashed: true
-    });
+  // story is still in room, marked as "trashed"
+  expect(room.stories[0]).toMatchObject({
+    id: storyId,
+    estimations: {},
+    title: 'the title',
+    description: 'This will be awesome',
+    trashed: true
   });
 });
 
@@ -67,16 +67,17 @@ test('Should produce additional storySelected event if story to trash was the se
   const secondStoryId = uuid();
 
   mockRoomsStore.manipulate((room) => {
-    room.stories[secondStoryId] = {
+    room.stories.push({
       id: secondStoryId,
-      title: 'secondStory'
-    };
+      title: 'secondStory',
+      createdAt: Date.now()
+    });
     room.selectedStory = storyId;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -86,25 +87,25 @@ test('Should produce additional storySelected event if story to trash was the se
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyTrashed', 'storySelected');
+  );
 
-    const [storyTrashedEvent, storySelectedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyTrashed', 'storySelected');
 
-    expect(storyTrashedEvent.payload.storyId).toEqual(storyId);
+  const [storyTrashedEvent, storySelectedEvent] = producedEvents;
 
-    expect(storySelectedEvent.payload.storyId).toEqual(secondStoryId);
+  expect(storyTrashedEvent.payload.storyId).toEqual(storyId);
 
-    // story is still in room, marked as "trashed"
-    expect(room.stories[storyId]).toMatchObject({
-      id: EXPECT_UUID_MATCHING,
-      estimations: {},
-      title: 'the title',
-      description: 'This will be awesome',
-      trashed: true
-    });
-    expect(room.selectedStory).toEqual(secondStoryId);
+  expect(storySelectedEvent.payload.storyId).toEqual(secondStoryId);
+
+  // story is still in room, marked as "trashed"
+  expect(room.stories[0]).toMatchObject({
+    id: storyId,
+    estimations: {},
+    title: 'the title',
+    description: 'This will be awesome',
+    trashed: true
   });
+  expect(room.selectedStory).toEqual(secondStoryId);
 });
 
 test('users marked as excluded can still trash stories', async () => {
@@ -117,12 +118,12 @@ test('users marked as excluded can still trash stories', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userId].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -132,15 +133,14 @@ test('users marked as excluded can still trash stories', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyTrashed', 'storySelected');
+  );
 
-    const [storyTrashedEvent, storySelectedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyTrashed', 'storySelected');
 
-    expect(storyTrashedEvent.payload.storyId).toEqual(storyId);
+  const [storyTrashedEvent, storySelectedEvent] = producedEvents;
 
-    expect(storySelectedEvent.payload.storyId).toEqual(undefined); // no more stories in room, so "undefined" is selected
-  });
+  expect(storyTrashedEvent.payload.storyId).toEqual(storyId);
+  expect(storySelectedEvent.payload.storyId).toEqual(undefined); // no more stories in room, so "undefined" is selected
 });
 
 test('Should throw if storyId is not uuid v4 format', async () => {

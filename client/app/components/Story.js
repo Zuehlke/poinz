@@ -57,7 +57,7 @@ const Story = ({
         // only display story text for selected story. improves overall readibility / usability (see #24)
         isSelected && (
           <StyledStoryText data-testid="storyText">
-            <Anchorify text={story.description} />
+            <Anchorify text={story.description || ''} />
           </StyledStoryText>
         )
       }

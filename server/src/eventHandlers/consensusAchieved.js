@@ -1,19 +1,13 @@
+import {modifyStory} from './roomModifiers';
+
 /**
  * Stores consensus estimation value (that everybody agreed on) on story.
  */
 const consensusAchievedEventHandler = (room, eventPayload) => {
-  const modifiedStories = {
-    ...room.stories,
-    [eventPayload.storyId]: {
-      ...room.stories[eventPayload.storyId],
-      consensus: eventPayload.value
-    }
-  };
-
-  return {
-    ...room,
-    stories: modifiedStories
-  };
+  return modifyStory(room, eventPayload.storyId, (story) => ({
+    ...story,
+    consensus: eventPayload.value
+  }));
 };
 
 export default consensusAchievedEventHandler;

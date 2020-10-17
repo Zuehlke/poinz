@@ -5,7 +5,7 @@ test('Should produce revealed event', async () => {
   const {roomId, userId, storyId, processor} = await prepOneUserInOneRoomWithOneStory();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -15,17 +15,17 @@ test('Should produce revealed event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'revealed');
+  );
 
-    const [revealedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'revealed');
 
-    expect(revealedEvent.payload.storyId).toEqual(storyId);
-    expect(revealedEvent.payload.manually).toBe(true);
+  const [revealedEvent] = producedEvents;
 
-    // flag set on story in room
-    expect(room.stories[storyId].revealed).toBe(true);
-  });
+  expect(revealedEvent.payload.storyId).toEqual(storyId);
+  expect(revealedEvent.payload.manually).toBe(true);
+
+  // flag set on story in room
+  expect(room.stories[0].revealed).toBe(true);
 });
 
 test('Users marked as excluded should still be able to reveal', async () => {
@@ -38,12 +38,12 @@ test('Users marked as excluded should still be able to reveal', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userId].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -53,7 +53,9 @@ test('Users marked as excluded should still be able to reveal', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) => expect(producedEvents).toMatchEvents(commandId, roomId, 'revealed'));
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'revealed');
 });
 
 describe('preconditions', () => {
@@ -85,7 +87,7 @@ describe('preconditions', () => {
     } = await prepOneUserInOneRoomWithOneStory();
 
     mockRoomsStore.manipulate((room) => {
-      room.stories[storyId].revealed = true;
+      room.stories[0].revealed = true;
       return room;
     });
 

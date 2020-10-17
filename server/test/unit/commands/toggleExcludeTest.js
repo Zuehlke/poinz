@@ -5,7 +5,7 @@ test('toggleExclude  -> excluded', async () => {
   const {userIdOne, userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -13,20 +13,21 @@ test('toggleExclude  -> excluded', async () => {
       payload: {}
     },
     userIdOne
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'excludedFromEstimations');
+  );
 
-    const [excludedFromEstimationsEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'excludedFromEstimations');
 
-    expect(excludedFromEstimationsEvent.userId).toEqual(userIdOne);
+  const [excludedFromEstimationsEvent] = producedEvents;
 
-    // flag is set in room object on user that sent command
-    expect(room.users[userIdOne].excluded).toBe(true);
-    expect(room.users[userIdOne].id).toBe(userIdOne);
+  expect(excludedFromEstimationsEvent.userId).toEqual(userIdOne);
 
-    // the other user is unchanged
-    expect(room.users[userIdTwo].excluded).toBeFalsy();
-  });
+  // flag is set in room object on user that sent command
+  expect(room.users[0].excluded).toBe(true);
+  expect(room.users[0].id).toBe(userIdOne);
+
+  // the other user is unchanged
+  expect(room.users[1].excluded).toBeFalsy();
+  expect(room.users[1].id).toBe(userIdTwo);
 });
 
 test('toggleExclude  -> included', async () => {
@@ -39,12 +40,12 @@ test('toggleExclude  -> included', async () => {
   } = await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdOne].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -52,20 +53,21 @@ test('toggleExclude  -> included', async () => {
       payload: {}
     },
     userIdOne
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'includedInEstimations');
+  );
 
-    const [includedInEstimationsEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'includedInEstimations');
 
-    expect(includedInEstimationsEvent.userId).toEqual(userIdOne);
+  const [includedInEstimationsEvent] = producedEvents;
 
-    // flag is set to false, on room object on user that sent command
-    expect(room.users[userIdOne].excluded).toBe(false);
-    expect(room.users[userIdOne].id).toBe(userIdOne);
+  expect(includedInEstimationsEvent.userId).toEqual(userIdOne);
 
-    // the other user is unchanged
-    expect(room.users[userIdTwo].excluded).toBeFalsy();
-  });
+  // flag is set to false, on room object on user that sent command
+  expect(room.users[0].excluded).toBe(false);
+  expect(room.users[0].id).toBe(userIdOne);
+
+  // the other user is unchanged
+  expect(room.users[1].excluded).toBeFalsy();
+  expect(room.users[1].id).toBe(userIdTwo);
 });
 
 test('cannot exclude another user (only myself)', async () => {

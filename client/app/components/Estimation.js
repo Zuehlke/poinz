@@ -46,7 +46,7 @@ const Estimation = ({
         </StyledStoryTitle>
 
         <StyledStoryText>
-          <Anchorify text={selectedStory.description} />
+          <Anchorify text={selectedStory.description || ''} />
         </StyledStoryText>
 
         {selectedStory.consensus && applause && (

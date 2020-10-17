@@ -1,14 +1,11 @@
 /**
- * Adds user object with given userId to "users" list on room
+ * A user joined a room: update "users" array in room object.
+ * "users" array is already correctly built in handler of joinRoom command (../commandHandlers/joinRoom.js)
  */
-const joinedRoomEventHandler = (room, eventPayload, userId) => {
-  const modifiedUsers = {
-    ...room.users,
-    [userId]: {id: userId}
-  };
+const joinedRoomEventHandler = (room, eventPayload) => {
   return {
     ...room,
-    users: modifiedUsers
+    users: eventPayload.users
   };
 };
 

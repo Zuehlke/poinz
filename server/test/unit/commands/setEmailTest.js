@@ -5,7 +5,7 @@ test('Should produce emailSet event', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -15,18 +15,18 @@ test('Should produce emailSet event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'emailSet');
+  );
 
-    const [emailSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'emailSet');
 
-    expect(emailSetEvent.payload.email).toEqual('j.doe@gmail.com');
-    expect(emailSetEvent.payload.emailHash).toEqual('8115b7da7fff37aeaec18779411a1042');
-    expect(emailSetEvent.userId).toEqual(userId);
+  const [emailSetEvent] = producedEvents;
 
-    expect(room.users[userId].email).toEqual('j.doe@gmail.com');
-    expect(room.users[userId].emailHash).toEqual('8115b7da7fff37aeaec18779411a1042');
-  });
+  expect(emailSetEvent.payload.email).toEqual('j.doe@gmail.com');
+  expect(emailSetEvent.payload.emailHash).toEqual('8115b7da7fff37aeaec18779411a1042');
+  expect(emailSetEvent.userId).toEqual(userId);
+
+  expect(room.users[0].email).toEqual('j.doe@gmail.com');
+  expect(room.users[0].emailHash).toEqual('8115b7da7fff37aeaec18779411a1042');
 });
 
 describe('preconditions', () => {

@@ -1,4 +1,4 @@
-import {throwIfStoryIdNotFoundInRoom, throwIfStoryTrashed} from './commonPreconditions';
+import {throwIfStoryTrashed} from './commonPreconditions';
 
 /**
  * A user changes the title and/or description of a story
@@ -39,7 +39,6 @@ const schema = {
 const changeStoryCommandHandler = {
   schema,
   preCondition: (room, command) => {
-    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
     throwIfStoryTrashed(room, command.payload.storyId);
   },
   fn: (room, command) => {

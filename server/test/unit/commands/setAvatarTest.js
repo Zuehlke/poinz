@@ -5,7 +5,7 @@ test('Should produce avatarSet event', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -15,16 +15,16 @@ test('Should produce avatarSet event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'avatarSet');
+  );
 
-    const [avatarSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'avatarSet');
 
-    expect(avatarSetEvent.payload.avatar).toEqual(3);
-    expect(avatarSetEvent.userId).toEqual(userId);
+  const [avatarSetEvent] = producedEvents;
 
-    expect(room.users[userId].avatar).toEqual(3);
-  });
+  expect(avatarSetEvent.payload.avatar).toEqual(3);
+  expect(avatarSetEvent.userId).toEqual(userId);
+
+  expect(room.users[0].avatar).toEqual(3);
 });
 
 describe('preconditions', () => {

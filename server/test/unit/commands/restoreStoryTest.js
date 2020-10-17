@@ -12,12 +12,12 @@ test('Should produce storyRestored event', async () => {
   const commandId = uuid();
 
   mockRoomsStore.manipulate((room) => {
-    room.stories[storyId].trashed = true;
+    room.stories[0].trashed = true;
     room.selectedStory = undefined;
     return room;
   });
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -27,25 +27,25 @@ test('Should produce storyRestored event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored', 'storySelected');
+  );
 
-    const [storyRestoredEvent, storySelectedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored', 'storySelected');
 
-    expect(storyRestoredEvent.payload.storyId).toEqual(storyId);
-    expect(storySelectedEvent.payload.storyId).toEqual(storyId);
+  const [storyRestoredEvent, storySelectedEvent] = producedEvents;
 
-    // story is in room, "trashed" flag set to false
-    expect(room.stories[storyId]).toMatchObject({
-      id: EXPECT_UUID_MATCHING,
-      estimations: {},
-      title: 'the title',
-      description: 'This will be awesome',
-      trashed: false
-    });
+  expect(storyRestoredEvent.payload.storyId).toEqual(storyId);
+  expect(storySelectedEvent.payload.storyId).toEqual(storyId);
 
-    expect(room.selectedStory).toEqual(storyRestoredEvent.payload.storyId);
+  // story is in room, "trashed" flag set to false
+  expect(room.stories[0]).toMatchObject({
+    id: EXPECT_UUID_MATCHING,
+    estimations: {},
+    title: 'the title',
+    description: 'This will be awesome',
+    trashed: false
   });
+
+  expect(room.selectedStory).toEqual(storyRestoredEvent.payload.storyId);
 });
 
 test('users marked as excluded can still restore stories', async () => {
@@ -58,13 +58,13 @@ test('users marked as excluded can still restore stories', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userId].excluded = true;
-    room.stories[storyId].trashed = true;
+    room.users[0].excluded = true;
+    room.stories[0].trashed = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -74,9 +74,9 @@ test('users marked as excluded can still restore stories', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored')
   );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyRestored');
 });
 
 test('Should throw if storyId is not uuid v4 format', async () => {

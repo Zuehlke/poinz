@@ -4,7 +4,7 @@
  * If story is already revealed, reject command.
  *
  */
-import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions';
 
 const schema = {
   allOf: [
@@ -36,9 +36,9 @@ const revealCommandHandler = {
       throw new Error('Can only reveal currently selected story!');
     }
 
-    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
+    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
 
-    if (room.stories[command.payload.storyId].revealed) {
+    if (matchingStory.revealed) {
       throw new Error('Story is already revealed');
     }
   },

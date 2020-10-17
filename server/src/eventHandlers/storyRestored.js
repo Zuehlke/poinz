@@ -2,19 +2,13 @@
  * Resets "trashed" flag on matching story.
  * Flag will be "false" afterwards.
  */
-const storyRestoredEventHandler = (room, eventPayload) => {
-  const modifiedStories = {
-    ...room.stories,
-    [eventPayload.storyId]: {
-      ...room.stories[eventPayload.storyId],
-      trashed: false
-    }
-  };
+import {modifyStory} from './roomModifiers';
 
-  return {
-    ...room,
-    stories: modifiedStories
-  };
+const storyRestoredEventHandler = (room, eventPayload) => {
+  return modifyStory(room, eventPayload.storyId, (story) => ({
+    ...story,
+    trashed: false
+  }));
 };
 
 export default storyRestoredEventHandler;

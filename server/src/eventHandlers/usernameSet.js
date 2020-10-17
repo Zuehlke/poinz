@@ -1,19 +1,13 @@
 /**
  * user set his name
  */
-const usernameSetEventHandler = (room, eventPayload, userId) => {
-  const modifiedUsers = {
-    ...room.users,
-    [userId]: {
-      ...room.users[userId],
-      username: eventPayload.username
-    }
-  };
+import {modifyUser} from './roomModifiers';
 
-  return {
-    ...room,
-    users: modifiedUsers
-  };
+const usernameSetEventHandler = (room, eventPayload, userId) => {
+  return modifyUser(room, userId, (user) => ({
+    ...user,
+    username: eventPayload.username
+  }));
 };
 
 export default usernameSetEventHandler;

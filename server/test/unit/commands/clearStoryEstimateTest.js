@@ -10,7 +10,7 @@ test('Should produce storyEstimateCleared event', async () => {
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -20,16 +20,16 @@ test('Should produce storyEstimateCleared event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateCleared');
+  );
 
-    const [storyEstimateClearedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateCleared');
 
-    expect(storyEstimateClearedEvent.payload.storyId).toEqual(storyId);
+  const [storyEstimateClearedEvent] = producedEvents;
 
-    // should clear value
-    expect(room.stories[storyId].estimations[userId]).toBeUndefined();
-  });
+  expect(storyEstimateClearedEvent.payload.storyId).toEqual(storyId);
+
+  // should clear value
+  expect(room.stories[0].estimations[userId]).toBeUndefined();
 });
 
 describe('preconditions', () => {
@@ -65,7 +65,7 @@ describe('preconditions', () => {
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
     mockRoomsStore.manipulate((room) => {
-      room.stories[storyId].revealed = true;
+      room.stories[0].revealed = true;
       return room;
     });
 
@@ -94,7 +94,7 @@ describe('preconditions', () => {
     } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
     mockRoomsStore.manipulate((room) => {
-      room.users[userId].excluded = true;
+      room.users[0].excluded = true;
       return room;
     });
 

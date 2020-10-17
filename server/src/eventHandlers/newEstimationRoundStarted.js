@@ -1,21 +1,15 @@
+import {modifyStory} from './roomModifiers';
+
 /**
  * Clears all estimations on story, sets "revealed" flag to false and erases "consensus"
  */
 const newEstimationRoundStartedEventHandler = (room, eventPayload) => {
-  const modifiedStories = {
-    ...room.stories,
-    [eventPayload.storyId]: {
-      ...room.stories[eventPayload.storyId],
-      estimations: {},
-      revealed: false,
-      consensus: undefined
-    }
-  };
-
-  return {
-    ...room,
-    stories: modifiedStories
-  };
+  return modifyStory(room, eventPayload.storyId, (story) => ({
+    ...story,
+    estimations: {},
+    revealed: false,
+    consensus: undefined
+  }));
 };
 
 export default newEstimationRoundStartedEventHandler;

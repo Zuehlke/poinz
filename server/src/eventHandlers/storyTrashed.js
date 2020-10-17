@@ -1,19 +1,13 @@
+import {modifyStory} from './roomModifiers';
+
 /**
  * Marks matching story as "trashed".  Story stays in room.
  */
 const storyTrashedEventHandler = (room, eventPayload) => {
-  const modifiedStories = {
-    ...room.stories,
-    [eventPayload.storyId]: {
-      ...room.stories[eventPayload.storyId],
-      trashed: true
-    }
-  };
-
-  return {
-    ...room,
-    stories: modifiedStories
-  };
+  return modifyStory(room, eventPayload.storyId, (story) => ({
+    ...story,
+    trashed: true
+  }));
 };
 
 export default storyTrashedEventHandler;

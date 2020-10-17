@@ -38,13 +38,18 @@ const addStoryCommandHandler = {
   schema,
   fn: (room, command) => {
     const newStoryId = uuid();
-
-    room.applyEvent('storyAdded', {
-      ...command.payload,
-      id: newStoryId,
+    const eventPayload = {
+      storyId: newStoryId,
+      title: command.payload.title,
       estimations: {},
       createdAt: Date.now()
-    });
+    };
+
+    if (command.payload.description) {
+      eventPayload.description = command.payload.description;
+    }
+
+    room.applyEvent('storyAdded', eventPayload);
 
     if (!hasActiveStories(room)) {
       // this is the first story that gets added (or all other stories are "trashed")

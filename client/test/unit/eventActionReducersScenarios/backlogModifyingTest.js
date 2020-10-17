@@ -51,7 +51,7 @@ test('Adding stories', () => {
         payload: {
           title: 'FirstStory',
           description: 'description one',
-          id: firstStoryId,
+          storyId: firstStoryId,
           estimations: {},
           createdAt: 1592115935676
         }
@@ -81,12 +81,12 @@ test('Adding stories', () => {
         payload: {
           title: 'Second story',
           description: 'dscription second... from other john',
-          id: secondStoryId,
+          storyId: secondStoryId,
           estimations: {},
           createdAt: 1592115972307
         }
       },
-      type: 'STORY_ADDED'
+      type: EVENT_ACTION_TYPES.storyAdded
     }
   ];
 

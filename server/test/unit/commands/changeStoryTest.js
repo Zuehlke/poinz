@@ -7,7 +7,7 @@ test('Should produce storyChanged event', async () => {
     'nice Story'
   );
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -19,20 +19,20 @@ test('Should produce storyChanged event', async () => {
       }
     },
     userIdOne
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged');
+  );
 
-    const [storyChangedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged');
 
-    expect(storyChangedEvent.payload).toMatchObject({
-      storyId,
-      title: 'NewTitle',
-      description: 'New Description'
-    });
+  const [storyChangedEvent] = producedEvents;
 
-    expect(room.stories[storyId].title).toEqual('NewTitle');
-    expect(room.stories[storyId].description).toEqual('New Description');
+  expect(storyChangedEvent.payload).toMatchObject({
+    storyId,
+    title: 'NewTitle',
+    description: 'New Description'
   });
+
+  expect(room.stories[0].title).toEqual('NewTitle');
+  expect(room.stories[0].description).toEqual('New Description');
 });
 
 test('Users marked as excluded can still change stories', async () => {
@@ -45,12 +45,12 @@ test('Users marked as excluded can still change stories', async () => {
   } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdOne].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -62,9 +62,9 @@ test('Users marked as excluded can still change stories', async () => {
       }
     },
     userIdOne
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged')
   );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyChanged');
 });
 
 describe('preconditions', () => {
@@ -103,7 +103,7 @@ describe('preconditions', () => {
     } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
     mockRoomsStore.manipulate((room) => {
-      room.stories[storyId].trashed = true;
+      room.stories[0].trashed = true;
       return room;
     });
 

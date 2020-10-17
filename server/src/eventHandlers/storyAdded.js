@@ -3,14 +3,17 @@
  */
 const storyAddedEventHandler = (room, eventPayload) => {
   const newStory = {
-    ...eventPayload,
-    estimations: {}
+    id: eventPayload.storyId,
+    title: eventPayload.title,
+    estimations: eventPayload.estimations,
+    createdAt: eventPayload.createdAt
   };
 
-  const modifiedStories = {
-    ...room.stories,
-    [eventPayload.id]: newStory
-  };
+  if (eventPayload.description) {
+    newStory.description = eventPayload.description;
+  }
+
+  const modifiedStories = [...room.stories, newStory];
 
   return {
     ...room,

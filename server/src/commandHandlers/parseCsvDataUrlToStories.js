@@ -44,7 +44,7 @@ function issueObjectToStory(issueObject) {
   return {
     title,
     description: getDescriptionFromIssueObject(issueObject),
-    id: uuid(),
+    storyId: uuid(),
     estimations: {},
     createdAt: Date.now()
   };

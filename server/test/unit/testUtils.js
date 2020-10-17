@@ -108,7 +108,7 @@ export async function prepOneUserInOneRoomWithOneStory(username = 'firstUser') {
     },
     userId
   );
-  const storyId = adEvents[0].payload.id;
+  const storyId = adEvents[0].payload.storyId;
 
   return {userId, storyId, roomId, processor, mockRoomsStore};
 }
@@ -179,7 +179,7 @@ export async function prepTwoUsersInOneRoomWithOneStory(
     userIdTwo
   );
 
-  const {producedEvents: adEvents} = await processor(
+  const {producedEvents: addEvents} = await processor(
     {
       id: uuid(),
       roomId,
@@ -191,7 +191,7 @@ export async function prepTwoUsersInOneRoomWithOneStory(
     },
     userIdOne
   );
-  const storyId = adEvents[0].payload.id;
+  const storyId = addEvents[0].payload.storyId;
 
   return {userIdOne, userIdTwo, roomId, storyId, processor, mockRoomsStore};
 }

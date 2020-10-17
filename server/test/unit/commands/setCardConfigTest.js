@@ -11,7 +11,7 @@ test('Should produce cardConfigSet event', async () => {
   ];
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -21,20 +21,20 @@ test('Should produce cardConfigSet event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'cardConfigSet');
+  );
 
-    const [cardConfigSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'cardConfigSet');
 
-    const sanitizedConfig = [
-      {label: '?', value: -2, color: '#bdbfbf'},
-      {label: '1/2', value: 0.5, color: '#667a66'}, // we expect that the "value" properties are numbers, no longer strings
-      {label: '1', value: 1, color: '#667a66'}
-    ];
+  const [cardConfigSetEvent] = producedEvents;
 
-    expect(cardConfigSetEvent.payload.cardConfig).toEqual(sanitizedConfig);
-    expect(room.cardConfig).toEqual(sanitizedConfig);
-  });
+  const sanitizedConfig = [
+    {label: '?', value: -2, color: '#bdbfbf'},
+    {label: '1/2', value: 0.5, color: '#667a66'}, // we expect that the "value" properties are numbers, no longer strings
+    {label: '1', value: 1, color: '#667a66'}
+  ];
+
+  expect(cardConfigSetEvent.payload.cardConfig).toEqual(sanitizedConfig);
+  expect(room.cardConfig).toEqual(sanitizedConfig);
 });
 
 describe('preconditions', () => {

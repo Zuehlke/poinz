@@ -1,5 +1,6 @@
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
+import {modifyUser} from '../eventHandlers/roomModifiers';
 
 /**
  * A user joins a room.
@@ -65,14 +66,14 @@ function joinNewRoom(room, command, userId) {
   // this event must contain all information about the room, such that every joining user gets the current room state!
   // since it is a new room, no stories , no selectedStory, only one (our) user
   const joinedRoomEventPayload = {
-    users: {
-      [userId]: {
+    users: [
+      {
         disconnected: false,
         id: userId,
         avatar
       }
-    },
-    stories: {},
+    ],
+    stories: [],
     selectedStory: undefined,
     cardConfig: defaultCardConfig
   };
@@ -102,19 +103,30 @@ function joinExistingRoom(room, command, userId) {
   // another user
   // so we do not check if another socket/userId pair is already connected/present in that room
 
-  const userObject = getMatchingUserObjectFromRoom(room, command, userId);
+  let userObject = getMatchingUserObjectFromRoom(room, command, userId);
 
   // produce a "roomJoined" event for an existing room
   // this event must contain all information about the room, such that every joining user gets the current room state!
+
   const joinedRoomEventPayload = {
-    users: {
-      ...room.users, // and all users that were already in that room
-      [userObject.id]: userObject
-    },
-    stories: {...room.stories},
+    stories: [...room.stories],
     selectedStory: room.selectedStory,
     cardConfig: room.cardConfig ? room.cardConfig : defaultCardConfig
   };
+
+  if (userObject) {
+    joinedRoomEventPayload.users = modifyUser(room, userId, () => userObject).users;
+  } else {
+    userObject = {
+      id: userId,
+      username: command.payload.username,
+      email: command.payload.email,
+      avatar: command.payload.avatar || 0,
+      disconnected: false,
+      excluded: false
+    };
+    joinedRoomEventPayload.users = [...room.users, userObject];
+  }
 
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
@@ -144,7 +156,7 @@ function joinExistingRoom(room, command, userId) {
  *  maybe user already exists in room (clients can reconnect with their userId)
  */
 function getMatchingUserObjectFromRoom(room, command, userId) {
-  const matchingExistingUser = room.users && room.users[userId];
+  const matchingExistingUser = room.users.find((usr) => usr.id === userId);
 
   if (matchingExistingUser) {
     // use the already matching user (re-use already existing state like "excluded" flag etc.)
@@ -165,14 +177,7 @@ function getMatchingUserObjectFromRoom(room, command, userId) {
     matchingExistingUser.disconnected = false;
 
     return matchingExistingUser;
-  } else {
-    return {
-      id: userId,
-      username: command.payload.username,
-      email: command.payload.email,
-      avatar: command.payload.avatar,
-      disconnected: false,
-      excluded: false
-    };
   }
+
+  return undefined;
 }

@@ -2,7 +2,7 @@
  * A user clears his estimation value for a certain story.
  * Users may only clear estimation for the currently selected story.
  */
-import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions';
 
 const schema = {
   allOf: [
@@ -34,13 +34,13 @@ const clearStoryEstimateCommandHandler = {
       throw new Error('Can only clear estimation for currently selected story!');
     }
 
-    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
-
-    if (room.stories[command.payload.storyId].revealed) {
+    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
+    if (matchingStory.revealed) {
       throw new Error('You cannot clear your estimate for a story that was revealed!');
     }
 
-    if (room.users[userId].excluded) {
+    const matchingUser = getMatchingUserOrThrow(room, userId);
+    if (matchingUser.excluded) {
       throw new Error('Users marked as excluded cannot clear estimations!');
     }
   },

@@ -1,9 +1,10 @@
 import {v4 as uuid} from 'uuid';
 
-import commandSchemaValidatorFactory, {
+import {
+  commandSchemaValidatorFactory,
   getSchemasFromRealCommandHandlers
-} from '../../src/commandSchemaValidator';
-import realCmdHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
+} from '../../../src/validation/schemaValidators';
+import realCmdHandlers, {baseCommandSchema} from '../../../src/commandHandlers/commandHandlers';
 
 const realSchemas = getSchemasFromRealCommandHandlers(realCmdHandlers);
 realSchemas.command = baseCommandSchema;

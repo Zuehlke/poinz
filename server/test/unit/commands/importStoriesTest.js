@@ -10,7 +10,7 @@ test('Should produce storyAdded events for all stories in data', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -20,29 +20,31 @@ test('Should produce storyAdded events for all stories in data', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(
-      commandId,
-      roomId,
-      'storyAdded',
-      'storyAdded',
-      'storyAdded',
-      'storyAdded',
-      'storySelected'
-    );
+  );
 
-    const storyAddedEvent1 = producedEvents[0];
-    const storySelectedEvent = producedEvents[4];
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyAdded',
+    'storyAdded',
+    'storyAdded',
+    'storyAdded',
+    'storySelected'
+  );
 
-    expect(storyAddedEvent1.payload).toMatchObject({
-      title: 'SMRGR-6275 Something something Summary',
-      description: 'His account can be deactivated end of July.',
-      estimations: {}
-    });
-    expect(storySelectedEvent.payload).toEqual({
-      storyId: storyAddedEvent1.payload.id
-    });
+  const storyAddedEvent1 = producedEvents[0];
+  const storySelectedEvent = producedEvents[4];
+
+  expect(storyAddedEvent1.payload).toMatchObject({
+    title: 'SMRGR-6275 Something something Summary',
+    description: 'His account can be deactivated end of July.',
+    estimations: {}
   });
+  expect(storySelectedEvent.payload).toEqual({
+    storyId: storyAddedEvent1.payload.storyId
+  });
+
+  expect(room.stories.length).toBe(4);
 });
 
 test('Should produce importFailed event', async () => {
@@ -51,7 +53,7 @@ test('Should produce importFailed event', async () => {
   const dataUrl = textToCsvDataUrl('this,is,a,csv\nbut,not,expected format,');
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -61,13 +63,13 @@ test('Should produce importFailed event', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'importFailed');
+  );
 
-    const [importFailedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'importFailed');
 
-    expect(importFailedEvent.payload.message).toMatch(/No Stories in payload/);
-  });
+  const [importFailedEvent] = producedEvents;
+
+  expect(importFailedEvent.payload.message).toMatch(/No Stories in payload/);
 });
 
 test('Should produce importFailed event: format error', async () => {
@@ -77,7 +79,7 @@ test('Should produce importFailed event: format error', async () => {
   const dataUrl = 'data:text/csv;base64,' + base64data;
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -87,15 +89,15 @@ test('Should produce importFailed event: format error', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'importFailed');
+  );
 
-    const [importFailedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'importFailed');
 
-    expect(importFailedEvent.payload.message).toMatch(
-      /Could not parse to stories Error: Got errors from parsing or input got truncated/
-    );
-  });
+  const [importFailedEvent] = producedEvents;
+
+  expect(importFailedEvent.payload.message).toMatch(
+    /Could not parse to stories Error: Got errors from parsing or input got truncated/
+  );
 });
 
 test('should throw on invalid command payload format', async () => {

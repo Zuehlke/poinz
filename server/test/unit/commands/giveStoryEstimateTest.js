@@ -6,25 +6,30 @@ test('Should produce storyEstimateGiven event', async () => {
   const {roomId, storyId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
       name: 'giveStoryEstimate',
       payload: {
-        storyId: storyId,
+        storyId,
         value: 2
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+  );
 
-    const [storyEstimateGivenEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
 
-    expect(storyEstimateGivenEvent.userId).toEqual(userId);
-    expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
-    expect(storyEstimateGivenEvent.payload.value).toBe(2);
+  const [storyEstimateGivenEvent] = producedEvents;
+
+  expect(storyEstimateGivenEvent.userId).toEqual(userId);
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
+
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0].estimations).toEqual({
+    [userId]: 2
   });
 });
 
@@ -38,7 +43,7 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
   } = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -49,33 +54,33 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
       }
     },
     userIdOne // first user estimates story
-  )
-    .then(() =>
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'giveStoryEstimate',
-          payload: {
-            storyId: storyId,
-            value: 2
-          }
-        },
-        userIdTwo // second user estimates story
-      )
-    )
+  );
 
-    .then(({producedEvents}) => {
-      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven', 'revealed');
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 2
+      }
+    },
+    userIdTwo // second user estimates story
+  );
 
-      const [storyEstimateGivenEvent, revealedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven', 'revealed');
 
-      expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
-      expect(storyEstimateGivenEvent.payload.value).toBe(2);
+  const [storyEstimateGivenEvent, revealedEvent] = producedEvents;
 
-      expect(revealedEvent.payload.storyId).toEqual(storyId);
-      expect(revealedEvent.payload.manually).toBe(false);
-    });
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
+
+  expect(revealedEvent.payload.storyId).toEqual(storyId);
+  expect(revealedEvent.payload.manually).toBe(false);
+
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0].revealed).toBe(true);
 });
 
 test('Should produce "consensusAchieved" and "revealed" event if everybody (allowed) estimated the same value', async () => {
@@ -88,7 +93,7 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
   } = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -99,53 +104,51 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
       }
     },
     userIdOne // first user estimates "2"
-  )
-    .then(() =>
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'giveStoryEstimate',
-          payload: {
-            storyId: storyId,
-            value: 2
-          }
-        },
-        userIdTwo // second user estimates "2"
-      )
-    )
+  );
 
-    .then(({producedEvents, room}) => {
-      expect(producedEvents).toMatchEvents(
-        commandId,
-        roomId,
-        'storyEstimateGiven',
-        'revealed',
-        'consensusAchieved'
-      );
-
-      const [storyEstimateGivenEvent, revealedEvent, consensusAchievedEvent] = producedEvents;
-
-      expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
-      expect(storyEstimateGivenEvent.payload.value).toBe(2);
-
-      expect(revealedEvent.payload.storyId).toEqual(storyId);
-      expect(revealedEvent.payload.manually).toBe(false);
-
-      expect(consensusAchievedEvent.payload).toEqual({
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
         storyId: storyId,
         value: 2
-      });
+      }
+    },
+    userIdTwo // second user estimates "2"
+  );
 
-      expect(room.stories[storyId].consensus).toBe(2);
-    });
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyEstimateGiven',
+    'revealed',
+    'consensusAchieved'
+  );
+
+  const [storyEstimateGivenEvent, revealedEvent, consensusAchievedEvent] = producedEvents;
+
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
+
+  expect(revealedEvent.payload.storyId).toEqual(storyId);
+  expect(revealedEvent.payload.manually).toBe(false);
+
+  expect(consensusAchievedEvent.payload).toEqual({
+    storyId: storyId,
+    value: 2
+  });
+
+  expect(room.stories[0].consensus).toBe(2);
 });
 
 test('Should not produce revealed event if user changes his estimation', async () => {
   const {roomId, storyId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  // our user estimates 2
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -156,45 +159,44 @@ test('Should not produce revealed event if user changes his estimation', async (
       }
     },
     userId
-  )
-    .then(({producedEvents, room}) => {
-      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+  );
 
-      const [storyEstimateGivenEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
 
-      expect(storyEstimateGivenEvent.userId).toEqual(userId);
-      expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
-      expect(storyEstimateGivenEvent.payload.value).toBe(2);
+  const [storyEstimateGivenEvent] = producedEvents;
 
-      // estimated value is stored on story in room
-      expect(room.stories[storyId].estimations[userId]).toBe(2);
-    })
-    .then(() =>
-      processor(
-        {
-          id: commandId,
-          roomId: roomId,
-          name: 'giveStoryEstimate',
-          payload: {
-            storyId: storyId,
-            value: 5
-          }
-        },
-        userId
-      )
-    )
-    .then(({producedEvents, room}) => {
-      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+  expect(storyEstimateGivenEvent.userId).toEqual(userId);
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
 
-      const [storyEstimateGivenEvent] = producedEvents;
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0].estimations[userId]).toBe(2);
 
-      expect(storyEstimateGivenEvent.userId).toEqual(userId);
-      expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
-      expect(storyEstimateGivenEvent.payload.value).toBe(5);
+  // -- now our user changes his mind and estimates 5 (same story of course)
+  const {producedEvents: scndProducedEvents, room: roomAfterScndCommand} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 5
+      }
+    },
+    userId
+  );
 
-      // estimated value is stored on story in room
-      expect(room.stories[storyId].estimations[userId]).toBe(5);
-    });
+  expect(scndProducedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+
+  const [scndStoryGivenEvent] = scndProducedEvents;
+
+  expect(scndStoryGivenEvent.userId).toEqual(userId);
+  expect(scndStoryGivenEvent.payload.storyId).toEqual(storyId);
+  expect(scndStoryGivenEvent.payload.value).toBe(5);
+
+  // estimated value is stored on story in room
+  expect(roomAfterScndCommand.stories.length).toBe(1);
+  expect(roomAfterScndCommand.stories[0].estimations[userId]).toBe(5);
 });
 
 test('Should produce additional "revealed" and "consensusAchieved" events if all users estimated (only one user)', async () => {
@@ -202,18 +204,17 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     roomId,
     storyId,
     userIdOne: userId,
-    userIdTwo,
     processor,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    delete room.users[userIdTwo];
+    room.users.splice(-1);
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -224,15 +225,20 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(
-      commandId,
-      roomId,
-      'storyEstimateGiven',
-      'revealed',
-      'consensusAchieved'
-    )
   );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyEstimateGiven',
+    'revealed',
+    'consensusAchieved'
+  );
+
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0].estimations).toEqual({
+    [userId]: 2
+  });
 });
 
 test('Should produce additional "revealed" and "consensusAchieved" events if all users estimated (other user is excluded)', async () => {
@@ -240,18 +246,17 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     roomId,
     storyId,
     userIdOne: userId,
-    userIdTwo,
     processor,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdTwo].excluded = true;
+    room.users[1].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -262,14 +267,14 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(
-      commandId,
-      roomId,
-      'storyEstimateGiven',
-      'revealed',
-      'consensusAchieved'
-    )
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyEstimateGiven',
+    'revealed',
+    'consensusAchieved'
   );
 });
 
@@ -278,18 +283,17 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
     roomId,
     storyId,
     userIdOne: userId,
-    userIdTwo,
     processor,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdTwo].disconnected = true;
+    room.users[1].disconnected = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -300,14 +304,14 @@ test('Should produce additional "revealed" and "consensusAchieved" events if all
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(
-      commandId,
-      roomId,
-      'storyEstimateGiven',
-      'revealed',
-      'consensusAchieved'
-    )
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyEstimateGiven',
+    'revealed',
+    'consensusAchieved'
   );
 });
 
@@ -359,7 +363,7 @@ describe('preconditions', () => {
     } = await prepTwoUsersInOneRoomWithOneStory();
 
     mockRoomsStore.manipulate((room) => {
-      room.stories[storyId].revealed = true;
+      room.stories[0].revealed = true;
       return room;
     });
 
@@ -389,7 +393,7 @@ describe('preconditions', () => {
     } = await prepTwoUsersInOneRoomWithOneStory();
 
     mockRoomsStore.manipulate((room) => {
-      room.users[userId].excluded = true;
+      room.users[0].excluded = true;
       return room;
     });
 

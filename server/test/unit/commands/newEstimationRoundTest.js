@@ -9,13 +9,14 @@ test('Should produce newEstimationRoundStarted event', async () => {
     userIdOne,
     mockRoomsStore
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+
   mockRoomsStore.manipulate((room) => {
-    room.stories[storyId].consensus = 4;
+    room.stories[0].consensus = 4;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -25,22 +26,22 @@ test('Should produce newEstimationRoundStarted event', async () => {
       }
     },
     userIdOne
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted');
+  );
 
-    const [newRoundStartedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted');
 
-    expect(newRoundStartedEvent.payload.storyId).toEqual(storyId);
+  const [newRoundStartedEvent] = producedEvents;
 
-    // Should clear estimations
-    expect(Object.values(room.stories[storyId].estimations).length).toBe(0);
+  expect(newRoundStartedEvent.payload.storyId).toEqual(storyId);
 
-    // revealed flag is reset
-    expect(room.stories[storyId].revealed).toBe(false);
+  // Should clear estimations
+  expect(Object.values(room.stories[0].estimations).length).toBe(0);
 
-    // previously achieved consensus is reset
-    expect(room.stories[storyId].consensus).toBeUndefined();
-  });
+  // revealed flag is reset
+  expect(room.stories[0].revealed).toBe(false);
+
+  // previously achieved consensus is reset
+  expect(room.stories[0].consensus).toBeUndefined();
 });
 
 test('Users marked as excluded can still start new estimation round', async () => {
@@ -56,12 +57,12 @@ test('Users marked as excluded can still start new estimation round', async () =
   } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdOne].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -71,9 +72,9 @@ test('Users marked as excluded can still start new estimation round', async () =
       }
     },
     userIdOne
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted')
   );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'newEstimationRoundStarted');
 });
 
 describe('preconditions', () => {

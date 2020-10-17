@@ -4,9 +4,11 @@ import {v4 as uuid} from 'uuid';
 import queueFactory from './sequenceQueue';
 import getLogger from './getLogger';
 import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
-import commandSchemaValidatorFactory, {
+import {
+  commandSchemaValidatorFactory,
+  roomSchemaValidatorFactory,
   getSchemasFromRealCommandHandlers
-} from './commandSchemaValidator';
+} from './validation/schemaValidators';
 
 const LOGGER = getLogger('commandProcessor');
 
@@ -40,6 +42,8 @@ export default function commandProcessorFactory(
     ...getSchemasFromRealCommandHandlers(commandHandlers),
     command: baseCommandSchema
   });
+
+  const validateRoom = roomSchemaValidatorFactory();
 
   /**
    *  The command processor handles incoming commands.
@@ -257,6 +261,15 @@ export default function commandProcessorFactory(
   async function saveRoomBackToStore(ctx) {
     ctx.room.lastActivity = Date.now();
     ctx.room.markedForDeletion = false;
+    delete ctx.room.applyEvent;
+
+    try {
+      validateRoom(ctx.room);
+    } catch (err) {
+      LOGGER.error(ctx.eventsToSend.map((e) => e.name).join(' '));
+      throw err;
+    }
+
     await store.saveRoom(ctx.room);
   }
 }

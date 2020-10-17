@@ -4,7 +4,7 @@
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
  */
-import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions';
 
 const schema = {
   allOf: [
@@ -41,13 +41,13 @@ const giveStoryEstimateCommandHandler = {
       throw new Error('Can only give estimation for currently selected story!');
     }
 
-    throwIfStoryIdNotFoundInRoom(room, storyId);
-
-    if (room.stories[storyId].revealed) {
+    const matchingStory = getMatchingStoryOrThrow(room, storyId);
+    if (matchingStory.revealed) {
       throw new Error('You cannot give an estimate for a story that was revealed!');
     }
 
-    if (room.users[userId].excluded) {
+    const matchingUser = getMatchingUserOrThrow(room, userId);
+    if (matchingUser.excluded) {
       throw new Error('Users that are excluded from estimations cannot give estimations!');
     }
   },
@@ -57,13 +57,15 @@ const giveStoryEstimateCommandHandler = {
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
-    if (allValidUsersEstimated(room, command.payload.storyId, userId)) {
+    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
+
+    if (allValidUsersEstimated(room, matchingStory, userId)) {
       room.applyEvent('revealed', {
         storyId: command.payload.storyId,
         manually: false
       });
 
-      if (allEstimationsSame(room, command.payload.storyId, userId, command.payload.value)) {
+      if (allEstimationsSame(room, matchingStory, userId, command.payload.value)) {
         room.applyEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value
@@ -77,15 +79,15 @@ const giveStoryEstimateCommandHandler = {
  * Checks if every user in the room (that is not marked as excluded and is not disconnected) did give an estimate for the specified story
  *
  * @param room
- * @param storyId
+ * @param matchingStory
  * @param userId
  * @returns {boolean}
  */
-function allValidUsersEstimated(room, storyId, userId) {
+function allValidUsersEstimated(room, matchingStory, userId) {
   const possibleEstimationCount = countAllUsersThatCanEstimate(room);
 
   const estimations = {
-    ...room.stories[storyId].estimations,
+    ...matchingStory.estimations,
     // set our user's estimation manually for counting (the actual value does not matter)
     // our estimation might be already set from a previous "giveStoryEstimate" commands.
     // so you cannot just add +1 to the count!
@@ -100,14 +102,14 @@ function allValidUsersEstimated(room, storyId, userId) {
  * Checks whether all estimations for the specified story in the room have the same value and match specified "ownEstimate"
  *
  * @param {object} room
- * @param {string} storyId
+ * @param {string} matchingStory
  * @param {string} userId
  * @param {number} ownEstimate
  * @return {boolean}
  */
-function allEstimationsSame(room, storyId, userId, ownEstimate) {
+function allEstimationsSame(room, matchingStory, userId, ownEstimate) {
   const estimations = {
-    ...room.stories[storyId].estimations,
+    ...matchingStory.estimations,
     // Add our user's estimation manually to the estimationMap (since event will be applied later)
     [userId]: ownEstimate
   };

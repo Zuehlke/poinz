@@ -1,4 +1,4 @@
-import {throwIfStoryIdNotFoundInRoom, throwIfStoryTrashed} from './commonPreconditions';
+import {throwIfStoryTrashed} from './commonPreconditions';
 
 /**
  * A user selected a story (marked it as the "current" story to estimate)
@@ -30,7 +30,6 @@ const schema = {
 const selectStoryCommandHandler = {
   schema,
   preCondition: (room, command) => {
-    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
     throwIfStoryTrashed(room, command.payload.storyId);
   },
   fn: (room, command) => {

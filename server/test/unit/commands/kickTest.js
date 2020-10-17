@@ -11,13 +11,13 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
   } = await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdTwo].disconnected = true;
+    room.users[1].disconnected = true;
     return room;
   });
 
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -27,17 +27,17 @@ test('Should produce kicked event (userOne kicks disconnected userTwo)', async (
       }
     },
     userIdOne
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked');
+  );
 
-    const [kickedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked');
 
-    expect(kickedEvent.userId).toEqual(userIdOne); // the user that kicked
-    expect(kickedEvent.payload.userId).toEqual(userIdTwo); // user that was kicked
+  const [kickedEvent] = producedEvents;
 
-    // user is removed from room
-    expect(room.users[userIdTwo]).toBeUndefined();
-  });
+  expect(kickedEvent.userId).toEqual(userIdOne); // the user that kicked
+  expect(kickedEvent.payload.userId).toEqual(userIdTwo); // user that was kicked
+
+  // user is removed from room
+  expect(room.users[userIdTwo]).toBeUndefined();
 });
 
 test('Should produce kicked event for connected (i.e. normal) user', async () => {
@@ -45,7 +45,7 @@ test('Should produce kicked event for connected (i.e. normal) user', async () =>
 
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -55,17 +55,17 @@ test('Should produce kicked event for connected (i.e. normal) user', async () =>
       }
     },
     userIdOne
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked');
+  );
 
-    const [kickedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked');
 
-    expect(kickedEvent.userId).toEqual(userIdOne); // the user that kicked
-    expect(kickedEvent.payload.userId).toEqual(userIdTwo); // user that was kicked
+  const [kickedEvent] = producedEvents;
 
-    // user is removed from room
-    expect(room.users[userIdTwo]).toBeUndefined();
-  });
+  expect(kickedEvent.userId).toEqual(userIdOne); // the user that kicked
+  expect(kickedEvent.payload.userId).toEqual(userIdTwo); // user that was kicked
+
+  // user is removed from room
+  expect(room.users[userIdTwo]).toBeUndefined();
 });
 
 test('Users that are marked as excluded can also kick others (userOne [excluded]  kicks disconnected userTwo)', async () => {
@@ -78,14 +78,14 @@ test('Users that are marked as excluded can also kick others (userOne [excluded]
   } = await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userIdTwo].disconnected = true;
-    room.users[userIdOne].excluded = true;
+    room.users[1].disconnected = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -95,7 +95,9 @@ test('Users that are marked as excluded can also kick others (userOne [excluded]
       }
     },
     userIdOne
-  ).then(({producedEvents}) => expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked'));
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'kicked');
 });
 
 describe('preconditions', () => {

@@ -1,12 +1,12 @@
 import {v4 as uuid} from 'uuid';
 
-import {EXPECT_UUID_MATCHING, prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../testUtils';
 
 test('Should produce leftRoom event', async () => {
-  const {userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();
+  const {userIdTwo, processor, roomId, userIdOne} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -14,16 +14,16 @@ test('Should produce leftRoom event', async () => {
       payload: {}
     },
     userIdTwo
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'leftRoom');
+  );
 
-    const [leftRoomEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'leftRoom');
 
-    expect(leftRoomEvent.userId).toEqual(userIdTwo);
+  const [leftRoomEvent] = producedEvents;
 
-    expect(room.users[userIdTwo]).toBeUndefined();
-    expect(Object.values(room.users).length).toBe(1);
-  });
+  expect(leftRoomEvent.userId).toEqual(userIdTwo);
+
+  expect(room.users.length).toBe(1);
+  expect(room.users[0].id).toBe(userIdOne);
 });
 
 test('Should keep estimations on stories after user left', async () => {
@@ -38,11 +38,11 @@ test('Should keep estimations on stories after user left', async () => {
 
   const estimatedValue = 3;
   mockRoomsStore.manipulate((room) => {
-    room.stories[storyId].estimations[userIdTwo] = estimatedValue;
+    room.stories[0].estimations[userIdTwo] = estimatedValue;
     return room;
   });
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -50,26 +50,27 @@ test('Should keep estimations on stories after user left', async () => {
       payload: {}
     },
     userIdTwo
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'leftRoom');
+  );
 
-    const [leftRoomEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'leftRoom');
 
-    expect(leftRoomEvent.userId).toEqual(userIdTwo);
+  const [leftRoomEvent] = producedEvents;
 
-    expect(room.users[userIdTwo]).toBeUndefined();
-    expect(Object.values(room.users).length).toBe(1);
+  expect(leftRoomEvent.userId).toEqual(userIdTwo);
 
-    // but estimation on story is preserved
-    expect(room.stories[storyId].estimations[userIdTwo]).toBe(estimatedValue);
-  });
+  expect(room.users[userIdTwo]).toBeUndefined();
+  expect(Object.values(room.users).length).toBe(1);
+
+  // but estimation on story is preserved
+  expect(room.stories[0].id).toBe(storyId);
+  expect(room.stories[0].estimations[userIdTwo]).toBe(estimatedValue);
 });
 
 test('Should produce connectionLost event', async () => {
   const {userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -79,19 +80,19 @@ test('Should produce connectionLost event', async () => {
       }
     },
     userIdTwo
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'connectionLost');
+  );
 
-    const [connectionLostEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'connectionLost');
 
-    expect(connectionLostEvent.userId).toEqual(userIdTwo);
+  const [connectionLostEvent] = producedEvents;
 
-    expect(room.users[userIdTwo]).toBeDefined();
-    expect(room.users[userIdTwo]).toMatchObject({
-      disconnected: true,
-      id: EXPECT_UUID_MATCHING,
-      username: 'secondUser'
-    });
-    expect(Object.values(room.users).length).toBe(2);
+  expect(connectionLostEvent.userId).toEqual(userIdTwo);
+
+  expect(room.users.length).toBe(2);
+  expect(room.users[1]).toBeDefined();
+  expect(room.users[1]).toMatchObject({
+    disconnected: true,
+    id: userIdTwo,
+    username: 'secondUser'
   });
 });

@@ -1,4 +1,4 @@
-import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions';
 
 /**
  * A user deletes a story.
@@ -32,10 +32,9 @@ const schema = {
 const deleteStoryCommandHandler = {
   schema,
   preCondition: (room, command) => {
-    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
+    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
 
-    const isTrashed = !!room.stories[command.payload.storyId].trashed;
-    if (!isTrashed) {
+    if (!matchingStory.trashed) {
       throw new Error(
         `Given story ${command.payload.storyId} in room ${room.id} is not marked as "trashed". cannot delete it!`
       );

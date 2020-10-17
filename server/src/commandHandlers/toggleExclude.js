@@ -4,6 +4,7 @@
  * (If user is marked as excluded, he cannot estimate stories.)
  *
  */
+import {getMatchingUserOrThrow} from './commonPreconditions';
 
 const schema = {
   allOf: [
@@ -26,7 +27,8 @@ const schema = {
 const toggleExcludeCommandHandler = {
   schema,
   fn: (room, command, userId) => {
-    if (room.users[userId].excluded) {
+    const matchingUser = getMatchingUserOrThrow(room, userId);
+    if (matchingUser.excluded) {
       room.applyEvent('includedInEstimations', {});
     } else {
       room.applyEvent('excludedFromEstimations', {});

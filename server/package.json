@@ -18,9 +18,12 @@
     "docu": "node ./docu/docuGenerator.js",
     "pretest": "npm run lint",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\"",
-    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"docu/**/*.js\"",
+    "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"docu/**/*.js\" \"migrations/**/*.js\"  \"./*js\"",
     "start": "node lib/server.js",
-    "start:dev": "node src/server.dev.js"
+    "start:dev": "node src/server.dev.js",
+    "migrate:status": "migrate-mongo status",
+    "migrate:down": "migrate-mongo down",
+    "migrate": "migrate-mongo up"
   },
   "jest": {
     "setupFilesAfterEnv": [
@@ -38,6 +41,7 @@
     "express": "4.17.1",
     "express-sslify": "^1.2.0",
     "glob": "7.1.6",
+    "migrate-mongo": "^8.1.2",
     "mongodb": "^3.6.2",
     "papaparse": "^5.3.0",
     "redis": "3.0.2",

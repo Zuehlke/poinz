@@ -5,7 +5,7 @@ test('Should produce storyAdded and storySelected event (since it is the first s
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -16,19 +16,28 @@ test('Should produce storyAdded and storySelected event (since it is the first s
       }
     },
     userId
-  ).then(({producedEvents}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded', 'storySelected');
+  );
 
-    const [storyAddedEvent, storySelectedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded', 'storySelected');
 
-    expect(storyAddedEvent.payload).toMatchObject({
-      title: 'SuperStory 232',
-      description: 'This will be awesome',
-      estimations: {}
-    });
-    expect(storySelectedEvent.payload).toMatchObject({
-      storyId: EXPECT_UUID_MATCHING
-    });
+  const [storyAddedEvent, storySelectedEvent] = producedEvents;
+
+  expect(storyAddedEvent.payload).toMatchObject({
+    storyId: EXPECT_UUID_MATCHING,
+    title: 'SuperStory 232',
+    description: 'This will be awesome',
+    estimations: {}
+  });
+  expect(storySelectedEvent.payload).toMatchObject({
+    storyId: EXPECT_UUID_MATCHING
+  });
+
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0]).toMatchObject({
+    id: storyAddedEvent.payload.storyId,
+    title: 'SuperStory 232',
+    description: 'This will be awesome',
+    estimations: {}
   });
 });
 
@@ -38,7 +47,7 @@ test('Should produce storyAdded event', async () => {
   const commandId = uuid();
 
   // adding two stories
-  return processor(
+  await processor(
     {
       id: commandId,
       roomId,
@@ -48,47 +57,47 @@ test('Should produce storyAdded event', async () => {
       }
     },
     userId
-  )
-    .then(() =>
-      processor(
-        {
-          id: commandId,
-          roomId,
-          name: 'addStory',
-          payload: {
-            title: 'SuperStory 222',
-            description: 'This will be awesome'
-          }
-        },
-        userId
-      )
-    )
-    .then(({producedEvents, room}) => {
-      expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded');
+  );
 
-      const [storyAddedEvent] = producedEvents;
-
-      expect(storyAddedEvent.payload).toMatchObject({
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'addStory',
+      payload: {
         title: 'SuperStory 222',
-        description: 'This will be awesome',
-        estimations: {}
-      });
+        description: 'This will be awesome'
+      }
+    },
+    userId
+  );
 
-      expect(room.stories[producedEvents[0].payload.id]).toBeDefined();
-      expect(Object.values(room.stories).length).toBe(2);
-    });
+  // on the second add, only one event
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded');
+
+  const [storyAddedEvent] = producedEvents;
+
+  expect(storyAddedEvent.payload).toMatchObject({
+    storyId: EXPECT_UUID_MATCHING,
+    title: 'SuperStory 222',
+    description: 'This will be awesome',
+    estimations: {}
+  });
+
+  expect(room.stories.length).toBe(2);
+  expect(room.stories[1].id).toBe(storyAddedEvent.payload.storyId);
 });
 
 test('users excluded from estimations can still add stories', async () => {
   const {userId, roomId, processor, mockRoomsStore} = await prepOneUserInOneRoom();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userId].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -99,9 +108,9 @@ test('users excluded from estimations can still add stories', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded', 'storySelected')
   );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyAdded', 'storySelected');
 });
 
 describe('preconditions', () => {

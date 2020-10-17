@@ -16,13 +16,13 @@ test('parse real jira csv', async () => {
   expect(stories[0]).toMatchObject({
     description: 'His account can be deactivated end of July.',
     estimations: {},
-    id: EXPECT_UUID_MATCHING,
+    storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-6275 Something something Summary'
   });
   expect(stories[1]).toMatchObject({
     description: 'Hi Test,',
     estimations: {},
-    id: EXPECT_UUID_MATCHING,
+    storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-3672 Delete Users'
   });
   expect(stories[2]).toMatchObject({
@@ -39,7 +39,7 @@ Sdgsdgsdg
 
 Much appreciated! =)`,
     estimations: {},
-    id: EXPECT_UUID_MATCHING,
+    storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-2643 timezone from AWST to HKT/SGT'
   });
   expect(stories[3]).toMatchObject({
@@ -52,7 +52,7 @@ Steps to reproduce:
 
 Dsfh`,
     estimations: {},
-    id: EXPECT_UUID_MATCHING,
+    storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-2151 Optimize messages'
   });
 });
@@ -74,7 +74,7 @@ test('parse csv with generic fields: "title" "description"  "key"', async () => 
   expect(stories[0]).toMatchObject({
     description: 'this is a test',
     estimations: {},
-    id: EXPECT_UUID_MATCHING,
+    storyId: EXPECT_UUID_MATCHING,
     title: 'PRJ-123 first story'
   });
 });

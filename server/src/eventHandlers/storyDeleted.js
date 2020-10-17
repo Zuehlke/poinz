@@ -1,15 +1,12 @@
+import {removeById} from './roomModifiers';
+
 /**
  * Removes matching story from "stories" list in room
  */
 const storyDeletedEventHandler = (room, eventPayload) => {
-  const modifiedStories = {
-    ...room.stories
-  };
-
-  delete modifiedStories[eventPayload.storyId];
   return {
     ...room,
-    stories: modifiedStories
+    stories: removeById(room.stories, eventPayload.storyId)
   };
 };
 

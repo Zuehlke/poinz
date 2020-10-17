@@ -4,7 +4,7 @@ import {prepOneUserInOneRoom} from '../testUtils';
 test('Should produce usernameSet event', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();
   const commandId = uuid();
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId: roomId,
@@ -14,16 +14,16 @@ test('Should produce usernameSet event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'usernameSet');
+  );
 
-    const [usernameSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'usernameSet');
 
-    expect(usernameSetEvent.payload.username).toEqual('John.Doe');
-    expect(usernameSetEvent.userId).toEqual(userId);
+  const [usernameSetEvent] = producedEvents;
 
-    expect(room.users[userId].username).toEqual('John.Doe');
-  });
+  expect(usernameSetEvent.payload.username).toEqual('John.Doe');
+  expect(usernameSetEvent.userId).toEqual(userId);
+
+  expect(room.users[0].username).toEqual('John.Doe');
 });
 
 describe('preconditions', () => {

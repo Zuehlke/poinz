@@ -12,11 +12,11 @@ test('Should produce storyDeleted event', async () => {
   const commandId = uuid();
 
   mockRoomsStore.manipulate((room) => {
-    room.stories[storyId].trashed = true;
+    room.stories[0].trashed = true;
     return room;
   });
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -26,16 +26,16 @@ test('Should produce storyDeleted event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted');
+  );
 
-    const [storyDeletedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted');
 
-    expect(storyDeletedEvent.payload.storyId).toEqual(storyId);
+  const [storyDeletedEvent] = producedEvents;
 
-    // story is removed from room
-    expect(room.stories[storyId]).toBeUndefined();
-  });
+  expect(storyDeletedEvent.payload.storyId).toEqual(storyId);
+
+  // story is removed from room
+  expect(room.stories[storyId]).toBeUndefined();
 });
 
 test('users marked as excluded can still delete stories', async () => {
@@ -48,13 +48,13 @@ test('users marked as excluded can still delete stories', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userId].excluded = true;
-    room.stories[storyId].trashed = true;
+    room.users[0].excluded = true;
+    room.stories[0].trashed = true;
     return room;
   });
 
   const commandId = uuid();
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -64,9 +64,9 @@ test('users marked as excluded can still delete stories', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted')
   );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted');
 });
 
 test('Should throw if storyId is not uuid v4 format', async () => {

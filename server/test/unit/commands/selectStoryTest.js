@@ -5,7 +5,7 @@ test('Should produce storySelected event', async () => {
   const {roomId, userId, storyId, processor} = await prepOneUserInOneRoomWithOneStory();
   const commandId = uuid();
 
-  return processor(
+  const {producedEvents, room} = await processor(
     {
       id: commandId,
       roomId,
@@ -15,16 +15,16 @@ test('Should produce storySelected event', async () => {
       }
     },
     userId
-  ).then(({producedEvents, room}) => {
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storySelected');
+  );
 
-    const [storySelectedEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storySelected');
 
-    expect(storySelectedEvent.payload.storyId).toEqual(storyId);
+  const [storySelectedEvent] = producedEvents;
 
-    // id set in room
-    expect(room.selectedStory).toEqual(storyId);
-  });
+  expect(storySelectedEvent.payload.storyId).toEqual(storyId);
+
+  // id set in room
+  expect(room.selectedStory).toEqual(storyId);
 });
 
 test('Users marked as excluded can still select current story', async () => {
@@ -37,13 +37,12 @@ test('Users marked as excluded can still select current story', async () => {
   } = await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
-    room.users[userId].excluded = true;
+    room.users[0].excluded = true;
     return room;
   });
 
   const commandId = uuid();
-
-  return processor(
+  const {producedEvents} = await processor(
     {
       id: commandId,
       roomId,
@@ -53,9 +52,9 @@ test('Users marked as excluded can still select current story', async () => {
       }
     },
     userId
-  ).then(({producedEvents}) =>
-    expect(producedEvents).toMatchEvents(commandId, roomId, 'storySelected')
   );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storySelected');
 });
 
 describe('preconditions', () => {
@@ -88,7 +87,7 @@ describe('preconditions', () => {
     } = await prepOneUserInOneRoomWithOneStory();
 
     mockRoomsStore.manipulate((room) => {
-      room.stories[storyId].trashed = true;
+      room.stories[0].trashed = true;
       return room;
     });
 

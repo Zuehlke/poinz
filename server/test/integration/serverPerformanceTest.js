@@ -121,7 +121,11 @@ describe('serverPerformance', () => {
     send();
 
     socket.on('event', (ev) => {
-      expect(ev.name).not.toBe('commandRejected');
+      if (ev.name === 'commandRejected') {
+        console.log(`eventCount so far ${eventCount}`);
+        console.log(ev.payload.reason);
+        throw new Error('A command was rejected!');
+      }
 
       eventCount++;
 

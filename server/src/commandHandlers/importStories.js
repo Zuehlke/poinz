@@ -49,8 +49,8 @@ const importStoriesCommandHandler = {
       });
 
       if (!hasActiveStories(room)) {
-        // this is the first story that gets added (or all other stories are "trashed")
-        room.applyEvent('storySelected', {storyId: stories[0].id});
+        // this is the first story that gets added (or all other stories are marked "trashed")
+        room.applyEvent('storySelected', {storyId: stories[0].storyId});
       }
     } catch (err) {
       applyFailed(room, err);

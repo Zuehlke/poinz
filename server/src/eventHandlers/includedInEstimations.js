@@ -1,19 +1,13 @@
+import {modifyUser} from './roomModifiers';
+
 /**
  * Sets "excluded" flag on user to false
  */
 const includedInEstimationsEventHandler = (room, eventPayload, userId) => {
-  const modifiedUsers = {
-    ...room.users,
-    [userId]: {
-      ...room.users[userId],
-      excluded: false
-    }
-  };
-
-  return {
-    ...room,
-    users: modifiedUsers
-  };
+  return modifyUser(room, userId, (user) => ({
+    ...user,
+    excluded: false
+  }));
 };
 
 export default includedInEstimationsEventHandler;

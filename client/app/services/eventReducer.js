@@ -130,19 +130,16 @@ const eventActionHandlers = {
 
         clientSettingsStore.setPresetUserId(event.userId);
 
-        const estimations = Object.entries(payload.stories || {}).reduce((total, stry) => {
-          total[stry[0]] = stry[1].estimations;
+        const estimations = (payload.stories || []).reduce((total, stry) => {
+          total[stry.id] = stry.estimations;
           return total;
         }, {});
 
-        const storiesWithoutEstimations = Object.entries(payload.stories || {}).reduce(
-          (total, stry) => {
-            total[stry[0]] = {...stry[1]};
-            delete total[stry[0]].estimations;
-            return total;
-          },
-          {}
-        );
+        const storiesWithoutEstimations = (payload.stories || []).reduce((total, stry) => {
+          total[stry.id] = {...stry};
+          delete total[stry.id].estimations;
+          return total;
+        }, {});
 
         // server sends current room state (users, stories, etc.)
         return {
@@ -150,7 +147,10 @@ const eventActionHandlers = {
           roomId: event.roomId,
           userId: event.userId,
           selectedStory: payload.selectedStory,
-          users: payload.users || {},
+          users: (payload.users || []).reduce((total, currentUser) => {
+            total[currentUser.id] = currentUser;
+            return total;
+          }, {}),
           stories: storiesWithoutEstimations,
           estimations,
           pendingJoinCommand: undefined,
@@ -158,11 +158,12 @@ const eventActionHandlers = {
         };
       } else {
         // if our client state has already a userId set, this event indicates that someone else joined
-        const modifiedUsers = {...state.users};
-        modifiedUsers[event.userId] = payload.users[event.userId];
         return {
           ...state,
-          users: modifiedUsers
+          users: (payload.users || []).reduce((total, currentUser) => {
+            total[currentUser.id] = currentUser;
+            return total;
+          }, {})
         };
       }
     },
@@ -251,7 +252,13 @@ const eventActionHandlers = {
   [EVENT_ACTION_TYPES.storyAdded]: {
     fn: (state, payload) => {
       const modifiedStories = {...state.stories};
-      modifiedStories[payload.id] = payload;
+      modifiedStories[payload.storyId] = {
+        id: payload.storyId,
+        title: payload.title,
+        description: payload.description,
+        estimations: {},
+        createdAt: payload.createdAt
+      };
       return {
         ...state,
         stories: modifiedStories

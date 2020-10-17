@@ -1,4 +1,4 @@
-import {throwIfStoryIdNotFoundInRoom} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions';
 
 /**
  * A user restores a story.
@@ -32,9 +32,9 @@ const schema = {
 const restoreStoryCommandHandler = {
   schema,
   preCondition: (room, command) => {
-    throwIfStoryIdNotFoundInRoom(room, command.payload.storyId);
+    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
 
-    if (!room.stories[command.payload.storyId].trashed) {
+    if (!matchingStory.trashed) {
       throw new Error(
         `Given story ${command.payload.storyId} in room ${room.id} is not marked as "trashed". Nothing to restore...`
       );

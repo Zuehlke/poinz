@@ -485,3 +485,38 @@ test('detect structural problems in commandHandlers: "fn" is not a function', ()
     )
   ).toThrow(/Fatal error: "fn" on commandHandler "setPropertyCommand" must be a function!/g);
 });
+
+test('throws if modified room does not adhere to roomSchema', async () => {
+  const processor = processorFactory(
+    {
+      setPropertyCommand: {
+        canCreateRoom: true,
+        skipUserIdRoomCheck: true,
+        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        schema: {$ref: 'command'}
+      }
+    },
+    baseCommandSchema,
+    {
+      propertySetEvent: (room) => ({
+        id: room.id
+        /* missing properties in room */
+      })
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        roomId: 'custom-room-id',
+        id: uuid(),
+        name: 'setPropertyCommand',
+        payload: {
+          payloadProperty: 'command-payload-property'
+        }
+      },
+      uuid()
+    )
+  ).rejects.toThrow('Invalid room object: Missing required property: stories in');
+});

@@ -55,7 +55,10 @@ export function commandSchemaValidatorFactory(commandSchemas) {
 
     const valid = tvInstance.validate(cmd, schema); // we no longer use validateMultiple. quite a big impact on performance
     if (!valid) {
-      throw new CommandValidationError(new Error(formatValidationErrorMessage(tvInstance.error)), cmd);
+      throw new CommandValidationError(
+        new Error(formatValidationErrorMessage(tvInstance.error)),
+        cmd
+      );
     }
   }
 }

@@ -18,23 +18,25 @@ import stream from 'stream';
 function init(app, store) {
   const restRouter = express.Router();
 
-  restRouter.get('/status', (req, res) =>
-    buildStatusObject(store).then((status) => res.json(status))
-  );
-  restRouter.get('/room/:roomId', (req, res) =>
-    buildRoomExportObject(store, req.params.roomId).then((roomExport) => {
-      if (!roomExport) {
-        res.status(404).json({message: 'room not found'});
-        return;
-      }
+  restRouter.get('/status', async (req, res) => {
+    const status = await buildStatusObject(store);
+    res.json(status);
+  });
 
-      if (req.query && req.query.mode === 'file') {
-        sendObjectAsJsonFile(res, roomExport, `poinz_${roomExport.roomId}.json`);
-      } else {
-        res.json(roomExport);
-      }
-    })
-  );
+  restRouter.get('/room/:roomId', async (req, res) => {
+    const roomExport = await buildRoomExportObject(store, req.params.roomId);
+
+    if (!roomExport) {
+      res.status(404).json({message: 'room not found'});
+      return;
+    }
+
+    if (req.query && req.query.mode === 'file') {
+      sendObjectAsJsonFile(res, roomExport, `poinz_${roomExport.roomId}.json`);
+    } else {
+      res.json(roomExport);
+    }
+  });
 
   app.use('/api', restRouter);
 }

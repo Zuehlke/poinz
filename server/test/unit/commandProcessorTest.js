@@ -62,7 +62,10 @@ test('process a dummy command successfully: room loading by id', () => {
   const roomStore = newMockRoomsStore({
     id: roomId,
     created: Date.now(),
-    users: []
+    stories: [],
+    users: [],
+    lastActivity: Date.now() + 1111,
+    markedForDeletion: false
   });
   const processor = processorFactory(
     {
@@ -363,7 +366,9 @@ test('process a dummy command WITH roomId: where room must exist', () => {
 test('concurrency handling', () => {
   const mockRoomsStore = newMockRoomsStore({
     id: 'concurrency-test-room',
-    created: Date.now(),
+    created: Date.now() - 12334,
+    lastActivity: Date.now(),
+    markedForDeletion: false,
     users: [],
     stories: []
   });

@@ -54,9 +54,9 @@ export async function buildStatusObject(store) {
   const allRooms = await store.getAllRooms();
 
   const rooms = Object.values(allRooms).map((room) => ({
-    storyCount: Object.values(room.stories).length,
-    userCount: Object.values(room.users).length,
-    userCountDisconnected: Object.values(room.users).filter((user) => user.disconnected).length,
+    storyCount: room.stories.length,
+    userCount: room.users.length,
+    userCountDisconnected: room.users.filter((user) => user.disconnected).length,
     lastActivity: room.lastActivity,
     markedForDeletion: room.markedForDeletion,
     created: room.created
@@ -79,17 +79,24 @@ export async function buildRoomExportObject(store, roomId) {
   return {
     roomId: room.id,
     exportedAt: Date.now(),
-    stories: Object.values(room.stories)
+    stories: room.stories
       .filter((story) => !story.trashed)
       .map((story) => buildStoryExportObject(story, room.users))
   };
 }
 
-const buildStoryExportObject = (story, users) => ({
-  title: story.title,
-  description: story.description,
-  estimations: Object.entries(story.estimations).map((entry) => {
-    const matchingUser = users[entry[0]];
-    return {username: matchingUser ? matchingUser.username : entry[0], value: entry[1]};
-  })
-});
+const buildStoryExportObject = (story, users) => {
+  const usernamesMap = users.reduce((total, currentUser) => {
+    total[currentUser.id] = currentUser.username || currentUser.id;
+    return total;
+  }, {});
+
+  return {
+    title: story.title,
+    description: story.description,
+    estimations: Object.entries(story.estimations).map((entry) => {
+      const matchingUser = usernamesMap[entry[0]];
+      return {username: matchingUser ? matchingUser : entry[0], value: entry[1]};
+    })
+  };
+};

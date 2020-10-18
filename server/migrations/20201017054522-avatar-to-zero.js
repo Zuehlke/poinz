@@ -5,6 +5,8 @@ module.exports = {
    * sets "avatar" on user to 0
    */
   async up(db) {
+    const ops = [];
+
     await db
       .collection('rooms')
       .find({})
@@ -14,10 +16,15 @@ module.exports = {
             if (!user.avatar) {
               user.avatar = 0;
             }
+            return user;
           });
-          return db.collection('rooms').replaceOne({_id: room._id}, room, {upsert: true});
+          migrateUtil.toBulkOps(ops, room);
         }
       });
+
+    if (ops.length) {
+      return db.collection('rooms').bulkWrite(ops);
+    }
   },
 
   /**

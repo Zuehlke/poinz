@@ -14,6 +14,17 @@ const indexById = (arr) =>
       }, {})
     : {};
 
+const toBulkOps = (opsArray, room) => {
+  opsArray.push({
+    replaceOne: {
+      filter: {_id: room._id},
+      replacement: room,
+      upsert: false
+    }
+  });
+};
+
 module.exports = {
-  indexById
+  indexById,
+  toBulkOps
 };

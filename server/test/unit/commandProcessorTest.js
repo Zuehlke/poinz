@@ -363,7 +363,7 @@ test('process a dummy command WITH roomId: where room must exist', () => {
 /**
  * Assures that we handle two "simultaneously" incoming commands correctly.
  */
-test('concurrency handling', () => {
+test('concurrency handling', async () => {
   const mockRoomsStore = newMockRoomsStore({
     id: 'concurrency-test-room',
     created: Date.now() - 12334,
@@ -371,6 +371,13 @@ test('concurrency handling', () => {
     markedForDeletion: false,
     users: [],
     stories: []
+  });
+
+  const originalSave = mockRoomsStore.saveRoom;
+
+  mockRoomsStore.saveRoom = jest.fn((rm) => originalSave(rm));
+  mockRoomsStore.saveRoom.mockImplementationOnce((rm) => {
+    return new Promise((resolve) => setTimeout(resolve, 20)).then(() => originalSave(rm));
   });
 
   const processor = processorFactory(
@@ -400,10 +407,10 @@ test('concurrency handling', () => {
       roomId: 'concurrency-test-room',
       name: 'setPropertyCommand',
       payload: {
-        property: 'value'
+        property: 'value-1'
       }
     },
-    '1'
+    uuid()
   );
   const eventPromiseTwo = processor(
     {
@@ -411,15 +418,21 @@ test('concurrency handling', () => {
       roomId: 'concurrency-test-room',
       name: 'setPropertyCommand',
       payload: {
-        property: 'value'
+        property: 'value-2'
       }
     },
-    '1'
+    uuid()
   );
 
-  return Promise.all([eventPromiseOne, eventPromiseTwo])
-    .then(() => mockRoomsStore.getRoomById('concurrency-test-room'))
-    .then((room) => expect(room.stories.length).toBe(2));
+  await Promise.all([eventPromiseOne, eventPromiseTwo]);
+
+  const room = await mockRoomsStore.getRoomById('concurrency-test-room');
+
+  expect(room.stories.length).toBe(2);
+  expect(room.stories[0].title).toBe('value-1');
+  expect(room.stories[1].title).toBe('value-2');
+
+  expect(mockRoomsStore.saveRoom.mock.calls.length).toBe(2);
 });
 
 test('detect structural problems in commandHandlers: no schema', () => {

@@ -142,7 +142,8 @@ test('throws on invalid userId', () => {
       id: uuid(),
       roomId: 'custom-room-id',
       name: 'commandReferencingBase',
-      userId: 'sdgdgkjslgjslkjglskgjdlksjgl'
+      userId: 'sdgdgkjslgjslkjglskgjdlksjgl',
+      payload: {}
     })
   ).toThrow(/Format validation failed \(must be a valid uuid v4\) in \/userId/);
 });

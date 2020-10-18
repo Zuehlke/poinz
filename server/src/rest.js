@@ -18,23 +18,25 @@ import stream from 'stream';
 function init(app, store) {
   const restRouter = express.Router();
 
-  restRouter.get('/status', (req, res) =>
-    buildStatusObject(store).then((status) => res.json(status))
-  );
-  restRouter.get('/room/:roomId', (req, res) =>
-    buildRoomExportObject(store, req.params.roomId).then((roomExport) => {
-      if (!roomExport) {
-        res.status(404).json({message: 'room not found'});
-        return;
-      }
+  restRouter.get('/status', async (req, res) => {
+    const status = await buildStatusObject(store);
+    res.json(status);
+  });
 
-      if (req.query && req.query.mode === 'file') {
-        sendObjectAsJsonFile(res, roomExport, `poinz_${roomExport.roomId}.json`);
-      } else {
-        res.json(roomExport);
-      }
-    })
-  );
+  restRouter.get('/room/:roomId', async (req, res) => {
+    const roomExport = await buildRoomExportObject(store, req.params.roomId);
+
+    if (!roomExport) {
+      res.status(404).json({message: 'room not found'});
+      return;
+    }
+
+    if (req.query && req.query.mode === 'file') {
+      sendObjectAsJsonFile(res, roomExport, `poinz_${roomExport.roomId}.json`);
+    } else {
+      res.json(roomExport);
+    }
+  });
 
   app.use('/api', restRouter);
 }
@@ -54,9 +56,9 @@ export async function buildStatusObject(store) {
   const allRooms = await store.getAllRooms();
 
   const rooms = Object.values(allRooms).map((room) => ({
-    storyCount: Object.values(room.stories).length,
-    userCount: Object.values(room.users).length,
-    userCountDisconnected: Object.values(room.users).filter((user) => user.disconnected).length,
+    storyCount: room.stories.length,
+    userCount: room.users.length,
+    userCountDisconnected: room.users.filter((user) => user.disconnected).length,
     lastActivity: room.lastActivity,
     markedForDeletion: room.markedForDeletion,
     created: room.created
@@ -79,17 +81,24 @@ export async function buildRoomExportObject(store, roomId) {
   return {
     roomId: room.id,
     exportedAt: Date.now(),
-    stories: Object.values(room.stories)
+    stories: room.stories
       .filter((story) => !story.trashed)
       .map((story) => buildStoryExportObject(story, room.users))
   };
 }
 
-const buildStoryExportObject = (story, users) => ({
-  title: story.title,
-  description: story.description,
-  estimations: Object.entries(story.estimations).map((entry) => {
-    const matchingUser = users[entry[0]];
-    return {username: matchingUser ? matchingUser.username : entry[0], value: entry[1]};
-  })
-});
+const buildStoryExportObject = (story, users) => {
+  const usernamesMap = users.reduce((total, currentUser) => {
+    total[currentUser.id] = currentUser.username || currentUser.id;
+    return total;
+  }, {});
+
+  return {
+    title: story.title,
+    description: story.description,
+    estimations: Object.entries(story.estimations).map((entry) => {
+      const matchingUser = usernamesMap[entry[0]];
+      return {username: matchingUser ? matchingUser : entry[0], value: entry[1]};
+    })
+  };
+};

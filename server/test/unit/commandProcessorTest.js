@@ -62,7 +62,10 @@ test('process a dummy command successfully: room loading by id', () => {
   const roomStore = newMockRoomsStore({
     id: roomId,
     created: Date.now(),
-    users: []
+    stories: [],
+    users: [],
+    lastActivity: Date.now() + 1111,
+    markedForDeletion: false
   });
   const processor = processorFactory(
     {
@@ -360,12 +363,21 @@ test('process a dummy command WITH roomId: where room must exist', () => {
 /**
  * Assures that we handle two "simultaneously" incoming commands correctly.
  */
-test('concurrency handling', () => {
+test('concurrency handling', async () => {
   const mockRoomsStore = newMockRoomsStore({
     id: 'concurrency-test-room',
-    created: Date.now(),
+    created: Date.now() - 12334,
+    lastActivity: Date.now(),
+    markedForDeletion: false,
     users: [],
     stories: []
+  });
+
+  const originalSave = mockRoomsStore.saveRoom;
+
+  mockRoomsStore.saveRoom = jest.fn((rm) => originalSave(rm));
+  mockRoomsStore.saveRoom.mockImplementationOnce((rm) => {
+    return new Promise((resolve) => setTimeout(resolve, 20)).then(() => originalSave(rm));
   });
 
   const processor = processorFactory(
@@ -395,10 +407,10 @@ test('concurrency handling', () => {
       roomId: 'concurrency-test-room',
       name: 'setPropertyCommand',
       payload: {
-        property: 'value'
+        property: 'value-1'
       }
     },
-    '1'
+    uuid()
   );
   const eventPromiseTwo = processor(
     {
@@ -406,15 +418,21 @@ test('concurrency handling', () => {
       roomId: 'concurrency-test-room',
       name: 'setPropertyCommand',
       payload: {
-        property: 'value'
+        property: 'value-2'
       }
     },
-    '1'
+    uuid()
   );
 
-  return Promise.all([eventPromiseOne, eventPromiseTwo])
-    .then(() => mockRoomsStore.getRoomById('concurrency-test-room'))
-    .then((room) => expect(room.stories.length).toBe(2));
+  await Promise.all([eventPromiseOne, eventPromiseTwo]);
+
+  const room = await mockRoomsStore.getRoomById('concurrency-test-room');
+
+  expect(room.stories.length).toBe(2);
+  expect(room.stories[0].title).toBe('value-1');
+  expect(room.stories[1].title).toBe('value-2');
+
+  expect(mockRoomsStore.saveRoom.mock.calls.length).toBe(2);
 });
 
 test('detect structural problems in commandHandlers: no schema', () => {
@@ -479,4 +497,39 @@ test('detect structural problems in commandHandlers: "fn" is not a function', ()
       newMockRoomsStore()
     )
   ).toThrow(/Fatal error: "fn" on commandHandler "setPropertyCommand" must be a function!/g);
+});
+
+test('throws if modified room does not adhere to roomSchema', async () => {
+  const processor = processorFactory(
+    {
+      setPropertyCommand: {
+        canCreateRoom: true,
+        skipUserIdRoomCheck: true,
+        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        schema: {$ref: 'command'}
+      }
+    },
+    baseCommandSchema,
+    {
+      propertySetEvent: (room) => ({
+        id: room.id
+        /* missing properties in room */
+      })
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        roomId: 'custom-room-id',
+        id: uuid(),
+        name: 'setPropertyCommand',
+        payload: {
+          payloadProperty: 'command-payload-property'
+        }
+      },
+      uuid()
+    )
+  ).rejects.toThrow('Invalid room object: Missing required property: stories in');
 });

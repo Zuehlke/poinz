@@ -5,6 +5,9 @@ import Promise from 'bluebird';
 import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
 import eventHandlers from '../../src/eventHandlers/eventHandlers';
 import commandProcessorFactory from '../../src/commandProcessor';
+import {roomSchemaValidatorFactory} from '../../src/validation/schemaValidators';
+
+const validateRoom = roomSchemaValidatorFactory();
 
 export const EXPECT_UUID_MATCHING = expect.stringMatching(
   new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
@@ -24,7 +27,12 @@ export function textToCsvDataUrl(csvContent) {
  * @param {object} [initialRoom] If not set, room will not exists in store.
  */
 export function newMockRoomsStore(initialRoom) {
-  let room = initialRoom ? detatchObject(initialRoom) : undefined;
+  let room;
+
+  if (initialRoom) {
+    validateRoom(initialRoom); // just make sure that all of our tests work with valid room objects!
+    room = detatchObject(initialRoom);
+  }
 
   return {
     getRoomById: (id) => {
@@ -34,6 +42,7 @@ export function newMockRoomsStore(initialRoom) {
       return Promise.resolve(detatchObject(room));
     },
     saveRoom: (rm) => {
+      validateRoom(rm);
       room = detatchObject(rm);
       return Promise.resolve();
     },
@@ -51,6 +60,7 @@ export function newMockRoomsStore(initialRoom) {
       if (!modifiedRoom) {
         throw new Error('Your function in "manipulate" must return the room!');
       }
+      validateRoom(modifiedRoom);
       room = modifiedRoom;
     },
     getStoreType: () => 'MockRoomsStore for unit tests'

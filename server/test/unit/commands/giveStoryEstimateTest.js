@@ -83,6 +83,69 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
   expect(room.stories[0].revealed).toBe(true);
 });
 
+test('Should produce "revealed" event if first user estimated and lost connection ', async () => {
+  const {
+    roomId,
+    storyId,
+    userIdOne,
+    userIdTwo,
+    processor
+  } = await prepTwoUsersInOneRoomWithOneStory();
+  const commandId = uuid();
+
+  await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 4
+      }
+    },
+    userIdOne // first user estimates story
+  );
+
+  const {producedEvents: leaveEvents} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'leaveRoom',
+      payload: {
+        connectionLost: true
+      }
+    },
+    userIdOne // first user looses connection
+  );
+  expect(leaveEvents).toMatchEvents(commandId, roomId, 'connectionLost');
+
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 2
+      }
+    },
+    userIdTwo // second user estimates story
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven', 'revealed');
+
+  const [storyEstimateGivenEvent, revealedEvent] = producedEvents;
+
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
+
+  expect(revealedEvent.payload.storyId).toEqual(storyId);
+  expect(revealedEvent.payload.manually).toBe(false);
+
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0].revealed).toBe(true);
+});
+
 test('Should produce "consensusAchieved" and "revealed" event if everybody (allowed) estimated the same value', async () => {
   const {
     roomId,

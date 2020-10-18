@@ -95,7 +95,7 @@ function allValidUsersEstimated(room, matchingStory, userId) {
   };
   const estimationCount = Object.values(estimations).length;
 
-  return estimationCount === possibleEstimationCount;
+  return estimationCount >= possibleEstimationCount;
 }
 
 /**

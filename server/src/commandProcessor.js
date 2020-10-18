@@ -1,7 +1,7 @@
 import util from 'util';
 import {v4 as uuid} from 'uuid';
+import fastq from 'fastq';
 
-import queueFactory from './sequenceQueue';
 import getLogger from './getLogger';
 import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
 import {
@@ -34,7 +34,7 @@ export default function commandProcessorFactory(
   eventHandlers,
   store
 ) {
-  const queue = queueFactory(jobHandler);
+  const queue = fastq(jobHandler, 1);
 
   checkCommandHandlersForStructure(commandHandlers);
 
@@ -73,9 +73,17 @@ export default function commandProcessorFactory(
      * In a scenario where two commands for the same room arrive only a few ms apart, both command handlers
      * would receive the same room object from the store. the second command would override the state manipulations of the first.
      *
-     * This is why we push incoming commands into a queue (see sequenceQueue).
+     * This is why we push incoming commands into a queue. Commands will be handled in sequence.
      */
-    return new Promise((resolve, reject) => queue.push({command, userId, resolve, reject}));
+    return new Promise((resolve, reject) =>
+      queue.push({command, userId}, (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      })
+    );
   };
 
   /**
@@ -104,24 +112,21 @@ export default function commandProcessorFactory(
       await steps.reduce((p, step) => p.then(() => step(context, command)), Promise.resolve(null));
     } catch (err) {
       proceed(err); // proceed with next job in queue
-      job.reject(err);
       return;
     }
 
     logEvents(context, command.id);
 
-    job.resolve({
+    proceed(null, {
       producedEvents: context.eventsToSend,
       room: context.room
-    });
-
-    proceed(); // proceed with next job in queue
+    }); // proceed with next job in queue
   }
 
   /**
    * 1. Validate incoming command (syntactically, against schema)
    */
-  async function validate(context, cmd) {
+  async function validate(ctx, cmd) {
     validateCmd(cmd);
   }
 

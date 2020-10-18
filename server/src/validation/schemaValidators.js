@@ -53,9 +53,12 @@ export function commandSchemaValidatorFactory(commandSchemas) {
       );
     }
 
-    const result = tvInstance.validateMultiple(cmd, schema); // "validateMultiple" does not stop on first error, but collects all errors
-    if (!result.valid) {
-      throw new CommandValidationError(new Error(serializeErrors(result.errors)), cmd);
+    const valid = tvInstance.validate(cmd, schema); // we no longer use validateMultiple. quite a big impact on performance
+    if (!valid) {
+      throw new CommandValidationError(
+        new Error(formatValidationErrorMessage(tvInstance.error)),
+        cmd
+      );
     }
   }
 }
@@ -74,9 +77,9 @@ export function roomSchemaValidatorFactory() {
    * Validates the given room against its schema.
    **/
   function validate(room) {
-    const result = tvInstance.validateMultiple(room, roomSchema); // "validateMultiple" does not stop on first error, but collects all errors
-    if (!result.valid) {
-      throw new Error('Invalid room object: ' + serializeErrors(result.errors));
+    const valid = tvInstance.validate(room, roomSchema); // we no longer use validateMultiple. quite a big impact on performance
+    if (!valid) {
+      throw new Error('Invalid room object: ' + formatValidationErrorMessage(tvInstance.error));
     }
   }
 }
@@ -93,9 +96,8 @@ export function getSchemasFromRealCommandHandlers(commandHandlers) {
   }, {});
 }
 
-function serializeErrors(tv4Errors) {
-  const errs = tv4Errors.map((tv4Err) => tv4Err.message + ' in ' + tv4Err.dataPath);
-  return errs.join('\n');
+function formatValidationErrorMessage(tv4Err) {
+  return `${tv4Err.message} in ${tv4Err.dataPath || '-'}`;
 }
 
 function CommandValidationError(err, cmd) {

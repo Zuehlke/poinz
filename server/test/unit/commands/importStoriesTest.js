@@ -119,3 +119,55 @@ test('should throw on invalid command payload format', async () => {
     /Format validation failed \(must be a valid text\/csv data url\) in \/payload\/data/
   );
 });
+
+test('Should fix title and description length:', async () => {
+  const {userId, roomId, processor} = await prepOneUserInOneRoom();
+
+  const stories = [
+    ['ISSUE-1', 'first story', 'description'].join(','),
+    ['ISSUE-2', 'second story' + '-'.repeat(130), 'description' + '-'.repeat(2010)].join(',')
+  ];
+  const base64data = Buffer.from('issue,title,descr\n' + stories.join('\n')).toString('base64');
+  const dataUrl = 'data:text/csv;base64,' + base64data;
+
+  const commandId = uuid();
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'importStories',
+      payload: {
+        data: dataUrl
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyAdded',
+    'storyAdded',
+    'storySelected'
+  );
+
+  const storyAddedEvent1 = producedEvents[0];
+  const storyAddedEvent2 = producedEvents[1];
+  const storySelectedEvent = producedEvents[2];
+
+  expect(storyAddedEvent1.payload).toMatchObject({
+    title: 'ISSUE-1 first story',
+    description: 'description',
+    estimations: {}
+  });
+  expect(storyAddedEvent2.payload).toMatchObject({
+    title: 'ISSUE-2 second story' + '-'.repeat(100 - 20),
+    description: 'description' + '-'.repeat(2000 - 11),
+    estimations: {}
+  });
+  expect(storySelectedEvent.payload).toEqual({
+    storyId: storyAddedEvent1.payload.storyId
+  });
+
+  expect(room.stories.length).toBe(2);
+});

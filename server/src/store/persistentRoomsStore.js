@@ -43,11 +43,12 @@ async function init(config) {
   });
 
   try {
-    await clientInstance.connect();
+    clientInstance = await clientInstance.connect();
     dbInstance = clientInstance.db(); // connection string contains db name
-    LOGGER.info(
-      `connected to mongodb on   ${clientInstance.s.url}, dbName ${clientInstance.s.options.dbName}`
-    );
+    await dbInstance.command({ping: 1});
+
+    logDbConnection(clientInstance);
+
     roomsCollection = dbInstance.collection(COLLECTION_NAME);
 
     await roomsCollection.createIndex('id', {unique: true, name: 'id_roomId'});
@@ -60,6 +61,26 @@ async function close() {
   if (clientInstance) {
     await clientInstance.close();
   }
+}
+
+/**
+ * Safely extract information about connection, do not log "url" (connectionURI), it might contain auth info.
+ *
+ * @param clInstance
+ */
+function logDbConnection(clInstance) {
+  if (!clInstance || !clInstance.s) {
+    LOGGER.info('connected to mongodb on  ?');
+  }
+  const {s} = clInstance;
+
+  const server =
+    s.options && s.options.servers && s.options.servers.length
+      ? `${s.options.servers[0].host}:${s.options.servers[0].port}`
+      : '?';
+  const dbName = s.options ? s.options.dbName : '?';
+
+  LOGGER.info(`connected to mongodb on "${server}", dbName "${dbName}"`);
 }
 
 /**

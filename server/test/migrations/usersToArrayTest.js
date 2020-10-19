@@ -6,9 +6,8 @@ import usersToArray from '../../migrations/20201014180128-users-to-array';
 test('DBMIGRATION: migrate users object to array (up)', async () => {
   const [db, roomz] = await initDb();
 
-  // insert "old" room with "users" as object
   const roomId = uuid();
-  const oldRoomStructure = {
+  const preRoom = {
     id: roomId,
     users: {
       'a5244224-4200-4c17-bc27-f7e05dcd0018': {
@@ -46,7 +45,7 @@ test('DBMIGRATION: migrate users object to array (up)', async () => {
       }
     }
   };
-  await roomz.insertOne(oldRoomStructure);
+  await roomz.insertOne(preRoom);
 
   // migrate "up"
   const bWriteResult = await usersToArray.up(db);
@@ -59,14 +58,10 @@ test('DBMIGRATION: migrate users object to array (up)', async () => {
   // "users" is now an array
   expect(Array.isArray(room.users)).toBe(true);
   expect(room.users.length).toBe(3);
-  expect(room.users[0]).toMatchObject(
-    oldRoomStructure.users['a5244224-4200-4c17-bc27-f7e05dcd0018']
-  );
-  expect(room.users[1]).toMatchObject(
-    oldRoomStructure.users['cf35de30-962f-4126-a5ac-f2f83cc4133d']
-  );
+  expect(room.users[0]).toMatchObject(preRoom.users['a5244224-4200-4c17-bc27-f7e05dcd0018']);
+  expect(room.users[1]).toMatchObject(preRoom.users['cf35de30-962f-4126-a5ac-f2f83cc4133d']);
 
-  expect(room.stories).toEqual(oldRoomStructure.stories); // "stories" untouched
+  expect(room.stories).toEqual(preRoom.stories); // "stories" untouched
 });
 
 test('DBMIGRATION: migrate users array back to object (down)', async () => {
@@ -74,7 +69,7 @@ test('DBMIGRATION: migrate users array back to object (down)', async () => {
 
   // insert "new" room with "users" as array
   const roomId = uuid();
-  const newRoomStructure = {
+  const preRoom = {
     id: roomId,
     users: [
       {
@@ -112,7 +107,7 @@ test('DBMIGRATION: migrate users array back to object (down)', async () => {
       }
     }
   };
-  await roomz.insertOne(newRoomStructure);
+  await roomz.insertOne(preRoom);
 
   // migrate "down"
   const bWriteResult = await usersToArray.down(db);
@@ -123,15 +118,9 @@ test('DBMIGRATION: migrate users array back to object (down)', async () => {
   const room = await roomz.findOne({id: roomId});
 
   // "users" is an object again
-  expect(room.users['a5244224-4200-4c17-bc27-f7e05dcd0018']).toMatchObject(
-    newRoomStructure.users[0]
-  );
-  expect(room.users['cf35de30-962f-4126-a5ac-f2f83cc4133d']).toMatchObject(
-    newRoomStructure.users[1]
-  );
-  expect(room.users['02447407-a841-470c-bc42-fa338d172654']).toMatchObject(
-    newRoomStructure.users[2]
-  );
+  expect(room.users['a5244224-4200-4c17-bc27-f7e05dcd0018']).toMatchObject(preRoom.users[0]);
+  expect(room.users['cf35de30-962f-4126-a5ac-f2f83cc4133d']).toMatchObject(preRoom.users[1]);
+  expect(room.users['02447407-a841-470c-bc42-fa338d172654']).toMatchObject(preRoom.users[2]);
 
-  expect(room.stories).toEqual(newRoomStructure.stories); // stories untouched
+  expect(room.stories).toEqual(preRoom.stories); // stories untouched
 });

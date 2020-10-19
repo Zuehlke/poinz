@@ -2,13 +2,14 @@ import {v4 as uuid} from 'uuid';
 
 import initDb from './db';
 import avatarToZero from '../../migrations/20201017054522-avatar-to-zero';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
 
 test('DBMIGRATION: set avatar to zero if undefined or null (up)', async () => {
   const [db, roomz] = await initDb();
 
   // insert room with users
   const roomId = uuid();
-  const oldRoomStructure = {
+  const preRoom = {
     id: roomId,
     users: [
       {
@@ -47,13 +48,11 @@ test('DBMIGRATION: set avatar to zero if undefined or null (up)', async () => {
     ]
   };
 
-  await roomz.insertOne(oldRoomStructure);
+  await roomz.insertOne(preRoom);
 
   // migrate "up"
   const bWriteResult = await avatarToZero.up(db);
-  if (bWriteResult.modifiedCount !== 1) {
-    throw new Error('do not run migration tests simultaneously!');
-  }
+  throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
 
@@ -71,5 +70,5 @@ test('DBMIGRATION: set avatar to zero if undefined or null (up)', async () => {
     id: '02447407-a841-470c-bc42-fa338d172654',
     avatar: 0
   });
-  expect(room.stories).toEqual(oldRoomStructure.stories); // "stories" untouched
+  expect(room.stories).toEqual(preRoom.stories); // "stories" untouched
 });

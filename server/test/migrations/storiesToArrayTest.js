@@ -2,13 +2,14 @@ import {v4 as uuid} from 'uuid';
 
 import initDb from './db';
 import storiesToArray from '../../migrations/20201014181259-stories-to-array';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
 
 test('DBMIGRATION: migrate "stories" object to array (up)', async () => {
   const [db, roomz] = await initDb();
 
   // insert room with users
   const roomId = uuid();
-  const oldRoomStructure = {
+  const preRoom = {
     id: roomId,
     users: [
       {
@@ -55,27 +56,21 @@ test('DBMIGRATION: migrate "stories" object to array (up)', async () => {
     }
   };
 
-  await roomz.insertOne(oldRoomStructure);
+  await roomz.insertOne(preRoom);
 
   // migrate "up"
   const bWriteResult = await storiesToArray.up(db);
-  if (bWriteResult.modifiedCount !== 1) {
-    throw new Error('do not run migration tests simultaneously!');
-  }
+  throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
 
   // "stories" is now an array
   expect(Array.isArray(room.stories)).toBe(true);
   expect(room.stories.length).toBe(2);
-  expect(room.stories[0]).toMatchObject(
-    oldRoomStructure.stories['7fff9ca8-452c-4e7e-a9e2-e2fd2d7ac44d']
-  );
-  expect(room.stories[1]).toMatchObject(
-    oldRoomStructure.stories['4a1d1faa-4407-40ff-bad2-1de3a6a86e77']
-  );
+  expect(room.stories[0]).toMatchObject(preRoom.stories['7fff9ca8-452c-4e7e-a9e2-e2fd2d7ac44d']);
+  expect(room.stories[1]).toMatchObject(preRoom.stories['4a1d1faa-4407-40ff-bad2-1de3a6a86e77']);
 
-  expect(room.users).toEqual(oldRoomStructure.users); // users untouched
+  expect(room.users).toEqual(preRoom.users); // users untouched
 });
 
 test('DBMIGRATION: migrate "stories" array back to object (down)', async () => {
@@ -83,7 +78,7 @@ test('DBMIGRATION: migrate "stories" array back to object (down)', async () => {
 
   // insert room with users
   const roomId = uuid();
-  const newRoomStructure = {
+  const preRoom = {
     id: roomId,
     users: [
       {
@@ -130,24 +125,18 @@ test('DBMIGRATION: migrate "stories" array back to object (down)', async () => {
     ]
   };
 
-  await roomz.insertOne(newRoomStructure);
+  await roomz.insertOne(preRoom);
 
   // migrate "up"
   const bWriteResult = await storiesToArray.down(db);
-  if (bWriteResult.modifiedCount !== 1) {
-    throw new Error('do not run migration tests simultaneously!');
-  }
+  throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
 
   // "stories" is now an object again
   expect(Array.isArray(room.stories)).toBe(false);
-  expect(room.stories['7fff9ca8-452c-4e7e-a9e2-e2fd2d7ac44d']).toMatchObject(
-    newRoomStructure.stories[0]
-  );
-  expect(room.stories['4a1d1faa-4407-40ff-bad2-1de3a6a86e77']).toMatchObject(
-    newRoomStructure.stories[1]
-  );
+  expect(room.stories['7fff9ca8-452c-4e7e-a9e2-e2fd2d7ac44d']).toMatchObject(preRoom.stories[0]);
+  expect(room.stories['4a1d1faa-4407-40ff-bad2-1de3a6a86e77']).toMatchObject(preRoom.stories[1]);
 
-  expect(room.users).toEqual(newRoomStructure.users); // users untouched
+  expect(room.users).toEqual(preRoom.users); // users untouched
 });

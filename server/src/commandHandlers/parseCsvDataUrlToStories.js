@@ -4,6 +4,9 @@ import getLogger from '../getLogger';
 
 const LOGGER = getLogger('storyImportParser');
 
+const STORY_TITLE_CHAR_LIMIT = 100;
+const STORY_DESCRIPTION_CHAR_LIMIT = 2000;
+
 /**
  * parses the given data url (data:text/csv;base64,U3VtbWFyeSxJc3N1ZSBrZXksSXNzdW.......) containing a list of "issues" (e.g. from jira)
  * into Poinz stories
@@ -66,7 +69,7 @@ function getTitleFromIssueObject(issueObject) {
     title += issueObject[titleProp];
   }
 
-  return title.trim();
+  return title.trim().substring(0, STORY_TITLE_CHAR_LIMIT);
 }
 
 function getDescriptionFromIssueObject(issueObject) {
@@ -75,7 +78,7 @@ function getDescriptionFromIssueObject(issueObject) {
   if (descrProp) {
     description += issueObject[descrProp];
   }
-  return description.trim();
+  return description.trim().substring(0, STORY_DESCRIPTION_CHAR_LIMIT);
 }
 
 function isPropMatch(propertyName) {

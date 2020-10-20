@@ -268,12 +268,7 @@ export default function commandProcessorFactory(
     ctx.room.markedForDeletion = false;
     delete ctx.room.applyEvent;
 
-    try {
-      validateRoom(ctx.room);
-    } catch (err) {
-      LOGGER.error(ctx.eventsToSend.map((e) => e.name).join(' '));
-      throw err;
-    }
+    validateRoom(ctx.room);
 
     await store.saveRoom(ctx.room);
   }

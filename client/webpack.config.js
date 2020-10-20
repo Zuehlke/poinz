@@ -110,6 +110,8 @@ module.exports = {
     // during dev serving
     historyApiFallback: true,
 
+    publicPath: '/assets/',
+
     // proxy request to the rest api (our server does not send CORS headers intentionally)
     proxy: {
       '/api/*': {

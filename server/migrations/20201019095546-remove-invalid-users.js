@@ -2,7 +2,7 @@ const migrateUtil = require('../migrate-util');
 
 module.exports = {
   /**
-   * sets "avatar" on user to 0
+   * removes users that have no "id" field
    */
   async up(db) {
     const ops = [];
@@ -12,13 +12,11 @@ module.exports = {
       .find({})
       .forEach((room) => {
         if (room.users && Array.isArray(room.users)) {
-          room.users = room.users.map((user) => {
-            if (!user.avatar) {
-              user.avatar = 0;
-            }
-            return user;
-          });
-          migrateUtil.toBulkOps(ops, room);
+          const lengthBeforeFiltering = room.users.length;
+          room.users = room.users.filter((usr) => usr.id);
+          if (room.users.length !== lengthBeforeFiltering) {
+            migrateUtil.toBulkOps(ops, room);
+          }
         }
       });
 
@@ -28,7 +26,7 @@ module.exports = {
   },
 
   /**
-   * cannot undo
+   * cannot go back
    */
   async down() {}
 };

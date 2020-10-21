@@ -17,7 +17,7 @@ test('Exclude and Include', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {

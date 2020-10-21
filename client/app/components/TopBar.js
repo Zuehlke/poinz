@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom} from '../actions';
+import {toggleBacklog, toggleSettings, toggleLog, leaveRoom} from '../actions';
 import {
   StyledBacklogToggle,
   StyledBacklogToggleIcon,
@@ -24,9 +24,9 @@ const TopBar = ({
   username,
   leaveRoom,
   toggleBacklog,
-  toggleUserMenu,
+  toggleSettings,
   toggleLog,
-  userMenuShown,
+  settingsShown,
   logShown,
   unseenError,
   backlogShown
@@ -57,11 +57,11 @@ const TopBar = ({
         </StyledWhoAmI>
 
         <StyledQuickMenuButton
-          data-testid="userMenuToggle"
+          data-testid="settingsToggle"
           className={`clickable pure-button pure-button-primary ${
-            userMenuShown ? 'pure-button-active' : ''
+            settingsShown ? 'pure-button-active' : ''
           } `}
-          onClick={toggleUserMenu}
+          onClick={toggleSettings}
           title={t('toggleMenu')}
         >
           <i className="icon-cog"></i>
@@ -94,14 +94,14 @@ const TopBar = ({
 
 TopBar.propTypes = {
   t: PropTypes.func,
-  userMenuShown: PropTypes.bool,
+  settingsShown: PropTypes.bool,
   backlogShown: PropTypes.bool,
   logShown: PropTypes.bool,
   unseenError: PropTypes.bool,
   username: PropTypes.string,
   roomId: PropTypes.string,
   toggleBacklog: PropTypes.func,
-  toggleUserMenu: PropTypes.func,
+  toggleSettings: PropTypes.func,
   leaveRoom: PropTypes.func,
   toggleLog: PropTypes.func
 };
@@ -110,11 +110,11 @@ export default connect(
   (state) => ({
     t: state.translator,
     roomId: state.roomId,
-    userMenuShown: state.userMenuShown,
+    settingsShown: state.settingsShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
     unseenError: state.unseenError,
     username: getOwnUsername(state)
   }),
-  {toggleBacklog, toggleUserMenu, toggleLog, leaveRoom}
+  {toggleBacklog, toggleSettings, toggleLog, leaveRoom}
 )(TopBar);

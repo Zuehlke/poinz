@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Backlog from '../components/Backlog';
-import UserMenu from '../components/UserMenu';
+import Settings from '../components/Settings';
 import ActionLog from '../components/ActionLog';
 import Users from '../components/Users';
 
@@ -24,7 +24,7 @@ import {isAStorySelected} from '../services/selectors';
 const Board = ({roomId, isAStorySelected}) => (
   <StyledBoard id={roomId}>
     <Users />
-    <UserMenu />
+    <Settings />
     <ActionLog />
     <Backlog />
     {isAStorySelected && <Estimation />}

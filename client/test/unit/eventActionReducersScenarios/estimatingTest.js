@@ -20,7 +20,7 @@ test('Estimation with two users', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {
@@ -195,7 +195,7 @@ test('New estimation round with two users', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {

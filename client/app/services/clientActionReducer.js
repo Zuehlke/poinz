@@ -1,6 +1,6 @@
 import {
   TOGGLE_BACKLOG,
-  TOGGLE_USER_MENU,
+  TOGGLE_SETTINGS,
   TOGGLE_LOG,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
@@ -60,18 +60,18 @@ export default function clientActionReducer(state, action) {
       const showBacklog = !state.backlogShown;
 
       if (showBacklog) {
-        return {...state, backlogShown: true, userMenuShown: false, logShown: false};
+        return {...state, backlogShown: true, settingsShown: false, logShown: false};
       } else {
         return {...state, backlogShown: false};
       }
     }
-    case TOGGLE_USER_MENU: {
-      const showMenu = !state.userMenuShown;
+    case TOGGLE_SETTINGS: {
+      const showMenu = !state.settingsShown;
 
       if (showMenu) {
-        return {...state, userMenuShown: true, logShown: false, backlogShown: false};
+        return {...state, settingsShown: true, logShown: false, backlogShown: false};
       } else {
-        return {...state, userMenuShown: false};
+        return {...state, settingsShown: false};
       }
     }
     case TOGGLE_LOG: {
@@ -82,7 +82,7 @@ export default function clientActionReducer(state, action) {
           ...state,
           logShown: true,
           unseenError: false,
-          userMenuShown: false,
+          settingsShown: false,
           backlogShown: false
         };
       } else {

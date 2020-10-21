@@ -9,7 +9,7 @@ import {
 } from './colors';
 import {device, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
 
-export const StyledUserMenu = styled.div`
+export const StyledSettings = styled.div`
   z-index: 10;
   position: fixed;
   width: ${(props) => (props.shown ? '100%' : RIGHT_MENU_WIDTH + 'px')};

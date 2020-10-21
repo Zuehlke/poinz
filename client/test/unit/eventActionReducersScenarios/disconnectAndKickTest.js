@@ -20,7 +20,7 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {

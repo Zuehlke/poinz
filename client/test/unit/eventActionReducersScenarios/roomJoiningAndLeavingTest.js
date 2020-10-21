@@ -273,7 +273,7 @@ test('You in a room, other user joins', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {
@@ -361,7 +361,7 @@ test('Two users in a room, the other leaves', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {
@@ -436,7 +436,7 @@ test('Two users in a room, you leave', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {

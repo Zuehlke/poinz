@@ -19,14 +19,14 @@ import {
   StyledRadioButton,
   StyledTextInput,
   StyledSection,
-  StyledUserMenu,
+  StyledSettings,
   StyledMiniAvatar,
   StyledLinkButton,
   StyledTextarea,
   StyledExpandButton,
   ErrorMsg,
   StyledArea
-} from '../styled/UserMenu';
+} from '../styled/Settings';
 import ValidatedInput from './ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
 
@@ -35,7 +35,7 @@ import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
  * - changing the username, avatar
  * - changing language
  */
-const UserMenu = ({
+const Settings = ({
   t,
   language,
   user,
@@ -44,7 +44,7 @@ const UserMenu = ({
   setAvatar,
   toggleExcluded,
   setLanguage,
-  userMenuShown,
+  settingsShown,
   cardConfig,
   setCardConfig,
   roomId
@@ -75,11 +75,11 @@ const UserMenu = ({
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
   React.useEffect(() => {
     setCustomCardConfigExpanded(false);
-  }, [userMenuShown]);
+  }, [settingsShown]);
   const [customCardConfigJsonError, setCustomCardConfigJsonError] = useState(false);
 
   return (
-    <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
+    <StyledSettings shown={settingsShown} data-testid="settings">
       <div className="pure-form">
         <StyledArea>
           <h4>{t('user')}</h4>
@@ -241,7 +241,7 @@ const UserMenu = ({
         Avatar Icons (c) by DELEKET{' '}
         <a href="https://www.deviantart.com/deleket">https://www.deviantart.com/deleket</a>
       </StyledLicenseHint>
-    </StyledUserMenu>
+    </StyledSettings>
   );
 
   function saveUsername() {
@@ -265,10 +265,10 @@ const UserMenu = ({
   }
 };
 
-UserMenu.propTypes = {
+Settings.propTypes = {
   t: PropTypes.func,
   user: PropTypes.object,
-  userMenuShown: PropTypes.bool,
+  settingsShown: PropTypes.bool,
   language: PropTypes.string,
   toggleExcluded: PropTypes.func,
   leaveRoom: PropTypes.func,
@@ -287,7 +287,7 @@ export default connect(
     cardConfig: state.cardConfig,
     language: state.language,
     user: state.users[state.userId],
-    userMenuShown: state.userMenuShown,
+    settingsShown: state.settingsShown,
     roomId: state.roomId
   }),
   {
@@ -299,4 +299,4 @@ export default connect(
     setLanguage,
     setCardConfig
   }
-)(UserMenu);
+)(Settings);

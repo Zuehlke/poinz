@@ -18,7 +18,7 @@ test('Adding stories', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {
@@ -125,7 +125,7 @@ test('Editing stories', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {
@@ -247,7 +247,7 @@ test('Trashing, Restoring and Deleting stories', () => {
       presetUsername: 'Jim',
       presetEmail: null,
       presetUserId: null,
-      userMenuShown: false,
+      settingsShown: false,
       roomId,
       userId: ownUserId,
       users: {

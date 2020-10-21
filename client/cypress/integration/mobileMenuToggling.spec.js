@@ -18,11 +18,11 @@ it('load page with mobile screen dimensions and toggle menues in room', function
     'This is visibile. I could add a story...'
   );
 
-  cy.get(tid('userMenuToggle')).click(); // show userMenu (settings)  will hide backlog
+  cy.get(tid('settingsToggle')).click(); // show settings, will hide backlog
 
   cy.get(tid('usernameInput')).type('{selectall}can type in here');
 
-  cy.get(tid('actionLogToggle')).click(); // show log (actions)  will hide usermenu
+  cy.get(tid('actionLogToggle')).click(); // show log (actions)  will hide settings
 
   cy.wait(200);
 

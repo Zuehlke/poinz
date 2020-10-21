@@ -111,8 +111,13 @@ export default function clientActionReducer(state, action) {
     }
     case SET_LANGUAGE: {
       const language = action.language;
-      state.setLanguage(language);
-      return {...state, language};
+      const newTranslatorFunction = state.setLanguage(language);
+      return {
+        ...state,
+        language,
+        // make sure to replace the translator function, so that all components that have translated UI elements get re-rendered
+        translator: newTranslatorFunction
+      };
     }
     case HIDE_NEW_USER_HINTS: {
       return {...state, hideNewUserHints: true};

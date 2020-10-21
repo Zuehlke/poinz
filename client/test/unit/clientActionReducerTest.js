@@ -215,8 +215,9 @@ test(EDIT_STORY + ' and ' + CANCEL_EDIT_STORY, () => {
 test(SET_LANGUAGE, () => {
   const startingState = initialState();
 
-  let modifiedState = clientActionReducer(startingState, setLanguage('someLangCode'));
+  const modifiedState = clientActionReducer(startingState, setLanguage('someLangCode'));
   expect(modifiedState.language).toEqual('someLangCode');
+  expect(modifiedState.translator).not.toBe(startingState.translator); // make sure "translator" changes, so that components do re-render
 });
 
 test(HIDE_NEW_USER_HINTS, () => {

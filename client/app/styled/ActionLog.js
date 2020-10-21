@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {MEDIA_MIN_WIDTH_THRESH, RIGHT_MENU_WIDTH} from './dimensions';
+import {device, RIGHT_MENU_WIDTH} from './dimensions';
 import {
   COLOR_BACKGROUND_GREY,
   COLOR_LIGHT_GREY,
@@ -22,7 +22,7 @@ export const StyledActionLog = styled.div`
   padding: 27px 8px 8px;
   background: ${COLOR_BACKGROUND_GREY};
 
-  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+  @media ${device.desktop} {
     width: ${RIGHT_MENU_WIDTH}px;
   }
 

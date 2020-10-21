@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import {COLOR_BACKGROUND_GREY, COLOR_LIGHTER_GREY} from './colors';
-import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH} from './dimensions';
+import {LEFT_MENU_WIDTH, device} from './dimensions';
 
 export const StyledBacklog = styled.div`
   transition: all 0.2s ease-out;
@@ -20,14 +20,14 @@ export const StyledBacklog = styled.div`
   justify-content: flex-start;
   align-items: stretch;
 
-  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+  @media ${device.desktop} {
     left: ${LEFT_MENU_WIDTH}px;
     width: ${LEFT_MENU_WIDTH}px;
   }
 
   &:after {
     content: '';
-    @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+    @media ${device.desktop} {
       border-right: 1px solid ${COLOR_LIGHTER_GREY};
     }
     top: 44px;

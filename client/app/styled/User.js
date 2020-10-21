@@ -7,53 +7,92 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from './colors';
-import {ZuehlkeFont} from './dimensions';
+import {device, ZuehlkeFont} from './dimensions';
 
 export const StyledUser = styled.div`
-  padding: 0 8px;
-  display: inline-block;
-  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  margin-top: 4px;
 
+  position: relative;
   color: ${({isOwn, shaded}) => (shaded ? COLOR_LIGHT_GREY : isOwn ? COLOR_ORANGE : 'inherit')};
   cursor: ${({isOwn}) => (isOwn ? 'inherit' : 'pointer')};
+
+  @media ${device.modernMobile} {
+    display: inline-block;
+    padding: 0 8px;
+    margin-top: 0;
+  }
 `;
 
 export const StyledUserName = styled.div`
   text-align: center;
-  margin: 4px 0;
+  margin: 0 0 0 4px;
   max-width: 90px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  @media ${device.modernMobile} {
+    margin: 4px 0;
+  }
 `;
 
 export const StyledUserBadge = styled.span`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 6px;
+  left: 44px;
+
+  @media ${device.modernMobile} {
+    top: 0;
+    right: 0;
+    left: auto;
+  }
 `;
 
 export const StyledUserEstimation = styled.div`
   transition: all 0.2s ease-out;
-  height: 100px;
-  width: 76px;
-  margin: 0 auto;
-  text-align: center;
-  padding: 28px 0;
-  border-radius: 12px;
   box-sizing: border-box;
-  font-size: 28px;
+  font-size: 18px;
   border: ${({revealed}) =>
-    revealed ? '4px solid  ' + COLOR_LIGHTER_GREY : '4px dashed ' + COLOR_LIGHTER_GREY};
+    revealed ? '2px solid  ' + COLOR_LIGHTER_GREY : '2px dashed ' + COLOR_LIGHTER_GREY};
   background: transparent;
   color: ${COLOR_LIGHT_GREY};
   font-family: ${ZuehlkeFont};
+  padding: 0;
+
+  height: 50px;
+  width: 34px;
+  margin: 0;
+  border-radius: 6px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  > span {
+    display: block;
+  }
+
+  @media ${device.modernMobile} {
+    font-size: 28px;
+    height: 100px;
+    width: 76px;
+    margin: 0 auto;
+    border-radius: 12px;
+    border-width: 4px;
+  }
 `;
 
 export const StyledUserEstimationGiven = styled(StyledUserEstimation)`
-  border: 4px solid white;
+  border: 2px solid white;
   color: ${({revealed}) => (revealed ? 'white' : COLOR_LIGHTER_GREY)};
   background: ${({revealed, valueColor}) => (revealed ? valueColor : COLOR_LIGHT_GREY)};
+
+  @media ${device.modernMobile} {
+    border: 4px solid white;
+  }
 `;
 
 export const StyledUserEstimationExcluded = styled(StyledUserEstimation)`
@@ -64,15 +103,16 @@ export const StyledUserEstimationExcluded = styled(StyledUserEstimation)`
 `;
 
 export const StyledUserKickOverlay = styled.span`
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 2px;
+
   position: absolute;
   top: 0;
-  width: 72px;
-  height: 72px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-  left: 50%;
-  margin-left: -36px;
 
   i {
     display: inline-block;
@@ -98,5 +138,14 @@ export const StyledUserKickOverlay = styled.span`
   }
   i:hover.icon-cancel {
     color: ${COLOR_FONT_GREY};
+  }
+
+  @media ${device.modernMobile} {
+    width: 72px;
+    height: 72px;
+    left: 50%;
+    margin-left: -36px;
+    justify-content: space-around;
+    background: transparent;
   }
 `;

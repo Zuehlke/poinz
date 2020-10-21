@@ -51,6 +51,14 @@ export const StyledUserMenu = styled.div`
   }
 `;
 
+export const StyledArea = styled.div`
+  margin-bottom: 30px;
+  > h4 {
+    margin-top: 2px;
+    margin-bottom: 8px;
+  }
+`;
+
 export const StyledSection = styled.div`
   background: white;
   border: 1px solid ${COLOR_LIGHTER_GREY};

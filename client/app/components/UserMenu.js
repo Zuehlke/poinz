@@ -24,7 +24,8 @@ import {
   StyledLinkButton,
   StyledTextarea,
   StyledExpandButton,
-  ErrorMsg
+  ErrorMsg,
+  StyledArea
 } from '../styled/UserMenu';
 import ValidatedInput from './ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
@@ -72,157 +73,168 @@ const UserMenu = ({
     setCustomCardConfigString(JSON.stringify(cardConfig, null, 4));
   }, [cardConfig]);
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
+  React.useEffect(() => {
+    setCustomCardConfigExpanded(false);
+  }, [userMenuShown]);
   const [customCardConfigJsonError, setCustomCardConfigJsonError] = useState(false);
 
   return (
     <StyledUserMenu shown={userMenuShown} data-testid="userMenu">
       <div className="pure-form">
-        <StyledSection>
-          <h5>{t('username')}</h5>
+        <StyledArea>
+          <h4>{t('user')}</h4>
 
-          <StyledTextInput>
-            <ValidatedInput
-              data-testid="usernameInput"
-              type="text"
-              id="username"
-              placeholder={t('name')}
-              fieldValue={myUsername}
-              setFieldValue={setMyUsername}
-              regexPattern={USERNAME_REGEX}
-              onEnter={saveUsername}
-            />
+          <StyledSection>
+            <h5>{t('username')}</h5>
 
-            <button
-              data-testid="saveUsernameButton"
-              className="pure-button pure-button-primary"
-              onClick={saveUsername}
-            >
-              <i className="icon-floppy" />
-            </button>
-          </StyledTextInput>
-        </StyledSection>
-
-        <StyledSection>
-          <h5>{t('language')}</h5>
-          <StyledRadioButton>
-            <label htmlFor="language-selector-en">
-              <input
-                type="radio"
-                id="language-selector-en"
-                name="language-selector"
-                defaultChecked={language === 'en'}
-                onClick={() => setLanguage('en')}
+            <StyledTextInput>
+              <ValidatedInput
+                data-testid="usernameInput"
+                type="text"
+                id="username"
+                placeholder={t('name')}
+                fieldValue={myUsername}
+                setFieldValue={setMyUsername}
+                regexPattern={USERNAME_REGEX}
+                onEnter={saveUsername}
               />
-              {t('english')}
-            </label>
 
-            <label htmlFor="language-selector-de">
-              <input
-                type="radio"
-                id="language-selector-de"
-                name="language-selector"
-                defaultChecked={language === 'de'}
-                onClick={() => setLanguage('de')}
+              <button
+                data-testid="saveUsernameButton"
+                className="pure-button pure-button-primary"
+                onClick={saveUsername}
+              >
+                <i className="icon-floppy" />
+              </button>
+            </StyledTextInput>
+          </StyledSection>
+
+          <StyledSection>
+            <h5>{t('language')}</h5>
+            <StyledRadioButton>
+              <label htmlFor="language-selector-en">
+                <input
+                  type="radio"
+                  id="language-selector-en"
+                  name="language-selector"
+                  defaultChecked={language === 'en'}
+                  onClick={() => setLanguage('en')}
+                />
+                {t('english')}
+              </label>
+
+              <label htmlFor="language-selector-de">
+                <input
+                  type="radio"
+                  id="language-selector-de"
+                  name="language-selector"
+                  defaultChecked={language === 'de'}
+                  onClick={() => setLanguage('de')}
+                />
+                {t('german')}
+              </label>
+            </StyledRadioButton>
+          </StyledSection>
+
+          <StyledSection>
+            <h5>{t('avatar')}</h5>
+            {t('avatarInfo')}
+
+            <StyledAvatarGrid data-testid="avatarGrid">
+              {avatarIcons.map((aIcn, index) => (
+                <StyledMiniAvatar
+                  selected={user.avatar === index}
+                  src={aIcn}
+                  key={'aIcn_' + aIcn}
+                  onClick={() => setAvatar(index)}
+                />
+              ))}
+            </StyledAvatarGrid>
+
+            {t('gravatarInfo')}
+
+            <StyledTextInput>
+              <ValidatedInput
+                data-testid="gravatarEmailInput"
+                type="text"
+                id="email"
+                placeholder="Email..."
+                fieldValue={myEmail}
+                setFieldValue={setMyEmail}
+                regexPattern={EMAIL_REGEX}
+                onEnter={saveEmail}
               />
-              {t('german')}
-            </label>
-          </StyledRadioButton>
-        </StyledSection>
 
-        <StyledSection>
-          <h5>{t('avatar')}</h5>
-          {t('avatarInfo')}
+              <button
+                className="pure-button pure-button-primary"
+                onClick={saveEmail}
+                data-testid="saveEmailButton"
+              >
+                <i className="icon-floppy" />
+              </button>
+            </StyledTextInput>
+          </StyledSection>
 
-          <StyledAvatarGrid data-testid="avatarGrid">
-            {avatarIcons.map((aIcn, index) => (
-              <StyledMiniAvatar
-                selected={user.avatar === index}
-                src={aIcn}
-                key={'aIcn_' + aIcn}
-                onClick={() => setAvatar(index)}
-              />
-            ))}
-          </StyledAvatarGrid>
+          <StyledSection>
+            <h5>{t('markExcluded')}</h5>
+            {t('excludedInfo')}
 
-          {t('gravatarInfo')}
+            <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
+              <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('excluded')}
+            </p>
+          </StyledSection>
+        </StyledArea>
 
-          <StyledTextInput>
-            <ValidatedInput
-              data-testid="gravatarEmailInput"
-              type="text"
-              id="email"
-              placeholder="Email..."
-              fieldValue={myEmail}
-              setFieldValue={setMyEmail}
-              regexPattern={EMAIL_REGEX}
-              onEnter={saveEmail}
-            />
+        <StyledArea>
+          <h4>{t('room')}</h4>
 
-            <button
-              className="pure-button pure-button-primary"
-              onClick={saveEmail}
-              data-testid="saveEmailButton"
-            >
-              <i className="icon-floppy" />
-            </button>
-          </StyledTextInput>
-        </StyledSection>
+          <StyledSection>
+            <h5>{t('customCards')}</h5>
+            {t('customCardsInfo')}
 
-        <StyledSection>
-          <h5>{t('markExcluded')}</h5>
-          {t('excludedInfo')}
+            {!customCardConfigExpanded && (
+              <StyledExpandButton
+                type="button"
+                className="pure-button pure-button-primary"
+                onClick={() => setCustomCardConfigExpanded(true)}
+              >
+                <i className="icon-angle-double-down"></i>
+              </StyledExpandButton>
+            )}
 
-          <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
-            <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('excluded')}
-          </p>
-        </StyledSection>
+            {customCardConfigExpanded && (
+              <div>
+                <p>
+                  <StyledTextarea
+                    value={customCardConfigString}
+                    onChange={(e) => setCustomCardConfigString(e.target.value)}
+                  ></StyledTextarea>
+                </p>
+                {customCardConfigJsonError && <ErrorMsg>{t('customCardsJsonError')}</ErrorMsg>}
+                <p>
+                  <button
+                    type="button"
+                    className="pure-button pure-button-primary"
+                    onClick={setCustomCardConfiguration}
+                  >
+                    {t('iKnowWhatImDoin')} <i className="icon-floppy" />
+                  </button>
+                </p>
+              </div>
+            )}
+          </StyledSection>
 
-        <StyledSection>
-          <h5>{t('export')}</h5>
-          {t('exportInfo')}
+          <StyledSection>
+            <h5>{t('export')}</h5>
+            {t('exportInfo')}
 
-          <p>
-            <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
-              {t('exportLinkText')} <i className="icon-download-cloud"></i>
-            </StyledLinkButton>
-          </p>
-        </StyledSection>
-
-        <StyledSection>
-          <h5>{t('customCards')}</h5>
-          {t('customCardsInfo')}
-
-          {!customCardConfigExpanded && (
-            <StyledExpandButton
-              type="button"
-              className="pure-button pure-button-primary"
-              onClick={() => setCustomCardConfigExpanded(true)}
-            >
-              <i className="icon-angle-double-down"></i>
-            </StyledExpandButton>
-          )}
-
-          {customCardConfigExpanded && (
-            <div>
-              <p>
-                <StyledTextarea
-                  value={customCardConfigString}
-                  onChange={(e) => setCustomCardConfigString(e.target.value)}
-                ></StyledTextarea>
-              </p>
-              {customCardConfigJsonError && <ErrorMsg>{t('customCardsJsonError')}</ErrorMsg>}
-              <p>
-                <button
-                  type="button"
-                  className="pure-button pure-button-primary"
-                  onClick={setCustomCardConfiguration}
-                >
-                  {t('iKnowWhatImDoin')} <i className="icon-floppy" />
-                </button>
-              </p>
-            </div>
-          )}
-        </StyledSection>
+            <p>
+              <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
+                {t('exportLinkText')} <i className="icon-download-cloud"></i>
+              </StyledLinkButton>
+            </p>
+          </StyledSection>
+        </StyledArea>
       </div>
 
       <StyledLicenseHint>

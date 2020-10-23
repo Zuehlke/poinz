@@ -185,6 +185,46 @@ test('disconnectAndKickTest: two users, one disconnects, kick him', async () => 
   clientB.disconnect();
 });
 
+test('joinAndLeave ', async () => {
+  const outputFile = path.join(
+    clientEventActionReducerScenarioDir,
+    'roomJoiningAndLeavingTest.json'
+  );
+
+  // we need two clients, since on "connectionLost" and "leftRoom", server removes socket of "leaving" user from room
+  const clientA = poinzSocketClientFactory();
+  const clientB = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+  const secondUserId = uuid();
+
+  // first user joins, adds story, estimates it alone
+  await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 3);
+  await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
+  const [storyAdded] = await clientA.cmdAndWait(
+    clientA.cmds.addStory(roomId, firstUserId, 'A super story'),
+    2
+  );
+  await clientA.cmdAndWait(
+    clientA.cmds.giveEstimate(roomId, firstUserId, storyAdded.payload.storyId, 4),
+    3 // given, revealed, consensus
+  );
+
+  // second user joins room with already a story in it
+  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
+  await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
+  await clientB.cmdAndWait(clientB.cmds.setEmail(roomId, secondUserId, 'test.johnny@gmail.com'));
+
+  const cmdId = clientA.cmds.leaveRoom(roomId, firstUserId);
+  await clientB.waitForEvents(cmdId, 1); // leftRoom
+
+  // in the end, write to file and close socket
+  await clientA.dumpAllEvents(outputFile);
+  clientA.disconnect();
+  clientB.disconnect();
+});
+
 test('includeAndExcludeTest: two users, one excludes and includes himself', async () => {
   const outputFile = path.join(clientEventActionReducerScenarioDir, 'includeAndExcludeTest.json');
 

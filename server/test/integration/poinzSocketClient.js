@@ -26,6 +26,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
   return {
     sendCommand,
     cmdAndWait,
+    waitForEvents,
     dumpAllEvents,
     disconnect,
     cmds: {
@@ -33,6 +34,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       leaveRoom,
       kick,
       setUsername,
+      setEmail,
       toggleExclude,
       addStory,
       changeStory,
@@ -130,7 +132,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
    * @param {number} expectedEventCount
    * @return {Promise<object[]>} Resolves to the array of received events
    */
-  async function cmdAndWait(cmdId, expectedEventCount) {
+  async function cmdAndWait(cmdId, expectedEventCount = 1) {
     if (!cmdId) {
       throw new Error('Please pass in cmd id !');
     }
@@ -181,6 +183,17 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       userId,
       payload: {
         username
+      }
+    });
+  }
+
+  function setEmail(roomId, userId, email) {
+    return sendCommand({
+      name: 'setEmail',
+      roomId,
+      userId,
+      payload: {
+        email
       }
     });
   }

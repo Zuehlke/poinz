@@ -2,7 +2,7 @@ import {promises as fs} from 'fs';
 import path from 'path';
 
 import initialState from '../../../app/store/initialState.js';
-import {reduceMultipleEvents} from './reduceMultipleEventActions';
+import reduceMultipleEvents from './reduceMultipleEvents';
 
 let events;
 

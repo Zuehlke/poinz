@@ -68,11 +68,15 @@ const User = ({
       )}
 
       {selectedStory && isExcluded && (
-        <StyledUserEstimationExcluded>{estimationValueToDisplay}</StyledUserEstimationExcluded>
+        <StyledUserEstimationExcluded>
+          <span>{estimationValueToDisplay}</span>
+        </StyledUserEstimationExcluded>
       )}
 
       {selectedStory && !userHasEstimation && !isExcluded && (
-        <StyledUserEstimation revealed={revealed}>{estimationValueToDisplay}</StyledUserEstimation>
+        <StyledUserEstimation revealed={revealed}>
+          <span>{estimationValueToDisplay}</span>
+        </StyledUserEstimation>
       )}
 
       {selectedStory && userHasEstimation && !isExcluded && (

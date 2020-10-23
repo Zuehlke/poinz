@@ -1,0 +1,248 @@
+import {v4 as uuid} from 'uuid';
+import path from 'path';
+
+import poinzSocketClientFactory from './poinzSocketClient';
+
+const clientEventActionReducerScenarioDir = path.resolve(
+  __dirname,
+  '../../../client/test/unit/eventActionReducersScenarios'
+);
+
+/**
+ *  Creates real-live lists of events by firing commands to the backend. (not really a test, no assertions here)
+ *  these "scenarios" are used for frontend reducer unit tests.
+ *  We ensure that the frontend reducer tests use valid backend events!
+ *
+ *  This needs a running Poinz backend on localhost:3000
+ *
+ *  This writes json files to the client directory!
+ */
+
+test('backlogModifyingTest: Adding Stories, editing them, trash/restore and delete them', async () => {
+  const outputFile = path.join(clientEventActionReducerScenarioDir, 'backlogModifyingTest.json');
+
+  const client = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+  const secondUserId = uuid();
+
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId), 2);
+
+  await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
+
+  await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
+
+  // both users add one story each
+  const [storyAddedOne] = await client.cmdAndWait(
+    client.cmds.addStory(roomId, firstUserId, 'ISSUE-SUPER-2', 'This is a story'),
+    2 // storyAdded and storySelected
+  );
+
+  const [storyAddedTwo] = await client.cmdAndWait(
+    client.cmds.addStory(roomId, secondUserId, 'ISSUE-SUPER-5', 'This is a second story')
+  );
+
+  await client.cmdAndWait(
+    client.cmds.selectStory(roomId, secondUserId, storyAddedTwo.payload.storyId)
+  );
+
+  // now edit them
+  await client.cmdAndWait(
+    client.cmds.changeStory(
+      roomId,
+      firstUserId,
+      storyAddedOne.payload.storyId,
+      'ISSUE-SUPER-22',
+      'This is a story changed'
+    )
+  );
+
+  await client.cmdAndWait(
+    client.cmds.changeStory(
+      roomId,
+      firstUserId,
+      storyAddedTwo.payload.storyId,
+      'ISSUE-SUPER-55',
+      'This is a second story changed'
+    )
+  );
+
+  await client.cmdAndWait(
+    client.cmds.trashStory(roomId, firstUserId, storyAddedTwo.payload.storyId),
+    2 // trashed and selected (the other, still active story)
+  );
+
+  await client.cmdAndWait(
+    client.cmds.restoreStory(roomId, firstUserId, storyAddedTwo.payload.storyId)
+  );
+
+  await client.cmdAndWait(
+    client.cmds.trashStory(roomId, firstUserId, storyAddedOne.payload.storyId)
+  );
+
+  await client.cmdAndWait(
+    client.cmds.deleteStory(roomId, firstUserId, storyAddedOne.payload.storyId)
+  );
+
+  // in the end, write to file and close socket
+  await client.dumpAllEvents(outputFile);
+  client.disconnect();
+});
+
+test('estimatingTest: Adding Stories, estimate them', async () => {
+  const outputFile = path.join(clientEventActionReducerScenarioDir, 'estimatingTest.json');
+
+  const client = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+  const secondUserId = uuid();
+
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId), 2);
+
+  await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
+
+  await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
+
+  // first user adds two stories
+  const [storyAddedOne] = await client.cmdAndWait(
+    client.cmds.addStory(roomId, firstUserId, 'ISSUE-SUPER-2', 'This is a story'),
+    2 // storyAdded and storySelected
+  );
+  const storyIdOne = storyAddedOne.payload.storyId;
+
+  await client.cmdAndWait(
+    client.cmds.addStory(roomId, firstUserId, 'ISSUE-SUPER-5', 'This is a second story')
+  );
+
+  // first user estimates first story
+  await client.cmdAndWait(client.cmds.giveEstimate(roomId, firstUserId, storyIdOne, 3));
+
+  // first user clears again
+  await client.cmdAndWait(client.cmds.clearEstimate(roomId, firstUserId, storyIdOne));
+
+  // both estimate 5
+  await client.cmdAndWait(client.cmds.giveEstimate(roomId, firstUserId, storyIdOne, 5));
+  await client.cmdAndWait(
+    client.cmds.giveEstimate(roomId, secondUserId, storyIdOne, 5),
+    3 // given, revealed, consensus
+  );
+
+  // start new round
+  await client.cmdAndWait(client.cmds.newRound(roomId, secondUserId, storyIdOne));
+
+  // in the end, write to file and close socket
+  await client.dumpAllEvents(outputFile);
+  client.disconnect();
+});
+
+test('disconnectAndKickTest: two users, one disconnects, kick him', async () => {
+  const outputFile = path.join(clientEventActionReducerScenarioDir, 'disconnectAndKickTest.json');
+
+  // we need two clients, since on "connectionLost" , server removes socket of "leaving" user from room
+  const clientA = poinzSocketClientFactory();
+  const clientB = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+  const secondUserId = uuid();
+
+  await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 3);
+  await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
+
+  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
+  await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
+
+  // second user adds a story and estimates it
+  const [storyAdded] = await clientB.cmdAndWait(
+    clientB.cmds.addStory(roomId, secondUserId, 'ISSUE-SUPER-2'),
+    2 // added and selected
+  );
+  await clientB.cmdAndWait(
+    clientB.cmds.giveEstimate(roomId, secondUserId, storyAdded.payload.storyId, 8)
+  );
+
+  // second user looses connection ("leaves" with "connectionLost"=true)
+  await clientB.cmdAndWait(
+    clientB.cmds.leaveRoom(roomId, secondUserId, true),
+    1 // connectionLost
+  );
+
+  // kick second user
+  await clientA.cmdAndWait(
+    clientA.cmds.kick(roomId, firstUserId, secondUserId),
+    1 // kicked
+  );
+
+  // in the end, write to file and close socket
+  await clientA.dumpAllEvents(outputFile);
+  clientA.disconnect();
+  clientB.disconnect();
+});
+
+test('joinAndLeave ', async () => {
+  const outputFile = path.join(
+    clientEventActionReducerScenarioDir,
+    'roomJoiningAndLeavingTest.json'
+  );
+
+  // we need two clients, since on "connectionLost" and "leftRoom", server removes socket of "leaving" user from room
+  const clientA = poinzSocketClientFactory();
+  const clientB = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+  const secondUserId = uuid();
+
+  // first user joins, adds story, estimates it alone
+  await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 3);
+  await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
+  const [storyAdded] = await clientA.cmdAndWait(
+    clientA.cmds.addStory(roomId, firstUserId, 'A super story'),
+    2
+  );
+  await clientA.cmdAndWait(
+    clientA.cmds.giveEstimate(roomId, firstUserId, storyAdded.payload.storyId, 4),
+    3 // given, revealed, consensus
+  );
+
+  // second user joins room with already a story in it
+  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
+  await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
+  await clientB.cmdAndWait(clientB.cmds.setEmail(roomId, secondUserId, 'test.johnny@gmail.com'));
+
+  const cmdId = clientA.cmds.leaveRoom(roomId, firstUserId);
+  await clientB.waitForEvents(cmdId, 1); // leftRoom
+
+  // in the end, write to file and close socket
+  await clientA.dumpAllEvents(outputFile);
+  clientA.disconnect();
+  clientB.disconnect();
+});
+
+test('includeAndExcludeTest: two users, one excludes and includes himself', async () => {
+  const outputFile = path.join(clientEventActionReducerScenarioDir, 'includeAndExcludeTest.json');
+
+  const client = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+  const secondUserId = uuid();
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId), 2);
+
+  await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
+  await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
+
+  await client.cmdAndWait(client.cmds.toggleExclude(roomId, firstUserId));
+  await client.cmdAndWait(client.cmds.toggleExclude(roomId, firstUserId));
+
+  // in the end, write to file and close socket
+  await client.dumpAllEvents(outputFile);
+  client.disconnect();
+});

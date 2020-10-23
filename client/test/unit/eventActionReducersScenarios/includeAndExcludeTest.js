@@ -1,79 +1,53 @@
-import {v4 as uuid} from 'uuid';
+import {promises as fs} from 'fs';
+import path from 'path';
 
-import initialState from '../../../app/store/initialState';
-import {EVENT_ACTION_TYPES} from '../../../app/actions/types';
-import eventReducer from '../../../app/services/eventReducer';
+import initialState from '../../../app/store/initialState.js';
+import reduceMultipleEvents from './reduceMultipleEvents';
+
+let events;
+
+beforeAll(async () => {
+  const eventRaw = await fs.readFile(
+    path.resolve(__dirname, './includeAndExcludeTest.json'),
+    'utf-8'
+  );
+  events = JSON.parse(eventRaw);
+  console.log(
+    `Loaded events for scenarios. ${events.length} in total. [${events
+      .map((e, i) => i + '=>' + e.name)
+      .join(', ')}]`
+  );
+});
 
 test('Exclude and Include', () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
+  const joinedEvtOne = events[1];
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      userMenuShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          id: otherUserId,
-          disconnected: false,
-          username: 'Other John'
-        }
-      }
-    }
-  };
-
-  // own user excluded himself
-  const excludedAction = {
-    event: {
-      id: uuid(),
-      userId: ownUserId,
-      correlationId: uuid(),
-      name: 'excludedFromEstimations',
-      roomId,
-      payload: {}
+  modifiedState = reduceMultipleEvents(
+    {
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    type: EVENT_ACTION_TYPES.excludedFromEstimations
-  };
-  modifiedState = eventReducer(startingState, excludedAction);
+    events.slice(0, 8) // up until first "toggle" -> "excludedFromEstimations"
+  );
 
-  expect(modifiedState.users[ownUserId]).toEqual({
+  expect(modifiedState.users[joinedEvtOne.userId]).toEqual({
+    avatar: 0,
     disconnected: false,
-    excluded: true,
-    id: ownUserId,
+    excluded: true, // <<-- flag set
+    id: joinedEvtOne.userId,
     username: 'Jim'
   });
 
-  // own user included himself again
-  const includedAction = {
-    event: {
-      id: uuid(),
-      userId: ownUserId,
-      correlationId: uuid(),
-      name: 'includedInEstimations',
-      roomId,
-      payload: {}
-    },
-    type: EVENT_ACTION_TYPES.includedInEstimations
-  };
-  modifiedState = eventReducer(startingState, includedAction);
+  modifiedState = reduceMultipleEvents(modifiedState, [events[8]]);
 
-  expect(modifiedState.users[ownUserId]).toEqual({
+  expect(modifiedState.users[joinedEvtOne.userId]).toEqual({
+    avatar: 0,
     disconnected: false,
-    excluded: false,
-    id: ownUserId,
+    excluded: false, // <<-- flag unset
+    id: joinedEvtOne.userId,
     username: 'Jim'
   });
 });

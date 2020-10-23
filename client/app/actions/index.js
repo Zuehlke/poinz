@@ -8,7 +8,7 @@ import appConfig from '../services/appConfig';
 import {
   LOCATION_CHANGED,
   TOGGLE_BACKLOG,
-  TOGGLE_USER_MENU,
+  TOGGLE_SETTINGS,
   TOGGLE_LOG,
   EDIT_STORY,
   CANCEL_EDIT_STORY,
@@ -330,7 +330,7 @@ export const fetchStatus = () => (dispatch) => {
 export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
 export const showTrash = () => ({type: SHOW_TRASH});
 export const hideTrash = () => ({type: HIDE_TRASH});
-export const toggleUserMenu = () => ({type: TOGGLE_USER_MENU});
+export const toggleSettings = () => ({type: TOGGLE_SETTINGS});
 export const toggleLog = () => ({type: TOGGLE_LOG});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});

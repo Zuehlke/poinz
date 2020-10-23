@@ -1,237 +1,63 @@
-import {v4 as uuid} from 'uuid';
+import {promises as fs} from 'fs';
+import path from 'path';
 
 import initialState from '../../../app/store/initialState.js';
-import {EVENT_ACTION_TYPES} from '../../../app/actions/types';
 import clientSettingsStore from '../../../app/store/clientSettingsStore';
-import reduceMultipleEventActions from './reduceMultipleEventActions';
-import eventReducer from '../../../app/services/eventReducer';
+import reduceMultipleEvents from './reduceMultipleEvents';
 
-test('You joining a new room', () => {
-  const cmdId = uuid();
+let events;
 
-  const startingState = {
-    ...initialState(),
-    pendingJoinCommandId: cmdId
-  };
-  let modifiedState;
-
-  const userId = uuid();
-  const roomId = uuid();
-  const eventActions = [
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: cmdId,
-        name: 'roomCreated',
-        roomId,
-        payload: {}
-      },
-      type: EVENT_ACTION_TYPES.roomCreated
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: cmdId,
-        name: 'joinedRoom',
-        roomId,
-        payload: {
-          users: [
-            {
-              disconnected: false,
-              id: userId,
-              avatar: 4
-            }
-          ],
-          stories: []
-        }
-      },
-      type: EVENT_ACTION_TYPES.joinedRoom
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: uuid(),
-        name: 'usernameSet',
-        roomId,
-        payload: {
-          username: 'Chrome'
-        }
-      },
-      type: EVENT_ACTION_TYPES.usernameSet
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: uuid(),
-        name: 'emailSet',
-        roomId,
-        payload: {
-          email: 'test@super.com'
-        }
-      },
-      type: EVENT_ACTION_TYPES.emailSet
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: uuid(),
-        name: 'avatarSet',
-        roomId,
-        payload: {
-          avatar: 4
-        }
-      },
-      type: EVENT_ACTION_TYPES.avatarSet
-    }
-  ];
-
-  modifiedState = reduceMultipleEventActions(startingState, eventActions);
-
-  expect(modifiedState.roomId).toEqual(roomId);
-  expect(modifiedState.userId).toEqual(userId);
-  expect(modifiedState.users).toEqual({
-    [userId]: {
-      disconnected: false,
-      id: userId,
-      username: 'Chrome',
-      email: 'test@super.com',
-      avatar: 4
-    }
-  });
-
-  expect(clientSettingsStore.getPresetUserId()).toEqual(userId);
-  expect(clientSettingsStore.getPresetUsername()).toEqual('Chrome');
-  expect(clientSettingsStore.getPresetEmail()).toEqual('test@super.com');
-  expect(clientSettingsStore.getPresetAvatar()).toEqual(4);
+beforeAll(async () => {
+  const eventRaw = await fs.readFile(
+    path.resolve(__dirname, './roomJoiningAndLeavingTest.json'),
+    'utf-8'
+  );
+  events = JSON.parse(eventRaw);
+  console.log(
+    `Loaded events for scenarios. ${events.length} in total. [${events
+      .map((e, i) => i + '=>' + e.name)
+      .join(', ')}]`
+  );
 });
 
-test('You joining a room with stories', () => {
-  const cmdId = uuid();
-
-  const startingState = {
-    ...initialState(),
-    pendingJoinCommandId: cmdId
-  };
+test('You join an existing room', () => {
   let modifiedState;
 
-  const otherUserId = uuid();
-  const userId = uuid();
-  const roomId = uuid();
-  const storyId = uuid();
+  const otherJoinEvent = events[2];
+  const otherUserId = otherJoinEvent.userId;
 
-  const eventActions = [
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: cmdId,
-        name: 'roomCreated',
-        roomId,
-        payload: {}
-      },
-      type: EVENT_ACTION_TYPES.roomCreated
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: cmdId,
-        name: 'joinedRoom',
-        roomId,
-        payload: {
-          users: [
-            {
-              disconnected: false,
-              id: userId,
-              avatar: 4
-            },
-            {
-              disconnected: false,
-              id: otherUserId,
-              username: 'theOtherOne',
-              avatar: 0
-            }
-          ],
-          stories: [
-            {
-              title: 'jgdlkg',
-              id: storyId,
-              description: '',
-              revealed: true,
-              consensus: 3,
-              createdAt: 1601628893157,
-              estimations: {
-                [userId]: 3
-              }
-            }
-          ]
-        }
-      },
-      type: EVENT_ACTION_TYPES.joinedRoom
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: uuid(),
-        name: 'usernameSet',
-        roomId,
-        payload: {
-          username: 'Chrome'
-        }
-      },
-      type: EVENT_ACTION_TYPES.usernameSet
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: uuid(),
-        name: 'emailSet',
-        roomId,
-        payload: {
-          email: 'test@super.com'
-        }
-      },
-      type: EVENT_ACTION_TYPES.emailSet
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: userId,
-        correlationId: uuid(),
-        name: 'avatarSet',
-        roomId,
-        payload: {
-          avatar: 4
-        }
-      },
-      type: EVENT_ACTION_TYPES.avatarSet
-    }
-  ];
+  const ourJoinEvent = events[9];
+  const ourUserId = ourJoinEvent.userId;
 
-  modifiedState = reduceMultipleEventActions(startingState, eventActions);
+  const storyAddedEvent = events[4];
+  const storyId = storyAddedEvent.payload.storyId;
 
-  expect(modifiedState.roomId).toEqual(roomId);
-  expect(modifiedState.userId).toEqual(userId);
+  modifiedState = reduceMultipleEvents(
+    {
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: ourJoinEvent.correlationId
+    },
+    events.slice(9, 13) // skip everything up until second user (that's us!) joined
+  );
+
+  expect(modifiedState.roomId).toEqual(events[0].roomId);
+  expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
   expect(modifiedState.users).toEqual({
     [otherUserId]: {
+      avatar: 0,
       disconnected: false,
       id: otherUserId,
-      username: 'theOtherOne',
-      avatar: 0
+      username: 'Jim'
     },
-    [userId]: {
+    [ourUserId]: {
+      avatar: 0,
       disconnected: false,
-      id: userId,
-      username: 'Chrome',
-      email: 'test@super.com',
-      avatar: 4
+      excluded: false,
+      id: ourUserId,
+      username: 'John',
+      email: 'test.johnny@gmail.com',
+      emailHash: 'f040d8bf881a96d34e193983b3df6087'
     }
   });
 
@@ -239,10 +65,10 @@ test('You joining a room with stories', () => {
   expect(modifiedState.stories).toEqual({
     [storyId]: {
       id: storyId,
-      title: 'jgdlkg',
-      consensus: 3,
-      createdAt: 1601628893157,
-      description: '',
+      title: storyAddedEvent.payload.title,
+      createdAt: storyAddedEvent.payload.createdAt,
+      description: storyAddedEvent.payload.description,
+      consensus: 4,
       revealed: true
     }
   });
@@ -250,238 +76,124 @@ test('You joining a room with stories', () => {
   // the estimations in a separate object on the state
   expect(modifiedState.estimations).toEqual({
     [storyId]: {
-      [userId]: 3
+      [otherUserId]: 4
     }
   });
 
-  expect(clientSettingsStore.getPresetUserId()).toEqual(userId);
-  expect(clientSettingsStore.getPresetUsername()).toEqual('Chrome');
-  expect(clientSettingsStore.getPresetEmail()).toEqual('test@super.com');
-  expect(clientSettingsStore.getPresetAvatar()).toEqual(4);
+  expect(clientSettingsStore.getPresetUserId()).toEqual(ourUserId);
+  expect(clientSettingsStore.getPresetAvatar()).toEqual(events[10].payload.avatar);
+  expect(clientSettingsStore.getPresetUsername()).toEqual(events[11].payload.username);
+  expect(clientSettingsStore.getPresetEmail()).toEqual(events[12].payload.email);
 });
 
-test('You in a room, other user joins', () => {
+test('You in a room, other user joins ', () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
+  const ourJoinEvent = events[2];
+  const ourUserId = ourJoinEvent.userId;
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      userMenuShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          id: ownUserId,
-          username: 'Jim'
-        }
-      },
-      stories: {}
-    }
-  };
-  clientSettingsStore.setPresetUserId(ownUserId);
+  const otherJoinEvent = events[9];
+  const otherUserId = otherJoinEvent.userId;
 
-  const eventActions = [
+  modifiedState = reduceMultipleEvents(
     {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'joinedRoom',
-        roomId,
-        payload: {
-          users: [
-            {
-              id: ownUserId,
-              username: 'Jim'
-            },
-            {
-              id: otherUserId,
-              disconnected: false,
-              excluded: false
-            }
-          ],
-          stories: []
-        }
-      },
-      type: EVENT_ACTION_TYPES.joinedRoom
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: ourJoinEvent.correlationId
     },
-    {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'usernameSet',
-        roomId,
-        payload: {
-          username: 'Other John'
-        }
-      },
-      type: EVENT_ACTION_TYPES.usernameSet
-    }
-  ];
+    events.slice(0, 13)
+  );
 
-  modifiedState = reduceMultipleEventActions(startingState, eventActions);
+  expect(modifiedState.roomId).toEqual(ourJoinEvent.roomId);
+  expect(modifiedState.userId).toEqual(ourUserId);
 
-  expect(modifiedState.roomId).toEqual(roomId);
-  expect(modifiedState.userId).toEqual(ownUserId);
   expect(modifiedState.users).toEqual({
     [otherUserId]: {
+      avatar: 0,
       disconnected: false,
+      email: 'test.johnny@gmail.com',
+      emailHash: 'f040d8bf881a96d34e193983b3df6087',
       excluded: false,
       id: otherUserId,
-      username: 'Other John'
+      username: 'John'
     },
-    [ownUserId]: {
-      id: ownUserId,
+    [ourUserId]: {
+      avatar: 0,
+      disconnected: false,
+      id: ourUserId,
       username: 'Jim'
     }
   });
 
-  expect(clientSettingsStore.getPresetUserId()).toEqual(ownUserId);
+  expect(clientSettingsStore.getPresetUserId()).toEqual(ourUserId);
 });
 
-test('Two users in a room, the other leaves', () => {
+test('You join an existing room, the other leaves', () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
-  const storyId = uuid();
+  const otherJoinEvent = events[1];
+  const otherUserId = otherJoinEvent.userId;
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      userMenuShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          disconnected: false,
-          id: otherUserId,
-          username: 'The other One'
-        }
-      },
-      stories: {
-        [storyId]: {
-          title: 'First Story',
-          description: 'With description',
-          id: storyId,
-          estimations: {
-            [otherUserId]: 8
-          },
-          createdAt: 1592120422988
-        }
-      }
-    }
-  };
-  clientSettingsStore.setPresetUserId(ownUserId);
+  const ourJoinEvent = events[9];
+  const ourUserId = ourJoinEvent.userId;
 
-  const leftRoomAction = {
-    event: {
-      id: uuid(),
-      userId: otherUserId,
-      correlationId: uuid(),
-      name: 'leftRoom',
-      roomId,
-      payload: {}
+  const storyAddedEvent = events[4];
+  const storyId = storyAddedEvent.payload.storyId;
+
+  modifiedState = reduceMultipleEvents(
+    {
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: ourJoinEvent.correlationId
     },
-    type: EVENT_ACTION_TYPES.leftRoom
-  };
+    events.slice(9, 13) // skip everything up until second user (that's us!) joined
+  );
 
-  modifiedState = eventReducer(startingState, leftRoomAction);
+  expect(modifiedState.roomId).toEqual(events[0].roomId);
+  expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
+  expect(Object.values(modifiedState.users).length).toBe(2);
 
-  expect(modifiedState.users).toEqual({
-    [ownUserId]: startingState.users[ownUserId]
-  });
+  modifiedState = reduceMultipleEvents(modifiedState, [events[13]]); // leftRoom event
+  expect(modifiedState.roomId).toEqual(events[0].roomId);
+  expect(modifiedState.userId).toEqual(ourUserId);
+  expect(Object.values(modifiedState.users).length).toBe(1); // only one user left
+  expect(Object.values(modifiedState.users)[0].id).toBe(ourUserId);
 
   expect(modifiedState.stories).toEqual({
     [storyId]: {
-      title: 'First Story',
-      description: 'With description',
+      title: storyAddedEvent.payload.title,
       id: storyId,
-      estimations: {
-        [otherUserId]: 8 // we keep estimations of users.  mainly because we want to still have these values when exporting (to json file)
-      },
-      createdAt: 1592120422988
+      consensus: 4,
+      revealed: true,
+      createdAt: storyAddedEvent.payload.createdAt
+    }
+  });
+
+  expect(modifiedState.estimations).toEqual({
+    [storyId]: {
+      [otherUserId]: 4 // we keep estimations of users.  mainly because we want to still have these values when exporting the room (to json file)
     }
   });
 });
 
-test('Two users in a room, you leave', () => {
+test('You in a room, other user joins, you leave', () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
-  const storyId = uuid();
+  const ourJoinEvent = events[2];
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      userMenuShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          disconnected: false,
-          id: otherUserId,
-          username: 'The other One'
-        }
-      },
-      stories: {
-        [storyId]: {
-          title: 'First Story',
-          description: 'With description',
-          id: storyId,
-          estimations: {
-            [otherUserId]: 8
-          },
-          createdAt: 1592120422988
-        }
-      }
-    }
-  };
-  clientSettingsStore.setPresetUserId(ownUserId);
-
-  const leftRoomAction = {
-    event: {
-      id: uuid(),
-      userId: ownUserId,
-      correlationId: uuid(),
-      name: 'leftRoom',
-      roomId,
-      payload: {}
+  modifiedState = reduceMultipleEvents(
+    {
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: ourJoinEvent.correlationId
     },
-    type: EVENT_ACTION_TYPES.leftRoom
-  };
+    events.slice(0, 13)
+  );
+  expect(Object.values(modifiedState.users).length).toBe(2);
 
-  modifiedState = eventReducer(startingState, leftRoomAction);
+  modifiedState = reduceMultipleEvents(modifiedState, [events[13]]);
 
-  // When own user leaves, tate is reset. except, actionLog has one new entry (log is added after event reduced).
-
+  // When own user leaves, state is reset. except, actionLog has one new entry (log is added after event reduced).
   expect(modifiedState.actionLog.length).toBe(1);
   // so we set it to an empty array manually here
   modifiedState.actionLog = [];

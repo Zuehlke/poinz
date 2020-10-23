@@ -1,7 +1,7 @@
 import styled, {keyframes} from 'styled-components';
 
 import {COLOR_BACKGROUND_GREY, COLOR_ORANGE} from './colors';
-import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH} from './dimensions';
+import {LEFT_MENU_WIDTH, device} from './dimensions';
 import {ZuehlkeFont} from './dimensions';
 
 export const StyledBoard = styled.div`
@@ -11,14 +11,18 @@ export const StyledBoard = styled.div`
   background: ${COLOR_BACKGROUND_GREY};
   flex-grow: 1;
 
-  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+  @media ${device.desktop} {
     padding-left: ${LEFT_MENU_WIDTH}px;
     left: 0;
   }
 `;
 
 export const StyledEstimation = styled.div`
-  padding: 16px;
+  padding: 16px 8px;
+
+  @media ${device.modernMobile} {
+    padding: 16px;
+  }
 `;
 
 export const BoardActionButtons = styled.div`
@@ -85,7 +89,7 @@ export const StyledCard = styled.button`
     font-family: ${ZuehlkeFont};
   }
 
-  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+  @media ${device.desktop} {
     &,
     &:focus {
       min-width: 100px;
@@ -100,9 +104,13 @@ export const StyledCardInner = styled.div`
   padding: 28px 0;
   box-sizing: border-box;
   border-radius: 12px;
-  border: ${({selected}) => (selected ? '4px solid ' + COLOR_ORANGE : '4px solid white')};
+  border: ${({selected}) => (selected ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
 
   &:hover {
     box-shadow: inset 0 -113px 113px -44px rgba(19, 18, 18, 0.39);
+  }
+
+  @media ${device.modernMobile} {
+    border-width: 4px;
   }
 `;

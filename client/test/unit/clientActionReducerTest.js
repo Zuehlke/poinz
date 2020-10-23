@@ -11,7 +11,7 @@ import {
   STATUS_FETCHED,
   TOGGLE_BACKLOG,
   TOGGLE_LOG,
-  TOGGLE_USER_MENU,
+  TOGGLE_SETTINGS,
   SHOW_TRASH,
   HIDE_TRASH
 } from '../../app/actions/types';
@@ -26,7 +26,7 @@ import {
   showTrash,
   toggleBacklog,
   toggleLog,
-  toggleUserMenu
+  toggleSettings
 } from '../../app/actions';
 
 test(COMMAND_SENT, () => {
@@ -117,15 +117,15 @@ test(EVENT_RECEIVED, () => {
 test(TOGGLE_BACKLOG, () => {
   const startingState = initialState();
 
-  // usermenu (settings) is currently shown, hide it
-  startingState.userMenuShown = true;
+  // settings is currently shown, hide it
+  startingState.settingsShown = true;
   let modifiedState = clientActionReducer(startingState, toggleBacklog());
   expect(modifiedState.backlogShown).toBe(true);
-  expect(modifiedState.userMenuShown).toBe(false);
+  expect(modifiedState.settingsShown).toBe(false);
 
   modifiedState = clientActionReducer(modifiedState, toggleBacklog());
   expect(modifiedState.backlogShown).toBe(false);
-  expect(modifiedState.userMenuShown).toBe(false);
+  expect(modifiedState.settingsShown).toBe(false);
 
   // if action log is currently shown, hide it
   startingState.logShown = true;
@@ -138,27 +138,27 @@ test(TOGGLE_BACKLOG, () => {
   expect(modifiedState.logShown).toBe(false);
 });
 
-test(TOGGLE_USER_MENU, () => {
+test(TOGGLE_SETTINGS, () => {
   const startingState = initialState();
 
   // if backlog (stories) is currently shown, hide it
   startingState.backlogShown = true;
-  let modifiedState = clientActionReducer(startingState, toggleUserMenu());
-  expect(modifiedState.userMenuShown).toBe(true);
+  let modifiedState = clientActionReducer(startingState, toggleSettings());
+  expect(modifiedState.settingsShown).toBe(true);
   expect(modifiedState.backlogShown).toBe(false);
 
-  modifiedState = clientActionReducer(modifiedState, toggleUserMenu());
-  expect(modifiedState.userMenuShown).toBe(false);
+  modifiedState = clientActionReducer(modifiedState, toggleSettings());
+  expect(modifiedState.settingsShown).toBe(false);
   expect(modifiedState.backlogShown).toBe(false);
 
   // if action log is currently shown, hide it
   startingState.logShown = true;
-  modifiedState = clientActionReducer(startingState, toggleUserMenu());
-  expect(modifiedState.userMenuShown).toBe(true);
+  modifiedState = clientActionReducer(startingState, toggleSettings());
+  expect(modifiedState.settingsShown).toBe(true);
   expect(modifiedState.logShown).toBe(false);
 
-  modifiedState = clientActionReducer(modifiedState, toggleUserMenu());
-  expect(modifiedState.userMenuShown).toBe(false);
+  modifiedState = clientActionReducer(modifiedState, toggleSettings());
+  expect(modifiedState.settingsShown).toBe(false);
   expect(modifiedState.logShown).toBe(false);
 });
 
@@ -175,15 +175,15 @@ test(TOGGLE_LOG, () => {
   expect(modifiedState.logShown).toBe(false);
   expect(modifiedState.backlogShown).toBe(false);
 
-  // usermenu (settings) is currently shown, hide it
-  startingState.userMenuShown = true;
+  // settings is currently shown, hide it
+  startingState.settingsShown = true;
   modifiedState = clientActionReducer(startingState, toggleLog());
   expect(modifiedState.logShown).toBe(true);
-  expect(modifiedState.userMenuShown).toBe(false);
+  expect(modifiedState.settingsShown).toBe(false);
 
   modifiedState = clientActionReducer(modifiedState, toggleLog());
   expect(modifiedState.logShown).toBe(false);
-  expect(modifiedState.userMenuShown).toBe(false);
+  expect(modifiedState.settingsShown).toBe(false);
 });
 
 test(EDIT_STORY + ' and ' + CANCEL_EDIT_STORY, () => {
@@ -215,8 +215,9 @@ test(EDIT_STORY + ' and ' + CANCEL_EDIT_STORY, () => {
 test(SET_LANGUAGE, () => {
   const startingState = initialState();
 
-  let modifiedState = clientActionReducer(startingState, setLanguage('someLangCode'));
+  const modifiedState = clientActionReducer(startingState, setLanguage('someLangCode'));
   expect(modifiedState.language).toEqual('someLangCode');
+  expect(modifiedState.translator).not.toBe(startingState.translator); // make sure "translator" changes, so that components do re-render
 });
 
 test(HIDE_NEW_USER_HINTS, () => {

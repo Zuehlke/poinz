@@ -13,7 +13,7 @@ it('join room, open user menu and change settings', function () {
   cy.get(tid('whoamiSimple')).contains(this.user.username);
 
   cy.get(tid('topBar'));
-  cy.get(tid('userMenuToggle')).click();
+  cy.get(tid('settingsToggle')).click();
 
   // -- set a new username
   cy.get(tid('usernameInput')).clear().type(this.sergio.username);
@@ -29,22 +29,22 @@ it('join room, open user menu and change settings', function () {
   cy.get(tid('users')).contains(' whitespace (allowed)');
 
   // -- switch language
-  cy.get(tid('userMenu') + ' #language-selector-de').click();
-  cy.get(tid('userMenu')).contains('Benutzername');
-  cy.get(tid('userMenu') + ' #language-selector-en').click();
-  cy.get(tid('userMenu')).contains('Username');
+  cy.get(tid('settings') + ' #language-selector-de').click();
+  cy.get(tid('settings')).contains('Benutzername');
+  cy.get(tid('settings') + ' #language-selector-en').click();
+  cy.get(tid('settings')).contains('Username');
 
   // -- select another avatar (user image)
-  cy.get(tid('userMenu', 'avatarGrid') + ' img:nth-child(4)').click();
+  cy.get(tid('settings', 'avatarGrid') + ' img:nth-child(4)').click();
 
   // -- set gravatar email address
-  cy.get(tid('userMenu', 'gravatarEmailInput')).type(this.user.email);
+  cy.get(tid('settings', 'gravatarEmailInput')).type(this.user.email);
   cy.get(tid('saveEmailButton')).click();
   cy.wait(400);
-  cy.get(tid('userMenu', 'gravatarEmailInput')).clear().type(this.sergio.email);
+  cy.get(tid('settings', 'gravatarEmailInput')).clear().type(this.sergio.email);
   cy.get(tid('saveEmailButton')).click();
 
   // -- mark as excluded / included
-  cy.get(tid('userMenu', 'excludedToggle')).click();
-  cy.get(tid('userMenu', 'excludedToggle')).click();
+  cy.get(tid('settings', 'excludedToggle')).click();
+  cy.get(tid('settings', 'excludedToggle')).click();
 });

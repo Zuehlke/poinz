@@ -1,6 +1,6 @@
 {
   "name": "poinz",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -23,10 +23,10 @@
     "bluebird": "3.7.2",
     "del": "6.0.0",
     "fs-extra": "9.0.1",
-    "glob": "^7.1.6",
+    "glob": "7.1.6",
     "npm-check-updates": "9.0.3",
-    "prettier": "^2.1.2",
-    "cross-spawn": "^7.0.3"
+    "prettier": "2.1.2",
+    "cross-spawn": "7.0.3"
   },
   "engines": {
     "node": ">=10"

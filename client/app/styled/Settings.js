@@ -7,9 +7,9 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from './colors';
-import {MEDIA_MIN_WIDTH_THRESH, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
+import {device, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
 
-export const StyledUserMenu = styled.div`
+export const StyledSettings = styled.div`
   z-index: 10;
   position: fixed;
   width: ${(props) => (props.shown ? '100%' : RIGHT_MENU_WIDTH + 'px')};
@@ -24,7 +24,7 @@ export const StyledUserMenu = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+  @media ${device.desktop} {
     width: ${RIGHT_MENU_WIDTH}px;
   }
 
@@ -35,7 +35,7 @@ export const StyledUserMenu = styled.div`
     position: absolute;
     bottom: 20px;
 
-    @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+    @media ${device.desktop} {
       border-right: 1px solid ${COLOR_LIGHTER_GREY};
     }
   }
@@ -48,6 +48,14 @@ export const StyledUserMenu = styled.div`
   }
   .pure-form {
     overflow-y: auto;
+  }
+`;
+
+export const StyledArea = styled.div`
+  margin-bottom: 30px;
+  > h4 {
+    margin-top: 2px;
+    margin-bottom: 8px;
   }
 `;
 

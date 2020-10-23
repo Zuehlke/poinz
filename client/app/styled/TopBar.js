@@ -1,6 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from './colors';
-import {LEFT_MENU_WIDTH, MEDIA_MIN_WIDTH_THRESH, TOPBAR_HEIGHT, ZuehlkeFont} from './dimensions';
+import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from './dimensions';
 
 export const StyledTopBar = styled.div`
   z-index: 1003;
@@ -105,7 +105,7 @@ export const StyledBacklogToggle = styled.a`
   height: 34px;
   background: ${COLOR_BLUE};
 
-  @media (min-width: ${MEDIA_MIN_WIDTH_THRESH}) {
+  @media ${device.desktop} {
     position: fixed;
     left: ${LEFT_MENU_WIDTH};
     display: none;

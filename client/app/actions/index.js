@@ -230,6 +230,15 @@ export const toggleExcluded = () => (dispatch, getState, sendCommand) => {
   });
 };
 
+export const toggleAutoReveal = () => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  sendCommand({
+    name: 'toggleAutoReveal',
+    roomId: state.roomId,
+    payload: {}
+  });
+};
+
 export const kick = (userId) => (dispatch, getState, sendCommand) => {
   const state = getState();
   sendCommand({

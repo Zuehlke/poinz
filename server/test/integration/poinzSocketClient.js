@@ -44,7 +44,9 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       deleteStory,
       giveEstimate,
       clearEstimate,
-      newRound
+      newRound,
+      setCardConfig,
+      toggleAutoReveal
     }
   };
 
@@ -307,6 +309,26 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       payload: {
         storyId
       }
+    });
+  }
+
+  function setCardConfig(roomId, userId, cardConfig) {
+    return sendCommand({
+      name: 'setCardConfig',
+      roomId,
+      userId,
+      payload: {
+        cardConfig
+      }
+    });
+  }
+
+  function toggleAutoReveal(roomId, userId) {
+    return sendCommand({
+      name: 'toggleAutoReveal',
+      roomId,
+      userId,
+      payload: {}
     });
   }
 }

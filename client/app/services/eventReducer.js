@@ -154,7 +154,8 @@ const eventActionHandlers = {
           stories: storiesWithoutEstimations,
           estimations,
           pendingJoinCommand: undefined,
-          cardConfig: payload.cardConfig
+          cardConfig: payload.cardConfig,
+          autoReveal: payload.autoReveal
         };
       } else {
         // if our client state has already a userId set, this event indicates that someone else joined
@@ -573,6 +574,22 @@ const eventActionHandlers = {
       cardConfig: payload.cardConfig
     }),
     log: (username) => `${username} set new custom card configuration for this room`
+  },
+
+  [EVENT_ACTION_TYPES.autoRevealOn]: {
+    fn: (state) => ({
+      ...state,
+      autoReveal: true
+    }),
+    log: (username) => `${username} enabled auto reveal for this room`
+  },
+
+  [EVENT_ACTION_TYPES.autoRevealOff]: {
+    fn: (state) => ({
+      ...state,
+      autoReveal: false
+    }),
+    log: (username) => `${username} disabled auto reveal for this room`
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {

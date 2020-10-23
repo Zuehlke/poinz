@@ -41,6 +41,7 @@ test('You join an existing room', () => {
     events.slice(9, 13) // skip everything up until second user (that's us!) joined
   );
 
+  expect(modifiedState.autoReveal).toBe(true);
   expect(modifiedState.roomId).toEqual(events[0].roomId);
   expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
   expect(modifiedState.users).toEqual({

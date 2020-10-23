@@ -12,7 +12,8 @@ import roomsStoreFactory from './store/roomStoreFactory';
 const LOGGER = getLogger('server');
 
 startup().catch((err) => {
-  throw new Error(err);
+  LOGGER.error('Could not start up! ' + err.message);
+  process.exit(1);
 });
 
 async function startup() {

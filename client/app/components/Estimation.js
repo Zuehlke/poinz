@@ -34,13 +34,14 @@ const Estimation = ({
   reveal
 }) => {
   const revealed = selectedStory.revealed;
+  const hasConsensus = selectedStory.consensus !== undefined; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledEstimation data-testid="estimationArea">
       <StyledSelectedStory data-testid="story">
         <StyledStoryTitle>
           {selectedStory.title}
-          {selectedStory.consensus && (
+          {hasConsensus && (
             <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
           )}
         </StyledStoryTitle>
@@ -49,7 +50,7 @@ const Estimation = ({
           <Anchorify text={selectedStory.description || ''} />
         </StyledStoryText>
 
-        {selectedStory.consensus && applause && (
+        {hasConsensus && applause && (
           <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
         )}
       </StyledSelectedStory>

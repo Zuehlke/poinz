@@ -6,7 +6,7 @@
     "describe": false,
     "test": false,
     "expect": false,
-    "before": false,
+    "beforeAll": false,
     "beforeEach": false,
     "afterEach": false
   }

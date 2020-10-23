@@ -1,266 +1,85 @@
-import {v4 as uuid} from 'uuid';
+import {promises as fs} from 'fs';
+import path from 'path';
 
 import initialState from '../../../app/store/initialState';
-import {EVENT_ACTION_TYPES} from '../../../app/actions/types';
-import reduceMultipleEventActions from './reduceMultipleEventActions';
-import eventReducer from '../../../app/services/eventReducer';
+import {reduceMultipleEvents} from './reduceMultipleEventActions';
+
+let events;
+
+beforeAll(async () => {
+  const eventRaw = await fs.readFile(path.resolve(__dirname, './estimatingTest.json'), 'utf-8');
+  events = JSON.parse(eventRaw);
+  console.log(
+    `Loaded events for scenarios. ${events.length} in total. [${events
+      .map((e, i) => i + '=>' + e.name)
+      .join(', ')}]`
+  );
+});
 
 test('Estimation with two users', () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
-  const firstStoryId = uuid();
-  const secondStoryId = uuid();
+  const joinedEvtOne = events[1];
+  const joinedEvtTwo = events[3];
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      settingsShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          id: otherUserId,
-          disconnected: false,
-          excluded: false,
-          username: 'Other John'
-        }
-      },
-      selectedStory: firstStoryId,
-      stories: {
-        [secondStoryId]: {
-          createdAt: 1592115972307,
-          description: 'dscription second... from other john',
-          id: secondStoryId,
-          title: 'Second story'
-        },
-        [firstStoryId]: {
-          createdAt: 1592115935676,
-          description: 'description one',
-          id: firstStoryId,
-          title: 'FirstStory'
-        }
-      },
-      estimations: {},
-      cardConfig: []
-    }
-  };
+  const addedEvtOne = events[7];
+  const storyIdOne = addedEvtOne.payload.storyId;
+  const addedEvtTwo = events[9];
+  const storyIdTwo = addedEvtTwo.payload.storyId;
 
-  // own user estimates firstStory
-  const ownUserEstimateGivenAction = {
-    event: {
-      id: uuid(),
-      userId: ownUserId,
-      correlationId: uuid(),
-      name: 'storyEstimateGiven',
-      roomId,
-      payload: {
-        value: 3,
-        storyId: firstStoryId
-      }
-    },
-    type: EVENT_ACTION_TYPES.storyEstimateGiven
-  };
-  modifiedState = eventReducer(startingState, ownUserEstimateGivenAction);
-
-  expect(modifiedState.stories[firstStoryId]).toEqual({
-    createdAt: 1592115935676,
-    description: 'description one',
-    id: firstStoryId,
-    title: 'FirstStory'
-  });
-  expect(modifiedState.estimations[firstStoryId]).toEqual({
-    [ownUserId]: 3
-  });
-
-  // own user cleares his estimation on firstStory
-  const ownUserEstimationClearedAction = {
-    event: {
-      id: uuid(),
-      userId: ownUserId,
-      correlationId: uuid(),
-      name: 'storyEstimateCleared',
-      roomId,
-      payload: {
-        storyId: firstStoryId
-      }
-    },
-    type: EVENT_ACTION_TYPES.storyEstimateCleared
-  };
-  modifiedState = eventReducer(startingState, ownUserEstimationClearedAction);
-
-  expect(modifiedState.estimations[firstStoryId]).toEqual({
-    // now empty again
-  });
-
-  // now both users estimate 5 -> revealed and consensusAchieved
-  const eventActions = [
+  modifiedState = reduceMultipleEvents(
     {
-      event: {
-        id: uuid(),
-        userId: ownUserId,
-        correlationId: uuid(),
-        name: 'storyEstimateGiven',
-        roomId,
-        payload: {
-          value: 5,
-          storyId: firstStoryId
-        }
-      },
-      type: EVENT_ACTION_TYPES.storyEstimateGiven
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'storyEstimateGiven',
-        roomId,
-        payload: {
-          value: 5,
-          storyId: firstStoryId
-        }
-      },
-      type: EVENT_ACTION_TYPES.storyEstimateGiven
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'revealed',
-        roomId,
-        payload: {
-          storyId: firstStoryId,
-          manually: false
-        }
-      },
-      type: EVENT_ACTION_TYPES.revealed
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'consensusAchieved',
-        roomId,
-        payload: {
-          storyId: firstStoryId,
-          value: 5
-        }
-      },
-      type: EVENT_ACTION_TYPES.consensusAchieved
-    }
-  ];
+    events.slice(0, 11) // up until first story estimate given
+  );
 
-  modifiedState = reduceMultipleEventActions(startingState, eventActions);
-
-  expect(modifiedState.stories[firstStoryId]).toEqual({
-    createdAt: 1592115935676,
-    description: 'description one',
-    revealed: true,
-    consensus: 5,
-    id: firstStoryId,
-    title: 'FirstStory'
+  expect(modifiedState.stories[storyIdOne]).toEqual({
+    createdAt: addedEvtOne.payload.createdAt,
+    description: 'This is a story',
+    id: storyIdOne,
+    title: 'ISSUE-SUPER-2'
   });
-  expect(modifiedState.estimations[firstStoryId]).toEqual({
-    [ownUserId]: 5,
-    [otherUserId]: 5
-  });
-
-  expect(modifiedState.applause).toBe(true);
-});
-
-test('New estimation round with two users', () => {
-  let modifiedState;
-
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
-  const firstStoryId = uuid();
-
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      settingsShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          id: otherUserId,
-          disconnected: false,
-          excluded: false,
-          username: 'Other John'
-        }
-      },
-      selectedStory: firstStoryId,
-      applause: true,
-      stories: {
-        [firstStoryId]: {
-          createdAt: 1592115935676,
-          description: 'description one',
-          revealed: true,
-          id: firstStoryId,
-          title: 'FirstStory'
-        }
-      },
-      estimations: {
-        [firstStoryId]: {
-          [ownUserId]: 5,
-          [otherUserId]: 8
-        }
-      }
-    }
-  };
-
-  // own user starts a new round on the firstStory
-  const ownUserNewEstimationRoundAction = {
-    event: {
-      id: uuid(),
-      userId: firstStoryId,
-      correlationId: uuid(),
-      name: 'newEstimationRoundStarted',
-      roomId,
-      payload: {
-        storyId: firstStoryId
-      }
-    },
-    type: EVENT_ACTION_TYPES.newEstimationRoundStarted
-  };
-  modifiedState = eventReducer(startingState, ownUserNewEstimationRoundAction);
-
-  expect(modifiedState.stories).toEqual({
-    [firstStoryId]: {
-      createdAt: 1592115935676,
-      description: 'description one',
-      id: firstStoryId,
-      consensus: undefined, // consensus set to undefined
-      revealed: false, // revealed flag set to false
-      title: 'FirstStory'
-    }
+  expect(modifiedState.stories[storyIdTwo]).toEqual({
+    createdAt: addedEvtTwo.payload.createdAt,
+    description: 'This is a second story',
+    id: storyIdTwo,
+    title: 'ISSUE-SUPER-5'
   });
 
   expect(modifiedState.estimations).toEqual({
-    // old values for first story removed
+    [storyIdOne]: {
+      [joinedEvtOne.userId]: 3
+    }
   });
 
+  modifiedState = reduceMultipleEvents(modifiedState, [events[11]]); //  storyEstimateCleared
+  expect(modifiedState.estimations).toEqual({
+    [storyIdOne]: {
+      // no estimations for this story anymore
+    }
+  });
+
+  modifiedState = reduceMultipleEvents(modifiedState, events.slice(12, 14)); // both did estimate
+  expect(modifiedState.estimations).toEqual({
+    [storyIdOne]: {
+      [joinedEvtOne.userId]: 5,
+      [joinedEvtTwo.userId]: 5
+    }
+  });
+
+  modifiedState = reduceMultipleEvents(modifiedState, events.slice(14, 16)); // revealed and consensus
+  expect(modifiedState.stories[storyIdOne].revealed).toBe(true);
+  expect(modifiedState.stories[storyIdOne].consensus).toBe(5);
+  expect(modifiedState.applause).toBe(true);
+
+  modifiedState = reduceMultipleEvents(modifiedState, [events[16]]); // new round
+  expect(modifiedState.stories[storyIdOne].revealed).toBe(false); // story no longer revealed
+  expect(modifiedState.stories[storyIdOne].consensus).toBe(undefined);
+  expect(modifiedState.estimations).toEqual({
+    // old values for story removed
+  });
   expect(modifiedState.applause).toBe(false);
 });

@@ -256,7 +256,6 @@ const eventActionHandlers = {
         id: payload.storyId,
         title: payload.title,
         description: payload.description,
-        estimations: {},
         createdAt: payload.createdAt
       };
       return {

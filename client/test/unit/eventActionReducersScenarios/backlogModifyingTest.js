@@ -1,233 +1,92 @@
-import {v4 as uuid} from 'uuid';
+import {promises as fs} from 'fs';
+import path from 'path';
 
 import initialState from '../../../app/store/initialState.js';
-import {EVENT_ACTION_TYPES} from '../../../app/actions/types';
-import reduceMultipleEventActions from './reduceMultipleEventActions';
-import eventReducer from '../../../app/services/eventReducer';
+import {reduceMultipleEvents} from './reduceMultipleEventActions';
 
-test('Adding stories', () => {
+let events;
+
+beforeAll(async () => {
+  const eventRaw = await fs.readFile(
+    path.resolve(__dirname, './backlogModifyingTest.json'),
+    'utf-8'
+  );
+  events = JSON.parse(eventRaw);
+  console.log(
+    `Loaded events for scenarios. ${events.length} in total. [${events
+      .map((e, i) => i + '=>' + e.name)
+      .join(', ')}]`
+  );
+});
+
+test('Adding Stories', async () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
+  const joinedEvtOne = events[1];
+  const addedEvtOne = events[7];
+  const addedEvtTwo = events[9];
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      settingsShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          id: otherUserId,
-          disconnected: false,
-          excluded: false,
-          username: 'Other John'
-        }
-      },
-      stories: {}
-    }
-  };
-
-  const firstStoryId = uuid();
-  const secondStoryId = uuid();
-  const eventActions = [
+  modifiedState = reduceMultipleEvents(
     {
-      event: {
-        id: uuid(),
-        userId: ownUserId,
-        correlationId: uuid(),
-        name: 'storyAdded',
-        roomId,
-        payload: {
-          title: 'FirstStory',
-          description: 'description one',
-          storyId: firstStoryId,
-          estimations: {},
-          createdAt: 1592115935676
-        }
-      },
-      type: EVENT_ACTION_TYPES.storyAdded
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    {
-      event: {
-        id: uuid(),
-        userId: ownUserId,
-        correlationId: uuid(),
-        name: 'storySelected',
-        roomId,
-        payload: {
-          storyId: firstStoryId
-        }
-      },
-      type: EVENT_ACTION_TYPES.storySelected
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'storyAdded',
-        roomId,
-        payload: {
-          title: 'Second story',
-          description: 'dscription second... from other john',
-          storyId: secondStoryId,
-          estimations: {},
-          createdAt: 1592115972307
-        }
-      },
-      type: EVENT_ACTION_TYPES.storyAdded
-    }
-  ];
-
-  modifiedState = reduceMultipleEventActions(startingState, eventActions);
-  expect(modifiedState.selectedStory).toEqual(firstStoryId);
+    events.slice(0, 10) // we use not all events, only the first 10 events until both stories are added
+  );
+  expect(modifiedState.selectedStory).toEqual(addedEvtOne.payload.storyId);
   expect(modifiedState.stories).toEqual({
-    [secondStoryId]: {
-      createdAt: 1592115972307,
-      description: 'dscription second... from other john',
-      estimations: {},
-      id: secondStoryId,
-      title: 'Second story'
+    // .stories is correctly stored as object. storyIds are the keys.
+    // no "estimations" on stories. are stored seperately on state
+    [addedEvtOne.payload.storyId]: {
+      id: addedEvtOne.payload.storyId,
+      title: addedEvtOne.payload.title,
+      description: addedEvtOne.payload.description,
+      createdAt: addedEvtOne.payload.createdAt
     },
-    [firstStoryId]: {
-      createdAt: 1592115935676,
-      description: 'description one',
-      estimations: {},
-      id: firstStoryId,
-      title: 'FirstStory'
+    [addedEvtTwo.payload.storyId]: {
+      id: addedEvtTwo.payload.storyId,
+      title: addedEvtTwo.payload.title,
+      description: addedEvtTwo.payload.description,
+      createdAt: addedEvtTwo.payload.createdAt
     }
   });
 });
 
-test('Editing stories', () => {
+test('Editing Stories', async () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
-  const firstStoryId = uuid();
-  const secondStoryId = uuid();
+  const joinedEvtOne = events[1];
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      settingsShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          id: otherUserId,
-          disconnected: false,
-          excluded: false,
-          username: 'Other John'
-        }
-      },
-      selectedStory: firstStoryId,
-      stories: {
-        [secondStoryId]: {
-          editMode: true,
-          createdAt: 1592115972307,
-          description: 'dscription second... from other john',
-          estimations: {},
-          id: secondStoryId,
-          title: 'Second story'
-        },
-        [firstStoryId]: {
-          editMode: true,
-          createdAt: 1592115935676,
-          description: 'description one',
-          estimations: {},
-          id: firstStoryId,
-          title: 'FirstStory'
-        }
-      }
-    }
-  };
+  const addedEvtOne = events[7];
+  const addedEvtTwo = events[9];
 
-  const eventActions = [
+  const changedEvtOne = events[11];
+  const changedEvtTwo = events[12];
+
+  modifiedState = reduceMultipleEvents(
     {
-      event: {
-        id: uuid(),
-        userId: ownUserId,
-        correlationId: uuid(),
-        name: 'storyChanged',
-        roomId,
-        payload: {
-          storyId: firstStoryId,
-          title: 'Edited first Story',
-          description: 'With edited description'
-        }
-      },
-      type: EVENT_ACTION_TYPES.storyChanged
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    {
-      event: {
-        id: uuid(),
-        userId: ownUserId,
-        correlationId: uuid(),
-        name: 'storySelected',
-        roomId,
-        payload: {
-          storyId: secondStoryId
-        }
-      },
-      type: EVENT_ACTION_TYPES.storySelected
-    },
-    {
-      event: {
-        id: uuid(),
-        userId: otherUserId,
-        correlationId: uuid(),
-        name: 'storyChanged',
-        roomId,
-        payload: {
-          storyId: secondStoryId,
-          title: 'Edited second Story',
-          description: 'With edited description (2)'
-        }
-      },
-      type: EVENT_ACTION_TYPES.storyChanged
-    }
-  ];
-
-  modifiedState = reduceMultipleEventActions(startingState, eventActions);
-  expect(modifiedState.selectedStory).toEqual(secondStoryId);
-  expect(modifiedState.applause).toEqual(false);
+    events.slice(0, 13) // we use not all events, only the first 13 events until both stories are edited (changed)
+  );
+  expect(modifiedState.selectedStory).toEqual(addedEvtTwo.payload.storyId);
   expect(modifiedState.stories).toEqual({
-    [secondStoryId]: {
-      createdAt: 1592115972307,
-      description: 'With edited description (2)',
-      estimations: {},
-      id: secondStoryId,
-      editMode: false,
-      title: 'Edited second Story'
+    [addedEvtOne.payload.storyId]: {
+      id: addedEvtOne.payload.storyId,
+      title: changedEvtOne.payload.title,
+      description: changedEvtOne.payload.description,
+      createdAt: addedEvtOne.payload.createdAt,
+      editMode: false
     },
-    [firstStoryId]: {
-      createdAt: 1592115935676,
-      description: 'With edited description',
-      estimations: {},
-      id: firstStoryId,
-      editMode: false,
-      title: 'Edited first Story'
+    [addedEvtTwo.payload.storyId]: {
+      id: addedEvtTwo.payload.storyId,
+      title: changedEvtTwo.payload.title,
+      description: changedEvtTwo.payload.description,
+      createdAt: addedEvtTwo.payload.createdAt,
+      editMode: false
     }
   });
 });
@@ -235,145 +94,32 @@ test('Editing stories', () => {
 test('Trashing, Restoring and Deleting stories', () => {
   let modifiedState;
 
-  const ownUserId = uuid();
-  const otherUserId = uuid();
-  const roomId = uuid();
-  const firstStoryId = uuid();
-  const secondStoryId = uuid();
+  const joinedEvtOne = events[1];
+  const addedEvtOne = events[7];
+  const addedEvtTwo = events[9];
 
-  const startingState = {
-    ...initialState(),
-    ...{
-      presetUsername: 'Jim',
-      presetEmail: null,
-      presetUserId: null,
-      settingsShown: false,
-      roomId,
-      userId: ownUserId,
-      users: {
-        [ownUserId]: {
-          disconnected: false,
-          id: ownUserId,
-          username: 'Jim'
-        },
-        [otherUserId]: {
-          id: otherUserId,
-          disconnected: false,
-          excluded: false,
-          username: 'Other John'
-        }
-      },
-      selectedStory: firstStoryId,
-      stories: {
-        [secondStoryId]: {
-          createdAt: 1592115972307,
-          description: 'dscription second... from other john',
-          estimations: {},
-          id: secondStoryId,
-          title: 'Second story'
-        },
-        [firstStoryId]: {
-          createdAt: 1592115935676,
-          description: 'description one',
-          estimations: {},
-          id: firstStoryId,
-          title: 'FirstStory'
-        }
-      }
-    }
-  };
-
-  const firstStoryTrashedAction = {
-    event: {
-      id: uuid(),
-      userId: otherUserId,
-      correlationId: uuid(),
-      name: 'storyTrashed',
-      roomId,
-      payload: {
-        storyId: firstStoryId
-      }
+  modifiedState = reduceMultipleEvents(
+    {
+      ...initialState(),
+      roomId: events[0].roomId,
+      pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    type: EVENT_ACTION_TYPES.storyTrashed
-  };
+    events.slice(0, 15) // up until trashed+selected
+  );
+  expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(true);
+  expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
+  expect(modifiedState.selectedStory).toEqual(addedEvtOne.payload.storyId);
 
-  modifiedState = eventReducer(startingState, firstStoryTrashedAction);
-  expect(modifiedState.stories).toEqual({
-    [firstStoryId]: {
-      ...startingState.stories[firstStoryId],
-      trashed: true
-    },
-    [secondStoryId]: startingState.stories[secondStoryId]
-  });
+  modifiedState = reduceMultipleEvents(
+    modifiedState,
+    events.slice(15, 16) // restored event
+  );
+  expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
+  expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 
-  const secondStoryTrashedAction = {
-    event: {
-      id: uuid(),
-      userId: otherUserId,
-      correlationId: uuid(),
-      name: 'storyTrashed',
-      roomId,
-      payload: {
-        storyId: secondStoryId
-      }
-    },
-    type: EVENT_ACTION_TYPES.storyTrashed
-  };
+  modifiedState = reduceMultipleEvents(modifiedState, events.slice(16, 19));
+  expect(modifiedState.stories[addedEvtOne.payload.storyId]).toBeUndefined(); // story is removed completely
 
-  modifiedState = eventReducer(modifiedState, secondStoryTrashedAction);
-  expect(modifiedState.stories).toEqual({
-    [firstStoryId]: {
-      ...startingState.stories[firstStoryId],
-      trashed: true
-    },
-    [secondStoryId]: {
-      ...startingState.stories[secondStoryId],
-      trashed: true
-    }
-  });
-
-  const storyDeletedAction = {
-    event: {
-      id: uuid(),
-      userId: otherUserId,
-      correlationId: uuid(),
-      name: 'storyDeleted',
-      roomId,
-      payload: {
-        storyId: firstStoryId
-      }
-    },
-    type: EVENT_ACTION_TYPES.storyDeleted
-  };
-
-  modifiedState = eventReducer(modifiedState, storyDeletedAction);
-  expect(modifiedState.stories).toEqual({
-    // first story is no longer in room
-    [secondStoryId]: {
-      ...startingState.stories[secondStoryId],
-      trashed: true
-    }
-  });
-
-  const storyRestoredAction = {
-    event: {
-      id: uuid(),
-      userId: otherUserId,
-      correlationId: uuid(),
-      name: 'storyRestored',
-      roomId,
-      payload: {
-        storyId: secondStoryId
-      }
-    },
-    type: EVENT_ACTION_TYPES.storyRestored
-  };
-
-  modifiedState = eventReducer(modifiedState, storyRestoredAction);
-  expect(modifiedState.stories).toEqual({
-    [secondStoryId]: {
-      ...startingState.stories[secondStoryId],
-      trashed: false
-    }
-  });
+  expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
+  expect(modifiedState.selectedStory).toEqual(addedEvtTwo.payload.storyId);
 });

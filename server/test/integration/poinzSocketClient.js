@@ -25,14 +25,15 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
 
   return {
     sendCommand,
-    waitForEvents,
+    cmdAndWait,
     dumpAllEvents,
     disconnect,
-    commands: {
+    cmds: {
       joinRoom,
       leaveRoom,
       kick,
       setUsername,
+      toggleExclude,
       addStory,
       changeStory,
       selectStory,
@@ -114,6 +115,29 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
     return cmdId;
   }
 
+  /**
+   Wrapper function that saves us some glue code.
+
+   ```
+   await client.cmdAndWait(
+   client.cmds.joinRoom(roomId, userId),
+   3  // wait for three events  (roomCreated, roomJoined, avatarSet)
+   );
+   ```
+
+   *
+   * @param {string} cmdId
+   * @param {number} expectedEventCount
+   * @return {Promise<object[]>} Resolves to the array of received events
+   */
+  async function cmdAndWait(cmdId, expectedEventCount) {
+    if (!cmdId) {
+      throw new Error('Please pass in cmd id !');
+    }
+
+    return waitForEvents(cmdId, expectedEventCount);
+  }
+
   /**  helpers **/
 
   function joinRoom(roomId, userId, username, email) {
@@ -158,6 +182,15 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       payload: {
         username
       }
+    });
+  }
+
+  function toggleExclude(roomId, userId) {
+    return sendCommand({
+      name: 'toggleExclude',
+      roomId,
+      userId,
+      payload: {}
     });
   }
 

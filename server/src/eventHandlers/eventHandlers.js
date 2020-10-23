@@ -21,6 +21,8 @@ import excludedFromEstimations from './excludedFromEstimations';
 import includedInEstimations from './includedInEstimations';
 import consensusAchieved from './consensusAchieved';
 import cardConfigSet from './cardConfigSet';
+import autoRevealOff from './autoRevealOff';
+import autoRevealOn from './autoRevealOn';
 
 export default {
   connectionLost,
@@ -45,5 +47,7 @@ export default {
   avatarSet,
   excludedFromEstimations,
   includedInEstimations,
-  cardConfigSet
+  cardConfigSet,
+  autoRevealOff,
+  autoRevealOn
 };

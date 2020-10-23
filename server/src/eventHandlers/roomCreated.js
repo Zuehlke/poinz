@@ -6,7 +6,8 @@ const roomCreatedEventHandler = (room) => ({
   id: room.id,
   users: [],
   stories: [],
-  created: Date.now()
+  created: Date.now(),
+  autoReveal: true
 });
 
 export default roomCreatedEventHandler;

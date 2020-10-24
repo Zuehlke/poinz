@@ -151,3 +151,15 @@ export const StyledLandingForm = styled.form`
     }
   }
 `;
+
+export const StyledGithubRibbon = styled.a`
+  position: fixed;
+  top: 0;
+  right: 0;
+  border: 0;
+
+  > img {
+    border: none;
+    outline: none;
+  }
+`;

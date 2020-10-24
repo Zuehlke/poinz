@@ -27,6 +27,8 @@ export const StyledEstimation = styled.div`
 
 export const BoardActionButtons = styled.div`
   margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const StyledSelectedStory = styled.div`

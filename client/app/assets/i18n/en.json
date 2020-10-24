@@ -7,6 +7,8 @@
   "joinWithRoomName": "Join %{room}",
   "name": "Name...",
   "addStory": "Add Story",
+  "estimateStory": "Estimate",
+  "estimateStoryHint": "Select story for estimation",
   "newRound": "New Round",
   "storyTitle": "Story Title",
   "description": "Description / URL",

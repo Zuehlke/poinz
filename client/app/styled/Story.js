@@ -67,3 +67,10 @@ export const StyledStoryTitle = styled.h4`
 export const StyledStoryText = styled.div`
   overflow-x: hidden;
 `;
+
+export const StyledHighlightButtonWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+`;

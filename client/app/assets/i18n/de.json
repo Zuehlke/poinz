@@ -7,6 +7,8 @@
   "joinWithRoomName": "%{room} beitreten",
   "name": "Name...",
   "addStory": "Story hinzufügen",
+  "estimateStory": "Schätzen",
+  "estimateStoryHint": "Auswählen für Schätzrunde",
   "newRound": "Neue Runde",
   "storyTitle": "Story Titel",
   "description": "Beschreibung / URL",

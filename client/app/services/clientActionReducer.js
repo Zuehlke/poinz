@@ -3,6 +3,7 @@ import {
   TOGGLE_SETTINGS,
   TOGGLE_LOG,
   EDIT_STORY,
+  HIGHLIGHT_STORY,
   CANCEL_EDIT_STORY,
   COMMAND_SENT,
   EVENT_RECEIVED,
@@ -95,6 +96,9 @@ export default function clientActionReducer(state, action) {
         [action.storyId]: {...state.stories[action.storyId], editMode: true}
       };
       return {...state, stories: modifiedStories};
+    }
+    case HIGHLIGHT_STORY: {
+      return {...state, highlightedStory: action.storyId};
     }
     case CANCEL_EDIT_STORY: {
       const modifiedStories = {

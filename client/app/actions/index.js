@@ -24,6 +24,7 @@ import {
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import readDroppedFile from '../services/readDroppedFile';
+import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
 
 /**
  * store current pathname in our redux store, join or leave room if necessary
@@ -140,6 +141,21 @@ export const selectStory = (storyId) => (dispatch, getState, sendCommand) => {
       storyId
     }
   });
+};
+
+export const selectNextStory = () => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  const nextStoryId = findNextStoryIdToEstimate(state);
+
+  if (nextStoryId) {
+    sendCommand({
+      name: 'selectStory',
+      roomId: state.roomId,
+      payload: {
+        storyId: nextStoryId
+      }
+    });
+  }
 };
 
 export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCommand) => {

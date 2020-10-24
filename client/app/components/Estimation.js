@@ -64,7 +64,7 @@ const Estimation = ({
             className="pure-button pure-button-primary"
             onClick={() => reveal(selectedStory.id)}
           >
-            {t('revealManually')}
+            {t('reveal')}
             <i className="icon-hand-paper-o button-icon-right"></i>
           </button>
         </BoardActionButtons>

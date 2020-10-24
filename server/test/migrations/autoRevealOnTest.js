@@ -13,6 +13,7 @@ test('DBMIGRATION: set autoReveal flag on every room (up)', async () => {
     id: roomId,
     users: [],
     stories: {}
+    // flag does not exist
   };
 
   await roomz.insertOne(preRoom);
@@ -25,6 +26,30 @@ test('DBMIGRATION: set autoReveal flag on every room (up)', async () => {
 
   // autoReveal is set
   expect(room.autoReveal).toBe(true);
+});
+
+test('DBMIGRATION: do not change autoReveal flag (when set to false) (up)', async () => {
+  const [db, roomz] = await initDb();
+
+  // insert room
+  const roomId = uuid();
+  const preRoom = {
+    id: roomId,
+    users: [],
+    stories: {},
+    autoReveal: false // for some reason, this room has the flag already set
+  };
+
+  await roomz.insertOne(preRoom);
+
+  // migrate "up"
+  const bWriteResult = await autoRevealOn.up(db);
+  expect(bWriteResult).toBeUndefined();
+
+  const room = await roomz.findOne({id: roomId});
+
+  // autoReveal is still false
+  expect(room.autoReveal).toBe(false);
 });
 
 test('DBMIGRATION: remove autoReveal flag on room (when set to false) (down)', async () => {

@@ -2,7 +2,7 @@ const migrateUtil = require('../migrate-util');
 
 module.exports = {
   /**
-   * sets autoReveal "true" on all rooms
+   * sets autoReveal "true" on all rooms that do not have the property set to either true or false.
    */
   async up(db) {
     const ops = [];
@@ -11,8 +11,10 @@ module.exports = {
       .collection('rooms')
       .find({})
       .forEach((room) => {
-        room.autoReveal = true;
-        migrateUtil.toBulkOps(ops, room);
+        if (room.autoReveal !== true && room.autoReveal !== false) {
+          room.autoReveal = true;
+          migrateUtil.toBulkOps(ops, room);
+        }
       });
 
     if (ops.length) {

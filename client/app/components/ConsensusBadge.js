@@ -8,7 +8,10 @@ const ConsensusBadge = ({cardConfig, consensusValue}) => {
   const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
 
   return (
-    <StyledConsensusBadge cardColor={matchingCardConfig && matchingCardConfig.color}>
+    <StyledConsensusBadge
+      cardColor={matchingCardConfig && matchingCardConfig.color}
+      data-testid="consensusBadge"
+    >
       <div>{matchingCardConfig.label}</div>
     </StyledConsensusBadge>
   );

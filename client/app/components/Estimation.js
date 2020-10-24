@@ -34,7 +34,7 @@ const Estimation = ({
   reveal
 }) => {
   const revealed = selectedStory.revealed;
-  const hasConsensus = selectedStory.consensus !== undefined; // value could be "0" which is falsy, check for undefined
+  const hasConsensus = selectedStory.consensus !== undefined && selectedStory.consensus !== null; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledEstimation data-testid="estimationArea">

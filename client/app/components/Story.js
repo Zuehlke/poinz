@@ -22,7 +22,7 @@ const Story = ({
   isWaiting
 }) => {
   const isSelected = selectedStoryId === story.id;
-  const hasConsensus = story.consensus !== undefined; // value could be "0" which is falsy, check for undefined
+  const hasConsensus = story.consensus !== undefined && story.consensus !== null; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledStory

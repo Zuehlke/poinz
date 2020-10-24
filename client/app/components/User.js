@@ -29,7 +29,7 @@ const User = ({
   const isDisconnected = user.disconnected;
   const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
-  const userHasEstimation = userEstimationValue !== undefined; // value could be "0" which is falsy, check for undefined
+  const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
 
   const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';

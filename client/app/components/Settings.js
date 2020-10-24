@@ -6,6 +6,7 @@ import avatarIcons from '../assets/avatars';
 
 import {
   toggleExcluded,
+  toggleAutoReveal,
   setUsername,
   setEmail,
   leaveRoom,
@@ -43,6 +44,8 @@ const Settings = ({
   setEmail,
   setAvatar,
   toggleExcluded,
+  autoReveal,
+  toggleAutoReveal,
   setLanguage,
   settingsShown,
   cardConfig,
@@ -189,6 +192,15 @@ const Settings = ({
           <h4>{t('room')}</h4>
 
           <StyledSection>
+            <h5>{t('toggleAutoReveal')}</h5>
+            {t('autoRevealInfo')}
+
+            <p onClick={toggleAutoReveal} className="clickable" data-testid="toggleAutoReveal">
+              <i className={autoReveal ? 'icon-check' : 'icon-check-empty'}></i> {t('autoReveal')}
+            </p>
+          </StyledSection>
+
+          <StyledSection>
             <h5>{t('customCards')}</h5>
             {t('customCardsInfo')}
 
@@ -271,6 +283,8 @@ Settings.propTypes = {
   settingsShown: PropTypes.bool,
   language: PropTypes.string,
   toggleExcluded: PropTypes.func,
+  autoReveal: PropTypes.bool,
+  toggleAutoReveal: PropTypes.func,
   leaveRoom: PropTypes.func,
   setLanguage: PropTypes.func,
   setUsername: PropTypes.func,
@@ -287,11 +301,13 @@ export default connect(
     cardConfig: state.cardConfig,
     language: state.language,
     user: state.users[state.userId],
+    autoReveal: state.autoReveal,
     settingsShown: state.settingsShown,
     roomId: state.roomId
   }),
   {
     toggleExcluded,
+    toggleAutoReveal,
     leaveRoom,
     setUsername,
     setEmail,

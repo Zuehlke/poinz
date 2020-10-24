@@ -41,7 +41,9 @@ export const EVENT_ACTION_TYPES = {
   storyDeleted: 'STORY_DELETED',
   storyTrashed: 'STORY_TRASHED',
   storyRestored: 'STORY_RESTORED',
-  cardConfigSet: 'CARD_CONFIG_SET'
+  cardConfigSet: 'CARD_CONFIG_SET',
+  autoRevealOn: 'AUTO_REVEAL_ON',
+  autoRevealOff: 'AUTO_REVEAL_OFF'
 };
 
 /** various **/

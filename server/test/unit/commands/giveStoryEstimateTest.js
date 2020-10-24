@@ -206,6 +206,86 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
   expect(room.stories[0].consensus).toBe(2);
 });
 
+test('Should produce "consensusAchieved" and "revealed" event if manually revealed (autoReveal off)', async () => {
+  const {
+    roomId,
+    storyId,
+    userIdOne,
+    userIdTwo,
+    processor,
+    mockRoomsStore
+  } = await prepTwoUsersInOneRoomWithOneStory();
+
+  mockRoomsStore.manipulate((room) => {
+    room.autoReveal = false;
+    return room;
+  });
+
+  const commandId = uuid();
+
+  await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 2
+      }
+    },
+    userIdOne // first user estimates "2"
+  );
+
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId: storyId,
+        value: 2
+      }
+    },
+    userIdTwo // second user estimates "2"
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+
+  const [storyEstimateGivenEvent] = producedEvents;
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
+
+  expect(room.stories[0].consensus).toBeUndefined();
+  expect(room.stories[0].revealed).toBeUndefined();
+
+  const {producedEvents: producedEvents2, room: room2} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'reveal',
+      payload: {
+        storyId: storyId
+      }
+    },
+    userIdTwo
+  );
+
+  expect(producedEvents2).toMatchEvents(commandId, roomId, 'revealed', 'consensusAchieved');
+
+  const [revealedEvent, consensusAchievedEvent] = producedEvents2;
+
+  expect(revealedEvent.payload.storyId).toEqual(storyId);
+  expect(revealedEvent.payload.manually).toBe(true);
+
+  expect(consensusAchievedEvent.payload).toEqual({
+    storyId: storyId,
+    value: 2
+  });
+
+  expect(room2.stories[0].consensus).toBe(2);
+  expect(room2.stories[0].revealed).toBe(true);
+});
+
 test('Should not produce revealed event if user changes his estimation', async () => {
   const {roomId, storyId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();

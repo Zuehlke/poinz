@@ -57,15 +57,19 @@ const giveStoryEstimateCommandHandler = {
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
     room.applyEvent('storyEstimateGiven', command.payload);
 
-    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
+    if (!room.autoReveal) {
+      // if room has autoReveal disabled, we can stop here
+      return;
+    }
 
+    const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
     if (allValidUsersEstimated(room, matchingStory, userId)) {
       room.applyEvent('revealed', {
         storyId: command.payload.storyId,
         manually: false
       });
 
-      if (allEstimationsSame(room, matchingStory, userId, command.payload.value)) {
+      if (allEstimationsSame(matchingStory, userId, command.payload.value)) {
         room.applyEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value
@@ -101,13 +105,12 @@ function allValidUsersEstimated(room, matchingStory, userId) {
 /**
  * Checks whether all estimations for the specified story in the room have the same value and match specified "ownEstimate"
  *
- * @param {object} room
  * @param {string} matchingStory
  * @param {string} userId
  * @param {number} ownEstimate
  * @return {boolean}
  */
-function allEstimationsSame(room, matchingStory, userId, ownEstimate) {
+function allEstimationsSame(matchingStory, userId, ownEstimate) {
   const estimations = {
     ...matchingStory.estimations,
     // Add our user's estimation manually to the estimationMap (since event will be applied later)

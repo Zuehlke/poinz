@@ -246,3 +246,29 @@ test('includeAndExcludeTest: two users, one excludes and includes himself', asyn
   await client.dumpAllEvents(outputFile);
   client.disconnect();
 });
+
+test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', async () => {
+  const outputFile = path.join(clientEventActionReducerScenarioDir, 'roomSettingsTest.json');
+
+  const client = poinzSocketClientFactory();
+
+  const roomId = uuid();
+  const firstUserId = uuid();
+
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+  await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
+
+  await client.cmdAndWait(
+    client.cmds.setCardConfig(roomId, firstUserId, [
+      {value: 0, color: 'green', label: 'yes'},
+      {value: 1, color: 'red', label: 'no'}
+    ])
+  );
+
+  await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
+  await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
+
+  // in the end, write to file and close socket
+  await client.dumpAllEvents(outputFile);
+  client.disconnect();
+});

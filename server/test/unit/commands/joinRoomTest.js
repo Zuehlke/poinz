@@ -54,7 +54,8 @@ test('nonexisting room', async () => {
         avatar: 0
       }
     ],
-    cardConfig: defaultCardConfig // default config is part of "joined" event payload, although it is not persisted on the room object (only if someone changes it with "setCardConfig")
+    cardConfig: defaultCardConfig, // default config is part of "joined" event payload, although it is not persisted on the room object (only if someone changes it with "setCardConfig")
+    autoReveal: true
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -85,7 +86,8 @@ test('nonexisting room', async () => {
         username: 'tester'
       }
     ],
-    stories: []
+    stories: [],
+    autoReveal: true
     // and some timestamps properties: created, lastActivity
   });
 
@@ -144,7 +146,8 @@ test('existing room with matching user already in room (re-join) ', async () => 
         avatar: 0
       }
     ],
-    cardConfig: defaultCardConfig
+    cardConfig: defaultCardConfig,
+    autoReveal: true
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -230,7 +233,8 @@ test('existing room with user match, command has no preset properties', async ()
         avatar: 1
       }
     ],
-    cardConfig: defaultCardConfig
+    cardConfig: defaultCardConfig,
+    autoReveal: true
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -304,7 +308,8 @@ test('existing room but completely new user, command has no preset properties', 
         id: newUserId
       }
     ],
-    cardConfig: defaultCardConfig
+    cardConfig: defaultCardConfig,
+    autoReveal: true
   });
 
   expect(avatarSetEvent.userId).toEqual(newUserId);

@@ -95,6 +95,9 @@ const roomSchema = {
     lastActivity: {
       type: 'number'
     },
+    autoReveal: {
+      type: 'boolean'
+    },
     markedForDeletion: {
       type: 'boolean'
     }

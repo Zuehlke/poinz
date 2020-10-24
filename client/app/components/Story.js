@@ -22,6 +22,7 @@ const Story = ({
   isWaiting
 }) => {
   const isSelected = selectedStoryId === story.id;
+  const hasConsensus = story.consensus !== undefined; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledStory
@@ -48,7 +49,7 @@ const Story = ({
 
       <StyledStoryTitle>
         <div>{story.title}</div>
-        {story.consensus && (
+        {hasConsensus && (
           <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
         )}
       </StyledStoryTitle>

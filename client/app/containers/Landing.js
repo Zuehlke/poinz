@@ -11,8 +11,10 @@ import {
   StyledLandingInner,
   StyledLanding,
   StyledLargeFontEyecatcher,
-  StyledInfoText
+  StyledInfoText,
+  StyledChangelog
 } from '../styled/Landing';
+import appConfig from '../services/appConfig';
 
 /**
  * The "landing" page where the user can enter a room name to join
@@ -44,6 +46,12 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
             </StyledActionLog>
           </StyledEyecatcher>
         )}
+
+        <StyledEyecatcher>
+          <StyledChangelog
+            dangerouslySetInnerHTML={{__html: appConfig.changeLog}}
+          ></StyledChangelog>
+        </StyledEyecatcher>
       </StyledLandingInner>
     </StyledLanding>
   );

@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 import backgroundImage from '../assets/landing_bg_z2020_lightblue.jpg';
-import {COLOR_FONT_GREY} from './colors';
+import {COLOR_FONT_GREY, COLOR_ORANGE} from './colors';
+import {device} from './dimensions';
 
 export const StyledLanding = styled.div`
   z-index: 1;
   overflow: hidden;
+  overflow-y: auto;
   width: 100%;
   height: 100%;
   top: 0;
@@ -12,6 +14,17 @@ export const StyledLanding = styled.div`
   position: fixed !important;
   background: url(${backgroundImage}) no-repeat center center fixed;
   background-size: cover;
+`;
+
+export const StyledLandingInner = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin-top: 5%;
+
+  @media ${device.desktop} {
+    margin-top: 20%;
+  }
 `;
 
 export const StyledActionLog = styled.ul`
@@ -35,8 +48,33 @@ export const StyledActionLog = styled.ul`
   }
 `;
 
-export const StyledLandingInner = styled.div`
-  margin-top: 20%;
+export const StyledChangelog = styled.div`
+  ul {
+    margin: 0;
+    margin-bottom: 22px;
+    padding: 0;
+    list-style-type: none;
+
+    h1 {
+      margin: 0;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      margin-left: 22px;
+      list-style-type: square;
+
+      li {
+        margin-bottom: 4px;
+      }
+    }
+  }
 `;
 
 export const StyledInfoText = styled.div`
@@ -75,10 +113,16 @@ export const StyledLargeFontEyecatcher = styled(StyledEyecatcher)`
   font-size: larger;
 `;
 
-export const StyledLandingDoubleButtonL = styled.button`
+const StyledLandingButton = styled.button`
+  background-color: ${COLOR_ORANGE} !important;
+  font-weight: bold;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.56);
+`;
+
+export const StyledLandingDoubleButtonL = styled(StyledLandingButton)`
   border-radius: 2px 0 0 2px;
 `;
-export const StyledLandingDoubleButtonR = styled.button`
+export const StyledLandingDoubleButtonR = styled(StyledLandingButton)`
   border-radius: 0 2px 2px 0;
 `;
 

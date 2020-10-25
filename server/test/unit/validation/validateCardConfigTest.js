@@ -1,21 +1,18 @@
 import defaultCardConfig from '../../../src/defaultCardConfig';
-import {cardConfigSchema} from '../../../src/commandHandlers/setCardConfig';
+import setCardConfig from '../../../src/commandHandlers/setCardConfig';
 import {commandSchemaValidatorFactory} from '../../../src/validation/schemaValidators';
 
 const validate = commandSchemaValidatorFactory({
   command: {},
-  setCardConfig: {
-    type: 'object',
-    properties: {
-      cardConfig: cardConfigSchema
-    }
-  }
+  setCardConfig: setCardConfig.schema
 });
 
 function validateCardConfig(cc) {
   const dummyCommand = {
     name: 'setCardConfig',
-    cardConfig: cc
+    payload: {
+      cardConfig: cc
+    }
   };
 
   try {

@@ -12,35 +12,27 @@ Checkout the App at [https://poinz.herokuapp.com/](https://poinz.herokuapp.com/)
 
 Similar tools are : https://www.pointingpoker.com/ or https://www.planningpoker.com/
 
-## Technologies and Frameworks
+## User Manual
 
-The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
-[Webpack](https://webpack.github.io/) serves as bundling tool.
-
-The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
-
+Confused? Or you want to learn about hidden features? Read the [User Manual](./manual.md).
 
 ## Contribute
 
-### Prerequisites
+You can contribute in multiple ways...
 
-* You have `nodeJS` installed at v9+ and `npm` at v6+.
-* You are familiar with `npm`
-* You are familiar with `git`
-* You are familiar with- or eager to learn `react`
-* You are familiar with- or eager to learn `redux`
+* Maybe you have a feature request? Found a bug? General feedback? Please open a new [issue](https://github.com/Zuehlke/poinz/issues)
+* You want to extend Poinz? Or fix one of the issues? Check out the [Development](#development) section.
 
-### Style
 
-Try to adhere to the [airbnb style guide](https://github.com/airbnb/javascript).
-(Run ```$ npm t``` in the root directory to lint all files and run tests.)
 
 ### Development
 
+
 ### Prerequisites
 
-* Install nodejs
+* Install `nodeJS` at v10+ and `npm` at v6+.
 * Install git
+* Install `docker` if you want to build PoinZ
 
 Fork & checkout the repository then install all npm dependencies.
 
@@ -50,25 +42,20 @@ Start the backend
 
 `$ cd server/ && npm run start:dev`
 
-Start the client-serving in dev mode via webpack-dev-server
+Serve the client in dev mode via webpack-dev-server
 
 `$ cd client/ && npm start`
 
 Then you can open the app at http://localhost:9000/
 
+#### Style
 
-## Build
+Run ```$ npm t``` in the root directory to lint all files and run tests.
+
+#### Build
 
 Our build produces a docker image that contains nodejs and our poinz server.
 Make sure you have docker installed on your machine and your user is in the "docker" usergroup. (```$ sudo groupadd docker``` and ```$ sudo usermod -aG docker $USER```)
-
-### 1. Install  npm dependencies
-
-We need all dependencies of the server and the client installed.
-
-```$ npm i``` within the project root will do that for us (postinstall in package.json)
-
-### 2. Build & Pack for deployment
 
 In project root, run
 
@@ -81,10 +68,21 @@ And then start the docker build.
 
 See [Deployment](DEPLOYMENT.md) for more information.
 
-To start the newly build image locally, in detached mode with port forwarding:
+To start the newly built image locally, in detached mode with port forwarding:
 ```
 $ docker run -p 3000:3000 -d xeronimus/poinz
 ```
+
+## Architecture
+
+### Technologies and Frameworks
+
+The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
+[Webpack](https://webpack.github.io/) serves as bundling tool.
+
+The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
+
+Client and server communicate over websockets ([socket.io](https://socket.io/)).
 
 ### Command and Events documentation
 

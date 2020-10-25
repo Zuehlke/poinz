@@ -32,7 +32,7 @@ build()
 
 async function build() {
   // 1. clean-up output directories
-  console.log('clean up deploy and distubtion');
+  console.log('clean up deploy/ and client/dist/');
   await del([
     './deploy/',
     './deploy/package.json',

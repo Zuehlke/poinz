@@ -1,9 +1,10 @@
 
-### 0.8.1: 2020-10-24
+### 0.8.1: 2020-10-25
 
 * Clicking a story in the Backlog no longer selects the story for estimation! 
 * Introduced button to jump to the next story (i.e. select it for estimation).
 * Added changelog
+* Added user manual (first few use cases)
 
 ### 0.8.0: 2020-10-24
 

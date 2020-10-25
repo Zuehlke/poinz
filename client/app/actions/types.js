@@ -5,6 +5,7 @@ export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG'; // toggles the visibility of the
 export const TOGGLE_SETTINGS = 'TOGGLE_SETTINGS'; // toggles the visibility of the settings menu
 export const TOGGLE_LOG = 'TOGGLE_LOG'; // toggles the visibility of the event log
 export const EDIT_STORY = 'EDIT_STORY';
+export const HIGHLIGHT_STORY = 'HIGHLIGHT_STORY';
 export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
 export const STATUS_FETCHED = 'STATUS_FETCHED';

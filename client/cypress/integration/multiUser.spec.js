@@ -22,11 +22,13 @@ it('multi user estimation', function () {
 
   // see ../support/commands.js
   const userTwoSocket = uuid();
+  const userTwoUserId = uuid();
   cy.openNewSocket(userTwoSocket);
   cy.sendCommands(userTwoSocket, [
     {
       roomId,
       name: 'joinRoom',
+      userId: userTwoUserId,
       payload: {
         username: this.sergio.username,
         avatar: 3
@@ -61,11 +63,36 @@ it('multi user estimation', function () {
         {
           roomId,
           name: 'giveStoryEstimate',
+          userId: userTwoUserId,
           payload: {
-            storyId,
-            value: 3
+            value: 3,
+            storyId
           }
         }
       ]);
+
+      // auto revealed, but no consensus
+      cy.get(tid('users')).contains(3);
+      cy.get(tid('users')).contains(8);
+
+      // let's try again
+      cy.get(tid('newRoundButton')).click();
+
+      cy.get(tid('estimationCard.8')).click();
+
+      cy.sendCommands(userTwoSocket, [
+        {
+          roomId,
+          name: 'giveStoryEstimate',
+          userId: userTwoUserId,
+          payload: {
+            value: 8,
+            storyId
+          }
+        }
+      ]);
+
+      cy.get(tid('users')).contains(8);
+      cy.get(tid('estimationArea', 'consensusBadge')).contains(8);
     });
 });

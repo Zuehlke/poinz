@@ -147,6 +147,7 @@ const eventActionHandlers = {
           roomId: event.roomId,
           userId: event.userId,
           selectedStory: payload.selectedStory,
+          highlightedStory: payload.selectedStory,
           users: (payload.users || []).reduce((total, currentUser) => {
             total[currentUser.id] = currentUser;
             return total;
@@ -290,6 +291,8 @@ const eventActionHandlers = {
 
       return {
         ...state,
+        highlightedStory:
+          state.highlightedStory === payload.storyId ? undefined : state.highlightedStory,
         stories: {
           ...state.stories,
           [payload.storyId]: modifiedStory
@@ -346,11 +349,13 @@ const eventActionHandlers = {
 
   /**
    * the selected story was set (i.e. the one that can be currently estimated by the team)
+   * not to be confused with "highlighted" (which is just the "marked" story in the list of stories)
    */
   [EVENT_ACTION_TYPES.storySelected]: {
     fn: (state, payload) => ({
       ...state,
       selectedStory: payload.storyId,
+      highlightedStory: state.highlightedStory || payload.storyId,
       applause: false
     }),
     log: (username, payload, oldState, newState) =>

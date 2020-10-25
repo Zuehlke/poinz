@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {newEstimationRound, reveal} from '../actions';
+import {newEstimationRound, reveal, selectNextStory} from '../actions';
 
 import Cards from './Cards';
 import ConsensusBadge from './ConsensusBadge';
@@ -16,6 +16,7 @@ import {
   StyledStoryText
 } from '../styled/Board';
 import {StyledStoryTitle} from '../styled/Story';
+import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
 
 /**
  * Displays
@@ -27,14 +28,16 @@ import {StyledStoryTitle} from '../styled/Story';
 const Estimation = ({
   t,
   selectedStory,
+  selectNextStory,
   applause,
   userCanCurrentlyEstimate,
   cardConfig,
   newEstimationRound,
-  reveal
+  reveal,
+  hasNextStory
 }) => {
   const revealed = selectedStory.revealed;
-  const hasConsensus = selectedStory.consensus !== undefined; // value could be "0" which is falsy, check for undefined
+  const hasConsensus = selectedStory.consensus !== undefined && selectedStory.consensus !== null; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledEstimation data-testid="estimationArea">
@@ -55,8 +58,6 @@ const Estimation = ({
         )}
       </StyledSelectedStory>
 
-      {userCanCurrentlyEstimate && <Cards />}
-
       {!revealed && (
         <BoardActionButtons>
           <button
@@ -64,7 +65,7 @@ const Estimation = ({
             className="pure-button pure-button-primary"
             onClick={() => reveal(selectedStory.id)}
           >
-            {t('revealManually')}
+            {t('reveal')}
             <i className="icon-hand-paper-o button-icon-right"></i>
           </button>
         </BoardActionButtons>
@@ -81,18 +82,34 @@ const Estimation = ({
             {t('newRound')}
             <i className="icon-ccw button-icon-right"></i>
           </button>
+
+          {hasNextStory && (
+            <button
+              type="button"
+              className="pure-button pure-button-primary"
+              onClick={selectNextStory}
+              data-testid="nextStoryButton"
+            >
+              {t('nextStory')}
+              <i className="icon-right-big button-icon-right"></i>
+            </button>
+          )}
         </BoardActionButtons>
       )}
+
+      {userCanCurrentlyEstimate && <Cards />}
     </StyledEstimation>
   );
 };
 
 Estimation.propTypes = {
   t: PropTypes.func,
+  selectNextStory: PropTypes.func,
   cardConfig: PropTypes.array,
   userCanCurrentlyEstimate: PropTypes.bool,
   selectedStory: PropTypes.object,
   applause: PropTypes.bool,
+  hasNextStory: PropTypes.bool,
   newEstimationRound: PropTypes.func,
   reveal: PropTypes.func
 };
@@ -108,10 +125,11 @@ export default connect(
       selectedStory,
       userCanCurrentlyEstimate,
       applause: state.applause,
-      cardConfig: state.cardConfig
+      cardConfig: state.cardConfig,
+      hasNextStory: !!findNextStoryIdToEstimate(state)
     };
   },
-  {newEstimationRound, reveal}
+  {newEstimationRound, reveal, selectNextStory}
 )(Estimation);
 
 const ApplauseHighlight = ({cardConfig, consensusValue}) => {

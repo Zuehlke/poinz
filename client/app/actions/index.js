@@ -11,6 +11,7 @@ import {
   TOGGLE_SETTINGS,
   TOGGLE_LOG,
   EDIT_STORY,
+  HIGHLIGHT_STORY,
   CANCEL_EDIT_STORY,
   STATUS_FETCHED,
   SET_LANGUAGE,
@@ -23,6 +24,7 @@ import {
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import readDroppedFile from '../services/readDroppedFile';
+import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
 
 /**
  * store current pathname in our redux store, join or leave room if necessary
@@ -139,6 +141,21 @@ export const selectStory = (storyId) => (dispatch, getState, sendCommand) => {
       storyId
     }
   });
+};
+
+export const selectNextStory = () => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  const nextStoryId = findNextStoryIdToEstimate(state);
+
+  if (nextStoryId) {
+    sendCommand({
+      name: 'selectStory',
+      roomId: state.roomId,
+      payload: {
+        storyId: nextStoryId
+      }
+    });
+  }
 };
 
 export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCommand) => {
@@ -341,6 +358,7 @@ export const showTrash = () => ({type: SHOW_TRASH});
 export const hideTrash = () => ({type: HIDE_TRASH});
 export const toggleSettings = () => ({type: TOGGLE_SETTINGS});
 export const toggleLog = () => ({type: TOGGLE_LOG});
+export const highlightStory = (storyId) => ({type: HIGHLIGHT_STORY, storyId});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
 export const toggleMarkForKick = (userId) => ({type: TOGGLE_MARK_FOR_KICK, userId});

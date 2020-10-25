@@ -74,8 +74,12 @@ async function handleSingleCmdHandlerFile(filePath) {
         );
         const sourceToEvaluate = `schema = ${schemaObjectLiteralSourceString}`;
         const ctx = {schema: {}};
-        vm.createContext(ctx);
-        vm.runInContext(sourceToEvaluate, ctx);
+        try {
+          vm.createContext(ctx);
+          vm.runInContext(sourceToEvaluate, ctx);
+        } catch (err) {
+          throw new Error(`Could not gather command schema from ${filePath}\n` + err.message);
+        }
         cmdHandlerInfo.schema = ctx.schema;
       }
     }

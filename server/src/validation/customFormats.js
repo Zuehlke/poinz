@@ -40,7 +40,8 @@ export function registerCustomFormats(tvi) {
     'username',
     validateStringFormat.bind(undefined, USERNAME_REGEX, 'must be a valid username')
   );
-  tvi.addFormat('cardConfig', validateCardConfig);
+  tvi.addFormat('parseableNumber', parseableNumber);
+  tvi.addFormat('cardConfig', cardConfigUniqueValue);
 }
 
 function validateStringFormat(formatRegex, errorMsg, data) {
@@ -55,52 +56,27 @@ function validateStringFormat(formatRegex, errorMsg, data) {
   return errorMsg;
 }
 
-export function validateCardConfig(data) {
+/**
+ * The whole cardConfig is validated through default tv4 mechanisms (see commandHandlers/setCardConfig.js  cardConfigSchema)
+ * Here we check uniqueness of items in the array.
+ *
+ * @param {object[]} data
+ */
+function cardConfigUniqueValue(data) {
   if (!data) {
-    return; // allow undefined, null
+    return;
   }
-
-  if (!Array.isArray(data)) {
-    return 'Given cardConfig is not an array!';
-  }
-
-  if (data.length < 1) {
-    return 'Given cardConfig must not be an empty array!';
-  }
-
-  const itemsValidationError = data.map(validateSingleCardConfigItem).find((i) => i);
-  if (itemsValidationError) {
-    return itemsValidationError;
-  }
-
   const valueArray = data.map((i) => i.value);
   if (new Set(valueArray).size !== valueArray.length) {
     return 'CardConfig must not contain two cards with the same value';
   }
 }
 
-function validateSingleCardConfigItem(ccItem) {
-  const itemProps = Object.keys(ccItem).sort();
-
-  if (
-    itemProps.length !== 3 ||
-    itemProps[0] !== 'color' ||
-    itemProps[1] !== 'label' ||
-    itemProps[2] !== 'value'
-  ) {
-    return 'A card in cardConfig must be an object with these exact 3 properties "color", "label" and "value"';
-  }
-
-  if (!Number.isFinite(ccItem.value)) {
-    const parsedValue = parseFloat(ccItem.value);
+export function parseableNumber(data) {
+  if (!Number.isFinite(data)) {
+    const parsedValue = parseFloat(data);
     if (isNaN(parsedValue)) {
-      return 'Property "value" on a card in cardConfig must be a number';
+      return 'Given value is not parseable to a number';
     }
-  }
-  if (typeof ccItem.label !== 'string') {
-    return 'Property "label" on a card in cardConfig must be a string';
-  }
-  if (typeof ccItem.color !== 'string') {
-    return 'Property "color" on a card in cardConfig must be a string';
   }
 }

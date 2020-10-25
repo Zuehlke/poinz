@@ -1,7 +1,6 @@
 /**
  * A user sets a custom card configuration on the room.
  */
-
 const schema = {
   allOf: [
     {
@@ -14,6 +13,24 @@ const schema = {
           properties: {
             cardConfig: {
               type: 'array',
+              minItems: 1,
+              items: {
+                type: 'object',
+                properties: {
+                  value: {
+                    type: ['number', 'string'],
+                    format: 'parseableNumber'
+                  },
+                  label: {
+                    type: 'string'
+                  },
+                  color: {
+                    type: 'string'
+                  }
+                },
+                required: ['value', 'label', 'color'],
+                additionalProperties: false
+              },
               format: 'cardConfig'
             }
           },

@@ -20,7 +20,8 @@ import {
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
   HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK
+  TOGGLE_MARK_FOR_KICK,
+  TOGGLE_HELP
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import readDroppedFile from '../services/readDroppedFile';
@@ -358,6 +359,7 @@ export const showTrash = () => ({type: SHOW_TRASH});
 export const hideTrash = () => ({type: HIDE_TRASH});
 export const toggleSettings = () => ({type: TOGGLE_SETTINGS});
 export const toggleLog = () => ({type: TOGGLE_LOG});
+export const toggleHelp = () => ({type: TOGGLE_HELP});
 export const highlightStory = (storyId) => ({type: HIGHLIGHT_STORY, storyId});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});

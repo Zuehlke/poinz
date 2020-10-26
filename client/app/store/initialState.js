@@ -25,6 +25,8 @@ const INITIAL_STATE = () => ({
   presetUserId: clientSettingsStore.getPresetUserId(),
   presetAvatar: clientSettingsStore.getPresetAvatar(),
   settingsShown: false,
+  logShown: false,
+  helpShown: false,
   trashShown: false,
   stories: {}, // in our frontend, we store stories as object (key is the story's id). this differs from the PoinZ Backend, where stories is a array...
   users: {}, // in our frontend, we store users as object (key is the user's id). this differs from the PoinZ Backend, where users is a array...

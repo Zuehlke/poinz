@@ -13,7 +13,8 @@ import {
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
   HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK
+  TOGGLE_MARK_FOR_KICK,
+  TOGGLE_HELP
 } from '../actions/types';
 
 /**
@@ -70,7 +71,13 @@ export default function clientActionReducer(state, action) {
       const showMenu = !state.settingsShown;
 
       if (showMenu) {
-        return {...state, settingsShown: true, logShown: false, backlogShown: false};
+        return {
+          ...state,
+          settingsShown: true,
+          logShown: false,
+          backlogShown: false,
+          helpShown: false
+        };
       } else {
         return {...state, settingsShown: false};
       }
@@ -82,12 +89,28 @@ export default function clientActionReducer(state, action) {
         return {
           ...state,
           logShown: true,
-          unseenError: false,
           settingsShown: false,
-          backlogShown: false
+          backlogShown: false,
+          helpShown: false,
+          unseenError: false
         };
       } else {
         return {...state, logShown: false};
+      }
+    }
+    case TOGGLE_HELP: {
+      const showHelp = !state.helpShown;
+
+      if (showHelp) {
+        return {
+          ...state,
+          settingsShown: false,
+          logShown: false,
+          backlogShown: false,
+          helpShown: true
+        };
+      } else {
+        return {...state, helpShown: false};
       }
     }
     case EDIT_STORY: {

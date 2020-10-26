@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {toggleBacklog, toggleSettings, toggleLog, leaveRoom} from '../actions';
+import {toggleBacklog, toggleSettings, toggleLog, toggleHelp, leaveRoom} from '../actions';
 import {
   StyledBacklogToggle,
   StyledBacklogToggleIcon,
@@ -25,9 +25,11 @@ const TopBar = ({
   leaveRoom,
   toggleBacklog,
   toggleSettings,
+  toggleHelp,
   toggleLog,
   settingsShown,
   logShown,
+  helpShown,
   unseenError,
   backlogShown
 }) => {
@@ -81,6 +83,17 @@ const TopBar = ({
         </StyledQuickMenuButton>
 
         <StyledQuickMenuButton
+          data-testid="helpToggle"
+          className={`clickable pure-button pure-button-primary ${
+            helpShown ? 'pure-button-active' : ''
+          } `}
+          onClick={toggleHelp}
+          title={t('help')}
+        >
+          <i className="icon-help"></i>
+        </StyledQuickMenuButton>
+
+        <StyledQuickMenuButton
           className="clickable pure-button pure-button-primary"
           onClick={leaveRoom}
           title={t('leaveRoom')}
@@ -97,10 +110,12 @@ TopBar.propTypes = {
   settingsShown: PropTypes.bool,
   backlogShown: PropTypes.bool,
   logShown: PropTypes.bool,
+  helpShown: PropTypes.bool,
   unseenError: PropTypes.bool,
   username: PropTypes.string,
   roomId: PropTypes.string,
   toggleBacklog: PropTypes.func,
+  toggleHelp: PropTypes.func,
   toggleSettings: PropTypes.func,
   leaveRoom: PropTypes.func,
   toggleLog: PropTypes.func
@@ -113,8 +128,9 @@ export default connect(
     settingsShown: state.settingsShown,
     backlogShown: state.backlogShown,
     logShown: state.logShown,
+    helpShown: state.helpShown,
     unseenError: state.unseenError,
     username: getOwnUsername(state)
   }),
-  {toggleBacklog, toggleSettings, toggleLog, leaveRoom}
+  {toggleBacklog, toggleSettings, toggleHelp, toggleLog, leaveRoom}
 )(TopBar);

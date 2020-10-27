@@ -1,3 +1,7 @@
+### 0.8.2: 2020-10-27
+
+* Added "Help" view to the right-hand sidebar
+* Extended user manual
 
 ### 0.8.1: 2020-10-25
 

@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import Backlog from '../components/Backlog';
 import Settings from '../components/Settings';
 import ActionLog from '../components/ActionLog';
+import Help from '../components/Help';
 import Users from '../components/Users';
-
 import Estimation from '../components/Estimation';
 import FeedbackHint from './FeedbackHint';
 import {StyledBoard} from '../styled/Board';
@@ -26,6 +26,7 @@ const Board = ({roomId, isAStorySelected}) => (
     <Users />
     <Settings />
     <ActionLog />
+    <Help />
     <Backlog />
     {isAStorySelected && <Estimation />}
 

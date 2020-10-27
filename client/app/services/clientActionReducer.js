@@ -1,7 +1,5 @@
 import {
   TOGGLE_BACKLOG,
-  TOGGLE_SETTINGS,
-  TOGGLE_LOG,
   EDIT_STORY,
   HIGHLIGHT_STORY,
   CANCEL_EDIT_STORY,
@@ -13,8 +11,10 @@ import {
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
   HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK
+  TOGGLE_MARK_FOR_KICK,
+  TOGGLE_SIDEBAR
 } from '../actions/types';
+import {SIDEBAR_ACTIONLOG} from '../actions';
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)
@@ -61,33 +61,24 @@ export default function clientActionReducer(state, action) {
       const showBacklog = !state.backlogShown;
 
       if (showBacklog) {
-        return {...state, backlogShown: true, settingsShown: false, logShown: false};
+        return {...state, backlogShown: true, sidebar: undefined};
       } else {
         return {...state, backlogShown: false};
       }
     }
-    case TOGGLE_SETTINGS: {
-      const showMenu = !state.settingsShown;
-
-      if (showMenu) {
-        return {...state, settingsShown: true, logShown: false, backlogShown: false};
-      } else {
-        return {...state, settingsShown: false};
-      }
-    }
-    case TOGGLE_LOG: {
-      const showLog = !state.logShown;
-
-      if (showLog) {
+    case TOGGLE_SIDEBAR: {
+      if (state.sidebar === action.sidebarKey) {
         return {
           ...state,
-          logShown: true,
-          unseenError: false,
-          settingsShown: false,
-          backlogShown: false
+          sidebar: undefined
         };
       } else {
-        return {...state, logShown: false};
+        return {
+          ...state,
+          sidebar: action.sidebarKey,
+          backlogShown: false,
+          unseenError: action.sidebarKey === SIDEBAR_ACTIONLOG ? false : state.unseenError
+        };
       }
     }
     case EDIT_STORY: {

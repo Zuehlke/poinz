@@ -8,8 +8,7 @@ import appConfig from '../services/appConfig';
 import {
   LOCATION_CHANGED,
   TOGGLE_BACKLOG,
-  TOGGLE_SETTINGS,
-  TOGGLE_LOG,
+  TOGGLE_SIDEBAR,
   EDIT_STORY,
   HIGHLIGHT_STORY,
   CANCEL_EDIT_STORY,
@@ -356,8 +355,6 @@ export const fetchStatus = () => (dispatch) => {
 export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
 export const showTrash = () => ({type: SHOW_TRASH});
 export const hideTrash = () => ({type: HIDE_TRASH});
-export const toggleSettings = () => ({type: TOGGLE_SETTINGS});
-export const toggleLog = () => ({type: TOGGLE_LOG});
 export const highlightStory = (storyId) => ({type: HIGHLIGHT_STORY, storyId});
 export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
 export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
@@ -370,3 +367,8 @@ export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};
 };
+
+export const toggleSidebar = (sidebarKey) => ({type: TOGGLE_SIDEBAR, sidebarKey});
+export const SIDEBAR_HELP = 'HELP';
+export const SIDEBAR_SETTINGS = 'SETTINGS';
+export const SIDEBAR_ACTIONLOG = 'ACTIONLOG';

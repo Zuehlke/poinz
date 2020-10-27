@@ -38,18 +38,19 @@ it('multi user estimation', function () {
 
   // now we have two users in the room and can do a real estimation round :)
 
+  // add two stories
   cy.get(tid('storyAddForm') + ' input[type="text"]').type(this.stories[0].title);
   cy.get(tid('storyAddForm') + ' button').click();
 
-  cy.get(tid('estimationCard.5')).click();
-  // only we estimated.. nothing is revealed
+  cy.get(tid('storyAddForm') + ' input[type="text"]').type(this.stories[2].title);
+  cy.get(tid('storyAddForm') + ' button').click();
 
-  //  and I can change my mind..
+  // our user estimates... nothing is auto-revealed, other user did not estimate so far
   cy.get(tid('estimationCard.5')).click();
 
+  //  and I can change my mind...   several times ;)
+  cy.get(tid('estimationCard.5')).click();
   cy.get(tid('estimationCard.13')).click();
-
-  // several times ;)
   cy.get(tid('estimationCard.8')).click();
 
   // get the story id from the selected story node in the DOM
@@ -94,5 +95,9 @@ it('multi user estimation', function () {
 
       cy.get(tid('users')).contains(8);
       cy.get(tid('estimationArea', 'consensusBadge')).contains(8);
+
+      cy.get(tid('nextStoryButton')).click();
+
+      cy.get(tid('estimationArea', 'story')).contains(this.stories[2].title);
     });
 });

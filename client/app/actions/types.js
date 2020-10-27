@@ -2,8 +2,7 @@
  *  UI-only
  */
 export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG'; // toggles the visibility of the story backlog
-export const TOGGLE_SETTINGS = 'TOGGLE_SETTINGS'; // toggles the visibility of the settings menu
-export const TOGGLE_LOG = 'TOGGLE_LOG'; // toggles the visibility of the event log
+export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'; // toggles the visibility of the righthand sidebar (could be either settings, action log or help)
 export const EDIT_STORY = 'EDIT_STORY';
 export const HIGHLIGHT_STORY = 'HIGHLIGHT_STORY';
 export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';

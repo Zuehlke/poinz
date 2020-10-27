@@ -24,8 +24,8 @@ const INITIAL_STATE = () => ({
   presetEmail: clientSettingsStore.getPresetEmail(),
   presetUserId: clientSettingsStore.getPresetUserId(),
   presetAvatar: clientSettingsStore.getPresetAvatar(),
-  settingsShown: false,
-  trashShown: false,
+  backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
+  sidebar: undefined,
   stories: {}, // in our frontend, we store stories as object (key is the story's id). this differs from the PoinZ Backend, where stories is a array...
   users: {}, // in our frontend, we store users as object (key is the user's id). this differs from the PoinZ Backend, where users is a array...
   estimations: {},

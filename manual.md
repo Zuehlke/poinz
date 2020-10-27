@@ -4,8 +4,6 @@ This page gives you an overview on the features and most common use cases.
 
 ## Table of Contents
 
-* [PoinZ user manual](#poinz-user-manual)
-  * [Table of Contents](#table-of-contents)
   * [The Board](#the-board)
   * [Joining and leaving rooms](#joining-and-leaving-rooms)
      * [Joining a room](#joining-a-room)
@@ -13,13 +11,18 @@ This page gives you an overview on the features and most common use cases.
      * [Removing other users from the room](#removing-other-users-from-the-room)
   * [The Story Backlog](#the-story-backlog)
      * [Adding stories](#adding-stories)
+     * [Importing stories](#importing-stories)
      * [Editing stories](#editing-stories)
      * [Trashing stories](#trashing-stories)
   * [Estimating](#estimating)
+     * [Manually reveal estimates](#manually-reveal-estimates)
+     * [New Round](#new-round)
+
+
 
 ## The Board
 
-The board contains the [**Backlog**](#the-story-backlog) (list of stories on the left). The **Estimation Area**, where we see all users in the room as well as the currently selected story (in the middle). Optionally the **Settings** menu or the **Action Log** on the right.
+The board contains the [**Backlog**](#the-story-backlog) (list of stories on the left). The [**Estimation Area**](#estimating), where we see all users in the room as well as the currently selected story (in the middle). Optionally the **Settings** menu or the **Action Log** on the right.
 
 ![The Board](https://user-images.githubusercontent.com/1777143/97100788-84ded180-1697-11eb-9737-6ef82b5fc73b.png)
 
@@ -32,6 +35,8 @@ You can join a room in three different ways
 1. Visit the [landing page](https://poinz.herokuapp.com/) and click the big button **"Join new room"**. You will join a new room with a randomly assigned unique room id.
 2. Visit the [landing page](https://poinz.herokuapp.com/), extend the form and enter a custom room name, then hit Enter or click the join button. If the room with this custom name (the room id) already exists, you will join it. Otherwise a new room is created.
 3. Join a room directly by visiting the room url. (e.g. https://poinz.herokuapp.com/test   or  https://poinz.herokuapp.com/a-random-room-id-here). If the room with this name/id already exists, you will join it. Otherwise a new room is created.
+
+PoinZ will ask you for a username on your first visit. Afterwards your username is stored in the LocalStorage of your browser and reused on subsequent joins.
 
 ![Join Room Form](https://user-images.githubusercontent.com/1777143/97100613-89a28600-1695-11eb-9d03-94a482cc0678.png)
 
@@ -59,8 +64,21 @@ The story backlog contains all stories added or imported to your room. The story
 
 ### Adding stories
 
-1. Simply fill in the form on the top left. The *Title* is mandatory, the *Description* is optional. 
-2. Drag and Drop a csv file with stories (e.g. an export from Jira) on to the backlog
+Simply fill in the form on the top left. The *Title* is mandatory, the *Description* is optional. Any url in the description will be rendered as clickable link.
+
+### Importing stories
+ 
+Drag and Drop a csv file with stories (e.g. an export from Jira) on to the backlog.
+The csv file should contain column headers on the first line.
+
+Example:
+```
+key,title,description
+ISS-123,The Title, some Description
+ISS-554,Another Story, With a description
+```
+
+PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.
 
 ### Editing stories
 
@@ -82,22 +100,22 @@ Only a single story can be estimated at a given time.
  
 1. Click the story you want to estimate in the **Backlog** and click the blue **Estimate** button.
 2. The board now shows the selected story. All users see the same story selected on the board.
-3. Estimate the story by clicking one of the cards.
+3. Estimate the story by clicking one of the colored cards. By default the cards have the values ?, 1/2, 1, 2, 3, 5, 8, 13, 21, 34, 55, BIG.
 4. By default, the given estimates are *revealed* as soon as all active users did estimate. This behaviour can be changed in the settings (Auto Reveal).
 
-If all users estimated the same value, *consensus* is achieved and the story will display a colored *badge*.
+If all users estimated the same value, *consensus* is achieved, and the story will display a colored *badge*.
 
 ![consensus](https://user-images.githubusercontent.com/1777143/97101160-4ba86080-169b-11eb-997d-57b5648e6ff8.png)
 
 ### Manually reveal estimates
 
-You can *reveal* the story at any time by clicking the blue **Reveal** button. Even if not all users in the room did estimate. All given estimates are shown.
+You can *reveal* the story at any time by clicking the blue **Reveal** button. Even if not all users in the room did estimate. PoinZ then displays all given estimates for this story (visible for all users).
 
 ![reveal](https://user-images.githubusercontent.com/1777143/97101241-08022680-169c-11eb-97de-9a27244c3dca.png)
 
 ### New Round
 
-After the story was revealed (automatically or manually) you can start a New round by clicking the blue **new Round** button.
-All previously given estimates on the currently selected story are erased and your team can start estimating again.
+After the story was revealed (automatically or manually) you can start a new round by clicking the blue **new Round** button.
+All previously given estimates on the currently selected story are erased, and your team can start estimating again.
 
 ![new round](https://user-images.githubusercontent.com/1777143/97101245-0e909e00-169c-11eb-81f5-80a0c094014c.png)

@@ -209,6 +209,12 @@
       "css": "right-big",
       "code": 8594,
       "src": "fontawesome"
+    },
+    {
+      "uid": "3a230e539a4f3b904debd04c6c155034",
+      "css": "help",
+      "code": 10067,
+      "src": "entypo"
     }
   ]
 }

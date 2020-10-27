@@ -1,15 +1,9 @@
 import styled from 'styled-components';
 
 import {device, RIGHT_MENU_WIDTH} from './dimensions';
-import {
-  COLOR_BACKGROUND_GREY,
-  COLOR_LIGHT_GREY,
-  COLOR_LIGHTER_GREY,
-  COLOR_ORANGE,
-  COLOR_WARNING
-} from './colors';
+import {COLOR_BACKGROUND_GREY, COLOR_ORANGE} from './colors';
 
-export const StyledActionLog = styled.div`
+export const StyledHelp = styled.div`
   z-index: 10;
   position: fixed;
   width: ${(props) => (props.shown ? '100%' : RIGHT_MENU_WIDTH + 'px')};
@@ -42,7 +36,7 @@ export const StyledActionLog = styled.div`
   }
 `;
 
-export const StyledActionLogInner = styled.div`
+export const StyledHelpInner = styled.div`
   top: 73px;
   bottom: 16px;
   position: absolute;
@@ -50,30 +44,4 @@ export const StyledActionLogInner = styled.div`
   overflow-y: auto;
   left: 8px;
   right: 8px;
-`;
-
-export const StyledActionLogList = styled.ul`
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-`;
-
-export const StyledActionLogListItem = styled.li`
-  background: #fff;
-  padding: 4px;
-  margin-bottom: 8px;
-  box-sizing: border-box;
-  border: 1px solid ${COLOR_LIGHTER_GREY};
-  border-left: ${({isError}) =>
-    isError ? '2px solid ' + COLOR_WARNING : '1px solid ' + COLOR_LIGHTER_GREY};
-
-  > span {
-    display: block;
-  }
-
-  > span:first-child {
-    color: ${COLOR_LIGHT_GREY};
-    font-size: 12px;
-  }
 `;

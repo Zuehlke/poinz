@@ -10,8 +10,6 @@ import {
   SET_LANGUAGE,
   STATUS_FETCHED,
   TOGGLE_BACKLOG,
-  TOGGLE_LOG,
-  TOGGLE_SETTINGS,
   SHOW_TRASH,
   HIDE_TRASH
 } from '../../app/actions/types';
@@ -24,9 +22,11 @@ import {
   hideTrash,
   setLanguage,
   showTrash,
+  SIDEBAR_ACTIONLOG,
+  SIDEBAR_HELP,
+  SIDEBAR_SETTINGS,
   toggleBacklog,
-  toggleLog,
-  toggleSettings
+  toggleSidebar
 } from '../../app/actions';
 
 test(COMMAND_SENT, () => {
@@ -117,73 +117,41 @@ test(EVENT_RECEIVED, () => {
 test(TOGGLE_BACKLOG, () => {
   const startingState = initialState();
 
-  // settings is currently shown, hide it
-  startingState.settingsShown = true;
+  // settings is currently shown, when backlog is openend, hide settings
+  startingState.sidebar = SIDEBAR_SETTINGS;
   let modifiedState = clientActionReducer(startingState, toggleBacklog());
   expect(modifiedState.backlogShown).toBe(true);
-  expect(modifiedState.settingsShown).toBe(false);
+  expect(modifiedState.sidebar).toBeFalsy();
 
   modifiedState = clientActionReducer(modifiedState, toggleBacklog());
   expect(modifiedState.backlogShown).toBe(false);
-  expect(modifiedState.settingsShown).toBe(false);
-
-  // if action log is currently shown, hide it
-  startingState.logShown = true;
-  modifiedState = clientActionReducer(startingState, toggleBacklog());
-  expect(modifiedState.backlogShown).toBe(true);
-  expect(modifiedState.logShown).toBe(false);
-
-  modifiedState = clientActionReducer(modifiedState, toggleBacklog());
-  expect(modifiedState.backlogShown).toBe(false);
-  expect(modifiedState.logShown).toBe(false);
+  expect(modifiedState.sidebar).toBeFalsy(); // still false
 });
 
-test(TOGGLE_SETTINGS, () => {
+test('toggle sidebar', () => {
   const startingState = initialState();
 
-  // if backlog (stories) is currently shown, hide it
-  startingState.backlogShown = true;
-  let modifiedState = clientActionReducer(startingState, toggleSettings());
-  expect(modifiedState.settingsShown).toBe(true);
+  let modifiedState = startingState;
+
+  modifiedState.unseenError = true;
+
+  modifiedState = clientActionReducer(modifiedState, toggleSidebar(SIDEBAR_SETTINGS));
+  expect(modifiedState.sidebar).toBe(SIDEBAR_SETTINGS);
+  expect(modifiedState.unseenError).toBe(true);
+
+  modifiedState.backlogShown = true;
+
+  modifiedState = clientActionReducer(modifiedState, toggleSidebar(SIDEBAR_HELP));
+  expect(modifiedState.sidebar).toBe(SIDEBAR_HELP);
+  expect(modifiedState.unseenError).toBe(true);
   expect(modifiedState.backlogShown).toBe(false);
 
-  modifiedState = clientActionReducer(modifiedState, toggleSettings());
-  expect(modifiedState.settingsShown).toBe(false);
-  expect(modifiedState.backlogShown).toBe(false);
+  modifiedState = clientActionReducer(modifiedState, toggleSidebar(SIDEBAR_ACTIONLOG));
+  expect(modifiedState.sidebar).toBe(SIDEBAR_ACTIONLOG);
+  expect(modifiedState.unseenError).toBe(false);
 
-  // if action log is currently shown, hide it
-  startingState.logShown = true;
-  modifiedState = clientActionReducer(startingState, toggleSettings());
-  expect(modifiedState.settingsShown).toBe(true);
-  expect(modifiedState.logShown).toBe(false);
-
-  modifiedState = clientActionReducer(modifiedState, toggleSettings());
-  expect(modifiedState.settingsShown).toBe(false);
-  expect(modifiedState.logShown).toBe(false);
-});
-
-test(TOGGLE_LOG, () => {
-  const startingState = initialState();
-
-  // if backlog (stories) is currently shown, hide it
-  startingState.backlogShown = true;
-  let modifiedState = clientActionReducer(startingState, toggleLog());
-  expect(modifiedState.logShown).toBe(true);
-  expect(modifiedState.backlogShown).toBe(false);
-
-  modifiedState = clientActionReducer(modifiedState, toggleLog());
-  expect(modifiedState.logShown).toBe(false);
-  expect(modifiedState.backlogShown).toBe(false);
-
-  // settings is currently shown, hide it
-  startingState.settingsShown = true;
-  modifiedState = clientActionReducer(startingState, toggleLog());
-  expect(modifiedState.logShown).toBe(true);
-  expect(modifiedState.settingsShown).toBe(false);
-
-  modifiedState = clientActionReducer(modifiedState, toggleLog());
-  expect(modifiedState.logShown).toBe(false);
-  expect(modifiedState.settingsShown).toBe(false);
+  modifiedState = clientActionReducer(modifiedState, toggleSidebar(SIDEBAR_ACTIONLOG));
+  expect(modifiedState.sidebar).toBeUndefined();
 });
 
 test(EDIT_STORY + ' and ' + CANCEL_EDIT_STORY, () => {

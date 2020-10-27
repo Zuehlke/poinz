@@ -35,28 +35,34 @@ export const StyledTopRight = styled.div`
 
 export const StyledWhoAmI = styled.div`
   padding: 0 8px;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
-export const StyledWhoAmISimple = styled.span`
+export const StyledWhoAmISimple = styled.div`
   max-width: 10vh;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: inline-block;
   white-space: nowrap;
 
-  ${StyledWhoAmI}:hover & {
-    display: none;
+  @media ${device.desktop} {
+    ${StyledWhoAmI}:hover & {
+      display: none;
+    }
   }
 `;
-export const StyledWhoAmIExtended = styled.span`
+export const StyledWhoAmIExtended = styled.div`
   display: none;
 
-  ${StyledWhoAmI}:hover & {
-    display: inline-block;
+  @media ${device.desktop} {
+    ${StyledWhoAmI}:hover & {
+      display: block;
+    }
   }
 `;
 
-// three buttons on the top right (user menu, action log, leave room)
+// four buttons on the top right (settings, action log, help, leave room)
 export const StyledQuickMenuButton = styled.a`
   display: block;
   width: 34px;

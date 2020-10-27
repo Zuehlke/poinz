@@ -1,7 +1,5 @@
 import {
   TOGGLE_BACKLOG,
-  TOGGLE_SETTINGS,
-  TOGGLE_LOG,
   EDIT_STORY,
   HIGHLIGHT_STORY,
   CANCEL_EDIT_STORY,
@@ -14,8 +12,9 @@ import {
   SHOW_TRASH,
   HIDE_TRASH,
   TOGGLE_MARK_FOR_KICK,
-  TOGGLE_HELP
+  TOGGLE_SIDEBAR
 } from '../actions/types';
+import {SIDEBAR_ACTIONLOG} from '../actions';
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)
@@ -62,55 +61,24 @@ export default function clientActionReducer(state, action) {
       const showBacklog = !state.backlogShown;
 
       if (showBacklog) {
-        return {...state, backlogShown: true, settingsShown: false, logShown: false};
+        return {...state, backlogShown: true, sidebar: undefined};
       } else {
         return {...state, backlogShown: false};
       }
     }
-    case TOGGLE_SETTINGS: {
-      const showMenu = !state.settingsShown;
-
-      if (showMenu) {
+    case TOGGLE_SIDEBAR: {
+      if (state.sidebar === action.sidebarKey) {
         return {
           ...state,
-          settingsShown: true,
-          logShown: false,
-          backlogShown: false,
-          helpShown: false
+          sidebar: undefined
         };
       } else {
-        return {...state, settingsShown: false};
-      }
-    }
-    case TOGGLE_LOG: {
-      const showLog = !state.logShown;
-
-      if (showLog) {
         return {
           ...state,
-          logShown: true,
-          settingsShown: false,
+          sidebar: action.sidebarKey,
           backlogShown: false,
-          helpShown: false,
-          unseenError: false
+          unseenError: action.sidebarKey === SIDEBAR_ACTIONLOG ? false : state.unseenError
         };
-      } else {
-        return {...state, logShown: false};
-      }
-    }
-    case TOGGLE_HELP: {
-      const showHelp = !state.helpShown;
-
-      if (showHelp) {
-        return {
-          ...state,
-          settingsShown: false,
-          logShown: false,
-          backlogShown: false,
-          helpShown: true
-        };
-      } else {
-        return {...state, helpShown: false};
       }
     }
     case EDIT_STORY: {

@@ -8,13 +8,14 @@ import {
   StyledActionLog,
   StyledActionLogListItem
 } from '../styled/ActionLog';
+import {SIDEBAR_ACTIONLOG} from '../actions';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
  */
-const ActionLog = ({t, actionLog, logShown}) => (
-  <StyledActionLog shown={logShown}>
-    <h5>{t('log')}</h5>
+const ActionLog = ({t, actionLog, shown}) => (
+  <StyledActionLog shown={shown}>
+    <h4>{t('log')}</h4>
 
     <StyledActionLogInner>
       <StyledActionLogList>
@@ -31,12 +32,12 @@ const ActionLog = ({t, actionLog, logShown}) => (
 
 ActionLog.propTypes = {
   t: PropTypes.func,
-  logShown: PropTypes.bool,
+  shown: PropTypes.bool,
   actionLog: PropTypes.array
 };
 
 export default connect((state) => ({
   t: state.translator,
-  logShown: state.logShown,
+  shown: state.sidebar === SIDEBAR_ACTIONLOG,
   actionLog: state.actionLog
 }))(ActionLog);

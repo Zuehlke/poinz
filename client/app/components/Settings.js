@@ -12,7 +12,8 @@ import {
   leaveRoom,
   setLanguage,
   setAvatar,
-  setCardConfig
+  setCardConfig,
+  SIDEBAR_SETTINGS
 } from '../actions';
 import {
   StyledAvatarGrid,
@@ -47,7 +48,7 @@ const Settings = ({
   autoReveal,
   toggleAutoReveal,
   setLanguage,
-  settingsShown,
+  shown,
   cardConfig,
   setCardConfig,
   roomId
@@ -78,11 +79,11 @@ const Settings = ({
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
   React.useEffect(() => {
     setCustomCardConfigExpanded(false);
-  }, [settingsShown]);
+  }, [shown]);
   const [customCardConfigJsonError, setCustomCardConfigJsonError] = useState(false);
 
   return (
-    <StyledSettings shown={settingsShown} data-testid="settings">
+    <StyledSettings shown={shown} data-testid="settings">
       <div className="pure-form">
         <StyledArea>
           <h4>{t('user')}</h4>
@@ -280,7 +281,7 @@ const Settings = ({
 Settings.propTypes = {
   t: PropTypes.func,
   user: PropTypes.object,
-  settingsShown: PropTypes.bool,
+  shown: PropTypes.bool,
   language: PropTypes.string,
   toggleExcluded: PropTypes.func,
   autoReveal: PropTypes.bool,
@@ -302,7 +303,7 @@ export default connect(
     language: state.language,
     user: state.users[state.userId],
     autoReveal: state.autoReveal,
-    settingsShown: state.settingsShown,
+    shown: state.sidebar === SIDEBAR_SETTINGS,
     roomId: state.roomId
   }),
   {

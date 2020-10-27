@@ -2,12 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {StyledHelp, StyledHelpInner} from '../styled/Help';
+import {SIDEBAR_HELP} from '../actions';
+import Avatar from './Avatar';
 
 /**
  */
-const Help = ({t, helpShown}) => (
-  <StyledHelp shown={helpShown}>
-    <h5>{t('help')}</h5>
+const Help = ({t, shown}) => (
+  <StyledHelp shown={shown}>
+    <h4>{t('help')}</h4>
 
     <StyledHelpInner>
       <p>
@@ -19,23 +21,33 @@ const Help = ({t, helpShown}) => (
         >
           User Manual
         </a>{' '}
-        or get{' '}
+        or get <a href="mailto:xeronimus@gmail.com">in touch!</a>
+      </p>
+
+      <p>
+        Also, I&apos;m always interested in your feedback. Please open an{' '}
         <a href="https://github.com/Zuehlke/poinz/issues" target="_blank" rel="noopener noreferrer">
-          in touch!
+          Issue on github.
         </a>
       </p>
 
-      <p>Also, I&apos;m always interested in your feedback. Please open an Issue on github...</p>
+      <p>
+        {' '}
+        <Avatar
+          user={{email: 'set@zuehlke.com', emailHash: 'd2bb0fb7ae7e208f0a2384ec08d708ef'}}
+          index={0}
+        />
+      </p>
     </StyledHelpInner>
   </StyledHelp>
 );
 
 Help.propTypes = {
   t: PropTypes.func,
-  helpShown: PropTypes.bool
+  shown: PropTypes.bool
 };
 
 export default connect((state) => ({
   t: state.translator,
-  helpShown: state.helpShown
+  shown: state.sidebar === SIDEBAR_HELP
 }))(Help);

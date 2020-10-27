@@ -2,7 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {toggleBacklog, toggleSettings, toggleLog, toggleHelp, leaveRoom} from '../actions';
+import {
+  toggleBacklog,
+  toggleSidebar,
+  leaveRoom,
+  SIDEBAR_HELP,
+  SIDEBAR_ACTIONLOG,
+  SIDEBAR_SETTINGS
+} from '../actions';
 import {
   StyledBacklogToggle,
   StyledBacklogToggleIcon,
@@ -23,13 +30,9 @@ const TopBar = ({
   roomId,
   username,
   leaveRoom,
+  toggleSidebar,
   toggleBacklog,
-  toggleSettings,
-  toggleHelp,
-  toggleLog,
-  settingsShown,
-  logShown,
-  helpShown,
+  sidebar,
   unseenError,
   backlogShown
 }) => {
@@ -61,9 +64,9 @@ const TopBar = ({
         <StyledQuickMenuButton
           data-testid="settingsToggle"
           className={`clickable pure-button pure-button-primary ${
-            settingsShown ? 'pure-button-active' : ''
+            sidebar === SIDEBAR_SETTINGS ? 'pure-button-active' : ''
           } `}
-          onClick={toggleSettings}
+          onClick={toggleSidebar.bind(undefined, SIDEBAR_SETTINGS)}
           title={t('toggleMenu')}
         >
           <i className="icon-cog"></i>
@@ -71,10 +74,10 @@ const TopBar = ({
         <StyledQuickMenuButton
           data-testid="actionLogToggle"
           className={`clickable pure-button pure-button-primary ${
-            logShown ? 'pure-button-active' : ''
+            sidebar === SIDEBAR_ACTIONLOG ? 'pure-button-active' : ''
           }`}
           warning={unseenError}
-          onClick={toggleLog}
+          onClick={toggleSidebar.bind(undefined, SIDEBAR_ACTIONLOG)}
           title={t('toggleLog')}
         >
           <i className="icon-doc-text"></i>
@@ -85,9 +88,9 @@ const TopBar = ({
         <StyledQuickMenuButton
           data-testid="helpToggle"
           className={`clickable pure-button pure-button-primary ${
-            helpShown ? 'pure-button-active' : ''
+            sidebar === SIDEBAR_HELP ? 'pure-button-active' : ''
           } `}
-          onClick={toggleHelp}
+          onClick={toggleSidebar.bind(undefined, SIDEBAR_HELP)}
           title={t('help')}
         >
           <i className="icon-help"></i>
@@ -107,16 +110,13 @@ const TopBar = ({
 
 TopBar.propTypes = {
   t: PropTypes.func,
-  settingsShown: PropTypes.bool,
+  toggleBacklog: PropTypes.func,
   backlogShown: PropTypes.bool,
-  logShown: PropTypes.bool,
-  helpShown: PropTypes.bool,
   unseenError: PropTypes.bool,
   username: PropTypes.string,
   roomId: PropTypes.string,
-  toggleBacklog: PropTypes.func,
-  toggleHelp: PropTypes.func,
-  toggleSettings: PropTypes.func,
+  toggleSidebar: PropTypes.func,
+  sidebar: PropTypes.string,
   leaveRoom: PropTypes.func,
   toggleLog: PropTypes.func
 };
@@ -125,12 +125,10 @@ export default connect(
   (state) => ({
     t: state.translator,
     roomId: state.roomId,
-    settingsShown: state.settingsShown,
     backlogShown: state.backlogShown,
-    logShown: state.logShown,
-    helpShown: state.helpShown,
+    sidebar: state.sidebar,
     unseenError: state.unseenError,
     username: getOwnUsername(state)
   }),
-  {toggleBacklog, toggleSettings, toggleHelp, toggleLog, leaveRoom}
+  {toggleBacklog, toggleSidebar, leaveRoom}
 )(TopBar);

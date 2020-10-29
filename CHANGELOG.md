@@ -1,3 +1,7 @@
+### 0.8.3: 2020-10-29
+
+* Handle whitespace in custom room ids gracefully. They are now replaced with dashes ("-").
+
 ### 0.8.2: 2020-10-27
 
 * Added "Help" view to the right-hand sidebar

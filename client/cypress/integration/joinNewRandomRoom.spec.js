@@ -43,3 +43,17 @@ it('create new room (custom name) on the fly when joining by url', function () {
 
   cy.get(tid('whoamiSimple')).contains(this.user.username);
 });
+
+it('create new room (whitespace room name) by url', function () {
+  const randomId = uuid();
+  const customRoomName = 'this works now' + randomId;
+
+  cy.visit('/' + customRoomName);
+
+  cy.get(tid('usernameInput')).type(this.user.username);
+  cy.get(tid('joinButton')).click();
+
+  cy.get(tid('whoamiSimple')).contains(this.user.username);
+
+  cy.url().should('contain', 'this-works-now' + randomId);
+});

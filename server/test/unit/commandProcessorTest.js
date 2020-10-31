@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import {newMockRoomsStore} from './testUtils';
-import processorFactory from '../../src/commandProcessor';
+import processorFactory, {sanitizeRoomId} from '../../src/commandProcessor';
 import {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
 
 test('process a dummy command successfully: create room on the fly', async () => {
@@ -433,6 +433,41 @@ test('concurrency handling', async () => {
   expect(room.stories[1].title).toBe('value-2');
 
   expect(mockRoomsStore.saveRoom.mock.calls.length).toBe(2);
+});
+
+describe('sanitizeRoomId', () => {
+  test('single whitespace', () => {
+    const {roomId} = sanitizeRoomId({
+      roomId: 'team estimating'
+    });
+
+    expect(roomId).toBe('team-estimating');
+  });
+  test('multiple whitespace', () => {
+    const {roomId} = sanitizeRoomId({
+      roomId: 'team  estimating'
+    });
+
+    expect(roomId).toBe('team--estimating');
+  });
+  test('%20', () => {
+    const {roomId} = sanitizeRoomId({
+      roomId: 'team%20estimating'
+    });
+
+    expect(roomId).toBe('team-estimating');
+  });
+  test('multiple %20', () => {
+    const {roomId} = sanitizeRoomId({
+      roomId: 'super%20team%20estimating'
+    });
+
+    expect(roomId).toBe('super-team-estimating');
+  });
+  test('missing roomId', () => {
+    const {roomId} = sanitizeRoomId({});
+    expect(roomId).toBeUndefined();
+  });
 });
 
 test('detect structural problems in commandHandlers: no schema', () => {

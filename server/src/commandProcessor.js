@@ -93,7 +93,9 @@ export default function commandProcessorFactory(
    * @param {function} proceed function to proceed the queue (handle the next job/command)
    */
   async function jobHandler(job, proceed) {
-    const {command, userId} = job;
+    const {userId} = job;
+    const command = sanitizeRoomId(job.command);
+
     const context = {userId};
 
     logCommand(command, userId);
@@ -272,6 +274,24 @@ export default function commandProcessorFactory(
 
     await store.saveRoom(ctx.room);
   }
+}
+
+/**
+ * remove whitespaces and (url encoded) %20 from roomId on given command and replace them with dashes.
+ * This is done "very early" when handling a command. before the command even is validated.
+ *
+ * @param command
+ * @return {{roomId}|*}
+ */
+export function sanitizeRoomId(command) {
+  if (!command || !command.roomId) {
+    return command;
+  }
+
+  command.roomId = command.roomId.replace(/ /g, '-');
+  command.roomId = command.roomId.replace(/%20/g, '-');
+
+  return command;
 }
 
 function checkCommandHandlersForStructure(cmdHandlers) {

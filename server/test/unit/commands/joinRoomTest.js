@@ -269,6 +269,43 @@ test('existing room with user match, command has no preset properties', async ()
   });
 });
 
+test('space in custom room id', async () => {
+  const {processor} = prepEmpty();
+
+  const roomId = 'super team';
+  const roomIdSanitized = 'super-team';
+
+  const commandId = uuid();
+  const userId = uuid();
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        username: 'tester',
+        email: 'super@test.com'
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomIdSanitized,
+    'roomCreated',
+    'joinedRoom',
+    'usernameSet',
+    'emailSet',
+    'avatarSet'
+  );
+  const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
+
+  expect(roomCreatedEvent.roomId).toBe(roomIdSanitized);
+  expect(joinedRoomEvent.roomId).toBe(roomIdSanitized);
+  expect(room.id).toBe(roomIdSanitized);
+});
+
 test('existing room but completely new user, command has no preset properties', async () => {
   const {processor, userId, roomId} = await prepOneUserInOneRoom();
 

@@ -1,6 +1,6 @@
 {
   "name": "poinz-server",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -41,9 +41,9 @@
   "dependencies": {
     "express": "4.17.1",
     "express-sslify": "1.2.0",
-    "fastq": "1.8.0",
+    "fastq": "1.9.0",
     "glob": "7.1.6",
-    "migrate-mongo": "8.1.2",
+    "migrate-mongo": "8.1.4",
     "mongodb": "3.6.2",
     "papaparse": "5.3.0",
     "redis": "3.0.2",
@@ -58,11 +58,11 @@
     "@babel/core": "7.12.3",
     "@babel/preset-env": "7.12.1",
     "@babel/register": "7.12.1",
-    "babel-jest": "26.5.2",
+    "babel-jest": "26.6.1",
     "chalk": "4.1.0",
     "ejs": "3.1.5",
-    "eslint": "7.11.0",
-    "jest": "26.5.3",
+    "eslint": "7.12.1",
+    "jest": "26.6.1",
     "socket.io-client": "2.3.1"
   },
   "engines": {

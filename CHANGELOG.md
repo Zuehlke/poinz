@@ -1,6 +1,7 @@
-### 0.8.3: 2020-10-29
+### 0.8.3: 2020-10-31
 
-* Handle whitespace in custom room ids gracefully. They are now replaced with dashes ("-").
+* Handle whitespace in custom room ids gracefully. They are now replaced with dashes.
+* Updated dependencies
 
 ### 0.8.2: 2020-10-27
 

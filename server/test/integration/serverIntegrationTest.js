@@ -117,7 +117,7 @@ describe('REST endpoint', () => {
       {
         host: 'localhost',
         port: 3000,
-        path: '/api/room/1234',
+        path: '/api/export/room/1234',
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'

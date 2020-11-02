@@ -3,9 +3,8 @@ import stream from 'stream';
 
 /**
  * This module handles incoming requests to the REST api.
- * Currently there is only one endpoint: /api/status
  *
- * All other communication between client and server (story-, estimation- and user-related)
+ * Most of the (user-interaction triggered) communication between client and server (story-, estimation- and user-related)
  * is done via websocket connection.
  *
  */
@@ -23,7 +22,7 @@ function init(app, store) {
     res.json(status);
   });
 
-  restRouter.get('/room/:roomId', async (req, res) => {
+  restRouter.get('/export/room/:roomId', async (req, res) => {
     const roomExport = await buildRoomExportObject(store, req.params.roomId);
 
     if (!roomExport) {

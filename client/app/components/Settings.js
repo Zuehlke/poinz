@@ -242,7 +242,7 @@ const Settings = ({
             {t('exportInfo')}
 
             <p>
-              <StyledLinkButton href={`/api/room/${roomId}?mode=file`} download>
+              <StyledLinkButton href={`/api/export/room/${roomId}?mode=file`} download>
                 {t('exportLinkText')} <i className="icon-download-cloud"></i>
               </StyledLinkButton>
             </p>

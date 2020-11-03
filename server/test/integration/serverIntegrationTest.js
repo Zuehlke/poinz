@@ -70,16 +70,15 @@ describe('websocket endpoint', () => {
 
 describe('REST endpoint', () => {
   test('should return backend status', async () => {
-    const {statusCode, body} = await httpGetJSON(
-      {
-        host: 'localhost',
-        port: 3000,
-        path: '/api/status',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+    const {statusCode, body} = await httpGetJSON({
+      host: 'localhost',
+      port: 3000,
+      path: '/api/status',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
 
     expect(statusCode).toBe(200);
     expect(body.roomCount).toBeDefined();
@@ -97,7 +96,7 @@ describe('REST endpoint', () => {
     const {statusCode, body} = await httpGetJSON({
       host: 'localhost',
       port: 3000,
-      path: '/api/room/' + roomId,
+      path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -111,18 +110,42 @@ describe('REST endpoint', () => {
     });
   });
 
-  test('should export room as csv', async () => {
-    // first make sure a room exists
-    const roomId = uuid();
-    const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, uuid()), 3);
-    client.disconnect();
-
-    // export the room
-    const {statusCode, body} = await httpGet({
+  test('should return 404 if room does not exist (export)', async () => {
+    const {statusCode, body} = await httpGetJSON({
       host: 'localhost',
       port: 3000,
-      path: `/api/room/${roomId}?format=csv`,
+      path: '/api/export/room/1234',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    expect(statusCode).toBe(404);
+    expect(body.message).toBeDefined();
+  });
+
+  test('should return whole room state', async () => {
+    // first make sure a room exists
+    const roomId = uuid();
+    const userId = uuid();
+    const client = poinzSocketClientFactory(backendUrl);
+    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 3);
+    const [storyAdded] = await client.cmdAndWait(
+      client.cmds.addStory(roomId, userId, 'test-story'),
+      2
+    );
+    await client.cmdAndWait(
+      client.cmds.giveEstimate(roomId, userId, storyAdded.payload.storyId, 3),
+      2
+    );
+    client.disconnect();
+
+    // fetch the whole room state
+    const {statusCode, body} = await httpGetJSON({
+      host: 'localhost',
+      port: 3000,
+      path: '/api/room/' + roomId,
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -130,24 +153,28 @@ describe('REST endpoint', () => {
     });
 
     expect(statusCode).toBe(200);
-    expect(body).toBe('cksjglkdjglsjglk');
-  });
-
-  test('should return 404 if room does not exist', async () => {
-    const {statusCode, body} = await httpGetJSON(
-      {
-        host: 'localhost',
-        port: 3000,
-        path: '/api/export/room/1234',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
+    expect(body).toMatchObject({
+      autoReveal: true,
+      id: roomId,
+      selectedStory: storyAdded.payload.storyId,
+      stories: [
+        {
+          consensus: 3,
+          estimations: {
+            [userId]: 3
+          },
+          id: storyAdded.payload.storyId,
+          revealed: true,
+          title: 'test-story'
         }
-      }
-    );
-
-    expect(statusCode).toBe(404);
-    expect(body.message).toBeDefined();
+      ],
+      users: [
+        {
+          avatar: 0,
+          id: userId
+        }
+      ]
+    });
   });
 
   /**
@@ -162,7 +189,6 @@ describe('REST endpoint', () => {
       body: JSON.parse(result.body)
     }));
   }
-
 
   /**
    * helper method to send HTTP GET requests to the backend under test

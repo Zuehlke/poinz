@@ -1,7 +1,7 @@
 export function throwIfBulkWriteResultInvalid(bWriteResult, expectedModCount = 1) {
   if (bWriteResult.modifiedCount !== expectedModCount) {
     throw new Error(
-      'do not run migration tests simultaneously! ModificationCount is ' +
+      'Make sure, you run these tests with the jest option "--runInBand". (prevents tests running in parallel)! ModificationCount is ' +
         bWriteResult.modifiedCount
     );
   }

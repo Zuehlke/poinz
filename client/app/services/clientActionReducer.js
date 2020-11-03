@@ -12,9 +12,11 @@ import {
   SHOW_TRASH,
   HIDE_TRASH,
   TOGGLE_MARK_FOR_KICK,
-  TOGGLE_SIDEBAR
+  TOGGLE_SIDEBAR,
+  ROOM_STATE_FETCHED
 } from '../actions/types';
 import {SIDEBAR_ACTIONLOG} from '../actions';
+import {indexEstimations, indexStories, indexUsers} from './roomStateMapper';
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)
@@ -137,6 +139,23 @@ export default function clientActionReducer(state, action) {
         [action.userId]: {...state.users[action.userId], markedForKick: doMark}
       };
       return {...state, users: modifiedUsers};
+    }
+    case ROOM_STATE_FETCHED: {
+      const room = action.room;
+
+      if (state.roomId !== room.id) {
+        return state;
+      }
+
+      return {
+        ...state,
+        selectedStory: room.selectedStory,
+        cardConfig: room.cardConfig,
+        autoReveal: room.autoReveal,
+        users: indexUsers(room.users),
+        stories: indexStories(room.stories),
+        estimations: indexEstimations(room.stories)
+      };
     }
 
     default:

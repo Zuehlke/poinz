@@ -19,7 +19,8 @@ import {
   HIDE_NEW_USER_HINTS,
   SHOW_TRASH,
   HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK
+  TOGGLE_MARK_FOR_KICK,
+  ROOM_STATE_FETCHED
 } from './types';
 import clientSettingsStore from '../store/clientSettingsStore';
 import readDroppedFile from '../services/readDroppedFile';
@@ -56,7 +57,7 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
  *
  * @param event
  */
-export const eventReceived = (event) => (dispatch) => {
+export const eventReceived = (event) => (dispatch, getState) => {
   const matchingType = EVENT_ACTION_TYPES[event.name];
   if (!matchingType) {
     log.error(`Unknown incoming event type ${event.name}. Will not dispatch a specific action.`);
@@ -78,6 +79,10 @@ export const eventReceived = (event) => (dispatch) => {
 
   if (event.name === 'joinedRoom') {
     history.push('/' + event.roomId);
+  }
+
+  if (matchingType === EVENT_ACTION_TYPES.commandRejected) {
+    tryToRecoverOnRejection(event, dispatch, getState);
   }
 };
 
@@ -347,6 +352,43 @@ export const fetchStatus = () => (dispatch) => {
     dispatch({
       type: STATUS_FETCHED,
       status: response.data
+    });
+  });
+};
+
+/**
+ * If a command failed, the server sends a "commandRejected" event.
+ * From some rejections, we might be able to recover by reloading the room state from the backend.
+ * Obviously there are situations where there is a mismatch between server and client state.
+ */
+const tryToRecoverOnRejection = (event, dispatch, getState) => {
+  if (!event.payload || !event.payload.command) {
+    return;
+  }
+
+  const failedCommandName = event.payload.command.name;
+
+  if (
+    failedCommandName === 'giveStoryEstimate' ||
+    failedCommandName === 'clearStoryEstimate' ||
+    failedCommandName === 'newEstimationRound' ||
+    failedCommandName === 'reveal'
+  ) {
+    fetchCurrentRoom(dispatch, getState);
+  }
+};
+
+const fetchCurrentRoom = (dispatch, getState) => {
+  const state = getState();
+
+  if (!state.roomId) {
+    return;
+  }
+
+  axios.get('/api/room/' + state.roomId).then((response) => {
+    dispatch({
+      type: ROOM_STATE_FETCHED,
+      room: response.data
     });
   });
 };

@@ -45,6 +45,7 @@ test('You join an existing room', () => {
   expect(modifiedState.roomId).toEqual(events[0].roomId);
   expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
   expect(modifiedState.users).toEqual({
+    // users is an object, indexed by userId
     [otherUserId]: {
       avatar: 0,
       disconnected: false,
@@ -62,7 +63,7 @@ test('You join an existing room', () => {
     }
   });
 
-  // stories without the "estimations" properties
+  // stories is an object indexed by storyId. stories no longer have the "estimations" property
   expect(modifiedState.stories).toEqual({
     [storyId]: {
       id: storyId,

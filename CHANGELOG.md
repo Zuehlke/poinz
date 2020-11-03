@@ -1,3 +1,7 @@
+### 0.8.4: 2020-11-03
+
+* Fetch backend room state on certain command rejections
+
 ### 0.8.3: 2020-10-31
 
 * Handle whitespace in custom room ids gracefully. They are now replaced with dashes.

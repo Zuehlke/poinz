@@ -5,6 +5,7 @@ import rootReducer from '../services/rootReducer';
 import hubFactory from '../services/hub';
 import {locationChanged, eventReceived, onSocketConnect} from '../actions';
 import history from '../services/getBrowserHistory';
+import appConfig from '../services/appConfig';
 
 /**
  * configures and sets up the redux store.
@@ -13,7 +14,10 @@ import history from '../services/getBrowserHistory';
  */
 export default function configureStore(initialState) {
   const composeEnhancers =
-    (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+    (typeof window !== 'undefined' &&
+      appConfig.env === 'dev' &&
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+    compose;
 
   let hub;
 
@@ -21,7 +25,10 @@ export default function configureStore(initialState) {
     rootReducer,
     initialState,
     composeEnhancers(
-      applyMiddleware(thunkMiddleware.withExtraArgument((cmd) => hub.sendCommand(cmd)))
+      applyMiddleware(
+        // "sendCommand" will be available in redux action creators as third argument
+        thunkMiddleware.withExtraArgument((cmd) => hub.sendCommand(cmd))
+      )
     )
   );
 

@@ -382,7 +382,8 @@ const tryToRecoverOnRejection = (event, dispatch, getState) => {
     failedCommandName === 'giveStoryEstimate' ||
     failedCommandName === 'clearStoryEstimate' ||
     failedCommandName === 'newEstimationRound' ||
-    failedCommandName === 'reveal'
+    failedCommandName === 'reveal' ||
+    failedCommandName === 'kick'
   ) {
     fetchCurrentRoom(dispatch, getState);
   }

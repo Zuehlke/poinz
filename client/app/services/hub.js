@@ -11,11 +11,12 @@ import {COMMAND_SENT} from '../actions/types';
  *
  * @param {function} dispatch The redux dispatch function
  * @param {function} getUserId Callback that provides the current userId
- * @return {{sendCommand: sendCommand, io: {emit: io.emit}, onEvent: onEvent}} a/the Hub instance
+ * @return {{onConnect: onConnect, sendCommand: sendCommand, onEvent: onEvent}}  a/the Hub instance
  */
 export default function hubFactory(dispatch, getUserId) {
   let ioInstance;
   let onEventHandler;
+  let onConnectHandler;
 
   if (appConfig.env === 'test') {
     // during test, there is no browser. thus we cannot instantiate socket.io!
@@ -24,7 +25,10 @@ export default function hubFactory(dispatch, getUserId) {
     };
   } else {
     ioInstance = appConfig.wsUrl ? io(appConfig.wsUrl) : io();
-    ioInstance.on('connect', () => log.info('socket connected to server'));
+    ioInstance.on('connect', () => {
+      log.info('socket connected to server');
+      onConnectHandler();
+    });
     ioInstance.on('disconnect', () => log.info('socket from server disconnected'));
     ioInstance.on('event', (ev) => {
       debugReceivedEvent(ev);
@@ -34,11 +38,15 @@ export default function hubFactory(dispatch, getUserId) {
 
   return {
     onEvent,
+    onConnect,
     sendCommand
   };
 
   function onEvent(onEventCb) {
     onEventHandler = onEventCb;
+  }
+  function onConnect(onConnectCb) {
+    onConnectHandler = onConnectCb;
   }
 
   /**

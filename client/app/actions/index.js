@@ -27,7 +27,7 @@ import readDroppedFile from '../services/readDroppedFile';
 import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
 
 /**
- * store current pathname in our redux store, join or leave room if necessary
+ * Store current pathname in our redux store, join or leave room if necessary
  */
 export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
@@ -51,6 +51,16 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
     type: LOCATION_CHANGED,
     pathname
   });
+};
+
+export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
+  const roomId = getState().roomId;
+
+  if (roomId) {
+    // the socket connected. since we have a roomId in our client-side state, we can assume this is a "re-connect"
+    // make sure we are in sync again with the backend state. send a joinRoom command.
+    joinRoom(roomId)(dispatch, getState, sendCommand);
+  }
 };
 
 /**

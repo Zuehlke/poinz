@@ -1,12 +1,6 @@
 import styled from 'styled-components';
 
-import {
-  COLOR_BACKGROUND_GREY,
-  COLOR_BLUE,
-  COLOR_LIGHTER_GREY,
-  COLOR_ORANGE,
-  COLOR_WARNING
-} from './colors';
+import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './colors';
 import {device, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from './dimensions';
 
 export const StyledSettings = styled.div`
@@ -134,20 +128,8 @@ export const StyledLinkButton = styled.a`
   }
 `;
 
-export const StyledTextarea = styled.textarea`
-  width: 100%;
-  font-family: monospace;
-  min-height: 300px;
-`;
-
 export const StyledExpandButton = styled.button`
   padding: 3px;
   font-size: small;
   margin: 0 4px;
-`;
-
-export const ErrorMsg = styled.p`
-  color: ${COLOR_WARNING};
-  margin-bottom: 2px;
-  font-size: small;
 `;

@@ -37,6 +37,29 @@ test('Should produce cardConfigSet event', async () => {
   expect(room.cardConfig).toEqual(sanitizedConfig);
 });
 
+test('Should use defaultCardConfig if empty array in command (reset)', async () => {
+  const {processor, roomId, userId} = await prepOneUserInOneRoom();
+
+  const commandId = uuid();
+  const {producedEvents} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'setCardConfig',
+      payload: {
+        cardConfig: []
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'cardConfigSet');
+
+  const [cardConfigSetEvent] = producedEvents;
+
+  expect(cardConfigSetEvent.payload.cardConfig.length).toBe(12);
+});
+
 describe('preconditions', () => {
   test('Should throw if given cardConfig is not an array', async () => {
     const {processor, roomId, userId} = await prepOneUserInOneRoom();

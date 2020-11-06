@@ -1,6 +1,8 @@
-### 0.8.4: 2020-11-03
+### 0.8.4: 2020-11-04
 
 * Fetch backend room state on certain command rejections
+* Rejoin room on socket reconnect
+* Visual editor for card configuration
 
 ### 0.8.3: 2020-10-31
 

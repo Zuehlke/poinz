@@ -24,13 +24,12 @@ import {
   StyledSettings,
   StyledMiniAvatar,
   StyledLinkButton,
-  StyledTextarea,
   StyledExpandButton,
-  ErrorMsg,
   StyledArea
 } from '../styled/Settings';
 import ValidatedInput from './ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../services/frontendInputValidation';
+import {CardConfigEditor} from './CardConfigEditor';
 
 /**
  * The user menu allows customizing Poinz
@@ -69,18 +68,10 @@ const Settings = ({
     setMyEmail(user.email || '');
   }, [user.email]);
 
-  // derive custom card config for textarea   from prop
-  const [customCardConfigString, setCustomCardConfigString] = useState(
-    JSON.stringify(cardConfig, null, 4)
-  );
-  React.useEffect(() => {
-    setCustomCardConfigString(JSON.stringify(cardConfig, null, 4));
-  }, [cardConfig]);
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
   React.useEffect(() => {
     setCustomCardConfigExpanded(false);
   }, [shown]);
-  const [customCardConfigJsonError, setCustomCardConfigJsonError] = useState(false);
 
   return (
     <StyledSettings shown={shown} data-testid="settings">
@@ -216,24 +207,7 @@ const Settings = ({
             )}
 
             {customCardConfigExpanded && (
-              <div>
-                <p>
-                  <StyledTextarea
-                    value={customCardConfigString}
-                    onChange={(e) => setCustomCardConfigString(e.target.value)}
-                  ></StyledTextarea>
-                </p>
-                {customCardConfigJsonError && <ErrorMsg>{t('customCardsJsonError')}</ErrorMsg>}
-                <p>
-                  <button
-                    type="button"
-                    className="pure-button pure-button-primary"
-                    onClick={setCustomCardConfiguration}
-                  >
-                    {t('iKnowWhatImDoin')} <i className="icon-floppy" />
-                  </button>
-                </p>
-              </div>
+              <CardConfigEditor t={t} cardConfig={cardConfig} onSave={(cc) => setCardConfig(cc)} />
             )}
           </StyledSection>
 
@@ -265,16 +239,6 @@ const Settings = ({
 
   function saveEmail() {
     setEmail(myEmail);
-  }
-
-  function setCustomCardConfiguration() {
-    try {
-      const customCc = JSON.parse(customCardConfigString);
-      setCustomCardConfigJsonError(false);
-      setCardConfig(customCc);
-    } catch (e) {
-      setCustomCardConfigJsonError(true);
-    }
   }
 };
 

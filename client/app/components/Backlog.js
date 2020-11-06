@@ -71,7 +71,7 @@ const BacklogModeButtons = ({
   trashedStoriesCount,
   activeStoriesCount
 }) => (
-  <div className="backlog-mode-buttons pure-g">
+  <div className="pure-g">
     <button
       title={t('backlog')}
       type="button"

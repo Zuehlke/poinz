@@ -44,7 +44,7 @@ async function handleSingleCmdHandlerFile(filePath) {
   cmdHandlerInfo.description = getFirstBlockComment(result);
 
   babel.traverse(result, {
-    // Find all calls to .applyEvent(...) abd extract name of event
+    // Find all calls to .applyEvent(...) and extract name of event
     CallExpression: function ({node}) {
       const {callee, arguments, loc} = node;
 

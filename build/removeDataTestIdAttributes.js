@@ -5,7 +5,7 @@ const DATA_TEST_ID_REGEX = new RegExp('^data-testid$');
  *
  * inspired by https://github.com/wireapp/babel-plugin-remove-jsx-attributes
  *
- * This plugin is actived via "env" > "production" > "plugins" in our client/.babelrc file
+ * This plugin is activated via "env" > "production" > "plugins" in our client/.babelrc file
  */
 module.exports = function ({types: t}) {
   return {

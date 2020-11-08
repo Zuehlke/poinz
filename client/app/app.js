@@ -12,8 +12,8 @@ import appConfig from './services/appConfig';
 import initialState from './store/initialState';
 import configureStore from './store/configureStore';
 
-import Main from './containers/Main';
-import Global from './styled/Global';
+import Main from './components/Main';
+import Global from './_styled';
 
 if (appConfig.env === 'dev') {
   log.setLevel('debug');

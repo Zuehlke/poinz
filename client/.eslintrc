@@ -35,5 +35,10 @@
   "globals": {
     "__POINZ_CONFIG__": false,
     "io": false
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

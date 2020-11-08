@@ -6,6 +6,7 @@ import clientSettingsStore from '../store/clientSettingsStore';
 import initialState from '../store/initialState';
 import {getCardConfigForValue} from './getCardConfigForValue';
 import {formatTime} from './timeUtil';
+import {indexEstimations, indexStories, indexUsers} from './roomStateMapper';
 
 /**
  * The event reducer handles backend-event actions.
@@ -130,17 +131,6 @@ const eventActionHandlers = {
 
         clientSettingsStore.setPresetUserId(event.userId);
 
-        const estimations = (payload.stories || []).reduce((total, stry) => {
-          total[stry.id] = stry.estimations;
-          return total;
-        }, {});
-
-        const storiesWithoutEstimations = (payload.stories || []).reduce((total, stry) => {
-          total[stry.id] = {...stry};
-          delete total[stry.id].estimations;
-          return total;
-        }, {});
-
         // server sends current room state (users, stories, etc.)
         return {
           ...state,
@@ -148,24 +138,18 @@ const eventActionHandlers = {
           userId: event.userId,
           selectedStory: payload.selectedStory,
           highlightedStory: payload.selectedStory,
-          users: (payload.users || []).reduce((total, currentUser) => {
-            total[currentUser.id] = currentUser;
-            return total;
-          }, {}),
-          stories: storiesWithoutEstimations,
-          estimations,
+          users: indexUsers(payload.users),
+          stories: indexStories(payload.stories),
+          estimations: indexEstimations(payload.stories),
           pendingJoinCommand: undefined,
           cardConfig: payload.cardConfig,
           autoReveal: payload.autoReveal
         };
       } else {
-        // if our client state has already a userId set, this event indicates that someone else joined
+        // if our client state has already a userId set, this event indicates that someone else joined, we only need to update our list of users in the room
         return {
           ...state,
-          users: (payload.users || []).reduce((total, currentUser) => {
-            total[currentUser.id] = currentUser;
-            return total;
-          }, {})
+          users: indexUsers(payload.users)
         };
       }
     },

@@ -1,5 +1,8 @@
 import {v4 as uuid} from 'uuid';
 
+import initialState from '../../app/store/initialState';
+import clientActionReducer from '../../app/services/clientActionReducer';
+
 import {
   CANCEL_EDIT_STORY,
   COMMAND_SENT,
@@ -11,10 +14,10 @@ import {
   STATUS_FETCHED,
   TOGGLE_BACKLOG,
   SHOW_TRASH,
-  HIDE_TRASH
+  HIDE_TRASH,
+  ROOM_STATE_FETCHED
 } from '../../app/actions/types';
-import initialState from '../../app/store/initialState';
-import clientActionReducer from '../../app/services/clientActionReducer';
+
 import {
   cancelEditStory,
   editStory,
@@ -224,4 +227,85 @@ test(SHOW_TRASH + ' and ' + HIDE_TRASH, () => {
   expect(modifiedState.trashShown).toBe(true);
   modifiedState = clientActionReducer(modifiedState, hideTrash());
   expect(modifiedState.trashShown).toBe(false);
+});
+
+test(ROOM_STATE_FETCHED, () => {
+  const startingState = initialState();
+  const roomId = uuid();
+  startingState.roomId = roomId;
+
+  const fetchedRoomState = {
+    autoReveal: true,
+    id: roomId,
+    selectedStory: '00ee44f1-79f8-4467-bfd3-ddc2d87735fc',
+    stories: [
+      {
+        id: '00ee44f1-79f8-4467-bfd3-ddc2d87735fc',
+        title: 'first',
+        estimations: {
+          'dc37a738-dbe8-4923-91c5-1b48ab1b3b2d': 3
+        },
+        createdAt: 1604385944454
+      },
+      {
+        id: '764343f0-6cdc-4abf-8bfc-c604b63ac633',
+        title: 'second',
+        estimations: {
+          '60b84426-3446-470d-a316-0e2ef234f6ff': 5
+        },
+        createdAt: 1604385947968
+      }
+    ],
+    users: [
+      {
+        disconnected: false,
+        id: 'dc37a738-dbe8-4923-91c5-1b48ab1b3b2d',
+        avatar: 2,
+        username: 'Foxy'
+      },
+      {
+        id: '60b84426-3446-470d-a316-0e2ef234f6ff',
+        username: 'Sergio',
+        email: 'xeronimus@gmail.com',
+        avatar: 9,
+        disconnected: false,
+        excluded: false,
+        emailHash: '349256fe3ca7a83b273f4c609c6a2a87'
+      }
+    ],
+    cardConfig: [{label: 'some', value: '1', color: 'red'}]
+  };
+
+  let modifiedState = clientActionReducer(startingState, {
+    type: ROOM_STATE_FETCHED,
+    room: fetchedRoomState
+  });
+
+  // users is an object, indexed by userId
+  expect(modifiedState.users[fetchedRoomState.users[0].id]).toEqual({
+    avatar: 2,
+    disconnected: false,
+    id: 'dc37a738-dbe8-4923-91c5-1b48ab1b3b2d',
+    username: 'Foxy'
+  });
+
+  // stories is an object, indexed by storyId
+  expect(modifiedState.stories[fetchedRoomState.stories[0].id]).toEqual({
+    createdAt: 1604385944454,
+    id: '00ee44f1-79f8-4467-bfd3-ddc2d87735fc',
+    title: 'first'
+    // no estimations property here. removed by reducer
+  });
+
+  // estimations is a separate object
+  expect(modifiedState.estimations).toEqual({
+    [fetchedRoomState.stories[0].id]: {
+      [fetchedRoomState.users[0].id]: 3
+    },
+    [fetchedRoomState.stories[1].id]: {
+      [fetchedRoomState.users[1].id]: 5
+    }
+  });
+
+  expect(modifiedState.cardConfig.length).toBe(1);
 });

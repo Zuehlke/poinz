@@ -36,12 +36,10 @@ test('not an array', () => {
   expect(res).toMatch(/Invalid type: object \(expected array\)/);
 });
 
-test('empty array', () => {
+test('empty array is ok', () => {
   const res = validateCardConfig([]);
 
-  expect(res).not.toBeFalsy();
-
-  expect(res).toMatch(/Array is too short \(0\), minimum 1/);
+  expect(res).toBeUndefined();
 });
 
 test('additional property', () => {

@@ -17,12 +17,15 @@ This page gives you an overview on the features and most common use cases.
   * [Estimating](#estimating)
      * [Manually reveal estimates](#manually-reveal-estimates)
      * [New Round](#new-round)
+  * [Settings](#settings)
+     * [User Settings](#user-settings)
+     * [Room Settings](#room-settings)
 
 
 
 ## The Board
 
-The board contains the [**Backlog**](#the-story-backlog) (list of stories on the left). The [**Estimation Area**](#estimating), where we see all users in the room as well as the currently selected story (in the middle). Optionally the **Settings** menu or the **Action Log** on the right.
+The board contains the [**Backlog**](#the-story-backlog) (list of stories on the left). The [**Estimation Area**](#estimating), where we see all users in the room as well as the currently selected story (in the middle). Optionally the [**Settings**](#settings) menu or the **Action Log** on the right.
 
 ![The Board](https://user-images.githubusercontent.com/1777143/97100788-84ded180-1697-11eb-9737-6ef82b5fc73b.png)
 
@@ -119,3 +122,48 @@ After the story was revealed (automatically or manually) you can start a new rou
 All previously given estimates on the currently selected story are erased, and your team can start estimating again.
 
 ![new round](https://user-images.githubusercontent.com/1777143/97101245-0e909e00-169c-11eb-81f5-80a0c094014c.png)
+
+## Settings
+
+
+### User Settings
+
+These settings will affect your user.
+
+<img src="https://user-images.githubusercontent.com/1777143/98459634-fc832500-219c-11eb-9c24-dac484541e86.png" width="150" />
+
+
+#### Avatar and Email
+
+Choose an avatar to be displayed in the Estimation Area, visible for all users in the room.
+If you set an email address that is registered with https://gravatar.com, the gravatar "Icon" will be used. This overrides any selected PoinZ avatar.
+
+#### Excluded
+
+If you mark yourself as "excluded", you do not take part in estimating stories. If auto reveal is enabled, PoinZ will "ignore you" and reveal the story as soon as all other users did estimate the current story.
+You can still modify the backlog. 
+This is helpful for Scrum Masters / moderators.
+
+### Room Settings
+These settings will affect the room and thus all users in the same room.
+
+<img src="https://user-images.githubusercontent.com/1777143/98459633-fbea8e80-219c-11eb-863b-c27d9a6b8f87.png" width="150" />
+
+
+#### Auto Reveal
+
+By default, PoinZ will reveal the current story automatically (all given estimation values are shown) as soon as all users in the room did estimate the current story (**Excluded** and **Disconnected** users are ignored).
+
+If this flag is removed, Poinz will not auto reveal and you can manually reveal the story.
+
+#### Custom Cards
+
+<img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="150" />
+
+If the default set of cards does not meet your needs, you can change it. 
+
+* Label (first column) can be any string
+* Value (second column) must be a number. Make sure that the values are unique
+* Color (thrid column) can be any css valid color string (hex, rgb, named)
+
+You can also use the text editor and edit the json array directly.

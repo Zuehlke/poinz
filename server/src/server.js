@@ -6,7 +6,7 @@ import sslifyEnforce from 'express-sslify';
 import settings from './settings';
 import socketServer from './socketServer';
 import getLogger from './getLogger';
-import rest from './rest';
+import restApiFactory from './rest';
 import roomsStoreFactory from './store/roomStoreFactory';
 
 const LOGGER = getLogger('server');
@@ -26,7 +26,7 @@ async function startup() {
   }
 
   // setup REST api
-  rest.init(app, store);
+  restApiFactory(app, store);
 
   // serve static client files
   app.use(express.static(path.resolve(__dirname, '../public')));

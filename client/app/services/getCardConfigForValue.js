@@ -5,7 +5,7 @@
  * @param cardConfig {object} The complete cardConfig object from the redux state
  * @param numericValue {number} The numeric value to look up
  */
-import {COLOR_WARNING} from '../styled/colors';
+import {COLOR_WARNING} from '../components/colors';
 
 export function getCardConfigForValue(cardConfig, numericValue) {
   const matchingConfig = cardConfig.find((cc) => cc.value === numericValue);

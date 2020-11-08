@@ -1,21 +1,17 @@
 import express from 'express';
 import stream from 'stream';
+import defaultCardConfig from './defaultCardConfig';
 
 /**
  * This module handles incoming requests to the REST api.
- * Currently there is only one endpoint: /api/status
  *
- * All other communication between client and server (story-, estimation- and user-related)
+ * Not a very extensive API... Most of the (user-interaction triggered) communication between client and server (story-, estimation- and user-related)
  * is done via websocket connection.
- *
- */
-
-/**
  *
  * @param app the express app object
  * @param store the roomsStore object
  */
-function init(app, store) {
+export default function restApiFactory(app, store) {
   const restRouter = express.Router();
 
   restRouter.get('/status', async (req, res) => {
@@ -23,7 +19,7 @@ function init(app, store) {
     res.json(status);
   });
 
-  restRouter.get('/room/:roomId', async (req, res) => {
+  restRouter.get('/export/room/:roomId', async (req, res) => {
     const roomExport = await buildRoomExportObject(store, req.params.roomId);
 
     if (!roomExport) {
@@ -38,10 +34,18 @@ function init(app, store) {
     }
   });
 
+  restRouter.get('/room/:roomId', async (req, res) => {
+    const roomState = await buildRoomStateObject(store, req.params.roomId);
+
+    if (!roomState) {
+      res.status(404).json({message: 'room not found'});
+      return;
+    }
+    res.json(roomState);
+  });
+
   app.use('/api', restRouter);
 }
-
-export default {init};
 
 function sendObjectAsJsonFile(res, data, filename) {
   const fileContents = Buffer.from(JSON.stringify(data, null, 4), 'utf-8');
@@ -102,3 +106,23 @@ const buildStoryExportObject = (story, users) => {
     })
   };
 };
+
+/**
+ * This should return the same information as contained in the "joinedRoom" event.
+ */
+export async function buildRoomStateObject(store, roomId) {
+  const room = await store.getRoomById(roomId);
+  if (!room) {
+    return undefined;
+  }
+  const {autoReveal, id, selectedStory, stories, users, cardConfig} = room;
+
+  return {
+    autoReveal,
+    id,
+    selectedStory,
+    stories,
+    users,
+    cardConfig: cardConfig ? cardConfig : defaultCardConfig
+  };
+}

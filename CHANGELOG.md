@@ -1,3 +1,9 @@
+### 0.8.4: 2020-11-04
+
+* Fetch backend room state on certain command rejections
+* Rejoin room on socket reconnect
+* Visual editor for card configuration
+
 ### 0.8.3: 2020-10-31
 
 * Handle whitespace in custom room ids gracefully. They are now replaced with dashes.

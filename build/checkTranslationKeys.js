@@ -3,7 +3,7 @@ const path = require('path');
 const glob = Promise.promisify(require('glob'));
 const fs = Promise.promisifyAll(require('fs-extra'));
 
-const TRANSLATION_INVOKE_PATTERN = /[\{|\s*]t\('([^\)]*)'[,|\)]/g;
+const TRANSLATION_INVOKE_PATTERN = /[\{|\s*|\(]t\('([^\)]*)'[,|\)]/g;
 
 const DEFINED_KEYS_EN = Object.keys(require('../client/app/assets/i18n/en.json'));
 const DEFINED_KEYS_DE = Object.keys(require('../client/app/assets/i18n/de.json'));
@@ -76,9 +76,7 @@ function checkMissing(keys) {
     console.error(
       `Key "${
         res.key
-      }" is missing at least one translation. Used in File(s) ${res.files.join()}: isTranslatedDE=${
-        res.isTranslatedDE
-      }  isTranslatedEN=${res.isTranslatedEN}`
+      }" is missing at least one translation. Used in File(s) ${res.files.join()}: ${res.isTranslatedDE ? '' : 'Missing in DE'} ${res.isTranslatedEN ? '' : 'Missing in EN'}`
     );
   });
 

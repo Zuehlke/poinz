@@ -74,9 +74,9 @@ function checkMissing(keys) {
 
   missingTranslations.forEach((res) => {
     console.error(
-      `Key "${
-        res.key
-      }" is missing at least one translation. Used in File(s) ${res.files.join()}: ${res.isTranslatedDE ? '' : 'Missing in DE'} ${res.isTranslatedEN ? '' : 'Missing in EN'}`
+      `Key "${res.key}" is missing at least one translation. Used in File(s) ${res.files.join()}: ${
+        res.isTranslatedDE ? '' : 'Missing in DE'
+      } ${res.isTranslatedEN ? '' : 'Missing in EN'}`
     );
   });
 

@@ -1,3 +1,7 @@
+### 0.8.5: 2020-12-04
+
+* Support for old (non chromium) Windows Edge
+
 ### 0.8.4: 2020-11-08
 
 * Fetch backend room state on certain command rejections

@@ -1,6 +1,6 @@
 {
   "name": "poinz-client",
-  "version": "0.8.4",
+  "version": "0.8.5",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -28,6 +28,10 @@
       "**/test/unit/**/*Test.js"
     ]
   },
+  "browserslist": [
+    "defaults",
+    "edge 18"
+  ],
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "7.12.3",

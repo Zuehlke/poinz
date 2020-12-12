@@ -37,6 +37,7 @@ it('multi user estimation', function () {
   ]);
 
   // now we have two users in the room and can do a real estimation round :)
+  cy.get(tid('users')).find('[data-testid="user"]').should('have.length', 2);
 
   // add two stories
   cy.get(tid('storyAddForm') + ' input[type="text"]').type(this.stories[0].title);

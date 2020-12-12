@@ -1,6 +1,7 @@
-### 0.8.5: 2020-12-04
+### 0.8.5: 2020-12-12
 
 * Support for old (non chromium) Windows Edge
+* Updated dependencies (some fixes needed for new socket.IO version)
 
 ### 0.8.4: 2020-11-08
 

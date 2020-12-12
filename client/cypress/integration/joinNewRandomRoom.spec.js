@@ -30,6 +30,7 @@ it('create new room (custom name) via landing, then join by url', function () {
   // now join the new room by url
   cy.visit('/' + customRoomName);
 
+  // since we are in the same cypress test, localStorage has our username preset, no need to enter it
   cy.get(tid('whoamiSimple')).contains(this.user.username);
 });
 

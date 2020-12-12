@@ -24,7 +24,7 @@ export default function hubFactory(dispatch, getUserId) {
       emit: () => {}
     };
   } else {
-    ioInstance = appConfig.wsUrl ? io(appConfig.wsUrl) : io();
+    ioInstance = io();
     ioInstance.on('connect', () => {
       log.info('socket connected to server');
       onConnectHandler();
@@ -45,6 +45,7 @@ export default function hubFactory(dispatch, getUserId) {
   function onEvent(onEventCb) {
     onEventHandler = onEventCb;
   }
+
   function onConnect(onConnectCb) {
     onConnectHandler = onConnectCb;
   }

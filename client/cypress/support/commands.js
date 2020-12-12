@@ -27,7 +27,7 @@ Cypress.Commands.add('openNewSocket', (socketIdentifier) => {
       w.__POINZ_E2E__ = {};
     }
 
-    w.__POINZ_E2E__[socketIdentifier] = socketIo('http://localhost:3000');
+    w.__POINZ_E2E__[socketIdentifier] = socketIo();
   });
 });
 

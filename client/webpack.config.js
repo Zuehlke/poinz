@@ -15,8 +15,7 @@ const definePlugin = new webpack.DefinePlugin({
     version: packageInformation.version + '-dev', // PoinZ version that is displayed in the ui
     vcsInfo: getGitInformation(),
     buildTime: Date.now(),
-    changeLog: readChangelogToHtml(),
-    wsUrl: 'http://localhost:3000' // backend websocket endpoint
+    changeLog: readChangelogToHtml()
   })
 });
 

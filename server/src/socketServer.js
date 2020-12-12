@@ -17,7 +17,7 @@ function init(httpServer, store) {
 
   // we dont want to pass "io" down to factory and registry. pass down a cb instead...
   const removeSocketFromRoomByIds = (socketId, roomId) => {
-    const connectedSocket = io.sockets.connected[socketId];
+    const connectedSocket = io.of('/').sockets.get(socketId);
     if (connectedSocket) {
       connectedSocket.leave(roomId);
     }

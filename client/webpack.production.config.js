@@ -10,7 +10,6 @@ const definePlugin = new webpack.DefinePlugin({
     version: packageInformation.version,
     buildTime: Date.now(),
     changeLog: readChangelogToHtml()
-    //wsUrl: '' //  do not set wsUrl -> hub will use socketIO default (which is: same host as the app is served)
   })
 });
 

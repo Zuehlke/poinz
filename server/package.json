@@ -41,7 +41,7 @@
   "dependencies": {
     "express": "4.17.1",
     "express-sslify": "1.2.0",
-    "fastq": "1.9.0",
+    "fastq": "1.10.0",
     "glob": "7.1.6",
     "migrate-mongo": "8.1.4",
     "mongodb": "3.6.3",
@@ -56,16 +56,16 @@
   "devDependencies": {
     "@babel/cli": "7.12.10",
     "@babel/core": "7.12.10",
-    "@babel/preset-env": "7.12.10",
+    "@babel/preset-env": "7.12.11",
     "@babel/register": "7.12.10",
     "babel-jest": "26.6.3",
     "chalk": "4.1.0",
     "ejs": "3.1.5",
-    "eslint": "7.15.0",
+    "eslint": "7.16.0",
     "jest": "26.6.3",
     "socket.io-client": "3.0.4"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   }
 }

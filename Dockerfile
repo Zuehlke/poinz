@@ -12,7 +12,8 @@
 # start the container locally in detached mode
 # docker run -p 3000:3000 -d xeronimus/poinz
 
-FROM node:lts-jessie
+# node 14.15.3 LTS  aka "lts-buster"    see  https://hub.docker.com/_/node
+FROM node:lts-buster
 
 # Create app directory
 RUN mkdir -p /usr/src/poinz/public

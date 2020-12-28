@@ -1,3 +1,8 @@
+### 0.8.6: 2020-12-28
+
+* update dependencies
+* switch to node.js 14 LTS
+
 ### 0.8.5: 2020-12-12
 
 * Support for old (non chromium) Windows Edge

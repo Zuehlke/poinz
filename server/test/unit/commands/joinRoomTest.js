@@ -374,3 +374,51 @@ test('existing room but completely new user, command has no preset properties', 
     // and some timestamps properties: created, lastActivity
   });
 });
+
+test('nonexisting room : create room with password', async () => {
+  const {processor} = prepEmpty();
+
+  const roomId = 'super-room-with-password';
+
+  const commandId = uuid();
+  const userId = uuid();
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        username: 'tester',
+        email: 'super@test.com',
+        password: 'my-cleartext-password'
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'roomCreated',
+    'joinedRoom',
+    'usernameSet',
+    'emailSet',
+    'avatarSet'
+  );
+  const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
+
+  expect(roomCreatedEvent.roomId).toBe(roomId);
+  expect(roomCreatedEvent.payload.password).toBeDefined();
+  expect(roomCreatedEvent.payload.password.salt).toBeDefined();
+  expect(roomCreatedEvent.payload.password.hash).toBeDefined();
+
+  expect(joinedRoomEvent.roomId).toBe(roomId);
+  expect(room.id).toBe(roomId);
+  expect(room.password).toBeDefined();
+  expect(room.password.hash).toBeDefined();
+  expect(room.password.hash).not.toBe('my-cleartext-password');
+  expect(room.password.salt).toBeDefined();
+  expect(room.password.salt).not.toBe('my-cleartext-password');
+
+  expect(joinedRoomEvent.payload.password).toBeUndefined(); // joinedRoom event must not contain password
+});

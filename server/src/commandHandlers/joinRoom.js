@@ -1,13 +1,14 @@
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
+import hashRoomPassword from './hashRoomPassword';
 
 /**
  * A user joins a room.
  *
  * Two scenarios:  either the room exists already or the room with the given id does not exist yet.
  *
- * If the room does not yet exist, an additional "roomCreated" event is produced.
+ * If the room does not yet exist, an additional "roomCreated" event is produced (as the first event).
  * Produces also a "roomJoined" event (which contains the room state).
  * Produces also events for additional properties if they are preset "usernameSet", "emailSet", "excludedFromEstimations".
  *
@@ -33,6 +34,11 @@ const schema = {
             },
             avatar: {
               type: 'number'
+            },
+            password: {
+              type: 'string',
+              minLength: 3,
+              maxLength: 50
             }
           },
           additionalProperties: false
@@ -58,7 +64,11 @@ const joinRoomCommandHandler = {
 export default joinRoomCommandHandler;
 
 function joinNewRoom(room, command, userId) {
-  room.applyEvent('roomCreated', {});
+  const roomCreatedPayload = {};
+  if (command.payload.password) {
+    roomCreatedPayload.password = hashRoomPassword(command.payload.password);
+  }
+  room.applyEvent('roomCreated', roomCreatedPayload);
 
   const avatar = Number.isInteger(command.payload.avatar) ? command.payload.avatar : 0;
 

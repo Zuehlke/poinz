@@ -111,7 +111,7 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
     }
 
     if (msg.name === 'joinRoom') {
-      // if no userId is given, it must be a joinRoom command. this is the only command that allows that.
+      // if no userId is given, we expect a "joinRoom" command. This is the only command that can omit the userId.
       return uuid();
     }
 

@@ -219,7 +219,13 @@ export default function commandProcessorFactory(
 
       // events are handled sequentially since events most often update the state of the room ("are applied to the room")
       ctx.eventHandlingQueue.push((currentRoom) => {
-        const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
+        /*
+         * Call actual eventHandler function:
+         * "modifyEventPayload": In some cases we need to pass data from commandHandler to eventHandler (because properties need to be stored on the room object).
+         * but we want to omit them on the event that is being sent to clients. (e.g. passwords and other sensitive data)
+         */
+        const modifyEventPayload = (modifiedEventPayload) => (eventPayload = modifiedEventPayload);
+        const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId, modifyEventPayload);
 
         if (!updatedRoom) {
           throw new Error('Fatal error: Event Handlers must return the room object!' + eventName);

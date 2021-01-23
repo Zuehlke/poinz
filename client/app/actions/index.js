@@ -22,9 +22,13 @@ import {
   TOGGLE_MARK_FOR_KICK,
   ROOM_STATE_FETCHED
 } from './types';
+
 import clientSettingsStore from '../store/clientSettingsStore';
 import readDroppedFile from '../services/readDroppedFile';
 import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
+
+const isRoomIdGivenInPathname = (pathname) =>
+  pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
 
 /**
  * Store current pathname in our redux store, join or leave room if necessary
@@ -32,12 +36,7 @@ import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
 export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
 
-  if (
-    pathname &&
-    pathname.length > 1 &&
-    pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER &&
-    !state.roomId
-  ) {
+  if (isRoomIdGivenInPathname(pathname) && !state.roomId) {
     joinRoom(pathname.substring(1))(dispatch, getState, sendCommand);
   } else if (!pathname || (pathname.length < 2 && state.userId && state.roomId)) {
     sendCommand({
@@ -101,7 +100,7 @@ export const eventReceived = (event) => (dispatch, getState) => {
  * They produce commands and pass them to the hub for sending.
  */
 
-export const joinRoom = (roomId) => (dispatch, getState, sendCommand) => {
+export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) => {
   const normalizedRoomId = roomId ? roomId.toLowerCase() : uuid();
 
   const joinCommandPayload = {};
@@ -115,6 +114,9 @@ export const joinRoom = (roomId) => (dispatch, getState, sendCommand) => {
   }
   if (Number.isInteger(state.presetAvatar)) {
     joinCommandPayload.avatar = state.presetAvatar;
+  }
+  if (password) {
+    joinCommandPayload.password = password;
   }
 
   const joinCommand = {

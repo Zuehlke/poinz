@@ -55,5 +55,8 @@
   "iKnowWhatImDoin": "I know what I'm doing...",
   "customCardsJsonError": "Sorry, we cannot parse the input to JSON!",
   "customCardsDuplicateError": "Make sure that you have unique values!",
-  "help": "Help"
+  "help": "Help",
+  "password": "Password",
+  "optionalPassword": "Optional password",
+  "roomIsProtected": "This room is protected by a password"
 }

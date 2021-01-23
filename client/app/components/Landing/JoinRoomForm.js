@@ -12,6 +12,7 @@ import {
   StyledLandingForm
 } from './_styled';
 import {ROOM_ID_REGEX} from '../../services/frontendInputValidation';
+import PasswordField from './PasswordField';
 
 /**
  * The form on the landing page where the user can join a room.
@@ -21,6 +22,7 @@ import {ROOM_ID_REGEX} from '../../services/frontendInputValidation';
 const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
   const [showExtended, setShowExtended] = useState(false);
   const [customRoomId, setCustomRoomId] = useState('');
+  const [customRoomPassword, setCustomRoomPassword] = useState('');
 
   return (
     <StyledEyecatcher>
@@ -59,23 +61,42 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
         </div>
 
         {showExtended && (
-          <ValidatedInput
-            data-testid="customRoomNameInput"
-            type="text"
-            placeholder={t('customRoomName')}
-            fieldValue={customRoomId}
-            setFieldValue={setCustomRoomId}
-            regexPattern={ROOM_ID_REGEX}
-            onEnter={onTriggerJoin}
-            allLowercase={true}
-          />
+          <React.Fragment>
+            <ValidatedInput
+              data-testid="customRoomNameInput"
+              type="text"
+              placeholder={t('customRoomName')}
+              fieldValue={customRoomId}
+              setFieldValue={setCustomRoomId}
+              regexPattern={ROOM_ID_REGEX}
+              onEnter={onTriggerJoin}
+              allLowercase={true}
+            />
+
+            <PasswordField
+              placeholder={t('optionalPassword')}
+              onChange={(evt) => setCustomRoomPassword(evt.target.value)}
+              value={customRoomPassword}
+              onKeyPress={onPwInputFieldKeyPress}
+            />
+          </React.Fragment>
         )}
       </StyledLandingForm>
     </StyledEyecatcher>
   );
 
+  function onPwInputFieldKeyPress(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      onTriggerJoin();
+    }
+  }
+
   function onTriggerJoin() {
-    joinRoom(customRoomId ? customRoomId : undefined);
+    joinRoom(
+      customRoomId ? customRoomId : undefined,
+      customRoomPassword ? customRoomPassword : undefined
+    );
   }
 };
 

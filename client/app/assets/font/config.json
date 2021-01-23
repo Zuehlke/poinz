@@ -245,6 +245,18 @@
       "css": "table",
       "code": 61646,
       "src": "fontawesome"
+    },
+    {
+      "uid": "7fd683b2c518ceb9e5fa6757f2276faa",
+      "css": "eye-off",
+      "code": 59407,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c1f1975c885aa9f3dad7810c53b82074",
+      "css": "lock",
+      "code": 59408,
+      "src": "fontawesome"
     }
   ]
 }

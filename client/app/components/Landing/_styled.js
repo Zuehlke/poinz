@@ -133,7 +133,10 @@ export const StyledLandingForm = styled.form`
 
   input[type='text'],
   input[type='text']:focus,
-  input[type='text']:active {
+  input[type='text']:active,
+  input[type='password'],
+  input[type='password']:focus,
+  input[type='password']:active {
     width: 100%;
     background: transparent;
     border: none;
@@ -162,4 +165,19 @@ export const StyledGithubRibbon = styled.a`
     border: none;
     outline: none;
   }
+`;
+
+export const StyledPasswordFieldWrapper = styled.div`
+  position: relative;
+
+  .clickable {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 4px;
+  }
+`;
+
+export const StyledPasswordInput = styled.input`
+  width: 80%;
 `;

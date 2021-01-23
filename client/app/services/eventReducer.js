@@ -19,11 +19,20 @@ import {indexEstimations, indexStories, indexUsers} from './roomStateMapper';
 export default function eventReducer(state, action) {
   const {event} = action;
 
-  // with issue #99 we introduced a new validation for usernames.
-  // if the preset username (previously stored in localStorage) does not match the new format, joinRoom will fail.
   if (isFailedJoinRoom(event)) {
-    clientSettingsStore.setPresetUsername('');
-    return {...state, presetUsername: ''};
+    const reason = event.payload.reason;
+
+    // with issue #99 we introduced a new validation for usernames.
+    // if the preset username (previously stored in localStorage) does not match the new format, joinRoom will fail.
+    if (reason.includes('validation Error') && reason.includes('/username')) {
+      clientSettingsStore.setPresetUsername('');
+      return {...state, presetUsername: ''};
+    }
+
+    if (reason.includes('Not Authorized')) {
+      // joinRoom failed to a a password-protected room. Let's store the roomId on our state
+      return {...state, authorizationFailed: event.payload.command.roomId};
+    }
   }
 
   // if we created a new room, and then joined, we don't have a roomId yet
@@ -141,7 +150,8 @@ const eventActionHandlers = {
           users: indexUsers(payload.users),
           stories: indexStories(payload.stories),
           estimations: indexEstimations(payload.stories),
-          pendingJoinCommand: undefined,
+          pendingJoinCommandId: undefined,
+          authorizationFailed: undefined,
           cardConfig: payload.cardConfig,
           autoReveal: payload.autoReveal
         };

@@ -1,4 +1,4 @@
-### 0.9.0: 2021-01-xx
+### 0.9.0: 2021-01-24
 
 * Optional password protection for rooms
 

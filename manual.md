@@ -20,7 +20,8 @@ This page gives you an overview on the features and most common use cases.
   * [Settings](#settings)
      * [User Settings](#user-settings)
      * [Room Settings](#room-settings)
-
+  * [Security](#security)
+   
 
 
 ## The Board
@@ -156,6 +157,24 @@ By default, PoinZ will reveal the current story automatically (all given estimat
 
 If this flag is removed, Poinz will not auto reveal and you can manually reveal the story.
 
+#### Password Protection
+
+By default, everybody can join your room. You can optionally set a password in order to protect unauthorized access to your room.
+
+**During creation**
+
+When creating a new room, extend the "Join" button and set a new password (second input field, "Optional password). Users will then be prompted for the password when they are joining your room.
+
+<img src="https://user-images.githubusercontent.com/1777143/105578774-d70cbd00-5d82-11eb-9d25-ee48b6d5d4bf.png" width="300" />
+
+**Existing Room**
+
+For an existing room without password protection, the room settings allow you to set a new password. You can also override an existing password.
+If you click the save button with an empty password field, you remove the password protection of that room.
+
+<img src="https://user-images.githubusercontent.com/1777143/105578826-379bfa00-5d83-11eb-9a34-6fea1abcd9d3.png" width="300" />
+
+
 #### Custom Cards
 
 <img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="150" />
@@ -167,3 +186,16 @@ If the default set of cards does not meet your needs, you can change it.
 * Color (thrid column) can be any css valid color string (hex, rgb, named)
 
 You can also use the text editor and edit the json array directly.
+
+
+## Security 
+
+By default, everybody that knows the name/ID of your room can join your room, without further authorization. 
+
+> **This means, anonymous people can read, modify and delete your stories as soon as they know the room ID.**
+
+This is by design. When we created PoinZ, we wanted a most simple solution, without the hassle of registration and user management.
+
+However, you might want to protect your data in some way. See ["Password Protection"](#password-protection) for more information.
+
+At any time, you are using PoinZ at your own risk!

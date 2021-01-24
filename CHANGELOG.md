@@ -1,3 +1,7 @@
+### 0.9.0: 2021-01-xx
+
+* Optional password protection for rooms
+
 ### 0.8.6: 2020-12-28
 
 * update dependencies

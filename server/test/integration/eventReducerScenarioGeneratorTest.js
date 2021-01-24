@@ -225,6 +225,60 @@ test('joinAndLeave ', async () => {
   clientB.disconnect();
 });
 
+test('joinAndLeaveWithPassword ', async () => {
+  const outputFile = path.join(
+    clientEventActionReducerScenarioDir,
+    'roomJoiningAndLeavingWithPasswordTest.json'
+  );
+
+  const roomId = uuid();
+
+  const client = poinzSocketClientFactory();
+  const userId = uuid();
+
+  //  user joins, creates room on the fly with password "1234"
+  await client.cmdAndWait(
+    client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com', '1234'),
+    3
+  );
+
+  //  user re-joins, with correct password
+  await client.cmdAndWait(
+    client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com', '1234'),
+    3
+  );
+
+  // in the end, write to file and close socket
+  await client.dumpAllEvents(outputFile);
+  client.disconnect();
+});
+
+test('resetAndClearPassword ', async () => {
+  const outputFile = path.join(
+    clientEventActionReducerScenarioDir,
+    'resetAndClearPasswordTest.json'
+  );
+
+  const roomId = uuid();
+
+  const client = poinzSocketClientFactory();
+  const userId = uuid();
+
+  //  user joins, creates room on the fly without password
+  await client.cmdAndWait(
+    client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com'),
+    3
+  );
+
+  await client.cmdAndWait(client.cmds.setPassword(roomId, userId, 'new-password'));
+
+  await client.cmdAndWait(client.cmds.setPassword(roomId, userId, ''));
+
+  // in the end, write to file and close socket
+  await client.dumpAllEvents(outputFile);
+  client.disconnect();
+});
+
 test('includeAndExcludeTest: two users, one excludes and includes himself', async () => {
   const outputFile = path.join(clientEventActionReducerScenarioDir, 'includeAndExcludeTest.json');
 

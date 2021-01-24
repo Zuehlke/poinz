@@ -44,7 +44,9 @@ export const EVENT_ACTION_TYPES = {
   storyRestored: 'STORY_RESTORED',
   cardConfigSet: 'CARD_CONFIG_SET',
   autoRevealOn: 'AUTO_REVEAL_ON',
-  autoRevealOff: 'AUTO_REVEAL_OFF'
+  autoRevealOff: 'AUTO_REVEAL_OFF',
+  passwordSet: 'PASSWORD_SET',
+  passwordCleared: 'PASSWORD_CLEARED'
 };
 
 /** various **/

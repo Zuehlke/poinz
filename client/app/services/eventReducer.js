@@ -153,7 +153,8 @@ const eventActionHandlers = {
           pendingJoinCommandId: undefined,
           authorizationFailed: undefined,
           cardConfig: payload.cardConfig,
-          autoReveal: payload.autoReveal
+          autoReveal: payload.autoReveal,
+          passwordProtected: !!payload.passwordProtected
         };
       } else {
         // if our client state has already a userId set, this event indicates that someone else joined, we only need to update our list of users in the room
@@ -589,6 +590,22 @@ const eventActionHandlers = {
       autoReveal: false
     }),
     log: (username) => `${username} disabled auto reveal for this room`
+  },
+
+  [EVENT_ACTION_TYPES.passwordSet]: {
+    fn: (state) => ({
+      ...state,
+      passwordProtected: true
+    }),
+    log: (username) => `${username} set a password for this room`
+  },
+
+  [EVENT_ACTION_TYPES.passwordCleared]: {
+    fn: (state) => ({
+      ...state,
+      passwordProtected: false
+    }),
+    log: (username) => `${username} removed password protection for this room`
   },
 
   [EVENT_ACTION_TYPES.commandRejected]: {

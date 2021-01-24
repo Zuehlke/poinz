@@ -9,6 +9,7 @@ import {
   StyledInfoText,
   StyledLandingDoubleButtonL,
   StyledLandingDoubleButtonR,
+  StyledLandingDoubleButtonWrapper,
   StyledLandingForm
 } from './_styled';
 import {ROOM_ID_REGEX} from '../../services/frontendInputValidation';
@@ -40,7 +41,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
       </StyledInfoText>
 
       <StyledLandingForm className="pure-form">
-        <div>
+        <StyledLandingDoubleButtonWrapper>
           <StyledLandingDoubleButtonL
             data-testid="joinButton"
             type="button"
@@ -58,7 +59,7 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
           >
             <i className={`icon-angle-double-${showExtended ? 'up' : 'down'}`} />
           </StyledLandingDoubleButtonR>
-        </div>
+        </StyledLandingDoubleButtonWrapper>
 
         {showExtended && (
           <React.Fragment>

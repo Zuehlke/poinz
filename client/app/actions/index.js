@@ -346,6 +346,17 @@ export const setCardConfig = (cardConfig) => (dispatch, getState, sendCommand) =
   });
 };
 
+export const setPassword = (password) => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  sendCommand({
+    name: 'setPassword',
+    roomId: state.roomId,
+    payload: {
+      password
+    }
+  });
+};
+
 export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
   readDroppedFile(file).then((content) => {
     const state = getState();

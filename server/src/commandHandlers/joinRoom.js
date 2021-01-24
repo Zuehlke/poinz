@@ -85,7 +85,8 @@ function joinNewRoom(room, command, userId) {
     stories: [],
     selectedStory: undefined,
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: !!command.payload.password
   };
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
@@ -137,7 +138,8 @@ function joinExistingRoom(room, command, userId) {
     stories: [...room.stories],
     selectedStory: room.selectedStory,
     cardConfig: room.cardConfig ? room.cardConfig : defaultCardConfig,
-    autoReveal: room.autoReveal
+    autoReveal: room.autoReveal,
+    passwordProtected: !!room.password
   };
 
   if (userObject) {

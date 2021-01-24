@@ -4,7 +4,7 @@
   "joinRoomInfo": "You can also join an existing room, if you know its name. Ask the creator of the room for the URL.",
   "joinNewRoom": "Join new room",
   "join": "Join",
-  "joinWithRoomName": "Join %{room}",
+  "joinWithRoomName": "Join room \"%{room}\"",
   "name": "Name...",
   "addStory": "Add Story",
   "estimateStory": "Estimate",
@@ -58,5 +58,9 @@
   "help": "Help",
   "password": "Password",
   "optionalPassword": "Optional password",
-  "roomIsProtected": "This room is protected by a password"
+  "setNewPassword": "Set new password",
+  "roomIsProtected": "This room is protected by a password",
+  "roomIsNotProtected": "This room is currently not protected by a password",
+  "passwordProtection": "Password Protection",
+  "passwordProtectionInfo": "Rooms can be protected by a password in order to prevent unauthorized users to join - even if they know the room ID"
 }

@@ -118,6 +118,9 @@ const StyledLandingButton = styled.button`
   font-weight: bold;
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.56);
 `;
+export const StyledLandingDoubleButtonWrapper = styled.div`
+  margin-bottom: 12px;
+`;
 
 export const StyledLandingDoubleButtonL = styled(StyledLandingButton)`
   border-radius: 2px 0 0 2px;
@@ -145,7 +148,6 @@ export const StyledLandingForm = styled.form`
     border-bottom: 1px solid white;
     color: white;
 
-    margin-top: 12px;
     margin-bottom: 12px;
 
     &::placeholder {
@@ -169,15 +171,16 @@ export const StyledGithubRibbon = styled.a`
 
 export const StyledPasswordFieldWrapper = styled.div`
   position: relative;
+  width: 100%;
 
   .clickable {
     display: block;
     position: absolute;
-    right: 0;
-    top: 4px;
+    right: 4px;
+    top: 10px;
   }
 `;
 
 export const StyledPasswordInput = styled.input`
-  width: 80%;
+  height: 100%;
 `;

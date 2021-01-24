@@ -56,7 +56,8 @@ test('nonexisting room', async () => {
       }
     ],
     cardConfig: defaultCardConfig, // default config is part of "joined" event payload, although it is not persisted on the room object (only if someone changes it with "setCardConfig")
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -148,7 +149,8 @@ test('existing room with matching user already in room (re-join) ', async () => 
       }
     ],
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -235,7 +237,8 @@ test('existing room with user match, command has no preset properties', async ()
       }
     ],
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -347,7 +350,8 @@ test('existing room but completely new user, command has no preset properties', 
       }
     ],
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(avatarSetEvent.userId).toEqual(newUserId);
@@ -415,6 +419,7 @@ test('nonexisting room : create room with password', async () => {
   expect(joinedRoomEvent.payload.password).toBeUndefined();
 
   expect(joinedRoomEvent.roomId).toBe(roomId);
+  expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
   expect(room.id).toBe(roomId);
 
   expect(room.password.hash).toBeDefined();
@@ -451,8 +456,7 @@ test('existing room with password : match', async () => {
   const [joinedRoomEvent, avatarSetEvent] = producedEvents;
 
   expect(joinedRoomEvent.userId).toEqual(newUserId);
-
-  // TODO:  joinedRoomEvent must contain token, which can be used for automatic rejoin
+  expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
 
   expect(avatarSetEvent.userId).toEqual(newUserId);
 });

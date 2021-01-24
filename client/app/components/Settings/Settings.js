@@ -16,11 +16,11 @@ import {StyledLicenseHint, StyledSettings} from './_styled';
 const Settings = ({shown}) => {
   return (
     <StyledSettings shown={shown} data-testid="settings">
-      <div className="pure-form">
+      <form className="pure-form" onSubmit={(e) => e.preventDefault()}>
         <UserSettings />
 
         <RoomSettings />
-      </div>
+      </form>
 
       <StyledLicenseHint>
         Avatar Icons (c) by DELEKET{' '}

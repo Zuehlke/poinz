@@ -15,11 +15,12 @@ const PasswordField = ({pw, placeholder, onChange, onKeyPress}) => {
         onChange={onChange}
         value={pw}
         onKeyPress={onKeyPress}
+        autoComplete="off"
       />
 
-      <p className="clickable" onClick={() => setIsPwReadable(!isPwReadable)}>
+      <div className="clickable" onClick={() => setIsPwReadable(!isPwReadable)}>
         <i className={isPwReadable ? 'icon-eye-off' : 'icon-eye'} />
-      </p>
+      </div>
     </StyledPasswordFieldWrapper>
   );
 };

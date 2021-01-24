@@ -118,6 +118,9 @@ const StyledLandingButton = styled.button`
   font-weight: bold;
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.56);
 `;
+export const StyledLandingDoubleButtonWrapper = styled.div`
+  margin-bottom: 12px;
+`;
 
 export const StyledLandingDoubleButtonL = styled(StyledLandingButton)`
   border-radius: 2px 0 0 2px;
@@ -133,7 +136,10 @@ export const StyledLandingForm = styled.form`
 
   input[type='text'],
   input[type='text']:focus,
-  input[type='text']:active {
+  input[type='text']:active,
+  input[type='password'],
+  input[type='password']:focus,
+  input[type='password']:active {
     width: 100%;
     background: transparent;
     border: none;
@@ -142,7 +148,6 @@ export const StyledLandingForm = styled.form`
     border-bottom: 1px solid white;
     color: white;
 
-    margin-top: 12px;
     margin-bottom: 12px;
 
     &::placeholder {
@@ -162,4 +167,20 @@ export const StyledGithubRibbon = styled.a`
     border: none;
     outline: none;
   }
+`;
+
+export const StyledPasswordFieldWrapper = styled.div`
+  position: relative;
+  width: 100%;
+
+  .clickable {
+    display: block;
+    position: absolute;
+    right: 4px;
+    top: 10px;
+  }
+`;
+
+export const StyledPasswordInput = styled.input`
+  height: 100%;
 `;

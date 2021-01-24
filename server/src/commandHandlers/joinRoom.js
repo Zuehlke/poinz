@@ -1,13 +1,15 @@
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
+import hashRoomPassword from './hashRoomPassword';
+import checkRoomPassword from './checkRoomPassword';
 
 /**
  * A user joins a room.
  *
  * Two scenarios:  either the room exists already or the room with the given id does not exist yet.
  *
- * If the room does not yet exist, an additional "roomCreated" event is produced.
+ * If the room does not yet exist, an additional "roomCreated" event is produced (as the first event).
  * Produces also a "roomJoined" event (which contains the room state).
  * Produces also events for additional properties if they are preset "usernameSet", "emailSet", "excludedFromEstimations".
  *
@@ -33,6 +35,11 @@ const schema = {
             },
             avatar: {
               type: 'number'
+            },
+            password: {
+              type: 'string',
+              minLength: 0,
+              maxLength: 50
             }
           },
           additionalProperties: false
@@ -58,7 +65,9 @@ const joinRoomCommandHandler = {
 export default joinRoomCommandHandler;
 
 function joinNewRoom(room, command, userId) {
-  room.applyEvent('roomCreated', {});
+  room.applyEvent('roomCreated', {
+    password: command.payload.password ? hashRoomPassword(command.payload.password) : undefined
+  });
 
   const avatar = Number.isInteger(command.payload.avatar) ? command.payload.avatar : 0;
 
@@ -76,7 +85,8 @@ function joinNewRoom(room, command, userId) {
     stories: [],
     selectedStory: undefined,
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: !!command.payload.password
   };
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
@@ -99,6 +109,21 @@ function joinNewRoom(room, command, userId) {
 }
 
 function joinExistingRoom(room, command, userId) {
+  if (room.password) {
+    if (!command.payload.password) {
+      throw new Error('Not Authorized!');
+    }
+
+    const pwMatch = checkRoomPassword(
+      command.payload.password,
+      room.password.hash,
+      room.password.salt
+    );
+    if (!pwMatch) {
+      throw new Error('Not Authorized!');
+    }
+  }
+
   // if user joins an existing room with a preset userId, the userId is handled like a "session" token.
   // Since we do not handle any sensitive data, it is known and accepted, that with a known userId one user can hijack the "session" of
   // another user
@@ -113,7 +138,8 @@ function joinExistingRoom(room, command, userId) {
     stories: [...room.stories],
     selectedStory: room.selectedStory,
     cardConfig: room.cardConfig ? room.cardConfig : defaultCardConfig,
-    autoReveal: room.autoReveal
+    autoReveal: room.autoReveal,
+    passwordProtected: !!room.password
   };
 
   if (userObject) {

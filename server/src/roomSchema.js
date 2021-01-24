@@ -100,6 +100,17 @@ const roomSchema = {
     },
     markedForDeletion: {
       type: 'boolean'
+    },
+    password: {
+      type: 'object',
+      properties: {
+        hash: {
+          type: 'string'
+        },
+        salt: {
+          type: 'string'
+        }
+      }
     }
   },
   required: ['id', 'stories', 'users', 'created', 'lastActivity', 'markedForDeletion'],

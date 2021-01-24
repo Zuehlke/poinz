@@ -35,7 +35,7 @@ body {
     }
   }
 
-  textarea, input[type=text] {
+  textarea, input[type=text], input[type=password] {
     box-shadow: none;
     border-radius: 0;
 

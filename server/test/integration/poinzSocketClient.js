@@ -46,7 +46,8 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       clearEstimate,
       newRound,
       setCardConfig,
-      toggleAutoReveal
+      toggleAutoReveal,
+      setPassword
     }
   };
 
@@ -144,14 +145,15 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
 
   /**  helpers **/
 
-  function joinRoom(roomId, userId, username, email) {
+  function joinRoom(roomId, userId, username, email, password) {
     return sendCommand({
       name: 'joinRoom',
       roomId,
       userId,
       payload: {
         username,
-        email
+        email,
+        password
       }
     });
   }
@@ -329,6 +331,17 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       roomId,
       userId,
       payload: {}
+    });
+  }
+
+  function setPassword(roomId, userId, password) {
+    return sendCommand({
+      name: 'setPassword',
+      roomId,
+      userId,
+      payload: {
+        password
+      }
     });
   }
 }

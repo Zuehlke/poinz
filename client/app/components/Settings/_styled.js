@@ -72,7 +72,7 @@ export const StyledTextInput = styled.div`
   padding: 4px;
 
   input {
-    width: 80%;
+    width: 100%;
     border: none;
     border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
     padding: 1px 0;

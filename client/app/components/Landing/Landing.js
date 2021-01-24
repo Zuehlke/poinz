@@ -20,12 +20,22 @@ import appConfig from '../../services/appConfig';
  * The "landing" page where the user can enter a room name to join
  */
 const Landing = ({t, waitingForJoin, actionLog}) => {
+  if (waitingForJoin) {
+    return (
+      <StyledLanding>
+        <GithubRibbon />
+        <StyledLandingInner>
+          <Loader t={t} />
+        </StyledLandingInner>
+      </StyledLanding>
+    );
+  }
+
   return (
     <StyledLanding>
       <GithubRibbon />
       <StyledLandingInner>
-        {!waitingForJoin && <JoinRoomForm />}
-        {waitingForJoin && <Loader t={t} />}
+        <JoinRoomForm />
 
         <StyledEyecatcher>
           <StyledInfoText small={true}>

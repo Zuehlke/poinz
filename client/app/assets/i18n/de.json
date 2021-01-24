@@ -4,7 +4,7 @@
   "joinRoomInfo": "Du kannst auch einen bereits existierenden Raum betreten, wenn du den Namen kennst. Frage den Ersteller für den Link.",
   "joinNewRoom": "Neuer Raum betreten",
   "join": "Beitreten",
-  "joinWithRoomName": "%{room} beitreten",
+  "joinWithRoomName": "Raum \"%{room}\" beitreten",
   "name": "Name...",
   "addStory": "Story hinzufügen",
   "estimateStory": "Schätzen",
@@ -55,5 +55,13 @@
   "iKnowWhatImDoin": "Ich weiss, was ich tue...",
   "customCardsJsonError": "Entschuldigung, wir können den Input nicht parsen. Invalides JSON!",
   "customCardsDuplicateError": "Karten-Wert darf nur einmal vorkommen!",
-  "help": "Hilfe"
+  "help": "Hilfe",
+  "password": "Passwort",
+  "optionalPassword": "Optionales Passwort",
+  "setNewPassword": "Neues Passwort",
+  "roomIsProtected": "Dieser Raum ist mit einem Passwort geschützt",
+  "roomIsNotProtected": "Dieser Raum ist im Moment nicht mit einem Passwort geschützt",
+  "passwordProtection": "Passwortschutz",
+  "passwordProtectionInfo": "PoinZ Räume können mit einem Passwort geschütz werden, um unberechtigten Zutritt zu verhindern"
+
 }

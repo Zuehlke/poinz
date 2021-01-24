@@ -7,6 +7,7 @@ import WhoAreYou from './Landing/WhoAreYou';
 import AppStatus from './AppStatus/AppStatus';
 import Landing from './Landing/Landing';
 import appConfig from '../services/appConfig';
+import RoomProtected from './Landing/RoomProtected';
 
 const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
 
@@ -15,10 +16,12 @@ const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
  * If the user did never set his username/name in a previous session, display "whoAreYou" with a username input field.
  * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
  */
-const Main = ({roomId, users, userId, presetUsername, pathname}) => {
+const Main = ({roomId, users, userId, presetUsername, pathname, authorizationFailed}) => {
   const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0 && userId;
   if (getNormalizedRoomId(pathname) === appConfig.APP_STATUS_IDENTIFIER) {
     return <AppStatus />;
+  } else if (authorizationFailed) {
+    return <RoomProtected />;
   } else if (hasRoomIdAndUsers && presetUsername) {
     return <Room />;
   } else if (hasRoomIdAndUsers) {
@@ -41,5 +44,6 @@ export default connect((state) => ({
   roomId: state.roomId,
   users: state.users,
   userId: state.userId,
-  presetUsername: state.presetUsername
+  presetUsername: state.presetUsername,
+  authorizationFailed: state.authorizationFailed
 }))(Main);

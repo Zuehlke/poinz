@@ -18,6 +18,7 @@ import setAvatar from './setAvatar';
 import toggleExclude from './toggleExclude';
 import setCardConfig from './setCardConfig';
 import toggleAutoReveal from './toggleAutoReveal';
+import setPassword from './setPassword';
 
 export default {
   addStory,
@@ -39,7 +40,8 @@ export default {
   setAvatar,
   toggleExclude,
   setCardConfig,
-  toggleAutoReveal
+  toggleAutoReveal,
+  setPassword
 };
 
 /**

@@ -43,6 +43,7 @@ test('You join an existing room', () => {
 
   expect(modifiedState.autoReveal).toBe(true);
   expect(modifiedState.roomId).toEqual(events[0].roomId);
+  expect(modifiedState.passwordProtected).toBe(false);
   expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
   expect(modifiedState.users).toEqual({
     // users is an object, indexed by userId

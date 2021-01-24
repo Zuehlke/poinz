@@ -2,6 +2,7 @@ import {v4 as uuid} from 'uuid';
 
 import {prepEmpty, prepOneUserInOneRoom} from '../testUtils';
 import defaultCardConfig from '../../../src/defaultCardConfig';
+import hashRoomPassword from '../../../src/commandHandlers/hashRoomPassword';
 
 test('nonexisting room', async () => {
   const {processor} = prepEmpty();
@@ -55,7 +56,8 @@ test('nonexisting room', async () => {
       }
     ],
     cardConfig: defaultCardConfig, // default config is part of "joined" event payload, although it is not persisted on the room object (only if someone changes it with "setCardConfig")
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -147,7 +149,8 @@ test('existing room with matching user already in room (re-join) ', async () => 
       }
     ],
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -234,7 +237,8 @@ test('existing room with user match, command has no preset properties', async ()
       }
     ],
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(usernameSetEvent.userId).toEqual(userId);
@@ -346,7 +350,8 @@ test('existing room but completely new user, command has no preset properties', 
       }
     ],
     cardConfig: defaultCardConfig,
-    autoReveal: true
+    autoReveal: true,
+    passwordProtected: false
   });
 
   expect(avatarSetEvent.userId).toEqual(newUserId);
@@ -373,4 +378,162 @@ test('existing room but completely new user, command has no preset properties', 
     stories: []
     // and some timestamps properties: created, lastActivity
   });
+});
+
+test('nonexisting room : create room with password', async () => {
+  const {processor} = prepEmpty();
+
+  const roomId = 'super-room-with-password';
+
+  const commandId = uuid();
+  const userId = uuid();
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        username: 'tester',
+        email: 'super@test.com',
+        password: 'my-cleartext-password'
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'roomCreated',
+    'joinedRoom',
+    'usernameSet',
+    'emailSet',
+    'avatarSet'
+  );
+  const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
+
+  expect(roomCreatedEvent.roomId).toBe(roomId);
+
+  // we don't want to send passwords to clients, even hashed ones
+  expect(roomCreatedEvent.payload.password).toBeUndefined();
+  expect(joinedRoomEvent.payload.password).toBeUndefined();
+
+  expect(joinedRoomEvent.roomId).toBe(roomId);
+  expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
+  expect(room.id).toBe(roomId);
+
+  expect(room.password.hash).toBeDefined();
+  expect(room.password.hash).not.toBe('my-cleartext-password');
+  expect(room.password.salt).toBeDefined();
+  expect(room.password.salt).not.toBe('my-cleartext-password');
+});
+
+test('existing room with password : match', async () => {
+  const {processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+
+  mockRoomsStore.manipulate((room) => {
+    room.password = hashRoomPassword('some-nice-password');
+    return room;
+  });
+
+  // a new user joins room
+  const commandId = uuid();
+  const newUserId = uuid();
+  const {producedEvents} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        password: 'some-nice-password' // <<- password matches
+      }
+    },
+    newUserId
+  );
+
+  // successful join
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'avatarSet');
+  const [joinedRoomEvent, avatarSetEvent] = producedEvents;
+
+  expect(joinedRoomEvent.userId).toEqual(newUserId);
+  expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
+
+  expect(avatarSetEvent.userId).toEqual(newUserId);
+});
+
+test('existing room with password : password missing', async () => {
+  const {processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+
+  mockRoomsStore.manipulate((room) => {
+    room.password = hashRoomPassword('some-nice-password');
+    return room;
+  });
+
+  const commandId = uuid();
+  const newUserId = uuid();
+  return expect(
+    processor(
+      {
+        id: commandId,
+        roomId,
+        name: 'joinRoom',
+        payload: {
+          // <<- no password given in payload
+        }
+      },
+      newUserId
+    )
+  ).rejects.toThrow('Not Authorized!');
+});
+
+test('existing room with password : password mismatch', async () => {
+  const {processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
+
+  mockRoomsStore.manipulate((room) => {
+    room.password = hashRoomPassword('some-nice-password');
+    return room;
+  });
+
+  const commandId = uuid();
+  const newUserId = uuid();
+  return expect(
+    processor(
+      {
+        id: commandId,
+        roomId,
+        name: 'joinRoom',
+        payload: {
+          password: 'this-does-not-match-the-first-one' // <<-
+        }
+      },
+      newUserId
+    )
+  ).rejects.toThrow('Not Authorized!');
+});
+
+test('existing room without password : password given in payload', async () => {
+  const {processor, roomId} = await prepOneUserInOneRoom();
+
+  const commandId = uuid();
+  const newUserId = uuid();
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        password: 'some-nice-password' // <<- password matches
+      }
+    },
+    newUserId
+  );
+
+  // successful join, password in payload is just ignored
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'avatarSet');
+  const [joinedRoomEvent, avatarSetEvent] = producedEvents;
+
+  expect(joinedRoomEvent.userId).toEqual(newUserId);
+  expect(avatarSetEvent.userId).toEqual(newUserId);
+
+  expect(room.password).toBe(undefined);
 });

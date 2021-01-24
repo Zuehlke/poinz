@@ -23,6 +23,8 @@ import consensusAchieved from './consensusAchieved';
 import cardConfigSet from './cardConfigSet';
 import autoRevealOff from './autoRevealOff';
 import autoRevealOn from './autoRevealOn';
+import passwordSet from './passwordSet';
+import passwordCleared from './passwordCleared';
 
 export default {
   connectionLost,
@@ -49,5 +51,7 @@ export default {
   includedInEstimations,
   cardConfigSet,
   autoRevealOff,
-  autoRevealOn
+  autoRevealOn,
+  passwordSet,
+  passwordCleared
 };

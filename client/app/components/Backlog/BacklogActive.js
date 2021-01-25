@@ -16,17 +16,24 @@ import {
   StyledBacklogInfoText
 } from './_styled';
 
+const sortAndFilter = (activeStories, comparator, query) => {
+  let shallowCopy = query
+    ? [...activeStories.filter((s) => s.title.toLowerCase().includes(query))]
+    : [...activeStories];
+  return shallowCopy.sort(comparator);
+};
+
 /**
  * show the story add form and list of active stories
  */
-const BacklogActive = ({t, activeStories, importCsvFile}) => {
+const BacklogActive = ({t, activeStories, filterQuery, importCsvFile}) => {
   const hasActiveStories = activeStories.length > 0;
 
   const [sorting, setSorting] = useState(sortings.newestFirst);
   const [sortedStories, setSortedStories] = useState(activeStories);
   useEffect(() => {
-    setSortedStories([...activeStories].sort(sorting.comp));
-  }, [activeStories, sorting]);
+    setSortedStories(sortAndFilter(activeStories, sorting.comp, filterQuery));
+  }, [activeStories, sorting, filterQuery]);
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -74,13 +81,15 @@ const BacklogActive = ({t, activeStories, importCsvFile}) => {
 BacklogActive.propTypes = {
   t: PropTypes.func.isRequired,
   activeStories: PropTypes.array,
+  filterQuery: PropTypes.string,
   importCsvFile: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
-    activeStories: getActiveStories(state)
+    activeStories: getActiveStories(state),
+    filterQuery: state.backlogFilterQuery
   }),
   {importCsvFile}
 )(BacklogActive);

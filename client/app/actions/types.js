@@ -14,6 +14,7 @@ export const HIDE_NEW_USER_HINTS = 'HIDE_NEW_USER_HINTS';
 export const SHOW_TRASH = 'SHOW_TRASH';
 export const HIDE_TRASH = 'HIDE_TRASH';
 export const TOGGLE_MARK_FOR_KICK = 'TOGGLE_MARK_FOR_KICK';
+export const FILTER_BACKLOG_STORIES = 'FILTER_BACKLOG_STORIES';
 
 /**
  * Action types for backend events

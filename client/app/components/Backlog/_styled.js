@@ -189,7 +189,7 @@ export const StyledHighlightButtonWrapper = styled.div`
   margin-top: 16px;
 `;
 
-export const StyledBacklogSortForm = styled.div`
+export const StyledBacklogSortForm = styled.form`
   margin: 0 8px 0 8px;
   padding: 8px 8px 8px 8px;
   border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
@@ -197,6 +197,15 @@ export const StyledBacklogSortForm = styled.div`
 
   display: flex;
   justify-content: flex-end;
+
+  > input[type='text'],
+  input[type='text']:focus {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0;
+  }
 
   > i {
     margin-left: 4px;

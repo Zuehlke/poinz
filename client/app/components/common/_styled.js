@@ -57,4 +57,3 @@ export const StyledPasswordFieldWrapper = styled.div`
 export const StyledPasswordInput = styled.input`
   height: 100%;
 `;
-

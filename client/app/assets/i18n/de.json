@@ -62,6 +62,10 @@
   "roomIsProtected": "Dieser Raum ist mit einem Passwort geschützt",
   "roomIsNotProtected": "Dieser Raum ist im Moment nicht mit einem Passwort geschützt",
   "passwordProtection": "Passwortschutz",
-  "passwordProtectionInfo": "PoinZ Räume können mit einem Passwort geschütz werden, um unberechtigten Zutritt zu verhindern"
-
+  "passwordProtectionInfo": "PoinZ Räume können mit einem Passwort geschütz werden, um unberechtigten Zutritt zu verhindern",
+  "sort": "Sortierern",
+  "oldest": "Älteste",
+  "newest": "Neueste",
+  "titleAtoZ": "Titel A-Z",
+  "titleZtoA": "Titel Z-A"
 }

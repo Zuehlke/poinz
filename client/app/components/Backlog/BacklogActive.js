@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
@@ -7,6 +7,7 @@ import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import {importCsvFile} from '../../actions';
 import {getActiveStories} from '../../services/selectors';
+import BacklogSortForm, {sortings} from './BacklogSortForm';
 
 import {
   StyledStories,
@@ -20,6 +21,12 @@ import {
  */
 const BacklogActive = ({t, activeStories, importCsvFile}) => {
   const hasActiveStories = activeStories.length > 0;
+
+  const [sorting, setSorting] = useState(sortings.newestFirst);
+  const [sortedStories, setSortedStories] = useState(activeStories);
+  useEffect(() => {
+    setSortedStories([...activeStories].sort(sorting.comp));
+  }, [activeStories, sorting]);
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -44,15 +51,19 @@ const BacklogActive = ({t, activeStories, importCsvFile}) => {
       ></StyledFileImportDropZoneOverlay>
 
       {hasActiveStories && (
-        <StyledStories>
-          {activeStories.map((story) =>
-            story.editMode ? (
-              <StoryEditForm key={story.id} story={story} />
-            ) : (
-              <Story key={story.id} story={story} />
-            )
-          )}
-        </StyledStories>
+        <React.Fragment>
+          <BacklogSortForm onSortingChanged={setSorting} sorting={sorting} />
+
+          <StyledStories>
+            {sortedStories.map((story) =>
+              story.editMode ? (
+                <StoryEditForm key={story.id} story={story} />
+              ) : (
+                <Story key={story.id} story={story} />
+              )
+            )}
+          </StyledStories>
+        </React.Fragment>
       )}
 
       {!hasActiveStories && <StyledBacklogInfoText>{t('noActiveStories')}</StyledBacklogInfoText>}

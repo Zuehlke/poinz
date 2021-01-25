@@ -103,8 +103,8 @@ function startBuildingDockerImage(gitInfo) {
 
 function getGitInformation() {
   return Promise.all([
-    execPromised('git rev-parse --abbrev-ref HEAD', {cdw: __dirname}),
-    execPromised('git rev-parse --short HEAD', {cdw: __dirname})
+    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}),
+    execPromised('git rev-parse --short HEAD', {cwd: __dirname})
   ]).spread((abbrev, short) => ({
     branch: abbrev.split('\n').join(''),
     hash: short.split('\n').join('')

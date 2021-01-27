@@ -11,8 +11,8 @@
   "estimateStoryHint": "Select story for estimation",
   "newRound": "New Round",
   "nextStory": "Next story",
-  "storyTitle": "Story Title",
-  "description": "Description / URL",
+  "storyTitle": "Story Title...",
+  "description": "Description / URL...",
   "username": "Username",
   "user": "User",
   "log": "Log",
@@ -58,7 +58,7 @@
   "help": "Help",
   "password": "Password",
   "optionalPassword": "Optional password",
-  "setNewPassword": "Set new password",
+  "setNewPassword": "Set new password...",
   "roomIsProtected": "This room is protected by a password",
   "roomIsNotProtected": "This room is currently not protected by a password",
   "passwordProtection": "Password Protection",
@@ -68,6 +68,6 @@
   "newest": "Newest",
   "titleAtoZ": "Title A-Z",
   "titleZtoA": "Title Z-A",
-  "filter": "Filter"
+  "filter": "Filter..."
 
 }

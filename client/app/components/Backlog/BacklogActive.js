@@ -59,7 +59,9 @@ const BacklogActive = ({t, activeStories, filterQuery, importCsvFile}) => {
 
       {hasActiveStories && (
         <React.Fragment>
-          <BacklogSortForm onSortingChanged={setSorting} sorting={sorting} />
+          {activeStories.length > 1 && (
+            <BacklogSortForm onSortingChanged={setSorting} sorting={sorting} />
+          )}
 
           <StyledStories>
             {sortedStories.map((story) =>

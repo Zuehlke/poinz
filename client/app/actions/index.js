@@ -20,8 +20,7 @@ import {
   SHOW_TRASH,
   HIDE_TRASH,
   TOGGLE_MARK_FOR_KICK,
-  ROOM_STATE_FETCHED,
-  FILTER_BACKLOG_STORIES
+  ROOM_STATE_FETCHED
 } from './types';
 
 import clientSettingsStore from '../store/clientSettingsStore';
@@ -434,7 +433,6 @@ export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};
 };
-export const filterBacklogStories = (filterQuery) => ({type: FILTER_BACKLOG_STORIES, filterQuery});
 export const toggleSidebar = (sidebarKey) => ({type: TOGGLE_SIDEBAR, sidebarKey});
 export const SIDEBAR_HELP = 'HELP';
 export const SIDEBAR_SETTINGS = 'SETTINGS';

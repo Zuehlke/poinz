@@ -2,8 +2,6 @@ import React, {useState, useEffect, useRef} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {filterBacklogStories} from '../../actions';
-
 import {StyledBacklogSortForm, StyledSortDropdown, StyledSortDropdownItem} from './_styled';
 
 /**
@@ -32,7 +30,7 @@ export const sortings = {
   }
 };
 
-const BacklogSortForm = ({t, filterQuery, filterBacklogStories, sorting, onSortingChanged}) => {
+const BacklogSortForm = ({t, filterQuery, onQueryChanged, sorting, onSortingChanged}) => {
   const dropdownRef = useRef(null);
   const [extended, setExtended] = useState(false);
 
@@ -41,25 +39,27 @@ const BacklogSortForm = ({t, filterQuery, filterBacklogStories, sorting, onSorti
   return (
     <StyledBacklogSortForm className="pure-form" onSubmit={(e) => e.preventDefault()}>
       <input
+        data-testid="filterQueryInput"
         type="text"
         placeholder={t('filter')}
         value={filterQuery}
-        onChange={(e) => filterBacklogStories(e.target.value)}
+        onChange={(e) => onQueryChanged(e.target.value)}
       />
       <i
         onClick={() => setExtended(!extended)}
         className="clickable icon-exchange"
         title={t('sort')}
+        data-testid="sortButton"
       ></i>
 
       {extended && (
-        <StyledSortDropdown ref={dropdownRef}>
+        <StyledSortDropdown ref={dropdownRef} data-testid="sortOptions">
           {Object.values(sortings).map((sortingItem) => (
             <StyledSortDropdownItem
               selected={sortingItem.id === sorting.id}
               className="clickable"
               key={`sorting-item-${sortingItem.id}`}
-              onClick={() => onSortingChanged(sortingItem)}
+              onClick={() => onSortingOptionClicked(sortingItem)}
             >
               {t(sortingItem.labelKey)}
             </StyledSortDropdownItem>
@@ -68,23 +68,24 @@ const BacklogSortForm = ({t, filterQuery, filterBacklogStories, sorting, onSorti
       )}
     </StyledBacklogSortForm>
   );
+
+  function onSortingOptionClicked(sortingItem) {
+    setExtended(false);
+    onSortingChanged(sortingItem);
+  }
 };
 
 BacklogSortForm.propTypes = {
   t: PropTypes.func.isRequired,
-  filterBacklogStories: PropTypes.func.isRequired,
   sorting: PropTypes.object,
+  onSortingChanged: PropTypes.func.isRequired,
   filterQuery: PropTypes.string,
-  onSortingChanged: PropTypes.func.isRequired
+  onQueryChanged: PropTypes.func.isRequired
 };
 
-export default connect(
-  (state) => ({
-    t: state.translator,
-    filterQuery: state.backlogFilterQuery
-  }),
-  {filterBacklogStories}
-)(BacklogSortForm);
+export default connect((state) => ({
+  t: state.translator
+}))(BacklogSortForm);
 
 const useOutsideClick = (ref, onOutside) => {
   useEffect(() => {

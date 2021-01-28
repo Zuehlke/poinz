@@ -13,8 +13,7 @@ import {
   HIDE_TRASH,
   TOGGLE_MARK_FOR_KICK,
   TOGGLE_SIDEBAR,
-  ROOM_STATE_FETCHED,
-  FILTER_BACKLOG_STORIES
+  ROOM_STATE_FETCHED
 } from '../actions/types';
 import {SIDEBAR_ACTIONLOG} from '../actions';
 import {indexEstimations, indexStories, indexUsers} from './roomStateMapper';
@@ -140,12 +139,6 @@ export default function clientActionReducer(state, action) {
         [action.userId]: {...state.users[action.userId], markedForKick: doMark}
       };
       return {...state, users: modifiedUsers};
-    }
-    case FILTER_BACKLOG_STORIES: {
-      return {
-        ...state,
-        backlogFilterQuery: action.filterQuery ? action.filterQuery.toLowerCase() : ''
-      };
     }
     case ROOM_STATE_FETCHED: {
       const room = action.room;

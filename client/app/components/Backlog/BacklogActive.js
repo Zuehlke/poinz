@@ -17,8 +17,9 @@ import {
 } from './_styled';
 
 const sortAndFilter = (activeStories, comparator, query) => {
+  const lcQuery = query.toLowerCase();
   let shallowCopy = query
-    ? [...activeStories.filter((s) => s.title.toLowerCase().includes(query))]
+    ? [...activeStories.filter((s) => s.title.toLowerCase().includes(lcQuery))]
     : [...activeStories];
   return shallowCopy.sort(comparator);
 };
@@ -26,9 +27,10 @@ const sortAndFilter = (activeStories, comparator, query) => {
 /**
  * show the story add form and list of active stories
  */
-const BacklogActive = ({t, activeStories, filterQuery, importCsvFile}) => {
+const BacklogActive = ({t, activeStories, importCsvFile}) => {
   const hasActiveStories = activeStories.length > 0;
 
+  const [filterQuery, setFilterQuery] = useState('');
   const [sorting, setSorting] = useState(sortings.newestFirst);
   const [sortedStories, setSortedStories] = useState(activeStories);
   useEffect(() => {
@@ -60,10 +62,15 @@ const BacklogActive = ({t, activeStories, filterQuery, importCsvFile}) => {
       {hasActiveStories && (
         <React.Fragment>
           {activeStories.length > 1 && (
-            <BacklogSortForm onSortingChanged={setSorting} sorting={sorting} />
+            <BacklogSortForm
+              onSortingChanged={setSorting}
+              sorting={sorting}
+              onQueryChanged={setFilterQuery}
+              filterQuery={filterQuery}
+            />
           )}
 
-          <StyledStories>
+          <StyledStories data-testid="activeStories">
             {sortedStories.map((story) =>
               story.editMode ? (
                 <StoryEditForm key={story.id} story={story} />
@@ -83,15 +90,13 @@ const BacklogActive = ({t, activeStories, filterQuery, importCsvFile}) => {
 BacklogActive.propTypes = {
   t: PropTypes.func.isRequired,
   activeStories: PropTypes.array,
-  filterQuery: PropTypes.string,
   importCsvFile: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
     t: state.translator,
-    activeStories: getActiveStories(state),
-    filterQuery: state.backlogFilterQuery
+    activeStories: getActiveStories(state)
   }),
   {importCsvFile}
 )(BacklogActive);

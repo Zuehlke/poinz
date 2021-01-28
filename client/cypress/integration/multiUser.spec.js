@@ -1,5 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import {tid} from '../support/commands';
+import {Room} from '../elements/elements';
 
 beforeEach(function () {
   cy.fixture('users/default.json').then((data) => (this.user = data));
@@ -40,11 +41,10 @@ it('multi user estimation', function () {
   cy.get(tid('users')).find('[data-testid="user"]').should('have.length', 2);
 
   // add two stories
-  cy.get(tid('storyAddForm') + ' input[type="text"]').type(this.stories[0].title);
-  cy.get(tid('storyAddForm') + ' button').click();
-
-  cy.get(tid('storyAddForm') + ' input[type="text"]').type(this.stories[2].title);
-  cy.get(tid('storyAddForm') + ' button').click();
+  Room.Backlog.StoryAddForm.titleField().type(this.stories[0].title);
+  Room.Backlog.StoryAddForm.addButton().click();
+  Room.Backlog.StoryAddForm.titleField().type(this.stories[2].title);
+  Room.Backlog.StoryAddForm.addButton().click();
 
   // our user estimates... nothing is auto-revealed, other user did not estimate so far
   cy.get(tid('estimationCard.5')).click();

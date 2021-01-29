@@ -90,6 +90,10 @@ function joinNewRoom(room, command, userId) {
   };
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
+  if (command.payload.password) {
+    room.applyRestrictedEvent('tokenIssued', {token: 'THIS_WILL_BE_THE_TOKEN'});
+  }
+
   if (command.payload.username) {
     room.applyEvent('usernameSet', {
       username: command.payload.username
@@ -157,6 +161,10 @@ function joinExistingRoom(room, command, userId) {
   }
 
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
+
+  if (room.password) {
+    room.applyRestrictedEvent('tokenIssued', {token: 'THIS_WILL_BE_THE_TOKEN'});
+  }
 
   if (userObject.username) {
     room.applyEvent('usernameSet', {

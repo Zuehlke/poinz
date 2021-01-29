@@ -25,6 +25,7 @@ import autoRevealOff from './autoRevealOff';
 import autoRevealOn from './autoRevealOn';
 import passwordSet from './passwordSet';
 import passwordCleared from './passwordCleared';
+import tokenIssued from './tokenIssued';
 
 export default {
   connectionLost,
@@ -53,5 +54,6 @@ export default {
   autoRevealOff,
   autoRevealOn,
   passwordSet,
-  passwordCleared
+  passwordCleared,
+  tokenIssued
 };

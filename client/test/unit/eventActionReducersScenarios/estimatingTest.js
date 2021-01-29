@@ -1,19 +1,11 @@
-import {promises as fs} from 'fs';
-import path from 'path';
-
 import initialState from '../../../app/store/initialState';
 import reduceMultipleEvents from './reduceMultipleEvents';
+import loadEventsFromJson from './loadEventsFromJson';
 
 let events;
 
 beforeAll(async () => {
-  const eventRaw = await fs.readFile(path.resolve(__dirname, './estimatingTest.json'), 'utf-8');
-  events = JSON.parse(eventRaw);
-  console.log(
-    `Loaded events for scenarios. ${events.length} in total. [${events
-      .map((e, i) => i + '=>' + e.name)
-      .join(', ')}]`
-  );
+  events = await loadEventsFromJson('estimatingTest.json');
 });
 
 test('Estimation with two users', () => {

@@ -210,8 +210,9 @@ export default function commandProcessorFactory(
      * called from command handlers: room.apply('someEvent', payload)
      * @param {string} eventName
      * @param {object} eventPayload
+     * @param {boolean} [restricted]
      */
-    ctx.room.applyEvent = (eventName, eventPayload) => {
+    ctx.room.applyEvent = (eventName, eventPayload, restricted = undefined) => {
       const eventHandler = eventHandlers[eventName];
       if (!eventHandler) {
         throw new Error('Cannot apply unknown event ' + eventName);
@@ -244,12 +245,16 @@ export default function commandProcessorFactory(
           correlationId: cmd.id,
           name: eventName,
           roomId: updatedRoom.id,
+          restricted,
           payload: eventPayload
         });
 
         return updatedRoom;
       });
     };
+
+    ctx.room.applyRestrictedEvent = (eventName, eventPayload) =>
+      ctx.room.applyEvent(eventName, eventPayload, true);
 
     // invoke the command handler function (will produce events by calling "applyEvent")
     ctx.handler.fn(ctx.room, cmd, ctx.userId);
@@ -275,6 +280,7 @@ export default function commandProcessorFactory(
     ctx.room.lastActivity = Date.now();
     ctx.room.markedForDeletion = false;
     delete ctx.room.applyEvent;
+    delete ctx.room.applyRestrictedEvent;
 
     validateRoom(ctx.room);
 

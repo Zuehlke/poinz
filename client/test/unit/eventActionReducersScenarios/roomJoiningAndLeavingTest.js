@@ -1,23 +1,12 @@
-import {promises as fs} from 'fs';
-import path from 'path';
-
 import initialState from '../../../app/store/initialState.js';
 import clientSettingsStore from '../../../app/store/clientSettingsStore';
 import reduceMultipleEvents from './reduceMultipleEvents';
+import loadEventsFromJson from './loadEventsFromJson';
 
 let events;
 
 beforeAll(async () => {
-  const eventRaw = await fs.readFile(
-    path.resolve(__dirname, './roomJoiningAndLeavingTest.json'),
-    'utf-8'
-  );
-  events = JSON.parse(eventRaw);
-  console.log(
-    `Loaded events for scenarios. ${events.length} in total. [${events
-      .map((e, i) => i + '=>' + e.name)
-      .join(', ')}]`
-  );
+  events = await loadEventsFromJson('roomJoiningAndLeavingTest.json');
 });
 
 test('You join an existing room', () => {

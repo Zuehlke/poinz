@@ -46,7 +46,8 @@ export const EVENT_ACTION_TYPES = {
   autoRevealOn: 'AUTO_REVEAL_ON',
   autoRevealOff: 'AUTO_REVEAL_OFF',
   passwordSet: 'PASSWORD_SET',
-  passwordCleared: 'PASSWORD_CLEARED'
+  passwordCleared: 'PASSWORD_CLEARED',
+  tokenIssued: 'TOKEN_ISSUED'
 };
 
 /** various **/

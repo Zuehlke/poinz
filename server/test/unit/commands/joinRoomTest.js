@@ -406,11 +406,12 @@ test('nonexisting room : create room with password', async () => {
     roomId,
     'roomCreated',
     'joinedRoom',
+    'tokenIssued',
     'usernameSet',
     'emailSet',
     'avatarSet'
   );
-  const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
+  const [roomCreatedEvent, joinedRoomEvent, tokenIssuedEvent] = producedEvents;
 
   expect(roomCreatedEvent.roomId).toBe(roomId);
 
@@ -421,6 +422,9 @@ test('nonexisting room : create room with password', async () => {
   expect(joinedRoomEvent.roomId).toBe(roomId);
   expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
   expect(room.id).toBe(roomId);
+
+  expect(tokenIssuedEvent.payload.token).toBeDefined();
+  expect(tokenIssuedEvent.userId).toBe(userId);
 
   expect(room.password.hash).toBeDefined();
   expect(room.password.hash).not.toBe('my-cleartext-password');
@@ -452,11 +456,14 @@ test('existing room with password : match', async () => {
   );
 
   // successful join
-  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'avatarSet');
-  const [joinedRoomEvent, avatarSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'tokenIssued', 'avatarSet');
+  const [joinedRoomEvent, tokenIssuedEvent, avatarSetEvent] = producedEvents;
 
   expect(joinedRoomEvent.userId).toEqual(newUserId);
   expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
+
+  expect(tokenIssuedEvent.userId).toEqual(newUserId);
+  expect(tokenIssuedEvent.payload.token).toBeDefined();
 
   expect(avatarSetEvent.userId).toEqual(newUserId);
 });

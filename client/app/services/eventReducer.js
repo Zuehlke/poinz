@@ -608,6 +608,14 @@ const eventActionHandlers = {
     log: (username) => `${username} removed password protection for this room`
   },
 
+  [EVENT_ACTION_TYPES.tokenIssued]: {
+    fn: (state, payload) => ({
+      ...state,
+      userToken: payload.token
+    })
+    // do not log
+  },
+
   [EVENT_ACTION_TYPES.commandRejected]: {
     fn: (state, payload, event) => {
       log.error(event);

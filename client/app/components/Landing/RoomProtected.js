@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {joinRoom} from '../../actions';
 import GithubRibbon from './GithubRibbon';
-import PasswordField from './PasswordField';
+import PasswordField from '../common/PasswordField';
 
 import {
   StyledEyecatcher,

@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
-import {COLOR_BACKGROUND_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE, COLOR_WARNING} from '../colors';
+import {
+  COLOR_BACKGROUND_GREY,
+  COLOR_FONT_GREY,
+  COLOR_LIGHTER_GREY,
+  COLOR_ORANGE,
+  COLOR_WARNING
+} from '../colors';
 import {LEFT_MENU_WIDTH, device} from '../dimensions';
 
 export const StyledBacklog = styled.div`
@@ -181,4 +187,57 @@ export const StyledHighlightButtonWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
+`;
+
+export const StyledBacklogSortForm = styled.form`
+  margin: 0 8px 0 8px;
+  padding: 8px 8px 8px 8px;
+  border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
+  position: relative;
+
+  display: flex;
+  justify-content: flex-end;
+
+  > input[type='text'],
+  input[type='text']:focus {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 0;
+  }
+
+  > i {
+    margin-left: 4px;
+    transform: rotate(90deg);
+  }
+`;
+
+export const StyledSortDropdown = styled.div`
+  position: absolute;
+  z-index: 1002;
+  background: white;
+  border: 1px solid ${COLOR_FONT_GREY};
+  padding: 8px 0;
+  width: 100%;
+  right: 0;
+  top: 100%;
+
+  > div.clickable {
+    padding: 4px 8px;
+    margin-top: 4px;
+    &:hover {
+      background-color: ${COLOR_LIGHTER_GREY};
+    }
+  }
+
+  @media ${device.desktop} {
+    right: 8px;
+    min-width: 132px;
+    width: auto;
+  }
+`;
+
+export const StyledSortDropdownItem = styled.div`
+  color: ${({selected}) => (selected ? COLOR_LIGHTER_GREY : 'inherit')};
 `;

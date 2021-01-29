@@ -88,8 +88,9 @@ describe('REST endpoint', () => {
   test('should export room as json', async () => {
     // first make sure a room exists
     const roomId = uuid();
+    const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, uuid()), 3);
+    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 3);
     client.disconnect();
 
     // export the room
@@ -99,7 +100,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'X-USER': userId
       }
     });
 
@@ -108,6 +109,60 @@ describe('REST endpoint', () => {
       roomId,
       stories: []
     });
+  });
+
+  test('should export room with pw protection as json', async () => {
+    // first make sure a room exists
+    const roomId = uuid();
+    const userId = uuid();
+    const client = poinzSocketClientFactory(backendUrl);
+    await client.cmdAndWait(
+      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de', '1234'),
+      3
+    );
+    client.disconnect();
+
+    // export the room
+    const {statusCode, body} = await httpGetJSON({
+      host: 'localhost',
+      port: 3000,
+      path: '/api/export/room/' + roomId,
+      method: 'GET',
+      headers: {
+        'X-USER': userId
+      }
+    });
+
+    expect(statusCode).toBe(200);
+    expect(body).toMatchObject({
+      roomId,
+      stories: []
+    });
+  });
+
+  test('should not allow export room with pw protection if userId mismatch', async () => {
+    // first make sure a room exists
+    const roomId = uuid();
+    const userId = uuid();
+    const client = poinzSocketClientFactory(backendUrl);
+    await client.cmdAndWait(
+      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de', '1234'),
+      3
+    );
+    client.disconnect();
+
+    // export the room
+    const {statusCode} = await httpGetJSON({
+      host: 'localhost',
+      port: 3000,
+      path: '/api/export/room/' + roomId,
+      method: 'GET',
+      headers: {
+        'X-USER': 'not-matching-userid'
+      }
+    });
+
+    expect(statusCode).toBe(403);
   });
 
   test('should return 404 if room does not exist (export)', async () => {
@@ -148,7 +203,7 @@ describe('REST endpoint', () => {
       path: '/api/room/' + roomId,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'X-USER': userId
       }
     });
 
@@ -184,10 +239,12 @@ describe('REST endpoint', () => {
    * @param options
    */
   function httpGetJSON(options) {
-    return httpGet(options).then((result) => ({
-      ...result,
-      body: JSON.parse(result.body)
-    }));
+    return httpGet(options).then((result) => {
+      return {
+        ...result,
+        body: result.body ? JSON.parse(result.body) : ''
+      };
+    });
   }
 
   /**

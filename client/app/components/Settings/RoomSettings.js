@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {toggleAutoReveal, setCardConfig, setPassword, SIDEBAR_SETTINGS} from '../../actions';
 import {CardConfigEditor} from './CardConfigEditor';
-import PasswordField from '../Landing/PasswordField';
+import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
 
 import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';

@@ -88,8 +88,9 @@ describe('REST endpoint', () => {
   test('should export room as json', async () => {
     // first make sure a room exists
     const roomId = uuid();
+    const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, uuid()), 3);
+    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 3);
     client.disconnect();
 
     // export the room
@@ -99,7 +100,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'X-USER': userId
       }
     });
 
@@ -202,7 +203,7 @@ describe('REST endpoint', () => {
       path: '/api/room/' + roomId,
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'X-USER': userId
       }
     });
 

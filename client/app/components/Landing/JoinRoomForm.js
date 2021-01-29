@@ -13,7 +13,7 @@ import {
   StyledLandingForm
 } from './_styled';
 import {ROOM_ID_REGEX} from '../../services/frontendInputValidation';
-import PasswordField from './PasswordField';
+import PasswordField from '../common/PasswordField';
 
 /**
  * The form on the landing page where the user can join a room.

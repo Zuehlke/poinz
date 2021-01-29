@@ -433,7 +433,6 @@ export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};
 };
-
 export const toggleSidebar = (sidebarKey) => ({type: TOGGLE_SIDEBAR, sidebarKey});
 export const SIDEBAR_HELP = 'HELP';
 export const SIDEBAR_SETTINGS = 'SETTINGS';

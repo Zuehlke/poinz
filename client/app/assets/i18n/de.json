@@ -11,8 +11,8 @@
   "estimateStoryHint": "Auswählen für Schätzrunde",
   "newRound": "Neue Runde",
   "nextStory": "Nächste Story",
-  "storyTitle": "Story Titel",
-  "description": "Beschreibung / URL",
+  "storyTitle": "Story Titel...",
+  "description": "Beschreibung / URL...",
   "username": "Benutzername",
   "user": "Benutzer",
   "log": "Log",
@@ -58,10 +58,15 @@
   "help": "Hilfe",
   "password": "Passwort",
   "optionalPassword": "Optionales Passwort",
-  "setNewPassword": "Neues Passwort",
+  "setNewPassword": "Neues Passwort...",
   "roomIsProtected": "Dieser Raum ist mit einem Passwort geschützt",
   "roomIsNotProtected": "Dieser Raum ist im Moment nicht mit einem Passwort geschützt",
   "passwordProtection": "Passwortschutz",
-  "passwordProtectionInfo": "PoinZ Räume können mit einem Passwort geschütz werden, um unberechtigten Zutritt zu verhindern"
-
+  "passwordProtectionInfo": "PoinZ Räume können mit einem Passwort geschütz werden, um unberechtigten Zutritt zu verhindern",
+  "sort": "Sortierern",
+  "oldest": "Älteste",
+  "newest": "Neueste",
+  "titleAtoZ": "Titel A-Z",
+  "titleZtoA": "Titel Z-A",
+  "filter": "Filtern..."
 }

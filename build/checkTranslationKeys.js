@@ -99,7 +99,7 @@ function checkUnused(keys) {
   });
 
   if (unusedDE.length > 0 || unusedEN.length) {
-    throw new Error('Check failed');
+    console.warn('!!=== there are unused translation keys ===!!');
   }
 }
 

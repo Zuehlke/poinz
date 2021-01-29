@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import {toggleAutoReveal, setCardConfig, setPassword, SIDEBAR_SETTINGS} from '../../actions';
 import {CardConfigEditor} from './CardConfigEditor';
+import PasswordField from '../common/PasswordField';
 
 import {
   StyledSection,
@@ -12,7 +13,6 @@ import {
   StyledArea,
   StyledTextInput
 } from './_styled';
-import PasswordField from '../Landing/PasswordField';
 
 const RoomSettings = ({
   t,

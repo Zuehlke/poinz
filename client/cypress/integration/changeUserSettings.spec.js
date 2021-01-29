@@ -1,4 +1,5 @@
 import {tid} from '../support/commands';
+import {Landing, Room} from '../elements/elements';
 
 beforeEach(function () {
   cy.fixture('users/default.json').then((data) => (this.user = data));
@@ -7,44 +8,46 @@ beforeEach(function () {
 
 it('join room, open user menu and change settings', function () {
   cy.visit('/');
-  cy.get(tid('joinButton')).click();
-  cy.get(tid('usernameInput')).type(this.user.username);
-  cy.get(tid('joinButton')).click();
-  cy.get(tid('whoamiSimple')).contains(this.user.username);
 
-  cy.get(tid('topBar'));
-  cy.get(tid('settingsToggle')).click();
+  Landing.joinButton().click();
+  Landing.usernameField().type(this.user.username);
+  Landing.joinButton().click();
+
+  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.settingsToggleButton().click();
 
   // -- set a new username
-  cy.get(tid('usernameInput')).clear().type(this.sergio.username);
-  cy.get(tid('saveUsernameButton')).click();
+  Room.Settings.usernameField().clear().type(this.sergio.username);
+  Room.Settings.saveUsernameButton().click();
 
-  cy.get(tid('whoamiSimple')).contains(this.sergio.username);
+  Room.TopBar.whoamiSimple().contains(this.sergio.username);
   cy.get(tid('users')).contains(this.sergio.username);
 
-  cy.get(tid('usernameInput')).type(' whitespace (allowed)');
-  cy.get(tid('saveUsernameButton')).click();
+  Room.Settings.usernameField().type(' whitespace (allowed)');
+  Room.Settings.saveUsernameButton().click();
 
-  cy.get(tid('whoamiSimple')).contains(' whitespace (allowed)');
+  Room.TopBar.whoamiSimple().contains(' whitespace (allowed)');
   cy.get(tid('users')).contains(' whitespace (allowed)');
 
   // -- switch language
-  cy.get(tid('settings') + ' #language-selector-de').click();
-  cy.get(tid('settings')).contains('Benutzername');
-  cy.get(tid('settings') + ' #language-selector-en').click();
-  cy.get(tid('settings')).contains('Username');
+  Room.Settings.settingsContainer().find('#language-selector-de').click();
+  Room.Settings.settingsContainer().contains('Benutzername');
+  Room.Settings.settingsContainer().find('#language-selector-en').click();
+  Room.Settings.settingsContainer().contains('Username');
 
   // -- select another avatar (user image)
-  cy.get(tid('settings', 'avatarGrid') + ' img:nth-child(4)').click();
+  Room.Settings.settingsContainer()
+    .find(tid('avatarGrid') + ' img:nth-child(4)')
+    .click();
 
   // -- set gravatar email address
-  cy.get(tid('settings', 'gravatarEmailInput')).type(this.user.email);
+  Room.Settings.settingsContainer().find(tid('gravatarEmailInput')).type(this.user.email);
   cy.get(tid('saveEmailButton')).click();
   cy.wait(400);
-  cy.get(tid('settings', 'gravatarEmailInput')).clear().type(this.sergio.email);
+  Room.Settings.settingsContainer().find(tid('gravatarEmailInput')).type(this.sergio.email);
   cy.get(tid('saveEmailButton')).click();
 
   // -- mark as excluded / included
-  cy.get(tid('settings', 'excludedToggle')).click();
-  cy.get(tid('settings', 'excludedToggle')).click();
+  Room.Settings.settingsContainer().find(tid('excludedToggle')).click();
+  Room.Settings.settingsContainer().find(tid('excludedToggle')).click();
 });

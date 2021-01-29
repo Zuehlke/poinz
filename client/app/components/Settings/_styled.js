@@ -72,7 +72,7 @@ export const StyledTextInput = styled.div`
   padding: 4px;
 
   input {
-    width: 100%;
+    width: 82%;
     border: none;
     border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
     padding: 1px 0;
@@ -117,20 +117,6 @@ export const StyledMiniAvatar = styled.img`
 
   &:hover {
     box-shadow: inset 0 82px 15px -60px rgba(194, 194, 194, 0.65);
-  }
-`;
-
-export const StyledLinkButton = styled.a`
-  padding: 0.5em 1em;
-  box-sizing: border-box;
-  color: white;
-  border-radius: 2px;
-  background: ${COLOR_BLUE};
-  text-decoration: none;
-  font-size: 100%;
-
-  &:hover {
-    background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   }
 `;
 

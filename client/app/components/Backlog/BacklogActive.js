@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
@@ -7,6 +7,7 @@ import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import {importCsvFile} from '../../actions';
 import {getActiveStories} from '../../services/selectors';
+import BacklogSortForm, {sortings} from './BacklogSortForm';
 
 import {
   StyledStories,
@@ -15,11 +16,26 @@ import {
   StyledBacklogInfoText
 } from './_styled';
 
+const sortAndFilter = (activeStories, comparator, query) => {
+  const lcQuery = query.toLowerCase();
+  let shallowCopy = query
+    ? [...activeStories.filter((s) => s.title.toLowerCase().includes(lcQuery))]
+    : [...activeStories];
+  return shallowCopy.sort(comparator);
+};
+
 /**
  * show the story add form and list of active stories
  */
 const BacklogActive = ({t, activeStories, importCsvFile}) => {
   const hasActiveStories = activeStories.length > 0;
+
+  const [filterQuery, setFilterQuery] = useState('');
+  const [sorting, setSorting] = useState(sortings.newestFirst);
+  const [sortedStories, setSortedStories] = useState(activeStories);
+  useEffect(() => {
+    setSortedStories(sortAndFilter(activeStories, sorting.comp, filterQuery));
+  }, [activeStories, sorting, filterQuery]);
 
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles && acceptedFiles.length > 0) {
@@ -44,15 +60,26 @@ const BacklogActive = ({t, activeStories, importCsvFile}) => {
       ></StyledFileImportDropZoneOverlay>
 
       {hasActiveStories && (
-        <StyledStories>
-          {activeStories.map((story) =>
-            story.editMode ? (
-              <StoryEditForm key={story.id} story={story} />
-            ) : (
-              <Story key={story.id} story={story} />
-            )
+        <React.Fragment>
+          {activeStories.length > 1 && (
+            <BacklogSortForm
+              onSortingChanged={setSorting}
+              sorting={sorting}
+              onQueryChanged={setFilterQuery}
+              filterQuery={filterQuery}
+            />
           )}
-        </StyledStories>
+
+          <StyledStories data-testid="activeStories">
+            {sortedStories.map((story) =>
+              story.editMode ? (
+                <StoryEditForm key={story.id} story={story} />
+              ) : (
+                <Story key={story.id} story={story} />
+              )
+            )}
+          </StyledStories>
+        </React.Fragment>
       )}
 
       {!hasActiveStories && <StyledBacklogInfoText>{t('noActiveStories')}</StyledBacklogInfoText>}

@@ -41,3 +41,19 @@ export const StyledConsensusBadge = styled.div`
     font-family: ${ZuehlkeFont};
   }
 `;
+
+export const StyledPasswordFieldWrapper = styled.div`
+  position: relative;
+  width: 100%;
+
+  .clickable {
+    display: block;
+    position: absolute;
+    right: 4px;
+    top: 10px;
+  }
+`;
+
+export const StyledPasswordInput = styled.input`
+  height: 100%;
+`;

@@ -1,5 +1,4 @@
 import {v4 as uuid} from 'uuid';
-import axios from 'axios';
 import log from 'loglevel';
 
 import history from '../services/getBrowserHistory';
@@ -26,6 +25,8 @@ import {
 import clientSettingsStore from '../store/clientSettingsStore';
 import readDroppedFile from '../services/readDroppedFile';
 import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
+import {getRoom} from '../services/roomService';
+import {getAppStatus} from '../services/appStatusService';
 
 const isRoomIdGivenInPathname = (pathname) =>
   pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
@@ -371,12 +372,12 @@ export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
 };
 
 export const fetchStatus = () => (dispatch) => {
-  axios.get('/api/status').then((response) => {
+  getAppStatus().then((data) =>
     dispatch({
       type: STATUS_FETCHED,
-      status: response.data
-    });
-  });
+      status: data
+    })
+  );
 };
 
 /**
@@ -409,12 +410,12 @@ const fetchCurrentRoom = (dispatch, getState) => {
     return;
   }
 
-  axios.get('/api/room/' + state.roomId).then((response) => {
+  getRoom(state.roomId, state.userId).then((data) =>
     dispatch({
       type: ROOM_STATE_FETCHED,
-      room: response.data
-    });
-  });
+      room: data
+    })
+  );
 };
 
 // ui-only actions (client-side view state)
@@ -433,7 +434,6 @@ export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};
 };
-
 export const toggleSidebar = (sidebarKey) => ({type: TOGGLE_SIDEBAR, sidebarKey});
 export const SIDEBAR_HELP = 'HELP';
 export const SIDEBAR_SETTINGS = 'SETTINGS';

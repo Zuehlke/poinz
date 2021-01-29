@@ -1,5 +1,4 @@
 import express from 'express';
-import stream from 'stream';
 import defaultCardConfig from './defaultCardConfig';
 
 /**
@@ -19,7 +18,7 @@ export default function restApiFactory(app, store) {
     res.json(status);
   });
 
-  restRouter.get('/export/room/:roomId', async (req, res) => {
+  restRouter.get('/export/room/:roomId', userIdInRoomCheck, async (req, res) => {
     const roomExport = await buildRoomExportObject(store, req.params.roomId);
 
     if (!roomExport) {
@@ -27,14 +26,10 @@ export default function restApiFactory(app, store) {
       return;
     }
 
-    if (req.query && req.query.mode === 'file') {
-      sendObjectAsJsonFile(res, roomExport, `poinz_${roomExport.roomId}.json`);
-    } else {
-      res.json(roomExport);
-    }
+    res.json(roomExport);
   });
 
-  restRouter.get('/room/:roomId', async (req, res) => {
+  restRouter.get('/room/:roomId', userIdInRoomCheck, async (req, res) => {
     const roomState = await buildRoomStateObject(store, req.params.roomId);
 
     if (!roomState) {
@@ -45,15 +40,58 @@ export default function restApiFactory(app, store) {
   });
 
   app.use('/api', restRouter);
-}
 
-function sendObjectAsJsonFile(res, data, filename) {
-  const fileContents = Buffer.from(JSON.stringify(data, null, 4), 'utf-8');
-  const readStream = new stream.PassThrough();
-  readStream.end(fileContents);
-  res.set('Content-disposition', 'attachment; filename=' + filename);
-  res.set('Content-Type', 'application/json');
-  readStream.pipe(res);
+  /**
+   * express middleware function for fetching/exporting rooms:
+   * Checks if a user belongs to a room and is thus allowed to fetch information about this room.
+   *
+   * Use this middleware for routes with :roomId  path parameter!
+   * Request is expected to specify Header Field "X-USER"
+   * Value of Header Field "X-USER" must match userId of one of the users in the room
+   *
+   * @param req
+   * @param res
+   * @param next
+   * @return {Promise<void>}
+   */
+  async function userIdInRoomCheck(req, res, next) {
+    const {
+      params: {roomId}
+    } = req;
+
+    try {
+      const isOK = await canUserReadRoom(roomId, req.get('X-USER'));
+      if (isOK) {
+        next();
+      } else {
+        res.status(403).json({message: 'Forbidden'});
+      }
+    } catch (e) {
+      res.status(404).json({message: 'room not found'});
+    }
+  }
+
+  /**
+   *
+   * @param roomId
+   * @param userId
+   * @return {Promise<boolean>}
+   */
+  async function canUserReadRoom(roomId, userId) {
+    if (!roomId) {
+      throw new Error('no such room');
+    }
+    const room = await store.getRoomById(roomId);
+    if (!room) {
+      throw new Error('no such room');
+    }
+
+    if (!userId) {
+      return false;
+    }
+
+    return !!room.users.find((usr) => usr.id === userId);
+  }
 }
 
 export async function buildStatusObject(store) {

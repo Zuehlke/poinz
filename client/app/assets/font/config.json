@@ -263,6 +263,12 @@
       "css": "lock-open-alt",
       "code": 61758,
       "src": "fontawesome"
+    },
+    {
+      "uid": "6020aff067fc3c119cdd75daa5249220",
+      "css": "exchange",
+      "code": 61676,
+      "src": "fontawesome"
     }
   ]
 }

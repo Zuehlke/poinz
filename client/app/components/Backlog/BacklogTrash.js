@@ -16,7 +16,7 @@ const BacklogTrash = ({t, trashedStories}) => {
   return (
     <React.Fragment>
       {hasTrashedStories && (
-        <StyledStoriesScrolling>
+        <StyledStoriesScrolling data-testid="trashedStories">
           {trashedStories.map((story) => (
             <TrashedStory story={story} key={story.id} />
           ))}

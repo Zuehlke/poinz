@@ -4,10 +4,15 @@ import PropTypes from 'prop-types';
 
 import {toggleAutoReveal, setCardConfig, setPassword, SIDEBAR_SETTINGS} from '../../actions';
 import {CardConfigEditor} from './CardConfigEditor';
-import PasswordField from '../Landing/PasswordField';
-import RoomExportFileDownload from './RoomExportFileDownload';
+import PasswordField from '../common/PasswordField';
 
-import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
+import {
+  StyledSection,
+  StyledLinkButton,
+  StyledExpandButton,
+  StyledArea,
+  StyledTextInput
+} from './_styled';
 
 const RoomSettings = ({
   t,
@@ -120,7 +125,9 @@ const RoomSettings = ({
         {t('exportInfo')}
 
         <p>
-          <RoomExportFileDownload roomId={roomId} />
+          <StyledLinkButton href={`/api/export/room/${roomId}?mode=file`} download>
+            {t('exportLinkText')} <i className="icon-download-cloud"></i>
+          </StyledLinkButton>
         </p>
       </StyledSection>
     </StyledArea>

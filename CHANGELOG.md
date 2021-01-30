@@ -1,3 +1,8 @@
+### 0.9.1: 2021-01-30
+
+* Sorting and filtering of stories in backlog
+* Improvements for password protected rooms
+
 ### 0.9.0: 2021-01-24
 
 * Optional password protection for rooms

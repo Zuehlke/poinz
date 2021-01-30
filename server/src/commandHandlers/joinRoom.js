@@ -1,8 +1,8 @@
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
-import hashRoomPassword from './hashRoomPassword';
-import checkRoomPassword from './checkRoomPassword';
+import {hashRoomPassword, checkRoomPassword} from './auth/roomPasswordService';
+import {issueJwt, validateJwt} from './auth/jwtService';
 
 /**
  * A user joins a room.
@@ -12,6 +12,8 @@ import checkRoomPassword from './checkRoomPassword';
  * If the room does not yet exist, an additional "roomCreated" event is produced (as the first event).
  * Produces also a "roomJoined" event (which contains the room state).
  * Produces also events for additional properties if they are preset "usernameSet", "emailSet", "excludedFromEstimations".
+ *
+ * For password protected rooms, we will create a Json Web Token (JWT) with an expiration date of 1 hour and pass it to the one joining user via "tokenIssued" event.
  *
  */
 
@@ -40,6 +42,9 @@ const schema = {
               type: 'string',
               minLength: 0,
               maxLength: 50
+            },
+            token: {
+              type: 'string'
             }
           },
           additionalProperties: false
@@ -90,6 +95,10 @@ function joinNewRoom(room, command, userId) {
   };
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
+  if (command.payload.password) {
+    room.applyRestrictedEvent('tokenIssued', {token: issueJwt(userId, room.id)});
+  }
+
   if (command.payload.username) {
     room.applyEvent('usernameSet', {
       username: command.payload.username
@@ -110,18 +119,7 @@ function joinNewRoom(room, command, userId) {
 
 function joinExistingRoom(room, command, userId) {
   if (room.password) {
-    if (!command.payload.password) {
-      throw new Error('Not Authorized!');
-    }
-
-    const pwMatch = checkRoomPassword(
-      command.payload.password,
-      room.password.hash,
-      room.password.salt
-    );
-    if (!pwMatch) {
-      throw new Error('Not Authorized!');
-    }
+    throwIfJoinIsForbidden(room, command.payload);
   }
 
   // if user joins an existing room with a preset userId, the userId is handled like a "session" token.
@@ -158,6 +156,10 @@ function joinExistingRoom(room, command, userId) {
 
   room.applyEvent('joinedRoom', joinedRoomEventPayload);
 
+  if (room.password && !command.payload.token) {
+    room.applyRestrictedEvent('tokenIssued', {token: issueJwt(userId, room.id)});
+  }
+
   if (userObject.username) {
     room.applyEvent('usernameSet', {
       username: userObject.username
@@ -177,6 +179,27 @@ function joinExistingRoom(room, command, userId) {
 
   if (userObject.excluded) {
     room.applyEvent('excludedFromEstimations', {});
+  }
+}
+
+/**
+ *
+ * @param room
+ * @param cmdPayload
+ */
+function throwIfJoinIsForbidden(room, cmdPayload) {
+  if (cmdPayload.password) {
+    const pwMatch = checkRoomPassword(cmdPayload.password, room.password.hash, room.password.salt);
+    if (!pwMatch) {
+      throw new Error('Not Authorized!');
+    }
+  } else if (cmdPayload.token) {
+    const isValid = validateJwt(cmdPayload.token, room.id);
+    if (!isValid) {
+      throw new Error('Not Authorized!');
+    }
+  } else {
+    throw new Error('Not Authorized!');
   }
 }
 

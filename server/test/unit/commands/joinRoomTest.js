@@ -2,7 +2,7 @@ import {v4 as uuid} from 'uuid';
 
 import {prepEmpty, prepOneUserInOneRoom} from '../testUtils';
 import defaultCardConfig from '../../../src/defaultCardConfig';
-import hashRoomPassword from '../../../src/commandHandlers/hashRoomPassword';
+import {hashRoomPassword} from '../../../src/commandHandlers/auth/roomPasswordService';
 
 test('nonexisting room', async () => {
   const {processor} = prepEmpty();
@@ -383,8 +383,7 @@ test('existing room but completely new user, command has no preset properties', 
 test('nonexisting room : create room with password', async () => {
   const {processor} = prepEmpty();
 
-  const roomId = 'super-room-with-password';
-
+  const roomId = uuid();
   const commandId = uuid();
   const userId = uuid();
   const {producedEvents, room} = await processor(
@@ -406,11 +405,12 @@ test('nonexisting room : create room with password', async () => {
     roomId,
     'roomCreated',
     'joinedRoom',
+    'tokenIssued',
     'usernameSet',
     'emailSet',
     'avatarSet'
   );
-  const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
+  const [roomCreatedEvent, joinedRoomEvent, tokenIssuedEvent] = producedEvents;
 
   expect(roomCreatedEvent.roomId).toBe(roomId);
 
@@ -422,13 +422,17 @@ test('nonexisting room : create room with password', async () => {
   expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
   expect(room.id).toBe(roomId);
 
+  expect(tokenIssuedEvent.payload.token).toBeDefined();
+  expect(tokenIssuedEvent.restricted).toBe(true); // if this flag is not set, event will be broadcasted to all users in room (like all other events) !
+  expect(tokenIssuedEvent.userId).toBe(userId);
+
   expect(room.password.hash).toBeDefined();
   expect(room.password.hash).not.toBe('my-cleartext-password');
   expect(room.password.salt).toBeDefined();
   expect(room.password.salt).not.toBe('my-cleartext-password');
 });
 
-test('existing room with password : match', async () => {
+test('existing room with password : match cleartext pw', async () => {
   const {processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
 
   mockRoomsStore.manipulate((room) => {
@@ -452,13 +456,71 @@ test('existing room with password : match', async () => {
   );
 
   // successful join
-  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'avatarSet');
-  const [joinedRoomEvent, avatarSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'tokenIssued', 'avatarSet');
+  const [joinedRoomEvent, tokenIssuedEvent, avatarSetEvent] = producedEvents;
 
   expect(joinedRoomEvent.userId).toEqual(newUserId);
   expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
 
+  expect(tokenIssuedEvent.userId).toEqual(newUserId);
+  expect(tokenIssuedEvent.restricted).toBe(true); // if this flag is not set, event will be broadcasted to all users in room (like all other events) !
+  expect(tokenIssuedEvent.payload.token).toBeDefined();
+
   expect(avatarSetEvent.userId).toEqual(newUserId);
+});
+
+test('existing room with password : match token', async () => {
+  // we need to create the room by "joinRoom" command, we need the tokenIssued event...
+  const {processor} = prepEmpty();
+
+  const roomId = uuid();
+  const commandId = uuid();
+  const userId = uuid();
+
+  // join and create on the fly
+  const {producedEvents} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        username: 'tester',
+        password: 'my-cleartext-password'
+      }
+    },
+    userId
+  );
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'roomCreated',
+    'joinedRoom',
+    'tokenIssued',
+    'usernameSet',
+    'avatarSet'
+  );
+  const tokenIssuedEvent = producedEvents[2];
+
+  // now the user can re-join with the token
+  const {producedEvents: producedEventsReJoin} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        token: tokenIssuedEvent.payload.token
+      }
+    },
+    userId
+  );
+  expect(producedEventsReJoin).toMatchEvents(
+    commandId,
+    roomId,
+    'joinedRoom',
+    // must not issue a new token on rejoin!
+    'usernameSet',
+    'avatarSet'
+  );
 });
 
 test('existing room with password : password missing', async () => {

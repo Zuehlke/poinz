@@ -29,7 +29,7 @@ test('handle incoming command. does not throw even if command handling fails (e.
   };
   await socketManager.handleIncomingCommand(socket, dummyCommand);
 
-  expect(socket.emit.mock.calls.length).toBe(1); // leads to a "commandRejected" event being emitted only to the one socket
+  expect(socket.cmdRejectedEvts.length).toBe(1); // leads to a "commandRejected" event being emitted only to the one socket
 });
 
 test('registering new joining user to socket.IO "room"', async () => {
@@ -47,7 +47,7 @@ test('registering new joining user to socket.IO "room"', async () => {
   };
   await socketManager.handleIncomingCommand(socket, joinCommand);
 
-  expect(socket.emit.mock.calls.length).toBe(0); // no commands rejected
+  expect(socket.cmdRejectedEvts.length).toBe(0); // no commands rejected
 
   expect(socket.join.mock.calls.length).toBe(1);
   expect(socket.join.mock.calls[0][0]).toEqual(roomId); // socket.IO' "join" method on the socket is called with our roomId
@@ -87,7 +87,7 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
     payload: {}
   });
 
-  expect(socket.emit.mock.calls.length).toBe(0); // no commands rejected
+  expect(socket.cmdRejectedEvts.length).toBe(0); // no commands rejected
 
   expect(socket.join.mock.calls.length).toBe(2);
   expect(socket.join.mock.calls[0][0]).toEqual(roomOneId);
@@ -127,7 +127,7 @@ test('should correctly use userId from command', async () => {
     }
   });
 
-  expect(socket.emit.mock.calls.length).toBe(0); // no commands rejected
+  expect(socket.cmdRejectedEvts.length).toBe(0); // no commands rejected
 
   expect(socket.join.mock.calls.length).toBe(1);
   expect(socket.join.mock.calls[0][0]).toEqual(roomOneId);
@@ -182,8 +182,8 @@ test('should correctly handle "kick" case', async () => {
     }
   });
 
-  expect(socketOne.emit.mock.calls.length).toBe(0); // no commands rejected
-  expect(socketTwo.emit.mock.calls.length).toBe(0); // no commands rejected
+  expect(socketOne.cmdRejectedEvts.length).toBe(0); // no commands rejected
+  expect(socketTwo.cmdRejectedEvts.length).toBe(0); // no commands rejected
 
   // all three sockets get joined together into same room
   expect(socketOne.join.mock.calls.length).toBe(1);
@@ -233,8 +233,8 @@ test('emits commandRejected if no userId is present in "normal" command', async 
 
   expect(sendEventToRoom.mock.calls.length).toBe(3); // created, joined, avatarSet
 
-  expect(socket.emit.mock.calls.length).toBe(1); // the commandRejectedEvent gets emitted to the one socket (not the room)
-  expect(socket.emit.mock.calls[0][1]).toMatchObject({
+  expect(socket.cmdRejectedEvts.length).toBe(1); // the commandRejectedEvent gets emitted to the one socket (not the room)
+  expect(socket.cmdRejectedEvts[0]).toMatchObject({
     name: 'commandRejected'
   });
 });
@@ -283,10 +283,16 @@ test('should handle disconnect for mapped user', async () => {
 });
 
 function getMockSocketObject(socketId = uuid()) {
+  const cmdRejectedEvts = [];
   return {
     id: socketId,
     join: jest.fn(),
-    emit: jest.fn()
+    emit: (msgName, event) => {
+      if (event.name === 'commandRejected') {
+        cmdRejectedEvts.push(event);
+      }
+    },
+    cmdRejectedEvts
   };
 }
 

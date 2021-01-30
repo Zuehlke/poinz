@@ -40,7 +40,7 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
 
       updateSocketRegistryJoining(userId, producedEvents, socket);
 
-      sendEvents(producedEvents, producedEvents[0].roomId);
+      sendEvents(producedEvents, producedEvents[0].roomId, socket);
 
       updateSocketRegistryLeavingOrConnectionLost(userId, producedEvents, socket);
       updateSocketRegistryKicking(userId, producedEvents);
@@ -119,12 +119,21 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
   }
 
   /**
-   * send produced events to all sockets in room
+   * Send produced events to all sockets in room (by default).
+   * In special cases, a event is "restricted", these get only sent back to the user that sent the correlating command.
+   *
    * @param producedEvents
    * @param roomId
+   * @param socket
    */
-  function sendEvents(producedEvents, roomId) {
-    producedEvents.forEach((producedEvent) => sendEventToRoom(roomId, producedEvent));
+  function sendEvents(producedEvents, roomId, socket) {
+    producedEvents.forEach((producedEvent) => {
+      if (producedEvent.restricted) {
+        socket.emit('event', producedEvent);
+      } else {
+        sendEventToRoom(roomId, producedEvent);
+      }
+    });
   }
 
   /**

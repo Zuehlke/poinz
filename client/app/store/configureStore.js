@@ -32,6 +32,11 @@ export default function configureStore(initialState) {
     )
   );
 
+  if (window.Cypress && appConfig.env === 'dev') {
+    // leak store to window object for debugging purposes during cypress tests
+    window.__POINZ_REDUX_STORE__ = store;
+  }
+
   // create our hub instance, provide it with "dispatch" and "getUserId" callbacks
   hub = hubFactory(store.dispatch, () => store.getState().userId);
   // All backend events that are received by the hub are dispatched to our redux store

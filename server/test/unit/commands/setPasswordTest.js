@@ -1,6 +1,7 @@
 import {v4 as uuid} from 'uuid';
+
 import {prepOneUserInOneRoom} from '../testUtils';
-import hashRoomPassword from '../../../src/commandHandlers/hashRoomPassword';
+import {hashRoomPassword} from '../../../src/commandHandlers/auth/roomPasswordService';
 
 test('Should produce passwordSet event for room withouth pw', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();

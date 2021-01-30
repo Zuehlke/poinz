@@ -1,5 +1,6 @@
 import express from 'express';
 import defaultCardConfig from './defaultCardConfig';
+import {validateJwt} from './commandHandlers/auth/jwtService';
 
 /**
  * This module handles incoming requests to the REST api.
@@ -42,12 +43,12 @@ export default function restApiFactory(app, store) {
   app.use('/api', restRouter);
 
   /**
-   * express middleware function for fetching/exporting rooms:
-   * Checks if a user belongs to a room and is thus allowed to fetch information about this room.
+   * Express middleware function for fetching/exporting rooms:
+   * Checks if a valid JWT is passed in the request and that the specified user belongs to a specific room and is thus allowed to fetch information about this room.
    *
    * Use this middleware for routes with :roomId  path parameter!
-   * Request is expected to specify Header Field "X-USER"
-   * Value of Header Field "X-USER" must match userId of one of the users in the room
+   * Request is expected to specify Header Field "Authorization"
+   * Value of Header Field "Authorization" must contain a valid (issued by us, not expired) JWT and match userId of one of the users in the room
    *
    * @param req
    * @param res
@@ -60,7 +61,7 @@ export default function restApiFactory(app, store) {
     } = req;
 
     try {
-      const isOK = await canUserReadRoom(roomId, req.get('X-USER'));
+      const isOK = await canUserReadRoom(roomId, req.get('Authorization'));
       if (isOK) {
         next();
       } else {
@@ -74,10 +75,10 @@ export default function restApiFactory(app, store) {
   /**
    *
    * @param roomId
-   * @param userId
+   * @param {string} authorizationHeaderField
    * @return {Promise<boolean>}
    */
-  async function canUserReadRoom(roomId, userId) {
+  async function canUserReadRoom(roomId, authorizationHeaderField) {
     if (!roomId) {
       throw new Error('no such room');
     }
@@ -85,12 +86,23 @@ export default function restApiFactory(app, store) {
     if (!room) {
       throw new Error('no such room');
     }
+    if (!room.password) {
+      return true;
+    }
 
-    if (!userId) {
+    if (!authorizationHeaderField || authorizationHeaderField.length < 8) {
+      return false;
+    }
+    const token = authorizationHeaderField.substring(7);
+    if (!token) {
       return false;
     }
 
-    return !!room.users.find((usr) => usr.id === userId);
+    const payload = validateJwt(token, roomId);
+    if (!payload) {
+      return false;
+    }
+    return !!room.users.find((usr) => usr.id === payload.sub);
   }
 }
 

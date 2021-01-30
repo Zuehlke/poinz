@@ -44,7 +44,7 @@ it('join room, open user menu and change settings', function () {
   Room.Settings.settingsContainer().find(tid('gravatarEmailInput')).type(this.user.email);
   cy.get(tid('saveEmailButton')).click();
   cy.wait(400);
-  Room.Settings.settingsContainer().find(tid('gravatarEmailInput')).type(this.sergio.email);
+  Room.Settings.settingsContainer().find(tid('gravatarEmailInput')).clear().type(this.sergio.email);
   cy.get(tid('saveEmailButton')).click();
 
   // -- mark as excluded / included

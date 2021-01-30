@@ -43,6 +43,7 @@
     "express-sslify": "1.2.0",
     "fastq": "1.10.0",
     "glob": "7.1.6",
+    "jsonwebtoken": "^8.5.1",
     "migrate-mongo": "8.1.4",
     "mongodb": "3.6.3",
     "papaparse": "5.3.0",

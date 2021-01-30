@@ -2,6 +2,7 @@ import http from 'http';
 import {v4 as uuid} from 'uuid';
 import socketIoClient from 'socket.io-client';
 import poinzSocketClientFactory from './poinzSocketClient';
+import {issueJwt} from '../../src/commandHandlers/auth/jwtService';
 
 /**
  * NOTE: for these integration tests, the PoinZ server must be running
@@ -116,7 +117,7 @@ describe('REST endpoint', () => {
     const roomId = uuid();
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(
+    const events = await client.cmdAndWait(
       client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de', '1234'),
       3
     );
@@ -129,7 +130,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        'X-USER': userId
+        Authorization: `Bearer ${events[2].payload.token}`
       }
     });
 
@@ -140,7 +141,7 @@ describe('REST endpoint', () => {
     });
   });
 
-  test('should not allow export room with pw protection if userId mismatch', async () => {
+  test('should not allow export room with pw protection with invalid token', async () => {
     // first make sure a room exists
     const roomId = uuid();
     const userId = uuid();
@@ -158,7 +159,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        'X-USER': 'not-matching-userid'
+        Authorization: `Bearer ${issueJwt(roomId, userId)}` // this token will be generated with another secret -> invalid
       }
     });
 

@@ -117,7 +117,11 @@ export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) 
     joinCommandPayload.avatar = state.presetAvatar;
   }
   if (password) {
+    // join with cleartext password from UI input field
     joinCommandPayload.password = password;
+  } else if (state.userToken) {
+    // join with jwt if present (after joining password-protected room, jwt is stored in our redux state)
+    joinCommandPayload.token = state.userToken;
   }
 
   const joinCommand = {
@@ -410,7 +414,7 @@ const fetchCurrentRoom = (dispatch, getState) => {
     return;
   }
 
-  getRoom(state.roomId, state.userId).then((data) =>
+  getRoom(state.roomId, state.userToken).then((data) =>
     dispatch({
       type: ROOM_STATE_FETCHED,
       room: data

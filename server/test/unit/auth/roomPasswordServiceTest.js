@@ -1,5 +1,15 @@
-import hashRoomPassword from '../../src/commandHandlers/hashRoomPassword';
-import checkRoomPassword from '../../src/commandHandlers/checkRoomPassword';
+import {
+  hashRoomPassword,
+  checkRoomPassword
+} from '../../../src/commandHandlers/auth/roomPasswordService';
+
+test('get hashed password with salt', () => {
+  const hashed = hashRoomPassword('this-is-my-superPassword');
+
+  expect(hashed.hash).toBeDefined();
+  expect(hashed.salt).toBeDefined();
+  expect(hashed.salt.length).toBe(12);
+});
 
 test('check password match', () => {
   const hashed = hashRoomPassword('this-is-my-superPassword');

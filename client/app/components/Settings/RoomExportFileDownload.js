@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {getRoomExport} from '../../services/roomService';
 
-const RoomExportFileDownload = ({t, roomId, userId}) => {
+const RoomExportFileDownload = ({t, roomId, userToken}) => {
   return (
     <button type="button" className="pure-button pure-button-primary" onClick={onDownloadClick}>
       {t('exportLinkText')} <i className="icon-download-cloud"></i>
@@ -11,7 +11,7 @@ const RoomExportFileDownload = ({t, roomId, userId}) => {
   );
 
   function onDownloadClick() {
-    getRoomExport(roomId, userId).then((data) =>
+    getRoomExport(roomId, userToken).then((data) =>
       fakeDownload(JSON.stringify(data, null, 4), `${roomId}.json`)
     );
   }
@@ -46,10 +46,10 @@ const RoomExportFileDownload = ({t, roomId, userId}) => {
 RoomExportFileDownload.propTypes = {
   t: PropTypes.func,
   roomId: PropTypes.string,
-  userId: PropTypes.string
+  userToken: PropTypes.string
 };
 
 export default connect((state) => ({
   t: state.translator,
-  userId: state.userId
+  userToken: state.userToken
 }))(RoomExportFileDownload);

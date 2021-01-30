@@ -48,7 +48,10 @@ async function handleSingleCmdHandlerFile(filePath) {
     CallExpression: function ({node}) {
       const {callee, arguments, loc} = node;
 
-      if (callee.type === 'MemberExpression' && callee.property.name === 'applyEvent') {
+      if (
+        callee.type === 'MemberExpression' &&
+        (callee.property.name === 'applyEvent' || callee.property.name === 'applyRestrictedEvent')
+      ) {
         const eventName = arguments[0].value;
         console.log(
           `   commandHandler file ${filePath} produces event "${chalk.yellow.bold(
@@ -90,6 +93,13 @@ async function handleSingleCmdHandlerFile(filePath) {
       `Could not get validationSchema for command "${commandName}"! Expected it to be defined as "const schema = {......}" `
     );
   }
+
+  // throw away duplicate event names
+  cmdHandlerInfo.events = [...new Set(cmdHandlerInfo.events)];
+
+  // sort them alphabetically
+  cmdHandlerInfo.events.sort();
+
   return cmdHandlerInfo;
 }
 

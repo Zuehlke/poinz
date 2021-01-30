@@ -1,4 +1,4 @@
-import hashRoomPassword from './hashRoomPassword';
+import {hashRoomPassword} from './auth/roomPasswordService';
 
 /**
  * A user sets (or re-sets) a password for this room. If the password is undefined or empty, the password protection is removed (passwordCleared event).

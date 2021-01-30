@@ -210,7 +210,7 @@ export default function commandProcessorFactory(
      * called from command handlers: room.apply('someEvent', payload)
      * @param {string} eventName
      * @param {object} eventPayload
-     * @param {boolean} [restricted]
+     * @param {boolean} [restricted] If true, the event will later only be emitted to the sending user (i.e. the socket that sent the correlating command) - not the whole room.
      */
     ctx.room.applyEvent = (eventName, eventPayload, restricted = undefined) => {
       const eventHandler = eventHandlers[eventName];

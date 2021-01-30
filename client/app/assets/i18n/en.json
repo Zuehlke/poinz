@@ -68,6 +68,8 @@
   "newest": "Newest",
   "titleAtoZ": "Title A-Z",
   "titleZtoA": "Title Z-A",
+  "withConsensusFirst": "With Consensus",
+  "withoutConsensusFirst": "Without Consensus",
   "filter": "Filter..."
 
 }

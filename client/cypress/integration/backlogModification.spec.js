@@ -135,7 +135,7 @@ it('join new room, add multiple stories sort and filter them', function () {
 
   // open sort dropdown and click different sortings
   Backlog.sortButton().click();
-  Backlog.sortOptionsList().should('have.length', 4);
+  Backlog.sortOptionsList().should('have.length', 6);
   Backlog.sortOptionsList().eq(1).click(); // "Oldest" = first added story on top
   Backlog.activeStoriesList().eq(0).find('h4').contains(this.stories[0].title);
   Backlog.activeStoriesList().eq(1).find('h4').contains(this.stories[2].title);

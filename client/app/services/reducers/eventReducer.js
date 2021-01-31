@@ -1,12 +1,12 @@
 import log from 'loglevel';
 import {v4 as uuid} from 'uuid';
 
-import {EVENT_ACTION_TYPES} from '../actions/types';
-import clientSettingsStore from '../store/clientSettingsStore';
-import initialState from '../store/initialState';
-import {getCardConfigForValue} from './getCardConfigForValue';
-import {formatTime} from './timeUtil';
-import {indexEstimations, indexStories, indexUsers} from './roomStateMapper';
+import {EVENT_ACTION_TYPES} from '../../actions/types';
+import clientSettingsStore from '../../store/clientSettingsStore';
+import initialState from '../../store/initialState';
+import {getCardConfigForValue} from '../getCardConfigForValue';
+import {formatTime} from '../timeUtil';
+import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
 
 /**
  * The event reducer handles backend-event actions.

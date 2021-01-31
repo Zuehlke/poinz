@@ -1,5 +1,5 @@
-import initialState from '../../../app/store/initialState.js';
-import clientSettingsStore from '../../../app/store/clientSettingsStore';
+import initialState from '../../../../app/store/initialState.js';
+import clientSettingsStore from '../../../../app/store/clientSettingsStore';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 

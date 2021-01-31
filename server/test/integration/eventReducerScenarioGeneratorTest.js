@@ -5,7 +5,7 @@ import poinzSocketClientFactory from './poinzSocketClient';
 
 const clientEventActionReducerScenarioDir = path.resolve(
   __dirname,
-  '../../../client/test/unit/eventActionReducersScenarios'
+  '../../../client/test/unit/reducers/eventActionReducersScenarios/events'
 );
 
 /**

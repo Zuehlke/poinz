@@ -1,7 +1,7 @@
 import {v4 as uuid} from 'uuid';
 
-import initialState from '../../app/store/initialState';
-import clientActionReducer from '../../app/services/clientActionReducer';
+import initialState from '../../../app/store/initialState';
+import clientActionReducer from '../../../app/services/reducers/clientActionReducer';
 
 import {
   CANCEL_EDIT_STORY,
@@ -16,7 +16,7 @@ import {
   SHOW_TRASH,
   HIDE_TRASH,
   ROOM_STATE_FETCHED
-} from '../../app/actions/types';
+} from '../../../app/actions/types';
 
 import {
   cancelEditStory,
@@ -30,7 +30,7 @@ import {
   SIDEBAR_SETTINGS,
   toggleBacklog,
   toggleSidebar
-} from '../../app/actions';
+} from '../../../app/actions';
 
 test(COMMAND_SENT, () => {
   const startingState = initialState();

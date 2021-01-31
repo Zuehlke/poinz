@@ -1,7 +1,7 @@
 import log from 'loglevel';
 
-import rootReducer from '../../../app/services/rootReducer';
-import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../../../app/actions/types';
+import rootReducer from '../../../../app/services/reducers/rootReducer';
+import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../../../../app/actions/types';
 
 export default function reduceMultipleEvents(startingState, events) {
   let modfifiedState = startingState;

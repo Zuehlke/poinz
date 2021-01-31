@@ -14,9 +14,9 @@ import {
   TOGGLE_MARK_FOR_KICK,
   TOGGLE_SIDEBAR,
   ROOM_STATE_FETCHED
-} from '../actions/types';
-import {SIDEBAR_ACTIONLOG} from '../actions';
-import {indexEstimations, indexStories, indexUsers} from './roomStateMapper';
+} from '../../actions/types';
+import {SIDEBAR_ACTIONLOG} from '../../actions';
+import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)

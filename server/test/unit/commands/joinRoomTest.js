@@ -2,7 +2,7 @@ import {v4 as uuid} from 'uuid';
 
 import {prepEmpty, prepOneUserInOneRoom} from '../testUtils';
 import defaultCardConfig from '../../../src/defaultCardConfig';
-import {hashRoomPassword} from '../../../src/commandHandlers/auth/roomPasswordService';
+import {hashRoomPassword} from '../../../src/auth/roomPasswordService';
 
 test('nonexisting room', async () => {
   const {processor} = prepEmpty();

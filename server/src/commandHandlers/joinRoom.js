@@ -1,8 +1,8 @@
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
-import {hashRoomPassword, checkRoomPassword} from './auth/roomPasswordService';
-import {issueJwt, validateJwt} from './auth/jwtService';
+import {hashRoomPassword, checkRoomPassword} from '../auth/roomPasswordService';
+import {issueJwt, validateJwt} from '../auth/jwtService';
 
 /**
  * A user joins a room.

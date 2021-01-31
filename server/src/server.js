@@ -6,7 +6,7 @@ import sslifyEnforce from 'express-sslify';
 import settings from './settings';
 import socketServer from './socketServer';
 import getLogger from './getLogger';
-import restApiFactory from './rest';
+import restApiFactory from './restApi/rest';
 import roomsStoreFactory from './store/roomStoreFactory';
 
 const LOGGER = getLogger('server');

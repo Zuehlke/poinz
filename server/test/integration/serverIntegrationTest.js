@@ -2,7 +2,7 @@ import http from 'http';
 import {v4 as uuid} from 'uuid';
 import socketIoClient from 'socket.io-client';
 import poinzSocketClientFactory from './poinzSocketClient';
-import {issueJwt} from '../../src/commandHandlers/auth/jwtService';
+import {issueJwt} from '../../src/auth/jwtService';
 
 /**
  * NOTE: for these integration tests, the PoinZ server must be running

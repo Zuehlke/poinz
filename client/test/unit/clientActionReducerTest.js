@@ -273,6 +273,7 @@ test(ROOM_STATE_FETCHED, () => {
         emailHash: '349256fe3ca7a83b273f4c609c6a2a87'
       }
     ],
+    passwordProtected: true,
     cardConfig: [{label: 'some', value: '1', color: 'red'}]
   };
 
@@ -308,4 +309,6 @@ test(ROOM_STATE_FETCHED, () => {
   });
 
   expect(modifiedState.cardConfig.length).toBe(1);
+
+  expect(modifiedState.passwordProtected).toBe(true);
 });

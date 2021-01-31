@@ -141,7 +141,7 @@ export default function clientActionReducer(state, action) {
       return {...state, users: modifiedUsers};
     }
     case ROOM_STATE_FETCHED: {
-      const room = action.room;
+      const {room} = action;
 
       if (state.roomId !== room.id) {
         return state;
@@ -154,7 +154,8 @@ export default function clientActionReducer(state, action) {
         autoReveal: room.autoReveal,
         users: indexUsers(room.users),
         stories: indexStories(room.stories),
-        estimations: indexEstimations(room.stories)
+        estimations: indexEstimations(room.stories),
+        passwordProtected: room.passwordProtected
       };
     }
 

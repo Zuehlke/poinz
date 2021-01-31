@@ -11,6 +11,7 @@
     "url": "https://github.com/Zuehlke/poinz.git"
   },
   "scripts": {
+    "ft": "npm run format && npm t",
     "format": "cd client/ && npm run format && cd ../server/ && npm run format  && cd ../ && prettier --write \"build/*.js\" ",
     "test": "cd client/ && npm test &&  cd ../server && npm test",
     "prebuild": "node build/checkTranslationKeys.js && cd server/ && npm run docu",

@@ -3,10 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {changeStory, cancelEditStory} from '../../actions';
-import {
-  STORY_DESCRIPTION_MAX_LENGTH,
-  STORY_TITLE_REGEX
-} from '../../services/frontendInputValidation';
+import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
 import {isThisStoryEditFormWaiting} from '../../services/selectors';
 import ValidatedInput from '../common/ValidatedInput';
 import StoryEditFormButtonGroup from './StoryEditFormButtonGroup';

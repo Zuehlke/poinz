@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ValidatedInput from '../common/ValidatedInput';
-import {EMAIL_REGEX, USERNAME_REGEX} from '../../services/frontendInputValidation';
+import {EMAIL_REGEX, USERNAME_REGEX} from '../frontendInputValidation';
 import avatarIcons from '../../assets/avatars';
 
 import {setAvatar, setEmail, setLanguage, setUsername, toggleExcluded} from '../../actions';

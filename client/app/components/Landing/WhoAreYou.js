@@ -11,7 +11,7 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from './_styled';
-import {USERNAME_REGEX} from '../../services/frontendInputValidation';
+import {USERNAME_REGEX} from '../frontendInputValidation';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.

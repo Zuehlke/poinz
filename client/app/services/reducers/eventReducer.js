@@ -1,16 +1,29 @@
 import log from 'loglevel';
-import {v4 as uuid} from 'uuid';
 
 import {EVENT_ACTION_TYPES} from '../../actions/types';
 import clientSettingsStore from '../../store/clientSettingsStore';
 import initialState from '../../store/initialState';
 import {getCardConfigForValue} from '../getCardConfigForValue';
-import {formatTime} from '../timeUtil';
 import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
+import updateActionLog from './updateActionLog';
+import modifyStory from './modifyStory';
+import modifyUser from './modifyUser';
+import deleteUser from './deleteUser';
+
+const isOurJoinedEvend = (state, event) =>
+  event.name === 'joinedRoom' &&
+  state.pendingJoinCommandId &&
+  state.pendingJoinCommandId === event.correlationId;
+
+const isFailedJoinRoom = (event) =>
+  event.name === 'commandRejected' &&
+  event.payload &&
+  event.payload.command &&
+  event.payload.command.name === 'joinRoom';
 
 /**
- * The event reducer handles backend-event actions.
- * These are equivalent to the event handlers in the backend as they modify the room state.
+ * The event reducer handles actions created by received backend-events.
+ * These are quite similar to the event handlers in the backend as they modify the room state.
  *
  * @param {object} state
  * @param {object} action
@@ -35,14 +48,9 @@ export default function eventReducer(state, action) {
     }
   }
 
-  // if we created a new room, and then joined, we don't have a roomId yet
-  if (!state.roomId && event.name === 'joinedRoom') {
-    state.roomId = event.roomId;
-  }
-
-  // Events from other rooms do not affect us (backend should not send such events in the first place)
-  if (state.roomId !== event.roomId) {
-    log.warn(
+  // Events from other rooms do not affect us
+  if (!isOurJoinedEvend(state, event) && state.roomId !== event.roomId) {
+    log.debug(
       `Event with different roomId received. localRoomId=${state.roomId}, eventRoomId=${event.roomId} (${event.name})`
     );
     return state;
@@ -55,70 +63,15 @@ export default function eventReducer(state, action) {
   }
 
   let modifiedState = matchingHandler.fn(state, event.payload, event) || state;
-  modifiedState = updateActionLog(matchingHandler.log, state, modifiedState, event);
-  return modifiedState;
-}
-
-function isFailedJoinRoom(event) {
-  return (
-    event.name === 'commandRejected' &&
-    event.payload &&
-    event.payload.command &&
-    event.payload.command.name === 'joinRoom'
-  );
-}
-
-/**
- * adds a log message for a backend event to the state.
- *
- * @param {undefined | string | function} logObject defined in event handlers.
- *         If this is a function: username, eventPayload, oldState and newState will be passed.
- *         The function can return undefined or empty string/undefined (then no logEntry will be added)
- * @param {object} oldState The state before the action was reduced
- * @param {object} modifiedState The state after the action was reduced
- * @param {object} event
- * @returns {object} The new state containing updated actionLog
- */
-function updateActionLog(logObject, oldState, modifiedState, event) {
-  if (!logObject) {
-    return modifiedState;
-  }
-
-  const matchingUser = modifiedState.users && modifiedState.users[event.userId];
-  const username = matchingUser ? matchingUser.username || '' : '';
-  const messageObject =
-    typeof logObject === 'function'
-      ? logObject(username, event.payload, oldState, modifiedState, event)
-      : logObject;
-
-  if (!messageObject) {
-    return modifiedState;
-  }
-
-  const newLogItem = {
-    tstamp: formatTime(Date.now()),
-    logId: uuid()
-  };
-  if (typeof messageObject === 'string') {
-    newLogItem.message = messageObject;
-  } else {
-    newLogItem.message = messageObject.message;
-    newLogItem.isError = messageObject.isError;
-  }
-
-  return {
-    ...modifiedState,
-    actionLog: [newLogItem, ...(modifiedState.actionLog || [])]
-  };
+  return updateActionLog(matchingHandler.log, state, modifiedState, event);
 }
 
 /**
  * Map of event handlers.
  *
- * Defines the modification (application/reduction) a backend event performs on our state.
- * Also defines an optional log function or string (this is separated intentionally - even though it is technically also a modification to the state).
+ * Defines the modification a backend event performs on our state.
+ * Also defines an optional log function or string (this is separated intentionally - even though it is technically also a modification of the state).
  *
- * TODO:  decide/discuss whether we should split these up into separate files (similar to backend)
  */
 const eventActionHandlers = {
   /**
@@ -135,8 +88,8 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.joinedRoom]: {
     fn: (state, payload, event) => {
-      if (state.pendingJoinCommandId && state.pendingJoinCommandId === event.correlationId) {
-        // you joined
+      if (isOurJoinedEvend(state, event)) {
+        // we joined
 
         clientSettingsStore.setPresetUserId(event.userId);
 
@@ -156,22 +109,20 @@ const eventActionHandlers = {
           autoReveal: payload.autoReveal,
           passwordProtected: !!payload.passwordProtected
         };
-      } else {
-        // if our client state has already a userId set, this event indicates that someone else joined, we only need to update our list of users in the room
-        return {
-          ...state,
-          users: indexUsers(payload.users)
-        };
       }
+
+      // someone else joined, we only need to update our list of users in the room
+      return {
+        ...state,
+        users: indexUsers(payload.users)
+      };
     },
-    log: (username, payload, oldState, newState, event) => {
-      const youJoined = !oldState.userId;
-
-      if (youJoined) {
+    log: (username, payload, oldState, newState) => {
+      if (!oldState.userId) {
         return `You joined room "${newState.roomId}"`;
+      } else {
+        return `${username || 'New user'} joined`;
       }
-
-      return `${newState.users[event.userId].username || 'New user'} joined`; // cannot directly use parameter "username". event is not yet reduced.
     }
   },
 
@@ -180,19 +131,13 @@ const eventActionHandlers = {
    */
   [EVENT_ACTION_TYPES.leftRoom]: {
     fn: (state, payload, event) => {
-      // If your user (in this or in another browser) left the room
+      // If your user (in this or in another window/tab) left the room
       if (state.userId === event.userId) {
         return {...initialState()};
       }
 
       // If someone else left the room
-      const modifiedUsers = {...state.users};
-      delete modifiedUsers[event.userId];
-
-      return {
-        ...state,
-        users: modifiedUsers
-      };
+      return deleteUser(state, event.userId);
     },
     log: (username, payload, oldState, newState, event) =>
       `${oldState.users[event.userId].username || 'New user'} left the room`
@@ -209,13 +154,7 @@ const eventActionHandlers = {
       }
 
       // We need to take the userId from the payload (the user that was kicked, not the "kicking" user)
-      const modifiedUsers = {...state.users};
-      delete modifiedUsers[payload.userId];
-
-      return {
-        ...state,
-        users: modifiedUsers
-      };
+      return deleteUser(state, payload.userId);
     },
     log: (username, payload, oldState, modifiedState, event) =>
       `${oldState.users[payload.userId].username || 'New user'} was kicked from the room by ${
@@ -232,66 +171,47 @@ const eventActionHandlers = {
         return state;
       }
 
-      return {
-        ...state,
-        users: {
-          ...state.users,
-          [event.userId]: {
-            ...state.users[event.userId],
-            disconnected: true
-          }
-        }
-      };
+      return modifyUser(state, event.userId, (user) => ({
+        ...user,
+        disconnected: true
+      }));
     },
     log: (username) => `${username || 'New user'} lost the connection`
   },
 
   [EVENT_ACTION_TYPES.storyAdded]: {
-    fn: (state, payload) => {
-      const modifiedStories = {...state.stories};
-      modifiedStories[payload.storyId] = {
+    fn: (state, payload) =>
+      modifyStory(state, payload.storyId, () => ({
         id: payload.storyId,
         title: payload.title,
         description: payload.description,
         createdAt: payload.createdAt
-      };
-      return {
-        ...state,
-        stories: modifiedStories
-      };
-    },
+      })),
     log: (username, payload) => `${username} added new story "${payload.title}"`
   },
 
   [EVENT_ACTION_TYPES.storyChanged]: {
-    fn: (state, payload) => {
-      const modifiedStory = {
-        ...state.stories[payload.storyId],
+    fn: (state, payload) =>
+      modifyStory(state, payload.storyId, (story) => ({
+        ...story,
         title: payload.title,
         description: payload.description,
         editMode: false
-      };
-
-      return {...state, stories: {...state.stories, [payload.storyId]: modifiedStory}};
-    },
+      })),
     log: (username, payload) => `${username} changed story "${payload.title}"`
   },
 
   [EVENT_ACTION_TYPES.storyTrashed]: {
     fn: (state, payload) => {
-      const modifiedStory = {
-        ...state.stories[payload.storyId],
+      const modifiedState = modifyStory(state, payload.storyId, (story) => ({
+        ...story,
         trashed: true
-      };
+      }));
 
       return {
-        ...state,
+        ...modifiedState,
         highlightedStory:
-          state.highlightedStory === payload.storyId ? undefined : state.highlightedStory,
-        stories: {
-          ...state.stories,
-          [payload.storyId]: modifiedStory
-        }
+          state.highlightedStory === payload.storyId ? undefined : state.highlightedStory
       };
     },
     log: (username, payload, oldState) => {
@@ -301,20 +221,11 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.storyRestored]: {
-    fn: (state, payload) => {
-      const modifiedStory = {
-        ...state.stories[payload.storyId],
+    fn: (state, payload) =>
+      modifyStory(state, payload.storyId, (story) => ({
+        ...story,
         trashed: false
-      };
-
-      return {
-        ...state,
-        stories: {
-          ...state.stories,
-          [payload.storyId]: modifiedStory
-        }
-      };
-    },
+      })),
     log: (username, payload, oldState) => {
       const storyTitle = oldState.stories[payload.storyId].title;
       return `${username} restored story "${storyTitle}" from trash`;
@@ -375,13 +286,13 @@ const eventActionHandlers = {
         clientSettingsStore.setPresetUsername(payload.username);
       }
 
-      const modifiedUsers = {
-        ...state.users,
-        [event.userId]: {...state.users[event.userId], username: payload.username}
-      };
+      const modifiedState = modifyUser(state, event.userId, (user) => ({
+        ...user,
+        username: payload.username
+      }));
+
       return {
-        ...state,
-        users: modifiedUsers,
+        ...modifiedState,
         presetUsername: isOwnUser ? payload.username : state.presetUsername
       };
     },
@@ -408,18 +319,11 @@ const eventActionHandlers = {
         clientSettingsStore.setPresetEmail(payload.email);
       }
 
-      return {
-        ...state,
-        users: {
-          ...state.users,
-          [event.userId]: {
-            ...state.users[event.userId],
-            email: payload.email,
-            emailHash: payload.emailHash
-          }
-        },
-        presetEmail: isOwnUser ? payload.email : state.presetEmail
-      };
+      return modifyUser(state, event.userId, (user) => ({
+        ...user,
+        email: payload.email,
+        emailHash: payload.emailHash
+      }));
     },
     log: (username, payload, oldState, newState, event) =>
       `${oldState.users[event.userId].username} set his/her email address`
@@ -433,12 +337,13 @@ const eventActionHandlers = {
         clientSettingsStore.setPresetAvatar(payload.avatar);
       }
 
+      const modifiedState = modifyUser(state, event.userId, (user) => ({
+        ...user,
+        avatar: payload.avatar
+      }));
+
       return {
-        ...state,
-        users: {
-          ...state.users,
-          [event.userId]: {...state.users[event.userId], avatar: payload.avatar}
-        },
+        ...modifiedState,
         presetAvatar: isOwnUser ? payload.avatar : state.presetAvatar
       };
     },
@@ -450,13 +355,11 @@ const eventActionHandlers = {
    * user was excluded from estimations (flag for a user was set / toggled on)
    */
   [EVENT_ACTION_TYPES.excludedFromEstimations]: {
-    fn: (state, payload, event) => ({
-      ...state,
-      users: {
-        ...state.users,
-        [event.userId]: {...state.users[event.userId], excluded: true}
-      }
-    }),
+    fn: (state, payload, event) =>
+      modifyUser(state, event.userId, (user) => ({
+        ...user,
+        excluded: true
+      })),
     log: (username) => `${username} is now excluded from estimations`
   },
 
@@ -464,13 +367,11 @@ const eventActionHandlers = {
    * user was included in estimations (flag for a user was unset / toggled off)
    */
   [EVENT_ACTION_TYPES.includedInEstimations]: {
-    fn: (state, payload, event) => ({
-      ...state,
-      users: {
-        ...state.users,
-        [event.userId]: {...state.users[event.userId], excluded: false}
-      }
-    }),
+    fn: (state, payload, event) =>
+      modifyUser(state, event.userId, (user) => ({
+        ...user,
+        excluded: false
+      })),
     log: (username) => `${username} is no longer excluded from estimations`
   },
 
@@ -489,17 +390,17 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.consensusAchieved]: {
-    fn: (state, payload) => ({
-      ...state,
-      applause: true,
-      stories: {
-        ...state.stories,
-        [payload.storyId]: {
-          ...state.stories[payload.storyId],
-          consensus: payload.value
-        }
-      }
-    }),
+    fn: (state, payload) => {
+      const modifiedState = modifyStory(state, payload.storyId, (story) => ({
+        ...story,
+        consensus: payload.value
+      }));
+
+      return {
+        ...modifiedState,
+        applause: true
+      };
+    },
     log: (username, eventPayload, oldState, modifiedState) => {
       const matchingCardConfig = getCardConfigForValue(
         oldState.cardConfig,
@@ -528,13 +429,11 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.revealed]: {
-    fn: (state, payload) => ({
-      ...state,
-      stories: {
-        ...state.stories,
-        [payload.storyId]: {...state.stories[payload.storyId], revealed: true}
-      }
-    }),
+    fn: (state, payload) =>
+      modifyStory(state, payload.storyId, (story) => ({
+        ...story,
+        revealed: true
+      })),
     log: (username, payload, oldState, modifiedState) =>
       payload.manually
         ? `${username} manually revealed estimates for story "${
@@ -544,30 +443,28 @@ const eventActionHandlers = {
             modifiedState.stories[payload.storyId].title
           }"`
   },
-
   [EVENT_ACTION_TYPES.newEstimationRoundStarted]: {
-    fn: (state, payload) => ({
-      ...state,
-      applause: false,
-      stories: {
-        ...state.stories,
-        [payload.storyId]: {
-          ...state.stories[payload.storyId],
-          revealed: false,
-          consensus: undefined
+    fn: (state, payload) => {
+      const modifiedState = modifyStory(state, payload.storyId, (story) => ({
+        ...story,
+        revealed: false,
+        consensus: undefined
+      }));
+
+      return {
+        ...modifiedState,
+        applause: false,
+        estimations: {
+          ...state.estimations,
+          [payload.storyId]: undefined
         }
-      },
-      estimations: {
-        ...state.estimations,
-        [payload.storyId]: undefined
-      }
-    }),
+      };
+    },
     log: (username, payload, oldState, modifiedState) =>
       `${username} started a new estimation round for story "${
         modifiedState.stories[payload.storyId].title
       }"`
   },
-
   [EVENT_ACTION_TYPES.cardConfigSet]: {
     fn: (state, payload) => ({
       ...state,
@@ -575,7 +472,6 @@ const eventActionHandlers = {
     }),
     log: (username) => `${username} set new custom card configuration for this room`
   },
-
   [EVENT_ACTION_TYPES.autoRevealOn]: {
     fn: (state) => ({
       ...state,
@@ -583,7 +479,6 @@ const eventActionHandlers = {
     }),
     log: (username) => `${username} enabled auto reveal for this room`
   },
-
   [EVENT_ACTION_TYPES.autoRevealOff]: {
     fn: (state) => ({
       ...state,
@@ -591,7 +486,6 @@ const eventActionHandlers = {
     }),
     log: (username) => `${username} disabled auto reveal for this room`
   },
-
   [EVENT_ACTION_TYPES.passwordSet]: {
     fn: (state) => ({
       ...state,
@@ -599,7 +493,6 @@ const eventActionHandlers = {
     }),
     log: (username) => `${username} set a password for this room`
   },
-
   [EVENT_ACTION_TYPES.passwordCleared]: {
     fn: (state) => ({
       ...state,
@@ -607,7 +500,6 @@ const eventActionHandlers = {
     }),
     log: (username) => `${username} removed password protection for this room`
   },
-
   [EVENT_ACTION_TYPES.tokenIssued]: {
     fn: (state, payload) => ({
       ...state,
@@ -615,7 +507,6 @@ const eventActionHandlers = {
     })
     // do not log
   },
-
   [EVENT_ACTION_TYPES.commandRejected]: {
     fn: (state, payload, event) => {
       log.error(event);

@@ -42,7 +42,6 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
   } else if (!pathname || (pathname.length < 2 && state.userId && state.roomId)) {
     sendCommand({
       name: 'leaveRoom',
-      roomId: state.roomId,
       payload: {}
     });
   }
@@ -138,10 +137,8 @@ export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) 
 };
 
 export const addStory = (storyTitle, storyDescription) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'addStory',
-    roomId: state.roomId,
     payload: {
       title: storyTitle,
       description: storyDescription
@@ -157,7 +154,6 @@ export const selectStory = (storyId) => (dispatch, getState, sendCommand) => {
 
   sendCommand({
     name: 'selectStory',
-    roomId: state.roomId,
     payload: {
       storyId
     }
@@ -171,7 +167,6 @@ export const selectNextStory = () => (dispatch, getState, sendCommand) => {
   if (nextStoryId) {
     sendCommand({
       name: 'selectStory',
-      roomId: state.roomId,
       payload: {
         storyId: nextStoryId
       }
@@ -183,7 +178,6 @@ export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCo
   const state = getState();
 
   const command = {
-    roomId: state.roomId,
     payload: {
       value: value,
       storyId: storyId
@@ -205,10 +199,8 @@ export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCo
 };
 
 export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'newEstimationRound',
-    roomId: state.roomId,
     payload: {
       storyId: storyId
     }
@@ -216,10 +208,8 @@ export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand)
 };
 
 export const reveal = (storyId) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'reveal',
-    roomId: state.roomId,
     payload: {
       storyId: storyId
     }
@@ -227,10 +217,8 @@ export const reveal = (storyId) => (dispatch, getState, sendCommand) => {
 };
 
 export const setUsername = (username) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'setUsername',
-    roomId: state.roomId,
     payload: {
       username: username
     }
@@ -238,10 +226,8 @@ export const setUsername = (username) => (dispatch, getState, sendCommand) => {
 };
 
 export const setEmail = (email) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'setEmail',
-    roomId: state.roomId,
     payload: {
       email: email
     }
@@ -249,10 +235,8 @@ export const setEmail = (email) => (dispatch, getState, sendCommand) => {
 };
 
 export const setAvatar = (avatar) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'setAvatar',
-    roomId: state.roomId,
     payload: {
       avatar
     }
@@ -260,28 +244,22 @@ export const setAvatar = (avatar) => (dispatch, getState, sendCommand) => {
 };
 
 export const toggleExcluded = () => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'toggleExclude',
-    roomId: state.roomId,
     payload: {}
   });
 };
 
 export const toggleAutoReveal = () => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'toggleAutoReveal',
-    roomId: state.roomId,
     payload: {}
   });
 };
 
 export const kick = (userId) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'kick',
-    roomId: state.roomId,
     payload: {
       userId
     }
@@ -295,10 +273,8 @@ export const leaveRoom = () => () => {
 };
 
 export const changeStory = (storyId, title, description) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'changeStory',
-    roomId: state.roomId,
     payload: {
       storyId,
       title,
@@ -308,10 +284,8 @@ export const changeStory = (storyId, title, description) => (dispatch, getState,
 };
 
 export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'trashStory',
-    roomId: state.roomId,
     payload: {
       storyId
     }
@@ -319,10 +293,8 @@ export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {
 };
 
 export const restoreStory = (storyId) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'restoreStory',
-    roomId: state.roomId,
     payload: {
       storyId
     }
@@ -330,10 +302,8 @@ export const restoreStory = (storyId) => (dispatch, getState, sendCommand) => {
 };
 
 export const deleteStory = (storyId) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'deleteStory',
-    roomId: state.roomId,
     payload: {
       storyId
     }
@@ -341,10 +311,8 @@ export const deleteStory = (storyId) => (dispatch, getState, sendCommand) => {
 };
 
 export const setCardConfig = (cardConfig) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'setCardConfig',
-    roomId: state.roomId,
     payload: {
       cardConfig
     }
@@ -352,10 +320,8 @@ export const setCardConfig = (cardConfig) => (dispatch, getState, sendCommand) =
 };
 
 export const setPassword = (password) => (dispatch, getState, sendCommand) => {
-  const state = getState();
   sendCommand({
     name: 'setPassword',
-    roomId: state.roomId,
     payload: {
       password
     }
@@ -364,10 +330,8 @@ export const setPassword = (password) => (dispatch, getState, sendCommand) => {
 
 export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
   readDroppedFile(file).then((content) => {
-    const state = getState();
     sendCommand({
       name: 'importStories',
-      roomId: state.roomId,
       payload: {
         data: content
       }

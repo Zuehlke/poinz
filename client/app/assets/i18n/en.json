@@ -70,6 +70,12 @@
   "titleZtoA": "Title Z-A",
   "withConsensusFirst": "With Consensus",
   "withoutConsensusFirst": "Without Consensus",
-  "filter": "Filter..."
+  "filter": "Filter...",
+  "estimationSummary": "Estimation Summary",
+  "highestValue": "Highest value",
+  "lowestValue": "Lowest value",
+  "consensusAchieved": "Consensus achieved!",
+  "usersEstimated": "# of Users estimated",
+  "average": "Average"
 
 }

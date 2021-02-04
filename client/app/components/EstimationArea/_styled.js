@@ -19,13 +19,13 @@ export const EstimationAreaButtons = styled.div`
 
 const FlashAnimation = keyframes`
   0% {
-    opacity :1;
+    opacity: 1;
   }
   50% {
-    opacity :0;
+    opacity: 0;
   }
   100% {
-    opacity :1;
+    opacity: 1;
   }
 `;
 
@@ -100,5 +100,26 @@ export const StyledCardInner = styled.div`
 
   @media ${device.modernMobile} {
     border-width: 4px;
+  }
+`;
+
+export const StyledEstimationSummary = styled.div`
+  margin-top: 24px;
+  padding: 8px;
+
+  h4 {
+    margin-bottom: 2px;
+  }
+`;
+export const StyledEstimationSummaryList = styled.div`
+  display: flex;
+  max-width: 400px;
+  position: relative;
+  flex-wrap: wrap;
+
+  > span {
+    margin-top: 8px;
+    padding: 4px 0;
+    width: 50%;
   }
 `;

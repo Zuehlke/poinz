@@ -15,6 +15,7 @@ import {
   StyledUserKickOverlay,
   StyledUserName
 } from './_styled';
+import {getEstimationsForCurrentlySelectedStory} from '../../services/selectors';
 
 const User = ({
   t,
@@ -106,7 +107,7 @@ User.propTypes = {
 
 export default connect(
   (state, props) => {
-    const estimationsForStory = state.estimations && state.estimations[state.selectedStory];
+    const estimationsForStory = getEstimationsForCurrentlySelectedStory(state);
     const userEstimationValue = estimationsForStory && estimationsForStory[props.user.id];
 
     return {

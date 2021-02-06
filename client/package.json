@@ -25,7 +25,8 @@
   },
   "jest": {
     "testMatch": [
-      "**/test/unit/**/*Test.js"
+      "**/test/unit/**/*Test.js",
+      "**/test/integration/**/*Test.js"
     ]
   },
   "browserslist": [

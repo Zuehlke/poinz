@@ -1,6 +1,6 @@
 {
   "name": "poinz",
-  "version": "0.9.1",
+  "version": "0.10.0",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -25,7 +25,7 @@
     "del": "6.0.0",
     "fs-extra": "9.1.0",
     "glob": "7.1.6",
-    "npm-check-updates": "11.0.2",
+    "npm-check-updates": "11.1.1",
     "prettier": "2.2.1",
     "cross-spawn": "7.0.3"
   },

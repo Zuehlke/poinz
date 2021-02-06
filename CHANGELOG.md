@@ -1,3 +1,10 @@
+### 0.10.0: 2021-02-06
+
+* Estimation Summary: After a story is revealed, show how many users estimated, which cards were used and how often.
+* If a new room is created, a default sample story is already added automatically. This allows to start estimating right away.
+* Added additional sorting option in backlog:  stories with consensus first vs. stories without consensus first
+* Updated dependencies
+
 ### 0.9.1: 2021-01-30
 
 * Sorting and filtering of stories in backlog
@@ -9,8 +16,8 @@
 
 ### 0.8.6: 2020-12-28
 
-* update dependencies
-* switch to node.js 14 LTS
+* Updated dependencies
+* Switched to node.js 14 LTS
 
 ### 0.8.5: 2020-12-12
 

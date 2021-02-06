@@ -72,10 +72,7 @@
   "withoutConsensusFirst": "Without Consensus",
   "filter": "Filter...",
   "estimationSummary": "Estimation Summary",
-  "highestValue": "Highest value",
-  "lowestValue": "Lowest value",
   "consensusAchieved": "Consensus achieved!",
-  "usersEstimated": "# of Users estimated",
-  "average": "Average"
+  "usersEstimated": "%{count} of %{total} Users estimated"
 
 }

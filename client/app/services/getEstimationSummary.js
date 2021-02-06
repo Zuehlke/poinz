@@ -12,7 +12,8 @@ export default function getEstimationSummary(estmForOneStory) {
       lowest: undefined,
       highest: undefined,
       average: undefined,
-      estimationCount: 0
+      estimationCount: 0,
+      estimatedValues: {}
     };
   }
 
@@ -24,10 +25,21 @@ export default function getEstimationSummary(estmForOneStory) {
     }
   });
 
+  const estimatedValues = estimationValues.reduce((result, current) => {
+    if (result[current]) {
+      result[current] = result[current] + 1;
+    } else {
+      result[current] = 1;
+    }
+
+    return result;
+  }, {});
+
   return {
     average: average(estimationValues),
     highest: Math.max(...estimationValues),
     lowest: Math.min(...estimationValues),
-    estimationCount: estimationValues.length
+    estimationCount: estimationValues.length,
+    estimatedValues
   };
 }

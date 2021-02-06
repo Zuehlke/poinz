@@ -2,14 +2,14 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
+import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 import {
   getEstimationsForCurrentlySelectedStory,
   getUserCount,
   hasSelectedStoryConsensus
 } from '../../services/selectors';
 import getEstimationSummary from '../../services/getEstimationSummary';
-import ConsensusBadge from '../common/ConsensusBadge';
+import EstimationSummaryCard from './EstimationSummaryCard';
 
 /**
  * One estimation card on the board.
@@ -22,41 +22,28 @@ const EstimationSummary = ({t, estimations, usersInRoomCount, cardConfig, hasCon
       <h4>{t('estimationSummary')}</h4>
 
       <StyledEstimationSummaryList>
-        <span>{t('usersEstimated')}</span>
         <span>
-          {summary.estimationCount} / {usersInRoomCount}
+          {t('usersEstimated', {count: summary.estimationCount, total: usersInRoomCount})}
         </span>
 
-        {!hasConsensus && summary.estimationCount > 0 && (
-          <React.Fragment>
-            <span>{t('lowestValue')}</span>
-            <span>
-              <ConsensusBadge cardConfig={cardConfig} consensusValue={summary.lowest} />
-            </span>
-            <span>{t('highestValue')}</span>
-            <span>
-              <ConsensusBadge cardConfig={cardConfig} consensusValue={summary.highest} />
-            </span>
-            <span>{t('average')}</span>
-            <span>{summary.average}</span>
-          </React.Fragment>
-        )}
-
-        {hasConsensus && (
-          <React.Fragment>
-            <span>{t('consensusAchieved')}</span>
-            <span>
-              <ConsensusBadge cardConfig={cardConfig} consensusValue={summary.highest} />
-            </span>
-          </React.Fragment>
-        )}
+        {hasConsensus && <span>{t('consensusAchieved')}</span>}
       </StyledEstimationSummaryList>
+
+      <StyledCards>
+        {cardConfig.map((cardConfig) => (
+          <EstimationSummaryCard
+            key={'mini-card_' + cardConfig.value}
+            cardCfg={cardConfig}
+            count={summary.estimatedValues[cardConfig.value]}
+          />
+        ))}
+      </StyledCards>
     </StyledEstimationSummary>
   );
 };
 
 EstimationSummary.propTypes = {
-  t: PropTypes.function.isRequired,
+  t: PropTypes.func.isRequired,
   estimations: PropTypes.object,
   cardConfig: PropTypes.array,
   usersInRoomCount: PropTypes.number,
@@ -70,6 +57,5 @@ export default connect(
     usersInRoomCount: getUserCount(state),
     cardConfig: state.cardConfig,
     hasConsensus: hasSelectedStoryConsensus(state)
-  }),
-  {}
+  })
 )(EstimationSummary);

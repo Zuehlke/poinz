@@ -15,7 +15,11 @@ test('simple', () => {
     lowest: 3,
     highest: 5,
     average: 4.2,
-    estimationCount: 5
+    estimationCount: 5,
+    estimatedValues: {
+      5: 3,
+      3: 2
+    }
   });
 });
 
@@ -34,7 +38,13 @@ test('negative values', () => {
     lowest: -2,
     highest: 8,
     average: 3,
-    estimationCount: 5
+    estimationCount: 5,
+    estimatedValues: {
+      '-1': 1,
+      '-2': 1,
+      5: 2,
+      8: 1
+    }
   });
 });
 
@@ -50,7 +60,11 @@ test('decimal values', () => {
     lowest: 0.5,
     highest: 5.5,
     average: 3,
-    estimationCount: 2
+    estimationCount: 2,
+    estimatedValues: {
+      0.5: 1,
+      5.5: 1
+    }
   });
 });
 
@@ -63,6 +77,7 @@ test('empty', () => {
     lowest: undefined,
     highest: undefined,
     average: undefined,
-    estimationCount: 0
+    estimationCount: 0,
+    estimatedValues: {}
   });
 });

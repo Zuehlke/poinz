@@ -64,7 +64,7 @@ export const StyledCard = styled.button`
   &,
   &:focus {
     cursor: pointer;
-    min-width: 30vw;
+    min-width: 28vw;
     display: block;
     border: none;
     outline: none;
@@ -103,6 +103,36 @@ export const StyledCardInner = styled.div`
   }
 `;
 
+export const StyledEstmSummCard = styled(StyledCard)`
+  &,
+  &:focus {
+    cursor: default;
+  }
+`;
+
+export const StyledEstmSummCardInner = styled(StyledCardInner)`
+  opacity: ${({wasEstimated}) => (wasEstimated ? 1 : 0.3)};
+
+  border: ${({wasEstimated}) => (wasEstimated ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
+
+  > span {
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 30%;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0 0 9px 9px;
+    font-size: 80%;
+    padding: 1px 0 0 0;
+    box-sizing: border-box;
+  }
+
+  &:hover {
+    box-shadow: none;
+  }
+`;
+
 export const StyledEstimationSummary = styled.div`
   margin-top: 24px;
   padding: 8px;
@@ -112,12 +142,8 @@ export const StyledEstimationSummary = styled.div`
   }
 `;
 export const StyledEstimationSummaryList = styled.div`
-  display: flex;
-  max-width: 400px;
-  position: relative;
-  flex-wrap: wrap;
-
   > span {
+    display: block;
     margin-top: 8px;
     padding: 4px 0;
     width: 50%;

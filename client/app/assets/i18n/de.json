@@ -72,9 +72,6 @@
   "withoutConsensusFirst": "Ohne Konsens",
   "filter": "Filtern...",
   "estimationSummary": "Zusammenfassung",
-  "highestValue": "Höchster Wert",
-  "lowestValue": "Tiefster Wert",
   "consensusAchieved": "Konsens erreicht!",
-  "usersEstimated": "# Benutzer haben geschätzt",
-  "average": "Durchschnitt"
+  "usersEstimated": "%{count} von %{total} Benutzer"
 }

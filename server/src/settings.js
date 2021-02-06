@@ -9,11 +9,11 @@ const settings = {
   // configuration for winston logging
   log: {
     file: {
-      level: 'info',
+      level: process.env.NODE_ENV === 'test' ? 'warn' : 'info',
       name: 'poinz.log'
     },
     console: {
-      level: 'info'
+      level: process.env.NODE_ENV === 'test' ? 'warn' : 'info'
     }
   },
 

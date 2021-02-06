@@ -3,10 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {addStory} from '../../actions';
-import {
-  STORY_DESCRIPTION_MAX_LENGTH,
-  STORY_TITLE_REGEX
-} from '../../services/frontendInputValidation';
+import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
 import {hasMatchingPendingCommand} from '../../services/selectors';
 import ValidatedInput from '../common/ValidatedInput';
 

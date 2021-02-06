@@ -10,10 +10,11 @@ import {COMMAND_SENT} from '../actions/types';
  * - Receives backend events from the websocket
  *
  * @param {function} dispatch The redux dispatch function
- * @param {function} getUserId Callback that provides the current userId
+ * @param {function} getUserId Callback that provides the current userId (if any)
+ * @param {function} getRoomId Callback that provides the current roomId (if any)
  * @return {{onConnect: onConnect, sendCommand: sendCommand, onEvent: onEvent}}  a/the Hub instance
  */
-export default function hubFactory(dispatch, getUserId) {
+export default function hubFactory(dispatch, getUserId, getRoomId) {
   let ioInstance;
   let onEventHandler;
   let onConnectHandler;
@@ -59,6 +60,10 @@ export default function hubFactory(dispatch, getUserId) {
 
     if (!command.userId) {
       command.userId = getUserId();
+    }
+
+    if (!command.roomId) {
+      command.roomId = getRoomId();
     }
 
     ioInstance.emit('command', command);

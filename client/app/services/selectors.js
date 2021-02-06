@@ -8,6 +8,16 @@ const getPendingCmds = (state) => state.pendingCommands;
 const getUsers = (state) => state.users;
 
 /**
+ * Returns the number of users in our room.
+ */
+export const getUserCount = createSelector([getUsers], (users) => {
+  if (users) {
+    return Object.keys(users).length;
+  }
+  return 0;
+});
+
+/**
  * Returns active stories as array. Never returns undefined.
  */
 export const getActiveStories = createSelector([getStories], (stories) =>
@@ -66,6 +76,29 @@ const myUserFirstUserComparator = (ownUserId, userA, userB) => {
 export const isAStorySelected = createSelector(
   [getSelectedStoryId, getStories],
   (selectedStoryId, stories) => stories && selectedStoryId && !!stories[selectedStoryId]
+);
+
+/**
+ * Returns true if our room contains stories, and a story is selected and this story was estimated with consensus (all values the same).
+ * False otherwise
+ */
+export const hasSelectedStoryConsensus = createSelector(
+  [getSelectedStoryId, getStories],
+  (selectedStoryId, stories) =>
+    stories &&
+    selectedStoryId &&
+    !!stories[selectedStoryId] &&
+    stories[selectedStoryId].consensus !== null &&
+    stories[selectedStoryId].consensus !== undefined
+);
+
+/**
+ *
+ */
+export const getEstimationsForCurrentlySelectedStory = createSelector(
+  [getSelectedStoryId, getEstimations],
+  (selectedStoryId, estimations) =>
+    estimations && estimations[selectedStoryId] ? estimations[selectedStoryId] : {}
 );
 
 /**

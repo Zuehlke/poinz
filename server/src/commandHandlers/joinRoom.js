@@ -1,8 +1,10 @@
+import {v4 as uuid} from 'uuid';
+
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
-import {hashRoomPassword, checkRoomPassword} from './auth/roomPasswordService';
-import {issueJwt, validateJwt} from './auth/jwtService';
+import {hashRoomPassword, checkRoomPassword} from '../auth/roomPasswordService';
+import {issueJwt, validateJwt} from '../auth/jwtService';
 
 /**
  * A user joins a room.
@@ -69,6 +71,12 @@ const joinRoomCommandHandler = {
 
 export default joinRoomCommandHandler;
 
+const sampleStory = {
+  title: 'Welcome to your PoinZ room!',
+  description:
+    'This is a sample story that we already created for you.\n\n- On the left, you can edit your stories and add new ones.\n- Below you can estimate this story by clicking on one of the cards.\n- Invite your teammates by sharing the url with them.\n\n For more information, refer to the manual https://github.com/Zuehlke/poinz/blob/master/manual.md'
+};
+
 function joinNewRoom(room, command, userId) {
   room.applyEvent('roomCreated', {
     password: command.payload.password ? hashRoomPassword(command.payload.password) : undefined
@@ -115,6 +123,17 @@ function joinNewRoom(room, command, userId) {
   room.applyEvent('avatarSet', {
     avatar
   });
+
+  // it's a completely new room, add our sample/placeholder story with simple instructions / quick start
+  const sampleStoryId = uuid();
+  room.applyEvent('storyAdded', {
+    createdAt: Date.now(),
+    storyId: sampleStoryId,
+    title: sampleStory.title,
+    description: sampleStory.description,
+    estimations: {}
+  });
+  room.applyEvent('storySelected', {storyId: sampleStoryId});
 }
 
 function joinExistingRoom(room, command, userId) {

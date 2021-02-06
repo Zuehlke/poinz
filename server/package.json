@@ -13,8 +13,8 @@
   "main": "lib/server.js",
   "scripts": {
     "build": "babel src -d lib --source-maps true",
-    "test": "jest \"./test/unit\"",
-    "test:integration": "jest \"./test/integration\"",
+    "test": "jest \"./test/unit\" \"./test/integration\"",
+    "test:system": "jest \"./test/system\"",
     "test:migration": "jest --runInBand \"./test/migrations\"",
     "docu": "node ./docu/docuGenerator.js",
     "pretest": "npm run lint",

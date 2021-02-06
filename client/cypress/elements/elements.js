@@ -49,12 +49,14 @@ const elements = {
       activeStoriesContainer: () => cy.get(tid('activeStories')),
       activeStoriesList: () => cy.get(tid('activeStories')).children(),
       firstStoryTrashButton: () =>
-        cy.get(tid('activeStories')).first().find(tid('trashStoryButton')),
+        cy.get(tid('activeStories')).children().eq(0).find(tid('trashStoryButton')),
 
       trashedStoriesContainer: () => cy.get(tid('trashedStories')),
       trashedStoriesList: () => cy.get(tid('trashedStories')).children(),
       firstTrashedStoryRestoreButton: () =>
         cy.get(tid('trashedStories')).first().find(tid('restoreStoryButton')),
+
+      activeWaitingStories: () => cy.get(tid('activeStories') + ' .waiting-spinner'),
 
       SelectedStory: {
         title: () => cy.get(tid('backlog', 'storySelected') + ' h4'),

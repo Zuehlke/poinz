@@ -17,6 +17,7 @@ import {
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
 import ApplauseHighlight from './ApplauseHighlight';
+import EstimationSummary from './EstimationSummary';
 
 /**
  * Displays
@@ -72,29 +73,33 @@ const EstimationArea = ({
       )}
 
       {revealed && (
-        <EstimationAreaButtons>
-          <button
-            type="button"
-            className="pure-button pure-button-primary"
-            onClick={() => newEstimationRound(selectedStory.id)}
-            data-testid="newRoundButton"
-          >
-            {t('newRound')}
-            <i className="icon-ccw button-icon-right"></i>
-          </button>
-
-          {hasNextStory && (
+        <React.Fragment>
+          <EstimationAreaButtons>
             <button
               type="button"
               className="pure-button pure-button-primary"
-              onClick={selectNextStory}
-              data-testid="nextStoryButton"
+              onClick={() => newEstimationRound(selectedStory.id)}
+              data-testid="newRoundButton"
             >
-              {t('nextStory')}
-              <i className="icon-right-big button-icon-right"></i>
+              {t('newRound')}
+              <i className="icon-ccw button-icon-right"></i>
             </button>
-          )}
-        </EstimationAreaButtons>
+
+            {hasNextStory && (
+              <button
+                type="button"
+                className="pure-button pure-button-primary"
+                onClick={selectNextStory}
+                data-testid="nextStoryButton"
+              >
+                {t('nextStory')}
+                <i className="icon-right-big button-icon-right"></i>
+              </button>
+            )}
+          </EstimationAreaButtons>
+
+          <EstimationSummary />
+        </React.Fragment>
       )}
 
       {userCanCurrentlyEstimate && <Cards />}

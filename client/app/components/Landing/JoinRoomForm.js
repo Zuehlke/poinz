@@ -12,7 +12,7 @@ import {
   StyledLandingDoubleButtonWrapper,
   StyledLandingForm
 } from './_styled';
-import {ROOM_ID_REGEX} from '../../services/frontendInputValidation';
+import {ROOM_ID_REGEX} from '../frontendInputValidation';
 import PasswordField from '../common/PasswordField';
 
 /**

@@ -68,6 +68,11 @@
   "newest": "Newest",
   "titleAtoZ": "Title A-Z",
   "titleZtoA": "Title Z-A",
-  "filter": "Filter..."
+  "withConsensusFirst": "With Consensus",
+  "withoutConsensusFirst": "Without Consensus",
+  "filter": "Filter...",
+  "estimationSummary": "Estimation Summary",
+  "consensusAchieved": "Consensus achieved!",
+  "usersEstimated": "%{count} of %{total} Users estimated"
 
 }

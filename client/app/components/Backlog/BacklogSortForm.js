@@ -18,7 +18,7 @@ export const sortings = {
     labelKey: 'oldest',
     comp: (sA, sB) => sA.createdAt - sB.createdAt
   },
-  titleAsceding: {
+  titleAscending: {
     id: 'titleAZ',
     labelKey: 'titleAtoZ',
     comp: (sA, sB) => sA.title.localeCompare(sB.title)
@@ -27,6 +27,32 @@ export const sortings = {
     id: 'titleZA',
     labelKey: 'titleZtoA',
     comp: (sA, sB) => sB.title.localeCompare(sA.title)
+  },
+  withConsensus: {
+    id: 'withConsensus',
+    labelKey: 'withConsensusFirst',
+    comp: (sA, sB) => {
+      if (sA.consensus && !sB.consensus) {
+        return -1;
+      } else if (sB.consensus && !sA.consensus) {
+        return 1;
+      } else {
+        return sortings.newestFirst.comp(sA, sB);
+      }
+    }
+  },
+  withoutConsensus: {
+    id: 'withoutConsensus',
+    labelKey: 'withoutConsensusFirst',
+    comp: (sA, sB) => {
+      if (sA.consensus && !sB.consensus) {
+        return 1;
+      } else if (sB.consensus && !sA.consensus) {
+        return -1;
+      } else {
+        return sB.createdAt - sA.createdAt;
+      }
+    }
   }
 };
 

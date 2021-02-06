@@ -1,7 +1,7 @@
 ### 0.10.0: 2021-02-06
 
-* Estimation Summary: After a story is revealed, show how many users estimated, which cards were used and how often.
-* If a new room is created, a default sample story is already added automatically. This allows to start estimating right away.
+* Estimation Summary: After a story is revealed, show how many users estimated, which cards were used and how often. (thanks to @gotdibbs for the suggestion)
+* If a new room is created, a default sample story is already added automatically. This allows to start estimating right away. (thanks to @gotdibbs for the suggestion)
 * Added additional sorting option in backlog:  stories with consensus first vs. stories without consensus first
 * Updated dependencies
 

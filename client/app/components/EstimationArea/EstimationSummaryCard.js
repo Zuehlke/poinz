@@ -11,7 +11,7 @@ const EstimationSummaryCard = ({cardCfg, count}) => {
     <StyledEstmSummCard>
       <StyledEstmSummCardInner wasEstimated={!!count} cardColor={cardCfg.color}>
         {cardCfg.label}
-        {count && <span>{count}x</span>}
+        {count && <span>{count}</span>}
       </StyledEstmSummCardInner>
     </StyledEstmSummCard>
   );

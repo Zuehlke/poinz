@@ -118,13 +118,14 @@ export const StyledEstmSummCardInner = styled(StyledCardInner)`
   > span {
     display: block;
     position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: 30%;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 0 0 9px 9px;
-    font-size: 80%;
-    padding: 1px 0 0 0;
+    top: 0px;
+    right: 0px;
+    width: 40%;
+    height: 32%;
+    background: #ff820a;
+    border-radius: 0 9px 0 100%;
+    font-size: 67%;
+    padding: 2px 0 0 7px;
     box-sizing: border-box;
   }
 

@@ -50,12 +50,10 @@ EstimationSummary.propTypes = {
   hasConsensus: PropTypes.bool
 };
 
-export default connect(
-  (state) => ({
-    t: state.translator,
-    estimations: getEstimationsForCurrentlySelectedStory(state),
-    usersInRoomCount: getUserCount(state),
-    cardConfig: state.cardConfig,
-    hasConsensus: hasSelectedStoryConsensus(state)
-  })
-)(EstimationSummary);
+export default connect((state) => ({
+  t: state.translator,
+  estimations: getEstimationsForCurrentlySelectedStory(state),
+  usersInRoomCount: getUserCount(state),
+  cardConfig: state.cardConfig,
+  hasConsensus: hasSelectedStoryConsensus(state)
+}))(EstimationSummary);

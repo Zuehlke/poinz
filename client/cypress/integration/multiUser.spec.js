@@ -40,10 +40,8 @@ it('multi user estimation', function () {
   // now we have two users in the room and can do a real estimation round :)
   cy.get(tid('users')).find('[data-testid="user"]').should('have.length', 2);
 
-  // add two stories
+  //  add an additional story
   Room.Backlog.StoryAddForm.titleField().type(this.stories[0].title);
-  Room.Backlog.StoryAddForm.addButton().click();
-  Room.Backlog.StoryAddForm.titleField().type(this.stories[2].title);
   Room.Backlog.StoryAddForm.addButton().click();
 
   // our user estimates... nothing is auto-revealed, other user did not estimate so far
@@ -55,6 +53,7 @@ it('multi user estimation', function () {
   cy.get(tid('estimationCard.8')).click();
 
   // get the story id from the selected story node in the DOM
+  // this is still the sample story ("Welcome")
   cy.get(tid('storySelected'))
     .should('have.attr', 'id')
     .then((theStoryElementId) => {
@@ -99,6 +98,6 @@ it('multi user estimation', function () {
 
       cy.get(tid('nextStoryButton')).click();
 
-      cy.get(tid('estimationArea', 'story')).contains(this.stories[2].title);
+      cy.get(tid('estimationArea', 'story')).contains(this.stories[0].title);
     });
 });

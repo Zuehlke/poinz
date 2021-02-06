@@ -12,7 +12,7 @@ import getEstimationSummary from '../../services/getEstimationSummary';
 import EstimationSummaryCard from './EstimationSummaryCard';
 
 /**
- * One estimation card on the board.
+ * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
 const EstimationSummary = ({t, estimations, usersInRoomCount, cardConfig, hasConsensus}) => {
   const summary = getEstimationSummary(estimations);

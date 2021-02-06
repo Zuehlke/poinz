@@ -107,9 +107,9 @@ describe('REST endpoint', () => {
 
     expect(statusCode).toBe(200);
     expect(body).toMatchObject({
-      roomId,
-      stories: []
+      roomId
     });
+    expect(body.stories.length).toBe(1);
   });
 
   test('should export room with pw protection as json', async () => {
@@ -136,9 +136,9 @@ describe('REST endpoint', () => {
 
     expect(statusCode).toBe(200);
     expect(body).toMatchObject({
-      roomId,
-      stories: []
+      roomId
     });
+    expect(body.stories.length).toBe(1);
   });
 
   test('should not allow export room with pw protection with invalid token', async () => {
@@ -186,7 +186,17 @@ describe('REST endpoint', () => {
     const roomId = uuid();
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 3);
+    const eventsFromJoin = await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 5);
+
+    await client.cmdAndWait(
+      client.cmds.trashStory(roomId, userId, eventsFromJoin[3].payload.storyId),
+      1
+    );
+    await client.cmdAndWait(
+      client.cmds.deleteStory(roomId, userId, eventsFromJoin[3].payload.storyId),
+      1
+    );
+
     const [storyAdded] = await client.cmdAndWait(
       client.cmds.addStory(roomId, userId, 'test-story'),
       2

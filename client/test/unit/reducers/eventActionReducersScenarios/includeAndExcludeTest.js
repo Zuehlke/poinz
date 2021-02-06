@@ -19,7 +19,7 @@ test('Exclude and Include', () => {
       roomId: events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 8) // up until first "toggle" -> "excludedFromEstimations"
+    events.slice(0, 10) // up until first "toggle" -> "excludedFromEstimations"
   );
 
   expect(modifiedState.users[joinedEvtOne.userId]).toEqual({
@@ -30,7 +30,7 @@ test('Exclude and Include', () => {
     username: 'Jim'
   });
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[8]]);
+  modifiedState = reduceMultipleEvents(modifiedState, [events[10]]);
 
   expect(modifiedState.users[joinedEvtOne.userId]).toEqual({
     avatar: 0,

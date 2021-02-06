@@ -19,12 +19,12 @@ test('Exclude and Include', () => {
       roomId: events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 6) // up until first "passwordSet"
+    events.slice(0, 8) // up until first "passwordSet"
   );
 
   expect(modifiedState.passwordProtected).toBe(true);
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[6]]); // process "passwordCleared" event
+  modifiedState = reduceMultipleEvents(modifiedState, [events[8]]); // process "passwordCleared" event
 
   expect(modifiedState.passwordProtected).toBe(false);
 });

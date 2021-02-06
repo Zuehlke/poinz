@@ -11,9 +11,11 @@ beforeAll(async () => {
 test('Adding Stories', async () => {
   let modifiedState;
 
+  // [0=>roomCreated, 1=>joinedRoom, 2=>avatarSet, 3=>storyAdded, 4=>storySelected, 5=>joinedRoom, 6=>avatarSet, 7=>usernameSet, 8=>usernameSet, 9=>storyAdded, 10=>storyAdded, 11=>storyChanged, 12=>storyChanged, 13=>storyTrashed, 14=>storyRestored, 15=>storyTrashed, 16=>storyDeleted]
+
   const joinedEvtOne = events[1];
-  const addedEvtOne = events[7];
-  const addedEvtTwo = events[9];
+  const addedEvtOne = events[9];
+  const addedEvtTwo = events[10];
 
   modifiedState = reduceMultipleEvents(
     {
@@ -21,24 +23,22 @@ test('Adding Stories', async () => {
       roomId: events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 10) // we use not all events, only the first 10 events until both stories are added
+    events.slice(0, 11) // we don't need all events, only the first 12 events until both stories are added
   );
-  expect(modifiedState.selectedStory).toEqual(addedEvtOne.payload.storyId);
-  expect(modifiedState.stories).toEqual({
-    // .stories is correctly stored as object. storyIds are the keys.
-    // no "estimations" on stories. are stored seperately on state
-    [addedEvtOne.payload.storyId]: {
-      id: addedEvtOne.payload.storyId,
-      title: addedEvtOne.payload.title,
-      description: addedEvtOne.payload.description,
-      createdAt: addedEvtOne.payload.createdAt
-    },
-    [addedEvtTwo.payload.storyId]: {
-      id: addedEvtTwo.payload.storyId,
-      title: addedEvtTwo.payload.title,
-      description: addedEvtTwo.payload.description,
-      createdAt: addedEvtTwo.payload.createdAt
-    }
+
+  // stories are correctly stored as object. storyIds are the keys.
+  // no "estimations" on stories. estimations are stored seperately on state
+  expect(modifiedState.stories[addedEvtOne.payload.storyId]).toEqual({
+    id: addedEvtOne.payload.storyId,
+    title: addedEvtOne.payload.title,
+    description: addedEvtOne.payload.description,
+    createdAt: addedEvtOne.payload.createdAt
+  });
+  expect(modifiedState.stories[addedEvtTwo.payload.storyId]).toEqual({
+    id: addedEvtTwo.payload.storyId,
+    title: addedEvtTwo.payload.title,
+    description: addedEvtTwo.payload.description,
+    createdAt: addedEvtTwo.payload.createdAt
   });
 });
 
@@ -47,8 +47,8 @@ test('Editing Stories', async () => {
 
   const joinedEvtOne = events[1];
 
-  const addedEvtOne = events[7];
-  const addedEvtTwo = events[9];
+  const addedEvtOne = events[9];
+  const addedEvtTwo = events[10];
 
   const changedEvtOne = events[11];
   const changedEvtTwo = events[12];
@@ -59,24 +59,23 @@ test('Editing Stories', async () => {
       roomId: events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 13) // we use not all events, only the first 13 events until both stories are edited (changed)
+    events.slice(0, 13) // we don't need all events,  only the first 13 events until both stories are edited (changed)
   );
-  expect(modifiedState.selectedStory).toEqual(addedEvtTwo.payload.storyId);
-  expect(modifiedState.stories).toEqual({
-    [addedEvtOne.payload.storyId]: {
-      id: addedEvtOne.payload.storyId,
-      title: changedEvtOne.payload.title,
-      description: changedEvtOne.payload.description,
-      createdAt: addedEvtOne.payload.createdAt,
-      editMode: false
-    },
-    [addedEvtTwo.payload.storyId]: {
-      id: addedEvtTwo.payload.storyId,
-      title: changedEvtTwo.payload.title,
-      description: changedEvtTwo.payload.description,
-      createdAt: addedEvtTwo.payload.createdAt,
-      editMode: false
-    }
+
+  expect(modifiedState.stories[addedEvtOne.payload.storyId]).toEqual({
+    id: addedEvtOne.payload.storyId,
+    title: changedEvtOne.payload.title,
+    description: changedEvtOne.payload.description,
+    createdAt: addedEvtOne.payload.createdAt,
+    editMode: false
+  });
+
+  expect(modifiedState.stories[addedEvtTwo.payload.storyId]).toEqual({
+    id: addedEvtTwo.payload.storyId,
+    title: changedEvtTwo.payload.title,
+    description: changedEvtTwo.payload.description,
+    createdAt: addedEvtTwo.payload.createdAt,
+    editMode: false
   });
 });
 
@@ -84,8 +83,8 @@ test('Trashing, Restoring and Deleting stories', () => {
   let modifiedState;
 
   const joinedEvtOne = events[1];
-  const addedEvtOne = events[7];
-  const addedEvtTwo = events[9];
+  const addedEvtOne = events[9];
+  const addedEvtTwo = events[10];
 
   modifiedState = reduceMultipleEvents(
     {
@@ -93,22 +92,20 @@ test('Trashing, Restoring and Deleting stories', () => {
       roomId: events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 15) // up until trashed+selected
+    events.slice(0, 14) // up until trashed
   );
   expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(true);
   expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
-  expect(modifiedState.selectedStory).toEqual(addedEvtOne.payload.storyId);
 
   modifiedState = reduceMultipleEvents(
     modifiedState,
-    events.slice(15, 16) // restored event
+    [events[14]] // restored event
   );
   expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
   expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 
-  modifiedState = reduceMultipleEvents(modifiedState, events.slice(16, 19));
+  modifiedState = reduceMultipleEvents(modifiedState, events.slice(15, 17)); // trashed & deleted event
   expect(modifiedState.stories[addedEvtOne.payload.storyId]).toBeUndefined(); // story is removed completely
 
   expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
-  expect(modifiedState.selectedStory).toEqual(addedEvtTwo.payload.storyId);
 });

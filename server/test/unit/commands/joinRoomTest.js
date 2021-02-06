@@ -31,7 +31,9 @@ test('nonexisting room', async () => {
     'joinedRoom',
     'usernameSet',
     'emailSet',
-    'avatarSet'
+    'avatarSet',
+    'storyAdded', // #164 when creating a new room, a sample story is added by default
+    'storySelected'
   );
   const [
     roomCreatedEvent,
@@ -88,10 +90,11 @@ test('nonexisting room', async () => {
         username: 'tester'
       }
     ],
-    stories: [],
     autoReveal: true
     // and some timestamps properties: created, lastActivity
   });
+  expect(room.stories.length).toBe(1);
+  expect(room.selectedStory).toBeDefined();
 
   expect(room.cardConfig).toBeUndefined(); // do not store default card config on room
 
@@ -301,7 +304,9 @@ test('space in custom room id', async () => {
     'joinedRoom',
     'usernameSet',
     'emailSet',
-    'avatarSet'
+    'avatarSet',
+    'storyAdded',
+    'storySelected'
   );
   const [roomCreatedEvent, joinedRoomEvent] = producedEvents;
 
@@ -408,7 +413,9 @@ test('nonexisting room : create room with password', async () => {
     'tokenIssued',
     'usernameSet',
     'emailSet',
-    'avatarSet'
+    'avatarSet',
+    'storyAdded',
+    'storySelected'
   );
   const [roomCreatedEvent, joinedRoomEvent, tokenIssuedEvent] = producedEvents;
 
@@ -470,14 +477,14 @@ test('existing room with password : match cleartext pw', async () => {
 });
 
 test('existing room with password : match token', async () => {
-  // we need to create the room by "joinRoom" command, we need the tokenIssued event...
+  // we cannot create an empty room and just manipulate and set password,
+  // we need the tokenIssued event payload -> create the room with custom "joinRoom" command
   const {processor} = prepEmpty();
 
   const roomId = uuid();
   const commandId = uuid();
   const userId = uuid();
 
-  // join and create on the fly
   const {producedEvents} = await processor(
     {
       id: commandId,
@@ -489,15 +496,6 @@ test('existing room with password : match token', async () => {
       }
     },
     userId
-  );
-  expect(producedEvents).toMatchEvents(
-    commandId,
-    roomId,
-    'roomCreated',
-    'joinedRoom',
-    'tokenIssued',
-    'usernameSet',
-    'avatarSet'
   );
   const tokenIssuedEvent = producedEvents[2];
 

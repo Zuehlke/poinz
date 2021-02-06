@@ -12,13 +12,13 @@ beforeAll(async () => {
 test('You join an existing room', () => {
   let modifiedState;
 
-  const otherJoinEvent = events[2];
-  const otherUserId = otherJoinEvent.userId;
+  const otherUserJoinedEvent = events[2];
+  const otherUserId = otherUserJoinedEvent.userId;
 
   const ourJoinEvent = events[9];
   const ourUserId = ourJoinEvent.userId;
 
-  const storyAddedEvent = events[4];
+  const storyAddedEvent = events[3];
   const storyId = storyAddedEvent.payload.storyId;
 
   modifiedState = reduceMultipleEvents(
@@ -122,14 +122,14 @@ test('You in a room, other user joins ', () => {
 
 test('You join an existing room, the other leaves', () => {
   let modifiedState;
-
+  // [0=>roomCreated, 1=>joinedRoom, 2=>avatarSet, 3=>storyAdded, 4=>storySelected, 5=>usernameSet, 6=>storyEstimateGiven, 7=>revealed, 8=>consensusAchieved, 9=>joinedRoom, 10=>avatarSet, 11=>usernameSet, 12=>emailSet, 13=>leftRoom]
   const otherJoinEvent = events[1];
   const otherUserId = otherJoinEvent.userId;
 
   const ourJoinEvent = events[9];
   const ourUserId = ourJoinEvent.userId;
 
-  const storyAddedEvent = events[4];
+  const storyAddedEvent = events[3];
   const storyId = storyAddedEvent.payload.storyId;
 
   modifiedState = reduceMultipleEvents(
@@ -154,6 +154,7 @@ test('You join an existing room, the other leaves', () => {
   expect(modifiedState.stories).toEqual({
     [storyId]: {
       title: storyAddedEvent.payload.title,
+      description: storyAddedEvent.payload.description,
       id: storyId,
       consensus: 4,
       revealed: true,

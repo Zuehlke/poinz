@@ -1,3 +1,5 @@
+import {v4 as uuid} from 'uuid';
+
 import defaultCardConfig from '../defaultCardConfig';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
@@ -115,6 +117,18 @@ function joinNewRoom(room, command, userId) {
   room.applyEvent('avatarSet', {
     avatar
   });
+
+  // it's a completely new room, add our sample/placeholder story with simple instructions / quick start
+  const sampleStoryId = uuid();
+  room.applyEvent('storyAdded', {
+    createdAt: Date.now(),
+    storyId: sampleStoryId,
+    title: 'Welcome to your PoinZ Room!',
+    description:
+      'This is a sample story, we already created for you.\n\n- On the left, you can edit your stories and add new ones.\n- Below you can give your estimation by clicking on a card\n- Invite your team mates by sharing the url with them',
+    estimations: {}
+  });
+  room.applyEvent('storySelected', {storyId: sampleStoryId});
 }
 
 function joinExistingRoom(room, command, userId) {

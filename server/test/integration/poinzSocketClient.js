@@ -55,9 +55,9 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
    * Wait for events to arrive over the websocket that correlate to a command you just sent.
    * Specify how many events you expect (one command can produce multiple events in the backend...).
    *
-   * Will resolve as soon as the specified number of events with the matching correlation id did arrive (were received).
+   * Will resolve as soon as the specified number of events with the matching correlationId did arrive (were received).
    *
-   * @param {string}correlationId
+   * @param {string} correlationId
    * @param {number} expectedEventCount
    * @return {Promise<object[]>} Resolves to the array of received events
    */

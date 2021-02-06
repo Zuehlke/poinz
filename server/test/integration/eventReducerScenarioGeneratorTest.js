@@ -27,7 +27,7 @@ test('backlogModifyingTest: Adding Stories, editing them, trash/restore and dele
   const firstUserId = uuid();
   const secondUserId = uuid();
 
-  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 5);
 
   await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId), 2);
 
@@ -38,15 +38,11 @@ test('backlogModifyingTest: Adding Stories, editing them, trash/restore and dele
   // both users add one story each
   const [storyAddedOne] = await client.cmdAndWait(
     client.cmds.addStory(roomId, firstUserId, 'ISSUE-SUPER-2', 'This is a story'),
-    2 // storyAdded and storySelected
+    1 // just storyAdded, the room contains the sample story already
   );
 
   const [storyAddedTwo] = await client.cmdAndWait(
     client.cmds.addStory(roomId, secondUserId, 'ISSUE-SUPER-5', 'This is a second story')
-  );
-
-  await client.cmdAndWait(
-    client.cmds.selectStory(roomId, secondUserId, storyAddedTwo.payload.storyId)
   );
 
   // now edit them
@@ -72,7 +68,7 @@ test('backlogModifyingTest: Adding Stories, editing them, trash/restore and dele
 
   await client.cmdAndWait(
     client.cmds.trashStory(roomId, firstUserId, storyAddedTwo.payload.storyId),
-    2 // trashed and selected (the other, still active story)
+    1 // trashed
   );
 
   await client.cmdAndWait(
@@ -101,7 +97,7 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   const firstUserId = uuid();
   const secondUserId = uuid();
 
-  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 5);
 
   await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId), 2);
 
@@ -112,13 +108,15 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   // first user adds two stories
   const [storyAddedOne] = await client.cmdAndWait(
     client.cmds.addStory(roomId, firstUserId, 'ISSUE-SUPER-2', 'This is a story'),
-    2 // storyAdded and storySelected
+    1 // just storyAdded, room contains sample story already
   );
   const storyIdOne = storyAddedOne.payload.storyId;
 
   await client.cmdAndWait(
     client.cmds.addStory(roomId, firstUserId, 'ISSUE-SUPER-5', 'This is a second story')
   );
+
+  await client.cmdAndWait(client.cmds.selectStory(roomId, secondUserId, storyIdOne));
 
   // first user estimates first story
   await client.cmdAndWait(client.cmds.giveEstimate(roomId, firstUserId, storyIdOne, 3));
@@ -152,17 +150,15 @@ test('disconnectAndKickTest: two users, one disconnects, kick him', async () => 
   const firstUserId = uuid();
   const secondUserId = uuid();
 
-  await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 3);
+  const eventsFromJoin = await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 5);
   await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
 
   await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
   await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
 
-  // second user adds a story and estimates it
-  const [storyAdded] = await clientB.cmdAndWait(
-    clientB.cmds.addStory(roomId, secondUserId, 'ISSUE-SUPER-2'),
-    2 // added and selected
-  );
+  // second user estimates default (sample) story
+
+  const storyAdded = eventsFromJoin[3];
   await clientB.cmdAndWait(
     clientB.cmds.giveEstimate(roomId, secondUserId, storyAdded.payload.storyId, 8)
   );
@@ -200,14 +196,11 @@ test('joinAndLeave ', async () => {
   const secondUserId = uuid();
 
   // first user joins, adds story, estimates it alone
-  await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 3);
+  const firstJoinEvents = await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 5);
   await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
-  const [storyAdded] = await clientA.cmdAndWait(
-    clientA.cmds.addStory(roomId, firstUserId, 'A super story'),
-    2
-  );
+
   await clientA.cmdAndWait(
-    clientA.cmds.giveEstimate(roomId, firstUserId, storyAdded.payload.storyId, 4),
+    clientA.cmds.giveEstimate(roomId, firstUserId, firstJoinEvents[3].payload.storyId, 4),
     3 // given, revealed, consensus
   );
 

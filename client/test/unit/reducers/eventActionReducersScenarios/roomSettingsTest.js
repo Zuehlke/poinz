@@ -12,7 +12,7 @@ test('cardConfig', () => {
   let modifiedState;
 
   const joinedEvtOne = events[1];
-  const cardConfigSetEvent = events[4];
+  const cardConfigSetEvent = events[6];
 
   modifiedState = reduceMultipleEvents(
     {
@@ -37,13 +37,13 @@ test('autoReveal', () => {
       roomId: events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 5)
+    events.slice(0, 7) // up until before first toggle
   );
-  expect(modifiedState.autoReveal).toBe(true);
+  expect(modifiedState.autoReveal).toBe(true); // default is true
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[5]]);
+  modifiedState = reduceMultipleEvents(modifiedState, [events[7]]); // autoRevealOff
   expect(modifiedState.autoReveal).toBe(false);
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[6]]);
+  modifiedState = reduceMultipleEvents(modifiedState, [events[8]]); // autoRevealOn
   expect(modifiedState.autoReveal).toBe(true);
 });

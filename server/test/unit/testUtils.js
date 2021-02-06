@@ -80,6 +80,13 @@ export function prepEmpty() {
   return {mockRoomsStore, processor};
 }
 
+const removeSampleStoryFromRoom = (mockRoomsStore) =>
+  mockRoomsStore.manipulate((rm) => {
+    rm.stories = [];
+    rm.selectedStory = undefined;
+    return rm;
+  });
+
 /**
  * create mock room store with one user in one room
  */
@@ -99,6 +106,8 @@ export async function prepOneUserInOneRoom(username = 'firstUser') {
     },
     userId
   );
+
+  removeSampleStoryFromRoom(mockRoomsStore);
 
   return {userId, roomId, processor, mockRoomsStore};
 }
@@ -176,6 +185,8 @@ export async function prepTwoUsersInOneRoomWithOneStory(
     },
     userIdOne
   );
+
+  removeSampleStoryFromRoom(mockRoomsStore);
 
   await processor(
     {

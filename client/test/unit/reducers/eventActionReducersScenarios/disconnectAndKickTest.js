@@ -12,8 +12,8 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
   let modifiedState;
 
   const joinedEvtOne = events[1];
-  const joinedEvtTwo = events[4];
-  const addedEvt = events[7];
+  const joinedEvtTwo = events[6];
+  const addedEvt = events[3];
 
   modifiedState = reduceMultipleEvents(
     {

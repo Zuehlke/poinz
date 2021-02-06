@@ -2,26 +2,30 @@ import initialState from '../../../../app/store/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 
-let events;
+let scenario;
 
 beforeAll(async () => {
-  events = await loadEventsFromJson('disconnectAndKickTest.json');
+  scenario = await loadEventsFromJson('disconnectAndKickTest.json');
+});
+
+beforeEach(() => {
+  scenario.reset();
 });
 
 test('Two users in a room, the other one disconnects, then you kick him', () => {
   let modifiedState;
 
-  const joinedEvtOne = events[1];
-  const joinedEvtTwo = events[6];
-  const addedEvt = events[3];
+  const joinedEvtOne = scenario.events[1];
+  const joinedEvtTwo = scenario.events[6];
+  const addedEvt = scenario.events[3];
 
   modifiedState = reduceMultipleEvents(
     {
       ...initialState(),
-      roomId: events[0].roomId,
+      roomId: scenario.events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 11) // up until "connectionLost"
+    scenario.getNextEvents(11) // up until "connectionLost"
   );
 
   // in contrast to "roomLeft",  on "connectionLost", user object stays. is marked as disconnected
@@ -38,7 +42,7 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
     [joinedEvtTwo.userId]: 8
   });
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[11]]);
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
 
   // now only our own user is left
   expect(modifiedState.users).toEqual({

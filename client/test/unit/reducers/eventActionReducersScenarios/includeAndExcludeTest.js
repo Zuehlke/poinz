@@ -2,24 +2,28 @@ import initialState from '../../../../app/store/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 
-let events;
+let scenario;
 
 beforeAll(async () => {
-  events = await loadEventsFromJson('includeAndExcludeTest.json');
+  scenario = await loadEventsFromJson('includeAndExcludeTest.json');
+});
+
+beforeEach(() => {
+  scenario.reset();
 });
 
 test('Exclude and Include', () => {
   let modifiedState;
 
-  const joinedEvtOne = events[1];
+  const joinedEvtOne = scenario.events[1];
 
   modifiedState = reduceMultipleEvents(
     {
       ...initialState(),
-      roomId: events[0].roomId,
+      roomId: scenario.events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 10) // up until first "toggle" -> "excludedFromEstimations"
+    scenario.getNextEvents(10) // up until first "toggle" -> "excludedFromEstimations"
   );
 
   expect(modifiedState.users[joinedEvtOne.userId]).toEqual({
@@ -30,7 +34,7 @@ test('Exclude and Include', () => {
     username: 'Jim'
   });
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[10]]);
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
 
   expect(modifiedState.users[joinedEvtOne.userId]).toEqual({
     avatar: 0,

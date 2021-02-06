@@ -2,29 +2,33 @@ import initialState from '../../../../app/store/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 
-let events;
+let scenario;
 
 beforeAll(async () => {
-  events = await loadEventsFromJson('resetAndClearPasswordTest.json');
+  scenario = await loadEventsFromJson('resetAndClearPasswordTest.json');
 });
 
-test('Exclude and Include', () => {
+beforeEach(() => {
+  scenario.reset();
+});
+
+test('Reset password and clear', () => {
   let modifiedState;
 
-  const joinedEvtOne = events[1];
+  const joinedEvtOne = scenario.events[1];
 
   modifiedState = reduceMultipleEvents(
     {
       ...initialState(),
-      roomId: events[0].roomId,
+      roomId: scenario.events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 8) // up until first "passwordSet"
+    scenario.getNextEvents(8) // up until first "passwordSet"
   );
 
   expect(modifiedState.passwordProtected).toBe(true);
 
-  modifiedState = reduceMultipleEvents(modifiedState, [events[8]]); // process "passwordCleared" event
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // process "passwordCleared" event
 
   expect(modifiedState.passwordProtected).toBe(false);
 });

@@ -2,28 +2,30 @@ import initialState from '../../../../app/store/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 
-let events;
+let scenario;
 
 beforeAll(async () => {
-  events = await loadEventsFromJson('backlogModifyingTest.json');
+  scenario = await loadEventsFromJson('backlogModifyingTest.json');
+});
+
+beforeEach(() => {
+  scenario.reset();
 });
 
 test('Adding Stories', async () => {
   let modifiedState;
 
-  // [0=>roomCreated, 1=>joinedRoom, 2=>avatarSet, 3=>storyAdded, 4=>storySelected, 5=>joinedRoom, 6=>avatarSet, 7=>usernameSet, 8=>usernameSet, 9=>storyAdded, 10=>storyAdded, 11=>storyChanged, 12=>storyChanged, 13=>storyTrashed, 14=>storyRestored, 15=>storyTrashed, 16=>storyDeleted]
-
-  const joinedEvtOne = events[1];
-  const addedEvtOne = events[9];
-  const addedEvtTwo = events[10];
+  const joinedEvtOne = scenario.events[1];
+  const addedEvtOne = scenario.events[9];
+  const addedEvtTwo = scenario.events[10];
 
   modifiedState = reduceMultipleEvents(
     {
       ...initialState(),
-      roomId: events[0].roomId,
+      roomId: scenario.events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 11) // we don't need all events, only the first 12 events until both stories are added
+    scenario.getNextEvents(11) // we don't need all events, only the first 12 events until both stories are added
   );
 
   // stories are correctly stored as object. storyIds are the keys.
@@ -45,21 +47,21 @@ test('Adding Stories', async () => {
 test('Editing Stories', async () => {
   let modifiedState;
 
-  const joinedEvtOne = events[1];
+  const joinedEvtOne = scenario.events[1];
 
-  const addedEvtOne = events[9];
-  const addedEvtTwo = events[10];
+  const addedEvtOne = scenario.events[9];
+  const addedEvtTwo = scenario.events[10];
 
-  const changedEvtOne = events[11];
-  const changedEvtTwo = events[12];
+  const changedEvtOne = scenario.events[11];
+  const changedEvtTwo = scenario.events[12];
 
   modifiedState = reduceMultipleEvents(
     {
       ...initialState(),
-      roomId: events[0].roomId,
+      roomId: scenario.events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 13) // we don't need all events,  only the first 13 events until both stories are edited (changed)
+    scenario.getNextEvents(13) // we don't need all events,  only the first 13 events until both stories are edited (changed)
   );
 
   expect(modifiedState.stories[addedEvtOne.payload.storyId]).toEqual({
@@ -82,29 +84,26 @@ test('Editing Stories', async () => {
 test('Trashing, Restoring and Deleting stories', () => {
   let modifiedState;
 
-  const joinedEvtOne = events[1];
-  const addedEvtOne = events[9];
-  const addedEvtTwo = events[10];
+  const joinedEvtOne = scenario.events[1];
+  const addedEvtOne = scenario.events[9];
+  const addedEvtTwo = scenario.events[10];
 
   modifiedState = reduceMultipleEvents(
     {
       ...initialState(),
-      roomId: events[0].roomId,
+      roomId: scenario.events[0].roomId,
       pendingJoinCommandId: joinedEvtOne.correlationId
     },
-    events.slice(0, 14) // up until trashed
+    scenario.getNextEvents(14) // up until trashed
   );
   expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(true);
   expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 
-  modifiedState = reduceMultipleEvents(
-    modifiedState,
-    [events[14]] // restored event
-  );
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // restored event
   expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
   expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 
-  modifiedState = reduceMultipleEvents(modifiedState, events.slice(15, 17)); // trashed & deleted event
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getNextEvents(2)); // trashed & deleted event
   expect(modifiedState.stories[addedEvtOne.payload.storyId]).toBeUndefined(); // story is removed completely
 
   expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);

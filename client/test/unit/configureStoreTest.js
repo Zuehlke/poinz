@@ -1,4 +1,4 @@
-import configureStore from '../../app/store/configureStore';
+import configureStore from '../../app/state/configureStore';
 
 test('should return a correctly configured store', () => {
   const store = configureStore();

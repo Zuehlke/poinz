@@ -2,9 +2,9 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {isAStorySelected} from '../../state/selectors/storiesAndEstimates';
 import Help from '../Help/Help';
 import FeedbackHint from './FeedbackHint';
-import {isAStorySelected} from '../../services/selectors';
 import Estimation from '../EstimationArea/EstimationArea';
 import Settings from '../Settings/Settings';
 import Users from '../Users/Users';

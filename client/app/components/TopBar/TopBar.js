@@ -2,14 +2,17 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {getOwnUsername} from '../../state/selectors/users';
 import {
   toggleBacklog,
   toggleSidebar,
-  leaveRoom,
   SIDEBAR_HELP,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_SETTINGS
-} from '../../actions';
+} from '../../state/actions/uiStateActions';
+
+import {leaveRoom} from '../../state/actions/commandActions';
+
 import {
   StyledBacklogToggle,
   StyledBacklogToggleIcon,
@@ -23,7 +26,6 @@ import {
   StyledWhoAmISimple,
   StyledIconExclamation
 } from './_styled';
-import {getOwnUsername} from '../../services/selectors';
 
 const TopBar = ({
   t,

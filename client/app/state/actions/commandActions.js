@@ -1,35 +1,15 @@
 import {v4 as uuid} from 'uuid';
-import log from 'loglevel';
 
-import history from '../services/getBrowserHistory';
-import appConfig from '../services/appConfig';
+import {findNextStoryIdToEstimate} from '../selectors/storiesAndEstimates';
+import readDroppedFile from '../../services/readDroppedFile';
+import appConfig from '../../services/appConfig';
+import history from '../../services/getBrowserHistory';
 
-import {
-  LOCATION_CHANGED,
-  TOGGLE_BACKLOG,
-  TOGGLE_SIDEBAR,
-  EDIT_STORY,
-  HIGHLIGHT_STORY,
-  CANCEL_EDIT_STORY,
-  STATUS_FETCHED,
-  SET_LANGUAGE,
-  EVENT_RECEIVED,
-  EVENT_ACTION_TYPES,
-  HIDE_NEW_USER_HINTS,
-  SHOW_TRASH,
-  HIDE_TRASH,
-  TOGGLE_MARK_FOR_KICK,
-  ROOM_STATE_FETCHED
-} from './types';
+/* TYPES */
+export const COMMAND_SENT = 'COMMAND_SENT';
+export const LOCATION_CHANGED = 'LOCATION_CHANGED';
 
-import clientSettingsStore from '../store/clientSettingsStore';
-import readDroppedFile from '../services/readDroppedFile';
-import findNextStoryIdToEstimate from '../services/findNextStoryIdToEstimate';
-import {getRoom} from '../services/roomService';
-import {getAppStatus} from '../services/appStatusService';
-
-const isRoomIdGivenInPathname = (pathname) =>
-  pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
+/* ACTION CREATORS */
 
 /**
  * Store current pathname in our redux store, join or leave room if necessary
@@ -51,6 +31,8 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
     pathname
   });
 };
+const isRoomIdGivenInPathname = (pathname) =>
+  pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
 
 export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
   const roomId = getState().roomId;
@@ -61,44 +43,6 @@ export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
     joinRoom(roomId)(dispatch, getState, sendCommand);
   }
 };
-
-/**
- *
- * @param event
- */
-export const eventReceived = (event) => (dispatch, getState) => {
-  const matchingType = EVENT_ACTION_TYPES[event.name];
-  if (!matchingType) {
-    log.error(`Unknown incoming event type ${event.name}. Will not dispatch a specific action.`);
-    return;
-  }
-
-  // dispatch generic "event_received" action
-  dispatch({
-    type: EVENT_RECEIVED,
-    eventName: event.name,
-    correlationId: event.correlationId
-  });
-
-  // dispatch the specific event action
-  dispatch({
-    event,
-    type: matchingType
-  });
-
-  if (event.name === 'joinedRoom') {
-    history.push('/' + event.roomId);
-  }
-
-  if (matchingType === EVENT_ACTION_TYPES.commandRejected) {
-    tryToRecoverOnRejection(event, dispatch, getState);
-  }
-};
-
-/**
- * Our actions contain our client-side business logic. (when to send which command).
- * They produce commands and pass them to the hub for sending.
- */
 
 export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) => {
   const normalizedRoomId = roomId ? roomId.toLowerCase() : uuid();
@@ -134,6 +78,15 @@ export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) 
   }
 
   sendCommand(joinCommand);
+};
+
+/*
+ * technically not a "commandAction". but fits best in this file.
+ */
+export const leaveRoom = () => () => {
+  // we only need to navigate to the landing page
+  // locationChanged will trigger sending "leaveRoom" command to backend
+  history.push('/');
 };
 
 export const addStory = (storyTitle, storyDescription) => (dispatch, getState, sendCommand) => {
@@ -174,28 +127,25 @@ export const selectNextStory = () => (dispatch, getState, sendCommand) => {
   }
 };
 
-export const giveStoryEstimate = (storyId, value) => (dispatch, getState, sendCommand) => {
+export const giveStoryEstimate = (value) => (dispatch, getState, sendCommand) => {
   const state = getState();
-
-  const command = {
+  sendCommand({
+    name: 'giveStoryEstimate',
     payload: {
-      value: value,
-      storyId: storyId
+      storyId: state.selectedStory,
+      value
     }
-  };
+  });
+};
 
-  if (
-    state.estimations &&
-    state.estimations[storyId] &&
-    state.estimations[storyId][state.userId] === value
-  ) {
-    command.name = 'clearStoryEstimate';
-    delete command.payload.value;
-  } else {
-    command.name = 'giveStoryEstimate';
-  }
-
-  sendCommand(command);
+export const clearStoryEstimate = () => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  sendCommand({
+    name: 'clearStoryEstimate',
+    payload: {
+      storyId: state.selectedStory
+    }
+  });
 };
 
 export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand) => {
@@ -266,12 +216,6 @@ export const kick = (userId) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const leaveRoom = () => () => {
-  // we only need to navigate to the landing page
-  // locationChanged will trigger sending "leaveRoom" command to backend
-  history.push('/');
-};
-
 export const changeStory = (storyId, title, description) => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'changeStory',
@@ -338,71 +282,3 @@ export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
     });
   });
 };
-
-export const fetchStatus = () => (dispatch) => {
-  getAppStatus().then((data) =>
-    dispatch({
-      type: STATUS_FETCHED,
-      status: data
-    })
-  );
-};
-
-/**
- * If a command failed, the server sends a "commandRejected" event.
- * From some rejections, we might be able to recover by reloading the room state from the backend.
- * Obviously there are situations where there is a mismatch between server and client state.
- */
-const tryToRecoverOnRejection = (event, dispatch, getState) => {
-  if (!event.payload || !event.payload.command) {
-    return;
-  }
-
-  const failedCommandName = event.payload.command.name;
-
-  if (
-    failedCommandName === 'giveStoryEstimate' ||
-    failedCommandName === 'clearStoryEstimate' ||
-    failedCommandName === 'newEstimationRound' ||
-    failedCommandName === 'reveal' ||
-    failedCommandName === 'kick'
-  ) {
-    fetchCurrentRoom(dispatch, getState);
-  }
-};
-
-const fetchCurrentRoom = (dispatch, getState) => {
-  const state = getState();
-
-  if (!state.roomId) {
-    return;
-  }
-
-  getRoom(state.roomId, state.userToken).then((data) =>
-    dispatch({
-      type: ROOM_STATE_FETCHED,
-      room: data
-    })
-  );
-};
-
-// ui-only actions (client-side view state)
-export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
-export const showTrash = () => ({type: SHOW_TRASH});
-export const hideTrash = () => ({type: HIDE_TRASH});
-export const highlightStory = (storyId) => ({type: HIGHLIGHT_STORY, storyId});
-export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
-export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
-export const toggleMarkForKick = (userId) => ({type: TOGGLE_MARK_FOR_KICK, userId});
-export const setLanguage = (language) => {
-  clientSettingsStore.setPresetLanguage(language);
-  return {type: SET_LANGUAGE, language};
-};
-export const hideNewUserHints = () => {
-  clientSettingsStore.setHideNewUserHints(true);
-  return {type: HIDE_NEW_USER_HINTS};
-};
-export const toggleSidebar = (sidebarKey) => ({type: TOGGLE_SIDEBAR, sidebarKey});
-export const SIDEBAR_HELP = 'HELP';
-export const SIDEBAR_SETTINGS = 'SETTINGS';
-export const SIDEBAR_ACTIONLOG = 'ACTIONLOG';

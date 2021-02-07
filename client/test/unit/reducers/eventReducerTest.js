@@ -1,8 +1,8 @@
 import {v4 as uuid} from 'uuid';
 
-import eventReducer from '../../../app/services/reducers/eventReducer';
-import {EVENT_ACTION_TYPES} from '../../../app/actions/types';
-import initialState from '../../../app/store/initialState.js';
+import eventReducer from '../../../app/state/reducers/eventReducer';
+import {EVENT_ACTION_TYPES} from '../../../app/state/actions/eventActions';
+import initialState from '../../../app/state/initialState.js';
 
 test('happy case: reduces an eventAction and writes log item', () => {
   const roomId = uuid();

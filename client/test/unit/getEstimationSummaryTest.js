@@ -1,4 +1,4 @@
-import getEstimationSummary from '../../app/services/getEstimationSummary';
+import getEstimationSummary from '../../app/components/EstimationArea/getEstimationSummary';
 
 test('simple', () => {
   const estimationObjectForOneStory = {

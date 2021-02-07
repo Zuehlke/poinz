@@ -1,4 +1,4 @@
-import initialState from '../../../app/store/initialState';
+import initialState from '../../../app/state/initialState';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 

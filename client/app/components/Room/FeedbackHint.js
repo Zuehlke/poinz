@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Avatar from '../common/Avatar';
-import {hideNewUserHints} from '../../actions';
+import {hideNewUserHints} from '../../state/actions/uiStateActions';
 
 import {StyledFeedbackHint} from './_styled';
 

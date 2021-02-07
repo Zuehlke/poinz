@@ -3,8 +3,10 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {getCardConfigForValue} from '../../services/getCardConfigForValue';
+import {toggleMarkForKick} from '../../state/actions/uiStateActions';
+import {kick} from '../../state/actions/commandActions';
+import {getEstimationsForCurrentlySelectedStory} from '../../state/selectors/storiesAndEstimates';
 import Avatar from '../common/Avatar';
-import {kick, toggleMarkForKick} from '../../actions';
 
 import {
   StyledUser,
@@ -15,7 +17,6 @@ import {
   StyledUserKickOverlay,
   StyledUserName
 } from './_styled';
-import {getEstimationsForCurrentlySelectedStory} from '../../services/selectors';
 
 const User = ({
   t,

@@ -1,10 +1,10 @@
 import log from 'loglevel';
 
-import {EVENT_ACTION_TYPES} from '../../actions/types';
-import clientSettingsStore from '../../store/clientSettingsStore';
-import initialState from '../../store/initialState';
-import {getCardConfigForValue} from '../getCardConfigForValue';
-import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
+import {EVENT_ACTION_TYPES} from '../actions/eventActions';
+import clientSettingsStore from '../../services/clientSettingsStore';
+import initialState from '../initialState';
+import {getCardConfigForValue} from '../../services/getCardConfigForValue';
+import {indexEstimations, indexStories, indexUsers} from '../../services/roomStateMapper';
 import updateActionLog from './updateActionLog';
 import modifyStory from './modifyStory';
 import modifyUser from './modifyUser';

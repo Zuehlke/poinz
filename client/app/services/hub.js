@@ -2,7 +2,7 @@ import log from 'loglevel';
 import {v4 as uuid} from 'uuid';
 
 import appConfig from './appConfig';
-import {COMMAND_SENT} from '../actions/types';
+import {COMMAND_SENT} from '../state/actions/commandActions';
 
 /**
  * The Hub  is our interface between the websocket connection and the app

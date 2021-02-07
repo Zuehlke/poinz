@@ -3,21 +3,20 @@ import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {newEstimationRound, reveal, selectNextStory} from '../../actions';
-
+import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
+import {findNextStoryIdToEstimate} from '../../state/selectors/storiesAndEstimates';
 import Cards from './Cards';
-
 import ConsensusBadge from '../common/ConsensusBadge';
-import findNextStoryIdToEstimate from '../../services/findNextStoryIdToEstimate';
+import ApplauseHighlight from './ApplauseHighlight';
+import EstimationSummary from './EstimationSummary';
+
+import {StyledStoryTitle} from '../_styled';
 import {
   EstimationAreaButtons,
   StyledEstimation,
   StyledSelectedStory,
   StyledStoryText
 } from './_styled';
-import {StyledStoryTitle} from '../_styled';
-import ApplauseHighlight from './ApplauseHighlight';
-import EstimationSummary from './EstimationSummary';
 
 /**
  * Displays

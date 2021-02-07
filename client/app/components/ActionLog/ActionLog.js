@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {SIDEBAR_ACTIONLOG} from '../../actions';
+import {SIDEBAR_ACTIONLOG} from '../../state/actions/uiStateActions';
 
 import {
   StyledActionLogInner,

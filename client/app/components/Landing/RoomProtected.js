@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {joinRoom} from '../../actions';
+import {joinRoom} from '../../state/actions/commandActions';
 import GithubRibbon from './GithubRibbon';
 import PasswordField from '../common/PasswordField';
 

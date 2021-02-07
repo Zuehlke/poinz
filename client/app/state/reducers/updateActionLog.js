@@ -1,4 +1,4 @@
-import {formatTime} from '../timeUtil';
+import {formatTime} from '../../services/timeUtil';
 import {v4 as uuid} from 'uuid';
 
 /**

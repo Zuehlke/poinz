@@ -3,10 +3,10 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
+import {importCsvFile} from '../../state/actions/commandActions';
+import {getActiveStories} from '../../state/selectors/storiesAndEstimates';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
-import {importCsvFile} from '../../actions';
-import {getActiveStories} from '../../services/selectors';
 import BacklogSortForm, {sortings} from './BacklogSortForm';
 
 import {

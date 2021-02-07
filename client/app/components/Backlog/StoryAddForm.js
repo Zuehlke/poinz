@@ -2,9 +2,9 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {addStory} from '../../actions';
+import {addStory} from '../../state/actions/commandActions';
 import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
-import {hasMatchingPendingCommand} from '../../services/selectors';
+import {hasMatchingPendingCommand} from '../../state/selectors/pendingCommands';
 import ValidatedInput from '../common/ValidatedInput';
 
 import {StyledAddForm} from './_styled';

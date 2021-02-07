@@ -2,14 +2,15 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
+import getEstimationSummary from './getEstimationSummary';
+import EstimationSummaryCard from './EstimationSummaryCard';
+import {getUserCount} from '../../state/selectors/users';
 import {
   getEstimationsForCurrentlySelectedStory,
-  getUserCount,
   hasSelectedStoryConsensus
-} from '../../services/selectors';
-import getEstimationSummary from '../../services/getEstimationSummary';
-import EstimationSummaryCard from './EstimationSummaryCard';
+} from '../../state/selectors/storiesAndEstimates';
+
+import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)

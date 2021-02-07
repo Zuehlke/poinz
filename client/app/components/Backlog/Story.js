@@ -3,8 +3,9 @@ import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {selectStory, editStory, highlightStory, trashStory} from '../../actions';
-import {isThisStoryWaiting} from '../../services/selectors';
+import {editStory, highlightStory} from '../../state/actions/uiStateActions';
+import {selectStory, trashStory} from '../../state/actions/commandActions';
+import {isThisStoryWaiting} from '../../state/selectors/pendingCommands';
 import ConsensusBadge from '../common/ConsensusBadge';
 
 import {
@@ -91,6 +92,7 @@ const Story = ({
   function triggerSelect() {
     selectStory(story.id);
   }
+
   function triggerHighlight() {
     highlightStory(story.id);
   }

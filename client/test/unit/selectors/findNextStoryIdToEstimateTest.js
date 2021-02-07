@@ -1,4 +1,4 @@
-import findNextStoryIdToEstimate from '../../app/services/findNextStoryIdToEstimate';
+import {findNextStoryIdToEstimate} from '../../../app/state/selectors/storiesAndEstimates';
 
 test('next unrevealed', () => {
   const state = {

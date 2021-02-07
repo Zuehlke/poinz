@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {getRoomExport} from '../../services/roomService';
+import {getRoomExport} from '../../services/restApi/roomService';
 
 const RoomExportFileDownload = ({t, roomId, userToken}) => {
   return (

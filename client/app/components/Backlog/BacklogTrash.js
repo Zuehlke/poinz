@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
-import {getTrashedStories} from '../../services/selectors';
+import {getTrashedStories} from '../../state/selectors/storiesAndEstimates';
 
 import {StyledBacklogInfoText, StyledStoriesScrolling} from './_styled';
 

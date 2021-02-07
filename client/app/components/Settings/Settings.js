@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {SIDEBAR_SETTINGS} from '../../actions';
+import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
 import UserSettings from './UserSettings';
 import RoomSettings from './RoomSettings';
 

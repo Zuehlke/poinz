@@ -6,7 +6,8 @@ import ValidatedInput from '../common/ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../frontendInputValidation';
 import avatarIcons from '../../assets/avatars';
 
-import {setAvatar, setEmail, setLanguage, setUsername, toggleExcluded} from '../../actions';
+import {setLanguage} from '../../state/actions/uiStateActions';
+import {toggleExcluded, setUsername, setEmail, setAvatar} from '../../state/actions/commandActions';
 
 import {
   StyledArea,

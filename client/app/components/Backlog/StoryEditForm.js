@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {changeStory, cancelEditStory} from '../../actions';
+import {cancelEditStory} from '../../state/actions/uiStateActions';
+import {changeStory} from '../../state/actions/commandActions';
 import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
-import {isThisStoryEditFormWaiting} from '../../services/selectors';
+import {isThisStoryEditFormWaiting} from '../../state/selectors/pendingCommands';
 import ValidatedInput from '../common/ValidatedInput';
 import StoryEditFormButtonGroup from './StoryEditFormButtonGroup';
 

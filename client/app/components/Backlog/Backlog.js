@@ -2,8 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {showTrash, hideTrash} from '../../actions';
-import {getActiveStories, getTrashedStories} from '../../services/selectors';
+import {showTrash, hideTrash} from '../../state/actions/uiStateActions';
+import {getActiveStories, getTrashedStories} from '../../state/selectors/storiesAndEstimates';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
 import StoryAddForm from './StoryAddForm';

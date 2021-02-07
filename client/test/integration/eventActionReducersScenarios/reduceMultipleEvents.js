@@ -1,12 +1,19 @@
 import log from 'loglevel';
 
-import rootReducer from '../../../app/services/reducers/rootReducer';
-import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../../../app/actions/types';
+import rootReducer from '../../../app/state/reducers/rootReducer';
+import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../../../app/state/actions/eventActions';
 
+/**
+ * reduce a series of given events ("at once" , in sequence)
+ *
+ * @param startingState
+ * @param events
+ * @return {*}
+ */
 export default function reduceMultipleEvents(startingState, events) {
-  let modfifiedState = startingState;
+  let modifiedState = startingState;
   events.forEach((e) => {
-    modfifiedState = rootReducer(modfifiedState, {
+    modifiedState = rootReducer(modifiedState, {
       type: EVENT_RECEIVED,
       eventName: e.name,
       correlationId: e.correlationId
@@ -18,10 +25,10 @@ export default function reduceMultipleEvents(startingState, events) {
       log.warn(`No matching action type for event "${e.name}"`);
     }
 
-    modfifiedState = rootReducer(modfifiedState, {
+    modifiedState = rootReducer(modifiedState, {
       event: e,
       type: matchingType
     });
   });
-  return modfifiedState;
+  return modifiedState;
 }

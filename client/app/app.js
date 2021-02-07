@@ -9,8 +9,8 @@ import './assets/font/poinz.css';
 import './assets/font/animation.css';
 
 import appConfig from './services/appConfig';
-import initialState from './store/initialState';
-import configureStore from './store/configureStore';
+import initialState from './state/initialState';
+import configureStore from './state/configureStore';
 
 import Main from './components/Main';
 import Global from './_styled';

@@ -1,36 +1,31 @@
 import {v4 as uuid} from 'uuid';
 
-import initialState from '../../../app/store/initialState';
-import clientActionReducer from '../../../app/services/reducers/clientActionReducer';
+import initialState from '../../../app/state/initialState';
+import clientActionReducer from '../../../app/state/reducers/clientActionReducer';
+
+import {EVENT_RECEIVED, ROOM_STATE_FETCHED} from '../../../app/state/actions/eventActions';
 
 import {
   CANCEL_EDIT_STORY,
-  COMMAND_SENT,
   EDIT_STORY,
-  EVENT_RECEIVED,
   HIDE_NEW_USER_HINTS,
-  LOCATION_CHANGED,
-  SET_LANGUAGE,
-  STATUS_FETCHED,
-  TOGGLE_BACKLOG,
-  SHOW_TRASH,
   HIDE_TRASH,
-  ROOM_STATE_FETCHED
-} from '../../../app/actions/types';
-
-import {
-  cancelEditStory,
-  editStory,
-  hideNewUserHints,
-  hideTrash,
-  setLanguage,
-  showTrash,
+  SET_LANGUAGE,
+  SHOW_TRASH,
+  TOGGLE_BACKLOG,
+  SIDEBAR_SETTINGS,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_HELP,
-  SIDEBAR_SETTINGS,
   toggleBacklog,
-  toggleSidebar
-} from '../../../app/actions';
+  hideNewUserHints,
+  toggleSidebar,
+  editStory,
+  cancelEditStory,
+  setLanguage,
+  showTrash,
+  hideTrash
+} from '../../../app/state/actions/uiStateActions';
+import {COMMAND_SENT, LOCATION_CHANGED} from '../../../app/state/actions/commandActions';
 
 test(COMMAND_SENT, () => {
   const startingState = initialState();
@@ -196,18 +191,6 @@ test(HIDE_NEW_USER_HINTS, () => {
 
   let modifiedState = clientActionReducer(startingState, hideNewUserHints());
   expect(modifiedState.hideNewUserHints).toBe(true);
-});
-
-test(STATUS_FETCHED, () => {
-  const startingState = initialState();
-
-  let modifiedState = clientActionReducer(startingState, {
-    type: STATUS_FETCHED,
-    status: {some: 'data'}
-  });
-  expect(modifiedState.appStatus).toEqual({
-    some: 'data'
-  });
 });
 
 test(LOCATION_CHANGED, () => {

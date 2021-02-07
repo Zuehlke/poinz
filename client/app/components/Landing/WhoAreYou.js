@@ -2,8 +2,10 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {setUsername} from '../../actions';
+import {setUsername} from '../../state/actions/commandActions';
+import {USERNAME_REGEX} from '../frontendInputValidation';
 import GithubRibbon from './GithubRibbon';
+
 import {
   StyledEyecatcher,
   StyledLandingInner,
@@ -11,7 +13,6 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from './_styled';
-import {USERNAME_REGEX} from '../frontendInputValidation';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.

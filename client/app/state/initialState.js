@@ -1,8 +1,8 @@
-import clientSettingsStore from './clientSettingsStore';
+import clientSettingsStore from '../services/clientSettingsStore';
 import translatorFactory from '../services/translator';
 
-import translationsEN from '../../app/assets/i18n/en.json';
-import translationsDE from '../../app/assets/i18n/de.json';
+import translationsEN from '../assets/i18n/en.json';
+import translationsDE from '../assets/i18n/de.json';
 
 const DEFAULT_LANGUAGE = 'en';
 const userLanguage = clientSettingsStore.getPresetLanguage();

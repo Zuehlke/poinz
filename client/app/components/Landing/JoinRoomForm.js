@@ -2,8 +2,11 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {joinRoom} from '../../state/actions/commandActions';
+import {ROOM_ID_REGEX} from '../frontendInputValidation';
+import PasswordField from '../common/PasswordField';
 import ValidatedInput from '../common/ValidatedInput';
-import {joinRoom} from '../../actions';
+
 import {
   StyledEyecatcher,
   StyledInfoText,
@@ -12,8 +15,6 @@ import {
   StyledLandingDoubleButtonWrapper,
   StyledLandingForm
 } from './_styled';
-import {ROOM_ID_REGEX} from '../frontendInputValidation';
-import PasswordField from '../common/PasswordField';
 
 /**
  * The form on the landing page where the user can join a room.

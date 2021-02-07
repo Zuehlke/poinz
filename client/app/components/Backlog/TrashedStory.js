@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {restoreStory, deleteStory} from '../../actions';
+import {restoreStory, deleteStory} from '../../state/actions/commandActions';
 import ConsensusBadge from '../common/ConsensusBadge';
 
 import {StyledStoryToolbar, StyledStory} from './_styled';

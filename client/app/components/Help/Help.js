@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {SIDEBAR_HELP} from '../../actions';
+import {SIDEBAR_HELP} from '../../state/actions/uiStateActions';
 import Avatar from '../common/Avatar';
 
 import {StyledHelp, StyledHelpInner} from './_styled';

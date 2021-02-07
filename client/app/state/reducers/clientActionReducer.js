@@ -1,22 +1,20 @@
 import {
-  TOGGLE_BACKLOG,
-  EDIT_STORY,
-  HIGHLIGHT_STORY,
   CANCEL_EDIT_STORY,
-  COMMAND_SENT,
-  EVENT_RECEIVED,
-  STATUS_FETCHED,
-  SET_LANGUAGE,
-  LOCATION_CHANGED,
+  EDIT_STORY,
   HIDE_NEW_USER_HINTS,
-  SHOW_TRASH,
   HIDE_TRASH,
+  HIGHLIGHT_STORY,
+  SET_LANGUAGE,
+  SHOW_TRASH,
+  SIDEBAR_ACTIONLOG,
+  TOGGLE_BACKLOG,
   TOGGLE_MARK_FOR_KICK,
-  TOGGLE_SIDEBAR,
-  ROOM_STATE_FETCHED
-} from '../../actions/types';
-import {SIDEBAR_ACTIONLOG} from '../../actions';
-import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
+  TOGGLE_SIDEBAR
+} from '../actions/uiStateActions';
+
+import {indexEstimations, indexStories, indexUsers} from '../../services/roomStateMapper';
+import {COMMAND_SENT, LOCATION_CHANGED} from '../actions/commandActions';
+import {EVENT_RECEIVED, ROOM_STATE_FETCHED} from '../actions/eventActions';
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)
@@ -99,12 +97,6 @@ export default function clientActionReducer(state, action) {
         [action.storyId]: {...state.stories[action.storyId], editMode: false}
       };
       return {...state, stories: modifiedStories};
-    }
-    case STATUS_FETCHED: {
-      return {
-        ...state,
-        appStatus: action.status
-      };
     }
     case SET_LANGUAGE: {
       const language = action.language;

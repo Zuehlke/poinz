@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {toggleAutoReveal, setCardConfig, setPassword, SIDEBAR_SETTINGS} from '../../actions';
+import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
+import {toggleAutoReveal, setCardConfig, setPassword} from '../../state/actions/commandActions';
 import {CardConfigEditor} from './CardConfigEditor';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';

@@ -1,10 +1,10 @@
 import log from 'loglevel';
 
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
-import clientSettingsStore from '../../services/clientSettingsStore';
+import clientSettingsStore from '../clientSettingsStore';
 import initialState from '../initialState';
-import {getCardConfigForValue} from '../../services/getCardConfigForValue';
-import {indexEstimations, indexStories, indexUsers} from '../../services/roomStateMapper';
+import {getCardConfigForValue} from '../selectors/getCardConfigForValue';
+import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
 import updateActionLog from './updateActionLog';
 import modifyStory from './modifyStory';
 import modifyUser from './modifyUser';
@@ -402,10 +402,10 @@ const eventActionHandlers = {
       };
     },
     log: (username, eventPayload, oldState, modifiedState) => {
-      const matchingCardConfig = getCardConfigForValue(
-        oldState.cardConfig,
-        modifiedState.stories[eventPayload.storyId].consensus
-      );
+      const matchingCardConfig = getCardConfigForValue({
+        ...oldState,
+        cardConfigLookupValue: modifiedState.stories[eventPayload.storyId].consensus
+      });
       return `Consensus achieved for story "${
         modifiedState.stories[eventPayload.storyId].title
       }": ${matchingCardConfig ? matchingCardConfig.label : '-'}`;

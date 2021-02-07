@@ -1,9 +1,8 @@
 import {v4 as uuid} from 'uuid';
 
 import {findNextStoryIdToEstimate} from '../selectors/storiesAndEstimates';
-import readDroppedFile from '../../services/readDroppedFile';
 import appConfig from '../../services/appConfig';
-import history from '../../services/getBrowserHistory';
+import history from '../getBrowserHistory';
 
 /* TYPES */
 export const COMMAND_SENT = 'COMMAND_SENT';
@@ -282,3 +281,15 @@ export const importCsvFile = (file) => (dispatch, getState, sendCommand) => {
     });
   });
 };
+
+function readDroppedFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onabort = () => reject('aborted');
+    reader.onerror = () => reject('error');
+    reader.onload = () => resolve(reader.result);
+
+    reader.readAsDataURL(file);
+  });
+}

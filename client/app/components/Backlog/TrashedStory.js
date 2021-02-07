@@ -11,7 +11,7 @@ import {StyledStoryTitle} from '../_styled';
 /**
  * One Trashed Story in the Trash
  */
-const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
+const TrashedStory = ({t, story, restoreStory, deleteStory}) => {
   return (
     <StyledStory>
       <StyledStoryToolbar>
@@ -31,9 +31,7 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
 
       <StyledStoryTitle>
         <div>{story.title}</div>
-        {story.consensus && (
-          <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
-        )}
+        {story.consensus && <ConsensusBadge consensusValue={story.consensus} />}
       </StyledStoryTitle>
     </StyledStory>
   );
@@ -42,15 +40,13 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
 TrashedStory.propTypes = {
   t: PropTypes.func.isRequired,
   story: PropTypes.object,
-  cardConfig: PropTypes.array,
   restoreStory: PropTypes.func.isRequired,
   deleteStory: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    cardConfig: state.cardConfig
+    t: state.translator
   }),
   {restoreStory, deleteStory}
 )(TrashedStory);

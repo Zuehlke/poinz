@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getCardConfigForValue} from '../../services/getCardConfigForValue';
+import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
 import {toggleMarkForKick} from '../../state/actions/uiStateActions';
 import {kick} from '../../state/actions/commandActions';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/selectors/storiesAndEstimates';
@@ -22,9 +22,9 @@ const User = ({
   t,
   user,
   selectedStory,
-  userEstimationValue,
+  userHasEstimation,
   ownUserId,
-  cardConfig,
+  matchingCardConfig,
   kick,
   toggleMarkForKick
 }) => {
@@ -32,9 +32,7 @@ const User = ({
   const isDisconnected = user.disconnected;
   const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
-  const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
 
-  const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
 
   return (
@@ -72,7 +70,7 @@ const User = ({
 
       {selectedStory && isExcluded && (
         <StyledUserEstimationExcluded>
-          <span>{estimationValueToDisplay}</span>
+          <span>-</span>
         </StyledUserEstimationExcluded>
       )}
 
@@ -98,10 +96,10 @@ const User = ({
 User.propTypes = {
   t: PropTypes.func,
   user: PropTypes.object,
-  userEstimationValue: PropTypes.number,
+  userHasEstimation: PropTypes.bool,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
-  cardConfig: PropTypes.array,
+  matchingCardConfig: PropTypes.object,
   kick: PropTypes.func.isRequired,
   toggleMarkForKick: PropTypes.func.isRequired
 };
@@ -110,13 +108,21 @@ export default connect(
   (state, props) => {
     const estimationsForStory = getEstimationsForCurrentlySelectedStory(state);
     const userEstimationValue = estimationsForStory && estimationsForStory[props.user.id];
+    const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
+
+    const matchingCardConfig = userHasEstimation
+      ? getCardConfigForValue({
+          ...state,
+          cardConfigLookupValue: userEstimationValue
+        })
+      : {};
 
     return {
       t: state.translator,
-      cardConfig: state.cardConfig,
+      userHasEstimation,
+      matchingCardConfig,
       ownUserId: state.userId,
-      selectedStory: state.stories[state.selectedStory],
-      userEstimationValue
+      selectedStory: state.stories[state.selectedStory]
     };
   },
   {kick, toggleMarkForKick}

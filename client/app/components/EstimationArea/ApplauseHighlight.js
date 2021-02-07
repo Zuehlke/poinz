@@ -1,15 +1,11 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getCardConfigForValue} from '../../services/getCardConfigForValue';
+import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
 import {StyledApplauseHighlight} from './_styled';
 
-const ApplauseHighlight = ({cardConfig, consensusValue}) => {
-  if (!consensusValue) {
-    return null;
-  }
-
-  const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
+const ApplauseHighlight = ({matchingCardConfig}) => {
   const highlightColor = matchingCardConfig.color;
   return (
     <StyledApplauseHighlight
@@ -19,8 +15,10 @@ const ApplauseHighlight = ({cardConfig, consensusValue}) => {
 };
 
 ApplauseHighlight.propTypes = {
-  cardConfig: PropTypes.array,
-  consensusValue: PropTypes.number
+  consensusValue: PropTypes.number,
+  matchingCardConfig: PropTypes.object
 };
 
-export default ApplauseHighlight;
+export default connect((state, props) => ({
+  matchingCardConfig: getCardConfigForValue({...state, cardConfigLookupValue: props.consensusValue})
+}))(ApplauseHighlight);

@@ -12,7 +12,7 @@ import {
   TOGGLE_SIDEBAR
 } from '../actions/uiStateActions';
 
-import {indexEstimations, indexStories, indexUsers} from '../../services/roomStateMapper';
+import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
 import {COMMAND_SENT, LOCATION_CHANGED} from '../actions/commandActions';
 import {EVENT_RECEIVED, ROOM_STATE_FETCHED} from '../actions/eventActions';
 

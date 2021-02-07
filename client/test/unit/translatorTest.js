@@ -1,4 +1,4 @@
-import translatorFactory from '../../app/services/translator';
+import translatorFactory from '../../app/state/translator';
 
 import translationsEN from '../../app/assets/i18n/en.json';
 import translationsDE from '../../app/assets/i18n/de.json';

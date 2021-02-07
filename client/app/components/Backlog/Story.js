@@ -24,7 +24,6 @@ const Story = ({
   story,
   selectedStoryId,
   highlightedStoryId,
-  cardConfig,
   selectStory,
   highlightStory,
   editStory,
@@ -60,9 +59,7 @@ const Story = ({
 
       <StyledStoryTitle>
         <div>{story.title}</div>
-        {hasConsensus && (
-          <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
-        )}
+        {hasConsensus && <ConsensusBadge consensusValue={story.consensus} />}
       </StyledStoryTitle>
 
       {
@@ -111,7 +108,6 @@ const Story = ({
 Story.propTypes = {
   story: PropTypes.object,
   isWaiting: PropTypes.bool,
-  cardConfig: PropTypes.array,
   selectedStoryId: PropTypes.string,
   highlightedStoryId: PropTypes.string,
   selectStory: PropTypes.func,
@@ -124,7 +120,6 @@ Story.propTypes = {
 export default connect(
   (state, props) => ({
     t: state.translator,
-    cardConfig: state.cardConfig,
     selectedStoryId: state.selectedStory,
     highlightedStoryId: state.highlightedStory,
     isWaiting: isThisStoryWaiting(state, props.story.id)

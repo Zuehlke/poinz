@@ -1,4 +1,4 @@
-import clientSettingsStore from '../../services/clientSettingsStore';
+import clientSettingsStore from '../clientSettingsStore';
 
 /* TYPES */
 export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';

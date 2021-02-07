@@ -1,5 +1,5 @@
-import clientSettingsStore from '../services/clientSettingsStore';
-import translatorFactory from '../services/translator';
+import clientSettingsStore from './clientSettingsStore';
+import translatorFactory from './translator';
 
 import translationsEN from '../assets/i18n/en.json';
 import translationsDE from '../assets/i18n/de.json';

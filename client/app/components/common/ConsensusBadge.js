@@ -1,13 +1,12 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getCardConfigForValue} from '../../services/getCardConfigForValue';
+import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
 
 import {StyledConsensusBadge} from './_styled';
 
-const ConsensusBadge = ({cardConfig, consensusValue}) => {
-  const matchingCardConfig = getCardConfigForValue(cardConfig, consensusValue);
-
+const ConsensusBadge = ({matchingCardConfig}) => {
   return (
     <StyledConsensusBadge
       cardColor={matchingCardConfig && matchingCardConfig.color}
@@ -18,8 +17,10 @@ const ConsensusBadge = ({cardConfig, consensusValue}) => {
   );
 };
 ConsensusBadge.propTypes = {
-  cardConfig: PropTypes.array,
-  consensusValue: PropTypes.number
+  consensusValue: PropTypes.number,
+  matchingCardConfig: PropTypes.object
 };
 
-export default ConsensusBadge;
+export default connect((state, props) => ({
+  matchingCardConfig: getCardConfigForValue({...state, cardConfigLookupValue: props.consensusValue})
+}))(ConsensusBadge);

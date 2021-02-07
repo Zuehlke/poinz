@@ -1,6 +1,6 @@
 import log from 'loglevel';
 
-import history from '../../services/getBrowserHistory';
+import history from '../getBrowserHistory';
 import {getRoom} from '../../services/restApi/roomService';
 
 /* TYPES */

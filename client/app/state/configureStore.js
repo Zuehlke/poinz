@@ -2,10 +2,10 @@ import {createStore, applyMiddleware, compose, bindActionCreators} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
 import rootReducer from './reducers/rootReducer';
-import hubFactory from '../services/hub';
+import hubFactory from './hub';
 import {eventReceived} from './actions/eventActions';
 import {locationChanged, onSocketConnect} from './actions/commandActions';
-import history from '../services/getBrowserHistory';
+import history from './getBrowserHistory';
 import appConfig from '../services/appConfig';
 
 /**

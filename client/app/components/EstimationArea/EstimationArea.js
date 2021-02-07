@@ -31,7 +31,6 @@ const EstimationArea = ({
   selectNextStory,
   applause,
   userCanCurrentlyEstimate,
-  cardConfig,
   newEstimationRound,
   reveal,
   hasNextStory
@@ -44,18 +43,14 @@ const EstimationArea = ({
       <StyledSelectedStory data-testid="story">
         <StyledStoryTitle>
           {selectedStory.title}
-          {hasConsensus && (
-            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
-          )}
+          {hasConsensus && <ConsensusBadge consensusValue={selectedStory.consensus} />}
         </StyledStoryTitle>
 
         <StyledStoryText>
           <Anchorify text={selectedStory.description || ''} />
         </StyledStoryText>
 
-        {hasConsensus && applause && (
-          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
-        )}
+        {hasConsensus && applause && <ApplauseHighlight consensusValue={selectedStory.consensus} />}
       </StyledSelectedStory>
 
       {!revealed && (
@@ -109,7 +104,6 @@ const EstimationArea = ({
 EstimationArea.propTypes = {
   t: PropTypes.func,
   selectNextStory: PropTypes.func,
-  cardConfig: PropTypes.array,
   userCanCurrentlyEstimate: PropTypes.bool,
   selectedStory: PropTypes.object,
   applause: PropTypes.bool,
@@ -129,7 +123,6 @@ export default connect(
       selectedStory,
       userCanCurrentlyEstimate,
       applause: state.applause,
-      cardConfig: state.cardConfig,
       hasNextStory: !!findNextStoryIdToEstimate(state)
     };
   },

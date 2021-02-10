@@ -99,7 +99,6 @@ const eventActionHandlers = {
           roomId: event.roomId,
           userId: event.userId,
           selectedStory: payload.selectedStory,
-          highlightedStory: payload.selectedStory,
           users: indexUsers(payload.users),
           stories: indexStories(payload.stories),
           estimations: indexEstimations(payload.stories),
@@ -202,18 +201,11 @@ const eventActionHandlers = {
   },
 
   [EVENT_ACTION_TYPES.storyTrashed]: {
-    fn: (state, payload) => {
-      const modifiedState = modifyStory(state, payload.storyId, (story) => ({
+    fn: (state, payload) =>
+      modifyStory(state, payload.storyId, (story) => ({
         ...story,
         trashed: true
-      }));
-
-      return {
-        ...modifiedState,
-        highlightedStory:
-          state.highlightedStory === payload.storyId ? undefined : state.highlightedStory
-      };
-    },
+      })),
     log: (username, payload, oldState) => {
       const storyTitle = oldState.stories[payload.storyId].title;
       return `${username} moved story "${storyTitle}" to trash`;
@@ -261,7 +253,6 @@ const eventActionHandlers = {
     fn: (state, payload) => ({
       ...state,
       selectedStory: payload.storyId,
-      highlightedStory: state.highlightedStory || payload.storyId,
       applause: false
     }),
     log: (username, payload, oldState, newState) =>

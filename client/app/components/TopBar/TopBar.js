@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import {getOwnUsername} from '../../state/selectors/users';
 import {
-  toggleBacklog,
+  toggleBacklogSidebar,
   toggleSidebar,
   SIDEBAR_HELP,
   SIDEBAR_ACTIONLOG,
@@ -33,7 +33,7 @@ const TopBar = ({
   username,
   leaveRoom,
   toggleSidebar,
-  toggleBacklog,
+  toggleBacklogSidebar,
   sidebar,
   unseenError,
   backlogShown
@@ -46,7 +46,7 @@ const TopBar = ({
         <StyledBacklogToggle
           data-testid="backlogToggle"
           className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
-          onClick={toggleBacklog}
+          onClick={toggleBacklogSidebar}
         >
           <StyledBacklogToggleIcon>
             <span></span>
@@ -112,7 +112,7 @@ const TopBar = ({
 
 TopBar.propTypes = {
   t: PropTypes.func,
-  toggleBacklog: PropTypes.func,
+  toggleBacklogSidebar: PropTypes.func,
   backlogShown: PropTypes.bool,
   unseenError: PropTypes.bool,
   username: PropTypes.string,
@@ -131,5 +131,5 @@ export default connect(
     unseenError: state.unseenError,
     username: getOwnUsername(state)
   }),
-  {toggleBacklog, toggleSidebar, leaveRoom}
+  {toggleBacklogSidebar, toggleSidebar, leaveRoom}
 )(TopBar);

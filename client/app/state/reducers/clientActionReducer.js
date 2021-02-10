@@ -1,20 +1,17 @@
 import {
-  CANCEL_EDIT_STORY,
-  EDIT_STORY,
+  STORY_EDIT_MODE_ENTERED,
+  STORY_EDIT_MODE_CANCELLED,
   HIDE_NEW_USER_HINTS,
-  HIDE_TRASH,
-  HIGHLIGHT_STORY,
   SET_LANGUAGE,
-  SHOW_TRASH,
   SIDEBAR_ACTIONLOG,
-  TOGGLE_BACKLOG,
-  TOGGLE_MARK_FOR_KICK,
-  TOGGLE_SIDEBAR
+  BACKLOG_SIDEBAR_TOGGLED,
+  SIDEBAR_TOGGLED
 } from '../actions/uiStateActions';
 
 import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
 import {COMMAND_SENT, LOCATION_CHANGED} from '../actions/commandActions';
 import {EVENT_RECEIVED, ROOM_STATE_FETCHED} from '../actions/eventActions';
+import modifyStory from './modifyStory';
 
 /**
  *  The client Action Reducer handles actions triggered by the client (view state, etc.)
@@ -57,7 +54,7 @@ export default function clientActionReducer(state, action) {
       const modifiedPendingCommands = {...state.pendingCommands};
       return {...state, pendingCommands: modifiedPendingCommands};
     }
-    case TOGGLE_BACKLOG: {
+    case BACKLOG_SIDEBAR_TOGGLED: {
       const showBacklog = !state.backlogShown;
 
       if (showBacklog) {
@@ -66,7 +63,7 @@ export default function clientActionReducer(state, action) {
         return {...state, backlogShown: false};
       }
     }
-    case TOGGLE_SIDEBAR: {
+    case SIDEBAR_TOGGLED: {
       if (state.sidebar === action.sidebarKey) {
         return {
           ...state,
@@ -81,22 +78,17 @@ export default function clientActionReducer(state, action) {
         };
       }
     }
-    case EDIT_STORY: {
-      const modifiedStories = {
-        ...state.stories,
-        [action.storyId]: {...state.stories[action.storyId], editMode: true}
-      };
-      return {...state, stories: modifiedStories};
+    case STORY_EDIT_MODE_ENTERED: {
+      return modifyStory(state, action.storyId, (story) => ({
+        ...story,
+        editMode: true
+      }));
     }
-    case HIGHLIGHT_STORY: {
-      return {...state, highlightedStory: action.storyId};
-    }
-    case CANCEL_EDIT_STORY: {
-      const modifiedStories = {
-        ...state.stories,
-        [action.storyId]: {...state.stories[action.storyId], editMode: false}
-      };
-      return {...state, stories: modifiedStories};
+    case STORY_EDIT_MODE_CANCELLED: {
+      return modifyStory(state, action.storyId, (story) => ({
+        ...story,
+        editMode: false
+      }));
     }
     case SET_LANGUAGE: {
       const language = action.language;
@@ -113,24 +105,6 @@ export default function clientActionReducer(state, action) {
     }
     case LOCATION_CHANGED: {
       return {...state, pathname: action.pathname};
-    }
-    case SHOW_TRASH: {
-      return {...state, trashShown: true};
-    }
-    case HIDE_TRASH: {
-      return {...state, trashShown: false};
-    }
-    case TOGGLE_MARK_FOR_KICK: {
-      if (state.userId === action.userId) {
-        return state; // no use in marking myself.. backend will prevent "kick" command for my own user anyways
-      }
-      const doMark = !state.users[action.userId].markedForKick;
-
-      const modifiedUsers = {
-        ...state.users,
-        [action.userId]: {...state.users[action.userId], markedForKick: doMark}
-      };
-      return {...state, users: modifiedUsers};
     }
     case ROOM_STATE_FETCHED: {
       const {room} = action;

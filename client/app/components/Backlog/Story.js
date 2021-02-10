@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {editStory, highlightStory} from '../../state/actions/uiStateActions';
+import {editStory} from '../../state/actions/uiStateActions';
 import {selectStory, trashStory} from '../../state/actions/commandActions';
 import {isThisStoryWaiting} from '../../state/selectors/pendingCommands';
 import ConsensusBadge from '../common/ConsensusBadge';
@@ -22,23 +22,22 @@ import {StyledStoryTitle} from '../_styled';
 const Story = ({
   t,
   story,
+  isHighlighted,
+  onStoryClicked,
   selectedStoryId,
-  highlightedStoryId,
   selectStory,
-  highlightStory,
   editStory,
   trashStory,
   isWaiting
 }) => {
   const isSelected = selectedStoryId === story.id;
-  const isHighlighted = highlightedStoryId === story.id;
   const hasConsensus = story.consensus !== undefined && story.consensus !== null; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledStory
       id={'story.' + story.id}
       data-testid={isSelected ? 'storySelected' : 'story'}
-      onClick={triggerHighlight}
+      onClick={onStoryClicked}
       selected={isSelected}
       className={isWaiting ? 'waiting-spinner' : ''}
     >
@@ -90,10 +89,6 @@ const Story = ({
     selectStory(story.id);
   }
 
-  function triggerHighlight() {
-    highlightStory(story.id);
-  }
-
   function triggerEdit(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
     editStory(story.id);
@@ -108,10 +103,10 @@ const Story = ({
 Story.propTypes = {
   story: PropTypes.object,
   isWaiting: PropTypes.bool,
+  isHighlighted: PropTypes.bool,
   selectedStoryId: PropTypes.string,
-  highlightedStoryId: PropTypes.string,
+  onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
-  highlightStory: PropTypes.func,
   editStory: PropTypes.func,
   trashStory: PropTypes.func,
   t: PropTypes.func
@@ -121,8 +116,7 @@ export default connect(
   (state, props) => ({
     t: state.translator,
     selectedStoryId: state.selectedStory,
-    highlightedStoryId: state.highlightedStory,
     isWaiting: isThisStoryWaiting(state, props.story.id)
   }),
-  {selectStory, highlightStory, editStory, trashStory}
+  {selectStory, editStory, trashStory}
 )(Story);

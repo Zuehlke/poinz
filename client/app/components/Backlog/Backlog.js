@@ -1,8 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {showTrash, hideTrash} from '../../state/actions/uiStateActions';
 import {getActiveStories, getTrashedStories} from '../../state/selectors/storiesAndEstimates';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
@@ -17,29 +16,24 @@ import {StyledBacklog} from './_styled';
  * if trash is active, only a list of "trashed" stories is displayed
  *
  */
-const Backlog = ({
-  t,
-  backlogShown,
-  trashShown,
-  showTrash,
-  hideTrash,
-  trashedStoriesCount,
-  activeStoriesCount
-}) => {
+const Backlog = ({t, backlogShown, trashedStoriesCount, activeStoriesCount}) => {
+  // whether to show trash (list of trashed stories) or not. by default this is false, i.e. the active stories are shown
+  const [showTrash, setShowTrash] = useState(false);
+
   return (
     <StyledBacklog shown={backlogShown} data-testid="backlog">
       <BacklogModeButtons
         t={t}
-        onShowBacklog={hideTrash}
-        onShowTrash={showTrash}
-        trashShown={trashShown}
+        onShowBacklog={() => setShowTrash(false)}
+        onShowTrash={() => setShowTrash(true)}
+        trashShown={showTrash}
         trashedStoriesCount={trashedStoriesCount}
         activeStoriesCount={activeStoriesCount}
       />
 
-      {trashShown && <BacklogTrash />}
-      {!trashShown && <StoryAddForm />}
-      {!trashShown && <BacklogActive />}
+      {showTrash && <BacklogTrash />}
+      {!showTrash && <StoryAddForm />}
+      {!showTrash && <BacklogActive />}
     </StyledBacklog>
   );
 };
@@ -47,20 +41,13 @@ const Backlog = ({
 Backlog.propTypes = {
   t: PropTypes.func.isRequired,
   backlogShown: PropTypes.bool,
-  trashShown: PropTypes.bool,
-  showTrash: PropTypes.func.isRequired,
-  hideTrash: PropTypes.func.isRequired,
   trashedStoriesCount: PropTypes.number.isRequired,
   activeStoriesCount: PropTypes.number.isRequired
 };
 
-export default connect(
-  (state) => ({
-    t: state.translator,
-    trashShown: state.trashShown,
-    backlogShown: state.backlogShown,
-    trashedStoriesCount: getTrashedStories(state).length,
-    activeStoriesCount: getActiveStories(state).length
-  }),
-  {showTrash, hideTrash}
-)(Backlog);
+export default connect((state) => ({
+  t: state.translator,
+  backlogShown: state.backlogShown,
+  trashedStoriesCount: getTrashedStories(state).length,
+  activeStoriesCount: getActiveStories(state).length
+}))(Backlog);

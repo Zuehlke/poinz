@@ -1,46 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
-import {toggleMarkForKick} from '../../state/actions/uiStateActions';
-import {kick} from '../../state/actions/commandActions';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/selectors/storiesAndEstimates';
+import {kick} from '../../state/actions/commandActions';
 import Avatar from '../common/Avatar';
+import UserEstimationCard from './UserEstimationCard';
 
-import {
-  StyledUser,
-  StyledUserBadge,
-  StyledUserEstimation,
-  StyledUserEstimationExcluded,
-  StyledUserEstimationGiven,
-  StyledUserKickOverlay,
-  StyledUserName
-} from './_styled';
+import {StyledUser, StyledUserBadge, StyledUserKickOverlay, StyledUserName} from './_styled';
 
-const User = ({
-  t,
-  user,
-  selectedStory,
-  userHasEstimation,
-  ownUserId,
-  matchingCardConfig,
-  kick,
-  toggleMarkForKick
-}) => {
+const User = ({t, user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
+  const isOwnUser = user.id === ownUserId;
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
-  const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
 
-  const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
+  const [isMarkedForKick, setMarkForKick] = useState(false);
 
   return (
-    <StyledUser
-      data-testid="user"
-      isOwn={user.id === ownUserId}
-      shaded={isDisconnected || isMarkedForKick}
-    >
+    <StyledUser data-testid="user" isOwn={isOwnUser} shaded={isDisconnected || isMarkedForKick}>
       {!isDisconnected && isExcluded && (
         <StyledUserBadge>
           <i className="icon-eye"></i>
@@ -54,7 +33,7 @@ const User = ({
       )}
 
       <Avatar
-        onClick={onMarkForKick}
+        onClick={toggleMarkForKick}
         user={user}
         isOwn={user.id === ownUserId}
         shaded={isDisconnected || isMarkedForKick}
@@ -63,33 +42,27 @@ const User = ({
 
       {isMarkedForKick && (
         <StyledUserKickOverlay>
-          <i className="icon-cancel" onClick={onMarkForKick} title={t('cancel')}></i>
+          <i className="icon-cancel" onClick={toggleMarkForKick} title={t('cancel')}></i>
           <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
         </StyledUserKickOverlay>
       )}
 
-      {selectedStory && isExcluded && (
-        <StyledUserEstimationExcluded>
-          <span>-</span>
-        </StyledUserEstimationExcluded>
-      )}
-
-      {selectedStory && !userHasEstimation && !isExcluded && (
-        <StyledUserEstimation revealed={revealed}>
-          <span>{estimationValueToDisplay}</span>
-        </StyledUserEstimation>
-      )}
-
-      {selectedStory && userHasEstimation && !isExcluded && (
-        <StyledUserEstimationGiven revealed={revealed} valueColor={matchingCardConfig.color}>
-          {estimationValueToDisplay}
-        </StyledUserEstimationGiven>
+      {selectedStory && (
+        <UserEstimationCard
+          isExcluded={isExcluded}
+          userHasEstimation={userHasEstimation}
+          revealed={revealed}
+          matchingCardConfig={matchingCardConfig}
+        />
       )}
     </StyledUser>
   );
 
-  function onMarkForKick() {
-    toggleMarkForKick(user.id);
+  function toggleMarkForKick() {
+    if (isOwnUser) {
+      return; // no use in marking myself.. backend will prevent "kick" command for my own user anyways
+    }
+    setMarkForKick(!isMarkedForKick);
   }
 };
 
@@ -100,8 +73,7 @@ User.propTypes = {
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
   matchingCardConfig: PropTypes.object,
-  kick: PropTypes.func.isRequired,
-  toggleMarkForKick: PropTypes.func.isRequired
+  kick: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -125,5 +97,5 @@ export default connect(
       selectedStory: state.stories[state.selectedStory]
     };
   },
-  {kick, toggleMarkForKick}
+  {kick}
 )(User);

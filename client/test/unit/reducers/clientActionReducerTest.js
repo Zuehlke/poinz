@@ -6,24 +6,20 @@ import clientActionReducer from '../../../app/state/reducers/clientActionReducer
 import {EVENT_RECEIVED, ROOM_STATE_FETCHED} from '../../../app/state/actions/eventActions';
 
 import {
-  CANCEL_EDIT_STORY,
-  EDIT_STORY,
+  STORY_EDIT_MODE_CANCELLED,
+  STORY_EDIT_MODE_ENTERED,
   HIDE_NEW_USER_HINTS,
-  HIDE_TRASH,
   SET_LANGUAGE,
-  SHOW_TRASH,
-  TOGGLE_BACKLOG,
+  BACKLOG_SIDEBAR_TOGGLED,
   SIDEBAR_SETTINGS,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_HELP,
-  toggleBacklog,
+  toggleBacklogSidebar,
   hideNewUserHints,
   toggleSidebar,
   editStory,
   cancelEditStory,
-  setLanguage,
-  showTrash,
-  hideTrash
+  setLanguage
 } from '../../../app/state/actions/uiStateActions';
 import {COMMAND_SENT, LOCATION_CHANGED} from '../../../app/state/actions/commandActions';
 
@@ -112,16 +108,16 @@ test(EVENT_RECEIVED, () => {
   expect(modifiedState.pendingCommands[cmdId2]).toBeUndefined();
 });
 
-test(TOGGLE_BACKLOG, () => {
+test(BACKLOG_SIDEBAR_TOGGLED, () => {
   const startingState = initialState();
 
   // settings is currently shown, when backlog is openend, hide settings
   startingState.sidebar = SIDEBAR_SETTINGS;
-  let modifiedState = clientActionReducer(startingState, toggleBacklog());
+  let modifiedState = clientActionReducer(startingState, toggleBacklogSidebar());
   expect(modifiedState.backlogShown).toBe(true);
   expect(modifiedState.sidebar).toBeFalsy();
 
-  modifiedState = clientActionReducer(modifiedState, toggleBacklog());
+  modifiedState = clientActionReducer(modifiedState, toggleBacklogSidebar());
   expect(modifiedState.backlogShown).toBe(false);
   expect(modifiedState.sidebar).toBeFalsy(); // still false
 });
@@ -152,7 +148,7 @@ test('toggle sidebar', () => {
   expect(modifiedState.sidebar).toBeUndefined();
 });
 
-test(EDIT_STORY + ' and ' + CANCEL_EDIT_STORY, () => {
+test(STORY_EDIT_MODE_ENTERED + ' and ' + STORY_EDIT_MODE_CANCELLED, () => {
   const storyId1 = uuid();
   const storyId2 = uuid();
 
@@ -201,15 +197,6 @@ test(LOCATION_CHANGED, () => {
     pathname: 'somePathName'
   });
   expect(modifiedState.pathname).toEqual('somePathName');
-});
-
-test(SHOW_TRASH + ' and ' + HIDE_TRASH, () => {
-  const startingState = initialState();
-
-  let modifiedState = clientActionReducer(startingState, showTrash());
-  expect(modifiedState.trashShown).toBe(true);
-  modifiedState = clientActionReducer(modifiedState, hideTrash());
-  expect(modifiedState.trashShown).toBe(false);
 });
 
 test(ROOM_STATE_FETCHED, () => {

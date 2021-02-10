@@ -19,20 +19,29 @@ export const getOwnUsername = createSelector([getUsers, getOwnUserId], (users, o
 
 /**
  * Returns an array of all users in our room, specially sorted: my own user always first.
- * All others sorted alphabetically (username)
+ * All normal users sorted alphabetically (username)
+ * All excluded users last
  */
 export const getSortedUserArray = createSelector([getUsers, getOwnUserId], (users, ownUserId) => {
   const userArray = Object.values(users || {});
-  userArray.sort(myUserFirstUserComparator.bind(undefined, ownUserId));
+  userArray.sort(myUserFirstExcludedLast.bind(undefined, ownUserId));
   return userArray;
 });
 
-const myUserFirstUserComparator = (ownUserId, userA, userB) => {
+const myUserFirstExcludedLast = (ownUserId, userA, userB) => {
   if (userA.id === ownUserId) {
     return -1;
   }
   if (userB.id === ownUserId) {
     return 1;
+  }
+
+  if (userA.excluded && !userB.excluded) {
+    return 1;
+  }
+
+  if (userB.excluded && !userA.excluded) {
+    return -1;
   }
 
   if (userA.username && userB.username) {

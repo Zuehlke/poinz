@@ -10,6 +10,8 @@ export const LOCATION_CHANGED = 'LOCATION_CHANGED';
 
 /* ACTION CREATORS */
 
+/** technically these are in fact action creators, since they all dispatch a "COMMAND_SENT" action.. **/
+
 /**
  * Store current pathname in our redux store, join or leave room if necessary
  */

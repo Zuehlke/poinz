@@ -1,25 +1,30 @@
 import clientSettingsStore from '../clientSettingsStore';
 
 /* TYPES */
-export const CANCEL_EDIT_STORY = 'CANCEL_EDIT_STORY';
-export const EDIT_STORY = 'EDIT_STORY';
+export const STORY_EDIT_MODE_ENTERED = 'STORY_EDIT_MODE_ENTERED';
+export const STORY_EDIT_MODE_CANCELLED = 'STORY_EDIT_MODE_CANCELLED';
 export const HIDE_NEW_USER_HINTS = 'HIDE_NEW_USER_HINTS';
-export const SHOW_TRASH = 'SHOW_TRASH';
-export const HIDE_TRASH = 'HIDE_TRASH';
-export const HIGHLIGHT_STORY = 'HIGHLIGHT_STORY';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
-export const TOGGLE_BACKLOG = 'TOGGLE_BACKLOG'; // toggles the visibility of the story backlog
-export const TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR'; // toggles the visibility of the righthand sidebar (could be either settings, action log or help)
-export const TOGGLE_MARK_FOR_KICK = 'TOGGLE_MARK_FOR_KICK';
+export const BACKLOG_SIDEBAR_TOGGLED = 'BACKLOG_SIDEBAR_TOGGLED'; // toggles the visibility of the story backlog
+export const SIDEBAR_TOGGLED = 'SIDEBAR_TOGGLED'; // toggles the visibility of the righthand sidebar (could be either settings, action log or help)
 
 /* ACTION CREATORS */
-export const toggleBacklog = () => ({type: TOGGLE_BACKLOG});
-export const showTrash = () => ({type: SHOW_TRASH});
-export const hideTrash = () => ({type: HIDE_TRASH});
-export const highlightStory = (storyId) => ({type: HIGHLIGHT_STORY, storyId});
-export const editStory = (storyId) => ({type: EDIT_STORY, storyId});
-export const cancelEditStory = (storyId) => ({type: CANCEL_EDIT_STORY, storyId});
-export const toggleMarkForKick = (userId) => ({type: TOGGLE_MARK_FOR_KICK, userId});
+
+/**
+ * in mobile view, the backlog on the let hand side is toggleable. ("hamburger icon")
+ */
+export const toggleBacklogSidebar = () => ({type: BACKLOG_SIDEBAR_TOGGLED});
+
+/**
+ * Enter "edit mode" for a story. Display the edit form instead of text+description.
+ * This needs to be on the redux state, we only want to disable edit mode if "storyChanged" event is received.
+ */
+export const editStory = (storyId) => ({type: STORY_EDIT_MODE_ENTERED, storyId});
+export const cancelEditStory = (storyId) => ({type: STORY_EDIT_MODE_CANCELLED, storyId});
+
+/**
+ * set the frontend language
+ */
 export const setLanguage = (language) => {
   clientSettingsStore.setPresetLanguage(language);
   return {type: SET_LANGUAGE, language};
@@ -28,7 +33,7 @@ export const hideNewUserHints = () => {
   clientSettingsStore.setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};
 };
-export const toggleSidebar = (sidebarKey) => ({type: TOGGLE_SIDEBAR, sidebarKey});
+export const toggleSidebar = (sidebarKey) => ({type: SIDEBAR_TOGGLED, sidebarKey});
 export const SIDEBAR_HELP = 'HELP';
 export const SIDEBAR_SETTINGS = 'SETTINGS';
 export const SIDEBAR_ACTIONLOG = 'ACTIONLOG';

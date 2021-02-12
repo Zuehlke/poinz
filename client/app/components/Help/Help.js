@@ -34,7 +34,6 @@ const Help = ({t, shown}) => (
       </p>
 
       <p>
-        {' '}
         <Avatar
           user={{email: 'set@zuehlke.com', emailHash: 'd2bb0fb7ae7e208f0a2384ec08d708ef'}}
           index={0}

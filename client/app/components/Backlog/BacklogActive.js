@@ -7,7 +7,7 @@ import {importCsvFile} from '../../state/actions/commandActions';
 import {getActiveStories} from '../../state/selectors/storiesAndEstimates';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
-import BacklogSortForm, {sortings} from './BacklogSortForm';
+import BacklogSortForm, {defaultSorting} from './BacklogSortForm';
 
 import {
   StyledStories,
@@ -53,7 +53,7 @@ const useDrop = (onFilesDrop) => {
  */
 const useSortingAndFiltering = (activeStories) => {
   const [filterQuery, setFilterQuery] = useState('');
-  const [sorting, setSorting] = useState(sortings.newestFirst);
+  const [sorting, setSorting] = useState(defaultSorting);
   const [sortedStories, setSortedStories] = useState(activeStories);
   useEffect(() => {
     setSortedStories(sortAndFilterStories(activeStories, sorting.comp, filterQuery));

@@ -2,17 +2,24 @@ import React from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
+import log from 'loglevel';
 
 import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
-import {findNextStoryIdToEstimate} from '../../state/selectors/storiesAndEstimates';
+import {
+  findNextStoryIdToEstimate,
+  getSelectedStory,
+  hasSelectedStoryConsensus,
+  isAStorySelected
+} from '../../state/selectors/storiesAndEstimates';
+import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
 import Cards from './Cards';
 import ConsensusBadge from '../common/ConsensusBadge';
-import ApplauseHighlight from './ApplauseHighlight';
 import EstimationSummary from './EstimationSummary';
 
 import {StyledStoryTitle} from '../_styled';
 import {
   EstimationAreaButtons,
+  StyledApplauseHighlight,
   StyledEstimation,
   StyledSelectedStory,
   StyledStoryText
@@ -30,13 +37,14 @@ const EstimationArea = ({
   selectedStory,
   selectNextStory,
   applause,
+  consensusCardConfig,
+  hasConsensus,
   userCanCurrentlyEstimate,
   newEstimationRound,
   reveal,
   hasNextStory
 }) => {
   const revealed = selectedStory.revealed;
-  const hasConsensus = selectedStory.consensus !== undefined && selectedStory.consensus !== null; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledEstimation data-testid="estimationArea">
@@ -50,7 +58,7 @@ const EstimationArea = ({
           <Anchorify text={selectedStory.description || ''} />
         </StyledStoryText>
 
-        {hasConsensus && applause && <ApplauseHighlight consensusValue={selectedStory.consensus} />}
+        {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
       </StyledSelectedStory>
 
       {!revealed && (
@@ -106,6 +114,8 @@ EstimationArea.propTypes = {
   selectNextStory: PropTypes.func,
   userCanCurrentlyEstimate: PropTypes.bool,
   selectedStory: PropTypes.object,
+  consensusCardConfig: PropTypes.object,
+  hasConsensus: PropTypes.bool,
   applause: PropTypes.bool,
   hasNextStory: PropTypes.bool,
   newEstimationRound: PropTypes.func,
@@ -114,13 +124,28 @@ EstimationArea.propTypes = {
 
 export default connect(
   (state) => {
-    const selectedStory = state.stories[state.selectedStory];
+    if (!isAStorySelected) {
+      log.error('No Story Selected! must not render EstimationArea');
+      return {};
+    }
+
+    const selectedStory = getSelectedStory(state);
     const isExcluded = state.users[state.userId].excluded;
     const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
+
+    const hasConsensus = hasSelectedStoryConsensus(state);
+    const consensusCardConfig = hasConsensus
+      ? getCardConfigForValue({
+          ...state,
+          cardConfigLookupValue: selectedStory.consensus
+        })
+      : {};
 
     return {
       t: state.translator,
       selectedStory,
+      consensusCardConfig,
+      hasConsensus,
       userCanCurrentlyEstimate,
       applause: state.applause,
       hasNextStory: !!findNextStoryIdToEstimate(state)

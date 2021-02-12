@@ -6,16 +6,14 @@ import {StyledEstmSummCard, StyledEstmSummCardInner} from './_styled';
 /**
  * One card in the estimation summary
  */
-const EstimationSummaryCard = ({cardCfg, count}) => {
-  return (
-    <StyledEstmSummCard>
-      <StyledEstmSummCardInner wasEstimated={!!count} cardColor={cardCfg.color}>
-        {cardCfg.label}
-        {count && <span>{count}</span>}
-      </StyledEstmSummCardInner>
-    </StyledEstmSummCard>
-  );
-};
+const EstimationSummaryCard = ({cardCfg, count}) => (
+  <StyledEstmSummCard>
+    <StyledEstmSummCardInner wasEstimated={!!count} cardColor={cardCfg.color}>
+      {cardCfg.label}
+      {count && <span>{count}</span>}
+    </StyledEstmSummCardInner>
+  </StyledEstmSummCard>
+);
 
 EstimationSummaryCard.propTypes = {
   cardCfg: PropTypes.object,

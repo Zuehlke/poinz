@@ -6,16 +6,15 @@ import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue
 
 import {StyledConsensusBadge} from './_styled';
 
-const ConsensusBadge = ({matchingCardConfig}) => {
-  return (
-    <StyledConsensusBadge
-      cardColor={matchingCardConfig && matchingCardConfig.color}
-      data-testid="consensusBadge"
-    >
-      <div>{matchingCardConfig.label}</div>
-    </StyledConsensusBadge>
-  );
-};
+const ConsensusBadge = ({matchingCardConfig}) => (
+  <StyledConsensusBadge
+    cardColor={matchingCardConfig && matchingCardConfig.color}
+    data-testid="consensusBadge"
+  >
+    <div>{matchingCardConfig.label}</div>
+  </StyledConsensusBadge>
+);
+
 ConsensusBadge.propTypes = {
   consensusValue: PropTypes.number,
   matchingCardConfig: PropTypes.object

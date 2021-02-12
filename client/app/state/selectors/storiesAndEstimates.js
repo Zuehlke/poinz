@@ -38,18 +38,33 @@ export const isAStorySelected = createSelector(
 );
 
 /**
+ * Get the currently selected story.
+ * Might return undefined!
+ */
+export const getSelectedStory = createSelector(
+  [getSelectedStoryId, getStories],
+  (selectedStoryId, stories) => stories && selectedStoryId && stories[selectedStoryId]
+);
+
+/**
  * Returns true if our room contains stories, and a story is selected and this story was estimated with consensus (all values the same).
  * False otherwise
  */
 export const hasSelectedStoryConsensus = createSelector(
-  [getSelectedStoryId, getStories],
-  (selectedStoryId, stories) =>
-    stories &&
-    selectedStoryId &&
-    !!stories[selectedStoryId] &&
-    stories[selectedStoryId].consensus !== null &&
-    stories[selectedStoryId].consensus !== undefined
+  [getSelectedStory],
+  (selectedStory) => selectedStory && hasStoryConsensus(selectedStory)
 );
+
+/**
+ * technically not a selector. pass in the story (not the whole state)
+ *
+ * value could be "0" which is falsy, check for undefined
+ *
+ * @param {object} story
+ * @return {boolean}
+ */
+export const hasStoryConsensus = (story) =>
+  story.consensus !== undefined && story.consensus !== null;
 
 /**
  *

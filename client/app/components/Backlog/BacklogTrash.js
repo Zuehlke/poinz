@@ -8,7 +8,7 @@ import {getTrashedStories} from '../../state/selectors/storiesAndEstimates';
 import {StyledBacklogInfoText, StyledStoriesScrolling} from './_styled';
 
 /**
- *
+ * List of trashed stories
  */
 const BacklogTrash = ({t, trashedStories}) => {
   const hasTrashedStories = trashedStories.length > 0;

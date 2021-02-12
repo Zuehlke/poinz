@@ -15,6 +15,7 @@ import {
   StyledHighlightButtonWrapper
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
+import {hasStoryConsensus} from '../../state/selectors/storiesAndEstimates';
 
 /**
  * One story in the backlog
@@ -31,7 +32,7 @@ const Story = ({
   isWaiting
 }) => {
   const isSelected = selectedStoryId === story.id;
-  const hasConsensus = story.consensus !== undefined && story.consensus !== null; // value could be "0" which is falsy, check for undefined
+  const hasConsensus = hasStoryConsensus(story);
 
   return (
     <StyledStory

@@ -28,9 +28,7 @@ const UserSettings = ({
   toggleExcluded,
   setLanguage
 }) => {
-  const username = user.username;
-  const email = user.email;
-  const excluded = user.excluded;
+  const {username, email, excluded} = user;
 
   // derive username for input field from prop
   const [myUsername, setMyUsername] = useState(username || '');

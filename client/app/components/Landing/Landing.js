@@ -58,9 +58,7 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
         )}
 
         <StyledEyecatcher>
-          <StyledChangelog
-            dangerouslySetInnerHTML={{__html: appConfig.changeLog}}
-          ></StyledChangelog>
+          <StyledChangelog dangerouslySetInnerHTML={{__html: appConfig.changeLog}} />
         </StyledEyecatcher>
       </StyledLandingInner>
     </StyledLanding>

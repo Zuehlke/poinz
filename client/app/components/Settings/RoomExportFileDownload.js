@@ -43,6 +43,7 @@ const RoomExportFileDownload = ({t, roomId, userToken}) => {
     }, 200);
   }
 };
+
 RoomExportFileDownload.propTypes = {
   t: PropTypes.func,
   roomId: PropTypes.string,

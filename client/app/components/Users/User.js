@@ -3,7 +3,11 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
-import {getEstimationsForCurrentlySelectedStory} from '../../state/selectors/storiesAndEstimates';
+import {
+  getEstimationsForCurrentlySelectedStory,
+  getSelectedStory,
+  isAStorySelected
+} from '../../state/selectors/storiesAndEstimates';
 import {kick} from '../../state/actions/commandActions';
 import Avatar from '../common/Avatar';
 import UserEstimationCard from './UserEstimationCard';
@@ -94,7 +98,7 @@ export default connect(
       userHasEstimation,
       matchingCardConfig,
       ownUserId: state.userId,
-      selectedStory: state.stories[state.selectedStory]
+      selectedStory: isAStorySelected(state) ? getSelectedStory(state) : undefined
     };
   },
   {kick}

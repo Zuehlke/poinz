@@ -7,7 +7,7 @@ import {StyledAvatar} from './_styled';
 
 const Avatar = ({user, isOwn, shaded, onClick}) => {
   const avatarImageSource = user.email
-    ? createGravatarUrl(user.emailHash)
+    ? `https://www.gravatar.com/avatar/${user.emailHash}?size=60`
     : avatarIcons[user.avatar || 0];
 
   return (
@@ -20,10 +20,6 @@ const Avatar = ({user, isOwn, shaded, onClick}) => {
     />
   );
 };
-
-function createGravatarUrl(emailHash) {
-  return `https://www.gravatar.com/avatar/${emailHash}?size=60`;
-}
 
 Avatar.propTypes = {
   user: PropTypes.object,

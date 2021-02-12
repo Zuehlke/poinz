@@ -31,10 +31,6 @@ const AppStatus = () => {
     return null;
   }
 
-  const uptime = secondsToDaysHoursMinutes(appStatus.uptime);
-
-  const sortedRooms = appStatus.rooms.sort(roomComparator);
-
   return (
     <StyledAppStatus data-testid="appStatusPage">
       <StyledTopBar data-testid="topBar">
@@ -61,7 +57,7 @@ const AppStatus = () => {
       <p>
         Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
       </p>
-      <p>Uptime: {uptime}</p>
+      <p>Uptime: {appStatus.uptime}</p>
       <p>Total rooms: {appStatus.roomCount}</p>
       <p>Running on: {appStatus.storeInfo}</p>
 
@@ -69,7 +65,7 @@ const AppStatus = () => {
 
       <StyledRoomsList>
         <TableHeaders />
-        {sortedRooms.map((room, index) => (
+        {appStatus.rooms.map((room, index) => (
           <RoomItem key={index} room={room} />
         ))}
       </StyledRoomsList>
@@ -77,7 +73,11 @@ const AppStatus = () => {
   );
 
   function loadAndSet() {
-    getAppStatus().then((data) => setAppStatus(data));
+    getAppStatus().then((data) => {
+      data.uptime = secondsToDaysHoursMinutes(data.uptime);
+      data.rooms.sort(roomComparator);
+      setAppStatus(data);
+    });
   }
 };
 

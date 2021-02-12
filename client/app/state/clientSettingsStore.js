@@ -1,72 +1,27 @@
-const POINZ_NS = 'poinz_';
+const POINZ_NAMESPACE = 'poinz_';
 
 function getItem(key) {
-  return localStorage.getItem(POINZ_NS + key);
+  return localStorage.getItem(POINZ_NAMESPACE + key);
 }
 
 function setItem(key, value) {
-  localStorage.setItem(POINZ_NS + key, value);
+  localStorage.setItem(POINZ_NAMESPACE + key, value);
 }
 
-function getPresetUsername() {
-  return getItem('presetUserName');
-}
+export const getPresetUsername = () => getItem('presetUserName');
+export const setPresetUsername = (username) => setItem('presetUserName', username);
 
-function setPresetUsername(username) {
-  setItem('presetUserName', username);
-}
+export const getPresetLanguage = () => getItem('presetLanguage');
+export const setPresetLanguage = (language) => setItem('presetLanguage', language);
 
-function getPresetLanguage() {
-  return getItem('presetLanguage');
-}
+export const getPresetEmail = () => getItem('presetEmail');
+export const setPresetEmail = (email) => setItem('presetEmail', email);
 
-function setPresetLanguage(language) {
-  setItem('presetLanguage', language);
-}
+export const getPresetAvatar = () => parseInt(getItem('presetAvatar'), 10);
+export const setPresetAvatar = (avatar) => setItem('presetAvatar', avatar);
 
-function getPresetEmail() {
-  return getItem('presetEmail');
-}
+export const getPresetUserId = () => getItem('presetUserId');
+export const setPresetUserId = (userId) => setItem('presetUserId', userId);
 
-function setPresetEmail(email) {
-  setItem('presetEmail', email);
-}
-
-function getPresetAvatar() {
-  return parseInt(getItem('presetAvatar'), 10);
-}
-
-function setPresetAvatar(avatar) {
-  setItem('presetAvatar', avatar);
-}
-
-function getPresetUserId() {
-  return getItem('presetUserId');
-}
-
-function setPresetUserId(userId) {
-  setItem('presetUserId', userId);
-}
-
-function getHideNewUserHints() {
-  return getItem('hideNewUserHints') === 'true';
-}
-
-function setHideNewUserHints(flag) {
-  setItem('hideNewUserHints', flag);
-}
-
-export default {
-  getPresetUsername,
-  setPresetUsername,
-  getPresetLanguage,
-  setPresetLanguage,
-  getPresetEmail,
-  setPresetEmail,
-  getPresetAvatar,
-  setPresetAvatar,
-  getPresetUserId,
-  setPresetUserId,
-  getHideNewUserHints,
-  setHideNewUserHints
-};
+export const getHideNewUserHints = () => getItem('hideNewUserHints') === 'true';
+export const setHideNewUserHints = (flag) => setItem('hideNewUserHints', flag);

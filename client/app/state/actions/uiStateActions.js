@@ -1,4 +1,4 @@
-import clientSettingsStore from '../clientSettingsStore';
+import {setPresetLanguage, setHideNewUserHints} from '../clientSettingsStore';
 
 /* TYPES */
 export const STORY_EDIT_MODE_ENTERED = 'STORY_EDIT_MODE_ENTERED';
@@ -26,11 +26,11 @@ export const cancelEditStory = (storyId) => ({type: STORY_EDIT_MODE_CANCELLED, s
  * set the frontend language
  */
 export const setLanguage = (language) => {
-  clientSettingsStore.setPresetLanguage(language);
+  setPresetLanguage(language);
   return {type: SET_LANGUAGE, language};
 };
 export const hideNewUserHints = () => {
-  clientSettingsStore.setHideNewUserHints(true);
+  setHideNewUserHints(true);
   return {type: HIDE_NEW_USER_HINTS};
 };
 export const toggleSidebar = (sidebarKey) => ({type: SIDEBAR_TOGGLED, sidebarKey});

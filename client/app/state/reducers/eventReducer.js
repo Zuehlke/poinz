@@ -1,7 +1,12 @@
 import log from 'loglevel';
 
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
-import clientSettingsStore from '../clientSettingsStore';
+import {
+  setPresetUserId,
+  setPresetUsername,
+  setPresetAvatar,
+  setPresetEmail
+} from '../clientSettingsStore';
 import initialState from '../initialState';
 import {getCardConfigForValue} from '../selectors/getCardConfigForValue';
 import {indexEstimations, indexStories, indexUsers} from '../roomStateMapper';
@@ -38,7 +43,7 @@ export default function eventReducer(state, action) {
     // with issue #99 we introduced a new validation for usernames.
     // if the preset username (previously stored in localStorage) does not match the new format, joinRoom will fail.
     if (reason.includes('validation Error') && reason.includes('/username')) {
-      clientSettingsStore.setPresetUsername('');
+      setPresetUsername('');
       return {...state, presetUsername: ''};
     }
 
@@ -91,7 +96,7 @@ const eventActionHandlers = {
       if (isOurJoinedEvend(state, event)) {
         // we joined
 
-        clientSettingsStore.setPresetUserId(event.userId);
+        setPresetUserId(event.userId);
 
         // server sends current room state (users, stories, etc.)
         return {
@@ -274,7 +279,7 @@ const eventActionHandlers = {
       const isOwnUser = state.userId === event.userId;
 
       if (isOwnUser) {
-        clientSettingsStore.setPresetUsername(payload.username);
+        setPresetUsername(payload.username);
       }
 
       const modifiedState = modifyUser(state, event.userId, (user) => ({
@@ -307,7 +312,7 @@ const eventActionHandlers = {
       const isOwnUser = state.userId === event.userId;
 
       if (isOwnUser) {
-        clientSettingsStore.setPresetEmail(payload.email);
+        setPresetEmail(payload.email);
       }
 
       return modifyUser(state, event.userId, (user) => ({
@@ -325,7 +330,7 @@ const eventActionHandlers = {
       const isOwnUser = state.userId === event.userId;
 
       if (isOwnUser) {
-        clientSettingsStore.setPresetAvatar(payload.avatar);
+        setPresetAvatar(payload.avatar);
       }
 
       const modifiedState = modifyUser(state, event.userId, (user) => ({

@@ -1,4 +1,4 @@
-import clientSettingsStore from './clientSettingsStore';
+import * as clientSettingsStore from './clientSettingsStore';
 import translatorFactory from './translator';
 
 import translationsEN from '../assets/i18n/en.json';

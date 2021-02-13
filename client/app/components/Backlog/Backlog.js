@@ -2,13 +2,14 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getActiveStories, getTrashedStories} from '../../state/selectors/storiesAndEstimates';
+import {getActiveStories, getTrashedStories} from '../../state/stories/storiesSelectors';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
 import StoryAddForm from './StoryAddForm';
 import BacklogModeButtons from './BacklogModeButtons';
 
 import {StyledBacklog} from './_styled';
+import {getTranslator, isBacklogShown} from '../../state/ui/uiSelectors';
 
 /**
  * The backlog contains two display modes:  active and trash
@@ -46,8 +47,8 @@ Backlog.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator,
-  backlogShown: state.backlogShown,
+  t: getTranslator(state),
+  backlogShown: isBacklogShown(state),
   trashedStoriesCount: getTrashedStories(state).length,
   activeStoriesCount: getActiveStories(state).length
 }))(Backlog);

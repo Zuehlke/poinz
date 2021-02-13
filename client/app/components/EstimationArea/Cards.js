@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import Card from './Card';
 
 import {StyledCards} from './_styled';
-import {getOwnEstimate} from '../../state/selectors/storiesAndEstimates';
+import {getOwnEstimate} from '../../state/estimations/estimationsSelectors';
+import {getCardConfigInOrder} from '../../state/room/roomSelectors';
 
 /**
  * All estimation cards on the board.
@@ -29,6 +30,6 @@ Cards.propTypes = {
 };
 
 export default connect((state) => ({
-  cardConfig: state.cardConfig,
+  cardConfig: getCardConfigInOrder(state),
   ownEstimate: getOwnEstimate(state)
 }))(Cards);

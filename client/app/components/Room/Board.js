@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {isAStorySelected} from '../../state/selectors/storiesAndEstimates';
 import Help from '../Help/Help';
 import FeedbackHint from './FeedbackHint';
 import Estimation from '../EstimationArea/EstimationArea';
@@ -12,6 +11,8 @@ import ActionLog from '../ActionLog/ActionLog';
 import Backlog from '../Backlog/Backlog';
 
 import {StyledBoard} from './_styled';
+import {getRoomId} from '../../state/room/roomSelectors';
+import {isAStorySelected} from '../../state/stories/storiesSelectors';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -41,6 +42,6 @@ Board.propTypes = {
 };
 
 export default connect((state) => ({
-  roomId: state.roomId,
+  roomId: getRoomId(state),
   isAStorySelected: isAStorySelected(state)
 }))(Board);

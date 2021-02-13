@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
-import {getTrashedStories} from '../../state/selectors/storiesAndEstimates';
+import {getTrashedStories} from '../../state/stories/storiesSelectors';
 
 import {StyledBacklogInfoText, StyledStoriesScrolling} from './_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * List of trashed stories
@@ -33,6 +34,6 @@ BacklogTrash.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator,
+  t: getTranslator(state),
   trashedStories: getTrashedStories(state)
 }))(BacklogTrash);

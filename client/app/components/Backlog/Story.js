@@ -5,8 +5,9 @@ import PropTypes from 'prop-types';
 
 import {editStory} from '../../state/actions/uiStateActions';
 import {selectStory, trashStory} from '../../state/actions/commandActions';
-import {isThisStoryWaiting} from '../../state/selectors/pendingCommands';
+import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
 import ConsensusBadge from '../common/ConsensusBadge';
+import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
 
 import {
   StyledStoryToolbar,
@@ -15,7 +16,7 @@ import {
   StyledHighlightButtonWrapper
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
-import {hasStoryConsensus} from '../../state/selectors/storiesAndEstimates';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * One story in the backlog
@@ -115,8 +116,8 @@ Story.propTypes = {
 
 export default connect(
   (state, props) => ({
-    t: state.translator,
-    selectedStoryId: state.selectedStory,
+    t: getTranslator(state),
+    selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryWaiting(state, props.story.id)
   }),
   {selectStory, editStory, trashStory}

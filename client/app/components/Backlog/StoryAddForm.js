@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 
 import {addStory} from '../../state/actions/commandActions';
 import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
-import {hasMatchingPendingCommand} from '../../state/selectors/pendingCommands';
+import {hasMatchingPendingCommand} from '../../state/commandTracking/commandTrackingSelectors';
 import ValidatedInput from '../common/ValidatedInput';
 
 import {StyledAddForm} from './_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * Form for adding stories to the backlog
@@ -77,7 +78,7 @@ StoryAddForm.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
+    t: getTranslator(state),
     waiting: hasMatchingPendingCommand(state, 'addStory')
   }),
   {addStory}

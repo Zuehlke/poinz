@@ -13,6 +13,7 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from './_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a password input field.
@@ -76,8 +77,8 @@ RoomProtected.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    roomId: state.authorizationFailed
+    t: getTranslator(state),
+    roomId: state.users.roomIdJoinAuthFail
   }),
   {joinRoom}
 )(RoomProtected);

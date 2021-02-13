@@ -1,12 +1,14 @@
 import {createStore, applyMiddleware, compose, bindActionCreators} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
-import rootReducer from './reducers/rootReducer';
+import rootReducer from './rootReducer';
 import hubFactory from './hub';
 import {eventReceived} from './actions/eventActions';
 import {locationChanged, onSocketConnect} from './actions/commandActions';
 import history from './getBrowserHistory';
 import appConfig from '../services/appConfig';
+import {getOwnUserId} from './users/usersSelectors';
+import {getRoomId} from './room/roomSelectors';
 
 /**
  * configures and sets up the redux store.
@@ -46,8 +48,8 @@ export default function configureStore(initialState) {
   // create our hub instance, provide it with "dispatch", "getUserId" and "getRoomId" callbacks
   hub = hubFactory(
     store.dispatch,
-    () => store.getState().userId,
-    () => store.getState().roomId
+    () => getOwnUserId(store.getState()),
+    () => getRoomId(store.getState())
   );
 
   // All backend events that are received by the hub are dispatched to our redux store

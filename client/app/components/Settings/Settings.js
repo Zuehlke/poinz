@@ -7,6 +7,7 @@ import UserSettings from './UserSettings';
 import RoomSettings from './RoomSettings';
 
 import {StyledLicenseHint, StyledSettings} from './_styled';
+import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 
 /**
  * The user menu allows customizing Poinz
@@ -33,5 +34,5 @@ Settings.propTypes = {
 };
 
 export default connect((state) => ({
-  shown: state.sidebar === SIDEBAR_SETTINGS
+  shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS
 }))(Settings);

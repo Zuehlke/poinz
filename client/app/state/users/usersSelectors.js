@@ -1,20 +1,29 @@
 import {createSelector} from 'reselect';
 
-const getOwnUserId = (state) => state.userId;
-const getUsers = (state) => state.users;
+export const getOwnUserId = (state) => state.users.ownUserId;
+export const getUsersById = (state) => state.users.usersById;
+export const getUsersPresets = (state) => state.users.presets;
 
 /**
  * Returns the number of users in our room.
  */
-export const getUserCount = createSelector([getUsers], (users) => {
+export const getUserCount = createSelector([getUsersById], (users) => {
   if (users) {
     return Object.keys(users).length;
   }
   return 0;
 });
 
-export const getOwnUsername = createSelector([getUsers, getOwnUserId], (users, ownUserId) =>
+export const getOwnUsername = createSelector([getUsersById, getOwnUserId], (users, ownUserId) =>
   users && users[ownUserId] ? users[ownUserId].username : '-'
+);
+
+/**
+ *
+ */
+export const getOwnUser = createSelector(
+  [getUsersById, getOwnUserId],
+  (users, ownUserId) => users[ownUserId]
 );
 
 /**
@@ -22,11 +31,14 @@ export const getOwnUsername = createSelector([getUsers, getOwnUserId], (users, o
  * All normal users sorted alphabetically (username)
  * All excluded users last
  */
-export const getSortedUserArray = createSelector([getUsers, getOwnUserId], (users, ownUserId) => {
-  const userArray = Object.values(users || {});
-  userArray.sort(myUserFirstExcludedLast.bind(undefined, ownUserId));
-  return userArray;
-});
+export const getSortedUserArray = createSelector(
+  [getUsersById, getOwnUserId],
+  (users, ownUserId) => {
+    const userArray = Object.values(users || {});
+    userArray.sort(myUserFirstExcludedLast.bind(undefined, ownUserId));
+    return userArray;
+  }
+);
 
 const myUserFirstExcludedLast = (ownUserId, userA, userB) => {
   if (userA.id === ownUserId) {

@@ -1,10 +1,20 @@
 import {createSelector} from 'reselect';
-import {getOwnEstimate} from './storiesAndEstimates';
+import {getOwnEstimate} from '../estimations/estimationsSelectors';
 
-const getPendingCmds = (state) => state.pendingCommands;
+const getPendingCmds = (state) => state.commandTracking.pendingCommands;
 
-// Returns pending commands as array. Never returns undefined.
-const getPendingCommands = createSelector([getPendingCmds], (pendingCmds) =>
+/**
+ * will return undefined, if we are not waiting for a joinEvent
+ *
+ * @param state
+ * @return {any}
+ */
+export const getPendingJoinCommandId = (state) => state.commandTracking.pendingJoinCommandId;
+
+/**
+ * Returns pending commands as array. Never returns undefined.
+ */
+const getPendingCmdsAsArray = createSelector([getPendingCmds], (pendingCmds) =>
   Object.values(pendingCmds || {})
 );
 
@@ -56,12 +66,12 @@ export const hasMatchingPendingCommand = (state, commandName) =>
  * Returns a matching pending command that was sent by this client (the client is currently waiting for a (event) response).
  * Can also return undefined
  */
-export const getMatchingPendingCommand = (state, commandName) =>
-  getPendingCommands(state).find((cmd) => cmd.name === commandName);
+const getMatchingPendingCommand = (state, commandName) =>
+  getPendingCmdsAsArray(state).find((cmd) => cmd.name === commandName);
 
 /**
  * Returns all matching pending commands for the given commandName.
  * Can return an empty array. never returns undefined.
  */
-export const getAllMatchingPendingCommands = (state, commandName) =>
-  getPendingCommands(state).filter((cmd) => cmd.name === commandName);
+const getAllMatchingPendingCommands = (state, commandName) =>
+  getPendingCmdsAsArray(state).filter((cmd) => cmd.name === commandName);

@@ -2,6 +2,8 @@ import log from 'loglevel';
 
 import history from '../getBrowserHistory';
 import {getRoom} from '../../services/restApi/roomService';
+import {getPendingJoinCommandId} from '../commandTracking/commandTrackingSelectors';
+import {getRoomId} from '../room/roomSelectors';
 
 /* TYPES */
 export const ROOM_STATE_FETCHED = 'ROOM_STATE_FETCHED';
@@ -50,32 +52,64 @@ export const EVENT_ACTION_TYPES = {
  * @param {object} event
  */
 export const eventReceived = (event) => (dispatch, getState) => {
-  const matchingType = EVENT_ACTION_TYPES[event.name];
-  if (!matchingType) {
-    log.error(`Unknown incoming event type ${event.name}. Will not dispatch a specific action.`);
+  const state = getState();
+  if (!EVENT_ACTION_TYPES[event.name]) {
+    log.error(`Unknown incoming event type ${event.name}. Will ignore!`);
     return;
   }
 
-  // dispatch generic "event_received" action
+  if (event.roomId !== getRoomId(state)) {
+    log.warn(
+      `Received event "${event.name}" has roomId=${event.roomId}. Our state has roomId=${getRoomId(
+        state
+      )}`
+    );
+  }
+
+  dispatchGenericEvent(dispatch, event);
+
+  dispatchSpecificEvent(dispatch, event, state);
+
+  if (EVENT_ACTION_TYPES[event.name] === EVENT_ACTION_TYPES.joinedRoom) {
+    history.push('/' + event.roomId);
+  }
+
+  if (EVENT_ACTION_TYPES[event.name] === EVENT_ACTION_TYPES.commandRejected) {
+    tryToRecoverOnRejection(event, dispatch, getState);
+  }
+};
+
+/**
+ * Dispatches a generic "EVENT_RECEIVED"  redux action
+ * @param dispatch
+ * @param event
+ */
+const dispatchGenericEvent = (dispatch, event) => {
   dispatch({
     type: EVENT_RECEIVED,
     eventName: event.name,
     correlationId: event.correlationId
   });
+};
 
-  // dispatch the specific event action
-  dispatch({
+/**
+ * Dispatches a specific redux action (see EVENT_ACTION_TYPES)
+ *
+ * @param dispatch
+ * @param event
+ * @param state
+ */
+const dispatchSpecificEvent = (dispatch, event, state) => {
+  const type = EVENT_ACTION_TYPES[event.name];
+  const specificEventAction = {
     event,
-    type: matchingType
-  });
-
-  if (event.name === 'joinedRoom') {
-    history.push('/' + event.roomId);
+    type
+  };
+  const isJoinedRoomEvent = type === EVENT_ACTION_TYPES.joinedRoom;
+  if (isJoinedRoomEvent && getPendingJoinCommandId(state) === event.correlationId) {
+    specificEventAction.ourJoin = true;
   }
-
-  if (matchingType === EVENT_ACTION_TYPES.commandRejected) {
-    tryToRecoverOnRejection(event, dispatch, getState);
-  }
+  dispatch(specificEventAction);
 };
 
 /**
@@ -85,7 +119,7 @@ export const eventReceived = (event) => (dispatch, getState) => {
  */
 const tryToRecoverOnRejection = (event, dispatch, getState) => {
   const state = getState();
-  if (!event.payload || !event.payload.command || !state.roomId) {
+  if (!event.payload || !event.payload.command || !getRoomId(state)) {
     return;
   }
 
@@ -98,7 +132,7 @@ const tryToRecoverOnRejection = (event, dispatch, getState) => {
     failedCommandName === 'reveal' ||
     failedCommandName === 'kick'
   ) {
-    getRoom(state.roomId, state.userToken).then((data) =>
+    getRoom(getRoomId(state), state.userToken).then((data) =>
       dispatch({
         type: ROOM_STATE_FETCHED,
         room: data

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
 import {importCsvFile} from '../../state/actions/commandActions';
-import {getActiveStories} from '../../state/selectors/storiesAndEstimates';
+import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import BacklogSortForm, {defaultSorting} from './BacklogSortForm';
@@ -15,6 +15,7 @@ import {
   StyledFileImportDropZoneOverlay,
   StyledBacklogInfoText
 } from './_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 const sortAndFilterStories = (activeStories, comparator, query) => {
   const lcQuery = query.toLowerCase();
@@ -146,9 +147,9 @@ BacklogActive.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
+    t: getTranslator(state),
     activeStories: getActiveStories(state),
-    selectedStoryId: state.selectedStory
+    selectedStoryId: getSelectedStoryId(state)
   }),
   {importCsvFile}
 )(BacklogActive);

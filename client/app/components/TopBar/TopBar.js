@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getOwnUsername} from '../../state/selectors/users';
+import {getOwnUsername} from '../../state/users/usersSelectors';
 import {
   toggleBacklogSidebar,
   toggleSidebar,
@@ -26,6 +26,13 @@ import {
   StyledWhoAmISimple,
   StyledIconExclamation
 } from './_styled';
+import {getRoomId} from '../../state/room/roomSelectors';
+import {
+  getCurrentSidebarIfAny,
+  getTranslator,
+  hasUnseenError,
+  isBacklogShown
+} from '../../state/ui/uiSelectors';
 
 const TopBar = ({
   t,
@@ -124,11 +131,11 @@ TopBar.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    roomId: state.roomId,
-    backlogShown: state.backlogShown,
-    sidebar: state.sidebar,
-    unseenError: state.unseenError,
+    t: getTranslator(state),
+    roomId: getRoomId(state),
+    backlogShown: isBacklogShown(state),
+    sidebar: getCurrentSidebarIfAny(state),
+    unseenError: hasUnseenError(state),
     username: getOwnUsername(state)
   }),
   {toggleBacklogSidebar, toggleSidebar, leaveRoom}

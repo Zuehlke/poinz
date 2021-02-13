@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {SIDEBAR_ACTIONLOG} from '../../state/actions/uiStateActions';
+import {getActionLog} from '../../state/actionLog/actionLogSelectors';
 
 import {
   StyledActionLogInner,
@@ -10,6 +11,7 @@ import {
   StyledActionLog,
   StyledActionLogListItem
 } from './_styled';
+import {getCurrentSidebarIfAny, getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
@@ -38,7 +40,7 @@ ActionLog.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator,
-  shown: state.sidebar === SIDEBAR_ACTIONLOG,
-  actionLog: state.actionLog
+  t: getTranslator(state),
+  shown: getCurrentSidebarIfAny(state) === SIDEBAR_ACTIONLOG,
+  actionLog: getActionLog(state)
 }))(ActionLog);

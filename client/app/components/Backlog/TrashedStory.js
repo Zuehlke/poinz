@@ -7,6 +7,7 @@ import ConsensusBadge from '../common/ConsensusBadge';
 
 import {StyledStoryToolbar, StyledStory} from './_styled';
 import {StyledStoryTitle} from '../_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * One Trashed Story in the Trash
@@ -44,7 +45,7 @@ TrashedStory.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator
+    t: getTranslator(state)
   }),
   {restoreStory, deleteStory}
 )(TrashedStory);

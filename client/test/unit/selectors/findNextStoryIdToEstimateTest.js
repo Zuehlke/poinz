@@ -1,23 +1,24 @@
-import {findNextStoryIdToEstimate} from '../../../app/state/selectors/storiesAndEstimates';
+import {findNextStoryIdToEstimate} from '../../../app/state/estimations/estimationsSelectors';
+import initialState from '../../../app/state/initialState';
 
 test('next unrevealed', () => {
-  const state = {
-    selectedStory: 1,
-    stories: {
-      1: {
-        id: 1,
-        title: 'one',
-        revealed: true,
-        consensus: 5
-      },
-      2: {
-        id: 2,
-        title: 'two'
-      },
-      3: {
-        id: 3,
-        title: 'three'
-      }
+  const state = {...initialState()};
+
+  state.stories.selectedStoryId = 1;
+  state.stories.storiesById = {
+    1: {
+      id: 1,
+      title: 'one',
+      revealed: true,
+      consensus: 5
+    },
+    2: {
+      id: 2,
+      title: 'two'
+    },
+    3: {
+      id: 3,
+      title: 'three'
     }
   };
 
@@ -25,26 +26,26 @@ test('next unrevealed', () => {
 });
 
 test('next without consensus', () => {
-  const state = {
-    selectedStory: 1,
-    stories: {
-      1: {
-        id: 1,
-        title: 'one',
-        revealed: true,
-        consensus: 5
-      },
-      2: {
-        id: 2,
-        title: 'two',
-        revealed: true,
-        consensus: 2
-      },
-      3: {
-        id: 3,
-        title: 'three',
-        revealed: true
-      }
+  const state = {...initialState()};
+
+  state.stories.selectedStoryId = 1;
+  state.stories.storiesById = {
+    1: {
+      id: 1,
+      title: 'one',
+      revealed: true,
+      consensus: 5
+    },
+    2: {
+      id: 2,
+      title: 'two',
+      revealed: true,
+      consensus: 2
+    },
+    3: {
+      id: 3,
+      title: 'three',
+      revealed: true
     }
   };
 
@@ -52,21 +53,21 @@ test('next without consensus', () => {
 });
 
 test('all revealed and consensus ', () => {
-  const state = {
-    selectedStory: 1,
-    stories: {
-      1: {
-        id: 1,
-        title: 'one',
-        revealed: true,
-        consensus: 5
-      },
-      2: {
-        id: 2,
-        title: 'two',
-        revealed: true,
-        consensus: 8
-      }
+  const state = {...initialState()};
+
+  state.stories.selectedStoryId = 1;
+  state.stories.storiesById = {
+    1: {
+      id: 1,
+      title: 'one',
+      revealed: true,
+      consensus: 5
+    },
+    2: {
+      id: 2,
+      title: 'two',
+      revealed: true,
+      consensus: 8
     }
   };
 
@@ -74,20 +75,20 @@ test('all revealed and consensus ', () => {
 });
 
 test('all trashed', () => {
-  const state = {
-    selectedStory: 1,
-    stories: {
-      1: {
-        id: 1,
-        title: 'one',
-        revealed: true,
-        consensus: 5
-      },
-      2: {
-        id: 2,
-        title: 'one',
-        trashed: true
-      }
+  const state = {...initialState()};
+
+  state.stories.selectedStoryId = 1;
+  state.stories.storiesById = {
+    1: {
+      id: 1,
+      title: 'one',
+      revealed: true,
+      consensus: 5
+    },
+    2: {
+      id: 2,
+      title: 'one',
+      trashed: true
     }
   };
 

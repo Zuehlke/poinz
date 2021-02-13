@@ -2,17 +2,16 @@ import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
-import {
-  getEstimationsForCurrentlySelectedStory,
-  getSelectedStory,
-  isAStorySelected
-} from '../../state/selectors/storiesAndEstimates';
+import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
 import {kick} from '../../state/actions/commandActions';
 import Avatar from '../common/Avatar';
 import UserEstimationCard from './UserEstimationCard';
 
 import {StyledUser, StyledUserBadge, StyledUserKickOverlay, StyledUserName} from './_styled';
+import {getSelectedStory, isAStorySelected} from '../../state/stories/storiesSelectors';
+import {getMatchingCardConfig} from '../../state/room/roomSelectors';
+import {getTranslator} from '../../state/ui/uiSelectors';
+import {getOwnUserId} from '../../state/users/usersSelectors';
 
 const User = ({t, user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
   const isOwnUser = user.id === ownUserId;
@@ -87,17 +86,14 @@ export default connect(
     const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
 
     const matchingCardConfig = userHasEstimation
-      ? getCardConfigForValue({
-          ...state,
-          cardConfigLookupValue: userEstimationValue
-        })
+      ? getMatchingCardConfig(state, userEstimationValue)
       : {};
 
     return {
-      t: state.translator,
+      t: getTranslator(state),
       userHasEstimation,
       matchingCardConfig,
-      ownUserId: state.userId,
+      ownUserId: getOwnUserId(state),
       selectedStory: isAStorySelected(state) ? getSelectedStory(state) : undefined
     };
   },

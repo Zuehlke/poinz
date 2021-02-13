@@ -2,9 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
-
 import {StyledConsensusBadge} from './_styled';
+import {getMatchingCardConfig} from '../../state/room/roomSelectors';
 
 const ConsensusBadge = ({matchingCardConfig}) => (
   <StyledConsensusBadge
@@ -21,5 +20,5 @@ ConsensusBadge.propTypes = {
 };
 
 export default connect((state, props) => ({
-  matchingCardConfig: getCardConfigForValue({...state, cardConfigLookupValue: props.consensusValue})
+  matchingCardConfig: getMatchingCardConfig(state, props.consensusValue)
 }))(ConsensusBadge);

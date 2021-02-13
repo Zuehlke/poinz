@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {StyledBacklogSortForm, StyledSortDropdown, StyledSortDropdownItem} from './_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * available sort options with their respective story comparators
@@ -127,5 +128,5 @@ BacklogSortForm.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator
+  t: getTranslator(state)
 }))(BacklogSortForm);

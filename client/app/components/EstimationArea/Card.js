@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {giveStoryEstimate, clearStoryEstimate} from '../../state/actions/commandActions';
-import {isThisCardWaiting} from '../../state/selectors/pendingCommands';
+import {isThisCardWaiting} from '../../state/commandTracking/commandTrackingSelectors';
 
 import {StyledCard, StyledCardInner} from './_styled';
 

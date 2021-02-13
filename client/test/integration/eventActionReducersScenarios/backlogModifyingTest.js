@@ -1,6 +1,7 @@
-import initialState from '../../../app/state/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
+import {getStoriesById} from '../../../app/state/stories/storiesSelectors';
+import getScenarioStartingState from './getScenarioStartingState';
 
 let scenario;
 
@@ -20,23 +21,20 @@ test('Adding Stories', async () => {
   const addedEvtTwo = scenario.events[10];
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: joinedEvtOne.correlationId
-    },
+    getScenarioStartingState(joinedEvtOne.correlationId),
     scenario.getNextEvents(11) // we don't need all events, only the first 12 events until both stories are added
   );
 
   // stories are correctly stored as object. storyIds are the keys.
   // no "estimations" on stories. estimations are stored seperately on state
-  expect(modifiedState.stories[addedEvtOne.payload.storyId]).toEqual({
+
+  expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId]).toEqual({
     id: addedEvtOne.payload.storyId,
     title: addedEvtOne.payload.title,
     description: addedEvtOne.payload.description,
     createdAt: addedEvtOne.payload.createdAt
   });
-  expect(modifiedState.stories[addedEvtTwo.payload.storyId]).toEqual({
+  expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId]).toEqual({
     id: addedEvtTwo.payload.storyId,
     title: addedEvtTwo.payload.title,
     description: addedEvtTwo.payload.description,
@@ -56,15 +54,11 @@ test('Editing Stories', async () => {
   const changedEvtTwo = scenario.events[12];
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: joinedEvtOne.correlationId
-    },
+    getScenarioStartingState(joinedEvtOne.correlationId),
     scenario.getNextEvents(13) // we don't need all events,  only the first 13 events until both stories are edited (changed)
   );
 
-  expect(modifiedState.stories[addedEvtOne.payload.storyId]).toEqual({
+  expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId]).toEqual({
     id: addedEvtOne.payload.storyId,
     title: changedEvtOne.payload.title,
     description: changedEvtOne.payload.description,
@@ -72,7 +66,7 @@ test('Editing Stories', async () => {
     editMode: false
   });
 
-  expect(modifiedState.stories[addedEvtTwo.payload.storyId]).toEqual({
+  expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId]).toEqual({
     id: addedEvtTwo.payload.storyId,
     title: changedEvtTwo.payload.title,
     description: changedEvtTwo.payload.description,
@@ -89,22 +83,18 @@ test('Trashing, Restoring and Deleting stories', () => {
   const addedEvtTwo = scenario.events[10];
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: joinedEvtOne.correlationId
-    },
+    getScenarioStartingState(joinedEvtOne.correlationId),
     scenario.getNextEvents(14) // up until trashed
   );
-  expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(true);
-  expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
+  expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId].trashed).toBe(true);
+  expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // restored event
-  expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
-  expect(modifiedState.stories[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
+  expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId].trashed).toBe(false);
+  expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getNextEvents(2)); // trashed & deleted event
-  expect(modifiedState.stories[addedEvtOne.payload.storyId]).toBeUndefined(); // story is removed completely
+  expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId]).toBeUndefined(); // story is removed completely
 
-  expect(modifiedState.stories[addedEvtTwo.payload.storyId].trashed).toBe(false);
+  expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId].trashed).toBe(false);
 });

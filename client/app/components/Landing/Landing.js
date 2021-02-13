@@ -4,7 +4,9 @@ import PropTypes from 'prop-types';
 
 import JoinRoomForm from './JoinRoomForm';
 import GithubRibbon from './GithubRibbon';
-import {hasMatchingPendingCommand} from '../../state/selectors/pendingCommands';
+import {hasMatchingPendingCommand} from '../../state/commandTracking/commandTrackingSelectors';
+import {getActionLog} from '../../state/actionLog/actionLogSelectors';
+import appConfig from '../../services/appConfig';
 import {
   StyledActionLog,
   StyledEyecatcher,
@@ -14,7 +16,7 @@ import {
   StyledInfoText,
   StyledChangelog
 } from './_styled';
-import appConfig from '../../services/appConfig';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * The "landing" page where the user can enter a room name to join
@@ -72,8 +74,8 @@ Landing.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator,
-  actionLog: state.actionLog,
+  t: getTranslator(state),
+  actionLog: getActionLog(state),
   waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
 }))(Landing);
 

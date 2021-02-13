@@ -1,7 +1,5 @@
-import log from 'loglevel';
-
-import rootReducer from '../../../app/state/reducers/rootReducer';
-import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../../../app/state/actions/eventActions';
+import rootReducer from '../../../app/state/rootReducer';
+import {eventReceived} from '../../../app/state/actions/eventActions';
 
 /**
  * reduce a series of given events ("at once" , in sequence)
@@ -12,23 +10,16 @@ import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../../../app/state/actions/eve
  */
 export default function reduceMultipleEvents(startingState, events) {
   let modifiedState = startingState;
-  events.forEach((e) => {
-    modifiedState = rootReducer(modifiedState, {
-      type: EVENT_RECEIVED,
-      eventName: e.name,
-      correlationId: e.correlationId
-    });
 
-    const matchingType = EVENT_ACTION_TYPES[e.name];
+  const ourDispatch = (action) => {
+    modifiedState = rootReducer(modifiedState, action);
+  };
 
-    if (!matchingType) {
-      log.warn(`No matching action type for event "${e.name}"`);
-    }
+  const ourGetState = () => modifiedState;
 
-    modifiedState = rootReducer(modifiedState, {
-      event: e,
-      type: matchingType
-    });
+  events.forEach((e, ind) => {
+    console.log(`[INTEGRATION_TEST] reducing event ${e.name} at scenario index ${ind}`);
+    eventReceived(e)(ourDispatch, ourGetState);
   });
   return modifiedState;
 }

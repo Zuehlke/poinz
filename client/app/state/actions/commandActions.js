@@ -1,8 +1,11 @@
 import {v4 as uuid} from 'uuid';
 
-import {findNextStoryIdToEstimate} from '../selectors/storiesAndEstimates';
+import {findNextStoryIdToEstimate} from '../estimations/estimationsSelectors';
 import appConfig from '../../services/appConfig';
 import history from '../getBrowserHistory';
+import {getOwnUserId, getUsersPresets} from '../users/usersSelectors';
+import {getSelectedStoryId} from '../stories/storiesSelectors';
+import {getRoomId} from '../room/roomSelectors';
 
 /* TYPES */
 export const COMMAND_SENT = 'COMMAND_SENT';
@@ -17,10 +20,11 @@ export const LOCATION_CHANGED = 'LOCATION_CHANGED';
  */
 export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
+  const ourRoomId = getRoomId(state);
 
-  if (isRoomIdGivenInPathname(pathname) && !state.roomId) {
+  if (isRoomIdGivenInPathname(pathname) && !ourRoomId) {
     joinRoom(pathname.substring(1))(dispatch, getState, sendCommand);
-  } else if (!pathname || (pathname.length < 2 && state.userId && state.roomId)) {
+  } else if (!pathname || (pathname.length < 2 && getOwnUserId(state) && ourRoomId)) {
     sendCommand({
       name: 'leaveRoom',
       payload: {}
@@ -36,46 +40,48 @@ const isRoomIdGivenInPathname = (pathname) =>
   pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
 
 export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
-  const roomId = getState().roomId;
+  const state = getState();
+  const ourRoomId = getRoomId(state);
 
-  if (roomId) {
+  if (ourRoomId) {
     // the socket connected. since we have a roomId in our client-side state, we can assume this is a "re-connect"
     // make sure we are in sync again with the backend state. send a joinRoom command.
-    joinRoom(roomId)(dispatch, getState, sendCommand);
+    joinRoom(ourRoomId)(dispatch, getState, sendCommand);
   }
 };
 
 export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) => {
   const normalizedRoomId = roomId ? roomId.toLowerCase() : uuid();
 
-  const joinCommandPayload = {};
   const state = getState();
-
-  if (state.presetUsername) {
-    joinCommandPayload.username = state.presetUsername;
-  }
-  if (state.presetEmail) {
-    joinCommandPayload.email = state.presetEmail;
-  }
-  if (Number.isInteger(state.presetAvatar)) {
-    joinCommandPayload.avatar = state.presetAvatar;
-  }
-  if (password) {
-    // join with cleartext password from UI input field
-    joinCommandPayload.password = password;
-  } else if (state.userToken) {
-    // join with jwt if present (after joining password-protected room, jwt is stored in our redux state)
-    joinCommandPayload.token = state.userToken;
-  }
 
   const joinCommand = {
     name: 'joinRoom',
     roomId: normalizedRoomId,
-    payload: joinCommandPayload
+    payload: {}
   };
 
-  if (state.presetUserId) {
-    joinCommand.userId = state.presetUserId;
+  const userPresets = getUsersPresets(state);
+
+  if (userPresets.username) {
+    joinCommand.payload.username = userPresets.username;
+  }
+  if (userPresets.email) {
+    joinCommand.payload.email = userPresets.email;
+  }
+  if (Number.isInteger(userPresets.avatar)) {
+    joinCommand.payload.avatar = userPresets.avatar;
+  }
+  if (password) {
+    // join with cleartext password from UI input field
+    joinCommand.payload.password = password;
+  } else if (state.userToken) {
+    // join with jwt if present (after joining password-protected room, jwt is stored in our redux state)
+    joinCommand.payload.token = state.userToken;
+  }
+
+  if (userPresets.userId) {
+    joinCommand.userId = userPresets.userId;
   }
 
   sendCommand(joinCommand);
@@ -102,7 +108,7 @@ export const addStory = (storyTitle, storyDescription) => (dispatch, getState, s
 
 export const selectStory = (storyId) => (dispatch, getState, sendCommand) => {
   const state = getState();
-  if (state.selectedStory === storyId) {
+  if (getSelectedStoryId(state) === storyId) {
     return;
   }
 
@@ -133,7 +139,7 @@ export const giveStoryEstimate = (value) => (dispatch, getState, sendCommand) =>
   sendCommand({
     name: 'giveStoryEstimate',
     payload: {
-      storyId: state.selectedStory,
+      storyId: getSelectedStoryId(state),
       value
     }
   });
@@ -144,7 +150,7 @@ export const clearStoryEstimate = () => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'clearStoryEstimate',
     payload: {
-      storyId: state.selectedStory
+      storyId: getSelectedStoryId(state)
     }
   });
 };

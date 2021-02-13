@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 
 import getEstimationSummary from './getEstimationSummary';
 import EstimationSummaryCard from './EstimationSummaryCard';
-import {getUserCount} from '../../state/selectors/users';
-import {
-  getEstimationsForCurrentlySelectedStory,
-  hasSelectedStoryConsensus
-} from '../../state/selectors/storiesAndEstimates';
+import {getUserCount} from '../../state/users/usersSelectors';
+import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
+import {hasSelectedStoryConsensus} from '../../state/stories/storiesSelectors';
 
 import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
+import {getCardConfigInOrder} from '../../state/room/roomSelectors';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
@@ -52,9 +52,9 @@ EstimationSummary.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator,
+  t: getTranslator(state),
   estimations: getEstimationsForCurrentlySelectedStory(state),
   usersInRoomCount: getUserCount(state),
-  cardConfig: state.cardConfig,
+  cardConfig: getCardConfigInOrder(state),
   hasConsensus: hasSelectedStoryConsensus(state)
 }))(EstimationSummary);

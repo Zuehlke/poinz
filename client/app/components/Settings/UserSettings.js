@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import ValidatedInput from '../common/ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../frontendInputValidation';
 import avatarIcons from '../../assets/avatars';
-
+import {getOwnUser} from '../../state/users/usersSelectors';
 import {setLanguage} from '../../state/actions/uiStateActions';
 import {toggleExcluded, setUsername, setEmail, setAvatar} from '../../state/actions/commandActions';
 
@@ -17,6 +17,7 @@ import {
   StyledSection,
   StyledTextInput
 } from './_styled';
+import {getLanguage, getTranslator} from '../../state/ui/uiSelectors';
 
 const UserSettings = ({
   t,
@@ -172,9 +173,9 @@ UserSettings.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    user: state.users[state.userId],
-    language: state.language
+    t: getTranslator(state),
+    user: getOwnUser(state),
+    language: getLanguage(state)
   }),
   {
     toggleExcluded,

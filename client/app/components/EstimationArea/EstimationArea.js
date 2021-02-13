@@ -4,17 +4,18 @@ import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 
-import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
-import {
-  findNextStoryIdToEstimate,
-  getSelectedStory,
-  hasSelectedStoryConsensus,
-  isAStorySelected
-} from '../../state/selectors/storiesAndEstimates';
-import {getCardConfigForValue} from '../../state/selectors/getCardConfigForValue';
 import Cards from './Cards';
 import ConsensusBadge from '../common/ConsensusBadge';
 import EstimationSummary from './EstimationSummary';
+import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
+import {findNextStoryIdToEstimate} from '../../state/estimations/estimationsSelectors';
+import {
+  hasSelectedStoryConsensus,
+  getSelectedStory,
+  isAStorySelected
+} from '../../state/stories/storiesSelectors';
+import {getOwnUser} from '../../state/users/usersSelectors';
+import {getMatchingCardConfig} from '../../state/room/roomSelectors';
 
 import {StyledStoryTitle} from '../_styled';
 import {
@@ -24,6 +25,7 @@ import {
   StyledSelectedStory,
   StyledStoryText
 } from './_styled';
+import {getTranslator, hasApplause} from '../../state/ui/uiSelectors';
 
 /**
  * Displays
@@ -124,30 +126,25 @@ EstimationArea.propTypes = {
 
 export default connect(
   (state) => {
-    if (!isAStorySelected) {
+    if (!isAStorySelected(state)) {
       log.error('No Story Selected! must not render EstimationArea');
       return {};
     }
 
     const selectedStory = getSelectedStory(state);
-    const isExcluded = state.users[state.userId].excluded;
+    const isExcluded = getOwnUser(state).excluded;
     const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
 
     const hasConsensus = hasSelectedStoryConsensus(state);
-    const consensusCardConfig = hasConsensus
-      ? getCardConfigForValue({
-          ...state,
-          cardConfigLookupValue: selectedStory.consensus
-        })
-      : {};
+    const consensusCardConfig = getMatchingCardConfig(state, selectedStory.consensus);
 
     return {
-      t: state.translator,
+      t: getTranslator(state),
       selectedStory,
       consensusCardConfig,
       hasConsensus,
       userCanCurrentlyEstimate,
-      applause: state.applause,
+      applause: hasApplause(state),
       hasNextStory: !!findNextStoryIdToEstimate(state)
     };
   },

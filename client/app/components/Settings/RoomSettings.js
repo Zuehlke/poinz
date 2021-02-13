@@ -9,6 +9,8 @@ import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
 
 import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
+import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
+import {getCurrentSidebarIfAny, getTranslator} from '../../state/ui/uiSelectors';
 
 const RoomSettings = ({
   t,
@@ -153,11 +155,11 @@ RoomSettings.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    shown: state.sidebar === SIDEBAR_SETTINGS,
-    autoReveal: state.autoReveal,
-    cardConfig: state.cardConfig,
-    roomId: state.roomId,
+    t: getTranslator(state),
+    shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
+    autoReveal: state.room.autoReveal,
+    cardConfig: getCardConfigInOrder(state),
+    roomId: getRoomId(state),
     passwordProtected: state.passwordProtected
   }),
   {

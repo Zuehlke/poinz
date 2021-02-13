@@ -13,6 +13,7 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from './_styled';
+import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
@@ -83,7 +84,7 @@ WhoAreYou.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator
+    t: getTranslator(state)
   }),
   {setUsername}
 )(WhoAreYou);

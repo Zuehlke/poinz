@@ -1,7 +1,11 @@
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 import getScenarioStartingState from './getScenarioStartingState';
-import {getStoriesById} from '../../../app/state/stories/storiesSelectors';
+import {
+  getStoriesById,
+  hasSelectedStoryConsensus,
+  hasStoryConsensus
+} from '../../../app/state/stories/storiesSelectors';
 import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
 import {hasApplause} from '../../../app/state/ui/uiSelectors';
 
@@ -68,11 +72,17 @@ test('Estimation with two users', () => {
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getNextEvents(2)); // revealed and consensus
   expect(getStoriesById(modifiedState)[storyIdOne].revealed).toBe(true);
   expect(getStoriesById(modifiedState)[storyIdOne].consensus).toBe(5);
+  expect(hasStoryConsensus(getStoriesById(modifiedState)[storyIdOne])).toBe(true);
+  expect(hasSelectedStoryConsensus(modifiedState)).toBe(true);
+  expect(hasStoryConsensus(getStoriesById(modifiedState)[storyIdTwo])).toBe(false);
   expect(hasApplause(modifiedState)).toBe(true);
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // new round
   expect(getStoriesById(modifiedState)[storyIdOne].revealed).toBe(false); // story no longer revealed
   expect(getStoriesById(modifiedState)[storyIdOne].consensus).toBe(undefined);
+  expect(hasSelectedStoryConsensus(modifiedState)).toBe(false);
+  expect(hasStoryConsensus(getStoriesById(modifiedState)[storyIdOne])).toBe(false);
+
   expect(getEstimations(modifiedState)).toEqual({
     // old values for story removed
   });

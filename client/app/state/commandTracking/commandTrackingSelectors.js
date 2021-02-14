@@ -38,14 +38,21 @@ const getPendingCmdsAsArray = createSelector([getPendingCmds], (pendingCmds) =>
  * (either because you just estimated or cleared your estimation)
  */
 export const isThisCardWaiting = (state, cardValue) => {
-  const ownEstimate = getOwnEstimate(state);
+  return isGivingEstimate(state, cardValue) || isClearingEstimate(state, cardValue);
+};
+
+const isGivingEstimate = (state, cardValue) => {
   const pendingEstimationCommand = getMatchingPendingCommand(state, 'giveStoryEstimate');
   const estimationWaiting = pendingEstimationCommand
     ? pendingEstimationCommand.payload.value
     : undefined;
-  const hasPendingClearCommand = hasMatchingPendingCommand(state, 'clearStoryEstimate');
 
-  return cardValue === estimationWaiting || (hasPendingClearCommand && cardValue === ownEstimate);
+  return cardValue === estimationWaiting;
+};
+
+const isClearingEstimate = (state, cardValue) => {
+  const hasPendingClearCommand = hasMatchingPendingCommand(state, 'clearStoryEstimate');
+  return hasPendingClearCommand && cardValue === getOwnEstimate(state);
 };
 
 /**

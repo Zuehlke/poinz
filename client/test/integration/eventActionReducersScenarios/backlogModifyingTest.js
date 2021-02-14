@@ -1,6 +1,12 @@
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
-import {getStoriesById} from '../../../app/state/stories/storiesSelectors';
+import {
+  getSelectedStory,
+  getSelectedStoryId,
+  getStoriesById,
+  getTrashedStories,
+  isAStorySelected
+} from '../../../app/state/stories/storiesSelectors';
 import getScenarioStartingState from './getScenarioStartingState';
 
 let scenario;
@@ -17,6 +23,7 @@ test('Adding Stories', async () => {
   let modifiedState;
 
   const joinedEvtOne = scenario.events[1];
+  const addedEvtDefault = scenario.events[3]; // on room creation, a default "sample" story is already added
   const addedEvtOne = scenario.events[9];
   const addedEvtTwo = scenario.events[10];
 
@@ -26,7 +33,7 @@ test('Adding Stories', async () => {
   );
 
   // stories are correctly stored as object. storyIds are the keys.
-  // no "estimations" on stories. estimations are stored seperately on state
+  // no "estimations" on stories. estimations are stored separately on state
 
   expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId]).toEqual({
     id: addedEvtOne.payload.storyId,
@@ -39,6 +46,13 @@ test('Adding Stories', async () => {
     title: addedEvtTwo.payload.title,
     description: addedEvtTwo.payload.description,
     createdAt: addedEvtTwo.payload.createdAt
+  });
+
+  expect(isAStorySelected(modifiedState)).toBe(true);
+  expect(getSelectedStoryId(modifiedState)).toBe(addedEvtDefault.payload.storyId);
+  expect(getSelectedStory(modifiedState)).toMatchObject({
+    id: addedEvtDefault.payload.storyId,
+    title: addedEvtDefault.payload.title
   });
 });
 
@@ -86,6 +100,8 @@ test('Trashing, Restoring and Deleting stories', () => {
     getScenarioStartingState(joinedEvtOne.correlationId),
     scenario.getNextEvents(14) // up until trashed
   );
+  expect(getTrashedStories(modifiedState).length).toBe(1);
+  expect(getTrashedStories(modifiedState)[0].id).toBe(addedEvtTwo.payload.storyId);
   expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId].trashed).toBe(true);
   expect(getStoriesById(modifiedState)[addedEvtOne.payload.storyId].trashed).toBeUndefined(); // unchanged
 

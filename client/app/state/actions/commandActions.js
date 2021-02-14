@@ -16,7 +16,8 @@ export const LOCATION_CHANGED = 'LOCATION_CHANGED';
 /** technically these are in fact action creators, since they all dispatch a "COMMAND_SENT" action.. **/
 
 /**
- * Store current pathname in our redux store, join or leave room if necessary
+ * "location" changed in browser history (i.e. url changed).
+ * send "joinRoom"  or "leaveRoom" commands if appropriate
  */
 export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
@@ -24,7 +25,7 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
 
   if (isRoomIdGivenInPathname(pathname) && !ourRoomId) {
     joinRoom(pathname.substring(1))(dispatch, getState, sendCommand);
-  } else if (!pathname || (pathname.length < 2 && getOwnUserId(state) && ourRoomId)) {
+  } else if ((!pathname || pathname.length < 2) && getOwnUserId(state) && ourRoomId) {
     sendCommand({
       name: 'leaveRoom',
       payload: {}

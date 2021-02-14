@@ -29,10 +29,8 @@ export default function (state, action, oldState) {
 
   switch (action.type) {
     // joining / leaving / kicking
-
     case EVENT_ACTION_TYPES.roomCreated:
       return updateLogInState(`Room "${payload.id}" created`);
-
     case EVENT_ACTION_TYPES.joinedRoom: {
       const isOwnJoin = getOwnUserId(state) === event.userId;
       const message = isOwnJoin
@@ -48,7 +46,6 @@ export default function (state, action, oldState) {
         return updateLogInState(message);
       }
     }
-
     case EVENT_ACTION_TYPES.leftRoom: {
       if (event.userId === getOwnUserId(oldState)) {
         return {
@@ -56,12 +53,15 @@ export default function (state, action, oldState) {
           actionLog: [toLogItem('You left the room')] // clear actionLog, just add our new item
         };
       } else {
-        return updateLogInState(`${username} left the room`);
+        return updateLogInState(`${getUsername(oldState, event.userId)} left the room`);
       }
     }
     case EVENT_ACTION_TYPES.kicked:
       return updateLogInState(
-        `${getUsername(oldState, payload.userId)} was kicked from the room by ${username}`
+        `${getUsername(oldState, payload.userId)} was kicked from the room by ${getUsername(
+          oldState,
+          event.userId
+        )}`
       );
     case EVENT_ACTION_TYPES.connectionLost:
       return updateLogInState(`${username} lost the connection`);
@@ -126,7 +126,6 @@ export default function (state, action, oldState) {
 
       return updateLogInState(message);
     }
-
     case EVENT_ACTION_TYPES.revealed: {
       const storyTitle = getStoryTitle(state, payload.storyId);
       const message = payload.manually
@@ -135,7 +134,6 @@ export default function (state, action, oldState) {
 
       return updateLogInState(message);
     }
-
     case EVENT_ACTION_TYPES.newEstimationRoundStarted: {
       return updateLogInState(
         `${username} started a new estimation round for story "${getStoryTitle(
@@ -183,10 +181,6 @@ export default function (state, action, oldState) {
   }
 
   function updateLogInState(logObject) {
-    if (!logObject) {
-      return state;
-    }
-
     return {
       ...state,
       actionLog: [toLogItem(logObject), ...state.actionLog]

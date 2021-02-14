@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect';
 
 export const getOwnUserId = (state) => state.users.ownUserId;
+export const getOwnUserToken = (state) => state.users.ownUserToken;
 export const getUsersById = (state) => state.users.usersById;
 export const getUsersPresets = (state) => state.users.presets;
 

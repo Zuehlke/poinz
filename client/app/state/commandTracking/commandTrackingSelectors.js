@@ -4,12 +4,27 @@ import {getOwnEstimate} from '../estimations/estimationsSelectors';
 const getPendingCmds = (state) => state.commandTracking.pendingCommands;
 
 /**
- * will return undefined, if we are not waiting for a joinEvent
+ * returns a commandId of the "joinRoom" command, if we sent one and are waiting for the respective event from the backend.
+ * Will return undefined, if we are not waiting for a roomJoined Event
  *
  * @param state
- * @return {any}
+ * @return {string | undefined}
  */
 export const getPendingJoinCommandId = (state) => state.commandTracking.pendingJoinCommandId;
+
+/**
+ *
+ * @param state
+ * @return {boolean}
+ */
+export const hasJoinFailedAuthorization = (state) => !!state.commandTracking.roomIdJoinAuthFail;
+
+/**
+ *
+ * @param state
+ * @return {string | undefined}
+ */
+export const getJoinFailedAuthRoomId = (state) => state.commandTracking.roomIdJoinAuthFail;
 
 /**
  * Returns pending commands as array. Never returns undefined.

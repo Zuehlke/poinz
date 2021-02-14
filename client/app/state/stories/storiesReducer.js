@@ -23,6 +23,7 @@ export default function storiesReducer(state = storiesInitialState, action, ownU
     case ROOM_STATE_FETCHED:
       return {
         ...state,
+        selectedStoryId: action.room.selectedStory,
         storiesById: indexStories(action.room.stories)
       };
 

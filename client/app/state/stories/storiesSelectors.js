@@ -6,6 +6,7 @@ export const getStoryById = (state, storyId) => state.stories.storiesById[storyI
 
 /**
  * Returns active stories as array. Never returns undefined.
+ * @return {object[]}
  */
 export const getActiveStories = createSelector([getStoriesById], (stories) =>
   stories ? Object.values(stories).filter((s) => !s.trashed) : []

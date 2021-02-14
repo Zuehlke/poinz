@@ -4,6 +4,7 @@ import history from '../getBrowserHistory';
 import {getRoom} from '../../services/restApi/roomService';
 import {getPendingJoinCommandId} from '../commandTracking/commandTrackingSelectors';
 import {getRoomId} from '../room/roomSelectors';
+import {getOwnUserToken} from '../users/usersSelectors';
 
 /* TYPES */
 export const ROOM_STATE_FETCHED = 'ROOM_STATE_FETCHED';
@@ -132,7 +133,7 @@ const tryToRecoverOnRejection = (event, dispatch, getState) => {
     failedCommandName === 'reveal' ||
     failedCommandName === 'kick'
   ) {
-    getRoom(getRoomId(state), state.userToken).then((data) =>
+    getRoom(getRoomId(state), getOwnUserToken(state)).then((data) =>
       dispatch({
         type: ROOM_STATE_FETCHED,
         room: data

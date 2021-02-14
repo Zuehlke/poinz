@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {getRoomExport} from '../../services/restApi/roomService';
 import {getTranslator} from '../../state/ui/uiSelectors';
+import {getOwnUserToken} from '../../state/users/usersSelectors';
 
 const RoomExportFileDownload = ({t, roomId, userToken}) => {
   return (
@@ -53,5 +54,5 @@ RoomExportFileDownload.propTypes = {
 
 export default connect((state) => ({
   t: getTranslator(state),
-  userToken: state.users.ownUserToken
+  userToken: getOwnUserToken(state)
 }))(RoomExportFileDownload);

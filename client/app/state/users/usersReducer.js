@@ -14,7 +14,6 @@ import {getUserPresets} from '../clientSettingsStore';
 export const usersInitialState = {
   ownUserId: undefined,
   ownUserToken: undefined,
-  roomIdJoinAuthFail: undefined, // contains the roomId in case of failed "join" command because of missing or wrong password / token
   usersById: {},
   presets: getUserPresets() // presets, stored in localStorage; username, userId, avatar, email
 };
@@ -45,7 +44,6 @@ export default function usersReducer(state = usersInitialState, action, ownUserI
           ...state,
           presets: {...state.presets, userId: event.userId},
           ownUserId: event.userId,
-          roomIdJoinAuthFail: undefined,
           usersById: indexUsers(event.payload.users)
         };
       } else {
@@ -155,22 +153,6 @@ export default function usersReducer(state = usersInitialState, action, ownUserI
         ...user,
         excluded: false
       }));
-    }
-
-    case EVENT_ACTION_TYPES.commandRejected: {
-      if (event.payload && event.payload.command && event.payload.command.name === 'joinRoom') {
-        const reason = event.payload.reason;
-
-        if (reason.includes('Not Authorized')) {
-          // joinRoom failed to a a password-protected room. Let's store the roomId on our state
-          return {
-            ...state,
-            roomIdJoinAuthFail: event.payload.command.roomId
-          };
-        }
-      } else {
-        return state;
-      }
     }
   }
 

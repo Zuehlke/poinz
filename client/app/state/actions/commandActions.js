@@ -3,7 +3,7 @@ import {v4 as uuid} from 'uuid';
 import {findNextStoryIdToEstimate} from '../estimations/estimationsSelectors';
 import appConfig from '../../services/appConfig';
 import history from '../getBrowserHistory';
-import {getOwnUserId, getUsersPresets} from '../users/usersSelectors';
+import {getOwnUserId, getOwnUserToken, getUsersPresets} from '../users/usersSelectors';
 import {getSelectedStoryId} from '../stories/storiesSelectors';
 import {getRoomId} from '../room/roomSelectors';
 
@@ -75,9 +75,9 @@ export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) 
   if (password) {
     // join with cleartext password from UI input field
     joinCommand.payload.password = password;
-  } else if (state.userToken) {
+  } else if (getOwnUserToken(state)) {
     // join with jwt if present (after joining password-protected room, jwt is stored in our redux state)
-    joinCommand.payload.token = state.userToken;
+    joinCommand.payload.token = getOwnUserToken(state);
   }
 
   if (userPresets.userId) {

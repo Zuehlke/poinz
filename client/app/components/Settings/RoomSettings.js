@@ -46,7 +46,7 @@ const RoomSettings = ({
         </p>
       </StyledSection>
 
-      <StyledSection>
+      <StyledSection data-testid="sectionPasswordProtection">
         <h5>{t('passwordProtection')}</h5>
         {t('passwordProtectionInfo')}
 
@@ -57,6 +57,7 @@ const RoomSettings = ({
             </p>
             <StyledTextInput>
               <PasswordField
+                data-testid="roomPasswordInput"
                 onKeyPress={onRoomPasswordKeyPress}
                 onChange={(e) => setMyRoomPassword(e.target.value)}
                 value={myRoomPassword}
@@ -81,6 +82,7 @@ const RoomSettings = ({
             </p>
             <StyledTextInput>
               <PasswordField
+                data-testid="roomPasswordInput"
                 onKeyPress={onRoomPasswordKeyPress}
                 onChange={(e) => setMyRoomPassword(e.target.value)}
                 value={myRoomPassword}
@@ -160,7 +162,7 @@ export default connect(
     autoReveal: state.room.autoReveal,
     cardConfig: getCardConfigInOrder(state),
     roomId: getRoomId(state),
-    passwordProtected: state.passwordProtected
+    passwordProtected: state.room.passwordProtected
   }),
   {
     toggleAutoReveal,

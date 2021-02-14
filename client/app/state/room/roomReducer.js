@@ -1,4 +1,4 @@
-import {EVENT_ACTION_TYPES} from '../actions/eventActions';
+import {EVENT_ACTION_TYPES, ROOM_STATE_FETCHED} from '../actions/eventActions';
 import {storiesInitialState} from '../stories/storiesReducer';
 
 export const roomInitialState = {
@@ -22,6 +22,18 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
   const {event} = action;
 
   switch (action.type) {
+    case ROOM_STATE_FETCHED: {
+      return {
+        ...state,
+        autoReveal: action.room.autoReveal,
+        passwordProtected: action.room.passwordProtected,
+        cardConfig: {
+          ordered: action.room.cardConfig,
+          byValue: indexCcByValue(action.room.cardConfig)
+        }
+      };
+    }
+
     case EVENT_ACTION_TYPES.joinedRoom: {
       if (action.ourJoin) {
         return {

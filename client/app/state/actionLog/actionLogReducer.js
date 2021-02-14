@@ -108,7 +108,7 @@ export default function (state, action, oldState) {
       );
     case EVENT_ACTION_TYPES.storySelected: {
       const line = payload.storyId
-        ? `${username} selected current story "${getStoryTitle(state, payload.storyId)}"`
+        ? `${username} selected story "${getStoryTitle(state, payload.storyId)}" for estimation`
         : 'Currently no story is selected';
       return updateLogInState(line);
     }

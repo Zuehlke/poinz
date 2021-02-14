@@ -10,6 +10,7 @@ import appConfig from '../services/appConfig';
 import RoomProtected from './Landing/RoomProtected';
 import {getOwnUserId, getUserCount, getUsersPresets} from '../state/users/usersSelectors';
 import {getRoomId} from '../state/room/roomSelectors';
+import {hasJoinFailedAuthorization} from '../state/commandTracking/commandTrackingSelectors';
 
 const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
 
@@ -47,5 +48,5 @@ export default connect((state) => ({
   userCount: getUserCount(state),
   userId: getOwnUserId(state),
   presetUsername: getUsersPresets(state).username,
-  authorizationFailed: !!state.users.roomIdJoinAuthFail
+  authorizationFailed: hasJoinFailedAuthorization(state)
 }))(Main);

@@ -14,6 +14,7 @@ import {
   StyledLandingForm
 } from './_styled';
 import {getTranslator} from '../../state/ui/uiSelectors';
+import {getJoinFailedAuthRoomId} from '../../state/commandTracking/commandTrackingSelectors';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a password input field.
@@ -33,6 +34,7 @@ const RoomProtected = ({t, roomId, joinRoom}) => {
           </StyledInfoText>
           <StyledLandingForm className="pure-form">
             <PasswordField
+              data-testid="roomPasswordInput"
               placeholder={t('password')}
               onChange={onInputChange}
               value={password}
@@ -78,7 +80,7 @@ RoomProtected.propTypes = {
 export default connect(
   (state) => ({
     t: getTranslator(state),
-    roomId: state.users.roomIdJoinAuthFail
+    roomId: getJoinFailedAuthRoomId(state)
   }),
   {joinRoom}
 )(RoomProtected);

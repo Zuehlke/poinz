@@ -3,6 +3,7 @@ import {EVENT_ACTION_TYPES, EVENT_RECEIVED} from '../actions/eventActions';
 
 export const commandTrackingInitialState = {
   pendingJoinCommandId: undefined,
+  roomIdJoinAuthFail: undefined, // contains the roomId in case of failed "join" command because of missing or wrong password / token
   pendingCommands: {}
 };
 
@@ -26,6 +27,8 @@ export default function commandTrackingReducer(
   action,
   ownUserId
 ) {
+  const {event} = action;
+
   switch (action.type) {
     case COMMAND_SENT: {
       const modifiedState = {
@@ -53,7 +56,8 @@ export default function commandTrackingReducer(
       if (action.ourJoin) {
         return {
           ...state,
-          pendingJoinCommandId: undefined
+          pendingJoinCommandId: undefined,
+          roomIdJoinAuthFail: undefined
         };
       } else {
         return state;
@@ -61,7 +65,7 @@ export default function commandTrackingReducer(
     }
 
     case EVENT_ACTION_TYPES.leftRoom: {
-      if (action.event.userId === ownUserId) {
+      if (event.userId === ownUserId) {
         return {...commandTrackingInitialState};
       } else {
         return state;
@@ -69,8 +73,20 @@ export default function commandTrackingReducer(
     }
 
     case EVENT_ACTION_TYPES.kicked: {
-      if (action.event.payload.userId === ownUserId) {
+      if (event.payload.userId === ownUserId) {
         return {...commandTrackingInitialState};
+      } else {
+        return state;
+      }
+    }
+
+    case EVENT_ACTION_TYPES.commandRejected: {
+      if (isAuthFailedJoinRejected(event)) {
+        // joinRoom failed to a a password-protected room. Let's store the roomId on our state
+        return {
+          ...state,
+          roomIdJoinAuthFail: event.payload.command.roomId
+        };
       } else {
         return state;
       }
@@ -79,3 +95,12 @@ export default function commandTrackingReducer(
 
   return state;
 }
+
+const isAuthFailedJoinRejected = (event) => {
+  if (event.payload && event.payload.command && event.payload.command.name === 'joinRoom') {
+    const reason = event.payload.reason;
+
+    return reason.includes('Not Authorized');
+  }
+  return false;
+};

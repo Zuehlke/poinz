@@ -23,6 +23,11 @@ export const getEstimationsForCurrentlySelectedStory = createSelector(
     estimations && estimations[selectedStoryId] ? estimations[selectedStoryId] : {}
 );
 
+export const isThisStoryEstimated = (state, storyId) => {
+  const estimations = getEstimations(state);
+  return !!estimations[storyId];
+};
+
 /**
  * Find the id of the "next story to estimate":
  * - Look through the backlog of active (=untrashed) stories, find the first one that is not revealed.

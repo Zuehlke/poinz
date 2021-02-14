@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import log from 'loglevel';
 
 import Cards from './Cards';
-import ConsensusBadge from '../common/ConsensusBadge';
+import ValueBadge from '../common/ValueBadge';
 import EstimationSummary from './EstimationSummary';
 import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
 import {findNextStoryIdToEstimate} from '../../state/estimations/estimationsSelectors';
@@ -16,6 +16,7 @@ import {
 } from '../../state/stories/storiesSelectors';
 import {getOwnUser} from '../../state/users/usersSelectors';
 import {getMatchingCardConfig} from '../../state/room/roomSelectors';
+import {getTranslator, hasApplause} from '../../state/ui/uiSelectors';
 
 import {StyledStoryTitle} from '../_styled';
 import {
@@ -25,7 +26,6 @@ import {
   StyledSelectedStory,
   StyledStoryText
 } from './_styled';
-import {getTranslator, hasApplause} from '../../state/ui/uiSelectors';
 
 /**
  * Displays
@@ -53,7 +53,7 @@ const EstimationArea = ({
       <StyledSelectedStory data-testid="story">
         <StyledStoryTitle>
           {selectedStory.title}
-          {hasConsensus && <ConsensusBadge consensusValue={selectedStory.consensus} />}
+          {hasConsensus && <ValueBadge cardValue={selectedStory.consensus} />}
         </StyledStoryTitle>
 
         <StyledStoryText>

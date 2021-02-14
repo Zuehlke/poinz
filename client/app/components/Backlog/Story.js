@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {editStory} from '../../state/actions/uiStateActions';
 import {selectStory, trashStory} from '../../state/actions/commandActions';
 import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
-import ConsensusBadge from '../common/ConsensusBadge';
+import ValueBadge from '../common/ValueBadge';
 import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
 
 import {
@@ -17,6 +17,8 @@ import {
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
 import {getTranslator} from '../../state/ui/uiSelectors';
+import UndecidedBadge from '../common/UndecidedBadge';
+import {isThisStoryEstimated} from '../../state/estimations/estimationsSelectors';
 
 /**
  * One story in the backlog
@@ -30,7 +32,8 @@ const Story = ({
   selectStory,
   editStory,
   trashStory,
-  isWaiting
+  isWaiting,
+  isStoryEstimated
 }) => {
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
@@ -60,7 +63,8 @@ const Story = ({
 
       <StyledStoryTitle>
         <div>{story.title}</div>
-        {hasConsensus && <ConsensusBadge consensusValue={story.consensus} />}
+        {hasConsensus && <ValueBadge cardValue={story.consensus} />}
+        {!hasConsensus && isStoryEstimated && <UndecidedBadge />}
       </StyledStoryTitle>
 
       {
@@ -106,6 +110,7 @@ Story.propTypes = {
   story: PropTypes.object,
   isWaiting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
+  isStoryEstimated: PropTypes.bool,
   selectedStoryId: PropTypes.string,
   onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
@@ -118,7 +123,8 @@ export default connect(
   (state, props) => ({
     t: getTranslator(state),
     selectedStoryId: getSelectedStoryId(state),
-    isWaiting: isThisStoryWaiting(state, props.story.id)
+    isWaiting: isThisStoryWaiting(state, props.story.id),
+    isStoryEstimated: isThisStoryEstimated(state, props.story.id)
   }),
   {selectStory, editStory, trashStory}
 )(Story);

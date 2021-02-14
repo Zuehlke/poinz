@@ -24,7 +24,7 @@ export const StyledAvatar = styled.img`
   }
 `;
 
-export const StyledConsensusBadge = styled.div`
+export const StyledValueBadge = styled.div`
   display: flex;
   width: 24px;
   height: 24px;
@@ -40,6 +40,13 @@ export const StyledConsensusBadge = styled.div`
     color: white;
     font-family: ${ZuehlkeFont};
   }
+`;
+
+export const StyledUndecidedBadge = styled(StyledValueBadge)`
+  background: none;
+  width: 16px;
+  height: 16px;
+  border: 4px solid #ccc;
 `;
 
 export const StyledPasswordFieldWrapper = styled.div`

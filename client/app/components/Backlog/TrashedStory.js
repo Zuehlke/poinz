@@ -3,11 +3,11 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {restoreStory, deleteStory} from '../../state/actions/commandActions';
-import ConsensusBadge from '../common/ConsensusBadge';
+import {getTranslator} from '../../state/ui/uiSelectors';
+import ValueBadge from '../common/ValueBadge';
 
 import {StyledStoryToolbar, StyledStory} from './_styled';
 import {StyledStoryTitle} from '../_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * One Trashed Story in the Trash
@@ -31,7 +31,7 @@ const TrashedStory = ({t, story, restoreStory, deleteStory}) => (
 
     <StyledStoryTitle>
       <div>{story.title}</div>
-      {story.consensus && <ConsensusBadge consensusValue={story.consensus} />}
+      {story.consensus && <ValueBadge cardValue={story.consensus} />}
     </StyledStoryTitle>
   </StyledStory>
 );

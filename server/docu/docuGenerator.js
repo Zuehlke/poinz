@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
 
+const downloadMermaidDiagramsAsSvg = require('./diagrams/downloadMermaidDiagramsAsSvg');
 const gatherData = require('./gatherData');
 const renderDocu = require('./renderDocu');
 
@@ -31,4 +32,6 @@ async function generate() {
     markdownString,
     'utf-8'
   );
+
+  await downloadMermaidDiagramsAsSvg();
 }

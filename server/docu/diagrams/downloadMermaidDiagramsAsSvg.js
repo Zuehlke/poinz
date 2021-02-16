@@ -1,0 +1,79 @@
+const fs = require('fs');
+const https = require('https');
+const path = require('path');
+const glob = require('glob');
+
+const BASE_URL = 'https://mermaid.ink/svg/';
+
+module.exports = downloadMermaidDiagramsAsSvg;
+
+/**
+ *
+ * @return {Promise<string[]>}
+ */
+async function downloadMermaidDiagramsAsSvg() {
+  const files = await listMarkdownFiles();
+  const filesWithUrl = await Promise.all(files.map(augmentWithUrl));
+
+  await Promise.all(
+    filesWithUrl.map(async (file) => downloadImageToFile(file.url, file.filePath + '.svg'))
+  );
+}
+
+/**
+ *
+ * @return {Promise<{filePath:string,fileName,string}>}
+ */
+async function listMarkdownFiles() {
+  const diagramRootFolder = path.resolve(__dirname);
+  return new Promise((resolve, reject) => {
+    glob('**/*.md', {cwd: diagramRootFolder}, (err, matchingFileNames) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(
+          matchingFileNames.map((fileName) => ({
+            filePath: path.resolve(diagramRootFolder, fileName),
+            fileName
+          }))
+        );
+      }
+    });
+  });
+}
+
+/**
+ *
+ * @param {object} diagram
+ * @return {Promise<{filePath:string,fileName:string,url:string}>}
+ */
+async function augmentWithUrl(diagram) {
+  const source = await fs.promises.readFile(diagram.filePath, 'utf-8');
+  return {...diagram, url: createMermaidImageUrl(source)};
+}
+
+function createMermaidImageUrl(rawMermaidDiagramText) {
+  const config = {code: rawMermaidDiagramText, mermaid: {theme: 'default'}, updateEditor: false};
+  const buffer = Buffer.from(JSON.stringify(config), 'utf-8');
+  const encodedConfig = buffer.toString('base64');
+  return BASE_URL + encodedConfig;
+}
+
+function downloadImageToFile(imageUrl, filePath) {
+  return new Promise((resolve, reject) => {
+    const file = fs.createWriteStream(filePath);
+    https
+      .get(imageUrl, (response) => {
+        response.pipe(file);
+
+        file.on('finish', () => {
+          file.close();
+          resolve();
+        });
+      })
+      .on('error', (err) => {
+        fs.unlink(filePath);
+        reject(err);
+      });
+  });
+}

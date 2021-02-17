@@ -3,6 +3,7 @@ const https = require('https');
 const path = require('path');
 const glob = require('glob');
 
+const settings = require('../docuSettings');
 const BASE_URL = 'https://mermaid.ink/svg/';
 
 module.exports = downloadMermaidDiagramsAsSvg;
@@ -25,15 +26,14 @@ async function downloadMermaidDiagramsAsSvg() {
  * @return {Promise<{filePath:string,fileName,string}>}
  */
 async function listMarkdownFiles() {
-  const diagramRootFolder = path.resolve(__dirname);
   return new Promise((resolve, reject) => {
-    glob('**/*.md', {cwd: diagramRootFolder}, (err, matchingFileNames) => {
+    glob('**/*.md', {cwd: settings.diagramsDirPath}, (err, matchingFileNames) => {
       if (err) {
         reject(err);
       } else {
         resolve(
           matchingFileNames.map((fileName) => ({
-            filePath: path.resolve(diagramRootFolder, fileName),
+            filePath: path.resolve(settings.diagramsDirPath, fileName),
             fileName
           }))
         );

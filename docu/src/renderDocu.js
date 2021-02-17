@@ -1,10 +1,11 @@
-const path = require('path');
 const ejs = require('ejs');
+
+const settings = require('../docuSettings');
 
 const renderDocu = ({commandHandlerFileData, eventList}) => {
   return new Promise((resolve, reject) => {
     ejs.renderFile(
-      path.join(__dirname, './templates/main.ejs'),
+      settings.commandAndEventDocuTemplate,
       {commandHandlerFileData, eventList, now: new Date().toLocaleString()},
       {
         /* options */

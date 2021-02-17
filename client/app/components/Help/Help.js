@@ -18,7 +18,7 @@ const Help = ({t, shown}) => (
       <p>
         If you need help, please checkout the{' '}
         <a
-          href="https://github.com/Zuehlke/poinz/blob/master/manual.md"
+          href="https://github.com/Zuehlke/poinz/blob/master/docu/manual.md"
           target="_blank"
           rel="noopener noreferrer"
         >

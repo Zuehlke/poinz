@@ -23,7 +23,7 @@ async function downloadMermaidDiagramsAsSvg() {
   await Promise.all(
     filesWithUrl.map(async (file) => {
       console.log(`   downloading mermaid.js diagram for ${file.fileName}`);
-      await downloadImageToFile(file.url, file.filePath + '.svg')
+      await downloadImageToFile(file.url, file.filePath + '.svg');
     })
   );
 }

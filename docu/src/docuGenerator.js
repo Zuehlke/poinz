@@ -31,5 +31,6 @@ async function generate() {
     'utf-8'
   );
 
+  console.log(chalk.blue.bold('\n\nGenerating svg graphics from diagrams...\n'));
   await downloadMermaidDiagramsAsSvg();
 }

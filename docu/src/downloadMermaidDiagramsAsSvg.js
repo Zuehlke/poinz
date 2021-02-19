@@ -8,6 +8,10 @@ const BASE_URL = 'https://mermaid.ink/svg/';
 
 module.exports = downloadMermaidDiagramsAsSvg;
 
+/*
+ *  see  https://mermaid-js.github.io/mermaid-live-editor
+ */
+
 /**
  *
  * @return {Promise<string[]>}
@@ -17,7 +21,10 @@ async function downloadMermaidDiagramsAsSvg() {
   const filesWithUrl = await Promise.all(files.map(augmentWithUrl));
 
   await Promise.all(
-    filesWithUrl.map(async (file) => downloadImageToFile(file.url, file.filePath + '.svg'))
+    filesWithUrl.map(async (file) => {
+      console.log(`   downloading mermaid.js diagram for ${file.fileName}`);
+      await downloadImageToFile(file.url, file.filePath + '.svg')
+    })
   );
 }
 

@@ -1,12 +1,14 @@
 # PoinZ technical documentation
 
+This page provides information about building and developing PoinZ, as well as its architecture.
+
 Checkout the [user manual](./manual.md), if you need help with PoinZ features and use cases...
 
 ## Development
 
 ### Prerequisites
 
-* Install `nodeJS` at v10+ and `npm` at v6+.
+* Install `nodeJS` at v14+ and `npm` at v6+.
 * Install git
 * Install `docker` if you want to build PoinZ
 
@@ -42,7 +44,7 @@ $ npm run build
 This will copy all backend and client files to `deploy/`.
 And then start the docker build.
 
-See [Deployment](DEPLOYMENT.md) for more information.
+See [Deployment](docu/deployment.md) for more information.
 
 To start the newly built image locally, in detached mode with port forwarding:
 ```
@@ -58,20 +60,29 @@ The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and 
 
 The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
 
-Client and server communicate over websockets ([socket.io](https://socket.io/)).
+Client and server communicate mostly over websockets ([socket.io](https://socket.io/)). The Backend provides a few REST endpoints as well.
 
 ### Command and Events documentation
 
 Our backend handles commands sent by the client over a websocket connection.
 Every command produces one or multiple events that modify the respective room (aka "aggregate").
-Then the events are sent back to the client.
+Then the events are sent back to the client. (This is somewhat inspired by [CQRS](https://martinfowler.com/bliki/CQRS.html).)
 
-(Somewhat inspired by [CQRS](https://martinfowler.com/bliki/CQRS.html).)
+The following diagram shows the basic attributes of every command and event:
+
+![command event structure](./diagrams/ermCommandEvent.md.svg)
+
+
+Simple sequence diagram that shows the basic flow and command handling:
 
 ![Generic command handling](./diagrams/sequenceCommandHandlingGeneric.md.svg)
 
-Example with a simple command that produces just one event
+
+Example with a simple command that produces just one event:
 
 ![Simple example](./diagrams/sequenceCommandHandlingExample.md.svg)
 
 For a list of all the commands and their respective events, see the generated [command and event docu](/docu/commandAndEventDocu.md);
+
+
+

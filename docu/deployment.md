@@ -1,6 +1,7 @@
 
+# Deployment
 
-PoinZ is currently deployed on a free-tier heroku dyno. (currently without persistent room storage)...
+PoinZ is currently deployed on a free-tier [heroku](https://www.heroku.com/) dyno. With mongodb as persistent storage on [MongoDB atlas](https://www.mongodb.com/cloud/atlas).
 
 
 

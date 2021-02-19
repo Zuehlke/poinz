@@ -16,7 +16,7 @@ import {
 } from '../../state/stories/storiesSelectors';
 import {getOwnUser} from '../../state/users/usersSelectors';
 import {getMatchingCardConfig} from '../../state/room/roomSelectors';
-import {getTranslator, hasApplause} from '../../state/ui/uiSelectors';
+import {getT, hasApplause} from '../../state/ui/uiSelectors';
 
 import {StyledStoryTitle} from '../_styled';
 import {
@@ -139,7 +139,7 @@ export default connect(
     const consensusCardConfig = getMatchingCardConfig(state, selectedStory.consensus);
 
     return {
-      t: getTranslator(state),
+      t: getT(state),
       selectedStory,
       consensusCardConfig,
       hasConsensus,

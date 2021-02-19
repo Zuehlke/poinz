@@ -8,6 +8,7 @@ import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesS
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import BacklogSortForm, {defaultSorting} from './BacklogSortForm';
+import {getT} from '../../state/ui/uiSelectors';
 
 import {
   StyledStories,
@@ -15,7 +16,6 @@ import {
   StyledFileImportDropZoneOverlay,
   StyledBacklogInfoText
 } from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
 
 const sortAndFilterStories = (activeStories, comparator, query) => {
   const lcQuery = query.toLowerCase();
@@ -147,7 +147,7 @@ BacklogActive.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state),
+    t: getT(state),
     activeStories: getActiveStories(state),
     selectedStoryId: getSelectedStoryId(state)
   }),

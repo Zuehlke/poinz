@@ -10,7 +10,7 @@ import {hasSelectedStoryConsensus} from '../../state/stories/storiesSelectors';
 
 import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
-import {getTranslator} from '../../state/ui/uiSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
@@ -52,7 +52,7 @@ EstimationSummary.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getTranslator(state),
+  t: getT(state),
   estimations: getEstimationsForCurrentlySelectedStory(state),
   usersInRoomCount: getUserCount(state),
   cardConfig: getCardConfigInOrder(state),

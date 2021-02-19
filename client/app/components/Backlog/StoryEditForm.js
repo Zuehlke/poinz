@@ -11,7 +11,7 @@ import ValidatedInput from '../common/ValidatedInput';
 import StoryEditFormButtonGroup from './StoryEditFormButtonGroup';
 
 import {StyledStory, StyledEditForm} from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
@@ -82,7 +82,7 @@ StoryEditForm.propTypes = {
 
 export default connect(
   (state, props) => ({
-    t: getTranslator(state),
+    t: getT(state),
     selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryEditFormWaiting(state, props.story.id)
   }),

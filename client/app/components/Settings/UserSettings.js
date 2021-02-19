@@ -8,6 +8,7 @@ import avatarIcons from '../../assets/avatars';
 import {getOwnUser} from '../../state/users/usersSelectors';
 import {setLanguage} from '../../state/actions/uiStateActions';
 import {toggleExcluded, setUsername, setEmail, setAvatar} from '../../state/actions/commandActions';
+import {getLanguage, getT} from '../../state/ui/uiSelectors';
 
 import {
   StyledArea,
@@ -17,7 +18,6 @@ import {
   StyledSection,
   StyledTextInput
 } from './_styled';
-import {getLanguage, getTranslator} from '../../state/ui/uiSelectors';
 
 const UserSettings = ({
   t,
@@ -173,7 +173,7 @@ UserSettings.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state),
+    t: getT(state),
     user: getOwnUser(state),
     language: getLanguage(state)
   }),

@@ -6,6 +6,7 @@ import JoinRoomForm from './JoinRoomForm';
 import GithubRibbon from './GithubRibbon';
 import {hasMatchingPendingCommand} from '../../state/commandTracking/commandTrackingSelectors';
 import {getActionLog} from '../../state/actionLog/actionLogSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 import appConfig from '../../services/appConfig';
 import {
   StyledActionLog,
@@ -16,7 +17,6 @@ import {
   StyledInfoText,
   StyledChangelog
 } from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * The "landing" page where the user can enter a room name to join
@@ -74,7 +74,7 @@ Landing.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getTranslator(state),
+  t: getT(state),
   actionLog: getActionLog(state),
   waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
 }))(Landing);

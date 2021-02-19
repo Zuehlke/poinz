@@ -11,7 +11,7 @@ import {
   StyledActionLog,
   StyledActionLogListItem
 } from './_styled';
-import {getCurrentSidebarIfAny, getTranslator} from '../../state/ui/uiSelectors';
+import {getCurrentSidebarIfAny, getT} from '../../state/ui/uiSelectors';
 
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
@@ -40,7 +40,7 @@ ActionLog.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getTranslator(state),
+  t: getT(state),
   shown: getCurrentSidebarIfAny(state) === SIDEBAR_ACTIONLOG,
   actionLog: getActionLog(state)
 }))(ActionLog);

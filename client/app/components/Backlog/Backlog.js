@@ -9,7 +9,7 @@ import StoryAddForm from './StoryAddForm';
 import BacklogModeButtons from './BacklogModeButtons';
 
 import {StyledBacklog} from './_styled';
-import {getTranslator, isBacklogShown} from '../../state/ui/uiSelectors';
+import {getT, isBacklogShown} from '../../state/ui/uiSelectors';
 
 /**
  * The backlog contains two display modes:  active and trash
@@ -47,7 +47,7 @@ Backlog.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getTranslator(state),
+  t: getT(state),
   backlogShown: isBacklogShown(state),
   trashedStoriesCount: getTrashedStories(state).length,
   activeStoriesCount: getActiveStories(state).length

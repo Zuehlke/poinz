@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import {joinRoom} from '../../state/actions/commandActions';
 import GithubRibbon from './GithubRibbon';
 import PasswordField from '../common/PasswordField';
+import {getT} from '../../state/ui/uiSelectors';
+import {getJoinFailedAuthRoomId} from '../../state/commandTracking/commandTrackingSelectors';
 
 import {
   StyledEyecatcher,
@@ -13,8 +15,6 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
-import {getJoinFailedAuthRoomId} from '../../state/commandTracking/commandTrackingSelectors';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a password input field.
@@ -79,7 +79,7 @@ RoomProtected.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state),
+    t: getT(state),
     roomId: getJoinFailedAuthRoomId(state)
   }),
   {joinRoom}

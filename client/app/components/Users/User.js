@@ -10,7 +10,7 @@ import UserEstimationCard from './UserEstimationCard';
 import {StyledUser, StyledUserBadge, StyledUserKickOverlay, StyledUserName} from './_styled';
 import {getSelectedStory, isAStorySelected} from '../../state/stories/storiesSelectors';
 import {getMatchingCardConfig} from '../../state/room/roomSelectors';
-import {getTranslator} from '../../state/ui/uiSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 import {getOwnUserId} from '../../state/users/usersSelectors';
 
 const User = ({t, user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
@@ -90,7 +90,7 @@ export default connect(
       : {};
 
     return {
-      t: getTranslator(state),
+      t: getT(state),
       userHasEstimation,
       matchingCardConfig,
       ownUserId: getOwnUserId(state),

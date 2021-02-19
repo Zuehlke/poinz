@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {getOwnUsername} from '../../state/users/usersSelectors';
+import {leaveRoom} from '../../state/actions/commandActions';
 import {
   toggleBacklogSidebar,
   toggleSidebar,
@@ -10,8 +11,13 @@ import {
   SIDEBAR_ACTIONLOG,
   SIDEBAR_SETTINGS
 } from '../../state/actions/uiStateActions';
-
-import {leaveRoom} from '../../state/actions/commandActions';
+import {getRoomId} from '../../state/room/roomSelectors';
+import {
+  getCurrentSidebarIfAny,
+  getT,
+  hasUnseenError,
+  isBacklogShown
+} from '../../state/ui/uiSelectors';
 
 import {
   StyledBacklogToggle,
@@ -26,13 +32,6 @@ import {
   StyledWhoAmISimple,
   StyledIconExclamation
 } from './_styled';
-import {getRoomId} from '../../state/room/roomSelectors';
-import {
-  getCurrentSidebarIfAny,
-  getTranslator,
-  hasUnseenError,
-  isBacklogShown
-} from '../../state/ui/uiSelectors';
 
 const TopBar = ({
   t,
@@ -131,7 +130,7 @@ TopBar.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state),
+    t: getT(state),
     roomId: getRoomId(state),
     backlogShown: isBacklogShown(state),
     sidebar: getCurrentSidebarIfAny(state),

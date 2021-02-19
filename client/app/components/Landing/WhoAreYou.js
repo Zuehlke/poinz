@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import {setUsername} from '../../state/actions/commandActions';
 import {USERNAME_REGEX} from '../frontendInputValidation';
 import GithubRibbon from './GithubRibbon';
+import {getT} from '../../state/ui/uiSelectors';
 
 import {
   StyledEyecatcher,
@@ -13,7 +14,6 @@ import {
   StyledInfoText,
   StyledLandingForm
 } from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * Displays a landing page (same styles, zuehlke background) with a username input field.
@@ -84,7 +84,7 @@ WhoAreYou.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state)
+    t: getT(state)
   }),
   {setUsername}
 )(WhoAreYou);

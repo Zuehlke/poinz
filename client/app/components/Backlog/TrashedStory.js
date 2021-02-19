@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {restoreStory, deleteStory} from '../../state/actions/commandActions';
-import {getTranslator} from '../../state/ui/uiSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 import ValueBadge from '../common/ValueBadge';
 
 import {StyledStoryToolbar, StyledStory} from './_styled';
@@ -45,7 +45,7 @@ TrashedStory.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state)
+    t: getT(state)
   }),
   {restoreStory, deleteStory}
 )(TrashedStory);

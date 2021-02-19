@@ -7,10 +7,10 @@ import {toggleAutoReveal, setCardConfig, setPassword} from '../../state/actions/
 import {CardConfigEditor} from './CardConfigEditor';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
+import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
+import {getCurrentSidebarIfAny, getT} from '../../state/ui/uiSelectors';
 
 import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
-import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
-import {getCurrentSidebarIfAny, getTranslator} from '../../state/ui/uiSelectors';
 
 const RoomSettings = ({
   t,
@@ -157,7 +157,7 @@ RoomSettings.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state),
+    t: getT(state),
     shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
     autoReveal: state.room.autoReveal,
     cardConfig: getCardConfigInOrder(state),

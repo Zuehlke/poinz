@@ -20,7 +20,7 @@ import {LOCATION_CHANGED} from '../actions/commandActions';
 const DEFAULT_LANGUAGE = 'en';
 const userLanguage = getPresetLanguage();
 
-const {t, setLanguage} = translatorFactory(
+const translator = translatorFactory(
   {
     en: translationsEN,
     de: translationsDE
@@ -35,8 +35,7 @@ export const uiInitialState = {
   unseenError: false,
   newUserHintHidden: getHideNewUserHints(),
   language: userLanguage || DEFAULT_LANGUAGE,
-  translator: t,
-  setLanguage
+  t: translator.t
 };
 
 /**
@@ -99,13 +98,12 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
 
     case LANGUAGE_SET: {
       const language = action.language;
-      const newTranslatorFunction = state.setLanguage(language);
+      const newT = translator.setLanguage(language);
       setPresetLanguage(language);
       return {
         ...state,
         language,
-        // make sure to replace the translator function, so that all components that have translated UI elements get re-rendered
-        translator: newTranslatorFunction
+        t: newT // make sure to replace the "t" function, so that all components that have translated UI elements get re-rendered
       };
     }
     case NEW_USER_HINTS_HIDDEN: {

@@ -7,7 +7,10 @@ import {editStory} from '../../state/actions/uiStateActions';
 import {selectStory, trashStory} from '../../state/actions/commandActions';
 import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
 import ValueBadge from '../common/ValueBadge';
+import UndecidedBadge from '../common/UndecidedBadge';
 import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
+import {getT} from '../../state/ui/uiSelectors';
+import {isThisStoryEstimated} from '../../state/estimations/estimationsSelectors';
 
 import {
   StyledStoryToolbar,
@@ -16,9 +19,6 @@ import {
   StyledHighlightButtonWrapper
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
-import UndecidedBadge from '../common/UndecidedBadge';
-import {isThisStoryEstimated} from '../../state/estimations/estimationsSelectors';
 
 /**
  * One story in the backlog
@@ -121,7 +121,7 @@ Story.propTypes = {
 
 export default connect(
   (state, props) => ({
-    t: getTranslator(state),
+    t: getT(state),
     selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryWaiting(state, props.story.id),
     isStoryEstimated: isThisStoryEstimated(state, props.story.id)

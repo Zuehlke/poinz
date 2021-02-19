@@ -3,7 +3,7 @@
  * @param state
  * @return {function} The translator function "t"
  */
-export const getTranslator = (state) => state.ui.translator;
+export const getT = (state) => state.ui.t;
 
 export const getCurrentSidebarIfAny = (state) => state.ui.sidebar;
 

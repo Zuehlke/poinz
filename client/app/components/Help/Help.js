@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import {SIDEBAR_HELP} from '../../state/actions/uiStateActions';
 import Avatar from '../common/Avatar';
+import {getCurrentSidebarIfAny, getT} from '../../state/ui/uiSelectors';
 
 import {StyledHelp, StyledHelpInner} from './_styled';
-import {getCurrentSidebarIfAny, getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  */
@@ -50,6 +50,6 @@ Help.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getTranslator(state),
+  t: getT(state),
   shown: getCurrentSidebarIfAny(state) === SIDEBAR_HELP
 }))(Help);

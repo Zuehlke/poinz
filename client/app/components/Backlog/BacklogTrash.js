@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
 import {getTrashedStories} from '../../state/stories/storiesSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 
 import {StyledBacklogInfoText, StyledStoriesScrolling} from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * List of trashed stories
@@ -34,6 +34,6 @@ BacklogTrash.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getTranslator(state),
+  t: getT(state),
   trashedStories: getTrashedStories(state)
 }))(BacklogTrash);

@@ -24,7 +24,7 @@ export default function (state, action) {
 
 /**
  * quite similar like the original "combineReducers" from redux.
- * (Whithout the dev/test env warnings)
+ * (Without the dev/test env warnings)
  *
  * Main difference:  we pass the own userId from the current state as third argument to each reducer!
  * This allows every reducer to check whether a userId from an event matches our own.

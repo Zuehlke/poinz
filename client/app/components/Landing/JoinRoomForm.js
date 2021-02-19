@@ -7,6 +7,7 @@ import {ROOM_ID_REGEX} from '../frontendInputValidation';
 import PasswordField from '../common/PasswordField';
 import ValidatedInput from '../common/ValidatedInput';
 import {getUsersPresets} from '../../state/users/usersSelectors';
+import {getT} from '../../state/ui/uiSelectors';
 
 import {
   StyledEyecatcher,
@@ -16,7 +17,6 @@ import {
   StyledLandingDoubleButtonWrapper,
   StyledLandingForm
 } from './_styled';
-import {getTranslator} from '../../state/ui/uiSelectors';
 
 /**
  * The form on the landing page where the user can join a room.
@@ -112,7 +112,7 @@ JoinRoomForm.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getTranslator(state),
+    t: getT(state),
     presetUsername: getUsersPresets(state).username
   }),
   {joinRoom}

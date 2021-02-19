@@ -28,7 +28,7 @@ export const L10nContext = React.createContext(undefined);
  */
 export const WithL10n = ({children}) => {
   let polyglot, language;
-  const [translator, setTranslator] = useState({t: () => '', setLanguage, language});
+  const [translator, setTranslator] = useState({t: () => 'ggg', setLanguage, language});
 
   useEffect(() => {
     language = getPresetLanguage() || DEFAULT_LANGUAGE;

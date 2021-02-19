@@ -85,6 +85,7 @@ export default function commandTrackingReducer(
         // joinRoom failed to a a password-protected room. Let's store the roomId on our state
         return {
           ...state,
+          pendingJoinCommandId: undefined,
           roomIdJoinAuthFail: event.payload.command.roomId
         };
       } else {

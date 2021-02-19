@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {hasMatchingPendingCommand} from '../../state/commandTracking/commandTrackingSelectors';
+import {getPendingJoinCommandId} from '../../state/commandTracking/commandTrackingSelectors';
 import {getActionLog} from '../../state/actionLog/actionLogSelectors';
 import appConfig from '../../services/appConfig';
 import JoinRoomForm from './JoinRoomForm';
@@ -14,7 +14,7 @@ import {
   StyledEyecatcher,
   StyledLandingInner,
   StyledLanding,
-  StyledLargeFontEyecatcher,
+  StyledLoadingSpinner,
   StyledInfoText,
   StyledChangelog
 } from './_styled';
@@ -76,10 +76,15 @@ Landing.propTypes = {
 
 export default connect((state) => ({
   actionLog: getActionLog(state),
-  waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
+  waitingForJoin: !!getPendingJoinCommandId(state)
 }))(Landing);
 
-const Loader = ({t}) => <StyledLargeFontEyecatcher>{t('loading')}</StyledLargeFontEyecatcher>;
+const Loader = ({t}) => (
+  <StyledLoadingSpinner>
+    <div>{t('loading')}</div>
+    <div className="waiting-spinner"></div>
+  </StyledLoadingSpinner>
+);
 
 Loader.propTypes = {
   t: PropTypes.func

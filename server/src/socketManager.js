@@ -145,22 +145,26 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
     LOGGER.warn(
       `CMDPROCERR user=${command.userId ? command.userId : 'n/a'} room=${
         command.roomId ? command.roomId : 'n/a'
-      } ${error.message}`
+      }  commandName=${command.name ? command.name : 'n/a'}  ${error.message}`
     );
 
-    const commandRejectedEvent = {
-      name: 'commandRejected',
-      id: uuid(),
-      correlationId: command.id,
-      roomId: command.roomId,
-      payload: {
-        command: command,
-        reason: error.message
-      }
-    };
-
-    // command rejected event is only sent to the one socket that sent the command
-    socket.emit('event', commandRejectedEvent);
+    sendEvents(
+      [
+        {
+          restricted: true, // command rejected event is only sent to the one socket that sent the command
+          name: 'commandRejected',
+          id: uuid(),
+          correlationId: command.id,
+          roomId: command.roomId,
+          payload: {
+            command: command,
+            reason: error.message
+          }
+        }
+      ],
+      command.roomId,
+      socket
+    );
   }
 
   /**

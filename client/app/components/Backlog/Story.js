@@ -1,16 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
+import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
+import {isThisStoryEstimated} from '../../state/estimations/estimationsSelectors';
 import {editStory} from '../../state/actions/uiStateActions';
 import {selectStory, trashStory} from '../../state/actions/commandActions';
 import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
 import ValueBadge from '../common/ValueBadge';
 import UndecidedBadge from '../common/UndecidedBadge';
-import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
-import {getT} from '../../state/ui/uiSelectors';
-import {isThisStoryEstimated} from '../../state/estimations/estimationsSelectors';
 
 import {
   StyledStoryToolbar,
@@ -24,7 +24,6 @@ import {StyledStoryTitle} from '../_styled';
  * One story in the backlog
  */
 const Story = ({
-  t,
   story,
   isHighlighted,
   onStoryClicked,
@@ -35,6 +34,7 @@ const Story = ({
   isWaiting,
   isStoryEstimated
 }) => {
+  const {t} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
 
@@ -115,13 +115,11 @@ Story.propTypes = {
   onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
-  trashStory: PropTypes.func,
-  t: PropTypes.func
+  trashStory: PropTypes.func
 };
 
 export default connect(
   (state, props) => ({
-    t: getT(state),
     selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryWaiting(state, props.story.id),
     isStoryEstimated: isThisStoryEstimated(state, props.story.id)

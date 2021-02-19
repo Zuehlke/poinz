@@ -1,13 +1,14 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import JoinRoomForm from './JoinRoomForm';
-import GithubRibbon from './GithubRibbon';
+import {L10nContext} from '../../services/l10n';
 import {hasMatchingPendingCommand} from '../../state/commandTracking/commandTrackingSelectors';
 import {getActionLog} from '../../state/actionLog/actionLogSelectors';
-import {getT} from '../../state/ui/uiSelectors';
 import appConfig from '../../services/appConfig';
+import JoinRoomForm from './JoinRoomForm';
+import GithubRibbon from './GithubRibbon';
+
 import {
   StyledActionLog,
   StyledEyecatcher,
@@ -21,7 +22,8 @@ import {
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({t, waitingForJoin, actionLog}) => {
+const Landing = ({waitingForJoin, actionLog}) => {
+  const {t} = useContext(L10nContext);
   if (waitingForJoin) {
     return (
       <StyledLanding>
@@ -68,13 +70,11 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
 };
 
 Landing.propTypes = {
-  t: PropTypes.func,
   waitingForJoin: PropTypes.bool,
   actionLog: PropTypes.array
 };
 
 export default connect((state) => ({
-  t: getT(state),
   actionLog: getActionLog(state),
   waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
 }))(Landing);

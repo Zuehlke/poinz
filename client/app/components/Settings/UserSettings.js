@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -6,9 +6,8 @@ import ValidatedInput from '../common/ValidatedInput';
 import {EMAIL_REGEX, USERNAME_REGEX} from '../frontendInputValidation';
 import avatarIcons from '../../assets/avatars';
 import {getOwnUser} from '../../state/users/usersSelectors';
-import {setLanguage} from '../../state/actions/uiStateActions';
 import {toggleExcluded, setUsername, setEmail, setAvatar} from '../../state/actions/commandActions';
-import {getLanguage, getT} from '../../state/ui/uiSelectors';
+import {L10nContext} from '../../services/l10n';
 
 import {
   StyledArea,
@@ -19,16 +18,8 @@ import {
   StyledTextInput
 } from './_styled';
 
-const UserSettings = ({
-  t,
-  language,
-  user,
-  setUsername,
-  setEmail,
-  setAvatar,
-  toggleExcluded,
-  setLanguage
-}) => {
+const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) => {
+  const {t, language, setLanguage} = useContext(L10nContext);
   const {username, email, excluded} = user;
 
   // derive username for input field from prop
@@ -161,27 +152,21 @@ const UserSettings = ({
 };
 
 UserSettings.propTypes = {
-  t: PropTypes.func,
   user: PropTypes.object,
-  language: PropTypes.string,
   toggleExcluded: PropTypes.func,
   setUsername: PropTypes.func,
   setEmail: PropTypes.func,
-  setAvatar: PropTypes.func,
-  setLanguage: PropTypes.func
+  setAvatar: PropTypes.func
 };
 
 export default connect(
   (state) => ({
-    t: getT(state),
-    user: getOwnUser(state),
-    language: getLanguage(state)
+    user: getOwnUser(state)
   }),
   {
     toggleExcluded,
     setUsername,
     setEmail,
-    setAvatar,
-    setLanguage
+    setAvatar
   }
 )(UserSettings);

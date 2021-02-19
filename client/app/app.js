@@ -11,6 +11,7 @@ import './assets/font/animation.css';
 import appConfig from './services/appConfig';
 import initialState from './state/initialState';
 import configureStore from './state/configureStore';
+import {WithL10n} from './services/l10n';
 
 import Main from './components/Main';
 import Global from './_styled';
@@ -25,8 +26,10 @@ if (appConfig.env === 'dev') {
 const store = configureStore(initialState());
 render(
   <Provider store={store}>
-    <Global />
-    <Main />
+    <WithL10n>
+      <Global />
+      <Main />
+    </WithL10n>
   </Provider>,
   document.getElementById('app-root')
 );

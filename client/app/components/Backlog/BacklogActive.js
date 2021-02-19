@@ -1,14 +1,14 @@
-import React, {useCallback, useState, useEffect} from 'react';
+import React, {useCallback, useState, useEffect, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
 import {importCsvFile} from '../../state/actions/commandActions';
 import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
+import {L10nContext} from '../../services/l10n';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import BacklogSortForm, {defaultSorting} from './BacklogSortForm';
-import {getT} from '../../state/ui/uiSelectors';
 
 import {
   StyledStories,
@@ -83,7 +83,8 @@ const useHighlightedStory = (selectedStoryId, activeStories) => {
 /**
  * List of active stories. Accepts drops of csv files for importing stories. Provides means to filter and sort active stories.
  */
-const BacklogActive = ({t, activeStories, selectedStoryId, importCsvFile}) => {
+const BacklogActive = ({activeStories, selectedStoryId, importCsvFile}) => {
+  const {t} = useContext(L10nContext);
   const hasActiveStories = activeStories.length > 0;
 
   const {highlightedStoryId, setHighlightedStoryId} = useHighlightedStory(
@@ -139,7 +140,6 @@ const BacklogActive = ({t, activeStories, selectedStoryId, importCsvFile}) => {
 };
 
 BacklogActive.propTypes = {
-  t: PropTypes.func.isRequired,
   activeStories: PropTypes.array,
   selectedStoryId: PropTypes.string,
   importCsvFile: PropTypes.func.isRequired
@@ -147,7 +147,6 @@ BacklogActive.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getT(state),
     activeStories: getActiveStories(state),
     selectedStoryId: getSelectedStoryId(state)
   }),

@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import {setUsername} from '../../state/actions/commandActions';
 import {USERNAME_REGEX} from '../frontendInputValidation';
 import GithubRibbon from './GithubRibbon';
-import {getT} from '../../state/ui/uiSelectors';
 
 import {
   StyledEyecatcher,
@@ -19,7 +19,8 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({t, setUsername}) => {
+const WhoAreYou = ({setUsername}) => {
+  const {t} = useContext(L10nContext);
   const [myUsername, setMyUsername] = useState('');
 
   return (
@@ -78,13 +79,7 @@ const WhoAreYou = ({t, setUsername}) => {
 };
 
 WhoAreYou.propTypes = {
-  t: PropTypes.func,
   setUsername: PropTypes.func
 };
 
-export default connect(
-  (state) => ({
-    t: getT(state)
-  }),
-  {setUsername}
-)(WhoAreYou);
+export default connect(() => ({}), {setUsername})(WhoAreYou);

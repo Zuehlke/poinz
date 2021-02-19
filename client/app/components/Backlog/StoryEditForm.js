@@ -1,7 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import {cancelEditStory} from '../../state/actions/uiStateActions';
 import {changeStory} from '../../state/actions/commandActions';
 import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
@@ -11,12 +12,12 @@ import ValidatedInput from '../common/ValidatedInput';
 import StoryEditFormButtonGroup from './StoryEditFormButtonGroup';
 
 import {StyledStory, StyledEditForm} from './_styled';
-import {getT} from '../../state/ui/uiSelectors';
 
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({t, story, selectedStoryId, changeStory, cancelEditStory, isWaiting}) => {
+const StoryEditForm = ({story, selectedStoryId, changeStory, cancelEditStory, isWaiting}) => {
+  const {t} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
 
   const [storyTitle, setStoryTitle] = useState(story.title);
@@ -72,7 +73,6 @@ const StoryEditForm = ({t, story, selectedStoryId, changeStory, cancelEditStory,
 };
 
 StoryEditForm.propTypes = {
-  t: PropTypes.func.isRequired,
   story: PropTypes.object,
   selectedStoryId: PropTypes.string,
   changeStory: PropTypes.func,
@@ -82,7 +82,6 @@ StoryEditForm.propTypes = {
 
 export default connect(
   (state, props) => ({
-    t: getT(state),
     selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryEditFormWaiting(state, props.story.id)
   }),

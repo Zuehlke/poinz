@@ -1,11 +1,13 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+
+import {L10nContext} from '../../services/l10n';
 import {getRoomExport} from '../../services/restApi/roomService';
-import {getT} from '../../state/ui/uiSelectors';
 import {getOwnUserToken} from '../../state/users/usersSelectors';
 
-const RoomExportFileDownload = ({t, roomId, userToken}) => {
+const RoomExportFileDownload = ({roomId, userToken}) => {
+  const {t} = useContext(L10nContext);
   return (
     <button type="button" className="pure-button pure-button-primary" onClick={onDownloadClick}>
       {t('exportLinkText')} <i className="icon-download-cloud"></i>
@@ -47,12 +49,10 @@ const RoomExportFileDownload = ({t, roomId, userToken}) => {
 };
 
 RoomExportFileDownload.propTypes = {
-  t: PropTypes.func,
   roomId: PropTypes.string,
   userToken: PropTypes.string
 };
 
 export default connect((state) => ({
-  t: getT(state),
   userToken: getOwnUserToken(state)
 }))(RoomExportFileDownload);

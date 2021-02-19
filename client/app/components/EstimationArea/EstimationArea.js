@@ -1,12 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 
-import Cards from './Cards';
-import ValueBadge from '../common/ValueBadge';
-import EstimationSummary from './EstimationSummary';
+import {L10nContext} from '../../services/l10n';
 import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
 import {findNextStoryIdToEstimate} from '../../state/estimations/estimationsSelectors';
 import {
@@ -16,7 +14,10 @@ import {
 } from '../../state/stories/storiesSelectors';
 import {getOwnUser} from '../../state/users/usersSelectors';
 import {getMatchingCardConfig} from '../../state/room/roomSelectors';
-import {getT, hasApplause} from '../../state/ui/uiSelectors';
+import {hasApplause} from '../../state/ui/uiSelectors';
+import Cards from './Cards';
+import ValueBadge from '../common/ValueBadge';
+import EstimationSummary from './EstimationSummary';
 
 import {StyledStoryTitle} from '../_styled';
 import {
@@ -35,7 +36,6 @@ import {
  *
  */
 const EstimationArea = ({
-  t,
   selectedStory,
   selectNextStory,
   applause,
@@ -46,6 +46,7 @@ const EstimationArea = ({
   reveal,
   hasNextStory
 }) => {
+  const {t} = useContext(L10nContext);
   const revealed = selectedStory.revealed;
 
   return (
@@ -112,7 +113,6 @@ const EstimationArea = ({
 };
 
 EstimationArea.propTypes = {
-  t: PropTypes.func,
   selectNextStory: PropTypes.func,
   userCanCurrentlyEstimate: PropTypes.bool,
   selectedStory: PropTypes.object,
@@ -139,7 +139,6 @@ export default connect(
     const consensusCardConfig = getMatchingCardConfig(state, selectedStory.consensus);
 
     return {
-      t: getT(state),
       selectedStory,
       consensusCardConfig,
       hasConsensus,

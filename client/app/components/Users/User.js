@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {getSelectedStory, isAStorySelected} from '../../state/stories/storiesSelectors';
+import {getMatchingCardConfig} from '../../state/room/roomSelectors';
+import {getOwnUserId} from '../../state/users/usersSelectors';
+import {L10nContext} from '../../services/l10n';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
 import {kick} from '../../state/actions/commandActions';
 import Avatar from '../common/Avatar';
 import UserEstimationCard from './UserEstimationCard';
 
 import {StyledUser, StyledUserBadge, StyledUserKickOverlay, StyledUserName} from './_styled';
-import {getSelectedStory, isAStorySelected} from '../../state/stories/storiesSelectors';
-import {getMatchingCardConfig} from '../../state/room/roomSelectors';
-import {getT} from '../../state/ui/uiSelectors';
-import {getOwnUserId} from '../../state/users/usersSelectors';
 
-const User = ({t, user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
+const User = ({user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
+  const {t} = useContext(L10nContext);
   const isOwnUser = user.id === ownUserId;
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
@@ -70,7 +71,6 @@ const User = ({t, user, selectedStory, userHasEstimation, ownUserId, matchingCar
 };
 
 User.propTypes = {
-  t: PropTypes.func,
   user: PropTypes.object,
   userHasEstimation: PropTypes.bool,
   selectedStory: PropTypes.object,
@@ -90,7 +90,6 @@ export default connect(
       : {};
 
     return {
-      t: getT(state),
       userHasEstimation,
       matchingCardConfig,
       ownUserId: getOwnUserId(state),

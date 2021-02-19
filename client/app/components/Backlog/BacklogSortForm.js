@@ -1,9 +1,8 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {connect} from 'react-redux';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import PropTypes from 'prop-types';
 
-import {getT} from '../../state/ui/uiSelectors';
 import {StyledBacklogSortForm, StyledSortDropdown, StyledSortDropdownItem} from './_styled';
+import {L10nContext} from '../../services/l10n';
 
 /**
  * available sort options with their respective story comparators
@@ -74,7 +73,8 @@ const useOutsideClick = (ref, onOutside) => {
 /**
  *  SortForm that provides sort ("order by") dropdown menu as well as an input field for filtering
  */
-const BacklogSortForm = ({t, filterQuery, onQueryChanged, sorting, onSortingChanged}) => {
+const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged}) => {
+  const {t} = useContext(L10nContext);
   const dropdownRef = useRef(null);
   const [extended, setExtended] = useState(false);
 
@@ -120,13 +120,10 @@ const BacklogSortForm = ({t, filterQuery, onQueryChanged, sorting, onSortingChan
 };
 
 BacklogSortForm.propTypes = {
-  t: PropTypes.func.isRequired,
   sorting: PropTypes.object,
   onSortingChanged: PropTypes.func.isRequired,
   filterQuery: PropTypes.string,
   onQueryChanged: PropTypes.func.isRequired
 };
 
-export default connect((state) => ({
-  t: getT(state)
-}))(BacklogSortForm);
+export default BacklogSortForm;

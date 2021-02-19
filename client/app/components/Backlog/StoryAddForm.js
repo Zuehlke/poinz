@@ -1,19 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import {addStory} from '../../state/actions/commandActions';
 import {STORY_DESCRIPTION_MAX_LENGTH, STORY_TITLE_REGEX} from '../frontendInputValidation';
 import {hasMatchingPendingCommand} from '../../state/commandTracking/commandTrackingSelectors';
 import ValidatedInput from '../common/ValidatedInput';
-import {getT} from '../../state/ui/uiSelectors';
 
 import {StyledAddForm} from './_styled';
 
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({t, addStory, waiting}) => {
+const StoryAddForm = ({addStory, waiting}) => {
+  const {t} = useContext(L10nContext);
   const [storyTitle, setStoryTitle] = useState('');
   const [storyDescr, setStoryDescr] = useState('');
 
@@ -71,14 +72,12 @@ const StoryAddForm = ({t, addStory, waiting}) => {
 };
 
 StoryAddForm.propTypes = {
-  t: PropTypes.func,
   addStory: PropTypes.func,
   waiting: PropTypes.bool
 };
 
 export default connect(
   (state) => ({
-    t: getT(state),
     waiting: hasMatchingPendingCommand(state, 'addStory')
   }),
   {addStory}

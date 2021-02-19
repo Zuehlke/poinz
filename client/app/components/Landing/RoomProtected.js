@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import {joinRoom} from '../../state/actions/commandActions';
-import GithubRibbon from './GithubRibbon';
 import PasswordField from '../common/PasswordField';
-import {getT} from '../../state/ui/uiSelectors';
 import {getJoinFailedAuthRoomId} from '../../state/commandTracking/commandTrackingSelectors';
+import GithubRibbon from './GithubRibbon';
 
 import {
   StyledEyecatcher,
@@ -20,7 +20,8 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a password input field.
  * If user wants to join a room that is protected by a password
  */
-const RoomProtected = ({t, roomId, joinRoom}) => {
+const RoomProtected = ({roomId, joinRoom}) => {
+  const {t} = useContext(L10nContext);
   const [password, setPassword] = useState('');
 
   return (
@@ -72,14 +73,12 @@ const RoomProtected = ({t, roomId, joinRoom}) => {
 };
 
 RoomProtected.propTypes = {
-  t: PropTypes.func,
   joinRoom: PropTypes.func,
   roomId: PropTypes.string
 };
 
 export default connect(
   (state) => ({
-    t: getT(state),
     roomId: getJoinFailedAuthRoomId(state)
   }),
   {joinRoom}

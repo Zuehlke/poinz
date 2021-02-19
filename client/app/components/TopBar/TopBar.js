@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import {getOwnUsername} from '../../state/users/usersSelectors';
 import {leaveRoom} from '../../state/actions/commandActions';
 import {
@@ -12,12 +13,7 @@ import {
   SIDEBAR_SETTINGS
 } from '../../state/actions/uiStateActions';
 import {getRoomId} from '../../state/room/roomSelectors';
-import {
-  getCurrentSidebarIfAny,
-  getT,
-  hasUnseenError,
-  isBacklogShown
-} from '../../state/ui/uiSelectors';
+import {getCurrentSidebarIfAny, hasUnseenError, isBacklogShown} from '../../state/ui/uiSelectors';
 
 import {
   StyledBacklogToggle,
@@ -34,7 +30,6 @@ import {
 } from './_styled';
 
 const TopBar = ({
-  t,
   roomId,
   username,
   leaveRoom,
@@ -44,6 +39,7 @@ const TopBar = ({
   unseenError,
   backlogShown
 }) => {
+  const {t} = useContext(L10nContext);
   const roomLink = <a href={'/' + roomId}>{roomId}</a>;
 
   return (
@@ -117,7 +113,6 @@ const TopBar = ({
 };
 
 TopBar.propTypes = {
-  t: PropTypes.func,
   toggleBacklogSidebar: PropTypes.func,
   backlogShown: PropTypes.bool,
   unseenError: PropTypes.bool,
@@ -130,7 +125,6 @@ TopBar.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getT(state),
     roomId: getRoomId(state),
     backlogShown: isBacklogShown(state),
     sidebar: getCurrentSidebarIfAny(state),

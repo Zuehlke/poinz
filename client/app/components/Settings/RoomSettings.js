@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
 import {toggleAutoReveal, setCardConfig, setPassword} from '../../state/actions/commandActions';
-import {CardConfigEditor} from './CardConfigEditor';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
 import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
-import {getCurrentSidebarIfAny, getT} from '../../state/ui/uiSelectors';
+import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
+import {CardConfigEditor} from './CardConfigEditor';
 
 import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
 
 const RoomSettings = ({
-  t,
   shown,
   autoReveal,
   cardConfig,
@@ -23,6 +23,8 @@ const RoomSettings = ({
   setPassword,
   passwordProtected
 }) => {
+  const {t} = useContext(L10nContext);
+
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
   React.useEffect(() => {
     setCustomCardConfigExpanded(false);
@@ -144,7 +146,6 @@ const RoomSettings = ({
 };
 
 RoomSettings.propTypes = {
-  t: PropTypes.func,
   shown: PropTypes.bool,
   autoReveal: PropTypes.bool,
   toggleAutoReveal: PropTypes.func,
@@ -157,7 +158,6 @@ RoomSettings.propTypes = {
 
 export default connect(
   (state) => ({
-    t: getT(state),
     shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
     autoReveal: state.room.autoReveal,
     cardConfig: getCardConfigInOrder(state),

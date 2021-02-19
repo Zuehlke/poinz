@@ -1,41 +1,19 @@
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
-import {
-  getHideNewUserHints,
-  getPresetLanguage,
-  setHideNewUserHints,
-  setPresetLanguage
-} from '../clientSettingsStore';
+import {getHideNewUserHints, setHideNewUserHints} from '../clientSettingsStore';
 import {
   BACKLOG_SIDEBAR_TOGGLED,
   NEW_USER_HINTS_HIDDEN,
-  LANGUAGE_SET,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_TOGGLED
 } from '../actions/uiStateActions';
-import translatorFactory from '../translator';
-import translationsEN from '../../assets/i18n/en.json';
-import translationsDE from '../../assets/i18n/de.json';
 import {LOCATION_CHANGED} from '../actions/commandActions';
-
-const DEFAULT_LANGUAGE = 'en';
-const userLanguage = getPresetLanguage();
-
-const translator = translatorFactory(
-  {
-    en: translationsEN,
-    de: translationsDE
-  },
-  userLanguage || DEFAULT_LANGUAGE
-);
 
 export const uiInitialState = {
   backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
   sidebar: undefined,
   applause: false,
   unseenError: false,
-  newUserHintHidden: getHideNewUserHints(),
-  language: userLanguage || DEFAULT_LANGUAGE,
-  t: translator.t
+  newUserHintHidden: getHideNewUserHints()
 };
 
 /**
@@ -96,16 +74,6 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
       }
     }
 
-    case LANGUAGE_SET: {
-      const language = action.language;
-      const newT = translator.setLanguage(language);
-      setPresetLanguage(language);
-      return {
-        ...state,
-        language,
-        t: newT // make sure to replace the "t" function, so that all components that have translated UI elements get re-rendered
-      };
-    }
     case NEW_USER_HINTS_HIDDEN: {
       setHideNewUserHints(true);
       return {...state, newUserHintHidden: true};

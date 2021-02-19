@@ -1,21 +1,22 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
 import getEstimationSummary from './getEstimationSummary';
-import EstimationSummaryCard from './EstimationSummaryCard';
 import {getUserCount} from '../../state/users/usersSelectors';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
 import {hasSelectedStoryConsensus} from '../../state/stories/storiesSelectors';
+import EstimationSummaryCard from './EstimationSummaryCard';
 
 import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
-import {getT} from '../../state/ui/uiSelectors';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
-const EstimationSummary = ({t, estimations, usersInRoomCount, cardConfig, hasConsensus}) => {
+const EstimationSummary = ({estimations, usersInRoomCount, cardConfig, hasConsensus}) => {
+  const {t} = useContext(L10nContext);
   const summary = getEstimationSummary(estimations);
 
   return (
@@ -44,7 +45,6 @@ const EstimationSummary = ({t, estimations, usersInRoomCount, cardConfig, hasCon
 };
 
 EstimationSummary.propTypes = {
-  t: PropTypes.func.isRequired,
   estimations: PropTypes.object,
   cardConfig: PropTypes.array,
   usersInRoomCount: PropTypes.number,
@@ -52,7 +52,6 @@ EstimationSummary.propTypes = {
 };
 
 export default connect((state) => ({
-  t: getT(state),
   estimations: getEstimationsForCurrentlySelectedStory(state),
   usersInRoomCount: getUserCount(state),
   cardConfig: getCardConfigInOrder(state),

@@ -2,7 +2,6 @@
 export const STORY_EDIT_MODE_ENTERED = 'STORY_EDIT_MODE_ENTERED';
 export const STORY_EDIT_MODE_CANCELLED = 'STORY_EDIT_MODE_CANCELLED';
 export const NEW_USER_HINTS_HIDDEN = 'NEW_USER_HINTS_HIDDEN';
-export const LANGUAGE_SET = 'LANGUAGE_SET';
 export const BACKLOG_SIDEBAR_TOGGLED = 'BACKLOG_SIDEBAR_TOGGLED'; // toggles the visibility of the story backlog
 export const SIDEBAR_TOGGLED = 'SIDEBAR_TOGGLED'; // toggles the visibility of the righthand sidebar (could be either settings, action log or help)
 
@@ -23,7 +22,6 @@ export const cancelEditStory = (storyId) => ({type: STORY_EDIT_MODE_CANCELLED, s
 /**
  * set the frontend language
  */
-export const setLanguage = (language) => ({type: LANGUAGE_SET, language});
 export const hideNewUserHints = () => ({type: NEW_USER_HINTS_HIDDEN});
 export const toggleSidebar = (sidebarKey) => ({type: SIDEBAR_TOGGLED, sidebarKey});
 export const SIDEBAR_HELP = 'HELP';

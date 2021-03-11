@@ -78,8 +78,8 @@ function downloadImageToFile(imageUrl, filePath) {
           resolve();
         });
       })
-      .on('error', (err) => {
-        fs.unlink(filePath);
+      .on('error', async (err) => {
+        await fs.promises.unlink(filePath);
         reject(err);
       });
   });

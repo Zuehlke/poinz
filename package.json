@@ -14,7 +14,7 @@
     "ft": "npm run format && npm t",
     "format": "cd client/ && npm run format && cd ../server/ && npm run format  && cd ../ && prettier --write \"build/*.js\"  \"docu/**/*.js\" ",
     "test": "cd client/ && npm test &&  cd ../server && npm test",
-    "prebuild": "node build/checkTranslationKeys.js && cd server/ && npm run docu",
+    "prebuild": "node build/checkTranslationKeys.js && npm run docu",
     "build": "node build/dockerImage.js",
     "dependencyCheck": "ncu --packageFile ./package.json > npm_dependencies_report.poinz.md && ncu --packageFile ./client/package.json > npm_dependencies_report.poinz-client.md && ncu --packageFile ./server/package.json > npm_dependencies_report.poinz-server.md ",
     "postinstall": "cd client/ && npm i && cd ../server && npm i",

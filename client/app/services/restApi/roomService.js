@@ -10,12 +10,12 @@ const getHeaders = (userToken) => (userToken ? {Authorization: `Bearer ${userTok
  * @param {string} userToken
  * @return {Promise<*>}
  */
-export async function getRoom(roomId, userToken) {
-  const response = await axios.get('/api/room/' + roomId, {
-    headers: getHeaders(userToken)
-  });
-
-  return response.data;
+export function getRoom(roomId, userToken) {
+  return axios
+    .get('/api/room/' + roomId, {
+      headers: getHeaders(userToken)
+    })
+    .then((response) => response.data);
 }
 
 /**
@@ -26,10 +26,10 @@ export async function getRoom(roomId, userToken) {
  * @param {string} userToken
  * @return {Promise<*>}
  */
-export async function getRoomExport(roomId, userToken) {
-  const response = await axios.get('/api/export/room/' + roomId, {
-    headers: getHeaders(userToken)
-  });
-
-  return response.data;
+export function getRoomExport(roomId, userToken) {
+  return axios
+    .get('/api/export/room/' + roomId, {
+      headers: getHeaders(userToken)
+    })
+    .then((response) => response.data);
 }

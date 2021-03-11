@@ -4,7 +4,6 @@ import axios from 'axios';
  *
  * @return {Promise<*>}
  */
-export async function getAppStatus() {
-  const response = await axios.get('/api/status');
-  return response.data;
+export function getAppStatus() {
+  return axios.get('/api/status').then((response) => response.data);
 }

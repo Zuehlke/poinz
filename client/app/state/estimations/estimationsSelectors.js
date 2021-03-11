@@ -25,7 +25,7 @@ export const getEstimationsForCurrentlySelectedStory = createSelector(
 
 export const isThisStoryEstimated = (state, storyId) => {
   const estimations = getEstimations(state);
-  return !!estimations[storyId];
+  return estimations[storyId] && Object.keys(estimations[storyId]).length > 0;
 };
 
 /**

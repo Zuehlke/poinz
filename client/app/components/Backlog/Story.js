@@ -64,7 +64,7 @@ const Story = ({
       <StyledStoryTitle>
         <div>{story.title}</div>
         {hasConsensus && <ValueBadge cardValue={story.consensus} />}
-        {!hasConsensus && isStoryEstimated && <UndecidedBadge />}
+        {!hasConsensus && isStoryEstimated && story.revealed && <UndecidedBadge />}
       </StyledStoryTitle>
 
       {

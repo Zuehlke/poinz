@@ -1,9 +1,14 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
+import {joinRoom} from '../../state/actions/commandActions';
+import {ROOM_ID_REGEX} from '../frontendInputValidation';
+import {getUsersPresets} from '../../state/users/usersSelectors';
+import PasswordField from '../common/PasswordField';
 import ValidatedInput from '../common/ValidatedInput';
-import {joinRoom} from '../../actions';
+
 import {
   StyledEyecatcher,
   StyledInfoText,
@@ -12,15 +17,14 @@ import {
   StyledLandingDoubleButtonWrapper,
   StyledLandingForm
 } from './_styled';
-import {ROOM_ID_REGEX} from '../frontendInputValidation';
-import PasswordField from '../common/PasswordField';
 
 /**
  * The form on the landing page where the user can join a room.
  * By default a new room (roomId is randomly generated in the ui).
  * User can optionally set a own roomId "roomName")
  */
-const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
+const JoinRoomForm = ({presetUsername, joinRoom}) => {
+  const {t} = useContext(L10nContext);
   const [showExtended, setShowExtended] = useState(false);
   const [customRoomId, setCustomRoomId] = useState('');
   const [customRoomPassword, setCustomRoomPassword] = useState('');
@@ -102,15 +106,13 @@ const JoinRoomForm = ({t, presetUsername, joinRoom}) => {
 };
 
 JoinRoomForm.propTypes = {
-  t: PropTypes.func,
   presetUsername: PropTypes.string,
   joinRoom: PropTypes.func
 };
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    presetUsername: state.presetUsername
+    presetUsername: getUsersPresets(state).username
   }),
   {joinRoom}
 )(JoinRoomForm);

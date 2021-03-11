@@ -1,16 +1,18 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import TrashedStory from './TrashedStory';
-import {getTrashedStories} from '../../services/selectors';
+import {getTrashedStories} from '../../state/stories/storiesSelectors';
 
 import {StyledBacklogInfoText, StyledStoriesScrolling} from './_styled';
+import {L10nContext} from '../../services/l10n';
 
 /**
- *
+ * List of trashed stories
  */
-const BacklogTrash = ({t, trashedStories}) => {
+const BacklogTrash = ({trashedStories}) => {
+  const {t} = useContext(L10nContext);
   const hasTrashedStories = trashedStories.length > 0;
 
   return (
@@ -28,11 +30,9 @@ const BacklogTrash = ({t, trashedStories}) => {
 };
 
 BacklogTrash.propTypes = {
-  t: PropTypes.func.isRequired,
   trashedStories: PropTypes.array
 };
 
 export default connect((state) => ({
-  t: state.translator,
   trashedStories: getTrashedStories(state)
 }))(BacklogTrash);

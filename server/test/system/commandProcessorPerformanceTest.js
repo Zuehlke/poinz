@@ -7,7 +7,7 @@ import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/comm
 import eventHandlers from '../../src/eventHandlers/eventHandlers';
 
 /**
- * tests the command processor performance with the real room store (redis)  but without socket connection (no json serializing, etc.)
+ * tests the command processor performance with the real room store (persistent storage)  but without socket connection (no json serializing, etc.)
  *
  */
 

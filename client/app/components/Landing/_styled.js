@@ -109,8 +109,12 @@ export const StyledEyecatcher = styled.div`
   }
 `;
 
-export const StyledLargeFontEyecatcher = styled(StyledEyecatcher)`
+export const StyledLoadingSpinner = styled(StyledEyecatcher)`
   font-size: larger;
+
+  > div {
+    min-height: 32px;
+  }
 `;
 
 const StyledLandingButton = styled.button`

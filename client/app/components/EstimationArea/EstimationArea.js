@@ -1,23 +1,32 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
+import log from 'loglevel';
 
-import {newEstimationRound, reveal, selectNextStory} from '../../actions';
-
+import {L10nContext} from '../../services/l10n';
+import {newEstimationRound, reveal, selectNextStory} from '../../state/actions/commandActions';
+import {findNextStoryIdToEstimate} from '../../state/estimations/estimationsSelectors';
+import {
+  hasSelectedStoryConsensus,
+  getSelectedStory,
+  isAStorySelected
+} from '../../state/stories/storiesSelectors';
+import {getOwnUser} from '../../state/users/usersSelectors';
+import {getMatchingCardConfig} from '../../state/room/roomSelectors';
+import {hasApplause} from '../../state/ui/uiSelectors';
 import Cards from './Cards';
+import ValueBadge from '../common/ValueBadge';
+import EstimationSummary from './EstimationSummary';
 
-import ConsensusBadge from '../common/ConsensusBadge';
-import findNextStoryIdToEstimate from '../../services/findNextStoryIdToEstimate';
+import {StyledStoryTitle} from '../_styled';
 import {
   EstimationAreaButtons,
+  StyledApplauseHighlight,
   StyledEstimation,
   StyledSelectedStory,
   StyledStoryText
 } from './_styled';
-import {StyledStoryTitle} from '../_styled';
-import ApplauseHighlight from './ApplauseHighlight';
-import EstimationSummary from './EstimationSummary';
 
 /**
  * Displays
@@ -27,36 +36,32 @@ import EstimationSummary from './EstimationSummary';
  *
  */
 const EstimationArea = ({
-  t,
   selectedStory,
   selectNextStory,
   applause,
+  consensusCardConfig,
+  hasConsensus,
   userCanCurrentlyEstimate,
-  cardConfig,
   newEstimationRound,
   reveal,
   hasNextStory
 }) => {
+  const {t} = useContext(L10nContext);
   const revealed = selectedStory.revealed;
-  const hasConsensus = selectedStory.consensus !== undefined && selectedStory.consensus !== null; // value could be "0" which is falsy, check for undefined
 
   return (
     <StyledEstimation data-testid="estimationArea">
       <StyledSelectedStory data-testid="story">
         <StyledStoryTitle>
           {selectedStory.title}
-          {hasConsensus && (
-            <ConsensusBadge cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
-          )}
+          {hasConsensus && <ValueBadge cardValue={selectedStory.consensus} />}
         </StyledStoryTitle>
 
         <StyledStoryText>
           <Anchorify text={selectedStory.description || ''} />
         </StyledStoryText>
 
-        {hasConsensus && applause && (
-          <ApplauseHighlight cardConfig={cardConfig} consensusValue={selectedStory.consensus} />
-        )}
+        {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
       </StyledSelectedStory>
 
       {!revealed && (
@@ -108,11 +113,11 @@ const EstimationArea = ({
 };
 
 EstimationArea.propTypes = {
-  t: PropTypes.func,
   selectNextStory: PropTypes.func,
-  cardConfig: PropTypes.array,
   userCanCurrentlyEstimate: PropTypes.bool,
   selectedStory: PropTypes.object,
+  consensusCardConfig: PropTypes.object,
+  hasConsensus: PropTypes.bool,
   applause: PropTypes.bool,
   hasNextStory: PropTypes.bool,
   newEstimationRound: PropTypes.func,
@@ -121,16 +126,24 @@ EstimationArea.propTypes = {
 
 export default connect(
   (state) => {
-    const selectedStory = state.stories[state.selectedStory];
-    const isExcluded = state.users[state.userId].excluded;
+    if (!isAStorySelected(state)) {
+      log.error('No Story Selected! must not render EstimationArea');
+      return {};
+    }
+
+    const selectedStory = getSelectedStory(state);
+    const isExcluded = getOwnUser(state).excluded;
     const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
 
+    const hasConsensus = hasSelectedStoryConsensus(state);
+    const consensusCardConfig = getMatchingCardConfig(state, selectedStory.consensus);
+
     return {
-      t: state.translator,
       selectedStory,
+      consensusCardConfig,
+      hasConsensus,
       userCanCurrentlyEstimate,
-      applause: state.applause,
-      cardConfig: state.cardConfig,
+      applause: hasApplause(state),
       hasNextStory: !!findNextStoryIdToEstimate(state)
     };
   },

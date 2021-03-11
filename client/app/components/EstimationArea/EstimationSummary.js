@@ -1,20 +1,22 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
-import {
-  getEstimationsForCurrentlySelectedStory,
-  getUserCount,
-  hasSelectedStoryConsensus
-} from '../../services/selectors';
-import getEstimationSummary from '../../services/getEstimationSummary';
+import {L10nContext} from '../../services/l10n';
+import getEstimationSummary from './getEstimationSummary';
+import {getUserCount} from '../../state/users/usersSelectors';
+import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
+import {hasSelectedStoryConsensus} from '../../state/stories/storiesSelectors';
 import EstimationSummaryCard from './EstimationSummaryCard';
+
+import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
+import {getCardConfigInOrder} from '../../state/room/roomSelectors';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
-const EstimationSummary = ({t, estimations, usersInRoomCount, cardConfig, hasConsensus}) => {
+const EstimationSummary = ({estimations, usersInRoomCount, cardConfig, hasConsensus}) => {
+  const {t} = useContext(L10nContext);
   const summary = getEstimationSummary(estimations);
 
   return (
@@ -43,7 +45,6 @@ const EstimationSummary = ({t, estimations, usersInRoomCount, cardConfig, hasCon
 };
 
 EstimationSummary.propTypes = {
-  t: PropTypes.func.isRequired,
   estimations: PropTypes.object,
   cardConfig: PropTypes.array,
   usersInRoomCount: PropTypes.number,
@@ -51,9 +52,8 @@ EstimationSummary.propTypes = {
 };
 
 export default connect((state) => ({
-  t: state.translator,
   estimations: getEstimationsForCurrentlySelectedStory(state),
   usersInRoomCount: getUserCount(state),
-  cardConfig: state.cardConfig,
+  cardConfig: getCardConfigInOrder(state),
   hasConsensus: hasSelectedStoryConsensus(state)
 }))(EstimationSummary);

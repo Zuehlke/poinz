@@ -8,6 +8,9 @@ import AppStatus from './AppStatus/AppStatus';
 import Landing from './Landing/Landing';
 import appConfig from '../services/appConfig';
 import RoomProtected from './Landing/RoomProtected';
+import {getOwnUserId, getUserCount, getUsersPresets} from '../state/users/usersSelectors';
+import {getRoomId} from '../state/room/roomSelectors';
+import {hasJoinFailedAuthorization} from '../state/commandTracking/commandTrackingSelectors';
 
 const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
 
@@ -16,8 +19,8 @@ const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
  * If the user did never set his username/name in a previous session, display "whoAreYou" with a username input field.
  * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
  */
-const Main = ({roomId, users, userId, presetUsername, pathname, authorizationFailed}) => {
-  const hasRoomIdAndUsers = roomId && users && Object.keys(users).length > 0 && userId;
+const Main = ({roomId, userCount, userId, presetUsername, pathname, authorizationFailed}) => {
+  const hasRoomIdAndUsers = roomId && userCount > 0 && userId;
   if (getNormalizedRoomId(pathname) === appConfig.APP_STATUS_IDENTIFIER) {
     return <AppStatus />;
   } else if (authorizationFailed) {
@@ -33,17 +36,17 @@ const Main = ({roomId, users, userId, presetUsername, pathname, authorizationFai
 
 Main.propTypes = {
   roomId: PropTypes.string,
-  users: PropTypes.object,
+  userCount: PropTypes.number,
   userId: PropTypes.string,
   presetUsername: PropTypes.string,
   pathname: PropTypes.string
 };
 
 export default connect((state) => ({
-  pathname: state.pathname,
-  roomId: state.roomId,
-  users: state.users,
-  userId: state.userId,
-  presetUsername: state.presetUsername,
-  authorizationFailed: state.authorizationFailed
+  pathname: state.ui.pathname,
+  roomId: getRoomId(state),
+  userCount: getUserCount(state),
+  userId: getOwnUserId(state),
+  presetUsername: getUsersPresets(state).username,
+  authorizationFailed: hasJoinFailedAuthorization(state)
 }))(Main);

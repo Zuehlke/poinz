@@ -1,11 +1,16 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
-import {selectStory, editStory, highlightStory, trashStory} from '../../actions';
-import {isThisStoryWaiting} from '../../services/selectors';
-import ConsensusBadge from '../common/ConsensusBadge';
+import {L10nContext} from '../../services/l10n';
+import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
+import {isThisStoryEstimated} from '../../state/estimations/estimationsSelectors';
+import {editStory} from '../../state/actions/uiStateActions';
+import {selectStory, trashStory} from '../../state/actions/commandActions';
+import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
+import ValueBadge from '../common/ValueBadge';
+import UndecidedBadge from '../common/UndecidedBadge';
 
 import {
   StyledStoryToolbar,
@@ -19,26 +24,25 @@ import {StyledStoryTitle} from '../_styled';
  * One story in the backlog
  */
 const Story = ({
-  t,
   story,
+  isHighlighted,
+  onStoryClicked,
   selectedStoryId,
-  highlightedStoryId,
-  cardConfig,
   selectStory,
-  highlightStory,
   editStory,
   trashStory,
-  isWaiting
+  isWaiting,
+  isStoryEstimated
 }) => {
+  const {t} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
-  const isHighlighted = highlightedStoryId === story.id;
-  const hasConsensus = story.consensus !== undefined && story.consensus !== null; // value could be "0" which is falsy, check for undefined
+  const hasConsensus = hasStoryConsensus(story);
 
   return (
     <StyledStory
       id={'story.' + story.id}
       data-testid={isSelected ? 'storySelected' : 'story'}
-      onClick={triggerHighlight}
+      onClick={onStoryClicked}
       selected={isSelected}
       className={isWaiting ? 'waiting-spinner' : ''}
     >
@@ -59,9 +63,8 @@ const Story = ({
 
       <StyledStoryTitle>
         <div>{story.title}</div>
-        {hasConsensus && (
-          <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
-        )}
+        {hasConsensus && <ValueBadge cardValue={story.consensus} />}
+        {!hasConsensus && isStoryEstimated && <UndecidedBadge />}
       </StyledStoryTitle>
 
       {
@@ -91,9 +94,6 @@ const Story = ({
   function triggerSelect() {
     selectStory(story.id);
   }
-  function triggerHighlight() {
-    highlightStory(story.id);
-  }
 
   function triggerEdit(e) {
     e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
@@ -109,23 +109,20 @@ const Story = ({
 Story.propTypes = {
   story: PropTypes.object,
   isWaiting: PropTypes.bool,
-  cardConfig: PropTypes.array,
+  isHighlighted: PropTypes.bool,
+  isStoryEstimated: PropTypes.bool,
   selectedStoryId: PropTypes.string,
-  highlightedStoryId: PropTypes.string,
+  onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
-  highlightStory: PropTypes.func,
   editStory: PropTypes.func,
-  trashStory: PropTypes.func,
-  t: PropTypes.func
+  trashStory: PropTypes.func
 };
 
 export default connect(
   (state, props) => ({
-    t: state.translator,
-    cardConfig: state.cardConfig,
-    selectedStoryId: state.selectedStory,
-    highlightedStoryId: state.highlightedStory,
-    isWaiting: isThisStoryWaiting(state, props.story.id)
+    selectedStoryId: getSelectedStoryId(state),
+    isWaiting: isThisStoryWaiting(state, props.story.id),
+    isStoryEstimated: isThisStoryEstimated(state, props.story.id)
   }),
-  {selectStory, highlightStory, editStory, trashStory}
+  {selectStory, editStory, trashStory}
 )(Story);

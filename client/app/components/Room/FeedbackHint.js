@@ -3,12 +3,12 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Avatar from '../common/Avatar';
-import {hideNewUserHints} from '../../actions';
+import {hideNewUserHints} from '../../state/actions/uiStateActions';
 
 import {StyledFeedbackHint} from './_styled';
 
-const FeedbackHint = ({hideHints, hideNewUserHints}) => {
-  if (hideHints) {
+const FeedbackHint = ({hintsHidden, hideNewUserHints}) => {
+  if (hintsHidden) {
     return null;
   }
 
@@ -32,13 +32,13 @@ const FeedbackHint = ({hideHints, hideNewUserHints}) => {
 };
 
 FeedbackHint.propTypes = {
-  hideHints: PropTypes.bool,
+  hintsHidden: PropTypes.bool,
   hideNewUserHints: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
-    hideHints: state.hideNewUserHints
+    hintsHidden: state.ui.newUserHintHidden
   }),
   {hideNewUserHints}
 )(FeedbackHint);

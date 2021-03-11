@@ -62,6 +62,8 @@ it('join new room, add a story trash it, restore it, trash it again and delete i
   Backlog.StoryAddForm.descriptionField().type(this.stories[0].description);
   Backlog.StoryAddForm.addButton().click();
 
+  Backlog.activeStoriesList().should('have.length', 2);
+
   // select our story
   Backlog.activeStoriesList().eq(0).click();
   Backlog.activeStoriesList().eq(0).find(tid('selectButton')).click();

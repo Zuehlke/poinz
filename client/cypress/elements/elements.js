@@ -28,7 +28,8 @@ const elements = {
     Settings: {
       settingsContainer: () => cy.get(tid('settings')),
       usernameField: () => cy.get(tid('settings', 'usernameInput')),
-      saveUsernameButton: () => cy.get(tid('settings', 'saveUsernameButton'))
+      saveUsernameButton: () => cy.get(tid('settings', 'saveUsernameButton')),
+      roomPasswordField: () => cy.get(tid('settings', 'roomPasswordInput'))
     },
 
     Backlog: {

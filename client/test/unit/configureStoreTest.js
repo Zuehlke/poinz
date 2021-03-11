@@ -1,14 +1,8 @@
-import configureStore from '../../app/store/configureStore';
-
-test('should return a correctly configured store', () => {
-  const store = configureStore();
-  expect(store).toBeDefined();
-  expect(store.dispatch).toBeDefined();
-});
+import configureStore from '../../app/state/configureStore';
 
 test('should return a correctly configured store with initial state', () => {
-  const store = configureStore({some: 'data'});
+  const store = configureStore({users: {ownUserId: 'some'}, other: 'data'});
   expect(store).toBeDefined();
   expect(store.dispatch).toBeDefined();
-  expect(store.getState().some).toEqual('data');
+  expect(store.getState().other).toEqual('data');
 });

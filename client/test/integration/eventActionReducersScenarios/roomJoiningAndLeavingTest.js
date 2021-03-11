@@ -1,7 +1,17 @@
-import initialState from '../../../app/store/initialState.js';
-import clientSettingsStore from '../../../app/store/clientSettingsStore';
+import initialState from '../../../app/state/initialState.js';
+import * as clientSettingsStore from '../../../app/state/clientSettingsStore';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
+import {
+  getOwnUserId,
+  getSortedUserArray,
+  getUserCount,
+  getUsersById
+} from '../../../app/state/users/usersSelectors';
+import {getStoriesById} from '../../../app/state/stories/storiesSelectors';
+import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
+import {getActionLog} from '../../../app/state/actionLog/actionLogSelectors';
+import getScenarioStartingState from './getScenarioStartingState';
 
 let scenario;
 
@@ -28,19 +38,15 @@ test('You join an existing room', () => {
   scenario.getNextEvents(9); // "fast forward" to before second user (that's us!) joined
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: ourJoinEvent.correlationId
-    },
+    getScenarioStartingState(ourJoinEvent.correlationId),
     scenario.getNextEvents(4)
   );
 
-  expect(modifiedState.autoReveal).toBe(true);
-  expect(modifiedState.roomId).toEqual(scenario.events[0].roomId);
-  expect(modifiedState.passwordProtected).toBe(false);
-  expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
-  expect(modifiedState.users).toEqual({
+  expect(modifiedState.room.autoReveal).toBe(true);
+  expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
+  expect(modifiedState.room.passwordProtected).toBe(false);
+  expect(getOwnUserId(modifiedState)).toEqual(ourUserId); // we got the userId from the server, correctly set to state
+  expect(getUsersById(modifiedState)).toEqual({
     // users is an object, indexed by userId
     [otherUserId]: {
       avatar: 0,
@@ -60,7 +66,7 @@ test('You join an existing room', () => {
   });
 
   // stories is an object indexed by storyId. stories no longer have the "estimations" property
-  expect(modifiedState.stories).toEqual({
+  expect(getStoriesById(modifiedState)).toEqual({
     [storyId]: {
       id: storyId,
       title: storyAddedEvent.payload.title,
@@ -72,7 +78,7 @@ test('You join an existing room', () => {
   });
 
   // the estimations in a separate object on the state
-  expect(modifiedState.estimations).toEqual({
+  expect(getEstimations(modifiedState)).toEqual({
     [storyId]: {
       [otherUserId]: 4
     }
@@ -94,18 +100,14 @@ test('You in a room, other user joins ', () => {
   const otherUserId = otherJoinEvent.userId;
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: ourJoinEvent.correlationId
-    },
+    getScenarioStartingState(ourJoinEvent.correlationId),
     scenario.getNextEvents(13)
   );
 
-  expect(modifiedState.roomId).toEqual(ourJoinEvent.roomId);
-  expect(modifiedState.userId).toEqual(ourUserId);
+  expect(modifiedState.room.roomId).toEqual(ourJoinEvent.roomId);
+  expect(getOwnUserId(modifiedState)).toEqual(ourUserId);
 
-  expect(modifiedState.users).toEqual({
+  expect(getUsersById(modifiedState)).toEqual({
     [otherUserId]: {
       avatar: 0,
       disconnected: false,
@@ -140,25 +142,21 @@ test('You join an existing room, the other leaves', () => {
   scenario.getNextEvents(9); // "fast forward" to before second user (that's us!) joined
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: ourJoinEvent.correlationId
-    },
+    getScenarioStartingState(ourJoinEvent.correlationId),
     scenario.getNextEvents(4)
   );
 
-  expect(modifiedState.roomId).toEqual(scenario.events[0].roomId);
-  expect(modifiedState.userId).toEqual(ourUserId); // we got the userId from the server, correctly set to state
-  expect(Object.values(modifiedState.users).length).toBe(2);
+  expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
+  expect(getOwnUserId(modifiedState)).toEqual(ourUserId); // we got the userId from the server, correctly set to state
+  expect(getUserCount(modifiedState)).toBe(2);
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // leftRoom event
-  expect(modifiedState.roomId).toEqual(scenario.events[0].roomId);
-  expect(modifiedState.userId).toEqual(ourUserId);
-  expect(Object.values(modifiedState.users).length).toBe(1); // only one user left
-  expect(Object.values(modifiedState.users)[0].id).toBe(ourUserId);
+  expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
+  expect(getOwnUserId(modifiedState)).toEqual(ourUserId);
+  expect(getUserCount(modifiedState)).toBe(1); // only one user left
+  expect(getSortedUserArray(modifiedState)[0].id).toBe(ourUserId);
 
-  expect(modifiedState.stories).toEqual({
+  expect(getStoriesById(modifiedState)).toEqual({
     [storyId]: {
       title: storyAddedEvent.payload.title,
       description: storyAddedEvent.payload.description,
@@ -169,7 +167,7 @@ test('You join an existing room, the other leaves', () => {
     }
   });
 
-  expect(modifiedState.estimations).toEqual({
+  expect(getEstimations(modifiedState)).toEqual({
     [storyId]: {
       [otherUserId]: 4 // we keep estimations of users.  mainly because we want to still have these values when exporting the room (to json file)
     }
@@ -182,20 +180,16 @@ test('You in a room, other user joins, you leave', () => {
   const ourJoinEvent = scenario.events[2];
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: ourJoinEvent.correlationId
-    },
+    getScenarioStartingState(ourJoinEvent.correlationId),
     scenario.getNextEvents(13)
   );
-  expect(Object.values(modifiedState.users).length).toBe(2);
+  expect(getUserCount(modifiedState)).toBe(2);
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
 
-  // When own user leaves, state is reset. except, actionLog has one new entry (log is added after event reduced).
-  expect(modifiedState.actionLog.length).toBe(1);
+  // When own user leaves , action log is reset and just one "you left" line is added
+  expect(getActionLog(modifiedState).length).toBe(1);
   // so we set it to an empty array manually here
   modifiedState.actionLog = [];
-  expect(modifiedState).toEqual(initialState());
+  expect(modifiedState).toEqual({...initialState()});
 });

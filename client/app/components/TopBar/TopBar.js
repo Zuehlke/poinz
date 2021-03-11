@@ -1,15 +1,20 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
+import {getOwnUsername} from '../../state/users/usersSelectors';
+import {leaveRoom} from '../../state/actions/commandActions';
 import {
-  toggleBacklog,
+  toggleBacklogSidebar,
   toggleSidebar,
-  leaveRoom,
   SIDEBAR_HELP,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_SETTINGS
-} from '../../actions';
+} from '../../state/actions/uiStateActions';
+import {getRoomId} from '../../state/room/roomSelectors';
+import {getCurrentSidebarIfAny, hasUnseenError, isBacklogShown} from '../../state/ui/uiSelectors';
+
 import {
   StyledBacklogToggle,
   StyledBacklogToggleIcon,
@@ -23,19 +28,18 @@ import {
   StyledWhoAmISimple,
   StyledIconExclamation
 } from './_styled';
-import {getOwnUsername} from '../../services/selectors';
 
 const TopBar = ({
-  t,
   roomId,
   username,
   leaveRoom,
   toggleSidebar,
-  toggleBacklog,
+  toggleBacklogSidebar,
   sidebar,
   unseenError,
   backlogShown
 }) => {
+  const {t} = useContext(L10nContext);
   const roomLink = <a href={'/' + roomId}>{roomId}</a>;
 
   return (
@@ -44,7 +48,7 @@ const TopBar = ({
         <StyledBacklogToggle
           data-testid="backlogToggle"
           className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
-          onClick={toggleBacklog}
+          onClick={toggleBacklogSidebar}
         >
           <StyledBacklogToggleIcon>
             <span></span>
@@ -109,8 +113,7 @@ const TopBar = ({
 };
 
 TopBar.propTypes = {
-  t: PropTypes.func,
-  toggleBacklog: PropTypes.func,
+  toggleBacklogSidebar: PropTypes.func,
   backlogShown: PropTypes.bool,
   unseenError: PropTypes.bool,
   username: PropTypes.string,
@@ -122,12 +125,11 @@ TopBar.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    roomId: state.roomId,
-    backlogShown: state.backlogShown,
-    sidebar: state.sidebar,
-    unseenError: state.unseenError,
+    roomId: getRoomId(state),
+    backlogShown: isBacklogShown(state),
+    sidebar: getCurrentSidebarIfAny(state),
+    unseenError: hasUnseenError(state),
     username: getOwnUsername(state)
   }),
-  {toggleBacklog, toggleSidebar, leaveRoom}
+  {toggleBacklogSidebar, toggleSidebar, leaveRoom}
 )(TopBar);

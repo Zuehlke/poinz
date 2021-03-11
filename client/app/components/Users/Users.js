@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import User from './User';
-import {getSortedUserArray} from '../../services/selectors';
+import {getSortedUserArray} from '../../state/users/usersSelectors';
 
 import {StyledUsers} from './_styled';
 

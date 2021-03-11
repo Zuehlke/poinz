@@ -1,10 +1,15 @@
-import React, {useState} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {joinRoom} from '../../actions';
-import GithubRibbon from './GithubRibbon';
+import {L10nContext} from '../../services/l10n';
+import {joinRoom} from '../../state/actions/commandActions';
 import PasswordField from '../common/PasswordField';
+import {
+  getJoinFailedAuthRoomId,
+  getPendingJoinCommandId
+} from '../../state/commandTracking/commandTrackingSelectors';
+import GithubRibbon from './GithubRibbon';
 
 import {
   StyledEyecatcher,
@@ -18,8 +23,16 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a password input field.
  * If user wants to join a room that is protected by a password
  */
-const RoomProtected = ({t, roomId, joinRoom}) => {
+const RoomProtected = ({roomId, pendingJoinCommandId, joinRoom}) => {
+  const {t} = useContext(L10nContext);
   const [password, setPassword] = useState('');
+  const [spinning, setSpinning] = useState(false);
+
+  useEffect(() => {
+    if (!pendingJoinCommandId) {
+      setSpinning(false);
+    }
+  }, [pendingJoinCommandId]);
 
   return (
     <StyledLanding>
@@ -31,21 +44,28 @@ const RoomProtected = ({t, roomId, joinRoom}) => {
             <p>{t('roomIsProtected')}</p>
           </StyledInfoText>
           <StyledLandingForm className="pure-form">
-            <PasswordField
-              placeholder={t('password')}
-              onChange={onInputChange}
-              value={password}
-              onKeyPress={onInputKeyPress}
-            />
+            {!spinning && (
+              <React.Fragment>
+                <PasswordField
+                  data-testid="roomPasswordInput"
+                  placeholder={t('password')}
+                  onChange={onInputChange}
+                  value={password}
+                  onKeyPress={onInputKeyPress}
+                />
 
-            <button
-              type="button"
-              data-testid="joinButton"
-              className="pure-button pure-button-primary button-save"
-              onClick={join}
-            >
-              {t('join')}
-            </button>
+                <button
+                  type="button"
+                  data-testid="joinButton"
+                  className="pure-button pure-button-primary button-save"
+                  onClick={join}
+                >
+                  {t('join')}
+                </button>
+              </React.Fragment>
+            )}
+
+            {spinning && <div className="waiting-spinner"></div>}
           </StyledLandingForm>
         </StyledEyecatcher>
       </StyledLandingInner>
@@ -64,20 +84,21 @@ const RoomProtected = ({t, roomId, joinRoom}) => {
   }
 
   function join() {
+    setSpinning(true);
     joinRoom(roomId, password);
   }
 };
 
 RoomProtected.propTypes = {
-  t: PropTypes.func,
   joinRoom: PropTypes.func,
-  roomId: PropTypes.string
+  roomId: PropTypes.string,
+  pendingJoinCommandId: PropTypes.string
 };
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    roomId: state.authorizationFailed
+    roomId: getJoinFailedAuthRoomId(state),
+    pendingJoinCommandId: getPendingJoinCommandId(state)
   }),
   {joinRoom}
 )(RoomProtected);

@@ -1,10 +1,10 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 
 import appConfig from '../../services/appConfig';
 import {formatDateTime, secondsToDaysHoursMinutes, timeAgo} from '../../services/timeUtil';
-import {fetchStatus} from '../../actions';
+import {getAppStatus} from '../../services/restApi/appStatusService';
+
 import {
   StyledPoinzLogo,
   StyledQuickMenuButton,
@@ -12,7 +12,6 @@ import {
   StyledTopLeft,
   StyledTopRight
 } from '../TopBar/_styled';
-
 import {StyledAppStatus, StyledRoomsList} from './_styled';
 
 /**
@@ -20,68 +19,67 @@ import {StyledAppStatus, StyledRoomsList} from './_styled';
  * How many rooms, how many users.
  * Does not display room names, since this page is publicly accessible.
  */
-class AppStatus extends React.Component {
-  componentDidMount() {
-    const {fetchStatus, appStatus} = this.props;
+const AppStatus = () => {
+  const [appStatus, setAppStatus] = useState();
 
-    if (!appStatus) {
-      fetchStatus();
-    }
+  useEffect(() => {
+    loadAndSet();
+  }, []);
+
+  if (!appStatus) {
+    // this is an operations UI, it's ok to display an empty page during data loading...
+    return null;
   }
 
-  render() {
-    const {fetchStatus, appStatus} = this.props;
-    if (!appStatus) {
-      // this is an operations UI, it's ok to display an empty page during data loading...
-      return null;
-    }
+  return (
+    <StyledAppStatus data-testid="appStatusPage">
+      <StyledTopBar data-testid="topBar">
+        <StyledTopLeft>
+          <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
+        </StyledTopLeft>
 
-    const uptime = secondsToDaysHoursMinutes(appStatus.uptime);
+        <StyledTopRight>
+          <StyledQuickMenuButton
+            data-testid="reloadDataButton"
+            className="clickable pure-button pure-button-primary"
+            onClick={loadAndSet}
+          >
+            <i className="icon-arrows-cw"></i>
+          </StyledQuickMenuButton>
+          <StyledQuickMenuButton className="clickable pure-button pure-button-primary" href="/">
+            <i className="icon-logout"></i>
+          </StyledQuickMenuButton>
+        </StyledTopRight>
+      </StyledTopBar>
 
-    const sortedRooms = appStatus.rooms.sort(roomComparator);
+      <h2>PoinZ Application Status</h2>
 
-    return (
-      <StyledAppStatus data-testid="appStatusPage">
-        <StyledTopBar data-testid="topBar">
-          <StyledTopLeft>
-            <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
-          </StyledTopLeft>
+      <p>
+        Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
+      </p>
+      <p>Uptime: {appStatus.uptime}</p>
+      <p>Total rooms: {appStatus.roomCount}</p>
+      <p>Running on: {appStatus.storeInfo}</p>
 
-          <StyledTopRight>
-            <StyledQuickMenuButton
-              data-testid="reloadDataButton"
-              className="clickable pure-button pure-button-primary"
-              onClick={fetchStatus}
-            >
-              <i className="icon-arrows-cw"></i>
-            </StyledQuickMenuButton>
-            <StyledQuickMenuButton className="clickable pure-button pure-button-primary" href="/">
-              <i className="icon-logout"></i>
-            </StyledQuickMenuButton>
-          </StyledTopRight>
-        </StyledTopBar>
+      <h3>Rooms</h3>
 
-        <h2>PoinZ Application Status</h2>
+      <StyledRoomsList>
+        <TableHeaders />
+        {appStatus.rooms.map((room, index) => (
+          <RoomItem key={index} room={room} />
+        ))}
+      </StyledRoomsList>
+    </StyledAppStatus>
+  );
 
-        <p>
-          Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
-        </p>
-        <p>Uptime: {uptime}</p>
-        <p>Total rooms: {appStatus.roomCount}</p>
-        <p>Running on: {appStatus.storeInfo}</p>
-
-        <h3>Rooms</h3>
-
-        <StyledRoomsList>
-          <TableHeaders />
-          {sortedRooms.map((room, index) => (
-            <RoomItem key={index} room={room} />
-          ))}
-        </StyledRoomsList>
-      </StyledAppStatus>
-    );
+  function loadAndSet() {
+    getAppStatus().then((data) => {
+      data.uptime = secondsToDaysHoursMinutes(data.uptime);
+      data.rooms.sort(roomComparator);
+      setAppStatus(data);
+    });
   }
-}
+};
 
 AppStatus.propTypes = {
   fetchStatus: PropTypes.func,
@@ -94,12 +92,7 @@ function roomComparator(rA, rB) {
   return roomOneTimestamp < roomTwoTimestamp ? 1 : roomTwoTimestamp < roomOneTimestamp ? -1 : 0;
 }
 
-export default connect(
-  (state) => ({
-    appStatus: state.appStatus
-  }),
-  {fetchStatus}
-)(AppStatus);
+export default AppStatus;
 
 const TableHeaders = () => (
   <li className="headers">

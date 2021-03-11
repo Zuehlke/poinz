@@ -41,7 +41,8 @@ export const StyledApplauseHighlight = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  border: 1px solid #e8e8e8;
+  border: ${({color}) => '1px solid ' + color};
+  box-shadow: ${({color}) => '0 0 10px ' + color};
   animation-name: ${FlashAnimation};
   animation-duration: 2s;
   animation-timing-function: linear;

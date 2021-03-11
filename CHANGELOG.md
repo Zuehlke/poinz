@@ -1,3 +1,8 @@
+### 0.10.1: 2021-02-19
+
+* Mark stories in backlog that were estimated, but without consensus
+* Frontend refactoring of redux state + reducers
+
 ### 0.10.0: 2021-02-06
 
 * Estimation Summary: After a story is revealed, show how many users estimated, which cards were used and how often. (thanks to @gotdibbs for the suggestion)

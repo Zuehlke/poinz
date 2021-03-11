@@ -6,7 +6,7 @@ beforeEach(function () {
   cy.fixture('users/sergio.json').then((data) => (this.sergio = data));
 });
 
-it('join room, open user menu and change settings', function () {
+it('join room, open settings menu and change user settings', function () {
   cy.visit('/');
 
   Landing.joinButton().click();

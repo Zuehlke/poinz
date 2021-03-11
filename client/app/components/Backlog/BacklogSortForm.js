@@ -1,34 +1,34 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {connect} from 'react-redux';
+import React, {useState, useEffect, useRef, useContext} from 'react';
 import PropTypes from 'prop-types';
 
 import {StyledBacklogSortForm, StyledSortDropdown, StyledSortDropdownItem} from './_styled';
+import {L10nContext} from '../../services/l10n';
 
 /**
  * available sort options with their respective story comparators
  */
-export const sortings = {
-  newestFirst: {
+const sortings = [
+  {
     id: 'newest',
     labelKey: 'newest',
     comp: (sA, sB) => sB.createdAt - sA.createdAt
   },
-  oldestFirst: {
+  {
     id: 'oldest',
     labelKey: 'oldest',
     comp: (sA, sB) => sA.createdAt - sB.createdAt
   },
-  titleAscending: {
+  {
     id: 'titleAZ',
     labelKey: 'titleAtoZ',
     comp: (sA, sB) => sA.title.localeCompare(sB.title)
   },
-  titleDescending: {
+  {
     id: 'titleZA',
     labelKey: 'titleZtoA',
     comp: (sA, sB) => sB.title.localeCompare(sA.title)
   },
-  withConsensus: {
+  {
     id: 'withConsensus',
     labelKey: 'withConsensusFirst',
     comp: (sA, sB) => {
@@ -37,11 +37,11 @@ export const sortings = {
       } else if (sB.consensus && !sA.consensus) {
         return 1;
       } else {
-        return sortings.newestFirst.comp(sA, sB);
+        return sortings[0].comp(sA, sB); // use default sorting, if no difference in consensus
       }
     }
   },
-  withoutConsensus: {
+  {
     id: 'withoutConsensus',
     labelKey: 'withoutConsensusFirst',
     comp: (sA, sB) => {
@@ -54,9 +54,27 @@ export const sortings = {
       }
     }
   }
+];
+export const defaultSorting = sortings[0];
+
+const useOutsideClick = (ref, onOutside) => {
+  useEffect(() => {
+    function handleMousedownEvent(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        onOutside();
+      }
+    }
+
+    document.addEventListener('mousedown', handleMousedownEvent);
+    return () => document.removeEventListener('mousedown', handleMousedownEvent);
+  }, [ref]);
 };
 
-const BacklogSortForm = ({t, filterQuery, onQueryChanged, sorting, onSortingChanged}) => {
+/**
+ *  SortForm that provides sort ("order by") dropdown menu as well as an input field for filtering
+ */
+const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged}) => {
+  const {t} = useContext(L10nContext);
   const dropdownRef = useRef(null);
   const [extended, setExtended] = useState(false);
 
@@ -76,11 +94,11 @@ const BacklogSortForm = ({t, filterQuery, onQueryChanged, sorting, onSortingChan
         className="clickable icon-exchange"
         title={t('sort')}
         data-testid="sortButton"
-      ></i>
+      />
 
       {extended && (
         <StyledSortDropdown ref={dropdownRef} data-testid="sortOptions">
-          {Object.values(sortings).map((sortingItem) => (
+          {sortings.map((sortingItem) => (
             <StyledSortDropdownItem
               selected={sortingItem.id === sorting.id}
               className="clickable"
@@ -102,28 +120,10 @@ const BacklogSortForm = ({t, filterQuery, onQueryChanged, sorting, onSortingChan
 };
 
 BacklogSortForm.propTypes = {
-  t: PropTypes.func.isRequired,
   sorting: PropTypes.object,
   onSortingChanged: PropTypes.func.isRequired,
   filterQuery: PropTypes.string,
   onQueryChanged: PropTypes.func.isRequired
 };
 
-export default connect((state) => ({
-  t: state.translator
-}))(BacklogSortForm);
-
-const useOutsideClick = (ref, onOutside) => {
-  useEffect(() => {
-    function handleMousedownEvent(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        onOutside();
-      }
-    }
-
-    document.addEventListener('mousedown', handleMousedownEvent);
-    return () => {
-      document.removeEventListener('mousedown', handleMousedownEvent);
-    };
-  }, [ref]);
-};
+export default BacklogSortForm;

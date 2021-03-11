@@ -1,6 +1,6 @@
-import initialState from '../../../app/store/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
+import getScenarioStartingState from './getScenarioStartingState';
 
 let scenario;
 
@@ -19,17 +19,11 @@ test('You create a room with password', () => {
   const tokenIssuedEvent = scenario.events[2];
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-
-      // needs to be set in initial state: client determines if a received "joinedRoom" event belongs "to us" (we are joining)
-      pendingJoinCommandId: joinedEvent.correlationId
-    },
+    getScenarioStartingState(joinedEvent.correlationId),
     scenario.events
   );
 
-  expect(modifiedState.roomId).toEqual(scenario.events[0].roomId);
-  expect(modifiedState.passwordProtected).toBe(true);
-  expect(modifiedState.userToken).toBe(tokenIssuedEvent.payload.token);
+  expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
+  expect(modifiedState.room.passwordProtected).toBe(true);
+  expect(modifiedState.users.ownUserToken).toBe(tokenIssuedEvent.payload.token);
 });

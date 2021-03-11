@@ -1,47 +1,29 @@
-import React from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getCardConfigForValue} from '../../services/getCardConfigForValue';
+import {getSelectedStory, isAStorySelected} from '../../state/stories/storiesSelectors';
+import {getMatchingCardConfig} from '../../state/room/roomSelectors';
+import {getOwnUserId} from '../../state/users/usersSelectors';
+import {L10nContext} from '../../services/l10n';
+import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
+import {kick} from '../../state/actions/commandActions';
 import Avatar from '../common/Avatar';
-import {kick, toggleMarkForKick} from '../../actions';
+import UserEstimationCard from './UserEstimationCard';
 
-import {
-  StyledUser,
-  StyledUserBadge,
-  StyledUserEstimation,
-  StyledUserEstimationExcluded,
-  StyledUserEstimationGiven,
-  StyledUserKickOverlay,
-  StyledUserName
-} from './_styled';
-import {getEstimationsForCurrentlySelectedStory} from '../../services/selectors';
+import {StyledUser, StyledUserBadge, StyledUserKickOverlay, StyledUserName} from './_styled';
 
-const User = ({
-  t,
-  user,
-  selectedStory,
-  userEstimationValue,
-  ownUserId,
-  cardConfig,
-  kick,
-  toggleMarkForKick
-}) => {
+const User = ({user, selectedStory, userHasEstimation, ownUserId, matchingCardConfig, kick}) => {
+  const {t} = useContext(L10nContext);
+  const isOwnUser = user.id === ownUserId;
   const isExcluded = user.excluded;
   const isDisconnected = user.disconnected;
-  const isMarkedForKick = user.markedForKick;
   const revealed = selectedStory && selectedStory.revealed;
-  const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
 
-  const matchingCardConfig = getCardConfigForValue(cardConfig, userEstimationValue);
-  const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
+  const [isMarkedForKick, setMarkForKick] = useState(false);
 
   return (
-    <StyledUser
-      data-testid="user"
-      isOwn={user.id === ownUserId}
-      shaded={isDisconnected || isMarkedForKick}
-    >
+    <StyledUser data-testid="user" isOwn={isOwnUser} shaded={isDisconnected || isMarkedForKick}>
       {!isDisconnected && isExcluded && (
         <StyledUserBadge>
           <i className="icon-eye"></i>
@@ -55,7 +37,7 @@ const User = ({
       )}
 
       <Avatar
-        onClick={onMarkForKick}
+        onClick={toggleMarkForKick}
         user={user}
         isOwn={user.id === ownUserId}
         shaded={isDisconnected || isMarkedForKick}
@@ -64,59 +46,55 @@ const User = ({
 
       {isMarkedForKick && (
         <StyledUserKickOverlay>
-          <i className="icon-cancel" onClick={onMarkForKick} title={t('cancel')}></i>
+          <i className="icon-cancel" onClick={toggleMarkForKick} title={t('cancel')}></i>
           <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
         </StyledUserKickOverlay>
       )}
 
-      {selectedStory && isExcluded && (
-        <StyledUserEstimationExcluded>
-          <span>{estimationValueToDisplay}</span>
-        </StyledUserEstimationExcluded>
-      )}
-
-      {selectedStory && !userHasEstimation && !isExcluded && (
-        <StyledUserEstimation revealed={revealed}>
-          <span>{estimationValueToDisplay}</span>
-        </StyledUserEstimation>
-      )}
-
-      {selectedStory && userHasEstimation && !isExcluded && (
-        <StyledUserEstimationGiven revealed={revealed} valueColor={matchingCardConfig.color}>
-          {estimationValueToDisplay}
-        </StyledUserEstimationGiven>
+      {selectedStory && (
+        <UserEstimationCard
+          isExcluded={isExcluded}
+          userHasEstimation={userHasEstimation}
+          revealed={revealed}
+          matchingCardConfig={matchingCardConfig}
+        />
       )}
     </StyledUser>
   );
 
-  function onMarkForKick() {
-    toggleMarkForKick(user.id);
+  function toggleMarkForKick() {
+    if (isOwnUser) {
+      return; // no use in marking myself.. backend will prevent "kick" command for my own user anyways
+    }
+    setMarkForKick(!isMarkedForKick);
   }
 };
 
 User.propTypes = {
-  t: PropTypes.func,
   user: PropTypes.object,
-  userEstimationValue: PropTypes.number,
+  userHasEstimation: PropTypes.bool,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
-  cardConfig: PropTypes.array,
-  kick: PropTypes.func.isRequired,
-  toggleMarkForKick: PropTypes.func.isRequired
+  matchingCardConfig: PropTypes.object,
+  kick: PropTypes.func.isRequired
 };
 
 export default connect(
   (state, props) => {
     const estimationsForStory = getEstimationsForCurrentlySelectedStory(state);
     const userEstimationValue = estimationsForStory && estimationsForStory[props.user.id];
+    const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
+
+    const matchingCardConfig = userHasEstimation
+      ? getMatchingCardConfig(state, userEstimationValue)
+      : {};
 
     return {
-      t: state.translator,
-      cardConfig: state.cardConfig,
-      ownUserId: state.userId,
-      selectedStory: state.stories[state.selectedStory],
-      userEstimationValue
+      userHasEstimation,
+      matchingCardConfig,
+      ownUserId: getOwnUserId(state),
+      selectedStory: isAStorySelected(state) ? getSelectedStory(state) : undefined
     };
   },
-  {kick, toggleMarkForKick}
+  {kick}
 )(User);

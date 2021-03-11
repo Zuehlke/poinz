@@ -1,6 +1,8 @@
-import initialState from '../../../app/store/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
+import getScenarioStartingState from './getScenarioStartingState';
+import {getUsersById} from '../../../app/state/users/usersSelectors';
+import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
 
 let scenario;
 
@@ -20,16 +22,12 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
   const addedEvt = scenario.events[3];
 
   modifiedState = reduceMultipleEvents(
-    {
-      ...initialState(),
-      roomId: scenario.events[0].roomId,
-      pendingJoinCommandId: joinedEvtOne.correlationId
-    },
+    getScenarioStartingState(joinedEvtOne.correlationId),
     scenario.getNextEvents(11) // up until "connectionLost"
   );
 
   // in contrast to "roomLeft",  on "connectionLost", user object stays. is marked as disconnected
-  expect(modifiedState.users[joinedEvtTwo.userId]).toEqual({
+  expect(getUsersById(modifiedState)[joinedEvtTwo.userId]).toEqual({
     avatar: 0,
     excluded: false,
     username: 'John',
@@ -38,14 +36,15 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
   });
 
   // also the estimation of the disconnected user is still in state
-  expect(modifiedState.estimations[addedEvt.payload.storyId]).toEqual({
+  expect(getEstimations(modifiedState)[addedEvt.payload.storyId]).toEqual({
     [joinedEvtTwo.userId]: 8
   });
 
-  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
+  const kickedEvent = scenario.getSingleNextEvent();
+  modifiedState = reduceMultipleEvents(modifiedState, kickedEvent);
 
   // now only our own user is left
-  expect(modifiedState.users).toEqual({
+  expect(getUsersById(modifiedState)).toEqual({
     [joinedEvtOne.userId]: {
       avatar: 0,
       disconnected: false,
@@ -55,7 +54,7 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
   });
 
   // estimation values are kept, even for kicked users
-  expect(modifiedState.estimations[addedEvt.payload.storyId]).toEqual({
+  expect(getEstimations(modifiedState)[addedEvt.payload.storyId]).toEqual({
     [joinedEvtTwo.userId]: 8
   });
 });

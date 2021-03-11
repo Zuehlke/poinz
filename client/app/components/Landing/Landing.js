@@ -1,25 +1,29 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {L10nContext} from '../../services/l10n';
+import {getPendingJoinCommandId} from '../../state/commandTracking/commandTrackingSelectors';
+import {getActionLog} from '../../state/actionLog/actionLogSelectors';
+import appConfig from '../../services/appConfig';
 import JoinRoomForm from './JoinRoomForm';
 import GithubRibbon from './GithubRibbon';
-import {hasMatchingPendingCommand} from '../../services/selectors';
+
 import {
   StyledActionLog,
   StyledEyecatcher,
   StyledLandingInner,
   StyledLanding,
-  StyledLargeFontEyecatcher,
+  StyledLoadingSpinner,
   StyledInfoText,
   StyledChangelog
 } from './_styled';
-import appConfig from '../../services/appConfig';
 
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({t, waitingForJoin, actionLog}) => {
+const Landing = ({waitingForJoin, actionLog}) => {
+  const {t} = useContext(L10nContext);
   if (waitingForJoin) {
     return (
       <StyledLanding>
@@ -58,9 +62,7 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
         )}
 
         <StyledEyecatcher>
-          <StyledChangelog
-            dangerouslySetInnerHTML={{__html: appConfig.changeLog}}
-          ></StyledChangelog>
+          <StyledChangelog dangerouslySetInnerHTML={{__html: appConfig.changeLog}} />
         </StyledEyecatcher>
       </StyledLandingInner>
     </StyledLanding>
@@ -68,18 +70,21 @@ const Landing = ({t, waitingForJoin, actionLog}) => {
 };
 
 Landing.propTypes = {
-  t: PropTypes.func,
   waitingForJoin: PropTypes.bool,
   actionLog: PropTypes.array
 };
 
 export default connect((state) => ({
-  t: state.translator,
-  actionLog: state.actionLog,
-  waitingForJoin: hasMatchingPendingCommand(state, 'joinRoom')
+  actionLog: getActionLog(state),
+  waitingForJoin: !!getPendingJoinCommandId(state)
 }))(Landing);
 
-const Loader = ({t}) => <StyledLargeFontEyecatcher>{t('loading')}</StyledLargeFontEyecatcher>;
+const Loader = ({t}) => (
+  <StyledLoadingSpinner>
+    <div>{t('loading')}</div>
+    <div className="waiting-spinner"></div>
+  </StyledLoadingSpinner>
+);
 
 Loader.propTypes = {
   t: PropTypes.func

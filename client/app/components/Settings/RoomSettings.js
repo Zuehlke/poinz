@@ -1,16 +1,19 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {toggleAutoReveal, setCardConfig, setPassword, SIDEBAR_SETTINGS} from '../../actions';
-import {CardConfigEditor} from './CardConfigEditor';
+import {L10nContext} from '../../services/l10n';
+import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
+import {toggleAutoReveal, setCardConfig, setPassword} from '../../state/actions/commandActions';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
+import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
+import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
+import {CardConfigEditor} from './CardConfigEditor';
 
 import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
 
 const RoomSettings = ({
-  t,
   shown,
   autoReveal,
   cardConfig,
@@ -20,6 +23,8 @@ const RoomSettings = ({
   setPassword,
   passwordProtected
 }) => {
+  const {t} = useContext(L10nContext);
+
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
   React.useEffect(() => {
     setCustomCardConfigExpanded(false);
@@ -43,7 +48,7 @@ const RoomSettings = ({
         </p>
       </StyledSection>
 
-      <StyledSection>
+      <StyledSection data-testid="sectionPasswordProtection">
         <h5>{t('passwordProtection')}</h5>
         {t('passwordProtectionInfo')}
 
@@ -54,6 +59,7 @@ const RoomSettings = ({
             </p>
             <StyledTextInput>
               <PasswordField
+                data-testid="roomPasswordInput"
                 onKeyPress={onRoomPasswordKeyPress}
                 onChange={(e) => setMyRoomPassword(e.target.value)}
                 value={myRoomPassword}
@@ -78,6 +84,7 @@ const RoomSettings = ({
             </p>
             <StyledTextInput>
               <PasswordField
+                data-testid="roomPasswordInput"
                 onKeyPress={onRoomPasswordKeyPress}
                 onChange={(e) => setMyRoomPassword(e.target.value)}
                 value={myRoomPassword}
@@ -139,7 +146,6 @@ const RoomSettings = ({
 };
 
 RoomSettings.propTypes = {
-  t: PropTypes.func,
   shown: PropTypes.bool,
   autoReveal: PropTypes.bool,
   toggleAutoReveal: PropTypes.func,
@@ -152,12 +158,11 @@ RoomSettings.propTypes = {
 
 export default connect(
   (state) => ({
-    t: state.translator,
-    shown: state.sidebar === SIDEBAR_SETTINGS,
-    autoReveal: state.autoReveal,
-    cardConfig: state.cardConfig,
-    roomId: state.roomId,
-    passwordProtected: state.passwordProtected
+    shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
+    autoReveal: state.room.autoReveal,
+    cardConfig: getCardConfigInOrder(state),
+    roomId: getRoomId(state),
+    passwordProtected: state.room.passwordProtected
   }),
   {
     toggleAutoReveal,

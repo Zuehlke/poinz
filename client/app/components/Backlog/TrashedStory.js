@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {restoreStory, deleteStory} from '../../actions';
-import ConsensusBadge from '../common/ConsensusBadge';
+import {L10nContext} from '../../services/l10n';
+import {restoreStory, deleteStory} from '../../state/actions/commandActions';
+import ValueBadge from '../common/ValueBadge';
 
 import {StyledStoryToolbar, StyledStory} from './_styled';
 import {StyledStoryTitle} from '../_styled';
@@ -11,7 +12,8 @@ import {StyledStoryTitle} from '../_styled';
 /**
  * One Trashed Story in the Trash
  */
-const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
+const TrashedStory = ({story, restoreStory, deleteStory}) => {
+  const {t} = useContext(L10nContext);
   return (
     <StyledStory>
       <StyledStoryToolbar>
@@ -31,26 +33,16 @@ const TrashedStory = ({t, story, cardConfig, restoreStory, deleteStory}) => {
 
       <StyledStoryTitle>
         <div>{story.title}</div>
-        {story.consensus && (
-          <ConsensusBadge cardConfig={cardConfig} consensusValue={story.consensus} />
-        )}
+        {story.consensus && <ValueBadge cardValue={story.consensus} />}
       </StyledStoryTitle>
     </StyledStory>
   );
 };
 
 TrashedStory.propTypes = {
-  t: PropTypes.func.isRequired,
   story: PropTypes.object,
-  cardConfig: PropTypes.array,
   restoreStory: PropTypes.func.isRequired,
   deleteStory: PropTypes.func.isRequired
 };
 
-export default connect(
-  (state) => ({
-    t: state.translator,
-    cardConfig: state.cardConfig
-  }),
-  {restoreStory, deleteStory}
-)(TrashedStory);
+export default connect(() => ({}), {restoreStory, deleteStory})(TrashedStory);

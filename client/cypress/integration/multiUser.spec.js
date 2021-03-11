@@ -94,7 +94,7 @@ it('multi user estimation', function () {
       ]);
 
       cy.get(tid('users')).contains(8);
-      cy.get(tid('estimationArea', 'consensusBadge')).contains(8);
+      cy.get(tid('estimationArea', 'cardValueBadge')).contains(8);
 
       cy.get(tid('nextStoryButton')).click();
 

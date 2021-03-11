@@ -1,7 +1,8 @@
-### 0.10.1: 2021-02-19
+### 0.10.1: 2021-03-11
 
 * Mark stories in backlog that were estimated, but without consensus
 * Frontend refactoring of redux state + reducers
+* Updated dependencies
 
 ### 0.10.0: 2021-02-06
 

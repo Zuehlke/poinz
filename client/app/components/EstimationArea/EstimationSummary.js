@@ -6,7 +6,11 @@ import {L10nContext} from '../../services/l10n';
 import getEstimationSummary from './getEstimationSummary';
 import {getUserCount} from '../../state/users/usersSelectors';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
-import {hasSelectedStoryConsensus} from '../../state/stories/storiesSelectors';
+import {concludeEstimation} from '../../state/actions/commandActions';
+import {
+  getSelectedStoryConsensusValue,
+  hasSelectedStoryConsensus
+} from '../../state/stories/storiesSelectors';
 import EstimationSummaryCard from './EstimationSummaryCard';
 
 import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
@@ -15,7 +19,14 @@ import {getCardConfigInOrder} from '../../state/room/roomSelectors';
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
-const EstimationSummary = ({estimations, usersInRoomCount, cardConfig, hasConsensus}) => {
+const EstimationSummary = ({
+  estimations,
+  usersInRoomCount,
+  cardConfig,
+  hasConsensus,
+  consensusValue,
+  concludeEstimation
+}) => {
   const {t} = useContext(L10nContext);
   const summary = getEstimationSummary(estimations);
 
@@ -34,6 +45,7 @@ const EstimationSummary = ({estimations, usersInRoomCount, cardConfig, hasConsen
       <StyledCards>
         {cardConfig.map((cardConfig) => (
           <EstimationSummaryCard
+            onClick={() => onCardClick(cardConfig.value)}
             key={'mini-card_' + cardConfig.value}
             cardCfg={cardConfig}
             count={summary.estimatedValues[cardConfig.value]}
@@ -42,18 +54,30 @@ const EstimationSummary = ({estimations, usersInRoomCount, cardConfig, hasConsen
       </StyledCards>
     </StyledEstimationSummary>
   );
+
+  function onCardClick(value) {
+    if (summary.estimatedValues[value] > 0 && consensusValue !== value) {
+      concludeEstimation(value);
+    }
+  }
 };
 
 EstimationSummary.propTypes = {
   estimations: PropTypes.object,
   cardConfig: PropTypes.array,
   usersInRoomCount: PropTypes.number,
-  hasConsensus: PropTypes.bool
+  hasConsensus: PropTypes.bool,
+  consensusValue: PropTypes.number,
+  concludeEstimation: PropTypes.func
 };
 
-export default connect((state) => ({
-  estimations: getEstimationsForCurrentlySelectedStory(state),
-  usersInRoomCount: getUserCount(state),
-  cardConfig: getCardConfigInOrder(state),
-  hasConsensus: hasSelectedStoryConsensus(state)
-}))(EstimationSummary);
+export default connect(
+  (state) => ({
+    estimations: getEstimationsForCurrentlySelectedStory(state),
+    usersInRoomCount: getUserCount(state),
+    cardConfig: getCardConfigInOrder(state),
+    hasConsensus: hasSelectedStoryConsensus(state),
+    consensusValue: getSelectedStoryConsensusValue(state)
+  }),
+  {concludeEstimation}
+)(EstimationSummary);

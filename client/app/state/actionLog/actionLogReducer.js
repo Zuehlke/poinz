@@ -120,9 +120,13 @@ export default function (state, action, oldState) {
     // if user is uncertain and switches between cards -> gives hints to other colleagues
     case EVENT_ACTION_TYPES.consensusAchieved: {
       const matchingCardConfig = getMatchingCardConfig(state, payload.value);
-      const message = `Consensus achieved for story "${getStoryTitle(state, payload.storyId)}": ${
+      let message = `Consensus achieved for story "${getStoryTitle(state, payload.storyId)}": ${
         matchingCardConfig.label
       }`;
+
+      if (payload.settled) {
+        message = `${message} (${username} manually settled)`;
+      }
 
       return updateLogInState(message);
     }

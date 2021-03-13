@@ -31,5 +31,5 @@ export function getRoomExport(roomId, userToken) {
     .get('/api/export/room/' + roomId, {
       headers: getHeaders(userToken)
     })
-    .then((response) => response.a.data);
+    .then((response) => response.data);
 }

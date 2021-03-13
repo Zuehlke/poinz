@@ -6,7 +6,7 @@ import {L10nContext} from '../../services/l10n';
 import getEstimationSummary from './getEstimationSummary';
 import {getUserCount} from '../../state/users/usersSelectors';
 import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/estimationsSelectors';
-import {concludeEstimation} from '../../state/actions/commandActions';
+import {settleEstimation} from '../../state/actions/commandActions';
 import {
   getSelectedStoryConsensusValue,
   hasSelectedStoryConsensus
@@ -25,7 +25,7 @@ const EstimationSummary = ({
   cardConfig,
   hasConsensus,
   consensusValue,
-  concludeEstimation
+  settleEstimation
 }) => {
   const {t} = useContext(L10nContext);
   const summary = getEstimationSummary(estimations);
@@ -57,7 +57,7 @@ const EstimationSummary = ({
 
   function onCardClick(value) {
     if (summary.estimatedValues[value] > 0 && consensusValue !== value) {
-      concludeEstimation(value);
+      settleEstimation(value);
     }
   }
 };
@@ -68,7 +68,7 @@ EstimationSummary.propTypes = {
   usersInRoomCount: PropTypes.number,
   hasConsensus: PropTypes.bool,
   consensusValue: PropTypes.number,
-  concludeEstimation: PropTypes.func
+  settleEstimation: PropTypes.func
 };
 
 export default connect(
@@ -79,5 +79,5 @@ export default connect(
     hasConsensus: hasSelectedStoryConsensus(state),
     consensusValue: getSelectedStoryConsensusValue(state)
   }),
-  {concludeEstimation}
+  {settleEstimation}
 )(EstimationSummary);

@@ -36,7 +36,7 @@ test('Should produce consensusAchieved event', async () => {
     {
       id: commandId,
       roomId: roomId,
-      name: 'concludeEstimation',
+      name: 'settleEstimation',
       payload: {
         storyId,
         value: 5
@@ -84,7 +84,7 @@ describe('preconditions', () => {
         {
           id: uuid(),
           roomId: roomId,
-          name: 'concludeEstimation',
+          name: 'settleEstimation',
           payload: {
             storyId: 'unknown',
             value: 5
@@ -147,7 +147,7 @@ describe('preconditions', () => {
         {
           id: uuid(),
           roomId: roomId,
-          name: 'concludeEstimation',
+          name: 'settleEstimation',
           payload: {
             storyId, // the storyId of the first story
             value: 5
@@ -155,7 +155,7 @@ describe('preconditions', () => {
         },
         userIdOne
       )
-    ).rejects.toThrow('Can only conclude estimation for currently selected story!');
+    ).rejects.toThrow('Can only settle estimation for currently selected story!');
   });
 
   test('Should throw if story is not revealed', async () => {
@@ -171,7 +171,7 @@ describe('preconditions', () => {
         {
           id: uuid(),
           roomId: roomId,
-          name: 'concludeEstimation',
+          name: 'settleEstimation',
           payload: {
             storyId,
             value: 5
@@ -179,10 +179,10 @@ describe('preconditions', () => {
         },
         userIdOne
       )
-    ).rejects.toThrow('You cannot conclude estimation for a story that was NOT YET revealed!');
+    ).rejects.toThrow('You cannot settle estimation for a story that was NOT YET revealed!');
   });
 
-  test('Should throw if value (to conclude) was not estimated by anyone', async () => {
+  test('Should throw if value (to settle) was not estimated by anyone', async () => {
     const {
       roomId,
       userIdOne,
@@ -209,7 +209,7 @@ describe('preconditions', () => {
         {
           id: uuid(),
           roomId: roomId,
-          name: 'concludeEstimation',
+          name: 'settleEstimation',
           payload: {
             storyId,
             value: 8 // <<- this value was not estimated by anyone in the room

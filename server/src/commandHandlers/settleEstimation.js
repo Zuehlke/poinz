@@ -31,17 +31,17 @@ const schema = {
   ]
 };
 
-const concludeEstimationCommandHandler = {
+const settleEstimationCommandHandler = {
   schema,
   preCondition: (room, command) => {
     const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
 
     if (room.selectedStory !== command.payload.storyId) {
-      throw new Error('Can only conclude estimation for currently selected story!');
+      throw new Error('Can only settle estimation for currently selected story!');
     }
 
     if (!matchingStory.revealed) {
-      throw new Error('You cannot conclude estimation for a story that was NOT YET revealed!');
+      throw new Error('You cannot settle estimation for a story that was NOT YET revealed!');
     }
 
     if (!valueWasEstimatedByAtLeastOneUser(matchingStory, command.payload.value)) {
@@ -57,9 +57,9 @@ const concludeEstimationCommandHandler = {
   }
 };
 
-function valueWasEstimatedByAtLeastOneUser(story, concludeValue) {
+function valueWasEstimatedByAtLeastOneUser(story, settledValue) {
   const allEstimatedValues = Object.values(story.estimations);
-  return allEstimatedValues.includes(concludeValue);
+  return allEstimatedValues.includes(settledValue);
 }
 
-export default concludeEstimationCommandHandler;
+export default settleEstimationCommandHandler;

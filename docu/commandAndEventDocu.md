@@ -191,7 +191,7 @@ Produces: **[storyEstimateCleared](#storyEstimateCleared)**,
 
 ### Command "concludeEstimation" <a name="concludeEstimation"></a>
 
-Source: [/server/src/commandHandlers/concludeEstimation.js](/server/src/commandHandlers/concludeEstimation.js)
+Source: [/server/src/commandHandlers/settleEstimation.js](/server/src/commandHandlers/concludeEstimation.js)
 
 Description
 

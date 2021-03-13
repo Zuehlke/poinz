@@ -13,6 +13,7 @@ import initialState from './state/initialState';
 import configureStore from './state/configureStore';
 import {WithL10n} from './services/l10n';
 
+import ErrorBoundary from './components/common/ErrorBoundary';
 import Main from './components/Main';
 import Global from './_styled';
 
@@ -25,11 +26,13 @@ if (appConfig.env === 'dev') {
 
 const store = configureStore(initialState());
 render(
-  <Provider store={store}>
-    <WithL10n>
-      <Global />
-      <Main />
-    </WithL10n>
-  </Provider>,
+  <ErrorBoundary>
+    <Provider store={store}>
+      <WithL10n>
+        <Global />
+        <Main />
+      </WithL10n>
+    </Provider>
+  </ErrorBoundary>,
   document.getElementById('app-root')
 );

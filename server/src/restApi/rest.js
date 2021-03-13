@@ -1,7 +1,11 @@
 import express from 'express';
+import {json as jsonParser} from 'body-parser';
 
 import {validateJwt} from '../auth/jwtService';
 import {mapAppStatusDto, mapRoomExportDto, mapRoomStateDto} from './dtoMapper';
+import getLogger from '../getLogger';
+
+const CLIENT_ERROR_LOGGER = getLogger('clientError');
 
 /**
  * This module handles incoming requests to the REST api.
@@ -14,6 +18,7 @@ import {mapAppStatusDto, mapRoomExportDto, mapRoomStateDto} from './dtoMapper';
  */
 export default function restApiFactory(app, store) {
   const restRouter = express.Router();
+  const jsonRequestBodyParser = jsonParser();
 
   app.use('/api', restRouter);
 
@@ -21,6 +26,11 @@ export default function restApiFactory(app, store) {
     const allRooms = await store.getAllRooms();
     const status = mapAppStatusDto(allRooms, store.getStoreType());
     res.json(status);
+  });
+
+  restRouter.post('/errorlog', jsonRequestBodyParser, async (req, res) => {
+    validateSanitizeAndLogError(req.body);
+    res.sendStatus(200);
   });
 
   restRouter.get('/export/room/:roomId', userIdInRoomCheck, async (req, res) => {
@@ -107,5 +117,20 @@ export default function restApiFactory(app, store) {
       return false;
     }
     return !!room.users.find((usr) => usr.id === payload.sub);
+  }
+
+  function validateSanitizeAndLogError(requestBody) {
+    if (
+      !requestBody ||
+      Object.keys(requestBody).length !== 2 ||
+      !requestBody.type ||
+      typeof requestBody.type !== 'string' ||
+      typeof requestBody.error !== 'string'
+    ) {
+      return;
+    }
+    CLIENT_ERROR_LOGGER.warn(
+      `${requestBody.type} ${requestBody.error.substring(0, 200).replace(/\n/g, ' ')}`
+    );
   }
 }

@@ -14,7 +14,7 @@ import {
 import EstimationSummaryCard from './EstimationSummaryCard';
 
 import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
-import {getCardConfigInOrder} from '../../state/room/roomSelectors';
+import {getCardConfigInOrder, getMatchingCardConfig} from '../../state/room/roomSelectors';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
@@ -23,14 +23,13 @@ const EstimationSummary = ({
   estimations,
   usersInRoomCount,
   cardConfig,
-  hasConsensus,
-  consensusValue,
+  consensusInfo,
   settleEstimation
 }) => {
   const {t} = useContext(L10nContext);
   const summary = getEstimationSummary(estimations);
   const allValuesSame = Object.keys(summary.estimatedValues).length === 1; // we cannot use "hasConsensus" property, because it is also set after (manually) "settling" the story.
-  const settled = hasConsensus && !allValuesSame;
+  const settled = consensusInfo.hasConsensus && !allValuesSame;
 
   return (
     <StyledEstimationSummary>
@@ -43,7 +42,7 @@ const EstimationSummary = ({
         <span>{t('numericalAverage', {value: summary.average})}</span>
 
         {allValuesSame && <span>{t('consensusAchieved')}</span>}
-        {settled && <span>{t('settledOn', {label: consensusValue})}</span>}
+        {settled && <span>{t('settledOn', {label: consensusInfo.label})}</span>}
       </StyledEstimationSummaryList>
 
       <StyledCards>
@@ -61,7 +60,7 @@ const EstimationSummary = ({
   );
 
   function onCardClick(value) {
-    if (summary.estimatedValues[value] > 0 && consensusValue !== value) {
+    if (summary.estimatedValues[value] > 0 && consensusInfo.value !== value) {
       settleEstimation(value);
     }
   }
@@ -71,8 +70,11 @@ EstimationSummary.propTypes = {
   estimations: PropTypes.object,
   cardConfig: PropTypes.array,
   usersInRoomCount: PropTypes.number,
-  hasConsensus: PropTypes.bool,
-  consensusValue: PropTypes.number,
+  consensusInfo: PropTypes.shape({
+    hasConsensus: PropTypes.bool,
+    value: PropTypes.number,
+    label: PropTypes.string
+  }),
   settleEstimation: PropTypes.func
 };
 
@@ -81,8 +83,11 @@ export default connect(
     estimations: getEstimationsForCurrentlySelectedStory(state),
     usersInRoomCount: getUserCount(state),
     cardConfig: getCardConfigInOrder(state),
-    hasConsensus: hasSelectedStoryConsensus(state),
-    consensusValue: getSelectedStoryConsensusValue(state)
+    consensusInfo: {
+      hasConsensus: hasSelectedStoryConsensus(state),
+      value: getSelectedStoryConsensusValue(state),
+      label: getMatchingCardConfig(state, getSelectedStoryConsensusValue(state)).label
+    }
   }),
   {settleEstimation}
 )(EstimationSummary);

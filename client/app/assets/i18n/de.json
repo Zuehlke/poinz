@@ -73,5 +73,8 @@
   "filter": "Filtern...",
   "estimationSummary": "Zusammenfassung",
   "consensusAchieved": "Konsens erreicht!",
-  "usersEstimated": "%{count} von %{total} Benutzer"
+  "usersEstimated": "%{count} von %{total} Benutzer",
+  "settle": "Schätzung festlegen auf \"%{label}\"",
+  "settledOn": "Schätzung festgelegt auf \"%{label}\"",
+  "numericalAverage": "Numerischer Durchschnitt: %{value}"
 }

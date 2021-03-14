@@ -1,5 +1,7 @@
 const average = (values) => values.reduce((a, b) => a + b) / values.length;
 
+const numberRoundedOneDigit = (number) => parseFloat(number.toFixed(1));
+
 /**
  *
  * @param {object} estmForOneStory The estimation object from the redux state, mapping userIds (keys) to estimation values (values)
@@ -36,7 +38,7 @@ export default function getEstimationSummary(estmForOneStory) {
   }, {});
 
   return {
-    average: average(estimationValues),
+    average: numberRoundedOneDigit(average(estimationValues)),
     highest: Math.max(...estimationValues),
     lowest: Math.min(...estimationValues),
     estimationCount: estimationValues.length,

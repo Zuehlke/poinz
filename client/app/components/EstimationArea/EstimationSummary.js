@@ -29,6 +29,8 @@ const EstimationSummary = ({
 }) => {
   const {t} = useContext(L10nContext);
   const summary = getEstimationSummary(estimations);
+  const allValuesSame = Object.keys(summary.estimatedValues).length === 1; // we cannot use "hasConsensus" property, because it is also set after (manually) "settling" the story.
+  const settled = hasConsensus && !allValuesSame;
 
   return (
     <StyledEstimationSummary>
@@ -38,13 +40,16 @@ const EstimationSummary = ({
         <span>
           {t('usersEstimated', {count: summary.estimationCount, total: usersInRoomCount})}
         </span>
+        <span>{t('numericalAverage', {value: summary.average})}</span>
 
-        {hasConsensus && <span>{t('consensusAchieved')}</span>}
+        {allValuesSame && <span>{t('consensusAchieved')}</span>}
+        {settled && <span>{t('settledOn', {label: consensusValue})}</span>}
       </StyledEstimationSummaryList>
 
       <StyledCards>
         {cardConfig.map((cardConfig) => (
           <EstimationSummaryCard
+            t={t}
             onClick={() => onCardClick(cardConfig.value)}
             key={'mini-card_' + cardConfig.value}
             cardCfg={cardConfig}

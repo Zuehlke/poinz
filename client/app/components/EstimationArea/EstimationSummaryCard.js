@@ -6,8 +6,12 @@ import {StyledEstmSummCard, StyledEstmSummCardInner} from './_styled';
 /**
  * One card in the estimation summary
  */
-const EstimationSummaryCard = ({cardCfg, count, onClick}) => (
-  <StyledEstmSummCard onClick={onClick} clickable={count > 0}>
+const EstimationSummaryCard = ({t, cardCfg, count, onClick}) => (
+  <StyledEstmSummCard
+    onClick={onClick}
+    clickable={count > 0}
+    title={t('settle', {label: cardCfg.label})}
+  >
     <StyledEstmSummCardInner wasEstimated={!!count} cardColor={cardCfg.color}>
       {cardCfg.label}
       {count && <span>{count}</span>}
@@ -16,6 +20,7 @@ const EstimationSummaryCard = ({cardCfg, count, onClick}) => (
 );
 
 EstimationSummaryCard.propTypes = {
+  t: PropTypes.func,
   cardCfg: PropTypes.object,
   count: PropTypes.number,
   onClick: PropTypes.func

@@ -68,6 +68,28 @@ test('decimal values', () => {
   });
 });
 
+test('rounding average', () => {
+  const estimationObjectForOneStory = {
+    'userId-1': 1,
+    'userId-2': 3,
+    'userId-3': 13
+  };
+
+  const summary = getEstimationSummary(estimationObjectForOneStory);
+
+  expect(summary).toEqual({
+    lowest: 1,
+    highest: 13,
+    average: 5.7, // <-- round to one digit after the decimal point
+    estimationCount: 3,
+    estimatedValues: {
+      1: 1,
+      3: 1,
+      13: 1
+    }
+  });
+});
+
 test('empty', () => {
   const estimationObjectForOneStory = {};
 

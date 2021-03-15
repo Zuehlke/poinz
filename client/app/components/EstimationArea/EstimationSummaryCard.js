@@ -8,6 +8,7 @@ import {StyledEstmSummCard, StyledEstmSummCardInner} from './_styled';
  */
 const EstimationSummaryCard = ({t, cardCfg, count, onClick}) => (
   <StyledEstmSummCard
+    data-testid={`summaryCard.${cardCfg.value}`}
     onClick={onClick}
     clickable={count > 0}
     title={t('settle', {label: cardCfg.label})}

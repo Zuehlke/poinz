@@ -32,7 +32,7 @@ const EstimationSummary = ({
   const settled = consensusInfo.hasConsensus && !allValuesSame;
 
   return (
-    <StyledEstimationSummary>
+    <StyledEstimationSummary data-testid="estimationSummary">
       <h4>{t('estimationSummary')}</h4>
 
       <StyledEstimationSummaryList>

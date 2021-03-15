@@ -1,4 +1,3 @@
-import {tid} from '../support/commands';
 import {Room, Landing} from '../elements/elements';
 
 beforeEach(function () {
@@ -17,10 +16,10 @@ it('join new room, add a story, estimate the story (alone)', function () {
   Room.Backlog.StoryAddForm.descriptionField().type(this.stories[3].description);
   Room.Backlog.StoryAddForm.addButton().click();
 
-  cy.get(tid('estimationCard.13')).click();
+  Room.EstimationArea.estimationCard(13).click();
 
-  cy.get(tid('user')).contains('13');
+  Room.Users.userEstimationGiven(13);
 
-  cy.get(tid('estimationArea', 'story')).contains('13'); // auto-revealed and showing consensus (since we have only one user in the room)
-  cy.get(tid('estimationArea', 'newRoundButton')); // revealed / round done -> "new Round" button is shown
+  Room.EstimationArea.storyConsensus().contains('13'); // auto-revealed and showing consensus (since we have only one user in the room)
+  Room.EstimationArea.newRoundButton().click(); // revealed  -> "new Round" button is shown
 });

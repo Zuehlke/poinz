@@ -1,3 +1,9 @@
+### 0.11.0: 2021-03-15
+
+* New feature "settle": if story is revealed but no consensus is reached, you can choose one card as the consensus value for the story
+* Estimation Summary shows numerical average
+* Room export now contains consensus value explicitly
+
 ### 0.10.1: 2021-03-11
 
 * Mark stories in backlog that were estimated, but without consensus

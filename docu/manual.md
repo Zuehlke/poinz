@@ -103,9 +103,23 @@ Switch to the list of trashed stories by clicking on **Trash (N)** on the top of
 Only a single story can be estimated at a given time.
  
 1. Click the story you want to estimate in the **Backlog** and click the blue **Estimate** button.
-2. The board now shows the selected story. All users see the same story selected on the board.
+2. The board now shows the selected story. All users see the same story selected on the board. In the backlog, the selected story is marked with an orange border on the left.
 3. Estimate the story by clicking one of the colored cards. By default the cards have the values ?, 1/2, 1, 2, 3, 5, 8, 13, 21, 34, 55, BIG.
 4. By default, the given estimates are *revealed* as soon as all active users did estimate. This behaviour can be changed in the settings (Auto Reveal).
+
+### Settle
+
+In many cases, your team does not "agree" on a value in the first round. You can discuss and then "settle" the estimation: **Click on one of the highlighted cards to store that value on the story.** 
+
+### New Round
+
+If you do not want to settle right away, you can start a new estimation round by clicking the blue **new Round** button.
+All previously given estimates on the currently selected story are **erased**, and your team can start estimating again.
+
+![new round](https://user-images.githubusercontent.com/1777143/97101245-0e909e00-169c-11eb-81f5-80a0c094014c.png)
+
+
+### Consensus
 
 If all users estimated the same value, *consensus* is achieved, and the story will display a colored *badge*.
 
@@ -116,13 +130,6 @@ If all users estimated the same value, *consensus* is achieved, and the story wi
 You can *reveal* the story at any time by clicking the blue **Reveal** button. Even if not all users in the room did estimate. PoinZ then displays all given estimates for this story (visible for all users).
 
 ![reveal](https://user-images.githubusercontent.com/1777143/97101241-08022680-169c-11eb-97de-9a27244c3dca.png)
-
-### New Round
-
-After the story was revealed (automatically or manually) you can start a new round by clicking the blue **new Round** button.
-All previously given estimates on the currently selected story are erased, and your team can start estimating again.
-
-![new round](https://user-images.githubusercontent.com/1777143/97101245-0e909e00-169c-11eb-81f5-80a0c094014c.png)
 
 ## Settings
 
@@ -142,8 +149,7 @@ If you set an email address that is registered with https://gravatar.com, the gr
 #### Excluded
 
 If you mark yourself as "excluded", you do not take part in estimating stories. If auto reveal is enabled, PoinZ will "ignore you" and reveal the story as soon as all other users did estimate the current story.
-You can still modify the backlog. 
-This is helpful for Scrum Masters / moderators.
+You can still modify the backlog and [settle](#settle). This is helpful for Scrum Masters / moderators.
 
 ### Room Settings
 These settings will affect the room and thus all users in the same room.

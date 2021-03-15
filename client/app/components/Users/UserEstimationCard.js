@@ -32,7 +32,11 @@ const UserEstimationCard = ({isExcluded, userHasEstimation, revealed, matchingCa
   }
 
   return (
-    <StyledUserEstimationGiven revealed={revealed} valueColor={matchingCardConfig.color}>
+    <StyledUserEstimationGiven
+      revealed={revealed}
+      valueColor={matchingCardConfig.color}
+      data-testid={`${revealed ? 'revealed.' : ''}userEstimationGiven.${matchingCardConfig.value}`}
+    >
       {estimationValueToDisplay}
     </StyledUserEstimationGiven>
   );

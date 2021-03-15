@@ -6,6 +6,7 @@ import restoreStory from './restoreStory';
 import importStories from './importStories';
 import clearStoryEstimate from './clearStoryEstimate';
 import giveStoryEstimate from './giveStoryEstimate';
+import settleEstimation from './settleEstimation';
 import joinRoom from './joinRoom';
 import kick from './kick';
 import leaveRoom from './leaveRoom';
@@ -29,6 +30,7 @@ export default {
   importStories,
   clearStoryEstimate,
   giveStoryEstimate,
+  settleEstimation,
   joinRoom,
   kick,
   leaveRoom,

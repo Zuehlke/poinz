@@ -47,6 +47,14 @@ export const hasSelectedStoryConsensus = createSelector(
 );
 
 /**
+ * Returns the consensusValue for the selected story (if our room contains stories, and a story is selected and this story was estimated with consensus (all values the same))
+ * Returns undefined if above preconditions are not met.
+ */
+export const getSelectedStoryConsensusValue = createSelector([getSelectedStory], (selectedStory) =>
+  selectedStory && hasStoryConsensus(selectedStory) ? selectedStory.consensus : undefined
+);
+
+/**
  * technically not a selector. pass in the story (not the whole state)
  *
  * value could be "0" which is falsy, check for undefined

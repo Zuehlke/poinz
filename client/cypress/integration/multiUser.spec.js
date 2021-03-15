@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import {tid} from '../support/commands';
-import {Room} from '../elements/elements';
+import {Landing, Room} from '../elements/elements';
 
 beforeEach(function () {
   cy.fixture('users/default.json').then((data) => (this.user = data));
@@ -8,19 +8,17 @@ beforeEach(function () {
   cy.fixture('stories.json').then((data) => (this.stories = data));
 });
 
-it('multi user estimation', function () {
+it('multi user estimation with two rounds, consensus on second round', function () {
   const roomId = 'multi-user-e2e_' + uuid();
 
   cy.visit('/' + roomId);
 
-  cy.get(tid('usernameInput')).type(this.user.username);
-  cy.get(tid('joinButton')).click();
+  Landing.usernameField().type(this.user.username);
+  Landing.joinButton().click();
+  Room.TopBar.whoamiSimple().contains(this.user.username);
 
-  cy.get(tid('whoamiSimple'));
-
-  // this will open an additional socket to the backend, so that we can add another user to the room
+  // -- the following will open an additional socket to the backend, so that we can add another user to the room
   // Cypress does not support multiple browsers!   see    https://docs.cypress.io/guides/references/trade-offs.html
-
   // see ../support/commands.js
   const userTwoSocket = uuid();
   const userTwoUserId = uuid();
@@ -38,19 +36,20 @@ it('multi user estimation', function () {
   ]);
 
   // now we have two users in the room and can do a real estimation round :)
-  cy.get(tid('users')).find('[data-testid="user"]').should('have.length', 2);
+  Room.Users.usersList().should('have.length', 2);
 
   //  add an additional story
   Room.Backlog.StoryAddForm.titleField().type(this.stories[0].title);
   Room.Backlog.StoryAddForm.addButton().click();
 
   // our user estimates... nothing is auto-revealed, other user did not estimate so far
-  cy.get(tid('estimationCard.5')).click();
+  Room.EstimationArea.estimationCard(5).click();
+  Room.Users.userEstimationGiven(5); // my user displays my card as "value given" (without showing the actual value)
 
   //  and I can change my mind...   several times ;)
-  cy.get(tid('estimationCard.5')).click();
-  cy.get(tid('estimationCard.13')).click();
-  cy.get(tid('estimationCard.8')).click();
+  Room.EstimationArea.estimationCard(5).click(); // clearEstimation
+  Room.EstimationArea.estimationCard(13).click();
+  Room.EstimationArea.estimationCard(8).click();
 
   // get the story id from the selected story node in the DOM
   // this is still the sample story ("Welcome")
@@ -73,13 +72,14 @@ it('multi user estimation', function () {
       ]);
 
       // auto revealed, but no consensus
-      cy.get(tid('users')).contains(3);
-      cy.get(tid('users')).contains(8);
+      Room.Users.userEstimationGivenRevealed(3);
+      Room.Users.userEstimationGivenRevealed(8);
 
-      // let's try again
-      cy.get(tid('newRoundButton')).click();
+      // let's try again in a new round
+      Room.EstimationArea.newRoundButton().click();
 
-      cy.get(tid('estimationCard.8')).click();
+      // first users selects 8
+      Room.EstimationArea.estimationCard(8).click();
 
       cy.sendCommands(userTwoSocket, [
         {
@@ -87,17 +87,79 @@ it('multi user estimation', function () {
           name: 'giveStoryEstimate',
           userId: userTwoUserId,
           payload: {
-            value: 8,
+            value: 8, // second user selects also 8
             storyId
           }
         }
       ]);
 
-      cy.get(tid('users')).contains(8);
-      cy.get(tid('estimationArea', 'cardValueBadge')).contains(8);
+      Room.Users.userEstimationGivenRevealed(8);
+      Room.EstimationArea.storyConsensus().contains('8');
 
       cy.get(tid('nextStoryButton')).click();
-
       cy.get(tid('estimationArea', 'story')).contains(this.stories[0].title);
+    });
+});
+
+it('estimation summary and settling on a value', function () {
+  const roomId = 'multi-user-e2e_' + uuid();
+
+  cy.visit('/' + roomId);
+
+  Landing.usernameField().type(this.user.username);
+  Landing.joinButton().click();
+  Room.TopBar.whoamiSimple().contains(this.user.username);
+
+  const userTwoSocket = uuid();
+  const userTwoUserId = uuid();
+  cy.openNewSocket(userTwoSocket);
+  cy.sendCommands(userTwoSocket, [
+    {
+      roomId,
+      name: 'joinRoom',
+      userId: userTwoUserId,
+      payload: {
+        username: this.sergio.username,
+        avatar: 3
+      }
+    }
+  ]);
+
+  Room.Users.usersList().should('have.length', 2); // important to "wait" for second user to show up in users list
+
+  Room.EstimationArea.estimationCard(5).click();
+
+  cy.get(tid('storySelected'))
+    .should('have.attr', 'id')
+    .then((theStoryElementId) => {
+      const storyId = theStoryElementId.substring(theStoryElementId.lastIndexOf('.') + 1);
+
+      // let the other user estimate
+      cy.sendCommands(userTwoSocket, [
+        {
+          roomId,
+          name: 'giveStoryEstimate',
+          userId: userTwoUserId,
+          payload: {
+            value: 3,
+            storyId
+          }
+        }
+      ]);
+
+      // auto revealed, but no consensus
+      Room.Users.userEstimationGivenRevealed(3);
+      Room.Users.userEstimationGivenRevealed(5);
+
+      cy.get(tid('estimationSummary')).contains('2 of 2 Users estimated');
+      cy.get(tid('estimationSummary')).contains('Numerical average: 4');
+
+      // user one (e.g. the scrum master) settles on "3"
+      Room.EstimationArea.summaryCard(3).click();
+
+      cy.get(tid('estimationSummary')).contains('Manually settled on "3"');
+      Room.EstimationArea.storyConsensus().contains('3');
+      Room.Users.userEstimationGivenRevealed(3);
+      Room.Users.userEstimationGivenRevealed(5);
     });
 });

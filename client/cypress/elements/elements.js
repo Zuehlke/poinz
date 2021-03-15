@@ -25,6 +25,21 @@ const elements = {
       settingsToggleButton: () => cy.get(tid('topBar', 'settingsToggle'))
     },
 
+    EstimationArea: {
+      estimationCard: (cardValue) => cy.get(tid(`estimationCard.${cardValue}`)),
+      storyConsensus: () => cy.get(tid('estimationArea', 'story', 'cardValueBadge')),
+      newRoundButton: () => cy.get(tid('estimationArea', 'newRoundButton')),
+      summaryCard: (cardValue) => cy.get(tid(`summaryCard.${cardValue}`))
+    },
+
+    Users: {
+      usersContainer: () => cy.get(tid('users')),
+      usersList: () => cy.get(tid('users')).children(),
+      userEstimationGiven: (cardValue) => cy.get(tid('users', `userEstimationGiven.${cardValue}`)),
+      userEstimationGivenRevealed: (cardValue) =>
+        cy.get(tid('users', `revealed.userEstimationGiven.${cardValue}`))
+    },
+
     Settings: {
       settingsContainer: () => cy.get(tid('settings')),
       usernameField: () => cy.get(tid('settings', 'usernameInput')),

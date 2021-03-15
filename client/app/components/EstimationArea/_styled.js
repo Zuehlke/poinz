@@ -106,8 +106,9 @@ export const StyledCardInner = styled.div`
 
 export const StyledEstmSummCard = styled(StyledCard)`
   &,
-  &:focus {
-    cursor: default;
+  &:focus,
+  &:hover {
+    cursor: ${({clickable}) => (clickable ? 'pointer' : 'default')};
   }
 `;
 

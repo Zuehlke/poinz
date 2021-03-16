@@ -76,5 +76,5 @@
   "usersEstimated": "%{count} von %{total} Benutzer",
   "settle": "Schätzung festlegen auf \"%{label}\"",
   "settledOn": "Schätzung festgelegt auf \"%{label}\"",
-  "numericalAverage": "Numerischer Durchschnitt: %{value}"
+  "numericalAverage": "Numerischer Durchschnitt ist %{value}"
 }

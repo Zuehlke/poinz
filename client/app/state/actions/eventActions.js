@@ -59,8 +59,8 @@ export const eventReceived = (event) => (dispatch, getState) => {
     return;
   }
 
-  if (event.roomId !== getRoomId(state)) {
-    log.warn(
+  if (log.getLevel() <= log.levels.DEBUG && event.roomId !== getRoomId(state)) {
+    log.debug(
       `Received event "${event.name}" has roomId=${event.roomId}. Our state has roomId=${getRoomId(
         state
       )}`

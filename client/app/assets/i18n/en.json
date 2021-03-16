@@ -76,6 +76,6 @@
   "usersEstimated": "%{count} of %{total} Users estimated",
   "settle": "Settle the estimation on \"%{label}\"",
   "settledOn": "Manually settled on \"%{label}\"",
-  "numericalAverage": "Numerical average: %{value}"
+  "numericalAverage": "Numerical average is %{value}"
 
 }

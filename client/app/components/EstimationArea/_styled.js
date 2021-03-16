@@ -1,6 +1,6 @@
 import styled, {keyframes} from 'styled-components';
 
-import {COLOR_ORANGE} from '../colors';
+import {COLOR_LIGHTER_GREY, COLOR_ORANGE} from '../colors';
 import {device, ZuehlkeFont} from '../dimensions';
 
 export const StyledEstimation = styled.div`
@@ -33,6 +33,8 @@ export const StyledStoryText = styled.div`
   margin-top: 4px;
   white-space: pre-wrap;
   display: inline-block;
+  overflow-x: auto;
+  width: 100%;
 `;
 
 export const StyledApplauseHighlight = styled.div`
@@ -106,6 +108,18 @@ export const StyledCardInner = styled.div`
 
 export const StyledEstmSummCard = styled(StyledCard)`
   &,
+  &:focus {
+    min-width: 21vw; /* slightly smaller cards in estimation summary */
+  }
+
+  @media ${device.desktop} {
+    &,
+    &:focus {
+      min-width: 80px; /* slightly smaller cards in estimation summary */
+    }
+  }
+
+  &,
   &:focus,
   &:hover {
     cursor: ${({clickable}) => (clickable ? 'pointer' : 'default')};
@@ -113,8 +127,10 @@ export const StyledEstmSummCard = styled(StyledCard)`
 `;
 
 export const StyledEstmSummCardInner = styled(StyledCardInner)`
-  opacity: ${({wasEstimated}) => (wasEstimated ? 1 : 0.3)};
+  height: 80px; /* slightly smaller cards in estimation summary */
+  padding: 23px 0;
 
+  opacity: ${({wasEstimated}) => (wasEstimated ? 1 : 0.3)};
   border: ${({wasEstimated}) => (wasEstimated ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
 
   > span {
@@ -138,10 +154,15 @@ export const StyledEstmSummCardInner = styled(StyledCardInner)`
 
 export const StyledEstimationSummary = styled.div`
   margin-top: 24px;
+  background: white;
+  border: 1px solid ${COLOR_LIGHTER_GREY};
   padding: 8px;
 
-  h4 {
-    margin-bottom: 2px;
+  h5 {
+    color: ${COLOR_ORANGE};
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 0;
   }
 `;
 export const StyledEstimationSummaryList = styled.div`

@@ -33,7 +33,7 @@ const EstimationSummary = ({
 
   return (
     <StyledEstimationSummary data-testid="estimationSummary">
-      <h4>{t('estimationSummary')}</h4>
+      <h5>{t('estimationSummary')}</h5>
 
       <StyledEstimationSummaryList>
         <span>
@@ -49,6 +49,7 @@ const EstimationSummary = ({
         {cardConfig.map((cardConfig) => (
           <EstimationSummaryCard
             t={t}
+            clickable={canCardBeClicked(cardConfig)}
             onClick={() => onCardClick(cardConfig.value)}
             key={'mini-card_' + cardConfig.value}
             cardCfg={cardConfig}
@@ -59,10 +60,21 @@ const EstimationSummary = ({
     </StyledEstimationSummary>
   );
 
-  function onCardClick(value) {
-    if (summary.estimatedValues[value] > 0 && consensusInfo.value !== value) {
-      settleEstimation(value);
+  function canCardBeClicked(cardConfig) {
+    if (consensusInfo.hasConsensus && allValuesSame) {
+      return false; // a "real" consensus was achieved, all users estimated the same value
     }
+
+    const count = summary.estimatedValues[cardConfig.value];
+    if (typeof count === 'undefined' || count < 1) {
+      return false;
+    }
+
+    return consensusInfo.value !== cardConfig.value;
+  }
+
+  function onCardClick(value) {
+    settleEstimation(value);
   }
 };
 

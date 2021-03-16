@@ -37,7 +37,7 @@ function normalizeDateOrTs(dateOrTs) {
   }
 
   const dateObject = new Date(dateOrTs);
-  if (dateObject.getFullYear() < 2000) {
+  if (log.getLevel() <= log.levels.DEBUG && dateObject.getFullYear() < 2000) {
     log.warn('DateObject is far in the past. Check Seconds versus Milliseconds!', dateObject);
   }
   return dateObject;

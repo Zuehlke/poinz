@@ -152,7 +152,7 @@ it('estimation summary and settling on a value', function () {
       Room.Users.userEstimationGivenRevealed(5);
 
       cy.get(tid('estimationSummary')).contains('2 of 2 Users estimated');
-      cy.get(tid('estimationSummary')).contains('Numerical average: 4');
+      cy.get(tid('estimationSummary')).contains('Numerical average is 4');
 
       // user one (e.g. the scrum master) settles on "3"
       Room.EstimationArea.summaryCard(3).click();

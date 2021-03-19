@@ -1,30 +1,40 @@
 import isDate from 'date-fns/isDate';
 import format from 'date-fns/format';
-import formatDistance from 'date-fns/formatDistance';
+import localeDe from 'date-fns/locale/de';
+import localeEn from 'date-fns/locale/en-US';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import formatDuration from 'date-fns/formatDuration';
 import log from 'loglevel';
 
 /**
- *
- * @param inSeconds
+ * some formatting functions (containing months, weekdays, etc.) are dependent on the locale/language
+ * @param {string} language Either 'en' or 'de' (at the moment)
  */
-export function secondsToDaysHoursMinutes(inSeconds) {
-  const inMinutes = Math.floor(inSeconds / 60);
-  const minutes = inMinutes % 60;
-  const inHours = Math.floor(inMinutes / 60);
-  const hours = inHours % 24;
-  const days = Math.floor(inHours / 24);
+export function getLocalizedFormats(language = 'en') {
+  const locale = getLocale(language);
+  return {
+    timeAgo,
+    formatDateTime,
+    secondsToDaysHoursMinutes
+  };
 
-  return `${days} day${days > 1 ? 's' : ''} ${hours} hour${hours > 1 ? 's' : ''} ${minutes} minute${
-    minutes > 1 ? 's' : ''
-  }`;
-}
+  function timeAgo(dateOrTs) {
+    return formatDistanceToNow(normalizeDateOrTs(dateOrTs), {addSuffix: true, locale});
+  }
 
-export function timeAgo(dateOrTs) {
-  return formatDistance(normalizeDateOrTs(dateOrTs), new Date(), {addSuffix: true});
-}
+  function formatDateTime(dateOrTs) {
+    return format(normalizeDateOrTs(dateOrTs), 'EEE MMM dd, HH:mm', {locale});
+  }
 
-export function formatDateTime(dateOrTs) {
-  return format(normalizeDateOrTs(dateOrTs), 'dd.MM.yyyy HH:mm');
+  function secondsToDaysHoursMinutes(inSeconds) {
+    const inMinutes = Math.floor(inSeconds / 60);
+    const minutes = inMinutes % 60;
+    const inHours = Math.floor(inMinutes / 60);
+    const hours = inHours % 24;
+    const days = Math.floor(inHours / 24);
+
+    return formatDuration({days, hours, minutes}, {format: ['days', 'hours', 'minutes'], locale});
+  }
 }
 
 export function formatTime(dateOrTs) {
@@ -41,4 +51,22 @@ function normalizeDateOrTs(dateOrTs) {
     log.warn('DateObject is far in the past. Check Seconds versus Milliseconds!', dateObject);
   }
   return dateObject;
+}
+
+/**
+ * Currently PoinZ only supports English and German.
+ * We do not want to include all date-fns locales!
+ *
+ * @param language
+ * @return {*}
+ */
+function getLocale(language) {
+  switch (language) {
+    case 'de':
+      return localeDe;
+    case 'en':
+      return localeEn;
+    default:
+      return localeEn;
+  }
 }

@@ -9,6 +9,8 @@ it('load page with mobile screen dimensions and toggle menues in room', function
   cy.viewport('iphone-x');
   cy.visit('/');
 
+  cy.clearLocalStorage(); // this should not be needed.  Cypress promises to clear all local storage in between tests.
+
   Landing.joinButton().click();
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();

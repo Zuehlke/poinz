@@ -1,10 +1,11 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import Polyglot from 'node-polyglot';
 
 import {getPresetLanguage, setPresetLanguage} from '../state/clientSettingsStore';
 import translationsEN from '../assets/i18n/en.json';
 import translationsDE from '../assets/i18n/de.json';
+import {getLocalizedFormats} from './timeUtil';
 
 const DEFAULT_LANGUAGE = 'en';
 
@@ -27,14 +28,16 @@ export const L10nContext = React.createContext(undefined);
  * @constructor
  */
 export const WithL10n = ({children}) => {
-  let polyglot, language;
-  const [translator, setTranslator] = useState({t: () => 'ggg', setLanguage, language});
+  const initialLanguage = getPresetLanguage() || DEFAULT_LANGUAGE;
+  const polyglot = new Polyglot({phrases: dictionary[initialLanguage]});
+  const initTranslatorState = {
+    t,
+    setLanguage,
+    language: initialLanguage,
+    format: getLocalizedFormats(initialLanguage)
+  };
 
-  useEffect(() => {
-    language = getPresetLanguage() || DEFAULT_LANGUAGE;
-    polyglot = new Polyglot({phrases: dictionary[language]});
-    setLanguage(language);
-  }, []);
+  const [translator, setTranslator] = useState(initTranslatorState);
 
   return <L10nContext.Provider value={translator}>{children}</L10nContext.Provider>;
 
@@ -57,7 +60,8 @@ export const WithL10n = ({children}) => {
     setTranslator({
       t,
       setLanguage,
-      language: lang
+      language: lang,
+      format: getLocalizedFormats(lang)
     });
   }
 };

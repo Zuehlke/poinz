@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import {
   COLOR_BACKGROUND_GREY,
   COLOR_FONT_GREY,
+  COLOR_LIGHT_GREY,
   COLOR_LIGHTER_GREY,
   COLOR_ORANGE,
   COLOR_WARNING
@@ -185,8 +186,16 @@ export const StyledStoryText = styled.div`
 export const StyledHighlightButtonWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-top: 16px;
+`;
+
+export const StyledStoryAttributes = styled.div`
+  > span {
+    color: ${COLOR_LIGHT_GREY};
+    font-size: 12px;
+  }
 `;
 
 export const StyledBacklogSortForm = styled.form`

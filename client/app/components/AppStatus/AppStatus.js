@@ -9,10 +9,11 @@ import {
   StyledPoinzLogo,
   StyledQuickMenuButton,
   StyledTopBar,
+  StyledTopBarInner,
   StyledTopLeft,
   StyledTopRight
 } from '../TopBar/_styled';
-import {StyledAppStatus, StyledRoomsList} from './_styled';
+import {StyledAppStatus, StyledAppStatusMain, StyledRoomsList} from './_styled';
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
@@ -34,41 +35,45 @@ const AppStatus = () => {
   return (
     <StyledAppStatus data-testid="appStatusPage">
       <StyledTopBar data-testid="topBar">
-        <StyledTopLeft>
-          <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
-        </StyledTopLeft>
+        <StyledTopBarInner>
+          <StyledTopLeft>
+            <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
+          </StyledTopLeft>
 
-        <StyledTopRight>
-          <StyledQuickMenuButton
-            data-testid="reloadDataButton"
-            className="clickable pure-button pure-button-primary"
-            onClick={loadAndSet}
-          >
-            <i className="icon-arrows-cw"></i>
-          </StyledQuickMenuButton>
-          <StyledQuickMenuButton className="clickable pure-button pure-button-primary" href="/">
-            <i className="icon-logout"></i>
-          </StyledQuickMenuButton>
-        </StyledTopRight>
+          <StyledTopRight>
+            <StyledQuickMenuButton
+              data-testid="reloadDataButton"
+              className="clickable pure-button pure-button-primary"
+              onClick={loadAndSet}
+            >
+              <i className="icon-arrows-cw"></i>
+            </StyledQuickMenuButton>
+            <StyledQuickMenuButton className="clickable pure-button pure-button-primary" href="/">
+              <i className="icon-logout"></i>
+            </StyledQuickMenuButton>
+          </StyledTopRight>
+        </StyledTopBarInner>
       </StyledTopBar>
 
-      <h2>PoinZ Application Status</h2>
+      <StyledAppStatusMain>
+        <h2>PoinZ Application Status</h2>
 
-      <p>
-        Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
-      </p>
-      <p>Uptime: {appStatus.uptime}</p>
-      <p>Total rooms: {appStatus.roomCount}</p>
-      <p>Running on: {appStatus.storeInfo}</p>
+        <p>
+          Version: {appConfig.version} {formatDateTime(appConfig.buildTime)}
+        </p>
+        <p>Uptime: {appStatus.uptime}</p>
+        <p>Total rooms: {appStatus.roomCount}</p>
+        <p>Running on: {appStatus.storeInfo}</p>
 
-      <h3>Rooms</h3>
+        <h3>Rooms</h3>
 
-      <StyledRoomsList>
-        <TableHeaders />
-        {appStatus.rooms.map((room, index) => (
-          <RoomItem key={index} room={room} />
-        ))}
-      </StyledRoomsList>
+        <StyledRoomsList>
+          <TableHeaders />
+          {appStatus.rooms.map((room, index) => (
+            <RoomItem key={index} room={room} />
+          ))}
+        </StyledRoomsList>
+      </StyledAppStatusMain>
     </StyledAppStatus>
   );
 

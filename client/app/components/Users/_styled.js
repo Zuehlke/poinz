@@ -14,7 +14,7 @@ export const StyledUsers = styled.div`
   flex-direction: column;
   justify-content: stretch;
 
-  padding: 48px 16px 16px;
+  padding: 16px;
 
   @media ${device.modernMobile} {
     display: block;

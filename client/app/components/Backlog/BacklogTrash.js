@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import TrashedStory from './TrashedStory';
 import {getTrashedStories} from '../../state/stories/storiesSelectors';
 
-import {StyledBacklogInfoText, StyledStoriesScrolling} from './_styled';
+import {StyledBacklogInfoText, StyledBacklogTrash, StyledStories} from './_styled';
 import {L10nContext} from '../../services/l10n';
 
 /**
@@ -16,16 +16,16 @@ const BacklogTrash = ({trashedStories}) => {
   const hasTrashedStories = trashedStories.length > 0;
 
   return (
-    <React.Fragment>
+    <StyledBacklogTrash>
       {hasTrashedStories && (
-        <StyledStoriesScrolling data-testid="trashedStories">
+        <StyledStories data-testid="trashedStories">
           {trashedStories.map((story) => (
             <TrashedStory story={story} key={story.id} />
           ))}
-        </StyledStoriesScrolling>
+        </StyledStories>
       )}
       {!hasTrashedStories && <StyledBacklogInfoText>{t('trashEmpty')}</StyledBacklogInfoText>}
-    </React.Fragment>
+    </StyledBacklogTrash>
   );
 };
 

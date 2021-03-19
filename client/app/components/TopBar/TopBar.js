@@ -26,7 +26,8 @@ import {
   StyledWhoAmI,
   StyledWhoAmIExtended,
   StyledWhoAmISimple,
-  StyledIconExclamation
+  StyledIconExclamation,
+  StyledTopBarInner
 } from './_styled';
 
 const TopBar = ({
@@ -44,70 +45,72 @@ const TopBar = ({
 
   return (
     <StyledTopBar data-testid="topBar">
-      <StyledTopLeft>
-        <StyledBacklogToggle
-          data-testid="backlogToggle"
-          className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
-          onClick={toggleBacklogSidebar}
-        >
-          <StyledBacklogToggleIcon>
-            <span></span>
-          </StyledBacklogToggleIcon>
-        </StyledBacklogToggle>
-        <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
-      </StyledTopLeft>
+      <StyledTopBarInner>
+        <StyledTopLeft>
+          <StyledBacklogToggle
+            data-testid="backlogToggle"
+            className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
+            onClick={toggleBacklogSidebar}
+          >
+            <StyledBacklogToggleIcon>
+              <span></span>
+            </StyledBacklogToggleIcon>
+          </StyledBacklogToggle>
+          <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
+        </StyledTopLeft>
 
-      <StyledTopRight>
-        <StyledWhoAmI>
-          <StyledWhoAmISimple data-testid="whoamiSimple">{username}</StyledWhoAmISimple>
-          <StyledWhoAmIExtended>
-            {username} @ {roomLink}
-          </StyledWhoAmIExtended>
-        </StyledWhoAmI>
+        <StyledTopRight>
+          <StyledWhoAmI>
+            <StyledWhoAmISimple data-testid="whoamiSimple">{username}</StyledWhoAmISimple>
+            <StyledWhoAmIExtended>
+              {username} @ {roomLink}
+            </StyledWhoAmIExtended>
+          </StyledWhoAmI>
 
-        <StyledQuickMenuButton
-          data-testid="settingsToggle"
-          className={`clickable pure-button pure-button-primary ${
-            sidebar === SIDEBAR_SETTINGS ? 'pure-button-active' : ''
-          } `}
-          onClick={toggleSidebar.bind(undefined, SIDEBAR_SETTINGS)}
-          title={t('toggleMenu')}
-        >
-          <i className="icon-cog"></i>
-        </StyledQuickMenuButton>
-        <StyledQuickMenuButton
-          data-testid="actionLogToggle"
-          className={`clickable pure-button pure-button-primary ${
-            sidebar === SIDEBAR_ACTIONLOG ? 'pure-button-active' : ''
-          }`}
-          warning={unseenError}
-          onClick={toggleSidebar.bind(undefined, SIDEBAR_ACTIONLOG)}
-          title={t('toggleLog')}
-        >
-          <i className="icon-doc-text"></i>
+          <StyledQuickMenuButton
+            data-testid="settingsToggle"
+            className={`clickable pure-button pure-button-primary ${
+              sidebar === SIDEBAR_SETTINGS ? 'pure-button-active' : ''
+            } `}
+            onClick={toggleSidebar.bind(undefined, SIDEBAR_SETTINGS)}
+            title={t('toggleMenu')}
+          >
+            <i className="icon-cog"></i>
+          </StyledQuickMenuButton>
+          <StyledQuickMenuButton
+            data-testid="actionLogToggle"
+            className={`clickable pure-button pure-button-primary ${
+              sidebar === SIDEBAR_ACTIONLOG ? 'pure-button-active' : ''
+            }`}
+            warning={unseenError}
+            onClick={toggleSidebar.bind(undefined, SIDEBAR_ACTIONLOG)}
+            title={t('toggleLog')}
+          >
+            <i className="icon-doc-text"></i>
 
-          {unseenError && <StyledIconExclamation className="icon-attention-alt" />}
-        </StyledQuickMenuButton>
+            {unseenError && <StyledIconExclamation className="icon-attention-alt" />}
+          </StyledQuickMenuButton>
 
-        <StyledQuickMenuButton
-          data-testid="helpToggle"
-          className={`clickable pure-button pure-button-primary ${
-            sidebar === SIDEBAR_HELP ? 'pure-button-active' : ''
-          } `}
-          onClick={toggleSidebar.bind(undefined, SIDEBAR_HELP)}
-          title={t('help')}
-        >
-          <i className="icon-help"></i>
-        </StyledQuickMenuButton>
+          <StyledQuickMenuButton
+            data-testid="helpToggle"
+            className={`clickable pure-button pure-button-primary ${
+              sidebar === SIDEBAR_HELP ? 'pure-button-active' : ''
+            } `}
+            onClick={toggleSidebar.bind(undefined, SIDEBAR_HELP)}
+            title={t('help')}
+          >
+            <i className="icon-help"></i>
+          </StyledQuickMenuButton>
 
-        <StyledQuickMenuButton
-          className="clickable pure-button pure-button-primary"
-          onClick={leaveRoom}
-          title={t('leaveRoom')}
-        >
-          <i className="icon-logout"></i>
-        </StyledQuickMenuButton>
-      </StyledTopRight>
+          <StyledQuickMenuButton
+            className="clickable pure-button pure-button-primary"
+            onClick={leaveRoom}
+            title={t('leaveRoom')}
+          >
+            <i className="icon-logout"></i>
+          </StyledQuickMenuButton>
+        </StyledTopRight>
+      </StyledTopBarInner>
     </StyledTopBar>
   );
 };

@@ -12,7 +12,7 @@ import BacklogSortForm, {defaultSorting} from './BacklogSortForm';
 
 import {
   StyledStories,
-  StyledFileImportDropZone,
+  StyledBacklogActive,
   StyledFileImportDropZoneOverlay,
   StyledBacklogInfoText
 } from './_styled';
@@ -99,7 +99,7 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile}) => {
   const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDrop(importCsvFile);
 
   return (
-    <StyledFileImportDropZone {...getRootProps()}>
+    <StyledBacklogActive {...getRootProps()}>
       <StyledFileImportDropZoneOverlay
         active={isDragActive}
         isAccept={isDragAccept}
@@ -135,7 +135,7 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile}) => {
       )}
 
       {!hasActiveStories && <StyledBacklogInfoText>{t('noActiveStories')}</StyledBacklogInfoText>}
-    </StyledFileImportDropZone>
+    </StyledBacklogActive>
   );
 };
 

@@ -3,18 +3,17 @@ import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from '..
 import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
 
 export const StyledTopBar = styled.div`
-  z-index: 1003;
+  flex-grow: 0;
+  height: ${TOPBAR_HEIGHT}px;
+  padding: 0 0 3px 0;
+  box-sizing: border-box;
+`;
+
+export const StyledTopBarInner = styled.div`
   display: flex;
   justify-content: space-between;
-  position: fixed;
   box-shadow: 0 1px 2px 0 #cccccc;
   background: ${COLOR_BACKGROUND_GREY};
-  top: 0;
-  left: 0;
-  right: 0;
-  height: ${TOPBAR_HEIGHT}px;
-  padding: 0;
-  box-sizing: border-box;
 `;
 
 export const StyledTopLeft = styled.div`
@@ -65,8 +64,8 @@ export const StyledWhoAmIExtended = styled.div`
 // four buttons on the top right (settings, action log, help, leave room)
 export const StyledQuickMenuButton = styled.a`
   display: block;
-  width: 34px;
-  height: 34px;
+  width: ${TOPBAR_HEIGHT - 3}px;
+  height: ${TOPBAR_HEIGHT - 3}px;
   font-size: 22px;
   padding: 4px 8px;
   box-sizing: border-box;
@@ -82,11 +81,11 @@ const shaky = keyframes`
   }
 
   20%, 80% {
-    transform:  rotate(10deg);
+    transform: rotate(10deg);
   }
 
   30%, 50%, 70% {
-    transform:  rotate(-20deg);
+    transform: rotate(-20deg);
   }
 
   40%, 60% {

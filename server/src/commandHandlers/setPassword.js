@@ -17,8 +17,7 @@ const schema = {
           properties: {
             password: {
               type: 'string',
-              minLength: 0,
-              maxLength: 50
+              minLength: 0 // allow zero length in order to "clear" room password
             }
           },
           comment:

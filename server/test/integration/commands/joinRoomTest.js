@@ -439,6 +439,40 @@ test('nonexisting room : create room with password', async () => {
   expect(room.password.salt).not.toBe('my-cleartext-password');
 });
 
+test('nonexisting room : create room with LONG password', async () => {
+  const {processor} = prepEmpty();
+
+  const roomId = uuid();
+  const commandId = uuid();
+  const userId = uuid();
+  const {producedEvents} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'joinRoom',
+      payload: {
+        username: 'tester',
+        email: 'super@test.com',
+        password: 'a'.repeat(500)
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'roomCreated',
+    'joinedRoom',
+    'tokenIssued',
+    'usernameSet',
+    'emailSet',
+    'avatarSet',
+    'storyAdded',
+    'storySelected'
+  );
+});
+
 test('existing room with password : match cleartext pw', async () => {
   const {processor, roomId, mockRoomsStore} = await prepOneUserInOneRoom();
 

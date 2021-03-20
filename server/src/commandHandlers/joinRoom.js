@@ -42,8 +42,7 @@ const schema = {
             },
             password: {
               type: 'string',
-              minLength: 0,
-              maxLength: 50
+              minLength: 0
             },
             token: {
               type: 'string'

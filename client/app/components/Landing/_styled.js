@@ -121,6 +121,8 @@ const StyledLandingButton = styled.button`
   background-color: ${COLOR_ORANGE} !important;
   font-weight: bold;
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.56);
+  max-width: 350px;
+  overflow: hidden;
 `;
 export const StyledLandingDoubleButtonWrapper = styled.div`
   margin-bottom: 12px;

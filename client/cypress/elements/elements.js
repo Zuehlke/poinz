@@ -21,7 +21,9 @@ const elements = {
 
   Room: {
     TopBar: {
-      whoamiSimple: () => cy.get(tid('topBar', 'whoamiSimple')),
+      logo: () => cy.get(tid('topBar', 'logo')),
+      whoami: () => cy.get(tid('topBar', 'whoami')),
+      whoamiDropdown: () => cy.get(tid('topBar', 'whoami', 'whoamiDropdown')),
       settingsToggleButton: () => cy.get(tid('topBar', 'settingsToggle'))
     },
 

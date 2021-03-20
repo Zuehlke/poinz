@@ -1,8 +1,10 @@
-import React, {useState, useEffect, useRef, useContext} from 'react';
+import React, {useState, useRef, useContext} from 'react';
 import PropTypes from 'prop-types';
 
-import {StyledBacklogSortForm, StyledSortDropdown, StyledSortDropdownItem} from './_styled';
+import {StyledBacklogSortForm, StyledSortDropdownItem} from './_styled';
 import {L10nContext} from '../../services/l10n';
+import useOutsideClick from '../common/useOutsideClick';
+import {StyledDropdown} from '../common/_styled';
 
 /**
  * available sort options with their respective story comparators
@@ -57,19 +59,6 @@ const sortings = [
 ];
 export const defaultSorting = sortings[0];
 
-const useOutsideClick = (ref, onOutside) => {
-  useEffect(() => {
-    function handleMousedownEvent(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
-        onOutside();
-      }
-    }
-
-    document.addEventListener('mousedown', handleMousedownEvent);
-    return () => document.removeEventListener('mousedown', handleMousedownEvent);
-  }, [ref]);
-};
-
 /**
  *  SortForm that provides sort ("order by") dropdown menu as well as an input field for filtering
  */
@@ -97,7 +86,7 @@ const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged
       />
 
       {extended && (
-        <StyledSortDropdown ref={dropdownRef} data-testid="sortOptions">
+        <StyledDropdown ref={dropdownRef} data-testid="sortOptions">
           {sortings.map((sortingItem) => (
             <StyledSortDropdownItem
               selected={sortingItem.id === sorting.id}
@@ -108,7 +97,7 @@ const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged
               {t(sortingItem.labelKey)}
             </StyledSortDropdownItem>
           ))}
-        </StyledSortDropdown>
+        </StyledDropdown>
       )}
     </StyledBacklogSortForm>
   );

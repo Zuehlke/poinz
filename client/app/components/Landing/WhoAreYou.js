@@ -34,6 +34,7 @@ const WhoAreYou = ({setUsername}) => {
           </StyledInfoText>
           <StyledLandingForm>
             <input
+              autoFocus={true}
               data-testid="usernameInput"
               type="text"
               placeholder={t('name')}

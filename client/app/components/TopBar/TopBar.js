@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {getOwnUsername} from '../../state/users/usersSelectors';
 import {leaveRoom} from '../../state/actions/commandActions';
+import WhoAmI from './WhoAmI';
 import {
   toggleBacklogSidebar,
   toggleSidebar,
@@ -12,7 +12,6 @@ import {
   SIDEBAR_ACTIONLOG,
   SIDEBAR_SETTINGS
 } from '../../state/actions/uiStateActions';
-import {getRoomId} from '../../state/room/roomSelectors';
 import {getCurrentSidebarIfAny, hasUnseenError, isBacklogShown} from '../../state/ui/uiSelectors';
 
 import {
@@ -23,16 +22,11 @@ import {
   StyledTopRight,
   StyledQuickMenuButton,
   StyledTopBar,
-  StyledWhoAmI,
-  StyledWhoAmIExtended,
-  StyledWhoAmISimple,
   StyledIconExclamation,
   StyledTopBarInner
 } from './_styled';
 
 const TopBar = ({
-  roomId,
-  username,
   leaveRoom,
   toggleSidebar,
   toggleBacklogSidebar,
@@ -41,7 +35,6 @@ const TopBar = ({
   backlogShown
 }) => {
   const {t} = useContext(L10nContext);
-  const roomLink = <a href={'/' + roomId}>{roomId}</a>;
 
   return (
     <StyledTopBar data-testid="topBar">
@@ -56,16 +49,11 @@ const TopBar = ({
               <span></span>
             </StyledBacklogToggleIcon>
           </StyledBacklogToggle>
-          <StyledPoinzLogo>PoinZ</StyledPoinzLogo>
+          <StyledPoinzLogo data-testid="logo">PoinZ</StyledPoinzLogo>
         </StyledTopLeft>
 
         <StyledTopRight>
-          <StyledWhoAmI>
-            <StyledWhoAmISimple data-testid="whoamiSimple">{username}</StyledWhoAmISimple>
-            <StyledWhoAmIExtended>
-              {username} @ {roomLink}
-            </StyledWhoAmIExtended>
-          </StyledWhoAmI>
+          <WhoAmI />
 
           <StyledQuickMenuButton
             data-testid="settingsToggle"
@@ -119,8 +107,6 @@ TopBar.propTypes = {
   toggleBacklogSidebar: PropTypes.func,
   backlogShown: PropTypes.bool,
   unseenError: PropTypes.bool,
-  username: PropTypes.string,
-  roomId: PropTypes.string,
   toggleSidebar: PropTypes.func,
   sidebar: PropTypes.string,
   leaveRoom: PropTypes.func
@@ -128,11 +114,9 @@ TopBar.propTypes = {
 
 export default connect(
   (state) => ({
-    roomId: getRoomId(state),
     backlogShown: isBacklogShown(state),
     sidebar: getCurrentSidebarIfAny(state),
-    unseenError: hasUnseenError(state),
-    username: getOwnUsername(state)
+    unseenError: hasUnseenError(state)
   }),
   {toggleBacklogSidebar, toggleSidebar, leaveRoom}
 )(TopBar);

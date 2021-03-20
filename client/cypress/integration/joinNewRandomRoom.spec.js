@@ -12,7 +12,8 @@ it('landing page and join new random room', function () {
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 });
 
 it('create new room (custom name) via landing, then join by url', function () {
@@ -26,13 +27,15 @@ it('create new room (custom name) via landing, then join by url', function () {
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 
   // now join the new room by url
   cy.visit('/' + customRoomName);
 
   // since we are in the same cypress test, localStorage has our username preset, no need to enter it
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 });
 
 it('create new room (custom name) on the fly when joining by url', function () {
@@ -46,7 +49,8 @@ it('create new room (custom name) on the fly when joining by url', function () {
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 });
 
 it('create new room (whitespace room name) by url', function () {
@@ -58,7 +62,8 @@ it('create new room (whitespace room name) by url', function () {
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 
   cy.url().should('contain', 'this-works-now' + randomId);
 });

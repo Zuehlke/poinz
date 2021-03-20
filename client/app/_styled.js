@@ -1,6 +1,6 @@
 import {createGlobalStyle} from 'styled-components';
 
-import {COLOR_BLUE, COLOR_FONT_GREY, COLOR_ORANGE} from './components/colors';
+import {COLOR_BLUE, COLOR_FONT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from './components/colors';
 import zFontWoff from './assets/aazuotps_30.12.13-webfont.woff2';
 
 import {StyledCardInner} from './components/EstimationArea/_styled';
@@ -34,11 +34,19 @@ const Global = createGlobalStyle`
       input:first-child, textarea:first-child, input:last-child, textarea:last-child {
         border-radius: 0;
       }
+
+      textarea {
+        padding: 10px 0;
+      }
     }
 
-    textarea, input[type=text], input[type=password] {
+    textarea, input[type=text], input[type=password], input[readonly] {
       box-shadow: none;
       border-radius: 0;
+      border: none;
+      border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
+      padding: 10px 0;
+      background: transparent;
 
       &:focus {
         border-bottom: 1px solid ${COLOR_BLUE};

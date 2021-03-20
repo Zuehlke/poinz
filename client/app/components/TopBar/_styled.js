@@ -1,8 +1,16 @@
 import styled, {keyframes} from 'styled-components';
-import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from '../colors';
+import {
+  COLOR_BACKGROUND_GREY,
+  COLOR_BLUE,
+  COLOR_LIGHTER_GREY,
+  COLOR_PURPLE,
+  COLOR_WARNING
+} from '../colors';
 import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
+import {StyledAvatar, StyledDropdown} from '../common/_styled';
 
 export const StyledTopBar = styled.div`
+  position: relative;
   flex-grow: 0;
   height: ${TOPBAR_HEIGHT}px;
   padding: 0 0 3px 0;
@@ -35,28 +43,53 @@ export const StyledTopRight = styled.div`
 export const StyledWhoAmI = styled.div`
   padding: 0 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-`;
-export const StyledWhoAmISimple = styled.div`
-  max-width: 10vh;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 
-  @media ${device.desktop} {
-    ${StyledWhoAmI}:hover & {
-      display: none;
+  > span {
+    max-width: 10vh;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 4px;
+  }
+
+  ${StyledAvatar} {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 3px solid white;
+    cursor: pointer;
+
+    &:hover {
+      border: 3px solid ${COLOR_LIGHTER_GREY};
     }
   }
-`;
-export const StyledWhoAmIExtended = styled.div`
-  display: none;
 
-  @media ${device.desktop} {
-    ${StyledWhoAmI}:hover & {
-      display: block;
+  ${StyledDropdown} {
+    padding: 8px;
+
+    > div {
+      margin: 4px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+
+      > i {
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      > input {
+        flex-grow: 1;
+        padding: 2px;
+      }
+    }
+
+    @media ${device.desktop} {
+      right: ${4 * 32}px;
+      min-width: 280px;
     }
   }
 `;

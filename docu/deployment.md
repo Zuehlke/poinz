@@ -33,3 +33,11 @@ Environment variable "ATLAS_DB_URI" is set via heroku dashboard. It's read in se
 If you want to manually analyze production logs on heroku, use the heroku cli on your dev machine:
 
 ```$ heroku logs -n 200 -a poinz --source app```
+
+#### Logz.io grok parsing
+
+We use this [grok](https://logz.io/blog/logstash-grok/) pattern to parse our loglines for Kibana.
+
+```text
+^%{TIMESTAMP_ISO8601:ts} %{LOGLEVEL:level}: \|POINZ\| \[%{WORD:component}\] (%{GREEDYDATA:action} user=%{NOTSPACE:userId} room=%{NOTSPACE:roomId})?%{GREEDYDATA:message}
+```

@@ -65,7 +65,6 @@ export const StyledUserBadge = styled.span`
 `;
 
 export const StyledUserEstimation = styled.div`
-  transition: all 0.2s ease-out;
   box-sizing: border-box;
   font-size: 18px;
   border: ${({revealed}) =>

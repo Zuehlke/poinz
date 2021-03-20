@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import {
   COLOR_BACKGROUND_GREY,
-  COLOR_FONT_GREY,
   COLOR_LIGHT_GREY,
   COLOR_LIGHTER_GREY,
   COLOR_ORANGE,
@@ -15,7 +14,6 @@ export const StyledBacklog = styled.div`
   box-sizing: border-box;
   width: 100%;
   padding: 8px 0 0 0;
-  transition: all 0.2s ease-out;
   background: ${COLOR_BACKGROUND_GREY};
   flex-shrink: 0;
 
@@ -220,32 +218,6 @@ export const StyledBacklogSortForm = styled.form`
   > i {
     margin-left: 4px;
     transform: rotate(90deg);
-  }
-`;
-
-export const StyledSortDropdown = styled.div`
-  position: absolute;
-  z-index: 1002;
-  background: white;
-  border: 1px solid ${COLOR_FONT_GREY};
-  padding: 8px 0;
-  width: 100%;
-  right: 0;
-  top: 100%;
-
-  > div.clickable {
-    padding: 4px 8px;
-    margin-top: 4px;
-
-    &:hover {
-      background-color: ${COLOR_LIGHTER_GREY};
-    }
-  }
-
-  @media ${device.desktop} {
-    right: 8px;
-    min-width: 132px;
-    width: auto;
   }
 `;
 

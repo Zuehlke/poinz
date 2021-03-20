@@ -27,7 +27,6 @@ export const StyledRoomFooter = styled.div`
 `;
 
 export const StyledBoard = styled.div`
-  transition: all 0.2s ease-out;
   position: relative;
   height: calc(100% - ${TOPBAR_HEIGHT}px);
   overflow: hidden;

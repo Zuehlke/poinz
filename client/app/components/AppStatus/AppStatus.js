@@ -30,8 +30,13 @@ const AppStatus = () => {
   }, [format]);
 
   if (!appStatus) {
-    // this is an operations UI, it's ok to display an empty page during data loading...
-    return null;
+    return (
+      <StyledAppStatus data-testid="appStatusPage">
+        <StyledAppStatusMain>
+          <div className="waiting-spinner"></div>
+        </StyledAppStatusMain>
+      </StyledAppStatus>
+    );
   }
 
   return (

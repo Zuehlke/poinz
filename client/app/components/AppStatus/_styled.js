@@ -6,7 +6,7 @@ export const StyledAppStatus = styled.div`
 `;
 
 export const StyledAppStatusMain = styled.div`
-  padding: 48px;
+  padding: 12px 48px;
 `;
 
 export const StyledRoomsList = styled.ul`

@@ -69,7 +69,7 @@ export const StyledDropdown = styled.div`
   position: absolute;
   z-index: 1002;
   background: white;
-  border: 1px solid ${COLOR_LIGHT_GREY};
+  border: 1px solid #575d6273;
   box-shadow: 0 0 5px 2px rgba(0, 0, 0, 0.2);
   padding: 8px 0;
   width: 100%;

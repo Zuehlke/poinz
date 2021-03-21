@@ -62,7 +62,7 @@
   "roomIsProtected": "This room is protected by a password",
   "roomIsNotProtected": "This room is currently not protected by a password",
   "passwordProtection": "Password Protection",
-  "passwordProtectionInfo": "Rooms can be protected by a password in order to prevent unauthorized users to join - even if they know the room ID",
+  "passwordProtectionInfo": "Rooms can be protected by a password in order to prevent unauthorized users to join. Even if they know the room id.",
   "sort": "Sort",
   "oldest": "Oldest",
   "newest": "Newest",

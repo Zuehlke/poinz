@@ -107,7 +107,6 @@ export const StyledItems = styled.div`
   flex-wrap: wrap;
   border: 1px solid #ccc;
   margin-bottom: 8px;
-  width: 250px;
 
   > div button {
     display: inline-block;
@@ -118,12 +117,13 @@ export const StyledItems = styled.div`
 `;
 
 export const StyledCCTableCell = styled.div`
+  position: relative;
   box-sizing: border-box;
-  flex-grow: 1;
+  flex-grow: 0;
   padding: 0.2em 0.2em;
   overflow: hidden;
   list-style: none;
-  width: 25%;
+  width: 15%;
 
   input[type='text'],
   input[type='number'] {
@@ -131,7 +131,8 @@ export const StyledCCTableCell = styled.div`
     box-shadow: none;
     outline: none;
     padding: 0;
-    max-width: 70px;
+    width: 100%;
+    max-width: 120px;
 
     &:focus {
       border-bottom: 1px solid ${COLOR_BLUE};

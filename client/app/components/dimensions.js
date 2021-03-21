@@ -1,4 +1,4 @@
-export const RIGHT_MENU_WIDTH = 300;
+export const RIGHT_MENU_WIDTH = 400;
 export const LEFT_MENU_WIDTH = 300;
 export const TOPBAR_HEIGHT = 37;
 

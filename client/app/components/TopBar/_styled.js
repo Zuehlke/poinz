@@ -1,11 +1,5 @@
 import styled, {keyframes} from 'styled-components';
-import {
-  COLOR_BACKGROUND_GREY,
-  COLOR_BLUE,
-  COLOR_LIGHTER_GREY,
-  COLOR_PURPLE,
-  COLOR_WARNING
-} from '../colors';
+import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from '../colors';
 import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
 import {StyledAvatar, StyledDropdown} from '../common/_styled';
 
@@ -13,7 +7,7 @@ export const StyledTopBar = styled.div`
   position: relative;
   flex-grow: 0;
   height: ${TOPBAR_HEIGHT}px;
-  padding: 0 0 3px 0;
+  padding: 0 0 4px 0;
   box-sizing: border-box;
 `;
 
@@ -56,14 +50,14 @@ export const StyledWhoAmI = styled.div`
   }
 
   ${StyledAvatar} {
-    width: 28px;
-    height: 28px;
-    padding: 0;
+    width: 27px;
+    height: 27px;
+    padding: 1px;
     border: 3px solid white;
     cursor: pointer;
 
     &:hover {
-      border: 3px solid ${COLOR_LIGHTER_GREY};
+      box-shadow: inset 0 82px 15px -60px rgb(194 194 194 / 65%);
     }
   }
 
@@ -88,7 +82,7 @@ export const StyledWhoAmI = styled.div`
     }
 
     @media ${device.desktop} {
-      right: ${4 * 32}px;
+      right: ${4 * 36}px;
       min-width: 280px;
     }
   }
@@ -97,8 +91,8 @@ export const StyledWhoAmI = styled.div`
 // four buttons on the top right (settings, action log, help, leave room)
 export const StyledQuickMenuButton = styled.a`
   display: block;
-  width: ${TOPBAR_HEIGHT - 3}px;
-  height: ${TOPBAR_HEIGHT - 3}px;
+  width: ${TOPBAR_HEIGHT - 2}px;
+  height: ${TOPBAR_HEIGHT - 2}px;
   font-size: 22px;
   padding: 4px 8px;
   box-sizing: border-box;
@@ -106,6 +100,10 @@ export const StyledQuickMenuButton = styled.a`
   border-radius: 0;
   background: ${COLOR_BLUE};
   position: relative;
+
+  &:hover {
+    background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  }
 `;
 
 const shaky = keyframes`

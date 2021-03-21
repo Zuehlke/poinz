@@ -49,14 +49,15 @@ const RoomSettings = ({
       </StyledSection>
 
       <StyledSection data-testid="sectionPasswordProtection">
-        <h5>{t('passwordProtection')}</h5>
+        <h5>
+          {t('passwordProtection')} {!passwordProtected && <i className="icon-lock-open-alt"></i>}{' '}
+          {passwordProtected && <i className="icon-lock"></i>}
+        </h5>
         {t('passwordProtectionInfo')}
 
         {passwordProtected && (
           <div>
-            <p>
-              {t('roomIsProtected')} <i className="icon-lock"></i>
-            </p>
+            <p>{t('roomIsProtected')}</p>
             <StyledTextInput>
               <PasswordField
                 data-testid="roomPasswordInput"
@@ -79,9 +80,7 @@ const RoomSettings = ({
 
         {!passwordProtected && (
           <div>
-            <p>
-              {t('roomIsNotProtected')} <i className="icon-lock-open-alt"></i>
-            </p>
+            <p>{t('roomIsNotProtected')}</p>
             <StyledTextInput>
               <PasswordField
                 data-testid="roomPasswordInput"

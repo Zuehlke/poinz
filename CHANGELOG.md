@@ -1,3 +1,9 @@
+### 0.11.1: 2021-03-21
+
+* Display story creation date in backlog
+* UI tweaks: Wider Settings Panel on the right. Display own user's avatar in Top Bar. Custom (thin) scrollbars.
+* Dependencies updated
+
 ### 0.11.0: 2021-03-16
 
 * New feature "settle": if story is revealed but no consensus is reached, you can choose one card as the consensus value for the story

@@ -11,6 +11,4 @@ export const isBacklogShown = (state) => !!state.ui.backlogShown;
 
 export const hasApplause = (state) => !!state.ui.applause;
 
-export const getLanguage = (state) => state.ui.language;
-
 export const hasUnseenError = (state) => state.ui.unseenError;

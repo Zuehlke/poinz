@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
 export const StyledAppStatus = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const StyledAppStatusMain = styled.div`
   padding: 48px;
 `;
 

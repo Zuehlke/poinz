@@ -15,7 +15,8 @@ it('multi user estimation with two rounds, consensus on second round', function 
 
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 
   // -- the following will open an additional socket to the backend, so that we can add another user to the room
   // Cypress does not support multiple browsers!   see    https://docs.cypress.io/guides/references/trade-offs.html
@@ -108,7 +109,8 @@ it('estimation summary and settling on a value', function () {
 
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 
   const userTwoSocket = uuid();
   const userTwoUserId = uuid();
@@ -152,7 +154,7 @@ it('estimation summary and settling on a value', function () {
       Room.Users.userEstimationGivenRevealed(5);
 
       cy.get(tid('estimationSummary')).contains('2 of 2 Users estimated');
-      cy.get(tid('estimationSummary')).contains('Numerical average: 4');
+      cy.get(tid('estimationSummary')).contains('Numerical average is 4');
 
       // user one (e.g. the scrum master) settles on "3"
       Room.EstimationArea.summaryCard(3).click();

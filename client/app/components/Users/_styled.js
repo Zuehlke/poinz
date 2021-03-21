@@ -14,7 +14,7 @@ export const StyledUsers = styled.div`
   flex-direction: column;
   justify-content: stretch;
 
-  padding: 48px 16px 16px;
+  padding: 16px;
 
   @media ${device.modernMobile} {
     display: block;
@@ -65,7 +65,6 @@ export const StyledUserBadge = styled.span`
 `;
 
 export const StyledUserEstimation = styled.div`
-  transition: all 0.2s ease-out;
   box-sizing: border-box;
   font-size: 18px;
   border: ${({revealed}) =>

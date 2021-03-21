@@ -9,10 +9,10 @@ import {StyledCCTableCell, StyledColorBadge} from './_styled';
 const CardConfigEditorItem = ({item, isLast, isFirst, onChange, onUp, onDown, onDelete}) => {
   return (
     <React.Fragment>
-      <StyledCCTableCell style={{width: '25%'}}>
+      <StyledCCTableCell>
         <input type="text" defaultValue={item.label} onBlur={onValueChange.bind(this, 'label')} />
       </StyledCCTableCell>
-      <StyledCCTableCell style={{width: '10%'}}>
+      <StyledCCTableCell>
         <input
           type="number"
           step="0.5"
@@ -20,11 +20,11 @@ const CardConfigEditorItem = ({item, isLast, isFirst, onChange, onUp, onDown, on
           onBlur={onValueChange.bind(this, 'value')}
         />
       </StyledCCTableCell>
-      <StyledCCTableCell style={{width: '40%'}}>
+      <StyledCCTableCell style={{width: 'auto', flexGrow: 1}}>
         <StyledColorBadge color={item.color} />
         <input type="text" defaultValue={item.color} onBlur={onValueChange.bind(this, 'color')} />
       </StyledCCTableCell>
-      <StyledCCTableCell style={{width: '24%'}}>
+      <StyledCCTableCell style={{width: '25%'}}>
         <button
           type="button"
           className="pure-button"

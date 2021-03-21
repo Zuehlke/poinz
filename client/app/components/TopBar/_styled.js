@@ -1,20 +1,21 @@
 import styled, {keyframes} from 'styled-components';
 import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from '../colors';
 import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
+import {StyledAvatar, StyledDropdown} from '../common/_styled';
 
 export const StyledTopBar = styled.div`
-  z-index: 1003;
+  position: relative;
+  flex-grow: 0;
+  height: ${TOPBAR_HEIGHT}px;
+  padding: 0 0 4px 0;
+  box-sizing: border-box;
+`;
+
+export const StyledTopBarInner = styled.div`
   display: flex;
   justify-content: space-between;
-  position: fixed;
   box-shadow: 0 1px 2px 0 #cccccc;
   background: ${COLOR_BACKGROUND_GREY};
-  top: 0;
-  left: 0;
-  right: 0;
-  height: ${TOPBAR_HEIGHT}px;
-  padding: 0;
-  box-sizing: border-box;
 `;
 
 export const StyledTopLeft = styled.div`
@@ -36,28 +37,53 @@ export const StyledTopRight = styled.div`
 export const StyledWhoAmI = styled.div`
   padding: 0 8px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-`;
-export const StyledWhoAmISimple = styled.div`
-  max-width: 10vh;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 
-  @media ${device.desktop} {
-    ${StyledWhoAmI}:hover & {
-      display: none;
+  > span {
+    max-width: 10vh;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 4px;
+  }
+
+  ${StyledAvatar} {
+    width: 27px;
+    height: 27px;
+    padding: 1px;
+    border: 3px solid white;
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: inset 0 82px 15px -60px rgb(194 194 194 / 65%);
     }
   }
-`;
-export const StyledWhoAmIExtended = styled.div`
-  display: none;
 
-  @media ${device.desktop} {
-    ${StyledWhoAmI}:hover & {
-      display: block;
+  ${StyledDropdown} {
+    padding: 8px;
+
+    > div {
+      margin: 4px 0;
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+
+      > i {
+        display: inline-block;
+        margin-right: 8px;
+      }
+
+      > input {
+        flex-grow: 1;
+        padding: 2px;
+      }
+    }
+
+    @media ${device.desktop} {
+      right: ${4 * 36}px;
+      min-width: 280px;
     }
   }
 `;
@@ -65,8 +91,8 @@ export const StyledWhoAmIExtended = styled.div`
 // four buttons on the top right (settings, action log, help, leave room)
 export const StyledQuickMenuButton = styled.a`
   display: block;
-  width: 34px;
-  height: 34px;
+  width: ${TOPBAR_HEIGHT - 2}px;
+  height: ${TOPBAR_HEIGHT - 2}px;
   font-size: 22px;
   padding: 4px 8px;
   box-sizing: border-box;
@@ -74,6 +100,10 @@ export const StyledQuickMenuButton = styled.a`
   border-radius: 0;
   background: ${COLOR_BLUE};
   position: relative;
+
+  &:hover {
+    background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  }
 `;
 
 const shaky = keyframes`
@@ -82,11 +112,11 @@ const shaky = keyframes`
   }
 
   20%, 80% {
-    transform:  rotate(10deg);
+    transform: rotate(10deg);
   }
 
   30%, 50%, 70% {
-    transform:  rotate(-20deg);
+    transform: rotate(-20deg);
   }
 
   40%, 60% {

@@ -7,38 +7,17 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from '../colors';
-import {device, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from '../dimensions';
 
 export const StyledSettings = styled.div`
-  z-index: 10;
-  position: fixed;
-  width: ${(props) => (props.shown ? '100%' : RIGHT_MENU_WIDTH + 'px')};
-  top: ${TOPBAR_HEIGHT}px;
-  bottom: 0;
-  right: ${(props) => (props.shown ? '0' : RIGHT_MENU_WIDTH * -1 + 'px')};
-  transition: all 0.2s ease-out;
   background: ${COLOR_BACKGROUND_GREY};
   box-sizing: border-box;
-  padding: 10px 8px 0 8px;
-  display: flex;
+  padding: 0 8px;
+  display: ${({shown}) => (shown ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: space-between;
 
-  @media ${device.desktop} {
-    width: ${RIGHT_MENU_WIDTH}px;
-  }
-
-  &:after {
-    content: '';
-    top: 10px;
-    left: 0;
-    position: absolute;
-    bottom: 20px;
-
-    @media ${device.desktop} {
-      border-right: 1px solid ${COLOR_LIGHTER_GREY};
-    }
-  }
+  height: 100%;
+  overflow-y: auto;
 
   h5 {
     color: ${COLOR_ORANGE};
@@ -46,15 +25,12 @@ export const StyledSettings = styled.div`
     margin-bottom: 8px;
     margin-top: 0;
   }
-  .pure-form {
-    overflow-y: auto;
-  }
 `;
 
 export const StyledArea = styled.div`
   margin-bottom: 30px;
+
   > h4 {
-    margin-top: 2px;
     margin-bottom: 8px;
   }
 `;
@@ -131,7 +107,6 @@ export const StyledItems = styled.div`
   flex-wrap: wrap;
   border: 1px solid #ccc;
   margin-bottom: 8px;
-  width: 250px;
 
   > div button {
     display: inline-block;
@@ -142,12 +117,13 @@ export const StyledItems = styled.div`
 `;
 
 export const StyledCCTableCell = styled.div`
+  position: relative;
   box-sizing: border-box;
-  flex-grow: 1;
+  flex-grow: 0;
   padding: 0.2em 0.2em;
   overflow: hidden;
   list-style: none;
-  width: 25%;
+  width: 15%;
 
   input[type='text'],
   input[type='number'] {
@@ -155,7 +131,8 @@ export const StyledCCTableCell = styled.div`
     box-shadow: none;
     outline: none;
     padding: 0;
-    max-width: 70px;
+    width: 100%;
+    max-width: 120px;
 
     &:focus {
       border-bottom: 1px solid ${COLOR_BLUE};

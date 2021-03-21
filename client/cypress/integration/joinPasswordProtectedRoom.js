@@ -16,7 +16,8 @@ it('join random room, open settings, set password. then rejoin room', function (
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 
   Room.TopBar.settingsToggleButton().click();
 
@@ -35,14 +36,15 @@ it('join random room, open settings, set password. then rejoin room', function (
 
   // no password, just enter
   cy.get(tid('roomPasswordInput')).type('{enter}');
-  Room.TopBar.whoamiSimple().should('not.exist');
+  Room.TopBar.whoami().should('not.exist');
 
   // wrong password
   cy.get(tid('roomPasswordInput')).type('aaaaa{enter}');
-  Room.TopBar.whoamiSimple().should('not.exist');
+  Room.TopBar.whoami().should('not.exist');
 
   // correct password
   cy.get(tid('roomPasswordInput')).clear().type('1234{enter}');
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
 });

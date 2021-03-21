@@ -16,12 +16,13 @@ import {
   StyledStoryToolbar,
   StyledStory,
   StyledStoryText,
-  StyledHighlightButtonWrapper
+  StyledHighlightButtonWrapper,
+  StyledStoryAttributes
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
 
 /**
- * One story in the backlog
+ * One story in the (active) backlog.
  */
 const Story = ({
   story,
@@ -34,7 +35,7 @@ const Story = ({
   isWaiting,
   isStoryEstimated
 }) => {
-  const {t} = useContext(L10nContext);
+  const {t, format} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
 
@@ -68,26 +69,36 @@ const Story = ({
       </StyledStoryTitle>
 
       {
-        // only display story text for highlighted story. improves overall readibility / usability (see #24)
+        // only display story text and creation date for highlighted story. Improves overall readability / usability (see #24)
         isHighlighted && (
-          <StyledStoryText data-testid="storyText">
-            <Anchorify text={story.description || ''} />
-          </StyledStoryText>
+          <React.Fragment>
+            <StyledStoryText data-testid="storyText">
+              <Anchorify text={story.description || ''} />
+            </StyledStoryText>
+
+            <StyledHighlightButtonWrapper>
+              <StyledStoryAttributes>
+                <span>{format.formatDateTime(story.createdAt)}</span>
+              </StyledStoryAttributes>
+
+              {
+                // if not the currently selected story, display "Estimate" Button
+                !isSelected && (
+                  <button
+                    type="button"
+                    className="pure-button pure-button-primary"
+                    data-testid="selectButton"
+                    onClick={triggerSelect}
+                    title={t('estimateStoryHint')}
+                  >
+                    {t('estimateStory')} <i className="icon-right-hand button-icon-right"></i>
+                  </button>
+                )
+              }
+            </StyledHighlightButtonWrapper>
+          </React.Fragment>
         )
       }
-      {isHighlighted && !isSelected && (
-        <StyledHighlightButtonWrapper>
-          <button
-            type="button"
-            className="pure-button pure-button-primary"
-            data-testid="selectButton"
-            onClick={triggerSelect}
-            title={t('estimateStoryHint')}
-          >
-            {t('estimateStory')} <i className="icon-right-hand button-icon-right"></i>
-          </button>
-        </StyledHighlightButtonWrapper>
-      )}
     </StyledStory>
   );
 

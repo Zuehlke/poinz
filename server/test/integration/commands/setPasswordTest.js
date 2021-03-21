@@ -3,7 +3,7 @@ import {v4 as uuid} from 'uuid';
 import {prepOneUserInOneRoom} from '../../unit/testUtils';
 import {hashRoomPassword} from '../../../src/auth/roomPasswordService';
 
-test('Should produce passwordSet event for room withouth pw', async () => {
+test('Should produce passwordSet event for room without pw', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();
 
   const commandId = uuid();
@@ -28,6 +28,25 @@ test('Should produce passwordSet event for room withouth pw', async () => {
 
   expect(room.password.hash).toBeDefined();
   expect(room.password.salt).toBeDefined();
+});
+
+test('Should produce passwordSet event for room without pw, LONG password', async () => {
+  const {processor, roomId, userId} = await prepOneUserInOneRoom();
+
+  const commandId = uuid();
+  const {producedEvents} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'setPassword',
+      payload: {
+        password: 'b'.repeat(500)
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'passwordSet');
 });
 
 test('Should produce passwordSet event for room with pw already set (override old pw)', async () => {
@@ -99,5 +118,3 @@ test('Should produce passwordCleared event for room with pw already set and empt
 
   expect(room.password).toBeUndefined();
 });
-
-describe('preconditions', () => {});

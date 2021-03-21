@@ -13,20 +13,25 @@ it('join room, open settings menu and change user settings', function () {
   Landing.usernameField().type(this.user.username);
   Landing.joinButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.user.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.user.username);
   Room.TopBar.settingsToggleButton().click();
 
   // -- set a new username
   Room.Settings.usernameField().clear().type(this.sergio.username);
   Room.Settings.saveUsernameButton().click();
 
-  Room.TopBar.whoamiSimple().contains(this.sergio.username);
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(this.sergio.username);
+  Room.TopBar.logo().click(); // hide whoami dropdown
   cy.get(tid('users')).contains(this.sergio.username);
 
   Room.Settings.usernameField().type(' whitespace (allowed)');
   Room.Settings.saveUsernameButton().click();
 
-  Room.TopBar.whoamiSimple().contains(' whitespace (allowed)');
+  Room.TopBar.whoami().click();
+  Room.TopBar.whoamiDropdown().contains(' whitespace (allowed)');
+  Room.TopBar.logo().click(); // hide whoami dropdown
   cy.get(tid('users')).contains(' whitespace (allowed)');
 
   // -- switch language

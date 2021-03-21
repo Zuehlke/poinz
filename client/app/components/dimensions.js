@@ -1,6 +1,6 @@
-export const RIGHT_MENU_WIDTH = 300;
+export const RIGHT_MENU_WIDTH = 400;
 export const LEFT_MENU_WIDTH = 300;
-export const TOPBAR_HEIGHT = 34;
+export const TOPBAR_HEIGHT = 37;
 
 const MODERN_MOBILE_UP_BRPT = '321px';
 const DESKTOP_WIDTH_UP_BRPT = '48em';

@@ -1,23 +1,25 @@
 import styled from 'styled-components';
 
-import {COLOR_FONT_GREY, COLOR_BACKGROUND_GREY, COLOR_BLUE} from '../colors';
-import {device, LEFT_MENU_WIDTH} from '../dimensions';
+import {COLOR_FONT_GREY, COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_LIGHTER_GREY} from '../colors';
+import {device, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from '../dimensions';
 
 export const StyledRoom = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: stretch;
 `;
 
 export const StyledRoomFooter = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
   margin-bottom: 8px;
   font-size: 9px;
   color: ${COLOR_FONT_GREY};
   background: ${COLOR_BACKGROUND_GREY};
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: baseline;
 
   > div {
     margin-right: 16px;
@@ -25,15 +27,47 @@ export const StyledRoomFooter = styled.div`
 `;
 
 export const StyledBoard = styled.div`
-  transition: all 0.2s ease-out;
   position: relative;
-  height: auto;
+  height: calc(100% - ${TOPBAR_HEIGHT}px);
+  overflow: hidden;
   background: ${COLOR_BACKGROUND_GREY};
   flex-grow: 1;
+  display: flex;
 
   @media ${device.desktop} {
-    padding-left: ${LEFT_MENU_WIDTH}px;
+  }
+`;
+
+export const StyledBoardCenter = styled.div`
+  flex-grow: 1;
+  max-width: 100%;
+  overflow-y: auto;
+`;
+
+export const StyledSidebarRight = styled.div`
+  display: ${({shown}) => (shown ? 'block' : 'none')};
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+
+  @media ${device.desktop} {
+    width: ${RIGHT_MENU_WIDTH}px;
+  }
+
+  h4 {
+    margin-bottom: 8px;
+  }
+
+  &:after {
+    content: '';
+
+    @media ${device.desktop} {
+      border-right: 1px solid ${COLOR_LIGHTER_GREY};
+    }
+    top: 8px;
     left: 0;
+    position: absolute;
+    bottom: 8px;
   }
 `;
 
@@ -56,6 +90,7 @@ export const StyledFeedbackHint = styled.div`
     box-sizing: border-box;
     margin: 0 8px 0 0;
   }
+
   > i {
     position: absolute;
     top: 4px;

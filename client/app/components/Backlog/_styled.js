@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import {
   COLOR_BACKGROUND_GREY,
-  COLOR_FONT_GREY,
+  COLOR_LIGHT_GREY,
   COLOR_LIGHTER_GREY,
   COLOR_ORANGE,
   COLOR_WARNING
@@ -10,24 +10,20 @@ import {
 import {LEFT_MENU_WIDTH, device} from '../dimensions';
 
 export const StyledBacklog = styled.div`
-  transition: all 0.2s ease-out;
-  margin-left: ${LEFT_MENU_WIDTH * -1}px;
-  width: ${(props) => (props.shown ? '100%' : LEFT_MENU_WIDTH + 'px')};
-  position: fixed;
-  top: 0;
-  left: ${({shown}) => (shown ? LEFT_MENU_WIDTH + 'px' : '0')};
-  bottom: 0;
-  z-index: 1000;
+  position: relative;
   box-sizing: border-box;
-  padding-top: 44px;
+  width: 100%;
+  padding: 8px 0 0 0;
   background: ${COLOR_BACKGROUND_GREY};
-  display: flex;
+  flex-shrink: 0;
+
+  display: ${({shown}) => (shown ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
 
   @media ${device.desktop} {
-    left: ${LEFT_MENU_WIDTH}px;
+    display: flex;
     width: ${LEFT_MENU_WIDTH}px;
   }
 
@@ -36,19 +32,15 @@ export const StyledBacklog = styled.div`
     @media ${device.desktop} {
       border-right: 1px solid ${COLOR_LIGHTER_GREY};
     }
-    top: 44px;
+    top: 8px;
     right: 0;
     position: absolute;
-    bottom: 20px;
+    bottom: 8px;
   }
 `;
 
 export const StyledStories = styled.div`
-  margin: 16px 8px 0 8px;
-`;
-
-export const StyledStoriesScrolling = styled(StyledStories)`
-  overflow-y: auto;
+  margin: 16px 8px 0 0;
 `;
 
 export const StyledEditForm = styled.form`
@@ -77,8 +69,8 @@ export const StyledEditFormButtonGroup = styled.div`
 `;
 
 export const StyledAddForm = styled(StyledEditForm)`
+  margin: 0 8px;
   padding: 8px 16px 16px 16px;
-  margin: 3px 8px 16px 8px;
   border: 1px solid ${COLOR_LIGHTER_GREY};
 `;
 
@@ -87,11 +79,17 @@ export const StyledBacklogInfoText = styled.div`
   text-align: center;
 `;
 
-export const StyledFileImportDropZone = styled.div`
+export const StyledBacklogActive = styled.div`
+  margin: 16px 0 0 8px;
   outline: none;
   border: none;
-  overflow: auto;
+  overflow-y: auto;
   flex-grow: 1;
+`;
+
+export const StyledBacklogTrash = styled.div`
+  margin-left: 8px;
+  overflow-y: auto;
 `;
 
 const dzOverlayAcceptBorder = '4px dashed rgba(0, 153, 204, 0.25)';
@@ -163,6 +161,7 @@ export const StyledStoryToolbar = styled.div`
   }
 
   /* My parent "StoryWrapper" gets hovered. my child "i" gets additional styles ... neat! */
+
   ${StyledStory}:hover & i {
     opacity: 0.6;
     background: white;
@@ -180,18 +179,27 @@ export const StyledStoryToolbar = styled.div`
 
 export const StyledStoryText = styled.div`
   overflow-x: hidden;
+  white-space: pre-wrap;
 `;
 
 export const StyledHighlightButtonWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: flex-end;
   margin-top: 16px;
 `;
 
+export const StyledStoryAttributes = styled.div`
+  > span {
+    color: ${COLOR_LIGHT_GREY};
+    font-size: 12px;
+  }
+`;
+
 export const StyledBacklogSortForm = styled.form`
-  margin: 0 8px 0 8px;
   padding: 8px 8px 8px 8px;
+  margin-right: 8px;
   border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
   position: relative;
 
@@ -210,31 +218,6 @@ export const StyledBacklogSortForm = styled.form`
   > i {
     margin-left: 4px;
     transform: rotate(90deg);
-  }
-`;
-
-export const StyledSortDropdown = styled.div`
-  position: absolute;
-  z-index: 1002;
-  background: white;
-  border: 1px solid ${COLOR_FONT_GREY};
-  padding: 8px 0;
-  width: 100%;
-  right: 0;
-  top: 100%;
-
-  > div.clickable {
-    padding: 4px 8px;
-    margin-top: 4px;
-    &:hover {
-      background-color: ${COLOR_LIGHTER_GREY};
-    }
-  }
-
-  @media ${device.desktop} {
-    right: 8px;
-    min-width: 132px;
-    width: auto;
   }
 `;
 

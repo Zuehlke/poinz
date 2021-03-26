@@ -1,3 +1,7 @@
+### 0.11.2: 2021-03-26
+
+* Fix link to manual in auto-generated story (thanks to @kratz00)
+
 ### 0.11.1: 2021-03-21
 
 * Display story creation date in backlog

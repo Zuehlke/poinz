@@ -1,6 +1,6 @@
 {
   "name": "poinz-server",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -55,7 +55,7 @@
   "devDependencies": {
     "@babel/cli": "7.13.10",
     "@babel/core": "7.13.10",
-    "@babel/preset-env": "7.13.10",
+    "@babel/preset-env": "7.13.12",
     "@babel/register": "7.13.8",
     "babel-jest": "26.6.3",
     "eslint": "7.22.0",

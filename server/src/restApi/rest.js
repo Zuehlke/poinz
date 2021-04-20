@@ -130,7 +130,7 @@ export default function restApiFactory(app, store) {
       return;
     }
     CLIENT_ERROR_LOGGER.warn(
-      `${requestBody.type} ${requestBody.error.substring(0, 200).replace(/\n/g, ' ')}`
+      `${requestBody.type} ${requestBody.error.substring(0, 600).replace(/\n/g, ' ')}`
     );
   }
 }

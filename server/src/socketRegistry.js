@@ -30,10 +30,13 @@ export default function socketRegistryFactory() {
   }
 
   function registerSocketMapping(socketId, userId, roomId) {
-    LOGGER.debug(`Registering socket ${socketId} : user ${userId} and room ${roomId}`);
+    LOGGER.debug(`Registering socket ${socketId} : userId=${userId} and roomId=${roomId}`);
 
-    if (registry[socketId]) {
-      LOGGER.warn(`Overriding old mapping for socket ${socketId}`);
+    const oldMapping = getMapping(socketId);
+    if (oldMapping) {
+      LOGGER.warn(
+        `Overriding old mapping for socket ${socketId}. (was userId=${oldMapping.userId} and roomId=${oldMapping.roomId}). Now userId=${userId} and roomId=${roomId}`
+      );
     }
 
     registry[socketId] = {

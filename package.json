@@ -1,6 +1,6 @@
 {
   "name": "poinz",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -21,15 +21,15 @@
     "docu": "node docu/src/docuGenerator.js"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.14",
+    "@babel/core": "^7.13.16",
     "bluebird": "3.7.2",
-    "chalk": "^4.1.0",
+    "chalk": "^4.1.1",
     "cross-spawn": "7.0.3",
     "del": "6.0.0",
     "ejs": "^3.1.6",
     "fs-extra": "9.1.0",
     "glob": "^7.1.6",
-    "npm-check-updates": "11.3.0",
+    "npm-check-updates": "11.5.4",
     "prettier": "2.2.1"
   },
   "engines": {

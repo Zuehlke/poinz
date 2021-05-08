@@ -1,3 +1,7 @@
+### 0.11.3: 2021-05-08
+
+* Dependencies updated
+
 ### 0.11.2: 2021-03-26
 
 * Fix link to manual in auto-generated story (thanks to @kratz00)

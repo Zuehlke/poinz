@@ -30,7 +30,7 @@
   "toggleMenu": "Settings",
   "customRoomName": "Custom Room Name",
   "welcomeBack": "Welcome back",
-  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is publicly available!",
+  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is potentially publicly available!",
   "markExcluded": "Mark as excluded",
   "excludedInfo": "Excluded users cannot participate in estimations. They still can add and modify stories.",
   "excluded": "Excluded from estimations",

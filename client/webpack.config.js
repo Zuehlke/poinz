@@ -106,14 +106,13 @@ module.exports = {
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader'
-      },
-
+      }
     ]
   },
 
   plugins: [definePlugin],
 
-  resolve: { extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json'] },
+  resolve: {extensions: ['.wasm', '.mjs', '.js', '.jsx', '.json']},
 
   devServer: {
     // enables support for HTML5 urls ( http://host:port/context/ROOM instead of http://host:port/context/#ROOM)

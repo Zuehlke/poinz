@@ -27,13 +27,8 @@ test('Should produce leftRoom event', async () => {
 });
 
 test('Should keep estimations on stories after user left', async () => {
-  const {
-    userIdTwo,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {userIdTwo, processor, roomId, storyId, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
   const estimatedValue = 3;

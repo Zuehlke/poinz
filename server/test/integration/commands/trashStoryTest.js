@@ -3,13 +3,8 @@ import {v4 as uuid} from 'uuid';
 import {prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
 
 test('Should produce storyTrashed event', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockRoomsStore} =
+    await prepOneUserInOneRoomWithOneStory();
 
   // add second story, set second story as selected
   const secondStoryId = uuid();
@@ -55,13 +50,8 @@ test('Should produce storyTrashed event', async () => {
 });
 
 test('Should produce additional storySelected event if story to trash was the selected one', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockRoomsStore} =
+    await prepOneUserInOneRoomWithOneStory();
 
   // add second story, set our first story as selected
   const secondStoryId = uuid();
@@ -109,13 +99,8 @@ test('Should produce additional storySelected event if story to trash was the se
 });
 
 test('users marked as excluded can still trash stories', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockRoomsStore} =
+    await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.users[0].excluded = true;

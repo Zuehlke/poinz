@@ -36,13 +36,8 @@ test('Should produce storyChanged event', async () => {
 });
 
 test('Users marked as excluded can still change stories', async () => {
-  const {
-    processor,
-    roomId,
-    userIdOne,
-    storyId,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
+  const {processor, roomId, userIdOne, storyId, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
   mockRoomsStore.manipulate((room) => {
     room.users[0].excluded = true;
@@ -94,13 +89,8 @@ describe('preconditions', () => {
   });
 
   test('Should throw if story is trashed', async () => {
-    const {
-      processor,
-      roomId,
-      storyId,
-      userIdOne,
-      mockRoomsStore
-    } = await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
+    const {processor, roomId, storyId, userIdOne, mockRoomsStore} =
+      await prepTwoUsersInOneRoomWithOneStory('mySuperUser', 'nice Story');
 
     mockRoomsStore.manipulate((room) => {
       room.stories[0].trashed = true;

@@ -28,13 +28,8 @@ test('Should produce storySelected event', async () => {
 });
 
 test('Users marked as excluded can still select current story', async () => {
-  const {
-    roomId,
-    userId,
-    storyId,
-    processor,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {roomId, userId, storyId, processor, mockRoomsStore} =
+    await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.users[0].excluded = true;
@@ -78,13 +73,8 @@ describe('preconditions', () => {
   });
 
   test('Should throw if story is marked as "trashed"', async () => {
-    const {
-      roomId,
-      userId,
-      storyId,
-      processor,
-      mockRoomsStore
-    } = await prepOneUserInOneRoomWithOneStory();
+    const {roomId, userId, storyId, processor, mockRoomsStore} =
+      await prepOneUserInOneRoomWithOneStory();
 
     mockRoomsStore.manipulate((room) => {
       room.stories[0].trashed = true;

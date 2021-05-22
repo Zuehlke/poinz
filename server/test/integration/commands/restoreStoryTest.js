@@ -2,13 +2,8 @@ import {v4 as uuid} from 'uuid';
 import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
 
 test('Should produce storyRestored event', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockRoomsStore} =
+    await prepOneUserInOneRoomWithOneStory();
   const commandId = uuid();
 
   mockRoomsStore.manipulate((room) => {
@@ -49,13 +44,8 @@ test('Should produce storyRestored event', async () => {
 });
 
 test('users marked as excluded can still restore stories', async () => {
-  const {
-    userId,
-    processor,
-    roomId,
-    storyId,
-    mockRoomsStore
-  } = await prepOneUserInOneRoomWithOneStory();
+  const {userId, processor, roomId, storyId, mockRoomsStore} =
+    await prepOneUserInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.users[0].excluded = true;

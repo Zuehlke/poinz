@@ -92,9 +92,8 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile}) => {
     activeStories
   );
 
-  const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories} = useSortingAndFiltering(
-    activeStories
-  );
+  const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories} =
+    useSortingAndFiltering(activeStories);
 
   const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDrop(importCsvFile);
 

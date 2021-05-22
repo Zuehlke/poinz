@@ -35,14 +35,8 @@ test('Should produce autoRevealOff event', async () => {
 });
 
 test('Should not produce "revealed" event if autoReveal is off', async () => {
-  const {
-    roomId,
-    storyId,
-    userIdOne,
-    userIdTwo,
-    processor,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, storyId, userIdOne, userIdTwo, processor, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.autoReveal = false;

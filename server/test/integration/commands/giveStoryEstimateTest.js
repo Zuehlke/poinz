@@ -34,13 +34,8 @@ test('Should produce storyEstimateGiven event', async () => {
 });
 
 test('Should produce "revealed" event if everybody (allowed) estimated ', async () => {
-  const {
-    roomId,
-    storyId,
-    userIdOne,
-    userIdTwo,
-    processor
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, storyId, userIdOne, userIdTwo, processor} =
+    await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
   await processor(
@@ -84,13 +79,8 @@ test('Should produce "revealed" event if everybody (allowed) estimated ', async 
 });
 
 test('Should produce "revealed" event if first user estimated and lost connection ', async () => {
-  const {
-    roomId,
-    storyId,
-    userIdOne,
-    userIdTwo,
-    processor
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, storyId, userIdOne, userIdTwo, processor} =
+    await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
   await processor(
@@ -147,13 +137,8 @@ test('Should produce "revealed" event if first user estimated and lost connectio
 });
 
 test('Should produce "consensusAchieved" and "revealed" event if everybody (allowed) estimated the same value', async () => {
-  const {
-    roomId,
-    storyId,
-    userIdOne,
-    userIdTwo,
-    processor
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, storyId, userIdOne, userIdTwo, processor} =
+    await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
   await processor(
@@ -207,14 +192,8 @@ test('Should produce "consensusAchieved" and "revealed" event if everybody (allo
 });
 
 test('Should produce "consensusAchieved" and "revealed" event if manually revealed (autoReveal off)', async () => {
-  const {
-    roomId,
-    storyId,
-    userIdOne,
-    userIdTwo,
-    processor,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, storyId, userIdOne, userIdTwo, processor, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.autoReveal = false;

@@ -137,14 +137,8 @@ export async function prepTwoUsersInOneRoomWithOneStoryAndEstimate(
   storyTitle,
   estimationValue = 8
 ) {
-  const {
-    userIdOne,
-    userIdTwo,
-    roomId,
-    storyId,
-    processor,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory(username, storyTitle);
+  const {userIdOne, userIdTwo, roomId, storyId, processor, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory(username, storyTitle);
 
   await processor(
     {

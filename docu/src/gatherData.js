@@ -46,13 +46,13 @@ async function handleSingleCmdHandlerFile(filePath) {
   babel.traverse(result, {
     // Find all calls to .applyEvent(...) and extract name of event
     CallExpression: function ({node}) {
-      const {callee, arguments, loc} = node;
+      const {callee, arguments: args, loc} = node;
 
       if (
         callee.type === 'MemberExpression' &&
         (callee.property.name === 'applyEvent' || callee.property.name === 'applyRestrictedEvent')
       ) {
-        const eventName = arguments[0].value;
+        const eventName = args[0].value;
         console.log(
           `   commandHandler file ${filePath} produces event "${chalk.yellow.bold(
             eventName

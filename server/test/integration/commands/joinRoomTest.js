@@ -35,13 +35,8 @@ test('nonexisting room', async () => {
     'storyAdded', // #164 when creating a new room, a sample story is added by default
     'storySelected'
   );
-  const [
-    roomCreatedEvent,
-    joinedRoomEvent,
-    usernameSetEvent,
-    emailSetEvent,
-    avatarSetEvent
-  ] = producedEvents;
+  const [roomCreatedEvent, joinedRoomEvent, usernameSetEvent, emailSetEvent, avatarSetEvent] =
+    producedEvents;
 
   expect(roomCreatedEvent.userId).toEqual(userId);
   expect(roomCreatedEvent.payload).toEqual({});

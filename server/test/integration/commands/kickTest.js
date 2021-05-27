@@ -2,13 +2,8 @@ import {v4 as uuid} from 'uuid';
 import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
 
 test('Should produce kicked event (userOne kicks disconnected userTwo)', async () => {
-  const {
-    roomId,
-    userIdOne,
-    userIdTwo,
-    processor,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, userIdOne, userIdTwo, processor, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.users[1].disconnected = true;
@@ -69,13 +64,8 @@ test('Should produce kicked event for connected (i.e. normal) user', async () =>
 });
 
 test('Users that are marked as excluded can also kick others (userOne [excluded]  kicks disconnected userTwo)', async () => {
-  const {
-    roomId,
-    userIdOne,
-    userIdTwo,
-    processor,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStory();
+  const {roomId, userIdOne, userIdTwo, processor, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStory();
 
   mockRoomsStore.manipulate((room) => {
     room.users[1].disconnected = true;

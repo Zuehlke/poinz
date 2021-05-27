@@ -40,7 +40,7 @@ export default function configureStore(initialState) {
     store.dispatch
   );
 
-  if (window.Cypress && appConfig.env === 'dev') {
+  if (typeof window === 'object' && window.Cypress && appConfig.env === 'dev') {
     // leak store to window object for debugging purposes during cypress tests
     window.__POINZ_REDUX_STORE__ = store;
   }

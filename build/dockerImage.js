@@ -76,12 +76,12 @@ async function build() {
  * and pipes stdout and stderr to the node process.
  *
  * @param command
- * @param arguments
+ * @param args
  * @param options
  * @returns {Promise<T>} Returns a promise that will reject if childprocess does not exit with code 0.
  */
-function spawnAndPrint(command, arguments, options) {
-  const spawned = spawn(command, arguments, options);
+function spawnAndPrint(command, args, options) {
+  const spawned = spawn(command, args, options);
   spawned.stdout.pipe(process.stdout);
   spawned.stderr.pipe(process.stderr);
 

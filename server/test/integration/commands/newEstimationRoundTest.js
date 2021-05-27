@@ -2,13 +2,8 @@ import {v4 as uuid} from 'uuid';
 import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../../unit/testUtils';
 
 test('Should produce newEstimationRoundStarted event', async () => {
-  const {
-    processor,
-    roomId,
-    storyId,
-    userIdOne,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+  const {processor, roomId, storyId, userIdOne, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
   mockRoomsStore.manipulate((room) => {
     room.stories[0].consensus = 4;
@@ -48,13 +43,8 @@ test('Users marked as excluded can still start new estimation round', async () =
   // this is wanted, since "excluded" users want to be "moderators" (i.e. Scrum Masters)
   // so, apart from estimating, they should be able to manipulate stories, etc.
 
-  const {
-    processor,
-    roomId,
-    storyId,
-    userIdOne,
-    mockRoomsStore
-  } = await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+  const {processor, roomId, storyId, userIdOne, mockRoomsStore} =
+    await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
 
   mockRoomsStore.manipulate((room) => {
     room.users[0].excluded = true;

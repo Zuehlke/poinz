@@ -1,4 +1,4 @@
-sudo: required
+os: linux
 
 services:
   - docker
@@ -32,7 +32,7 @@ script:
 
 after_success:
  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-   docker -v
-   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-   docker image push --all-tags xeronimus/poinz:latest;
+   docker -v;
+   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+   docker image push xeronimus/poinz:latest;
    fi

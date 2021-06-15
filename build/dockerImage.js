@@ -14,6 +14,7 @@ const fs = Promise.promisifyAll(require('fs-extra'));
 const {exec} = require('child_process');
 const {spawn} = require('cross-spawn');
 const del = require('del');
+const pkg = require('../package.json');
 
 const execPromised = Promise.promisify(exec);
 
@@ -96,7 +97,11 @@ function startBuildingDockerImage(gitInfo) {
   console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch}`);
 
   const userAndProject = 'xeronimus/poinz';
-  const cmdArgs = `build -t ${userAndProject}:latest -t ${HEROKU_DEPLOYMENT_TAG} .`;
+  const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
+  if (gitInfo.branch === 'master') {
+    tags.push(`${userAndProject}:${pkg.version}`);
+  }
+  const cmdArgs = `build ${tags.map(tg => '-t ' + tg).join(' ')} .`;
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
 }

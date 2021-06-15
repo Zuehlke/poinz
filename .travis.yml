@@ -3,6 +3,9 @@ os: linux
 services:
   - docker
 
+before_install:
+  - './.travis/setup.sh'
+
 addons:
   apt:
     packages:

@@ -109,11 +109,11 @@ function startBuildingDockerImage(gitInfo) {
 
 function getGitInformation() {
   return Promise.all([
-    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}),
+    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}), // This will return `HEAD` if in detached mode
     execPromised('git rev-parse --short HEAD', {cwd: __dirname}),
     execPromised('git tag --points-at HEAD', {cwd: __dirname})
   ]).spread((abbrev, short, tags) => ({
-    branch: abbrev.split('\n').join(''),
+    branch: process.env.TRAVIS_BRANCH || abbrev.split('\n').join(''),
     hash: short.split('\n').join(''),
     tags: tags.split('\n').filter( n => n)
   }));

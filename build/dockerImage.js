@@ -94,15 +94,18 @@ function spawnAndPrint(command, args, options) {
 }
 
 function startBuildingDockerImage(gitInfo) {
-  console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch} (git-tags: ${gitInfo.tags.join(' ')})`);
+  console.log(
+    `
+    building docker container for ${gitInfo.hash} on ${
+      gitInfo.branch
+    } (git-tags: ${gitInfo.tags.join(' ')})`
+  );
 
   const user = process.env.DOCKER_USERNAME || 'xeronimus';
   const userAndProject = `${user}/poinz`;
   const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
-  gitInfo.tags.forEach(function(gitTag){
-    tags.push(`${userAndProject}:${gitTag}`)
-  })
-  const cmdArgs = `build ${tags.map(tg => '-t ' + tg).join(' ')} .`;
+  gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
+  const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} .`;
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
 }
@@ -115,6 +118,6 @@ function getGitInformation() {
   ]).spread((abbrev, short, tags) => ({
     branch: process.env.TRAVIS_BRANCH || abbrev.split('\n').join(''),
     hash: short.split('\n').join(''),
-    tags: tags.split('\n').filter( n => n)
+    tags: tags.split('\n').filter((n) => n)
   }));
 }

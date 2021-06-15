@@ -94,13 +94,14 @@ function spawnAndPrint(command, args, options) {
 }
 
 function startBuildingDockerImage(gitInfo) {
-  console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch}`);
+  console.log(`building docker container for ${gitInfo.hash} on ${gitInfo.branch} (git-tags: ${gitInfo.tags.join(' ')})`);
 
-  const userAndProject = 'xeronimus/poinz';
+  const user = process.env.DOCKER_USERNAME || 'xeronimus';
+  const userAndProject = `${user}/poinz`;
   const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
-  if (gitInfo.branch === 'master') {
-    tags.push(`${userAndProject}:${pkg.version}`);
-  }
+  gitInfo.tags.forEach(function(gitTag){
+    tags.push(`${userAndProject}:${gitTag}`)
+  })
   const cmdArgs = `build ${tags.map(tg => '-t ' + tg).join(' ')} .`;
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
@@ -109,9 +110,11 @@ function startBuildingDockerImage(gitInfo) {
 function getGitInformation() {
   return Promise.all([
     execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}),
-    execPromised('git rev-parse --short HEAD', {cwd: __dirname})
-  ]).spread((abbrev, short) => ({
+    execPromised('git rev-parse --short HEAD', {cwd: __dirname}),
+    execPromised('git tag --points-at HEAD', {cwd: __dirname})
+  ]).spread((abbrev, short, tags) => ({
     branch: abbrev.split('\n').join(''),
-    hash: short.split('\n').join('')
+    hash: short.split('\n').join(''),
+    tags: tags.split('\n').filter( n => n)
   }));
 }

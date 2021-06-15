@@ -34,5 +34,5 @@ after_success:
  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
    docker -v;
    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
-   docker image push xeronimus/poinz:latest;
+   docker image push --all-tags "${DOCKER_USERNAME}/poinz";
    fi

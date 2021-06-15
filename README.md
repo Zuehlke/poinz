@@ -25,5 +25,3 @@ You can contribute in multiple ways...
 
 * Maybe you have a feature request? Found a bug? General feedback? Please open a new [issue](https://github.com/Zuehlke/poinz/issues)
 * You want to extend Poinz? Or fix one of the issues? Check out the [Technical documentation](./docu/technicalDocu.md).
-
-

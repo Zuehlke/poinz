@@ -1,6 +1,13 @@
-const average = (values) => values.reduce((a, b) => a + b) / values.length;
+const average = (values) => {
+  const positiveValuesOnly = values.filter((v) => v >= 0);
+  if (positiveValuesOnly.length < 1) {
+    return undefined;
+  }
+  return positiveValuesOnly.reduce((a, b) => a + b) / positiveValuesOnly.length;
+};
 
-const numberRoundedOneDigit = (number) => parseFloat(number.toFixed(1));
+const numberRoundedTwoDigit = (number) =>
+  typeof number !== 'undefined' ? parseFloat(number.toFixed(2)) : undefined;
 
 /**
  *
@@ -38,7 +45,7 @@ export default function getEstimationSummary(estmForOneStory) {
   }, {});
 
   return {
-    average: numberRoundedOneDigit(average(estimationValues)),
+    average: numberRoundedTwoDigit(average(estimationValues)),
     highest: Math.max(...estimationValues),
     lowest: Math.min(...estimationValues),
     estimationCount: estimationValues.length,

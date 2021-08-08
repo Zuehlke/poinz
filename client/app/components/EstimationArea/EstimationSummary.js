@@ -39,7 +39,11 @@ const EstimationSummary = ({
         <span>
           {t('usersEstimated', {count: summary.estimationCount, total: usersInRoomCount})}
         </span>
-        <span>{t('numericalAverage', {value: summary.average})}</span>
+        <span>
+          {t('numericalAverage', {
+            value: typeof summary.average !== 'undefined' ? summary.average : '-'
+          })}
+        </span>
 
         {allValuesSame && <span>{t('consensusAchieved')}</span>}
         {settled && <span>{t('settledOn', {label: consensusInfo.label})}</span>}

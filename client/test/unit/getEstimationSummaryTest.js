@@ -23,6 +23,10 @@ test('simple', () => {
   });
 });
 
+/*
+ as of #192, we ignore negative values, which represent by default the "special" cards "?"  "BIG", etc.
+ i.e. we also do not count the users that estimated / choose these (negative) cards => average is calculated:  Sum of all positive values devided by number of users that estimated positive values.
+ */
 test('negative values', () => {
   const estimationObjectForOneStory = {
     'userId-1': -1,
@@ -37,13 +41,37 @@ test('negative values', () => {
   expect(summary).toEqual({
     lowest: -2,
     highest: 8,
-    average: 3,
+    average: 6,
     estimationCount: 5,
     estimatedValues: {
       '-1': 1,
       '-2': 1,
       5: 2,
       8: 1
+    }
+  });
+});
+
+/*
+#192
+ */
+test('only negative values', () => {
+  const estimationObjectForOneStory = {
+    'userId-1': -1,
+    'userId-2': -2,
+    'userId-3': -1
+  };
+
+  const summary = getEstimationSummary(estimationObjectForOneStory);
+
+  expect(summary).toEqual({
+    lowest: -2,
+    highest: -1,
+    average: undefined,
+    estimationCount: 3,
+    estimatedValues: {
+      '-1': 2,
+      '-2': 1
     }
   });
 });
@@ -80,7 +108,7 @@ test('rounding average', () => {
   expect(summary).toEqual({
     lowest: 1,
     highest: 13,
-    average: 5.7, // <-- round to one digit after the decimal point
+    average: 5.67, // <-- round to two digit after the decimal point
     estimationCount: 3,
     estimatedValues: {
       1: 1,

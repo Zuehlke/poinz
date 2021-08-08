@@ -193,7 +193,12 @@ export default function (state, action, oldState) {
 }
 
 function getUsername(state, userId) {
-  if (state.users && state.users.usersById && state.users.usersById[userId]) {
+  if (
+    state.users &&
+    state.users.usersById &&
+    state.users.usersById[userId] &&
+    state.users.usersById[userId].username
+  ) {
     return state.users.usersById[userId].username;
   } else {
     return 'New user';

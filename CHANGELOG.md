@@ -1,3 +1,8 @@
+### 0.11.4: 2021-08-09
+
+* Ignore negative card values in calculating the "numerical average" (#192)
+* Dependencies updated
+
 ### 0.11.3: 2021-05-08
 
 * Dependencies updated

@@ -62,50 +62,16 @@ module.exports = {
         }
       },
 
-      // now some font loaders (needed for zuehlke font and font-awesome icons)
+      // file loader for directly imported Zühlke font (in _styled.js).
+      // as of Aug2021 / css-loader 6.x does not use this loader -> no impact on fontello icon font "poinz"
       {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        test: /aazuotps_30.12.13-webfont.woff2/, // <- matches the zühlke font
         use: {
-          loader: 'url-loader',
+          loader: 'file-loader',
           options: {
-            limit: 10000,
-            mimetype: 'application/font-woff'
+            name: '[path][name].[ext]'
           }
         }
-      },
-      {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/font-woff'
-          }
-        }
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'image/svg+xml'
-          }
-        }
-      },
-      {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        use: {
-          loader: 'url-loader',
-          options: {
-            limit: 10000,
-            mimetype: 'application/octet-stream'
-          }
-        }
-      },
-      {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        use: 'file-loader'
       }
     ]
   },

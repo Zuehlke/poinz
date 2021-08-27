@@ -1,6 +1,6 @@
 # PoinZ - Distributed Planning Poker
 
-[![Build Status](https://travis-ci.com/Zuehlke/poinz.svg?branch=master)](https://travis-ci.com/Zuehlke/poinz)
+[![Build Status](https://travis-ci.com/Zuehlke/poinz.svg?branch=master)](https://app.travis-ci.com/github/Zuehlke/poinz)
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
 [![GitHub Release](https://img.shields.io/github/v/release/Zuehlke/PoinZ.svg?style=flat)]()
 [![Last Commit](https://img.shields.io/github/last-commit/Zuehlke/PoinZ.svg?style=flat)]()

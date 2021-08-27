@@ -196,7 +196,7 @@ function joinExistingRoom(room, command, userId) {
   });
 
   if (userObject.excluded) {
-    room.applyEvent('excludedFromEstimations', {});
+    room.applyEvent('excludedFromEstimations', {userId: userObject.id});
   }
 }
 

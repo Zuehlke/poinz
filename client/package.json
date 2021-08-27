@@ -19,7 +19,7 @@
     "pretest": "npm run lint",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
-    "serve": "cross-env BABEL_ENV=development webpack serve --config webpack.config.js --progress --port 9000",
+    "serve": "cross-env BABEL_ENV=development webpack serve --config webpack.config.js --progress",
     "build": "cross-env BABEL_ENV=production webpack --progress --bail --json --config  webpack.production.config.js > webpack-build-stats.json",
     "build:analyze": "cross-env BABEL_ENV=production webpack --progress --colors --bail --config  webpack.analysis.config.js"
   },
@@ -38,9 +38,9 @@
   ],
   "dependencies": {
     "axios": "0.21.1",
-    "history": "5.0.0",
+    "history": "5.0.1",
     "loglevel": "1.7.1",
-    "node-polyglot": "2.4.0",
+    "node-polyglot": "2.4.2",
     "purecss": "2.0.6",
     "react": "17.0.2",
     "react-anchorify-text": "2.4.1",
@@ -52,7 +52,7 @@
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
     "socket.io-client": "4.1.3",
-    "styled-components": "5.3.0",
+    "styled-components": "5.3.1",
     "uuid": "8.3.2"
   },
   "devDependencies": {
@@ -65,7 +65,7 @@
     "babel-plugin-styled-components": "1.13.2",
     "cross-env": "7.0.3",
     "css-loader": "6.2.0",
-    "cypress": "8.2.0",
+    "cypress": "8.3.0",
     "date-fns": "2.23.0",
     "eslint": "7.32.0",
     "eslint-plugin-react": "7.24.0",
@@ -73,10 +73,10 @@
     "jest": "27.0.6",
     "style-loader": "3.2.1",
     "url-loader": "4.1.1",
-    "webpack": "5.49.0",
+    "webpack": "5.51.1",
     "webpack-bundle-analyzer": "4.4.2",
-    "webpack-cli": "4.7.2",
-    "webpack-dev-server": "3.11.2"
+    "webpack-cli": "4.8.0",
+    "webpack-dev-server": "4.0.0"
   },
   "engines": {
     "node": ">=14"

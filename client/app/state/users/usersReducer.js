@@ -143,13 +143,13 @@ export default function usersReducer(state = usersInitialState, action, ownUserI
 
     // including / excluding user from estimation
     case EVENT_ACTION_TYPES.excludedFromEstimations: {
-      return modifyUser(state, event.userId, (user) => ({
+      return modifyUser(state, event.payload.userId, (user) => ({
         ...user,
         excluded: true
       }));
     }
     case EVENT_ACTION_TYPES.includedInEstimations: {
-      return modifyUser(state, event.userId, (user) => ({
+      return modifyUser(state, event.payload.userId, (user) => ({
         ...user,
         excluded: false
       }));
@@ -180,6 +180,9 @@ function indexUsers(usersArray) {
  * @param {function} modifier Will be invoked with the matching user from the user map (which can be undefined, if no such user is in the map)
  */
 function modifyUser(state, userId, modifier) {
+  if (!userId) {
+    return state;
+  }
   const modifiedUser = modifier(state.usersById[userId]);
 
   return {

@@ -212,10 +212,10 @@ export const setAvatar = (avatar) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const toggleExcluded = () => (dispatch, getState, sendCommand) => {
+export const toggleExcluded = (userId) => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'toggleExclude',
-    payload: {}
+    payload: {userId}
   });
 };
 

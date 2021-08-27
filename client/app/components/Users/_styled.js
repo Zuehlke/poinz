@@ -1,13 +1,7 @@
 import styled from 'styled-components';
 
 import {device, ZuehlkeFont} from '../dimensions';
-import {
-  COLOR_FONT_GREY,
-  COLOR_LIGHT_GREY,
-  COLOR_LIGHTER_GREY,
-  COLOR_ORANGE,
-  COLOR_WARNING
-} from '../colors';
+import {COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE, COLOR_WARNING} from '../colors';
 
 export const StyledUsers = styled.div`
   display: flex;
@@ -82,6 +76,7 @@ export const StyledUserEstimation = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
   > span {
     display: block;
   }
@@ -113,7 +108,11 @@ export const StyledUserEstimationExcluded = styled(StyledUserEstimation)`
   visibility: hidden;
 `;
 
-export const StyledUserKickOverlay = styled.span`
+export const StyledEyeIcon = styled.i`
+  color: ${({active}) => (active ? COLOR_ORANGE : COLOR_LIGHT_GREY)};
+`;
+
+export const StyledUserQuickMenu = styled.span`
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.8);
@@ -127,7 +126,7 @@ export const StyledUserKickOverlay = styled.span`
 
   i {
     display: inline-block;
-    font-size: 22px;
+    font-size: 16px;
     cursor: pointer;
     padding: 6px;
     width: 18px;
@@ -138,17 +137,14 @@ export const StyledUserKickOverlay = styled.span`
     background: #fff;
     border-radius: 50%;
     opacity: 0.9;
-    color: ${COLOR_LIGHT_GREY};
   }
 
   i:hover {
     opacity: 1;
   }
+
   i:hover.icon-logout {
     color: ${COLOR_WARNING};
-  }
-  i:hover.icon-cancel {
-    color: ${COLOR_FONT_GREY};
   }
 
   @media ${device.modernMobile} {

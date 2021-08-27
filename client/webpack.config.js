@@ -86,14 +86,14 @@ module.exports = {
     historyApiFallback: true,
 
     static: {
-      directory: path.join(__dirname),
+      directory: path.join(__dirname)
     },
     compress: true,
     port: 9000,
 
     devMiddleware: {
       index: true,
-      publicPath: '/assets/',
+      publicPath: '/assets/'
     },
 
     // proxy request to the rest api (our server does not send CORS headers intentionally)

@@ -1,3 +1,8 @@
+### 0.11.5: 2021-08-28
+
+* Modify "quick menu" on user's avatar: add option to quickly toggle "spectator" mode (exclude from estimations).
+* All users can now mark all other users as spectator.
+
 ### 0.11.4: 2021-08-09
 
 * Ignore negative card values in calculating the "numerical average" (#192)

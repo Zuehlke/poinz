@@ -274,7 +274,7 @@ test('resetAndClearPassword ', async () => {
   client.disconnect();
 });
 
-test('includeAndExcludeTest: two users, one excludes and includes himself', async () => {
+test('includeAndExcludeTest: two users, one excludes and includes himself. Then second user excludes&includes first user', async () => {
   const outputFile = path.join(clientEventActionReducerScenarioDir, 'includeAndExcludeTest.json');
 
   const client = poinzSocketClientFactory();
@@ -288,8 +288,11 @@ test('includeAndExcludeTest: two users, one excludes and includes himself', asyn
   await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
   await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
 
-  await client.cmdAndWait(client.cmds.toggleExclude(roomId, firstUserId));
-  await client.cmdAndWait(client.cmds.toggleExclude(roomId, firstUserId));
+  await client.cmdAndWait(client.cmds.toggleExclude(roomId, firstUserId, firstUserId));
+  await client.cmdAndWait(client.cmds.toggleExclude(roomId, firstUserId, firstUserId));
+
+  await client.cmdAndWait(client.cmds.toggleExclude(roomId, secondUserId, firstUserId));
+  await client.cmdAndWait(client.cmds.toggleExclude(roomId, secondUserId, firstUserId));
 
   // in the end, write to file and close socket
   await client.dumpAllEvents(outputFile);

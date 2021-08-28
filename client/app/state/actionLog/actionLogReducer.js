@@ -84,10 +84,26 @@ export default function (state, action, oldState) {
       return updateLogInState(`${username} set his/her email address`);
     case EVENT_ACTION_TYPES.avatarSet:
       return updateLogInState(`${username} set his/her avatar`);
-    case EVENT_ACTION_TYPES.excludedFromEstimations:
-      return updateLogInState(`${username} is now excluded from estimations`);
-    case EVENT_ACTION_TYPES.includedInEstimations:
-      return updateLogInState(`${username} is no longer excluded from estimations`);
+    case EVENT_ACTION_TYPES.excludedFromEstimations: {
+      const isOwn = getOwnUserId(state) === payload.userId;
+      if (isOwn) {
+        return updateLogInState(`${username} excluded himself/herself from estimations`);
+      } else {
+        return updateLogInState(
+          `${username} excluded ${getUsername(state, payload.userId)} from estimations`
+        );
+      }
+    }
+    case EVENT_ACTION_TYPES.includedInEstimations: {
+      const isOwn = getOwnUserId(state) === payload.userId;
+      if (isOwn) {
+        return updateLogInState(`${username} included himself/herself in estimations`);
+      } else {
+        return updateLogInState(
+          `${username} included ${getUsername(state, payload.userId)} in estimations`
+        );
+      }
+    }
 
     // backlog modifications (stories added, changed, trashed, deleted)
     case EVENT_ACTION_TYPES.storyAdded:

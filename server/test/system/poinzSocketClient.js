@@ -202,12 +202,12 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
     });
   }
 
-  function toggleExclude(roomId, userId) {
+  function toggleExclude(roomId, userId, userIdToToggle) {
     return sendCommand({
       name: 'toggleExclude',
       roomId,
       userId,
-      payload: {}
+      payload: {userId: userIdToToggle}
     });
   }
 

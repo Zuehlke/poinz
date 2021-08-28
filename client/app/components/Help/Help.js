@@ -31,13 +31,13 @@ const Help = ({shown}) => {
         </p>
 
         <p>
-          Also, I&apos;m always interested in your feedback. Please open an{' '}
+          Also, I&apos;m always interested in your feedback. Please open a{' '}
           <a
-            href="https://github.com/Zuehlke/poinz/issues"
+            href="https://github.com/Zuehlke/poinz/discussions"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Issue on github.
+            Discussion on github.
           </a>
         </p>
 

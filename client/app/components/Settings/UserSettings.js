@@ -133,7 +133,11 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
         <h5>{t('markExcluded')}</h5>
         {t('excludedInfo')}
 
-        <p onClick={toggleExcluded} className="clickable" data-testid="excludedToggle">
+        <p
+          onClick={() => toggleExcluded(user.userId)}
+          className="clickable"
+          data-testid="excludedToggle"
+        >
           <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('excluded')}
         </p>
       </StyledSection>

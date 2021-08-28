@@ -40,4 +40,25 @@ test('Exclude and Include', () => {
     id: joinedEvtOne.userId,
     username: 'Jim'
   });
+
+  // now second user toggles first user
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
+
+  expect(getUsersById(modifiedState)[joinedEvtOne.userId]).toEqual({
+    avatar: 0,
+    disconnected: false,
+    excluded: true, // <<-- flag set
+    id: joinedEvtOne.userId,
+    username: 'Jim'
+  });
+
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
+
+  expect(getUsersById(modifiedState)[joinedEvtOne.userId]).toEqual({
+    avatar: 0,
+    disconnected: false,
+    excluded: false, // <<-- flag unset
+    id: joinedEvtOne.userId,
+    username: 'Jim'
+  });
 });

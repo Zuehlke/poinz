@@ -146,9 +146,10 @@ These settings will affect your user.
 Choose an avatar to be displayed in the Estimation Area, visible for all users in the room.
 If you set an email address that is registered with https://gravatar.com, the gravatar "Icon" will be used. This overrides any selected PoinZ avatar.
 
-#### Excluded
+#### Spectator
 
-If you mark yourself as "excluded", you do not take part in estimating stories. If auto reveal is enabled, PoinZ will "ignore you" and reveal the story as soon as all other users did estimate the current story.
+If you mark yourself as "spectator", you exclude yourself from estimation and can no longer take part in estimating stories. 
+If auto reveal is enabled, PoinZ will "ignore you" and reveal the story as soon as all other users did estimate the current story.
 You can still modify the backlog and [settle](#settle). This is helpful for Scrum Masters / moderators.
 
 ### Room Settings
@@ -159,7 +160,7 @@ These settings will affect the room and thus all users in the same room.
 
 #### Auto Reveal
 
-By default, PoinZ will reveal the current story automatically (all given estimation values are shown) as soon as all users in the room did estimate the current story (**Excluded** and **Disconnected** users are ignored).
+By default, PoinZ will reveal the current story automatically (all given estimation values are shown) as soon as all users in the room did estimate the current story. **Excluded** (spectators) and **Disconnected** users are ignored.
 
 If this flag is removed, Poinz will not auto reveal and you can manually reveal the story.
 

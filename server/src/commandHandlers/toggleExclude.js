@@ -1,12 +1,12 @@
+import {getMatchingUserOrThrow} from './commonPreconditions';
+
 /**
- * Emits event "excludedFromEstimations" or "includedInEstimations"
  *
- * (If user is marked as excluded, he cannot estimate stories.)
- *
- * as of #200, every user can "exclude" every other user -> we pass the userId in the payload of the command
+ * Marks a user as "Spectator" (excluded from estimations)
+ * If user is marked as excluded, he cannot estimate stories.
+ * As of #200, every user can "exclude" every other user -> we pass the userId in the payload of the command
  *
  */
-import {getMatchingUserOrThrow} from './commonPreconditions';
 
 const schema = {
   allOf: [

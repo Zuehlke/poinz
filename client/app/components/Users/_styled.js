@@ -24,7 +24,7 @@ export const StyledUser = styled.div`
 
   position: relative;
   color: ${({isOwn, shaded}) => (shaded ? COLOR_LIGHT_GREY : isOwn ? COLOR_ORANGE : 'inherit')};
-  cursor: ${({isOwn}) => (isOwn ? 'inherit' : 'pointer')};
+  cursor: pointer;
 
   @media ${device.modernMobile} {
     display: inline-block;
@@ -48,8 +48,13 @@ export const StyledUserName = styled.div`
 
 export const StyledUserBadge = styled.span`
   position: absolute;
-  top: 6px;
+  top: 2px;
   left: 44px;
+
+  > i {
+    display: inline-block;
+    margin-right: 2px;
+  }
 
   @media ${device.modernMobile} {
     top: 0;

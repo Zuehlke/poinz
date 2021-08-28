@@ -43,17 +43,10 @@ const User = ({
 
   return (
     <StyledUser data-testid="user" isOwn={isOwnUser} shaded={isDisconnected || quickMenuShown}>
-      {!isDisconnected && isExcluded && (
-        <StyledUserBadge>
-          <i className="icon-eye"></i>
-        </StyledUserBadge>
-      )}
-
-      {isDisconnected && (
-        <StyledUserBadge>
-          <i className="icon-flash"></i>
-        </StyledUserBadge>
-      )}
+      <StyledUserBadge>
+        {isExcluded && <i className="icon-eye"></i>}
+        {isDisconnected && <i className="icon-flash"></i>}
+      </StyledUserBadge>
 
       <Avatar
         onClick={() => setQuickMenuShown(true)}
@@ -69,7 +62,7 @@ const User = ({
             active={isExcluded}
             className="icon-eye"
             onClick={onEyeIconClick}
-            title={t('markExcluded')}
+            title={t('markSpectator')}
           ></StyledEyeIcon>
 
           {!isOwnUser && (

@@ -1,3 +1,8 @@
+### 0.11.6: 2021-09-03
+
+* Moved "New Round" button to the right. This prevents accidentally starting a new round, when clicking "Reveal" (#206, thanks to @ecaron)
+* Added autocomplete attribute to name input fields. Should prevent browsers from suggesting credit card numbers (#205, thanks to @ecaron)
+
 ### 0.11.5: 2021-08-28
 
 * Modify "quick menu" on user's avatar: add option to quickly toggle "spectator" mode (exclude from estimations).

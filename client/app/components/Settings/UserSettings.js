@@ -45,6 +45,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
           <ValidatedInput
             data-testid="usernameInput"
             type="text"
+            autoComplete="name"
             id="username"
             placeholder={t('name')}
             fieldValue={myUsername}
@@ -112,6 +113,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
             data-testid="gravatarEmailInput"
             type="text"
             id="email"
+            autoComplete="email"
             placeholder="Email..."
             fieldValue={myEmail}
             setFieldValue={setMyEmail}

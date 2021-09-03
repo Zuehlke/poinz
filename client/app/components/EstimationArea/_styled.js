@@ -14,7 +14,15 @@ export const StyledEstimation = styled.div`
 export const EstimationAreaButtons = styled.div`
   margin-top: 16px;
   display: flex;
-  justify-content: space-between;
+  justify-content: ${({alignment}) => alignment};
+
+  > button {
+    margin-right: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 `;
 
 const FlashAnimation = keyframes`

@@ -65,7 +65,7 @@ const EstimationArea = ({
       </StyledSelectedStory>
 
       {!revealed && (
-        <EstimationAreaButtons>
+        <EstimationAreaButtons alignment="space-between">
           <button
             type="button"
             className="pure-button pure-button-primary"
@@ -79,7 +79,7 @@ const EstimationArea = ({
 
       {revealed && (
         <React.Fragment>
-          <EstimationAreaButtons>
+          <EstimationAreaButtons alignment="flex-end">
             <button
               type="button"
               className="pure-button pure-button-primary"

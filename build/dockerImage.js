@@ -95,8 +95,7 @@ function spawnAndPrint(command, args, options) {
 
 function startBuildingDockerImage(gitInfo) {
   console.log(
-    `
-    building docker container for ${gitInfo.hash} on ${
+    `building docker container for ${gitInfo.hash} on branch ${
       gitInfo.branch
     } (git-tags: ${gitInfo.tags.join(' ')})`
   );

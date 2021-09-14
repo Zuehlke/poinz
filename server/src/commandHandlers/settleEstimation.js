@@ -43,10 +43,6 @@ const settleEstimationCommandHandler = {
     if (!matchingStory.revealed) {
       throw new Error('You cannot settle estimation for a story that was NOT YET revealed!');
     }
-
-    if (!valueWasEstimatedByAtLeastOneUser(matchingStory, command.payload.value)) {
-      throw new Error(`Value ${command.payload.value} was not estimated/selected by any user!`);
-    }
   },
   fn: (room, command) => {
     room.applyEvent('consensusAchieved', {
@@ -56,10 +52,5 @@ const settleEstimationCommandHandler = {
     });
   }
 };
-
-function valueWasEstimatedByAtLeastOneUser(story, settledValue) {
-  const allEstimatedValues = Object.values(story.estimations);
-  return allEstimatedValues.includes(settledValue);
-}
 
 export default settleEstimationCommandHandler;

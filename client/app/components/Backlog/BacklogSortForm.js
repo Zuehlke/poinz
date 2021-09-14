@@ -76,6 +76,7 @@ const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged
         type="text"
         placeholder={t('filter')}
         value={filterQuery}
+        autoComplete="off"
         onChange={(e) => onQueryChanged(e.target.value)}
       />
       <i

@@ -72,27 +72,21 @@ export const StyledCards = styled.div`
 `;
 
 export const StyledCard = styled.button`
-  &,
-  &:focus {
-    cursor: pointer;
-    min-width: 28vw;
-    display: block;
-    border: none;
-    outline: none;
-    background: transparent;
-    text-align: center;
-    height: 100px;
-    box-sizing: border-box;
-    font-size: 28px;
-    padding: 8px;
-    font-family: ${ZuehlkeFont};
-  }
+  cursor: pointer;
+  min-width: 28vw;
+  display: block;
+  border: none;
+  outline: none;
+  background: transparent;
+  text-align: center;
+  height: 100px;
+  box-sizing: border-box;
+  font-size: 28px;
+  padding: 8px;
+  font-family: ${ZuehlkeFont};
 
   @media ${device.desktop} {
-    &,
-    &:focus {
-      min-width: 100px;
-    }
+    min-width: 100px;
   }
 `;
 
@@ -115,16 +109,10 @@ export const StyledCardInner = styled.div`
 `;
 
 export const StyledEstmSummCard = styled(StyledCard)`
-  &,
-  &:focus {
-    min-width: 21vw; /* slightly smaller cards in estimation summary */
-  }
+  min-width: 21vw; /* slightly smaller cards in estimation summary */
 
   @media ${device.desktop} {
-    &,
-    &:focus {
-      min-width: 80px; /* slightly smaller cards in estimation summary */
-    }
+    min-width: 80px; /* slightly smaller cards in estimation summary */
   }
 
   &,
@@ -175,9 +163,12 @@ export const StyledEstimationSummary = styled.div`
 `;
 export const StyledEstimationSummaryList = styled.div`
   > span {
-    display: block;
+    display: flex;
     margin-top: 8px;
     padding: 4px 0;
-    width: 50%;
+
+    @media ${device.desktop} {
+      width: 50%;
+    }
   }
 `;

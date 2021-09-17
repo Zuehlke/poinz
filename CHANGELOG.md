@@ -1,3 +1,9 @@
+### 0.12.0: 2021-09-17
+
+* Display "Recommendation" in Estimation Summary: the first card that is larger than the numerical average. Eexcept numerical average is within 10% of the lower card. (#207, thanks to #ecaron)
+* You can now settle for any card. (Previously, only cards that were chosen by at least one user were possible settle values).
+* Dependencies updated
+
 ### 0.11.6: 2021-09-04
 
 * Moved "New Round" button to the right. This prevents accidentally starting a new round, when clicking "Reveal" (#206, thanks to @ecaron)

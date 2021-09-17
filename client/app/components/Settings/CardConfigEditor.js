@@ -78,6 +78,10 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
       >
         {t('iKnowWhatImDoin')} <i className="icon-floppy" />
       </button>
+
+      <button type="button" className="pure-button" onClick={() => onSave()}>
+        {t('default')} <i className="icon-ccw" />
+      </button>
     </div>
   );
 

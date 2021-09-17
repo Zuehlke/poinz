@@ -9,14 +9,13 @@
  *
  * */
 const path = require('path');
-const Promise = require('bluebird');
-const fs = Promise.promisifyAll(require('fs-extra'));
+const util = require('util');
+const fs = require('fs-extra');
 const {exec} = require('child_process');
 const {spawn} = require('cross-spawn');
 const del = require('del');
-const pkg = require('../package.json');
 
-const execPromised = Promise.promisify(exec);
+const execPromised = util.promisify(exec);
 
 const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
 
@@ -114,9 +113,9 @@ function getGitInformation() {
     execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}), // This will return `HEAD` if in detached mode
     execPromised('git rev-parse --short HEAD', {cwd: __dirname}),
     execPromised('git tag --points-at HEAD', {cwd: __dirname})
-  ]).spread((abbrev, short, tags) => ({
-    branch: process.env.TRAVIS_BRANCH || abbrev.split('\n').join(''),
-    hash: short.split('\n').join(''),
-    tags: tags.split('\n').filter((n) => n)
+  ]).then(([abbrev, short, tags]) => ({
+    branch: process.env.TRAVIS_BRANCH || abbrev.stdout.split('\n').join(''),
+    hash: short.stdout.split('\n').join(''),
+    tags: tags.stdout.split('\n').filter((n) => n)
   }));
 }

@@ -1,5 +1,4 @@
 import {v4 as uuid} from 'uuid';
-import Promise from 'bluebird';
 
 // we want to test with our real command- and event handlers.
 import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';

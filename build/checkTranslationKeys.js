@@ -1,7 +1,8 @@
-const Promise = require('bluebird');
 const path = require('path');
-const glob = Promise.promisify(require('glob'));
-const fs = Promise.promisifyAll(require('fs-extra'));
+const chalk = require('chalk');
+const util = require('util');
+const glob = util.promisify(require('glob'));
+const fs = require('fs-extra');
 
 const TRANSLATION_INVOKE_PATTERN = /[\{|\s*|\(]t\('([^\)]*)'[,|\)]/g;
 
@@ -99,7 +100,7 @@ function checkUnused(keys) {
   });
 
   if (unusedDE.length > 0 || unusedEN.length) {
-    console.warn('!!=== there are unused translation keys ===!!');
+    console.warn(chalk.yellow.bold('!!=== there are unused translation keys ===!!'));
   }
 }
 
@@ -110,5 +111,5 @@ async function check() {
 
   checkUnused(keys);
 
-  console.log(`checked ${keys.length} translation keys... all good.`);
+  console.log(`checked ${keys.length} translation keys...`);
 }

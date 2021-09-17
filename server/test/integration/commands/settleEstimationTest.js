@@ -52,6 +52,49 @@ test('Should produce consensusAchieved event', async () => {
   });
 });
 
+test('Should also allow value (to settle) that was not estimated by anyone (as of #207)', async () => {
+  const {roomId, userIdOne, userIdTwo, processor, storyId} =
+    await prepTwoUsersInOneRoomWithOneStoryAndEstimate('jimmy', 'some story', 1);
+
+  await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId,
+        value: 5
+      }
+    },
+    userIdTwo
+  );
+
+  const commandId = uuid();
+
+  const {producedEvents} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'settleEstimation',
+      payload: {
+        storyId,
+        value: 8 // <<- this value was not estimated by anyone in the room
+      }
+    },
+    userIdOne
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'consensusAchieved');
+
+  const [consensusAchievedEvent] = producedEvents;
+
+  expect(consensusAchievedEvent.payload).toEqual({
+    storyId,
+    value: 8,
+    settled: true
+  });
+});
+
 describe('preconditions', () => {
   test('Should throw if storyId does not match a story in the room', async () => {
     const {roomId, userIdOne, userIdTwo, processor, storyId} =
@@ -162,38 +205,5 @@ describe('preconditions', () => {
         userIdOne
       )
     ).rejects.toThrow('You cannot settle estimation for a story that was NOT YET revealed!');
-  });
-
-  test('Should throw if value (to settle) was not estimated by anyone', async () => {
-    const {roomId, userIdOne, userIdTwo, processor, storyId} =
-      await prepTwoUsersInOneRoomWithOneStoryAndEstimate('jimmy', 'some story', 1);
-
-    await processor(
-      {
-        id: uuid(),
-        roomId: roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId,
-          value: 5
-        }
-      },
-      userIdTwo
-    );
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'settleEstimation',
-          payload: {
-            storyId,
-            value: 8 // <<- this value was not estimated by anyone in the room
-          }
-        },
-        userIdOne
-      )
-    ).rejects.toThrow('Value 8 was not estimated/selected by any user!');
   });
 });

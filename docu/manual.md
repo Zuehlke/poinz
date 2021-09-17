@@ -15,8 +15,10 @@ This page gives you an overview on the features and most common use cases.
      * [Editing stories](#editing-stories)
      * [Trashing stories](#trashing-stories)
   * [Estimating](#estimating)
-     * [Manually reveal estimates](#manually-reveal-estimates)
      * [New Round](#new-round)
+     * [Settle](#settle)
+     * [Consensus](#consensus)
+     * [Manually reveal estimates](#manually-reveal-estimates)
   * [Settings](#settings)
      * [User Settings](#user-settings)
      * [Room Settings](#room-settings)
@@ -107,17 +109,21 @@ Only a single story can be estimated at a given time.
 3. Estimate the story by clicking one of the colored cards. By default the cards have the values ?, 1/2, 1, 2, 3, 5, 8, 13, 21, 34, 55, BIG.
 4. By default, the given estimates are *revealed* as soon as all active users did estimate. This behaviour can be changed in the settings (Auto Reveal).
 
-### Settle
-
-In many cases, your team does not "agree" on a value in the first round. You can discuss and then "settle" the estimation: **Click on one of the highlighted cards to store that value on the story.** 
 
 ### New Round
 
-If you do not want to settle right away, you can start a new estimation round by clicking the blue **new Round** button.
-All previously given estimates on the currently selected story are **erased**, and your team can start estimating again.
+In many cases, your team does not "agree" on a value in the first round. It is recommended that you discuss and share opinions before you start a new estimation round.
+You can start a new estimation round by clicking the blue **new Round** button.
+
+All previously given estimates on the currently selected story are **erased**, and your team can start voting again.
 
 ![new round](https://user-images.githubusercontent.com/1777143/97101245-0e909e00-169c-11eb-81f5-80a0c094014c.png)
 
+### Settle
+
+If you do not want to estimate until everybody voted for the same card, you can manually "settle" the estimation: Click on one of the cards in the **Estimation Summary** to store that value on the story.
+
+![estimation_summary](https://user-images.githubusercontent.com/1777143/133760536-117486ce-135f-41b0-b571-877ed992f914.png)
 
 ### Consensus
 
@@ -168,13 +174,13 @@ If this flag is removed, Poinz will not auto reveal and you can manually reveal 
 
 By default, everybody can join your room. You can optionally set a password in order to protect unauthorized access to your room.
 
-**During creation**
+**Setting a room password during creation**
 
-When creating a new room, extend the "Join" button and set a new password (second input field, "Optional password). Users will then be prompted for the password when they are joining your room.
+When creating a new room, extend the "Join" button and set a new password (second input field, "Optional password"). Users will then be prompted for the password when they are joining your room.
 
 <img src="https://user-images.githubusercontent.com/1777143/105578774-d70cbd00-5d82-11eb-9d25-ee48b6d5d4bf.png" width="300" />
 
-**Existing Room**
+**Setting a room password in an existing Room**
 
 For an existing room without password protection, the room settings allow you to set a new password. You can also override an existing password.
 If you click the save button with an empty password field, you remove the password protection of that room.
@@ -194,6 +200,7 @@ If the default set of cards does not meet your needs, you can change it.
 
 You can also use the text editor and edit the json array directly.
 
+If you click on "Default", you immediately restore the default card configuration.
 
 ## Security 
 

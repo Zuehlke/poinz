@@ -161,9 +161,11 @@ export const StyledEstimationSummary = styled.div`
     margin-top: 0;
   }
 `;
+
 export const StyledEstimationSummaryList = styled.div`
   > span {
     display: flex;
+    align-items: center;
     margin-top: 8px;
     padding: 4px 0;
 

@@ -18,14 +18,10 @@ const settings = {
   },
 
   // if environment variable "ATLAS_DB_URI" is set (in heroku deployment), persistent store is used.
+  // the db uri already contains username and password
   // if env variable is not set, "persistentStore" is false and in-memory store is used.
-
   // as of august 2020, switched from mLab to mongoDB Atlas
-  persistentStore: process.env.ATLAS_DB_URI
-    ? {
-        connectionURI: process.env.ATLAS_DB_URI
-      }
-    : false
+  persistentStore: process.env.ATLAS_DB_URI ? process.env.ATLAS_DB_URI : false
 };
 
 export default settings;

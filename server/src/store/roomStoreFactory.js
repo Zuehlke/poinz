@@ -6,7 +6,7 @@ const LOGGER = getLogger('roomStoreFactory');
 
 /**
  * will return either a persistent or in-memory rooms store
- * @param {boolean | object} persistent  Either falsy, then inMemory storage is used, or a configuration object for the persistent storage.
+ * @param {boolean | string} persistent  Either falsy, then inMemory storage is used, or a db connection URI
  * @returns {{init, getRoomById, saveRoom, getAllRooms}}
  */
 export default async function getNewRoomsStore(persistent) {

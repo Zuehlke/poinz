@@ -29,16 +29,19 @@ export default {
   getStoreType
 };
 
-async function init(config) {
-  if (!config.connectionURI) {
-    throw new Error('Please provide "connectionURI"');
+/**
+ * initialize the persistent room storage
+ * @param {string} connectionURI The db uri already contains username and password
+ * @return {Promise<void>}
+ */
+async function init(connectionURI) {
+  if (!connectionURI || typeof connectionURI !== 'string') {
+    throw new Error('Please provide "connectionURI" as string');
   }
 
   LOGGER.info('Using persistent storage');
 
-  clientInstance = new MongoClient(config.connectionURI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  clientInstance = new MongoClient(connectionURI, {
     serverSelectionTimeoutMS: 4000
   });
 
@@ -53,7 +56,7 @@ async function init(config) {
 
     await roomsCollection.createIndex('id', {unique: true, name: 'id_roomId'});
   } catch (error) {
-    throw new Error('Could not connect to persistent Storage ' + config.connectionURI);
+    throw new Error('Could not connect to persistent Storage ' + connectionURI);
   }
 }
 

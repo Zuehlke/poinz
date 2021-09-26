@@ -23,6 +23,8 @@ import consensusAchieved from './consensusAchieved';
 import cardConfigSet from './cardConfigSet';
 import autoRevealOff from './autoRevealOff';
 import autoRevealOn from './autoRevealOn';
+import confidenceOn from './confidenceOn';
+import confidenceOff from './confidenceOff';
 import passwordSet from './passwordSet';
 import passwordCleared from './passwordCleared';
 import tokenIssued from './tokenIssued';
@@ -53,6 +55,8 @@ export default {
   cardConfigSet,
   autoRevealOff,
   autoRevealOn,
+  confidenceOn,
+  confidenceOff,
   passwordSet,
   passwordCleared,
   tokenIssued

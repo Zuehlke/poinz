@@ -1,8 +1,10 @@
 /**
  * A user gives his estimation for a certain story.
  * Users may only give estimations for the currently selected story.
+ * Users can optionally specify "confidence". if the value is above zero -> I'm confident.  if the value is below zero -> I'm unsure!.  If property is not provided, or 0 -> default.
+ *
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
- * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced
+ * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced (by default, if room setting is not altered. see "autoReveal")
  */
 import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions';
 
@@ -22,6 +24,9 @@ const schema = {
             },
             value: {
               type: 'number'
+            },
+            confidence: {
+              type: 'number' /* optional payload property */
             }
           },
           required: ['storyId', 'value'],

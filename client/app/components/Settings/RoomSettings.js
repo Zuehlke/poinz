@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
 import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
-import {toggleAutoReveal, setCardConfig, setPassword} from '../../state/actions/commandActions';
+import {
+  toggleAutoReveal,
+  toggleConfidence,
+  setCardConfig,
+  setPassword
+} from '../../state/actions/commandActions';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
 import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
@@ -16,10 +21,12 @@ import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './
 const RoomSettings = ({
   shown,
   autoReveal,
+  withConfidence,
   cardConfig,
   roomId,
   setCardConfig,
   toggleAutoReveal,
+  toggleConfidence,
   setPassword,
   passwordProtected
 }) => {
@@ -103,6 +110,16 @@ const RoomSettings = ({
       </StyledSection>
 
       <StyledSection>
+        <h5>{t('confidence')}</h5>
+        {t('confidenceInfo')}
+
+        <p onClick={toggleConfidence} className="clickable" data-testid="toggleConfidence">
+          <i className={withConfidence ? 'icon-check' : 'icon-check-empty'}></i>{' '}
+          {t('toggleConfidence')}
+        </p>
+      </StyledSection>
+
+      <StyledSection>
         <h5>{t('customCards')}</h5>
         {t('customCardsInfo')}
 
@@ -147,7 +164,9 @@ const RoomSettings = ({
 RoomSettings.propTypes = {
   shown: PropTypes.bool,
   autoReveal: PropTypes.bool,
+  withConfidence: PropTypes.bool,
   toggleAutoReveal: PropTypes.func,
+  toggleConfidence: PropTypes.func,
   setCardConfig: PropTypes.func,
   setPassword: PropTypes.func,
   cardConfig: PropTypes.array,
@@ -159,12 +178,14 @@ export default connect(
   (state) => ({
     shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
     autoReveal: state.room.autoReveal,
+    withConfidence: state.room.withConfidence,
     cardConfig: getCardConfigInOrder(state),
     roomId: getRoomId(state),
     passwordProtected: state.room.passwordProtected
   }),
   {
     toggleAutoReveal,
+    toggleConfidence,
     setCardConfig,
     setPassword
   }

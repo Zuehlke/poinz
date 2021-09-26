@@ -72,7 +72,7 @@ test(ROOM_STATE_FETCHED + ' should correctly be reduced to state ', () => {
 
   expect(getEstimations(modifiedState)).toEqual({
     [storyId]: {
-      [userId]: 0.5
+      [userId]: {value: 0.5, confidence: 0}
     }
   });
 

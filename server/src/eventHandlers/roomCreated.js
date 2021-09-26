@@ -11,7 +11,8 @@ function roomCreatedEventHandler(room, eventPayload, userId, modifyEventPayload)
     users: [],
     stories: [],
     created: Date.now(),
-    autoReveal: true
+    autoReveal: true,
+    withConfidence: false
   };
 
   if (eventPayload.password) {

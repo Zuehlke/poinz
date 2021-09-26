@@ -31,6 +31,46 @@ test('Should produce storyEstimateGiven event', async () => {
   expect(room.stories[0].estimations).toEqual({
     [userId]: 2
   });
+
+  expect(room.stories[0].estimationsConfidence).toBeUndefined();
+});
+
+test('Should produce storyEstimateGiven event with confidence property', async () => {
+  const {roomId, storyId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
+  const commandId = uuid();
+
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId,
+        value: 2,
+        confidence: 1
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'storyEstimateGiven');
+
+  const [storyEstimateGivenEvent] = producedEvents;
+
+  expect(storyEstimateGivenEvent.userId).toEqual(userId);
+  expect(storyEstimateGivenEvent.payload.storyId).toEqual(storyId);
+  expect(storyEstimateGivenEvent.payload.value).toBe(2);
+  expect(storyEstimateGivenEvent.payload.confidence).toBe(1); // confidence value on event payload
+
+  expect(room.stories.length).toBe(1);
+  expect(room.stories[0].estimations).toEqual({
+    [userId]: 2
+  });
+
+  // confidence stored separately on store object
+  expect(room.stories[0].estimationsConfidence).toEqual({
+    [userId]: 1
+  });
 });
 
 test('Should produce "revealed" event if everybody (allowed) estimated ', async () => {

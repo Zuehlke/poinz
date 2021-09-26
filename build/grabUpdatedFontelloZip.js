@@ -4,7 +4,7 @@ const fs = require('fs-extra');
 const {exec} = require('child_process');
 const del = require('del');
 
-const execPromised = Promise.promisify(exec);
+const execPromised = util.promisify(exec);
 
 const POINZ_CLIENT_FONT_DIR = path.resolve(__dirname, '../client/app/assets/font');
 

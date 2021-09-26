@@ -43,6 +43,7 @@ test('You join an existing room', () => {
   );
 
   expect(modifiedState.room.autoReveal).toBe(true);
+  expect(modifiedState.room.withConfidence).toBe(false);
   expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
   expect(modifiedState.room.passwordProtected).toBe(false);
   expect(getOwnUserId(modifiedState)).toEqual(ourUserId); // we got the userId from the server, correctly set to state
@@ -80,7 +81,7 @@ test('You join an existing room', () => {
   // the estimations in a separate object on the state
   expect(getEstimations(modifiedState)).toEqual({
     [storyId]: {
-      [otherUserId]: 4
+      [otherUserId]: {value: 4, confidence: 1}
     }
   });
 
@@ -169,7 +170,8 @@ test('You join an existing room, the other leaves', () => {
 
   expect(getEstimations(modifiedState)).toEqual({
     [storyId]: {
-      [otherUserId]: 4 // we keep estimations of users.  mainly because we want to still have these values when exporting the room (to json file)
+      // we keep estimations of users.  mainly because we want to still have these values when exporting the room (to json file)
+      [otherUserId]: {value: 4, confidence: 1}
     }
   });
 });

@@ -54,6 +54,7 @@ test('nonexisting room', async () => {
     ],
     cardConfig: defaultCardConfig, // default config is part of "joined" event payload, although it is not persisted on the room object (only if someone changes it with "setCardConfig")
     autoReveal: true,
+    withConfidence: false,
     passwordProtected: false
   });
 
@@ -148,6 +149,7 @@ test('existing room with matching user already in room (re-join) ', async () => 
     ],
     cardConfig: defaultCardConfig,
     autoReveal: true,
+    withConfidence: false,
     passwordProtected: false
   });
 
@@ -236,6 +238,7 @@ test('existing room with user match, command has no preset properties', async ()
     ],
     cardConfig: defaultCardConfig,
     autoReveal: true,
+    withConfidence: false,
     passwordProtected: false
   });
 
@@ -351,6 +354,7 @@ test('existing room but completely new user, command has no preset properties', 
     ],
     cardConfig: defaultCardConfig,
     autoReveal: true,
+    withConfidence: false,
     passwordProtected: false
   });
 

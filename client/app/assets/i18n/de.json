@@ -78,5 +78,12 @@
   "settle": "Schätzung festlegen auf \"%{label}\"",
   "settledOn": "Schätzung festgelegt auf \"%{label}\"",
   "numericalAverage": "Numerischer Durchschnitt ist %{value}",
-  "recommendation": "Empfehlung"
+  "recommendation": "Empfehlung",
+  "confidenceUnsure": "Unsicher",
+  "confidenceDefault": "Normal",
+  "confidenceVerySure": "Sehr sicher",
+  "confidence": "Schätz-Sicherheit",
+  "confidenceInfo": "Wenn die Schätz-Sicherheit aktiviert ist, können Benutzer angeben, ob sie unsicher, normal oder sehr sicher sind, wenn sie eine story schätzen.",
+  "toggleConfidence": "Schätz-Sicherheit aktivieren",
+  "includeUnsureEstimations": "Inklusive unsicherer Schätzungen"
 }

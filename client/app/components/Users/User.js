@@ -23,6 +23,7 @@ import {
 const User = ({
   user,
   selectedStory,
+  userEstimation,
   userHasEstimation,
   ownUserId,
   matchingCardConfig,
@@ -75,6 +76,7 @@ const User = ({
         <UserEstimationCard
           isExcluded={isExcluded}
           userHasEstimation={userHasEstimation}
+          userEstimation={userEstimation}
           revealed={revealed}
           matchingCardConfig={matchingCardConfig}
         />
@@ -90,6 +92,7 @@ const User = ({
 
 User.propTypes = {
   user: PropTypes.object,
+  userEstimation: PropTypes.object,
   userHasEstimation: PropTypes.bool,
   selectedStory: PropTypes.object,
   ownUserId: PropTypes.string,
@@ -101,14 +104,15 @@ User.propTypes = {
 export default connect(
   (state, props) => {
     const estimationsForStory = getEstimationsForCurrentlySelectedStory(state);
-    const userEstimationValue = estimationsForStory && estimationsForStory[props.user.id];
-    const userHasEstimation = userEstimationValue !== undefined && userEstimationValue !== null; // value could be "0" which is falsy, check for undefined
+    const userEstimation = estimationsForStory && estimationsForStory[props.user.id];
+    const userHasEstimation = userEstimation !== undefined;
 
     const matchingCardConfig = userHasEstimation
-      ? getMatchingCardConfig(state, userEstimationValue)
+      ? getMatchingCardConfig(state, userEstimation.value)
       : {};
 
     return {
+      userEstimation,
       userHasEstimation,
       matchingCardConfig,
       ownUserId: getOwnUserId(state),

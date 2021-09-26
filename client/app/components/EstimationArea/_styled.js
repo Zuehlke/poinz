@@ -66,6 +66,10 @@ export const StyledSelectedStory = styled.div`
   position: relative;
 `;
 
+export const StyledConfidenceButtons = styled.div`
+  margin-top: 8px;
+`;
+
 export const StyledCards = styled.div`
   display: flex;
   flex-wrap: wrap;

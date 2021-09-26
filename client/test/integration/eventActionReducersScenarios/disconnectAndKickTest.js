@@ -37,7 +37,7 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
 
   // also the estimation of the disconnected user is still in state
   expect(getEstimations(modifiedState)[addedEvt.payload.storyId]).toEqual({
-    [joinedEvtTwo.userId]: 8
+    [joinedEvtTwo.userId]: {value: 8, confidence: 0}
   });
 
   const kickedEvent = scenario.getSingleNextEvent();
@@ -55,6 +55,6 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
 
   // estimation values are kept, even for kicked users
   expect(getEstimations(modifiedState)[addedEvt.payload.storyId]).toEqual({
-    [joinedEvtTwo.userId]: 8
+    [joinedEvtTwo.userId]: {value: 8, confidence: 0}
   });
 });

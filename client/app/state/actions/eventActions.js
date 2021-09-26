@@ -38,6 +38,8 @@ export const EVENT_ACTION_TYPES = {
   cardConfigSet: 'CARD_CONFIG_SET',
   autoRevealOn: 'AUTO_REVEAL_ON',
   autoRevealOff: 'AUTO_REVEAL_OFF',
+  confidenceOn: 'CONFIDENCE_ON',
+  confidenceOff: 'CONFIDENCE_OFF',
   passwordSet: 'PASSWORD_SET',
   passwordCleared: 'PASSWORD_CLEARED',
   tokenIssued: 'TOKEN_ISSUED'

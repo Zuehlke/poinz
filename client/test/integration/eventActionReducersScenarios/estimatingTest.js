@@ -50,7 +50,7 @@ test('Estimation with two users', () => {
 
   expect(getEstimations(modifiedState)).toEqual({
     [storyIdOne]: {
-      [joinedEvtOne.userId]: 3
+      [joinedEvtOne.userId]: {value: 3, confidence: 0}
     }
   });
 
@@ -64,8 +64,8 @@ test('Estimation with two users', () => {
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getNextEvents(2)); // both did estimate
   expect(getEstimations(modifiedState)).toEqual({
     [storyIdOne]: {
-      [joinedEvtOne.userId]: 5,
-      [joinedEvtTwo.userId]: 5
+      [joinedEvtOne.userId]: {value: 5, confidence: 0},
+      [joinedEvtTwo.userId]: {value: 5, confidence: 1}
     }
   });
 

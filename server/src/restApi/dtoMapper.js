@@ -47,11 +47,12 @@ export function mapRoomStateDto(room) {
   if (!room) {
     return undefined;
   }
-  const {autoReveal, id, selectedStory, stories, users, cardConfig} = room;
+  const {id, autoReveal, withConfidence, selectedStory, stories, users, cardConfig} = room;
 
   return {
-    autoReveal,
     id,
+    autoReveal,
+    withConfidence,
     selectedStory,
     stories,
     users,

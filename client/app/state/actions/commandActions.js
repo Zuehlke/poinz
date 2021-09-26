@@ -135,13 +135,14 @@ export const selectNextStory = () => (dispatch, getState, sendCommand) => {
   }
 };
 
-export const giveStoryEstimate = (value) => (dispatch, getState, sendCommand) => {
+export const giveStoryEstimate = (value, confidence) => (dispatch, getState, sendCommand) => {
   const state = getState();
   sendCommand({
     name: 'giveStoryEstimate',
     payload: {
       storyId: getSelectedStoryId(state),
-      value
+      value,
+      confidence
     }
   });
 };
@@ -222,6 +223,13 @@ export const toggleExcluded = (userId) => (dispatch, getState, sendCommand) => {
 export const toggleAutoReveal = () => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'toggleAutoReveal',
+    payload: {}
+  });
+};
+
+export const toggleConfidence = () => (dispatch, getState, sendCommand) => {
+  sendCommand({
+    name: 'toggleConfidence',
     payload: {}
   });
 };

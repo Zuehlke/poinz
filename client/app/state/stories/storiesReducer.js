@@ -128,7 +128,7 @@ export default function storiesReducer(state = storiesInitialState, action, ownU
 
 /**
  * Index given stories array by storyId into a map.
- * In our frontend the stories are not held as array, but as map. Estimations are deleted (kept separate)
+ * In our frontend the stories are not held as array, but as map. Estimations & Estimations-Confidence are deleted (kept separate)
  *
  * @param {object[]} storiesArray Array of story objects as in payload of backend events
  * @return {*}
@@ -137,6 +137,7 @@ function indexStories(storiesArray) {
   return (storiesArray || []).reduce((total, stry) => {
     total[stry.id] = {...stry};
     delete total[stry.id].estimations;
+    delete total[stry.id].estimationsConfidence;
     return total;
   }, {});
 }

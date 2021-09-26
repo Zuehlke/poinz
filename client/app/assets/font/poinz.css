@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'poinz';
-  src: url('../font/poinz.eot?72324671');
-  src: url('../font/poinz.eot?72324671#iefix') format('embedded-opentype'),
-       url('../font/poinz.woff2?72324671') format('woff2'),
-       url('../font/poinz.woff?72324671') format('woff'),
-       url('../font/poinz.ttf?72324671') format('truetype'),
-       url('../font/poinz.svg?72324671#poinz') format('svg');
+  src: url('../font/poinz.eot?52716672');
+  src: url('../font/poinz.eot?52716672#iefix') format('embedded-opentype'),
+       url('../font/poinz.woff2?52716672') format('woff2'),
+       url('../font/poinz.woff?52716672') format('woff'),
+       url('../font/poinz.ttf?52716672') format('truetype'),
+       url('../font/poinz.svg?52716672#poinz') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'poinz';
-    src: url('../font/poinz.svg?72324671#poinz') format('svg');
+    src: url('../font/poinz.svg?52716672#poinz') format('svg');
   }
 }
 */
@@ -73,6 +73,7 @@
 .icon-circle-empty:before { content: '\f10c'; } /* '' */
 .icon-spinner:before { content: '\f110'; } /* '' */
 .icon-code:before { content: '\f121'; } /* '' */
+.icon-help-1:before { content: '\f128'; } /* '' */
 .icon-attention-alt:before { content: '\f12a'; } /* '' */
 .icon-lock-open-alt:before { content: '\f13e'; } /* '' */
 .icon-level-up:before { content: '\f148'; } /* '' */

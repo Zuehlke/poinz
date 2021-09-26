@@ -17,16 +17,16 @@ const defaultCardConfig = [
 
 test('simple', () => {
   const estimationObjectForOneStory = {
-    'userId-1': 3,
-    'userId-2': 5,
-    'userId-3': 5,
-    'userId-4': 5,
-    'userId-5': '3'
+    'userId-1': {value: 3},
+    'userId-2': {value: 5},
+    'userId-3': {value: 5},
+    'userId-4': {value: 5},
+    'userId-5': {value: '3'}
   };
 
   const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
-
-  expect(summary).toEqual({
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
     lowest: 3,
     highest: 5,
     average: 4.2,
@@ -39,22 +39,58 @@ test('simple', () => {
   });
 });
 
+test('simple with confidence', () => {
+  const estimationObjectForOneStory = {
+    'userId-1': {value: 3, confidence: 0},
+    'userId-2': {value: 5, confidence: -1},
+    'userId-3': {value: 5, confidence: -1},
+    'userId-4': {value: 5, confidence: 1},
+    'userId-5': {value: '3'}
+  };
+
+  const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
+    lowest: 3,
+    highest: 5,
+    average: 4.2,
+    recommendation: 5,
+    estimationCount: 5,
+    estimatedValues: {
+      5: 3,
+      3: 2
+    }
+  });
+
+  expect(summary[1]).toEqual({
+    lowest: 3,
+    highest: 5,
+    average: 3.67,
+    recommendation: 5,
+    estimationCount: 3,
+    estimatedValues: {
+      5: 1,
+      3: 2
+    }
+  });
+});
+
 /*
  as of #192, we ignore negative values, which represent by default the "special" cards "?"  "BIG", etc.
  i.e. we also do not count the users that estimated / choose these (negative) cards => average is calculated:  Sum of all positive values devided by number of users that estimated positive values.
  */
 test('negative values', () => {
   const estimationObjectForOneStory = {
-    'userId-1': -1,
-    'userId-2': -2,
-    'userId-3': 5,
-    'userId-4': 5,
-    'userId-5': '8'
+    'userId-1': {value: -1},
+    'userId-2': {value: -2},
+    'userId-3': {value: 5},
+    'userId-4': {value: 5},
+    'userId-5': {value: '8'}
   };
 
   const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
-
-  expect(summary).toEqual({
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
     lowest: -2,
     highest: 8,
     average: 6,
@@ -74,14 +110,14 @@ test('negative values', () => {
  */
 test('only negative values', () => {
   const estimationObjectForOneStory = {
-    'userId-1': -1,
-    'userId-2': -2,
-    'userId-3': -1
+    'userId-1': {value: -1},
+    'userId-2': {value: -2},
+    'userId-3': {value: -1}
   };
 
   const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
-
-  expect(summary).toEqual({
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
     lowest: -2,
     highest: -1,
     average: undefined,
@@ -96,13 +132,13 @@ test('only negative values', () => {
 
 test('decimal values', () => {
   const estimationObjectForOneStory = {
-    'userId-1': 0.5,
-    'userId-2': 5.5
+    'userId-1': {value: 0.5},
+    'userId-2': {value: 5.5}
   };
 
   const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
-
-  expect(summary).toEqual({
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
     lowest: 0.5,
     highest: 5.5,
     average: 3,
@@ -117,14 +153,14 @@ test('decimal values', () => {
 
 test('rounding average', () => {
   const estimationObjectForOneStory = {
-    'userId-1': 1,
-    'userId-2': 3,
-    'userId-3': 13
+    'userId-1': {value: 1},
+    'userId-2': {value: 3},
+    'userId-3': {value: 13}
   };
 
   const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
-
-  expect(summary).toEqual({
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
     lowest: 1,
     highest: 13,
     average: 5.67, // <-- round to two digit after the decimal point
@@ -142,8 +178,15 @@ test('empty', () => {
   const estimationObjectForOneStory = {};
 
   const summary = getEstimationSummary(estimationObjectForOneStory, defaultCardConfig);
-
-  expect(summary).toEqual({
+  expect(summary.length).toBe(2);
+  expect(summary[0]).toEqual({
+    lowest: undefined,
+    highest: undefined,
+    average: undefined,
+    estimationCount: 0,
+    estimatedValues: {}
+  });
+  expect(summary[1]).toEqual({
     lowest: undefined,
     highest: undefined,
     average: undefined,

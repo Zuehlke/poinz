@@ -19,6 +19,7 @@ import setAvatar from './setAvatar';
 import toggleExclude from './toggleExclude';
 import setCardConfig from './setCardConfig';
 import toggleAutoReveal from './toggleAutoReveal';
+import toggleConfidence from './toggleConfidence';
 import setPassword from './setPassword';
 
 export default {
@@ -43,6 +44,7 @@ export default {
   toggleExclude,
   setCardConfig,
   toggleAutoReveal,
+  toggleConfidence,
   setPassword
 };
 

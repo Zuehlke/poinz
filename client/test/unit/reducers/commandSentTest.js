@@ -71,7 +71,7 @@ test(COMMAND_SENT + ' : clearStoryEstimate  ', () => {
   startingState.stories.selectedStoryId = storyId;
   startingState.estimations = {
     [storyId]: {
-      [userId]: 8
+      [userId]: {value: 8}
     }
   };
 

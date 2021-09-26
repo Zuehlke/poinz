@@ -281,6 +281,12 @@
       "css": "user",
       "code": 59418,
       "src": "fontawesome"
+    },
+    {
+      "uid": "ce3cf091d6ebd004dd0b52d24074e6e3",
+      "css": "help-1",
+      "code": 61736,
+      "src": "fontawesome"
     }
   ]
 }

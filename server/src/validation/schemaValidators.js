@@ -79,7 +79,11 @@ export function roomSchemaValidatorFactory() {
   function validate(room) {
     const valid = tvInstance.validate(room, roomSchema); // we no longer use validateMultiple. quite a big impact on performance
     if (!valid) {
-      throw new Error('Invalid room object: ' + formatValidationErrorMessage(tvInstance.error));
+      throw new Error(
+        `Invalid room object: ${formatValidationErrorMessage(
+          tvInstance.error
+        )}    See /server/src/roomSchema.js if you want to modify the room schema...`
+      );
     }
   }
 }

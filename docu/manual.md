@@ -19,6 +19,7 @@ This page gives you an overview on the features and most common use cases.
   * [Settle](#settle)
   * [Consensus](#consensus)
   * [Manually reveal estimates](#manually-reveal-estimates)
+  * [Estimating with "Confidence Levels"](#estimating-with-confidence-levels)
 * [Settings](#settings)
   * [User Settings](#user-settings)
   * [Room Settings](#room-settings)

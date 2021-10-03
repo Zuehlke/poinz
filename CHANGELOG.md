@@ -1,3 +1,7 @@
+### 0.13.0: 2021-10-03
+
+* Confidence Levels : Allow users in the room to specify how confident they are when estimating a story (#178, thanks to @gotdibbs and @gvheertum)
+
 ### 0.12.0: 2021-09-17
 
 * Display "Recommendation" in Estimation Summary: the first card that is larger than the numerical average. Eexcept numerical average is within 10% of the lower card. (#207, thanks to #ecaron)

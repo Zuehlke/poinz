@@ -16,19 +16,19 @@ import {getCardConfigInOrder, getMatchingCardConfig} from '../../state/room/room
 import EstimationSummaryCard from './EstimationSummaryCard';
 import ValueBadge from '../common/ValueBadge';
 
-import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
+import {StyledCardsWrapper, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
 const EstimationSummary = ({
-                             withConfidence,
-                             summaries,
-                             usersInRoomCount,
-                             cardConfig,
-                             consensusInfo,
-                             settleEstimation
-                           }) => {
+  withConfidence,
+  summaries,
+  usersInRoomCount,
+  cardConfig,
+  consensusInfo,
+  settleEstimation
+}) => {
   const {t} = useContext(L10nContext);
 
   const [includeUnsureEstimations, setIncludeUnsureEstimations] = useState(true);
@@ -41,10 +41,15 @@ const EstimationSummary = ({
     <StyledEstimationSummary data-testid="estimationSummary">
       <h5>{t('estimationSummary')}</h5>
 
-      {withConfidence &&
-      <p onClick={() => setIncludeUnsureEstimations(!includeUnsureEstimations)} className="clickable"  >
-        <i className={includeUnsureEstimations ? 'icon-check' : 'icon-check-empty'}></i> {t('includeUnsureEstimations')}
-      </p>}
+      {withConfidence && (
+        <p
+          onClick={() => setIncludeUnsureEstimations(!includeUnsureEstimations)}
+          className="clickable"
+        >
+          <i className={includeUnsureEstimations ? 'icon-check' : 'icon-check-empty'}></i>{' '}
+          {t('includeUnsureEstimations')}
+        </p>
+      )}
 
       <StyledEstimationSummaryList>
         <span>
@@ -70,7 +75,7 @@ const EstimationSummary = ({
         {settled && <span>{t('settledOn', {label: consensusInfo.label})}</span>}
       </StyledEstimationSummaryList>
 
-      <StyledCards>
+      <StyledCardsWrapper>
         {cardConfig.map((cardConfig) => (
           <EstimationSummaryCard
             t={t}
@@ -80,7 +85,7 @@ const EstimationSummary = ({
             count={summary.estimatedValues[cardConfig.value]}
           />
         ))}
-      </StyledCards>
+      </StyledCardsWrapper>
     </StyledEstimationSummary>
   );
 

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import Card from './Card';
 
-import {StyledCards} from './_styled';
+import {StyledCards, StyledCardsWrapper} from './_styled';
 import {getOwnEstimate} from '../../state/estimations/estimationsSelectors';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
 import {clearStoryEstimate, giveStoryEstimate} from '../../state/actions/commandActions';
@@ -27,7 +27,7 @@ const Cards = ({
   const [confidence, setConfidence] = useState(0);
 
   return (
-    <React.Fragment>
+    <StyledCards>
       {withConfidence && (
         <ConfidenceButtons
           onConfidenceChange={onConfidenceChange}
@@ -35,7 +35,7 @@ const Cards = ({
         />
       )}
 
-      <StyledCards>
+      <StyledCardsWrapper>
         {cardConfig.map((config) => (
           <Card
             key={'card_' + config.value}
@@ -44,8 +44,8 @@ const Cards = ({
             onClick={() => onCardClick(config.value)}
           />
         ))}
-      </StyledCards>
-    </React.Fragment>
+      </StyledCardsWrapper>
+    </StyledCards>
   );
 
   function onConfidenceChange(conf) {

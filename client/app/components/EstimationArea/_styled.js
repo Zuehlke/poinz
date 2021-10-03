@@ -67,12 +67,33 @@ export const StyledSelectedStory = styled.div`
 `;
 
 export const StyledConfidenceButtons = styled.div`
-  margin-top: 8px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  @media ${device.desktop} {
+    display: block;
+  }
+`;
+
+export const StyledConfButton = styled.button`
+  font-size: small;
+  box-shadow: ${({active}) => (active ? 'inset 1px 2px 12px -4px #424242' : 'inherit')};
+  background: ${({active}) => (active ? ' #afaeae' : '#e6e6e6')};
 `;
 
 export const StyledCards = styled.div`
+  margin-top: 16px;
+`;
+
+export const StyledCardsWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+
+  @media ${device.desktop} {
+    justify-content: flex-start;
+  }
 `;
 
 export const StyledCard = styled.button`

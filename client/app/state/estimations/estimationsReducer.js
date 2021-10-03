@@ -45,7 +45,7 @@ export default function estimationsReducer(state = estimationsInitialState, acti
         ...state,
         [event.payload.storyId]: {
           ...state[event.payload.storyId],
-          [event.userId]: event.payload.value
+          [event.userId]: {value: event.payload.value, confidence: event.payload.confidence || 0}
         }
       };
     case EVENT_ACTION_TYPES.storyEstimateCleared: {
@@ -68,15 +68,25 @@ export default function estimationsReducer(state = estimationsInitialState, acti
 }
 
 /**
- * index estimations from given array of stories into map. storyId -> EstimationsMap.
- * EstimationsMap is (unchanged) userId -> value
+ * index estimations from given array of stories into a map: storyId -> EstimationsMap.
+ * EstimationsMap is an object that maps userId -> value
  *
  * @param {object[]} storiesArray Array of stories objects as in payload of backend events
  * @return {*}
  */
 function indexEstimations(storiesArray) {
-  return (storiesArray || []).reduce((total, stry) => {
-    total[stry.id] = stry.estimations;
-    return total;
+  return (storiesArray || []).reduce((allEstimations, stry) => {
+    const storyConfidences = stry.estimationsConfidence || {};
+
+    allEstimations[stry.id] = Object.entries(stry.estimations).reduce(
+      (estmForOneStory, currentStoryEstmEntry) => {
+        const userId = currentStoryEstmEntry[0];
+        const estmValue = currentStoryEstmEntry[1];
+        estmForOneStory[userId] = {value: estmValue, confidence: storyConfidences[userId] || 0};
+        return estmForOneStory;
+      },
+      {}
+    );
+    return allEstimations;
   }, {});
 }

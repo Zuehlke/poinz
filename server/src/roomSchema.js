@@ -18,6 +18,9 @@ const storySchema = {
     estimations: {
       type: 'object'
     },
+    estimationsConfidence: {
+      type: 'object'
+    },
     createdAt: {
       type: 'number'
     },
@@ -96,6 +99,9 @@ const roomSchema = {
       type: 'number'
     },
     autoReveal: {
+      type: 'boolean'
+    },
+    withConfidence: {
       type: 'boolean'
     },
     markedForDeletion: {

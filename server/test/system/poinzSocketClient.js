@@ -280,14 +280,15 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
     });
   }
 
-  function giveEstimate(roomId, userId, storyId, value) {
+  function giveEstimate(roomId, userId, storyId, value, confidence) {
     return sendCommand({
       name: 'giveStoryEstimate',
       roomId,
       userId,
       payload: {
         storyId,
-        value
+        value,
+        confidence
       }
     });
   }

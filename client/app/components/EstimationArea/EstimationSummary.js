@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -16,13 +16,14 @@ import {getCardConfigInOrder, getMatchingCardConfig} from '../../state/room/room
 import EstimationSummaryCard from './EstimationSummaryCard';
 import ValueBadge from '../common/ValueBadge';
 
-import {StyledCards, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
+import {StyledCardsWrapper, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 
 /**
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
 const EstimationSummary = ({
-  summary,
+  withConfidence,
+  summaries,
   usersInRoomCount,
   cardConfig,
   consensusInfo,
@@ -30,12 +31,25 @@ const EstimationSummary = ({
 }) => {
   const {t} = useContext(L10nContext);
 
+  const [includeUnsureEstimations, setIncludeUnsureEstimations] = useState(true);
+
+  const summary = includeUnsureEstimations ? summaries[0] : summaries[1];
   const allValuesSame = Object.keys(summary.estimatedValues).length === 1; // we cannot use "hasConsensus" property, because it is also set after (manually) "settling" the story.
   const settled = consensusInfo.hasConsensus && !allValuesSame;
 
   return (
     <StyledEstimationSummary data-testid="estimationSummary">
       <h5>{t('estimationSummary')}</h5>
+
+      {withConfidence && (
+        <p
+          onClick={() => setIncludeUnsureEstimations(!includeUnsureEstimations)}
+          className="clickable"
+        >
+          <i className={includeUnsureEstimations ? 'icon-check' : 'icon-check-empty'}></i>{' '}
+          {t('includeUnsureEstimations')}
+        </p>
+      )}
 
       <StyledEstimationSummaryList>
         <span>
@@ -61,7 +75,7 @@ const EstimationSummary = ({
         {settled && <span>{t('settledOn', {label: consensusInfo.label})}</span>}
       </StyledEstimationSummaryList>
 
-      <StyledCards>
+      <StyledCardsWrapper>
         {cardConfig.map((cardConfig) => (
           <EstimationSummaryCard
             t={t}
@@ -71,7 +85,7 @@ const EstimationSummary = ({
             count={summary.estimatedValues[cardConfig.value]}
           />
         ))}
-      </StyledCards>
+      </StyledCardsWrapper>
     </StyledEstimationSummary>
   );
 
@@ -81,8 +95,9 @@ const EstimationSummary = ({
 };
 
 EstimationSummary.propTypes = {
-  summary: PropTypes.object,
+  summaries: PropTypes.array,
   cardConfig: PropTypes.array,
+  withConfidence: PropTypes.bool,
   usersInRoomCount: PropTypes.number,
   consensusInfo: PropTypes.shape({
     hasConsensus: PropTypes.bool,
@@ -96,14 +111,16 @@ export default connect(
   (state) => {
     const estimations = getEstimationsForCurrentlySelectedStory(state);
     const cardConfig = getCardConfigInOrder(state);
-    const summary = getEstimationSummary(estimations, cardConfig);
-
-    summary.recommendationCard = getMatchingCardConfig(state, summary.recommendation);
+    const summaries = getEstimationSummary(estimations, cardConfig).map((s) => {
+      s.recommendationCard = getMatchingCardConfig(state, s.recommendation);
+      return s;
+    });
 
     return {
       usersInRoomCount: getUserCount(state),
       cardConfig,
-      summary,
+      summaries,
+      withConfidence: state.room.withConfidence,
       consensusInfo: {
         hasConsensus: hasSelectedStoryConsensus(state),
         value: getSelectedStoryConsensusValue(state),

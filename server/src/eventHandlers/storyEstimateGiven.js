@@ -4,13 +4,24 @@
 import {modifyStory} from './roomModifiers';
 
 const storyEstimateGivenEventHandler = (room, eventPayload, userId) => {
-  return modifyStory(room, eventPayload.storyId, (story) => ({
+  let modifiedRoom = modifyStory(room, eventPayload.storyId, (story) => ({
     ...story,
     estimations: {
       ...story.estimations,
       [userId]: eventPayload.value
     }
   }));
+
+  if (eventPayload.confidence) {
+    modifiedRoom = modifyStory(modifiedRoom, eventPayload.storyId, (story) => ({
+      ...story,
+      estimationsConfidence: {
+        ...story.estimationsConfidence,
+        [userId]: eventPayload.confidence
+      }
+    }));
+  }
+  return modifiedRoom;
 };
 
 export default storyEstimateGivenEventHandler;

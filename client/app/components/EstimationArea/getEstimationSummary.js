@@ -1,33 +1,38 @@
-const average = (values) => {
-  const positiveValuesOnly = values.filter((v) => v >= 0);
-  if (positiveValuesOnly.length < 1) {
-    return undefined;
-  }
-  return positiveValuesOnly.reduce((a, b) => a + b) / positiveValuesOnly.length;
-};
-
-const numberRoundedTwoDigit = (number) =>
-  typeof number !== 'undefined' ? parseFloat(number.toFixed(2)) : undefined;
-
 /**
  *
- * @param {object} estmForOneStory The estimation object from the redux state, mapping userIds (keys) to estimation values (values)
+ * @param {object} estmForOneStory The estimation object from the redux state, mapping userIds (keys) to  {estimation values and confidence}
  * @param {object[]} cardConfig The card configuration array
- * @return {{average: *, highest: number, estimationCount: number, lowest: number}}
+ * @return {object[]} Returns an array with two summaries!
+ *      - First Summary is the default (ignoring confidence)
+ *      - Second Summary is without "unsure" values
  */
 export default function getEstimationSummary(estmForOneStory, cardConfig) {
   const estmValues = Object.values(estmForOneStory);
   if (estmValues.length < 1) {
-    return {
+    return [-1, -1].fill({
       lowest: undefined,
       highest: undefined,
       average: undefined,
       recommendation: undefined,
       estimationCount: 0,
       estimatedValues: {}
-    };
+    });
   }
 
+  const ignoringConfidEstmValues = estmValues.map((ev) => ev.value);
+  const withoutUnsureEstmValues = estmValues
+    .filter(
+      (ev) => (ev.confidence !== undefined && ev.confidence >= 0) || ev.confidence === undefined
+    )
+    .map((ev) => ev.value);
+
+  return [
+    buildSummaryForValues(ignoringConfidEstmValues, cardConfig),
+    buildSummaryForValues(withoutUnsureEstmValues, cardConfig)
+  ];
+}
+
+function buildSummaryForValues(estmValues, cardConfig) {
   const estimationValues = estmValues.map((value) => {
     if (typeof value === 'string') {
       return parseFloat(value);
@@ -75,3 +80,14 @@ function getRecommendation(numericalAverage, cardConfig) {
 
   return diff <= 0.1 * cardLower ? cardLower : cardHigher;
 }
+
+const average = (values) => {
+  const positiveValuesOnly = values.filter((v) => v >= 0);
+  if (positiveValuesOnly.length < 1) {
+    return undefined;
+  }
+  return positiveValuesOnly.reduce((a, b) => a + b) / positiveValuesOnly.length;
+};
+
+const numberRoundedTwoDigit = (number) =>
+  typeof number !== 'undefined' ? parseFloat(number.toFixed(2)) : undefined;

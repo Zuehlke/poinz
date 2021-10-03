@@ -129,7 +129,7 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   // both estimate 5
   await client.cmdAndWait(client.cmds.giveEstimate(roomId, firstUserId, storyIdOne, 5));
   await client.cmdAndWait(
-    client.cmds.giveEstimate(roomId, secondUserId, storyIdOne, 5),
+    client.cmds.giveEstimate(roomId, secondUserId, storyIdOne, 5, 1),
     3 // given, revealed, consensus
   );
 
@@ -202,11 +202,11 @@ test('joinAndLeave ', async () => {
   await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
 
   await clientA.cmdAndWait(
-    clientA.cmds.giveEstimate(roomId, firstUserId, firstJoinEvents[3].payload.storyId, 4),
+    clientA.cmds.giveEstimate(roomId, firstUserId, firstJoinEvents[3].payload.storyId, 4, 1),
     3 // given, revealed, consensus
   );
 
-  // second user joins room with already a story in it
+  // second user joins room with already a estimated story in it
   await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
   await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
   await clientB.cmdAndWait(clientB.cmds.setEmail(roomId, secondUserId, 'test.johnny@gmail.com'));

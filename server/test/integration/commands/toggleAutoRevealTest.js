@@ -2,7 +2,7 @@ import {v4 as uuid} from 'uuid';
 
 import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
 
-test('Should produce autoRevealOff event', async () => {
+test('Should produce autoRevealOff & autoRevealOn events', async () => {
   const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 

@@ -4,6 +4,7 @@ import {storiesInitialState} from '../stories/storiesReducer';
 export const roomInitialState = {
   roomId: undefined,
   autoReveal: true,
+  withConfidence: false,
   passwordProtected: false,
   cardConfig: {
     ordered: [],
@@ -26,6 +27,7 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
       return {
         ...state,
         autoReveal: action.room.autoReveal,
+        withConfidence: action.room.withConfidence,
         passwordProtected: action.room.passwordProtected,
         cardConfig: {
           ordered: action.room.cardConfig,
@@ -40,6 +42,7 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
           ...state,
           roomId: event.roomId,
           autoReveal: event.payload.autoReveal,
+          withConfidence: event.payload.withConfidence,
           passwordProtected: event.payload.passwordProtected,
           cardConfig: {
             ordered: event.payload.cardConfig,
@@ -85,6 +88,16 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
       return {
         ...state,
         autoReveal: false
+      };
+    case EVENT_ACTION_TYPES.confidenceOn:
+      return {
+        ...state,
+        withConfidence: true
+      };
+    case EVENT_ACTION_TYPES.confidenceOff:
+      return {
+        ...state,
+        withConfidence: false
       };
     case EVENT_ACTION_TYPES.passwordSet:
       return {

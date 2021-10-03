@@ -97,12 +97,27 @@ export const StyledUserEstimation = styled.div`
 `;
 
 export const StyledUserEstimationGiven = styled(StyledUserEstimation)`
+  position: relative;
   border: 2px solid white;
   color: ${({revealed}) => (revealed ? 'white' : COLOR_LIGHTER_GREY)};
   background: ${({revealed, valueColor}) => (revealed ? valueColor : COLOR_LIGHT_GREY)};
 
   @media ${device.modernMobile} {
     border: 4px solid white;
+  }
+
+  > i {
+    font-size: small;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+  }
+
+  > i:last-child {
+    bottom: 4px;
+    left: 4px;
+    top: auto;
+    right: auto;
   }
 `;
 

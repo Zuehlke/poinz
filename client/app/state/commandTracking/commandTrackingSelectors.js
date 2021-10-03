@@ -52,7 +52,9 @@ const isGivingEstimate = (state, cardValue) => {
 
 const isClearingEstimate = (state, cardValue) => {
   const hasPendingClearCommand = hasMatchingPendingCommand(state, 'clearStoryEstimate');
-  return hasPendingClearCommand && cardValue === getOwnEstimate(state);
+  const ownEstimate = getOwnEstimate(state);
+  const hasEstimate = ownEstimate !== undefined;
+  return hasPendingClearCommand && hasEstimate && cardValue === ownEstimate.value;
 };
 
 /**

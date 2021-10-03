@@ -12,7 +12,13 @@ import {
  * the estimated value of this user (after reveal)
  * or even a invisible placeholder for excluded users
  */
-const UserEstimationCard = ({isExcluded, userHasEstimation, revealed, matchingCardConfig}) => {
+const UserEstimationCard = ({
+  isExcluded,
+  userEstimation,
+  userHasEstimation,
+  revealed,
+  matchingCardConfig
+}) => {
   const estimationValueToDisplay = userHasEstimation && revealed ? matchingCardConfig.label : 'Z';
 
   if (isExcluded) {
@@ -31,12 +37,30 @@ const UserEstimationCard = ({isExcluded, userHasEstimation, revealed, matchingCa
     );
   }
 
+  const showConfidenceMarker = !!(revealed && userEstimation.confidence);
+  const showHighConfMarker = showConfidenceMarker && userEstimation.confidence > 0;
+  const showLowConfMarker = showConfidenceMarker && userEstimation.confidence < 0;
+
   return (
     <StyledUserEstimationGiven
       revealed={revealed}
       valueColor={matchingCardConfig.color}
       data-testid={`${revealed ? 'revealed.' : ''}userEstimationGiven.${matchingCardConfig.value}`}
     >
+      {showHighConfMarker && (
+        <React.Fragment>
+          <i className="icon icon-attention-alt"></i>
+          <i className="icon icon-attention-alt"></i>
+        </React.Fragment>
+      )}
+
+      {showLowConfMarker && (
+        <React.Fragment>
+          <i className="icon icon-help-1"></i>
+          <i className="icon icon-help-1"></i>
+        </React.Fragment>
+      )}
+
       {estimationValueToDisplay}
     </StyledUserEstimationGiven>
   );
@@ -44,6 +68,7 @@ const UserEstimationCard = ({isExcluded, userHasEstimation, revealed, matchingCa
 
 UserEstimationCard.propTypes = {
   isExcluded: PropTypes.bool,
+  userEstimation: PropTypes.object,
   userHasEstimation: PropTypes.bool,
   revealed: PropTypes.bool,
   matchingCardConfig: PropTypes.object

@@ -78,6 +78,15 @@
   "settle": "Settle the estimation on \"%{label}\"",
   "settledOn": "Manually settled on \"%{label}\"",
   "numericalAverage": "Numerical average is %{value}",
-  "recommendation": "Recommendation"
-
+  "recommendation": "Recommendation",
+  "confidenceUnsure": "Unsure",
+  "confidenceDefault": "Default",
+  "confidenceVerySure": "Very sure",
+  "confidenceUnsureTitle": "I 'm not at all confident about this story",
+  "confidenceDefaultTitle": "Neither unsure nor very sure about this story",
+  "confidenceVerySureTitle": "I'm very confident about this story",
+  "confidence": "Confidence",
+  "confidenceInfo": "Allow users to specify whether they are unsure (not confident) or very sure (very confident) when estimating a story.",
+  "toggleConfidence": "Enable confidence",
+  "includeUnsureEstimations": "Include low confidence estimations"
 }

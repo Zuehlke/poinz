@@ -41,8 +41,8 @@ const changeStoryCommandHandler = {
   preCondition: (room, command) => {
     throwIfStoryTrashed(room, command.payload.storyId);
   },
-  fn: (room, command) => {
-    room.applyEvent('storyChanged', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('storyChanged', command.payload);
   }
 };
 

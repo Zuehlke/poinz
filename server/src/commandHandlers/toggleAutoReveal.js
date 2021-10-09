@@ -22,11 +22,11 @@ const schema = {
 
 const toggleAutoRevealCommandHandler = {
   schema,
-  fn: (room) => {
+  fn: (pushEvent, room) => {
     if (room.autoReveal) {
-      room.applyEvent('autoRevealOff', {});
+      pushEvent('autoRevealOff', {});
     } else {
-      room.applyEvent('autoRevealOn', {});
+      pushEvent('autoRevealOn', {});
     }
   }
 };

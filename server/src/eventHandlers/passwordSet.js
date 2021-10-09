@@ -1,15 +1,11 @@
 /**
  * user did set new password for room
  */
-const passwordSetEventHandler = (room, eventPayload, userId, modifyEventPayload) => {
-  const modifiedRoom = {
+const passwordSetEventHandler = (room, eventPayload) => {
+  return {
     ...room,
     password: eventPayload.password
   };
-
-  modifyEventPayload({}); // clear password from event payload. we don't want to send it to clients
-
-  return modifiedRoom;
 };
 
 export default passwordSetEventHandler;

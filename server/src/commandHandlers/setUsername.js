@@ -27,8 +27,8 @@ const schema = {
 
 const setUsernameCommandHandler = {
   schema,
-  fn: (room, command) => {
-    room.applyEvent('usernameSet', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('usernameSet', command.payload);
   }
 };
 

@@ -40,11 +40,11 @@ const restoreStoryCommandHandler = {
       );
     }
   },
-  fn: (room, command) => {
-    room.applyEvent('storyRestored', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('storyRestored', command.payload);
 
     if (!room.selectedStory) {
-      room.applyEvent('storySelected', {storyId: command.payload.storyId});
+      pushEvent('storySelected', {storyId: command.payload.storyId});
     }
   }
 };

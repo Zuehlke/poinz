@@ -28,8 +28,8 @@ const schema = {
 
 const setAvatarCommandHandler = {
   schema,
-  fn: (room, command) => {
-    room.applyEvent('avatarSet', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('avatarSet', command.payload);
   }
 };
 

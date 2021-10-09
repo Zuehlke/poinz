@@ -34,11 +34,11 @@ const trashStoryCommandHandler = {
   preCondition: (room, command) => {
     getMatchingStoryOrThrow(room, command.payload.storyId);
   },
-  fn: (room, command) => {
-    room.applyEvent('storyTrashed', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('storyTrashed', command.payload);
 
     if (room.selectedStory === command.payload.storyId) {
-      room.applyEvent('storySelected', {storyId: findNextStoryToSelect(room, command)});
+      pushEvent('storySelected', {storyId: findNextStoryToSelect(room, command)});
     }
   }
 };

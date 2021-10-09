@@ -28,11 +28,11 @@ const schema = {
 
 const leaveRoomCommandHandler = {
   schema,
-  fn: (room, command) => {
+  fn: (pushEvent, room, command) => {
     if (command.payload.connectionLost) {
-      room.applyEvent('connectionLost', {});
+      pushEvent('connectionLost', {});
     } else {
-      room.applyEvent('leftRoom', {});
+      pushEvent('leftRoom', {});
     }
   }
 };

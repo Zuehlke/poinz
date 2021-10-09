@@ -44,8 +44,8 @@ const clearStoryEstimateCommandHandler = {
       throw new Error('Users marked as excluded cannot clear estimations!');
     }
   },
-  fn: (room, command) => {
-    room.applyEvent('storyEstimateCleared', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('storyEstimateCleared', command.payload);
   }
 };
 

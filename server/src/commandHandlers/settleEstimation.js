@@ -44,8 +44,8 @@ const settleEstimationCommandHandler = {
       throw new Error('You cannot settle estimation for a story that was NOT YET revealed!');
     }
   },
-  fn: (room, command) => {
-    room.applyEvent('consensusAchieved', {
+  fn: (pushEvent, room, command) => {
+    pushEvent('consensusAchieved', {
       storyId: command.payload.storyId,
       value: command.payload.value,
       settled: true

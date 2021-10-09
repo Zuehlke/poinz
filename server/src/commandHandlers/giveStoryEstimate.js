@@ -56,11 +56,11 @@ const giveStoryEstimateCommandHandler = {
       throw new Error('Users that are excluded from estimations cannot give estimations!');
     }
   },
-  fn: (room, command, userId) => {
+  fn: (pushEvent, room, command, userId) => {
     // currently estimation value is also sent to clients (hidden there)
     // user could "sniff" network traffic and see estimations of colleagues...
     // this could be improved in the future.. (e.g. not send value with "storyEstimateGiven" -> but send all values later with "revealed" )
-    room.applyEvent('storyEstimateGiven', command.payload);
+    pushEvent('storyEstimateGiven', command.payload);
 
     if (!room.autoReveal) {
       // if room has autoReveal disabled, we can stop here
@@ -69,13 +69,13 @@ const giveStoryEstimateCommandHandler = {
 
     const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
     if (allValidUsersEstimated(room, matchingStory, userId)) {
-      room.applyEvent('revealed', {
+      pushEvent('revealed', {
         storyId: command.payload.storyId,
         manually: false
       });
 
       if (allEstimationsSame(matchingStory, userId, command.payload.value)) {
-        room.applyEvent('consensusAchieved', {
+        pushEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value
         });

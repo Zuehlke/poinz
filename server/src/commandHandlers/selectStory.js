@@ -32,8 +32,8 @@ const selectStoryCommandHandler = {
   preCondition: (room, command) => {
     throwIfStoryTrashed(room, command.payload.storyId);
   },
-  fn: (room, command) => {
-    room.applyEvent('storySelected', {storyId: command.payload.storyId});
+  fn: (pushEvent, room, command) => {
+    pushEvent('storySelected', {storyId: command.payload.storyId});
   }
 };
 

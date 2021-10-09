@@ -40,8 +40,8 @@ const deleteStoryCommandHandler = {
       );
     }
   },
-  fn: (room, command) => {
-    room.applyEvent('storyDeleted', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('storyDeleted', command.payload);
   }
 };
 

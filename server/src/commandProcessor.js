@@ -223,12 +223,14 @@ export default function commandProcessorFactory(
         const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
 
         if (!updatedRoom) {
-          throw new Error('Fatal error: Event Handlers must return the room object!' + eventName);
+          throw new Error(
+            `Fatal error: Event Handlers must return the room object! event "${eventName}"`
+          );
         }
 
         if (updatedRoom === currentRoom) {
           throw new Error(
-            'Fatal error: Event Handlers must not return same room object! ' + eventName
+            `Fatal error: Event Handlers must not return same room object! event "${eventName}"`
           );
         }
 

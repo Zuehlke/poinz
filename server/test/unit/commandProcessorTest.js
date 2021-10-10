@@ -139,6 +139,79 @@ test('process a dummy command with No Handler ( and thus no schema )', () => {
   ).rejects.toThrow('Cannot validate command, no matching schema found for "justACommand"!');
 });
 
+test('process a dummy command where event handler does not return room object', () => {
+  const processor = processorFactory(
+    {
+      setPropertyCommand: {
+        canCreateRoom: true,
+        skipUserIdRoomCheck: true,
+        fn: (pushEvent) => {
+          pushEvent('propertySetEvent', {});
+        },
+        schema: {$ref: 'command'}
+      }
+    },
+    baseCommandSchema,
+    {
+      propertySetEvent: () => {
+        return null;
+      }
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        id: uuid(),
+        roomId: 'my-test-room',
+        name: 'setPropertyCommand',
+        payload: {}
+      },
+      uuid()
+    )
+  ).rejects.toThrow(
+    'Fatal error: Event Handlers must return the room object! event "propertySetEvent"'
+  );
+});
+
+test('process a dummy command where event handler does return same room object', () => {
+  const processor = processorFactory(
+    {
+      setPropertyCommand: {
+        canCreateRoom: true,
+        skipUserIdRoomCheck: true,
+        fn: (pushEvent) => {
+          pushEvent('propertySetEvent', {});
+        },
+        schema: {$ref: 'command'}
+      }
+    },
+    baseCommandSchema,
+    {
+      propertySetEvent: (room) => {
+        room.someProperty = 'one';
+        return room;
+      }
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        id: uuid(),
+        roomId: 'my-test-room',
+        name: 'setPropertyCommand',
+        payload: {}
+      },
+      uuid()
+    )
+  ).rejects.toThrow(
+    'Fatal error: Event Handlers must not return same room object! event "propertySetEvent"'
+  );
+});
+
 test('process a dummy command where command handler produced unknown event', () => {
   const processor = processorFactory(
     {

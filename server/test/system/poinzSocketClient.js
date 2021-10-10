@@ -23,7 +23,6 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
   });
 
   return {
-    sendCommand,
     cmdAndWait,
     waitForEvents,
     getAllReceivedEvents,

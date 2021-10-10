@@ -1,5 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import path from 'path';
+import {promises as fs, constants as fsConst} from 'fs';
 
 import poinzSocketClientFactory from './poinzSocketClient';
 
@@ -9,19 +10,18 @@ const clientEventActionReducerScenarioDir = path.resolve(
 );
 
 /**
- *  Creates real-live lists of events by firing commands to the backend. (not really a test, no assertions here)
- *  these "scenarios" are used for frontend reducer unit tests.
- *  We ensure that the frontend reducer tests use valid backend events!
+ *  These tests create real-live lists of events by firing commands to the backend. (not really a test, no assertions here)
+ *  These "scenarios" are used for frontend reducer unit tests (redux). We ensure that the frontend reducer tests use valid backend events!
  *
  *  This needs a running Poinz backend on localhost:3000
  *
- *  This writes json files to the client directory!
+ *  This writes json files to the client directory (if there are changes in the produced events apart from the ever-changing uuids)!
  *
- *  See client/test/integration/eventActionReducersScenarios/README.md
+ *  See /docu/technicalDocu.md for further information
  */
 
 test('backlogModifyingTest: Adding Stories, editing them, trash/restore and delete them', async () => {
-  const outputFile = path.join(clientEventActionReducerScenarioDir, 'backlogModifyingTest.json');
+  const outputFilename = 'backlogModifyingTest.json';
 
   const client = poinzSocketClientFactory();
 
@@ -86,12 +86,12 @@ test('backlogModifyingTest: Adding Stories, editing them, trash/restore and dele
   );
 
   // in the end, write to file and close socket
-  await client.dumpAllEvents(outputFile);
+  await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
   client.disconnect();
 });
 
 test('estimatingTest: Adding Stories, estimate them', async () => {
-  const outputFile = path.join(clientEventActionReducerScenarioDir, 'estimatingTest.json');
+  const outputFilename = 'estimatingTest.json';
 
   const client = poinzSocketClientFactory();
 
@@ -106,6 +106,9 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
 
   await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
+
+  // activate confidence levels on this room
+  await client.cmdAndWait(client.cmds.toggleConfidence(roomId, firstUserId));
 
   // first user adds two stories
   const [storyAddedOne] = await client.cmdAndWait(
@@ -137,12 +140,12 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   await client.cmdAndWait(client.cmds.newRound(roomId, secondUserId, storyIdOne));
 
   // in the end, write to file and close socket
-  await client.dumpAllEvents(outputFile);
+  await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
   client.disconnect();
 });
 
 test('disconnectAndKickTest: two users, one disconnects, kick him', async () => {
-  const outputFile = path.join(clientEventActionReducerScenarioDir, 'disconnectAndKickTest.json');
+  const outputFilename = 'disconnectAndKickTest.json';
 
   // we need two clients, since on "connectionLost" , server removes socket of "leaving" user from room
   const clientA = poinzSocketClientFactory();
@@ -178,16 +181,13 @@ test('disconnectAndKickTest: two users, one disconnects, kick him', async () => 
   );
 
   // in the end, write to file and close socket
-  await clientA.dumpAllEvents(outputFile);
+  await dumpEventsToFile(clientA.getAllReceivedEvents(), outputFilename);
   clientA.disconnect();
   clientB.disconnect();
 });
 
 test('joinAndLeave ', async () => {
-  const outputFile = path.join(
-    clientEventActionReducerScenarioDir,
-    'roomJoiningAndLeavingTest.json'
-  );
+  const outputFilename = 'roomJoiningAndLeavingTest.json';
 
   // we need two clients, since on "connectionLost" and "leftRoom", server removes socket of "leaving" user from room
   const clientA = poinzSocketClientFactory();
@@ -215,16 +215,13 @@ test('joinAndLeave ', async () => {
   await clientB.waitForEvents(cmdId, 1); // leftRoom
 
   // in the end, write to file and close socket
-  await clientA.dumpAllEvents(outputFile);
+  await dumpEventsToFile(clientA.getAllReceivedEvents(), outputFilename);
   clientA.disconnect();
   clientB.disconnect();
 });
 
 test('joinAndLeaveWithPassword ', async () => {
-  const outputFile = path.join(
-    clientEventActionReducerScenarioDir,
-    'roomJoiningAndLeavingWithPasswordTest.json'
-  );
+  const outputFilename = 'roomJoiningAndLeavingWithPasswordTest.json';
 
   const roomId = uuid();
 
@@ -244,15 +241,12 @@ test('joinAndLeaveWithPassword ', async () => {
   );
 
   // in the end, write to file and close socket
-  await client.dumpAllEvents(outputFile);
+  await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
   client.disconnect();
 });
 
 test('resetAndClearPassword ', async () => {
-  const outputFile = path.join(
-    clientEventActionReducerScenarioDir,
-    'resetAndClearPasswordTest.json'
-  );
+  const outputFilename = 'resetAndClearPasswordTest.json';
 
   const roomId = uuid();
 
@@ -270,12 +264,12 @@ test('resetAndClearPassword ', async () => {
   await client.cmdAndWait(client.cmds.setPassword(roomId, userId, ''));
 
   // in the end, write to file and close socket
-  await client.dumpAllEvents(outputFile);
+  await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
   client.disconnect();
 });
 
 test('includeAndExcludeTest: two users, one excludes and includes himself. Then second user excludes&includes first user', async () => {
-  const outputFile = path.join(clientEventActionReducerScenarioDir, 'includeAndExcludeTest.json');
+  const outputFilename = 'includeAndExcludeTest.json';
 
   const client = poinzSocketClientFactory();
 
@@ -295,12 +289,12 @@ test('includeAndExcludeTest: two users, one excludes and includes himself. Then 
   await client.cmdAndWait(client.cmds.toggleExclude(roomId, secondUserId, firstUserId));
 
   // in the end, write to file and close socket
-  await client.dumpAllEvents(outputFile);
+  await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
   client.disconnect();
 });
 
 test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', async () => {
-  const outputFile = path.join(clientEventActionReducerScenarioDir, 'roomSettingsTest.json');
+  const outputFilename = 'roomSettingsTest.json';
 
   const client = poinzSocketClientFactory();
 
@@ -321,6 +315,70 @@ test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', asyn
   await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
 
   // in the end, write to file and close socket
-  await client.dumpAllEvents(outputFile);
+  await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);
   client.disconnect();
 });
+
+/**
+ *
+ * @param {object[]} events
+ * @param {string} outputFilename
+ */
+async function dumpEventsToFile(events, outputFilename) {
+  const outputFullPath = path.resolve(clientEventActionReducerScenarioDir, outputFilename);
+  const outputFileExists = await fileExists(outputFullPath);
+
+  if (!outputFileExists) {
+    await fs.writeFile(outputFullPath, JSON.stringify(events), 'utf-8');
+  } else {
+    // usually, the output json already exists (for existing tests, output files are committed to the repository)
+    // in this case, perform a "id-ignoring" diff
+    const previousEvents = await readJsonFile(outputFullPath);
+    if (
+      JSON.stringify(resetIdAndTokenProperties(previousEvents)) !==
+      JSON.stringify(resetIdAndTokenProperties(events))
+    ) {
+      await fs.writeFile(outputFullPath, JSON.stringify(events), 'utf-8');
+    }
+  }
+}
+
+/**
+ * recursively traverses given js object. sets "*id", "selectedStory" and "token" properties to "-1".
+ * @param {*} object
+ * @return {string|{}|*}
+ */
+function resetIdAndTokenProperties(object) {
+  if (!object) {
+    return object;
+  } else if (Array.isArray(object)) {
+    return object.map(resetIdAndTokenProperties);
+  } else if (typeof object === 'string') {
+    return object;
+  } else if (typeof object === 'object') {
+    return Object.keys(object).reduce((newObj, k) => {
+      if (
+        ['id', 'roomId', 'correlationId', 'userId', 'selectedStory', 'storyId', 'token'].includes(k)
+      ) {
+        newObj[k] = '-1';
+      } else {
+        newObj[k] = resetIdAndTokenProperties(object[k]);
+      }
+      return newObj;
+    }, {});
+  }
+}
+
+async function fileExists(fullFilePath) {
+  try {
+    await fs.access(fullFilePath, fsConst.F_OK);
+    return true;
+  } catch (accessError) {
+    return false;
+  }
+}
+
+async function readJsonFile(fullFilePath) {
+  const existingFileContent = await fs.readFile(fullFilePath, 'utf-8');
+  return JSON.parse(existingFileContent);
+}

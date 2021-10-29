@@ -18,6 +18,7 @@ import {hasApplause} from '../../state/ui/uiSelectors';
 import Cards from './Cards';
 import ValueBadge from '../common/ValueBadge';
 import EstimationSummary from './EstimationSummary';
+import EasterEgg from '../common/EasterEgg';
 
 import {StyledStoryTitle} from '../_styled';
 import {
@@ -62,6 +63,7 @@ const EstimationArea = ({
         </StyledStoryText>
 
         {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
+        {hasConsensus && applause && <EasterEgg />}
       </StyledSelectedStory>
 
       {!revealed && (

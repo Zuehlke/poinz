@@ -46,9 +46,9 @@ const schema = {
 
 const setCardConfigCommandHandler = {
   schema,
-  fn: (room, command) => {
+  fn: (pushEvent, room, command) => {
     const cardConfig = sanitizeCardConfig(command.payload.cardConfig);
-    room.applyEvent('cardConfigSet', {...command.payload, cardConfig});
+    pushEvent('cardConfigSet', {...command.payload, cardConfig});
   }
 };
 

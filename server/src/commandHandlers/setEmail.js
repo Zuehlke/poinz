@@ -31,8 +31,8 @@ const schema = {
 
 const setEmailCommandHandler = {
   schema,
-  fn: (room, command) => {
-    room.applyEvent('emailSet', {
+  fn: (pushEvent, room, command) => {
+    pushEvent('emailSet', {
       ...command.payload,
       emailHash: calcEmailHash(command.payload.email)
     });

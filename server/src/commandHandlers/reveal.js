@@ -42,8 +42,8 @@ const revealCommandHandler = {
       throw new Error('Story is already revealed');
     }
   },
-  fn: (room, command) => {
-    room.applyEvent('revealed', {
+  fn: (pushEvent, room, command) => {
+    pushEvent('revealed', {
       storyId: command.payload.storyId,
       manually: true
     });
@@ -51,7 +51,7 @@ const revealCommandHandler = {
     const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
     const estimValues = Object.values(matchingStory.estimations);
     if (allEstimationsSame(estimValues)) {
-      room.applyEvent('consensusAchieved', {
+      pushEvent('consensusAchieved', {
         storyId: command.payload.storyId,
         value: estimValues[0]
       });

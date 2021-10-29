@@ -47,6 +47,8 @@ export const StyledStoryText = styled.div`
 
 export const StyledApplauseHighlight = styled.div`
   position: absolute;
+  user-select: none;
+  pointer-events: none;
   top: 0;
   left: 0;
   width: 100%;
@@ -60,6 +62,7 @@ export const StyledApplauseHighlight = styled.div`
 `;
 
 export const StyledSelectedStory = styled.div`
+  position: relative;
   background: #fff;
   border: 1px solid #e8e8e8;
   padding: 8px;

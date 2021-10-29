@@ -1,5 +1,4 @@
 import socketIoClient from 'socket.io-client';
-import {promises as fs} from 'fs';
 import {v4 as uuid} from 'uuid';
 
 /**
@@ -24,10 +23,9 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
   });
 
   return {
-    sendCommand,
     cmdAndWait,
     waitForEvents,
-    dumpAllEvents,
+    getAllReceivedEvents,
     disconnect,
     cmds: {
       joinRoom,
@@ -46,6 +44,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       clearEstimate,
       newRound,
       setCardConfig,
+      toggleConfidence,
       toggleAutoReveal,
       setPassword
     }
@@ -95,14 +94,8 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
     });
   }
 
-  /**
-   * writes all received events to the specified file (as json)
-   *
-   * @param {string} outputFilePath
-   * @return {Promise<void>}
-   */
-  async function dumpAllEvents(outputFilePath) {
-    await fs.writeFile(outputFilePath, JSON.stringify(receivedEvents), 'utf-8');
+  function getAllReceivedEvents() {
+    return receivedEvents;
   }
 
   function disconnect() {
@@ -329,6 +322,14 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
   function toggleAutoReveal(roomId, userId) {
     return sendCommand({
       name: 'toggleAutoReveal',
+      roomId,
+      userId,
+      payload: {}
+    });
+  }
+  function toggleConfidence(roomId, userId) {
+    return sendCommand({
+      name: 'toggleConfidence',
       roomId,
       userId,
       payload: {}

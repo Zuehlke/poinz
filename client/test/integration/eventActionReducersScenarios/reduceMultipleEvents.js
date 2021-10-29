@@ -20,7 +20,7 @@ export default function reduceMultipleEvents(startingState, events) {
   // eslint-disable-next-line no-unused-vars
   events.forEach((e, index) => {
     // Uncomment the following line for debugging integration tests
-    console.log(`[INTEGRATION_TEST] reducing event ${e.name} at scenario index ${index}`);
+    //  console.log(`[INTEGRATION_TEST] reducing event ${e.name} at scenario index ${index}`);
     eventReceived(e)(ourDispatch, ourGetState);
   });
   return modifiedState;

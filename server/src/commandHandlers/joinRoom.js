@@ -59,11 +59,11 @@ const joinRoomCommandHandler = {
   canCreateRoom: true,
   skipUserIdRoomCheck: true, // will not check whether userId is part of the room.  for most other commands this is a precondition. not for "joinRoom".
   schema,
-  fn: (room, command, userId) => {
+  fn: (pushEvent, room, command, userId) => {
     if (room.pristine) {
-      joinNewRoom(room, command, userId);
+      joinNewRoom(pushEvent, room, command, userId);
     } else {
-      joinExistingRoom(room, command, userId);
+      joinExistingRoom(pushEvent, room, command, userId);
     }
   }
 };
@@ -76,8 +76,8 @@ const sampleStory = {
     'This is a sample story that we already created for you.\n\n- On the left, you can edit your stories and add new ones.\n- Below you can estimate this story by clicking on one of the cards.\n- Invite your teammates by sharing the url with them.\n\n For more information, refer to the manual https://github.com/Zuehlke/poinz/blob/master/docu/manual.md'
 };
 
-function joinNewRoom(room, command, userId) {
-  room.applyEvent('roomCreated', {
+function joinNewRoom(pushEvent, room, command, userId) {
+  pushEvent('roomCreated', {
     password: command.payload.password ? hashRoomPassword(command.payload.password) : undefined
   });
 
@@ -101,42 +101,41 @@ function joinNewRoom(room, command, userId) {
     withConfidence: false,
     passwordProtected: !!command.payload.password
   };
-  room.applyEvent('joinedRoom', joinedRoomEventPayload);
+  pushEvent('joinedRoom', joinedRoomEventPayload);
 
   if (command.payload.password) {
-    room.applyRestrictedEvent('tokenIssued', {token: issueJwt(userId, room.id)});
+    pushEvent('tokenIssued', {token: issueJwt(userId, room.id)}, true);
   }
 
   if (command.payload.username) {
-    room.applyEvent('usernameSet', {
+    pushEvent('usernameSet', {
       username: command.payload.username
     });
   }
 
   if (command.payload.email) {
-    room.applyEvent('emailSet', {
+    pushEvent('emailSet', {
       email: command.payload.email,
       emailHash: calcEmailHash(command.payload.email)
     });
   }
-
-  room.applyEvent('avatarSet', {
+  pushEvent('avatarSet', {
     avatar
   });
 
   // it's a completely new room, add our sample/placeholder story with simple instructions / quick start
   const sampleStoryId = uuid();
-  room.applyEvent('storyAdded', {
+  pushEvent('storyAdded', {
     createdAt: Date.now(),
     storyId: sampleStoryId,
     title: sampleStory.title,
     description: sampleStory.description,
     estimations: {}
   });
-  room.applyEvent('storySelected', {storyId: sampleStoryId});
+  pushEvent('storySelected', {storyId: sampleStoryId});
 }
 
-function joinExistingRoom(room, command, userId) {
+function joinExistingRoom(pushEvent, room, command, userId) {
   if (room.password) {
     throwIfJoinIsForbidden(room, command.payload);
   }
@@ -174,31 +173,31 @@ function joinExistingRoom(room, command, userId) {
     joinedRoomEventPayload.users = [...room.users, userObject];
   }
 
-  room.applyEvent('joinedRoom', joinedRoomEventPayload);
+  pushEvent('joinedRoom', joinedRoomEventPayload);
 
   if (room.password && !command.payload.token) {
-    room.applyRestrictedEvent('tokenIssued', {token: issueJwt(userId, room.id)});
+    pushEvent('tokenIssued', {token: issueJwt(userId, room.id)}, true);
   }
 
   if (userObject.username) {
-    room.applyEvent('usernameSet', {
+    pushEvent('usernameSet', {
       username: userObject.username
     });
   }
 
   if (userObject.email) {
-    room.applyEvent('emailSet', {
+    pushEvent('emailSet', {
       email: userObject.email,
       emailHash: calcEmailHash(userObject.email)
     });
   }
 
-  room.applyEvent('avatarSet', {
+  pushEvent('avatarSet', {
     avatar: userObject.avatar
   });
 
   if (userObject.excluded) {
-    room.applyEvent('excludedFromEstimations', {userId: userObject.id});
+    pushEvent('excludedFromEstimations', {userId: userObject.id});
   }
 }
 

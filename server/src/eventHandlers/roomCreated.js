@@ -1,11 +1,7 @@
 /**
  * A room was created. Creates a new default room object
- * @param room
- * @param eventPayload
- * @param userId
- * @param {function} modifyEventPayload
  */
-function roomCreatedEventHandler(room, eventPayload, userId, modifyEventPayload) {
+function roomCreatedEventHandler(room, eventPayload) {
   const roomObject = {
     id: room.id,
     users: [],
@@ -18,8 +14,6 @@ function roomCreatedEventHandler(room, eventPayload, userId, modifyEventPayload)
   if (eventPayload.password) {
     roomObject.password = eventPayload.password;
   }
-
-  modifyEventPayload({}); // clear password from event payload. we don't want to send it to clients
 
   return roomObject;
 }

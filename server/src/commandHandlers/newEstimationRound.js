@@ -36,8 +36,8 @@ const newEstimationRoundCommandHandler = {
       throw new Error('Can only start a new round for currently selected story!');
     }
   },
-  fn: (room, command) => {
-    room.applyEvent('newEstimationRoundStarted', command.payload);
+  fn: (pushEvent, room, command) => {
+    pushEvent('newEstimationRoundStarted', command.payload);
   }
 };
 

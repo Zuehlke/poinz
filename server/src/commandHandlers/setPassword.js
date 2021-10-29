@@ -32,13 +32,13 @@ const schema = {
 
 const setPasswordCommandHandler = {
   schema,
-  fn: (room, command) => {
+  fn: (pushEvent, room, command) => {
     if (command.payload.password) {
-      room.applyEvent('passwordSet', {
+      pushEvent('passwordSet', {
         password: hashRoomPassword(command.payload.password)
       });
     } else {
-      room.applyEvent('passwordCleared', {});
+      pushEvent('passwordCleared', {});
     }
   }
 };

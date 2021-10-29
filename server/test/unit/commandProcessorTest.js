@@ -9,7 +9,7 @@ test('process a dummy command successfully: create room on the fly', async () =>
       setPropertyCommand: {
         canCreateRoom: true,
         skipUserIdRoomCheck: true,
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        fn: (pushEvent, room, command) => pushEvent('propertySetEvent', command.payload),
         schema: {$ref: 'command'}
       }
     },
@@ -72,7 +72,7 @@ test('process a dummy command successfully: room loading by id', () => {
       setPropertyCommand: {
         canCreateRoom: true,
         skipUserIdRoomCheck: true,
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        fn: (pushEvent, room, command) => pushEvent('propertySetEvent', command.payload),
         schema: {$ref: 'command'}
       }
     },
@@ -139,13 +139,86 @@ test('process a dummy command with No Handler ( and thus no schema )', () => {
   ).rejects.toThrow('Cannot validate command, no matching schema found for "justACommand"!');
 });
 
+test('process a dummy command where event handler does not return room object', () => {
+  const processor = processorFactory(
+    {
+      setPropertyCommand: {
+        canCreateRoom: true,
+        skipUserIdRoomCheck: true,
+        fn: (pushEvent) => {
+          pushEvent('propertySetEvent', {});
+        },
+        schema: {$ref: 'command'}
+      }
+    },
+    baseCommandSchema,
+    {
+      propertySetEvent: () => {
+        return null;
+      }
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        id: uuid(),
+        roomId: 'my-test-room',
+        name: 'setPropertyCommand',
+        payload: {}
+      },
+      uuid()
+    )
+  ).rejects.toThrow(
+    'Fatal error: Event Handlers must return the room object! event "propertySetEvent"'
+  );
+});
+
+test('process a dummy command where event handler does return same room object', () => {
+  const processor = processorFactory(
+    {
+      setPropertyCommand: {
+        canCreateRoom: true,
+        skipUserIdRoomCheck: true,
+        fn: (pushEvent) => {
+          pushEvent('propertySetEvent', {});
+        },
+        schema: {$ref: 'command'}
+      }
+    },
+    baseCommandSchema,
+    {
+      propertySetEvent: (room) => {
+        room.someProperty = 'one';
+        return room;
+      }
+    },
+    newMockRoomsStore()
+  );
+
+  return expect(
+    processor(
+      {
+        id: uuid(),
+        roomId: 'my-test-room',
+        name: 'setPropertyCommand',
+        payload: {}
+      },
+      uuid()
+    )
+  ).rejects.toThrow(
+    'Fatal error: Event Handlers must not return same room object! event "propertySetEvent"'
+  );
+});
+
 test('process a dummy command where command handler produced unknown event', () => {
   const processor = processorFactory(
     {
       setPropertyCommand: {
         canCreateRoom: true,
         skipUserIdRoomCheck: true,
-        fn: (room, command) => room.applyEvent('unknownEvent', command.payload),
+        fn: (pushEvent, room, command) => pushEvent('unknownEvent', command.payload),
         schema: {$ref: 'command'}
       }
     },
@@ -168,7 +241,7 @@ test('process a dummy command where command handler produced unknown event', () 
       },
       uuid()
     )
-  ).rejects.toThrow('Cannot apply unknown event unknownEvent');
+  ).rejects.toThrow('Cannot push unknown event unknownEvent');
 });
 
 test('process a dummy command where command precondition throws', () => {
@@ -180,7 +253,7 @@ test('process a dummy command where command precondition throws', () => {
         preCondition: () => {
           throw new Error('Uh-uh. nono!');
         },
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        fn: () => {},
         schema: {$ref: 'command'}
       }
     },
@@ -213,7 +286,7 @@ test('process a dummy command where user does not belong to room', () => {
         canCreateRoom: true,
         // here "skipUserIdRoomCheck" flag is not set (same as in most handlers)
         schema: {$ref: 'command'},
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload)
+        fn: () => {}
       }
     },
     baseCommandSchema,
@@ -262,7 +335,7 @@ test('process a dummy command where command validation fails (schema)', () => {
       setPropertyCommand: {
         canCreateRoom: true,
         skipUserIdRoomCheck: true,
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        fn: () => {},
         schema: {
           properties: {
             payload: {
@@ -384,7 +457,7 @@ test('concurrency handling', async () => {
     {
       setPropertyCommand: {
         skipUserIdRoomCheck: true,
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        fn: (pushEvent, room, command) => pushEvent('propertySetEvent', command.payload),
         schema: {}
       }
     },
@@ -475,7 +548,7 @@ test('detect structural problems in commandHandlers: no schema', () => {
     processorFactory(
       {
         setPropertyCommand: {
-          fn: (room, command) => room.applyEvent('propertySetEvent', command.payload)
+          fn: () => {}
           // no property "schema" defined
         }
       },
@@ -491,7 +564,7 @@ test('detect structural problems in commandHandlers: schema is not an object, bu
     processorFactory(
       {
         setPropertyCommand: {
-          fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+          fn: () => {},
           schema: 'not-an-object' // <<- property "schema" must be an object
         }
       },
@@ -507,7 +580,7 @@ test('detect structural problems in commandHandlers: schema is not an object, bu
     processorFactory(
       {
         setPropertyCommand: {
-          fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+          fn: () => {},
           schema: () => true // <<- property "schema" must be an object
         }
       },
@@ -540,7 +613,7 @@ test('throws if modified room does not adhere to roomSchema', async () => {
       setPropertyCommand: {
         canCreateRoom: true,
         skipUserIdRoomCheck: true,
-        fn: (room, command) => room.applyEvent('propertySetEvent', command.payload),
+        fn: (pushEvent, room, command) => pushEvent('propertySetEvent', command.payload),
         schema: {$ref: 'command'}
       }
     },

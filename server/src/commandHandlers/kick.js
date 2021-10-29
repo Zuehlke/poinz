@@ -36,8 +36,8 @@ const kickCommandHandler = {
 
     throwIfUserIdNotFoundInRoom(room, command.payload.userId);
   },
-  fn: (room, command) => {
-    room.applyEvent('kicked', {userId: command.payload.userId});
+  fn: (pushEvent, room, command) => {
+    pushEvent('kicked', {userId: command.payload.userId});
   }
 };
 

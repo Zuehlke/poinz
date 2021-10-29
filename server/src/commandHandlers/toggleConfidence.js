@@ -22,11 +22,11 @@ const schema = {
 
 const toggleConfidenceCommandHandler = {
   schema,
-  fn: (room) => {
+  fn: (pushEvent, room) => {
     if (room.withConfidence) {
-      room.applyEvent('confidenceOff', {});
+      pushEvent('confidenceOff', {});
     } else {
-      room.applyEvent('confidenceOn', {});
+      pushEvent('confidenceOn', {});
     }
   }
 };

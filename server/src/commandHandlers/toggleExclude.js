@@ -33,12 +33,12 @@ const schema = {
 
 const toggleExcludeCommandHandler = {
   schema,
-  fn: (room, command) => {
+  fn: (pushEvent, room, command) => {
     const matchingUser = getMatchingUserOrThrow(room, command.payload.userId);
     if (matchingUser.excluded) {
-      room.applyEvent('includedInEstimations', {userId: command.payload.userId});
+      pushEvent('includedInEstimations', {userId: command.payload.userId});
     } else {
-      room.applyEvent('excludedFromEstimations', {userId: command.payload.userId});
+      pushEvent('excludedFromEstimations', {userId: command.payload.userId});
     }
   }
 };

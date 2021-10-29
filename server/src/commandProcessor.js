@@ -207,36 +207,35 @@ export default function commandProcessorFactory(
     ctx.eventsToSend = [];
 
     /**
-     * called from command handlers: room.apply('someEvent', payload)
+     * called from command handlers: pushEvent('someEvent', payload)
      * @param {string} eventName
      * @param {object} eventPayload
      * @param {boolean} [restricted] If true, the event will later only be emitted to the sending user (i.e. the socket that sent the correlating command) - not the whole room.
      */
-    ctx.room.applyEvent = (eventName, eventPayload, restricted = undefined) => {
+    function pushEvent(eventName, eventPayload, restricted = false) {
       const eventHandler = eventHandlers[eventName];
       if (!eventHandler) {
-        throw new Error('Cannot apply unknown event ' + eventName);
+        throw new Error('Cannot push unknown event ' + eventName);
       }
 
       // events are handled sequentially since events most often update the state of the room ("are applied to the room")
       ctx.eventHandlingQueue.push((currentRoom) => {
-        /*
-         * Call actual eventHandler function:
-         * "modifyEventPayload": In some cases we need to pass data from commandHandler to eventHandler (because properties need to be stored on the room object).
-         * but we want to omit them on the event that is being sent to clients. (e.g. passwords and other sensitive data)
-         */
-        const modifyEventPayload = (modifiedEventPayload) => (eventPayload = modifiedEventPayload);
-        const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId, modifyEventPayload);
+        const updatedRoom = eventHandler(currentRoom, eventPayload, ctx.userId);
 
         if (!updatedRoom) {
-          throw new Error('Fatal error: Event Handlers must return the room object!' + eventName);
+          throw new Error(
+            `Fatal error: Event Handlers must return the room object! event "${eventName}"`
+          );
         }
 
         if (updatedRoom === currentRoom) {
           throw new Error(
-            'Fatal error: Event Handlers must not return same room object! ' + eventName
+            `Fatal error: Event Handlers must not return same room object! event "${eventName}"`
           );
         }
+
+        /** make sure to not send a "password" property to the client **/
+        delete eventPayload.password;
 
         // build the event object that is sent back to clients
         ctx.eventsToSend.push({
@@ -251,13 +250,10 @@ export default function commandProcessorFactory(
 
         return updatedRoom;
       });
-    };
+    }
 
-    ctx.room.applyRestrictedEvent = (eventName, eventPayload) =>
-      ctx.room.applyEvent(eventName, eventPayload, true);
-
-    // invoke the command handler function (will produce events by calling "applyEvent")
-    ctx.handler.fn(ctx.room, cmd, ctx.userId);
+    // invoke the command handler function
+    ctx.handler.fn(pushEvent, ctx.room, cmd, ctx.userId);
   }
 
   /**
@@ -279,8 +275,6 @@ export default function commandProcessorFactory(
   async function saveRoomBackToStore(ctx) {
     ctx.room.lastActivity = Date.now();
     ctx.room.markedForDeletion = false;
-    delete ctx.room.applyEvent;
-    delete ctx.room.applyRestrictedEvent;
 
     validateRoom(ctx.room);
 

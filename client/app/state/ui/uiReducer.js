@@ -1,3 +1,5 @@
+import getDayOfYear from 'date-fns/getDayOfYear';
+
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
 import {getHideNewUserHints, setHideNewUserHints} from '../clientSettingsStore';
 import {
@@ -13,6 +15,7 @@ export const uiInitialState = {
   sidebar: undefined,
   applause: false,
   unseenError: false,
+  easterEggActive: isHalloweenSeason(),
   newUserHintHidden: getHideNewUserHints()
 };
 
@@ -87,4 +90,10 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
   }
 
   return state;
+}
+
+function isHalloweenSeason() {
+  const now = new Date();
+  const currentDayOfYear = getDayOfYear(now);
+  return currentDayOfYear > 319 && currentDayOfYear < 349; // between 15. October and 15.November (close enough, in leap years this is shifted by one day)
 }

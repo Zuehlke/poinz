@@ -34,6 +34,7 @@ async function addNstories(numberOfStoriesToAdd) {
     eventCountBeforeAddingStories + numberOfStoriesToAdd
   );
 
+  console.log('disconnecting');
   client.disconnect();
 }
 

@@ -95,5 +95,5 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
 function isHalloweenSeason() {
   const now = new Date();
   const currentDayOfYear = getDayOfYear(now);
-  return currentDayOfYear > 319 && currentDayOfYear < 349; // between 15. October and 15.November (close enough, in leap years this is shifted by one day)
+  return currentDayOfYear > 288 && currentDayOfYear < 319; // between 15. October and 15.November (close enough, in leap years this is shifted by one day)
 }

@@ -1,3 +1,8 @@
+### 0.13.3: 2021-11-21
+
+* Halloween Easter Egg fixed
+* Dependencies updated
+
 ### 0.13.0: 2021-10-03
 
 * Confidence Levels : Allow users in the room to specify how confident they are when estimating a story (#178, thanks to @gotdibbs and @gvheertum)

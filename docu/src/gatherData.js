@@ -1,10 +1,10 @@
-const chalk = require('chalk');
-const path = require('path');
-const fs = require('fs');
-const babel = require('@babel/core');
-const vm = require('vm');
+import path from 'path';
+import fs from 'fs';
+import chalk from 'chalk';
+import babel from '@babel/core';
+import vm from 'vm';
 
-module.exports = gatherData;
+export default gatherData;
 
 /**
  * gathers command and event metadata from our sources

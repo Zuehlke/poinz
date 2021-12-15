@@ -1,6 +1,6 @@
-const ejs = require('ejs');
+import ejs from 'ejs';
 
-const settings = require('../docuSettings');
+import settings from '../docuSettings.mjs';
 
 const renderDocu = ({commandHandlerFileData, eventList}) => {
   return new Promise((resolve, reject) => {
@@ -21,4 +21,4 @@ const renderDocu = ({commandHandlerFileData, eventList}) => {
   });
 };
 
-module.exports = renderDocu;
+export default renderDocu;

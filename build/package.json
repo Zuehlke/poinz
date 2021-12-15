@@ -1,0 +1,19 @@
+{
+  "name": "poinz-build",
+  "version": "0.13.3",
+  "description": "Distributed Planning Poker",
+  "private": true,
+  "author": "xeronimus@gmail.com",
+  "license": "MIT",
+  "homepage": "https://github.com/Zuehlke/poinz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Zuehlke/poinz.git"
+  },
+  "type": "module",
+  "main": "src/docuGenerator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": []
+}

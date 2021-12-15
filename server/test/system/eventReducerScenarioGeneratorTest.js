@@ -218,7 +218,7 @@ test('joinAndLeave ', async () => {
   await dumpEventsToFile(clientA.getAllReceivedEvents(), outputFilename);
   clientA.disconnect();
   clientB.disconnect();
-});
+},300000);
 
 test('joinAndLeaveWithPassword ', async () => {
   const outputFilename = 'roomJoiningAndLeavingWithPasswordTest.json';
@@ -358,7 +358,7 @@ function resetIdAndTokenProperties(object) {
   } else if (typeof object === 'object') {
     return Object.keys(object).reduce((newObj, k) => {
       if (
-        ['id', 'roomId', 'correlationId', 'userId', 'selectedStory', 'storyId', 'token'].includes(k)
+        ['id', 'roomId', 'correlationId', 'userId', 'selectedStory', 'storyId', 'token','createdAt'].includes(k)
       ) {
         newObj[k] = '-1';
       } else {

@@ -3,9 +3,9 @@ import fs from 'fs';
 import chalk from 'chalk';
 
 import settings from '../docuSettings.mjs';
-import downloadMermaidDiagramsAsSvg from './downloadMermaidDiagramsAsSvg.js';
-import gatherData from "./gatherData.js";
-import renderDocu from "./renderDocu.js";
+import downloadMermaidDiagramsAsSvg from './downloadMermaidDiagramsAsSvg.mjs';
+import gatherData from "./gatherData.mjs";
+import renderDocu from "./renderDocu.mjs";
 
 generate().catch((err) => {
   console.error(err);

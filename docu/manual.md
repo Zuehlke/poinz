@@ -158,7 +158,7 @@ estimate. PoinZ then displays all given estimates for this story (visible for al
 You can enable the "Confidence" setting in your room to allow your colleagues to specify a confidence when estimating a
 story.
 
-If the feature is enabled, users will be able to select "Unsuer" /  "Default" / "Very sure" when estimating a story:
+If the feature is enabled, users will be able to select "Unsure" /  "Default" / "Very sure" when estimating a story:
 
 ![estimating_with_confidence](https://user-images.githubusercontent.com/1777143/135747987-de44939e-d90f-4ea4-8c05-f5820e3bbbbd.png)
 

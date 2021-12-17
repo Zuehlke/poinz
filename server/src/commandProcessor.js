@@ -186,6 +186,8 @@ export default function commandProcessorFactory(
   async function preConditions(ctx, cmd) {
     try {
       if (!ctx.handler.skipUserIdRoomCheck) {
+        // this check is important. only after a user joined a room, he can issue commands against that room.
+        // for password protected rooms, the token is only validated on joinRoom command - not on all subsequent commands
         throwIfUserIdNotFoundInRoom(ctx.room, ctx.userId);
       }
 

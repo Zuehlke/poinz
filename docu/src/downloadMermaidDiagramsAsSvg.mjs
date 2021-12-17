@@ -3,7 +3,7 @@ import https from 'https';
 import path from 'path';
 import glob from 'glob';
 
-import settings from '../docuSettings.mjs'
+import settings from '../docuSettings.mjs';
 
 const BASE_URL = 'https://mermaid.ink/svg/';
 

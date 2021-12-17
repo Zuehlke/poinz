@@ -3,14 +3,18 @@ import chalk from 'chalk';
 import util from 'util';
 import globCb from 'glob';
 import fs from 'fs-extra';
-import {URL,fileURLToPath} from 'url';
+import {URL, fileURLToPath} from 'url';
 
 const glob = util.promisify(globCb);
 const TRANSLATION_INVOKE_PATTERN = /[\{|\s*|\(]t\('([^\)]*)'[,|\)]/g;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const DEFINED_KEYS_EN = getDefinedTranslationKeysFromRelativeFile('../client/app/assets/i18n/en.json')
-const DEFINED_KEYS_DE = getDefinedTranslationKeysFromRelativeFile('../client/app/assets/i18n/de.json')
+const DEFINED_KEYS_EN = getDefinedTranslationKeysFromRelativeFile(
+  '../client/app/assets/i18n/en.json'
+);
+const DEFINED_KEYS_DE = getDefinedTranslationKeysFromRelativeFile(
+  '../client/app/assets/i18n/de.json'
+);
 
 check().catch((err) => {
   console.error(err);

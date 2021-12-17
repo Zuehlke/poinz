@@ -20,7 +20,6 @@ const execPromised = util.promisify(exec);
 
 const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
 
-
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const clientDirPath = path.resolve(dirname, '../client');
 const serverDirPath = path.resolve(dirname, '../server');

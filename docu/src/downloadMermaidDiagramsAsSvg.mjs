@@ -1,12 +1,13 @@
-const fs = require('fs');
-const https = require('https');
-const path = require('path');
-const glob = require('glob');
+import fs from 'fs';
+import https from 'https';
+import path from 'path';
+import glob from 'glob';
 
-const settings = require('../docuSettings');
+import settings from '../docuSettings.mjs';
+
 const BASE_URL = 'https://mermaid.ink/svg/';
 
-module.exports = downloadMermaidDiagramsAsSvg;
+export default downloadMermaidDiagramsAsSvg;
 
 /*
  *  see  https://mermaid-js.github.io/mermaid-live-editor

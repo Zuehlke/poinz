@@ -1,11 +1,11 @@
-const path = require('path');
-const fs = require('fs');
-const chalk = require('chalk');
+import path from 'path';
+import fs from 'fs';
+import chalk from 'chalk';
 
-const settings = require('../docuSettings');
-const downloadMermaidDiagramsAsSvg = require('./downloadMermaidDiagramsAsSvg');
-const gatherData = require('./gatherData');
-const renderDocu = require('./renderDocu');
+import settings from '../docuSettings.mjs';
+import downloadMermaidDiagramsAsSvg from './downloadMermaidDiagramsAsSvg.mjs';
+import gatherData from './gatherData.mjs';
+import renderDocu from './renderDocu.mjs';
 
 generate().catch((err) => {
   console.error(err);

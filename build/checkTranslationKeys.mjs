@@ -1,18 +1,30 @@
-const path = require('path');
-const chalk = require('chalk');
-const util = require('util');
-const glob = util.promisify(require('glob'));
-const fs = require('fs-extra');
+import path from 'path';
+import chalk from 'chalk';
+import util from 'util';
+import globCb from 'glob';
+import fs from 'fs-extra';
+import {URL, fileURLToPath} from 'url';
 
+const glob = util.promisify(globCb);
 const TRANSLATION_INVOKE_PATTERN = /[\{|\s*|\(]t\('([^\)]*)'[,|\)]/g;
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const DEFINED_KEYS_EN = Object.keys(require('../client/app/assets/i18n/en.json'));
-const DEFINED_KEYS_DE = Object.keys(require('../client/app/assets/i18n/de.json'));
+const DEFINED_KEYS_EN = getDefinedTranslationKeysFromRelativeFile(
+  '../client/app/assets/i18n/en.json'
+);
+const DEFINED_KEYS_DE = getDefinedTranslationKeysFromRelativeFile(
+  '../client/app/assets/i18n/de.json'
+);
 
 check().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+function getDefinedTranslationKeysFromRelativeFile(relativePath) {
+  const absolutPath = new URL(relativePath, import.meta.url).pathname;
+  return Object.keys(fs.readJsonSync(absolutPath));
+}
 
 const findTranslationKeysInFileContent = (fileName, content) => {
   const fileMatches = {
@@ -48,10 +60,10 @@ const groupByKey = (fileResults) =>
   );
 
 async function getUsedKeysInAppFiles() {
-  const files = await glob('../client/app/**/*.js', {cwd: __dirname});
+  const files = await glob('../client/app/**/*.js', {cwd: dirname});
   console.log(`Checking ${files.length} js files for translation key use...`);
   const filePromises = files.map(async (fileName) => {
-    const content = await fs.readFile(path.join(__dirname, fileName), 'utf-8');
+    const content = await fs.readFile(path.join(dirname, fileName), 'utf-8');
     return findTranslationKeysInFileContent(fileName, content);
   });
   const fileResults = await Promise.all(filePromises);

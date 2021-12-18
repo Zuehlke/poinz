@@ -8,19 +8,21 @@
  *  5. build docker image (see Dockerfile)
  *
  * */
-const path = require('path');
-const util = require('util');
-const fs = require('fs-extra');
-const {exec} = require('child_process');
-const {spawn} = require('cross-spawn');
-const del = require('del');
+import path from 'path';
+import {fileURLToPath} from 'url';
+import util from 'util';
+import fs from 'fs-extra';
+import {exec} from 'child_process';
+import {spawn} from 'cross-spawn';
+import del from 'del';
 
 const execPromised = util.promisify(exec);
 
 const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
 
-const clientDirPath = path.resolve(__dirname, '../client');
-const serverDirPath = path.resolve(__dirname, '../server');
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+const clientDirPath = path.resolve(dirname, '../client');
+const serverDirPath = path.resolve(dirname, '../server');
 
 build()
   .then(() => process.exit(0))
@@ -45,7 +47,7 @@ async function build() {
   await spawnAndPrint('npm', ['install'], {cwd: clientDirPath});
 
   console.log('building client with webpack...');
-  await spawnAndPrint('npm', 'run build'.split(' '), {cwd: path.resolve(__dirname, '../client')});
+  await spawnAndPrint('npm', 'run build'.split(' '), {cwd: path.resolve(dirname, '../client')});
 
   console.log('copying built client to ./deploy/public');
   await fs.copy('./client/dist', './deploy/public/assets');
@@ -87,7 +89,7 @@ function spawnAndPrint(command, args, options) {
 
   return new Promise((resolve, reject) =>
     spawned.on('exit', (code) =>
-      code !== 0 ? reject(new Error('Error in child process')) : resolve()
+      code !== 0 ? reject(new Error('Error in child process: ' + code)) : resolve()
     )
   );
 }
@@ -105,14 +107,14 @@ function startBuildingDockerImage(gitInfo) {
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
   const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} .`;
 
-  return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(__dirname, '..')});
+  return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(dirname, '..')});
 }
 
 function getGitInformation() {
   return Promise.all([
-    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: __dirname}), // This will return `HEAD` if in detached mode
-    execPromised('git rev-parse --short HEAD', {cwd: __dirname}),
-    execPromised('git tag --points-at HEAD', {cwd: __dirname})
+    execPromised('git rev-parse --abbrev-ref HEAD', {cwd: dirname}), // This will return `HEAD` if in detached mode
+    execPromised('git rev-parse --short HEAD', {cwd: dirname}),
+    execPromised('git tag --points-at HEAD', {cwd: dirname})
   ]).then(([abbrev, short, tags]) => ({
     branch: process.env.TRAVIS_BRANCH || abbrev.stdout.split('\n').join(''),
     hash: short.stdout.split('\n').join(''),

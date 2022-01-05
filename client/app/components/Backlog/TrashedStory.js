@@ -25,7 +25,7 @@ const TrashedStory = ({story, restoreStory, deleteStory}) => {
         ></i>
         <i
           title={t('delete')}
-          className="icon-minus-circled story-delete"
+          className="icon-cancel-circled story-delete"
           onClick={() => deleteStory(story.id)}
           data-testid="deleteStoryButton"
         />

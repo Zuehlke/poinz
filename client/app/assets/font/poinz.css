@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'poinz';
-  src: url('../font/poinz.eot?52716672');
-  src: url('../font/poinz.eot?52716672#iefix') format('embedded-opentype'),
-       url('../font/poinz.woff2?52716672') format('woff2'),
-       url('../font/poinz.woff?52716672') format('woff'),
-       url('../font/poinz.ttf?52716672') format('truetype'),
-       url('../font/poinz.svg?52716672#poinz') format('svg');
+  src: url('../font/poinz.eot?75262429');
+  src: url('../font/poinz.eot?75262429#iefix') format('embedded-opentype'),
+       url('../font/poinz.woff2?75262429') format('woff2'),
+       url('../font/poinz.woff?75262429') format('woff'),
+       url('../font/poinz.ttf?75262429') format('truetype'),
+       url('../font/poinz.svg?75262429#poinz') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'poinz';
-    src: url('../font/poinz.svg?52716672#poinz') format('svg');
+    src: url('../font/poinz.svg?75262429#poinz') format('svg');
   }
 }
 */
@@ -61,6 +61,7 @@
 .icon-down-dir:before { content: '\e818'; } /* '' */
 .icon-up-dir:before { content: '\e819'; } /* '' */
 .icon-user:before { content: '\e81a'; } /* '' */
+.icon-cancel-circled:before { content: '\e81b'; } /* '' */
 .icon-check-empty:before { content: '\f096'; } /* '' */
 .icon-list-bullet:before { content: '\f0ca'; } /* '' */
 .icon-table:before { content: '\f0ce'; } /* '' */
@@ -76,6 +77,8 @@
 .icon-help-1:before { content: '\f128'; } /* '' */
 .icon-attention-alt:before { content: '\f12a'; } /* '' */
 .icon-lock-open-alt:before { content: '\f13e'; } /* '' */
+.icon-ellipsis:before { content: '\f141'; } /* '' */
+.icon-ellipsis-vert:before { content: '\f142'; } /* '' */
 .icon-level-up:before { content: '\f148'; } /* '' */
 .icon-share:before { content: '\f1e0'; } /* '' */
 .icon-trash:before { content: '\f1f8'; } /* '' */

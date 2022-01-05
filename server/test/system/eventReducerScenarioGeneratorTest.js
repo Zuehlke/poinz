@@ -339,6 +339,10 @@ async function dumpEventsToFile(events, outputFilename) {
       JSON.stringify(resetIdAndTokenProperties(events))
     ) {
       await fs.writeFile(outputFullPath, JSON.stringify(events), 'utf-8');
+
+      // for debugging purposes, if you wonder why the event files get written:
+      // await fs.writeFile(outputFullPath + '_PREV', JSON.stringify(resetIdAndTokenProperties(previousEvents), null, 4), 'utf-8');
+      // await fs.writeFile(outputFullPath + '_NEW', JSON.stringify(resetIdAndTokenProperties(events), null, 4), 'utf-8');
     }
   }
 }

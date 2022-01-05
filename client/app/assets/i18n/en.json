@@ -7,6 +7,7 @@
   "joinWithRoomName": "Join room \"%{room}\"",
   "name": "Name...",
   "addStory": "Add Story",
+  "trashAllStories": "Move all Stories to the trash",
   "estimateStory": "Estimate",
   "estimateStoryHint": "Select story for estimation",
   "newRound": "New Round",
@@ -30,7 +31,7 @@
   "toggleMenu": "Settings",
   "customRoomName": "Custom Room Name",
   "welcomeBack": "Welcome back",
-  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is potentially publicly available!",
+  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is potentially publicly available! We do not recommend that you use PoinZ as a permanent information storage. PoinZ is provided as is without warranty of any kind!",
   "markSpectator": "Mark as spectator",
   "spectatorInfo": "Spectators cannot participate in estimations. They still can add and modify stories.",
   "spectator": "Spectator",
@@ -88,5 +89,6 @@
   "confidence": "Confidence",
   "confidenceInfo": "Allow users to specify whether they are unsure (not confident) or very sure (very confident) when estimating a story.",
   "toggleConfidence": "Enable confidence",
-  "includeUnsureEstimations": "Include low confidence estimations"
+  "includeUnsureEstimations": "Include low confidence estimations",
+  "more": "More..."
 }

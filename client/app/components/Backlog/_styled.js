@@ -197,7 +197,7 @@ export const StyledStoryAttributes = styled.div`
   }
 `;
 
-export const StyledBacklogSortForm = styled.form`
+export const StyledBacklogToolbar = styled.form`
   padding: 8px 8px 8px 8px;
   margin-right: 8px;
   border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
@@ -216,11 +216,26 @@ export const StyledBacklogSortForm = styled.form`
   }
 
   > i {
+    display: block;
+    min-width: 16px;
+    text-align: center;
+  }
+
+  > i.icon-exchange {
     margin-left: 4px;
+    margin-right: 8px;
     transform: rotate(90deg);
+  }
+
+  > i.icon-trash:hover {
+    color: ${COLOR_WARNING};
   }
 `;
 
 export const StyledSortDropdownItem = styled.div`
   color: ${({selected}) => (selected ? COLOR_LIGHTER_GREY : 'inherit')};
+
+  > i {
+    margin-right: 4px;
+  }
 `;

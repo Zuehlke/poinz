@@ -7,6 +7,7 @@
   "joinWithRoomName": "Raum \"%{room}\" beitreten",
   "name": "Name...",
   "addStory": "Story hinzufügen",
+  "trashAllStories": "Alle Stories in den Papierkorb verschieben",
   "estimateStory": "Schätzen",
   "estimateStoryHint": "Auswählen für Schätzrunde",
   "newRound": "Neue Runde",
@@ -30,7 +31,7 @@
   "toggleMenu": "Einstellungen",
   "customRoomName": "Raum Name",
   "welcomeBack": "Willkommen zurück",
-  "disclaimer": "Die Benützung von Poinz erfolgt auf eigenes Risiko! Jegliche eingetragene informationen sind möglicherweise öffentlich abrufbar.",
+  "disclaimer": "Die Benützung von Poinz erfolgt auf eigenes Risiko! Jegliche eingetragene informationen sind möglicherweise öffentlich abrufbar. Wir empfehlen nicht, PoinZ als dauerhaften Speicherort für Information zu verwenden. PoinZ wird ohne Gewähr zur Verfügung gestellt!",
   "markSpectator": "Als Zuschauer markieren",
   "spectatorInfo": "Zuschauer können keine Stories schätzen. Sie können aber nach wie vor Stories hinzufügen und editieren.",
   "spectator": "Zuschauer",
@@ -88,5 +89,6 @@
   "confidence": "Schätz-Sicherheit",
   "confidenceInfo": "Wenn die Schätz-Sicherheit aktiviert ist, können Benutzer angeben, ob sie unsicher, normal oder sehr sicher sind, wenn sie eine story schätzen.",
   "toggleConfidence": "Schätz-Sicherheit aktivieren",
-  "includeUnsureEstimations": "Inklusive unsicherer Schätzungen"
+  "includeUnsureEstimations": "Inklusive unsicherer Schätzungen",
+  "more": "Mehr..."
 }

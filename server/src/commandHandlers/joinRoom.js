@@ -1,6 +1,7 @@
 import {v4 as uuid} from 'uuid';
 
 import defaultCardConfig from '../defaultCardConfig';
+import sampleStory from './joinRoomSampleStory';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
 import {hashRoomPassword, checkRoomPassword} from '../auth/roomPasswordService';
@@ -69,12 +70,6 @@ const joinRoomCommandHandler = {
 };
 
 export default joinRoomCommandHandler;
-
-const sampleStory = {
-  title: 'Welcome to your PoinZ room!',
-  description:
-    'This is a sample story that we already created for you.\n\n- On the left, you can edit your stories and add new ones.\n- Below you can estimate this story by clicking on one of the cards.\n- Invite your teammates by sharing the url with them.\n\n For more information, refer to the manual https://github.com/Zuehlke/poinz/blob/master/docu/manual.md'
-};
 
 function joinNewRoom(pushEvent, room, command, userId) {
   pushEvent('roomCreated', {

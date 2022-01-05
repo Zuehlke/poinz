@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.1",
-    "express": "4.17.1",
+    "express": "4.17.2",
     "express-sslify": "1.2.0",
     "fastq": "1.13.0",
     "jsonwebtoken": "^8.5.1",
@@ -53,13 +53,13 @@
     "winston-daily-rotate-file": "4.5.5"
   },
   "devDependencies": {
-    "@babel/cli": "7.16.0",
-    "@babel/core": "7.16.5",
-    "@babel/preset-env": "7.16.5",
-    "@babel/register": "7.16.5",
-    "babel-jest": "27.4.5",
-    "eslint": "8.4.1",
-    "jest": "27.4.5",
+    "@babel/cli": "7.16.7",
+    "@babel/core": "7.16.7",
+    "@babel/preset-env": "7.16.7",
+    "@babel/register": "7.16.7",
+    "babel-jest": "27.4.6",
+    "eslint": "8.6.0",
+    "jest": "27.4.7",
     "socket.io-client": "4.4.0"
   },
   "engines": {

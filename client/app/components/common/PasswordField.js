@@ -16,7 +16,7 @@ const PasswordField = (props) => {
         onChange={onChange}
         value={pw}
         onKeyPress={onKeyPress}
-        autoComplete="off"
+        autoComplete="new-password"
       />
 
       <div className="clickable" onClick={() => setIsPwReadable(!isPwReadable)}>

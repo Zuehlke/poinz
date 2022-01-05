@@ -4,7 +4,7 @@ import {findNextStoryIdToEstimate} from '../estimations/estimationsSelectors';
 import appConfig from '../../services/appConfig';
 import history from '../getBrowserHistory';
 import {getOwnUserId, getOwnUserToken, getUsersPresets} from '../users/usersSelectors';
-import {getSelectedStoryId} from '../stories/storiesSelectors';
+import {getActiveStories, getSelectedStoryId} from '../stories/storiesSelectors';
 import {getRoomId} from '../room/roomSelectors';
 
 /* TYPES */
@@ -252,6 +252,17 @@ export const changeStory = (storyId, title, description) => (dispatch, getState,
       description
     }
   });
+};
+
+export const trashBacklogStories = () => (dispatch, getState, sendCommand) => {
+  getActiveStories(getState()).forEach((story) =>
+    sendCommand({
+      name: 'trashStory',
+      payload: {
+        storyId: story.id
+      }
+    })
+  );
 };
 
 export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {

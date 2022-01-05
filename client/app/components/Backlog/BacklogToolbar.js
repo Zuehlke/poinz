@@ -1,7 +1,7 @@
 import React, {useState, useRef, useContext} from 'react';
 import PropTypes from 'prop-types';
 
-import {StyledBacklogSortForm, StyledSortDropdownItem} from './_styled';
+import {StyledBacklogToolbar, StyledSortDropdownItem} from './_styled';
 import {L10nContext} from '../../services/l10n';
 import useOutsideClick from '../common/useOutsideClick';
 import {StyledDropdown} from '../common/_styled';
@@ -60,34 +60,43 @@ const sortings = [
 export const defaultSorting = sortings[0];
 
 /**
- *  SortForm that provides sort ("order by") dropdown menu as well as an input field for filtering
+ *  Toolbar that provides sort ("order by") dropdown menu as well as an input field for filtering and a "move all stories to trash" butotn.
  */
-const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged}) => {
+const BacklogToolbar = ({filterQuery, onQueryChanged, sorting, onSortingChanged, onTrashAll}) => {
   const {t} = useContext(L10nContext);
-  const dropdownRef = useRef(null);
-  const [extended, setExtended] = useState(false);
+  const sortDropdownRef = useRef(null);
+  const moreDropdownRef = useRef(null);
+  const [extendedSort, setExtendedSort] = useState(false);
+  const [extendedMore, setExtendedMore] = useState(false);
 
-  useOutsideClick(dropdownRef, () => setExtended(false));
+  useOutsideClick(sortDropdownRef, () => setExtendedSort(false));
+  useOutsideClick(moreDropdownRef, () => setExtendedMore(false));
 
   return (
-    <StyledBacklogSortForm className="pure-form" onSubmit={(e) => e.preventDefault()}>
+    <StyledBacklogToolbar className="pure-form" onSubmit={(e) => e.preventDefault()}>
       <input
         data-testid="filterQueryInput"
         type="text"
         placeholder={t('filter')}
         value={filterQuery}
-        autoComplete="off"
+        autoComplete="new-password"
         onChange={(e) => onQueryChanged(e.target.value)}
       />
       <i
-        onClick={() => setExtended(!extended)}
+        onClick={() => setExtendedSort(!extendedSort)}
         className="clickable icon-exchange"
         title={t('sort')}
         data-testid="sortButton"
       />
 
-      {extended && (
-        <StyledDropdown ref={dropdownRef} data-testid="sortOptions">
+      <i
+        onClick={() => setExtendedMore(!extendedMore)}
+        className="clickable icon-ellipsis-vert"
+        title={t('more')}
+      />
+
+      {extendedSort && (
+        <StyledDropdown ref={sortDropdownRef} data-testid="sortOptions">
           {sortings.map((sortingItem) => (
             <StyledSortDropdownItem
               selected={sortingItem.id === sorting.id}
@@ -100,20 +109,30 @@ const BacklogSortForm = ({filterQuery, onQueryChanged, sorting, onSortingChanged
           ))}
         </StyledDropdown>
       )}
-    </StyledBacklogSortForm>
+
+      {extendedMore && (
+        <StyledDropdown ref={moreDropdownRef} data-testid="moreOptions">
+          <StyledSortDropdownItem className="clickable" onClick={onTrashAll}>
+            <i className="icon icon-trash"></i>
+            {t('trashAllStories')}
+          </StyledSortDropdownItem>
+        </StyledDropdown>
+      )}
+    </StyledBacklogToolbar>
   );
 
   function onSortingOptionClicked(sortingItem) {
-    setExtended(false);
+    setExtendedSort(false);
     onSortingChanged(sortingItem);
   }
 };
 
-BacklogSortForm.propTypes = {
+BacklogToolbar.propTypes = {
   sorting: PropTypes.object,
   onSortingChanged: PropTypes.func.isRequired,
+  onTrashAll: PropTypes.func.isRequired,
   filterQuery: PropTypes.string,
   onQueryChanged: PropTypes.func.isRequired
 };
 
-export default BacklogSortForm;
+export default BacklogToolbar;

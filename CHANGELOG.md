@@ -1,3 +1,9 @@
+### 0.13.4: 2022-01-06
+
+* New function in the active Backlog: Move all (visible) stories to the trash
+* Various smaller bugfixes
+* Dependencies updated
+
 ### 0.13.3: 2021-11-21
 
 * Halloween Easter Egg fixed

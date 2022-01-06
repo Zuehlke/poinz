@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
-import {importCsvFile, trashBacklogStories} from '../../state/actions/commandActions';
+import {importCsvFile, trashStories} from '../../state/actions/commandActions';
 import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
 import {L10nContext} from '../../services/l10n';
 import StoryEditForm from './StoryEditForm';
@@ -83,7 +83,7 @@ const useHighlightedStory = (selectedStoryId, activeStories) => {
 /**
  * List of active stories. Accepts drops of csv files for importing stories. Provides means to filter and sort active stories.
  */
-const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashBacklogStories}) => {
+const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStories}) => {
   const {t} = useContext(L10nContext);
   const hasActiveStories = activeStories.length > 0;
 
@@ -94,6 +94,9 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashBack
 
   const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories} =
     useSortingAndFiltering(activeStories);
+
+  // only trash the currently visible stories (after filtering)
+  const onTrashAll = () => trashStories(sortedStories.map((story) => story.id));
 
   const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDrop(importCsvFile);
 
@@ -109,7 +112,7 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashBack
         <React.Fragment>
           {activeStories.length > 1 && (
             <BacklogToolbar
-              onTrashAll={trashBacklogStories}
+              onTrashAll={onTrashAll}
               onSortingChanged={setSorting}
               sorting={sorting}
               onQueryChanged={setFilterQuery}
@@ -143,7 +146,7 @@ BacklogActive.propTypes = {
   activeStories: PropTypes.array,
   selectedStoryId: PropTypes.string,
   importCsvFile: PropTypes.func.isRequired,
-  trashBacklogStories: PropTypes.func.isRequired
+  trashStories: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -151,5 +154,5 @@ export default connect(
     activeStories: getActiveStories(state),
     selectedStoryId: getSelectedStoryId(state)
   }),
-  {importCsvFile, trashBacklogStories}
+  {importCsvFile, trashStories}
 )(BacklogActive);

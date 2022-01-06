@@ -55,24 +55,34 @@ const EstimationSummary = ({
         <span>
           {t('usersEstimated', {count: summary.estimationCount, total: usersInRoomCount})}
         </span>
-        <span>
-          {t('numericalAverage', {
-            value: typeof summary.average !== 'undefined' ? summary.average : '-'
-          })}
-        </span>
 
-        {summary.recommendation !== undefined && summary.recommendationCard !== undefined && (
+        {!allValuesSame && (
           <span>
-            {t('recommendation')}
-            <ValueBadge
-              cardValue={summary.recommendation}
-              cardConfigItem={summary.recommendationCard}
-            />
+            {t('numericalAverage', {
+              value: typeof summary.average !== 'undefined' ? summary.average : '-'
+            })}
           </span>
         )}
 
+        {summary.recommendation !== undefined &&
+          summary.recommendationCard !== undefined &&
+          !allValuesSame && (
+            <span>
+              {t('recommendation')}
+              <ValueBadge
+                cardValue={summary.recommendation}
+                cardConfigItem={summary.recommendationCard}
+              />
+            </span>
+          )}
+
         {allValuesSame && <span>{t('consensusAchieved')}</span>}
-        {settled && <span>{t('settledOn', {label: consensusInfo.label})}</span>}
+        {settled && (
+          <span>
+            {t('settledOn')}
+            <ValueBadge cardValue={consensusInfo.value} />
+          </span>
+        )}
       </StyledEstimationSummaryList>
 
       <StyledCardsWrapper>

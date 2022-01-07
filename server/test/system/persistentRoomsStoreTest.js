@@ -160,8 +160,8 @@ describe('housekeeping', () => {
   });
 
   test('should mark rooms with lastActivity *just greater than threshold* for deletion ', async () => {
-
-    const tStampThirtyOneDaysAgo = Date.now() - (31 * 24 * 60 * 60 * 1000) - 100; /* 100 ms margin */
+    // as of january 2022, the threshold is new 61 days
+    const tStampThirtyOneDaysAgo = Date.now() - 61 * 24 * 60 * 60 * 1000 - 100; /* 100 ms margin */
 
     const oldRoomObject = {
       id: uuid(),
@@ -173,7 +173,7 @@ describe('housekeeping', () => {
 
     await persistentRoomsStore.saveRoom(oldRoomObject);
 
-    let houseKeepingReport = await persistentRoomsStore.housekeeping();
+    const houseKeepingReport = await persistentRoomsStore.housekeeping();
     expect(houseKeepingReport.markedForDeletion.length).toBe(1);
     expect(houseKeepingReport.markedForDeletion[0]).toEqual(oldRoomObject.id);
     expect(houseKeepingReport.deleted.length).toBe(0);
@@ -183,12 +183,11 @@ describe('housekeeping', () => {
     expect(retrievedRoom).toBeDefined();
     expect(retrievedRoom.markedForDeletion).toBe(true);
 
-
     // on the second housekeeping, room is removed
     await persistentRoomsStore.housekeeping();
     retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
-  })
+  });
 
   test('should keep old rooms with recent activity', async () => {
     const oldRoomObject = {
@@ -219,8 +218,6 @@ describe('housekeeping', () => {
     retrievedRoom = await persistentRoomsStore.getRoomById(oldRoomObject.id);
     expect(retrievedRoom).toBeUndefined();
   });
-
-
 });
 
 test('has getStoreType() function', async () => {

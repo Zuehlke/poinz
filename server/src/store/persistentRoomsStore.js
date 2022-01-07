@@ -142,7 +142,7 @@ async function housekeepingMarkForDeletion() {
   );
 
   if (roomIds.length !== updateResult.matchedCount) {
-    LOGGER.warn(
+    LOGGER.error(
       'inconsistency during housekeepingMarkForDeletion',
       roomIds,
       updateResult.matchedCount

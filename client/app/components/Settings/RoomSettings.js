@@ -72,6 +72,7 @@ const RoomSettings = ({
                 onChange={(e) => setMyRoomPassword(e.target.value)}
                 value={myRoomPassword}
                 placeholder={t('setNewPassword')}
+                isNewPassword={true}
               />
 
               <button
@@ -95,6 +96,7 @@ const RoomSettings = ({
                 onChange={(e) => setMyRoomPassword(e.target.value)}
                 value={myRoomPassword}
                 placeholder={t('setNewPassword')}
+                isNewPassword={true}
               />
 
               <button

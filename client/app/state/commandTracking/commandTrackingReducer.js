@@ -82,7 +82,9 @@ export default function commandTrackingReducer(
 
     case EVENT_ACTION_TYPES.commandRejected: {
       if (isAuthFailedJoinRejected(event)) {
-        // joinRoom failed to a a password-protected room. Let's store the roomId on our state
+        // joinRoom failed to a a password-protected room. Let's store the roomId on our state.
+        // this will be used to indicate "we tried to enter a password protected room - but failed"
+        // -> the user will be presented with the "room is protected, enter password" view. The user can re-enter password and try again.
         return {
           ...state,
           pendingJoinCommandId: undefined,

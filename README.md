@@ -23,5 +23,5 @@ Confused? Or you want to learn about hidden features? Read the [User Manual](doc
 
 You can contribute in multiple ways...
 
-* Maybe you have a feature request? Found a bug? General feedback? Please open a new [issue](https://github.com/Zuehlke/poinz/issues)
+* Maybe you have a feature request? Found a bug? General feedback? Please open a new [discussion](https://github.com/Zuehlke/poinz/discussions).
 * You want to extend Poinz? Or fix one of the issues? Check out the [Technical documentation](./docu/technicalDocu.md).

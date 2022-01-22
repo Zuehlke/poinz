@@ -76,6 +76,7 @@ const JoinRoomForm = ({presetUsername, joinRoom}) => {
               regexPattern={ROOM_ID_REGEX}
               onEnter={onTriggerJoin}
               allLowercase={true}
+              autoComplete="organization"
             />
 
             <PasswordField

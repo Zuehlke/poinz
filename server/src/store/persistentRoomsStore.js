@@ -4,6 +4,12 @@ import getLogger from '../getLogger';
 
 const COLLECTION_NAME = 'rooms';
 
+// on every server start, we run DB "Housekeeping".
+// if a room has a "lastActivity" timestamp that is older than X days, it is marked for deletion.
+// in the next subsequent housekeeping run, these rooms are deleted!
+// in January 22 we raised it from 31 days (a month) to 61 days (two months)
+const AUTOMATIC_ROOM_DELETION_THRESHOLD_DAYS = 61;
+
 const LOGGER = getLogger('persistentRoomsStore');
 
 let clientInstance;
@@ -89,7 +95,7 @@ function logDbConnection(clInstance) {
 /**
  * remove old/unused rooms
  * remove rooms that are marked for deletion.
- * mark rooms for deletion that have a "lastActivity" timestamp below threshold (currently older than 31 days)
+ * mark rooms for deletion that have a "lastActivity" timestamp below threshold
  *
  * @return {Promise<{deleted: *[], markedForDeletion: *[]}>}
  */
@@ -122,9 +128,8 @@ async function houskeepingDeleteMarked() {
 }
 
 async function housekeepingMarkForDeletion() {
-  const MORE_THAN_THIRTY_DAYS = 1000 * 60 * 60 * 24 * 31; // 1000 ms * 60 seconds * 60 minutes * 24 h * 31 days
-
-  const thresholdTimeStamp = Date.now() - MORE_THAN_THIRTY_DAYS;
+  const moreThanXDaysInMS = 1000 * 60 * 60 * 24 * AUTOMATIC_ROOM_DELETION_THRESHOLD_DAYS; // 1000 ms * 60 seconds * 60 minutes * 24 h * DAYS
+  const thresholdTimeStamp = Date.now() - moreThanXDaysInMS;
 
   const rooms = await roomsCollection
     .find({lastActivity: {$lt: thresholdTimeStamp}})
@@ -142,7 +147,7 @@ async function housekeepingMarkForDeletion() {
   );
 
   if (roomIds.length !== updateResult.matchedCount) {
-    LOGGER.warn(
+    LOGGER.error(
       'inconsistency during housekeepingMarkForDeletion',
       roomIds,
       updateResult.matchedCount

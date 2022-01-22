@@ -22,7 +22,10 @@ A more suitable deployment might be needed in the future.
 
 ### MongoDB
 
-in August 2020 we had to switch from mLab to mongoDB Atlas.
+in August 2020 we had to switch from mLab to mongoDB Atlas. (https://cloud.mongodb.com/).
+
+Currently we use a free-tier (AWS / Ireland (eu-west-1), M0 Sandbox (General),  Replica Set - 3 node, no backups). 
+See also https://docs.atlas.mongodb.com/reference/free-shared-limitations/ for limitations.
 
 Environment variable "ATLAS_DB_URI" is set via heroku dashboard. It's read in settings.js and toggles persistent storage.
  

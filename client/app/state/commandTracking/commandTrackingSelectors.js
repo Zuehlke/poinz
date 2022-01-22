@@ -17,7 +17,7 @@ export const getPendingJoinCommandId = (state) => state.commandTracking.pendingJ
  * @param state
  * @return {boolean}
  */
-export const hasJoinFailedAuthorization = (state) => !!state.commandTracking.roomIdJoinAuthFail;
+export const hasJoinFailedAuthorization = (state) => !!getJoinFailedAuthRoomId(state);
 
 /**
  *

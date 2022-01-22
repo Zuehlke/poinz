@@ -6,7 +6,7 @@ const sampleStory = {
     - Below you can estimate this story by clicking on one of the cards.
     - Invite your teammates by sharing the url with them.
 
-Please note: If a PoinZ room is unused for more than 30 days, it will get deleted automatically!
+Please note: If a PoinZ room is unused for more than two months, it will get deleted automatically!
 
 For more information, refer to the manual https://github.com/Zuehlke/poinz/blob/master/docu/manual.md`
 };

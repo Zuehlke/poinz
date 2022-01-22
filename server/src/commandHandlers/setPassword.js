@@ -3,6 +3,9 @@ import {hashRoomPassword} from '../auth/roomPasswordService';
 /**
  * A user sets (or re-sets) a password for this room. If the password is undefined or empty, the password protection is removed (passwordCleared event).
  * Currently this can be done without specifying the old password.
+ *
+ * Note: All currently valid JWT will still be valid even after password is edited. currently expiration time for our tokens is 60 minutes.
+ *
  */
 
 const schema = {

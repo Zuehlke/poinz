@@ -21,7 +21,7 @@
     "docu": "node docu/src/docuGenerator.mjs"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.7",
+    "@babel/core": "^7.16.10",
     "chalk": "^5.0.0",
     "cross-spawn": "7.0.3",
     "del": "6.0.0",

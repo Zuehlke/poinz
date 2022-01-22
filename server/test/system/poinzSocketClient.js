@@ -1,5 +1,6 @@
 import socketIoClient from 'socket.io-client';
-import {v4 as uuid} from 'uuid';
+
+import uuid from '../../src/uuid';
 
 /**
  * provides functionality to interact with our poinz backend over websockets.

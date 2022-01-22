@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../../src/uuid';
 import {prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
 
 test('Should produce storyDeleted event', async () => {
@@ -59,7 +59,7 @@ test('users marked as excluded can still delete stories', async () => {
   expect(producedEvents).toMatchEvents(commandId, roomId, 'storyDeleted');
 });
 
-test('Should throw if storyId is not uuid v4 format', async () => {
+test('Should throw if storyId is not uuid format', async () => {
   const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
   return expect(
     processor(
@@ -73,7 +73,9 @@ test('Should throw if storyId is not uuid v4 format', async () => {
       },
       userId
     )
-  ).rejects.toThrow(/Format validation failed \(must be a valid uuid v4\) in \/payload\/storyId/);
+  ).rejects.toThrow(
+    /Format validation failed \(must be a valid nanoid or uuid v4\) in \/payload\/storyId/
+  );
 });
 
 describe('preconditions', () => {

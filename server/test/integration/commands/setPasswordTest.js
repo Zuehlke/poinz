@@ -1,6 +1,5 @@
-import {v4 as uuid} from 'uuid';
-
 import {prepOneUserInOneRoom} from '../../unit/testUtils';
+import uuid from '../../../src/uuid';
 import {hashRoomPassword} from '../../../src/auth/roomPasswordService';
 
 test('Should produce passwordSet event for room without pw', async () => {

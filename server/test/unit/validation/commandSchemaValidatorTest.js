@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../../src/uuid';
 import {
   commandSchemaValidatorFactory,
   getSchemasFromRealCommandHandlers
@@ -126,6 +125,18 @@ test('throws on invalid roomId', () => {
   );
 });
 
+test('must not throw with valid uuid v4 (lowercase)', () => {
+  const validate = commandSchemaValidatorFactory(realSchemas);
+
+  validate({
+    id: uuid(),
+    name: 'joinRoom',
+    roomId: 'some-room',
+    userId: '3c33b123-b2d9-4444-8cc3-1287c670f755',
+    payload: {username: 'Thom'}
+  });
+});
+
 test('throws on invalid userId', () => {
   const validate = commandSchemaValidatorFactory({
     commandReferencingBase: {
@@ -145,7 +156,31 @@ test('throws on invalid userId', () => {
       userId: 'sdgdgkjslgjslkjglskgjdlksjgl',
       payload: {}
     })
-  ).toThrow(/Format validation failed \(must be a valid uuid v4\) in \/userId/);
+  ).toThrow(/Format validation failed \(must be a valid nanoid or uuid v4\) in \/userId/);
+});
+
+test('throws on roomId with uppercase characters', () => {
+  const validate = commandSchemaValidatorFactory({
+    commandReferencingBase: {
+      allOf: [
+        {
+          $ref: 'command'
+        }
+      ]
+    },
+    command: baseCommandSchema
+  });
+  expect(() =>
+    validate({
+      id: uuid(),
+      roomId: 'cuAstom-room-ifd',
+      name: 'commandReferencingBase',
+      userId: uuid(),
+      payload: {}
+    })
+  ).toThrow(
+    /Format validation failed \(must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -\) in \/roomId/
+  );
 });
 
 test('works with valid userId', () => {

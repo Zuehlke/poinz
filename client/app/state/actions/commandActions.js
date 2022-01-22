@@ -1,7 +1,6 @@
-import {v4 as uuid} from 'uuid';
-
 import {findNextStoryIdToEstimate} from '../estimations/estimationsSelectors';
 import appConfig from '../../services/appConfig';
+import uuid from '../../services/uuid';
 import history from '../getBrowserHistory';
 import {getOwnUserId, getOwnUserToken, getUsersPresets} from '../users/usersSelectors';
 import {getSelectedStoryId} from '../stories/storiesSelectors';

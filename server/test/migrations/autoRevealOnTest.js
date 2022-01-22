@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import initDb from './db';
 import autoRevealOn from '../../migrations/20201023190325-auto-reveal-on';
 import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';

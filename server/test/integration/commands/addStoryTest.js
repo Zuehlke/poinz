@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../../src/uuid';
 import {EXPECT_UUID_MATCHING, prepOneUserInOneRoom} from '../../unit/testUtils';
 
 test('Should produce storyAdded and storySelected event (since it is the first story added to the room)', async () => {

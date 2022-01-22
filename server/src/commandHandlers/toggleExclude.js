@@ -20,7 +20,7 @@ const schema = {
           properties: {
             userId: {
               type: 'string',
-              format: 'uuidv4'
+              format: 'uuid'
             }
           },
           required: ['userId'],

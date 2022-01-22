@@ -1,5 +1,5 @@
+import {nanoid} from 'nanoid';
 import socketIo from 'socket.io-client';
-import {v4 as uuid} from 'uuid';
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -43,7 +43,7 @@ Cypress.Commands.add('sendCommands', (socketIdentifier, commands) => {
     commands.forEach((cmd) => {
       w.__POINZ_E2E__[socketIdentifier].emit('command', {
         ...cmd,
-        id: uuid()
+        id: nanoid()
       });
     });
   });

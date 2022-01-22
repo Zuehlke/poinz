@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../../app/services/uuid';
 import {ROOM_STATE_FETCHED} from '../../../app/state/actions/eventActions';
 import rootReducer from '../../../app/state/rootReducer';
 import initialState from '../../../app/state/initialState';

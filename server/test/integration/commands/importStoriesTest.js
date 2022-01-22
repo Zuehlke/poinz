@@ -1,6 +1,7 @@
 import {promises as fs} from 'fs';
 import path from 'path';
-import {v4 as uuid} from 'uuid';
+
+import uuid from '../../../src/uuid';
 import {prepOneUserInOneRoom, textToCsvDataUrl} from '../../unit/testUtils';
 
 test('Should produce storyAdded events for all stories in data', async () => {

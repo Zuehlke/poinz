@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import initDb from './db';
 import avatarToZero from '../../migrations/20201017054522-avatar-to-zero';
 import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';

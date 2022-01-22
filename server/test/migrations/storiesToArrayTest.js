@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import initDb from './db';
 import storiesToArray from '../../migrations/20201014181259-stories-to-array';
 import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';

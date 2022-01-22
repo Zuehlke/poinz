@@ -18,7 +18,7 @@ const schema = {
           properties: {
             storyId: {
               type: 'string',
-              format: 'uuidv4'
+              format: 'uuid'
             }
           },
           required: ['storyId'],

@@ -1,8 +1,9 @@
 const EMAIL_REGEX =
   /^[-a-z0-9~!$%^&*_=+}{'?]+(\.[-a-z0-9~!$%^&*_=+}{'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 const EMAIL_MAX_LENGTH = 254;
-const ROOMID_REGEX = /^[-a-z0-9_]+$/;
-const UUIDv4_REGEX = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+const ROOMID_REGEX = /^[-a-z0-9_]+$/; // roomId must not contain uppercase values
+const UUIDv4_OR_NANOID_REGEX =
+  /^([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[-a-z0-9_]{21})$/; // either an old uuidv4 (lowercase) or a nanoid (limited alphabet, no uppercase letters)
 const CsvDATAURL_REGEX =
   /^data:(text\/csv|application\/vnd.ms-excel|application\/csv|text\/x-csv|application\/x-csv|text\/comma-separated-values|text\/x-comma-separated-values);base64,/;
 const USERNAME_REGEX = /^.{3,80}$/;
@@ -30,9 +31,19 @@ export function registerCustomFormats(tvi) {
       'must be a valid roomId: only the following characters are allowed: a-z 0-9 _ -'
     )
   );
+
+  /**
+   *  format "uid"  will match either the previously used UUIDv4 (https://www.npmjs.com/package/uuid) or the newly used nanoid (https://www.npmjs.com/package/nanoid)
+   *  we still need to accept old uuidv4, there are still such ids present in our persistent store in production.
+   *  **/
+
   tvi.addFormat(
-    'uuidv4',
-    validateStringFormat.bind(undefined, UUIDv4_REGEX, 'must be a valid uuid v4')
+    'uuid',
+    validateStringFormat.bind(
+      undefined,
+      UUIDv4_OR_NANOID_REGEX,
+      'must be a valid nanoid or uuid v4'
+    )
   );
   tvi.addFormat(
     'csvDataUrl',

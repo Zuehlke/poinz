@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../uuid';
 import defaultCardConfig from '../defaultCardConfig';
 import sampleStory from './joinRoomSampleStory';
 import {calcEmailHash} from './setEmail';

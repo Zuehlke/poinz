@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import initDb from './db';
 import fixUsernameLength from '../../migrations/20201019134711-fix-username-length';
 import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';

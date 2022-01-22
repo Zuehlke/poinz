@@ -62,7 +62,7 @@ export const baseCommandSchema = {
     },
     userId: {
       type: 'string',
-      format: 'uuidv4'
+      format: 'uuid'
     },
     name: {
       type: 'string',

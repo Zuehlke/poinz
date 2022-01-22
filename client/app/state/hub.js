@@ -1,6 +1,6 @@
 import log from 'loglevel';
-import {v4 as uuid} from 'uuid';
 
+import uuid from '../services/uuid';
 import appConfig from '../services/appConfig';
 import {COMMAND_SENT} from './actions/commandActions';
 

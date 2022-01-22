@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import persistentRoomsStore from '../../src/store/persistentRoomsStore';
 
 const LOCAL_MONGODB_CONNECTION_URI = 'mongodb://localhost:27017';

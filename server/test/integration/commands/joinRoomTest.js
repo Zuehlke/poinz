@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../../src/uuid';
 import {prepEmpty, prepOneUserInOneRoom} from '../../unit/testUtils';
 import defaultCardConfig from '../../../src/defaultCardConfig';
 import {hashRoomPassword} from '../../../src/auth/roomPasswordService';

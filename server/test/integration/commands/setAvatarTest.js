@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../../src/uuid';
 import {prepOneUserInOneRoom} from '../../unit/testUtils';
 
 test('Should produce avatarSet event', async () => {

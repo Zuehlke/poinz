@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../../src/uuid';
 import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../../unit/testUtils';
 
 test('Should produce newEstimationRoundStarted event', async () => {

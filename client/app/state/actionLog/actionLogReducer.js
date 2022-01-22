@@ -1,5 +1,5 @@
 import {formatTime} from '../../services/timeUtil';
-import {v4 as uuid} from 'uuid';
+import uuid from '../../services/uuid';
 
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
 import {getMatchingCardConfig, getRoomId} from '../room/roomSelectors';

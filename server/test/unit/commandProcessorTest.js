@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../src/uuid';
 import {newMockRoomsStore} from './testUtils';
 import processorFactory, {sanitizeRoomId} from '../../src/commandProcessor';
 import {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';

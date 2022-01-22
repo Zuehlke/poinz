@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../../src/uuid';
 import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
 
 test('Should produce storyRestored event', async () => {
@@ -83,7 +83,9 @@ test('Should throw if storyId is not uuid v4 format', async () => {
       },
       userId
     )
-  ).rejects.toThrow(/Format validation failed \(must be a valid uuid v4\) in \/payload\/storyId/);
+  ).rejects.toThrow(
+    /Format validation failed \(must be a valid nanoid or uuid v4\) in \/payload\/storyId/
+  );
 });
 
 describe('preconditions', () => {

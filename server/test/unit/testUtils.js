@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../src/uuid';
 
 // we want to test with our real command- and event handlers.
 import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
@@ -8,8 +8,14 @@ import {roomSchemaValidatorFactory} from '../../src/validation/schemaValidators'
 
 const validateRoom = roomSchemaValidatorFactory();
 
+/**
+ * jest string matcher that will match our uuids (= unique identifiers) in use.  These are either the "old" uuidv4 or the "new" nanoid
+ * @type {any}
+ */
 export const EXPECT_UUID_MATCHING = expect.stringMatching(
-  new RegExp(/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i)
+  new RegExp(
+    /^([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[-a-z0-9_]{21})$/
+  )
 );
 
 export function textToCsvDataUrl(csvContent) {

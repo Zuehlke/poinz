@@ -3,7 +3,7 @@ const storySchema = {
   properties: {
     id: {
       type: 'string',
-      format: 'uuidv4'
+      format: 'uuid'
     },
     title: {
       type: 'string',
@@ -43,7 +43,7 @@ const userSchema = {
   properties: {
     id: {
       type: 'string',
-      format: 'uuidv4'
+      format: 'uuid'
     },
     username: {
       type: ['string', 'undefined', 'null'],
@@ -78,7 +78,7 @@ const roomSchema = {
     },
     selectedStory: {
       type: ['string', 'undefined', 'null'],
-      format: 'uuidv4'
+      format: 'uuid'
     },
     cardConfig: {
       type: ['array', 'undefined', 'null'],

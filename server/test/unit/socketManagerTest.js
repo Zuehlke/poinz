@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../src/uuid';
 import socketManagerFactory from '../../src/socketManager';
 
 import {newMockRoomsStore} from './testUtils';

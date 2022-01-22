@@ -1,6 +1,6 @@
-import {v4 as uuid} from 'uuid';
 import jwt from 'jsonwebtoken';
 
+import uuid from '../../../src/uuid';
 import {issueJwt, validateJwt} from '../../../src/auth/jwtService';
 
 test('issue a new jwt', () => {

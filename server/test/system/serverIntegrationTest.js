@@ -1,6 +1,7 @@
 import http from 'http';
-import {v4 as uuid} from 'uuid';
 import socketIoClient from 'socket.io-client';
+
+import uuid from '../../src/uuid';
 import poinzSocketClientFactory from './poinzSocketClient';
 import {issueJwt} from '../../src/auth/jwtService';
 

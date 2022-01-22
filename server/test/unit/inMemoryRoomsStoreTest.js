@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../src/uuid';
 import inMemoryRoomsStore from '../../src/store/inMemoryRoomsStore';
 
 test('should save and retrieve a room', async () => {

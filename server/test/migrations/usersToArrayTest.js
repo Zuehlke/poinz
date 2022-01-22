@@ -1,5 +1,4 @@
-import {v4 as uuid} from 'uuid';
-
+import uuid from '../../src/uuid';
 import initDb from './db';
 import usersToArray from '../../migrations/20201014180128-users-to-array';
 

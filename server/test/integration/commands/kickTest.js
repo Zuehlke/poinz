@@ -1,5 +1,5 @@
-import {v4 as uuid} from 'uuid';
 import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
+import uuid from '../../../src/uuid';
 
 test('Should produce kicked event (userOne kicks disconnected userTwo)', async () => {
   const {roomId, userIdOne, userIdTwo, processor, mockRoomsStore} =

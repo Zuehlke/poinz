@@ -1,7 +1,7 @@
-import {v4 as uuid} from 'uuid';
 import path from 'path';
 import {promises as fs, constants as fsConst} from 'fs';
 
+import uuid from '../../src/uuid';
 import poinzSocketClientFactory from './poinzSocketClient';
 
 const clientEventActionReducerScenarioDir = path.resolve(
@@ -15,7 +15,7 @@ const clientEventActionReducerScenarioDir = path.resolve(
  *
  *  This needs a running Poinz backend on localhost:3000
  *
- *  This writes json files to the client directory (if there are changes in the produced events apart from the ever-changing uuids)!
+ *  This writes json files to the client directory (if there are changes in the produced events apart from the ever-changing uids (uuidv4 or nanoid))!
  *
  *  See /docu/technicalDocu.md for further information
  */

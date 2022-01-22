@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {v4 as uuid} from 'uuid';
 import PropTypes from 'prop-types';
 
+import uuid from '../../services/uuid';
 import CardConfigEditorItem from './CardConfigEditorItem';
 
 import {AddItemButton, ErrorMsg, StyledItems, StyledTextarea} from './_styled';

@@ -1,7 +1,7 @@
 import util from 'util';
-import {v4 as uuid} from 'uuid';
 import fastq from 'fastq';
 
+import uuid from './uuid';
 import getLogger from './getLogger';
 import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
 import {

@@ -1,5 +1,6 @@
-import {v4 as uuid} from 'uuid';
 import {parse as parseCsv} from 'papaparse';
+
+import uuid from '../uuid';
 import getLogger from '../getLogger';
 
 const LOGGER = getLogger('storyImportParser');

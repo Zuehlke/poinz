@@ -1,4 +1,4 @@
-import {v4 as uuid} from 'uuid';
+import uuid from '../../../src/uuid';
 import {prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
 
 test('Should produce revealed event', async () => {

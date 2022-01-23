@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import {L10nContext} from '../../services/l10n';
 import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
 import {
-  toggleAutoReveal,
-  toggleConfidence,
   setCardConfig,
-  setPassword
+  setPassword,
+  setRoomConfigToggleConfidence,
+  setRoomConfigToggleAutoReveal,
+  setRoomConfigIssueTrackingUrl
 } from '../../state/actions/commandActions';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
@@ -22,12 +23,14 @@ const RoomSettings = ({
   shown,
   autoReveal,
   withConfidence,
+  issueTrackingUrl,
   cardConfig,
   roomId,
   setCardConfig,
-  toggleAutoReveal,
-  toggleConfidence,
   setPassword,
+  setRoomConfigToggleConfidence,
+  setRoomConfigToggleAutoReveal,
+  setRoomConfigIssueTrackingUrl,
   passwordProtected
 }) => {
   const {t} = useContext(L10nContext);
@@ -42,6 +45,12 @@ const RoomSettings = ({
     setMyRoomPassword('');
   }, [passwordProtected]);
 
+  // derive issueTrackingUrl for input field from prop
+  const [myIssueTrackingUrl, setMyIssueTrackingUrl] = useState(issueTrackingUrl || '');
+  React.useEffect(() => {
+    setMyIssueTrackingUrl(issueTrackingUrl || '');
+  }, [issueTrackingUrl]);
+
   return (
     <StyledArea>
       <h4>{t('room')}</h4>
@@ -50,7 +59,11 @@ const RoomSettings = ({
         <h5>{t('toggleAutoReveal')}</h5>
         {t('autoRevealInfo')}
 
-        <p onClick={toggleAutoReveal} className="clickable" data-testid="toggleAutoReveal">
+        <p
+          onClick={setRoomConfigToggleAutoReveal}
+          className="clickable"
+          data-testid="toggleAutoReveal"
+        >
           <i className={autoReveal ? 'icon-check' : 'icon-check-empty'}></i> {t('autoReveal')}
         </p>
       </StyledSection>
@@ -115,7 +128,11 @@ const RoomSettings = ({
         <h5>{t('confidence')}</h5>
         {t('confidenceInfo')}
 
-        <p onClick={toggleConfidence} className="clickable" data-testid="toggleConfidence">
+        <p
+          onClick={setRoomConfigToggleConfidence}
+          className="clickable"
+          data-testid="toggleConfidence"
+        >
           <i className={withConfidence ? 'icon-check' : 'icon-check-empty'}></i>{' '}
           {t('toggleConfidence')}
         </p>
@@ -141,6 +158,32 @@ const RoomSettings = ({
       </StyledSection>
 
       <StyledSection>
+        <h5>{t('issueTrackingUrl')}</h5>
+        {t('issueTrackingUrlInfo')}
+
+        <StyledTextInput>
+          <input
+            data-testid="issueTrackingUrlInput"
+            type="text"
+            autoComplete="url"
+            id="issueTrackingUrl"
+            placeholder={t('issueTrackingUrlExample')}
+            value={myIssueTrackingUrl}
+            onChange={(e) => setMyIssueTrackingUrl(e.target.value)}
+            onKeyPress={onIssueTrackingUrlKeyPress}
+          />
+
+          <button
+            data-testid="setIssueTrackingUrlButton"
+            className="pure-button pure-button-primary"
+            onClick={() => setRoomConfigIssueTrackingUrl(myIssueTrackingUrl)}
+          >
+            <i className="icon-floppy" />
+          </button>
+        </StyledTextInput>
+      </StyledSection>
+
+      <StyledSection>
         <h5>{t('export')}</h5>
         {t('exportInfo')}
 
@@ -161,16 +204,25 @@ const RoomSettings = ({
   function savePassword() {
     setPassword(myRoomPassword);
   }
+
+  function onIssueTrackingUrlKeyPress(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      setRoomConfigIssueTrackingUrl(myIssueTrackingUrl);
+    }
+  }
 };
 
 RoomSettings.propTypes = {
   shown: PropTypes.bool,
   autoReveal: PropTypes.bool,
   withConfidence: PropTypes.bool,
-  toggleAutoReveal: PropTypes.func,
-  toggleConfidence: PropTypes.func,
+  issueTrackingUrl: PropTypes.string,
   setCardConfig: PropTypes.func,
   setPassword: PropTypes.func,
+  setRoomConfigToggleConfidence: PropTypes.func,
+  setRoomConfigToggleAutoReveal: PropTypes.func,
+  setRoomConfigIssueTrackingUrl: PropTypes.func,
   cardConfig: PropTypes.array,
   roomId: PropTypes.string,
   passwordProtected: PropTypes.bool
@@ -181,14 +233,16 @@ export default connect(
     shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
     autoReveal: state.room.autoReveal,
     withConfidence: state.room.withConfidence,
+    issueTrackingUrl: state.room.issueTrackingUrl,
     cardConfig: getCardConfigInOrder(state),
     roomId: getRoomId(state),
     passwordProtected: state.room.passwordProtected
   }),
   {
-    toggleAutoReveal,
-    toggleConfidence,
     setCardConfig,
-    setPassword
+    setPassword,
+    setRoomConfigToggleConfidence,
+    setRoomConfigToggleAutoReveal,
+    setRoomConfigIssueTrackingUrl
   }
 )(RoomSettings);

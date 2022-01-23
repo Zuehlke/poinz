@@ -45,9 +45,8 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       clearEstimate,
       newRound,
       setCardConfig,
-      toggleConfidence,
-      toggleAutoReveal,
-      setPassword
+      setPassword,
+      setRoomConfig
     }
   };
 
@@ -320,20 +319,12 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
     });
   }
 
-  function toggleAutoReveal(roomId, userId) {
+  function setRoomConfig(roomId, userId, config) {
     return sendCommand({
-      name: 'toggleAutoReveal',
+      name: 'setRoomConfig',
       roomId,
       userId,
-      payload: {}
-    });
-  }
-  function toggleConfidence(roomId, userId) {
-    return sendCommand({
-      name: 'toggleConfidence',
-      roomId,
-      userId,
-      payload: {}
+      payload: config
     });
   }
 

@@ -34,7 +34,7 @@ ValidatedInput.propTypes = {
   fieldValue: PropTypes.any.isRequired,
   setFieldValue: PropTypes.func.isRequired,
   onEnter: PropTypes.func,
-  allLowercase: PropTypes.bool, // if true, entered charachters get "lowercased" before pattern checking
+  allLowercase: PropTypes.bool, // if true, entered characters get "lowercased" before pattern checking
   regexPattern: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(RegExp)]).isRequired
 };
 export default ValidatedInput;

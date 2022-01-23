@@ -219,19 +219,45 @@ export const toggleExcluded = (userId) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const toggleAutoReveal = () => (dispatch, getState, sendCommand) => {
+/* these three properties are set with "setRoomConfig" command */
+
+export const setRoomConfigToggleAutoReveal = () => (dispatch, getState, sendCommand) => {
+  const {room} = getState();
   sendCommand({
-    name: 'toggleAutoReveal',
-    payload: {}
+    name: 'setRoomConfig',
+    payload: {
+      autoReveal: !room.autoReveal,
+      withConfidence: room.withConfidence,
+      issueTrackingUrl: room.issueTrackingUrl
+    }
   });
 };
 
-export const toggleConfidence = () => (dispatch, getState, sendCommand) => {
+export const setRoomConfigToggleConfidence = () => (dispatch, getState, sendCommand) => {
+  const {room} = getState();
   sendCommand({
-    name: 'toggleConfidence',
-    payload: {}
+    name: 'setRoomConfig',
+    payload: {
+      autoReveal: room.autoReveal,
+      withConfidence: !room.withConfidence,
+      issueTrackingUrl: room.issueTrackingUrl
+    }
   });
 };
+
+export const setRoomConfigIssueTrackingUrl =
+  (url = []) =>
+  (dispatch, getState, sendCommand) => {
+    const {room} = getState();
+    sendCommand({
+      name: 'setRoomConfig',
+      payload: {
+        autoReveal: room.autoReveal,
+        withConfidence: room.withConfidence,
+        issueTrackingUrl: url
+      }
+    });
+  };
 
 export const kick = (userId) => (dispatch, getState, sendCommand) => {
   sendCommand({

@@ -5,6 +5,7 @@ export const roomInitialState = {
   roomId: undefined,
   autoReveal: true,
   withConfidence: false,
+  issueTrackingUrl: undefined,
   passwordProtected: false,
   cardConfig: {
     ordered: [],
@@ -28,6 +29,7 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
         ...state,
         autoReveal: action.room.autoReveal,
         withConfidence: action.room.withConfidence,
+        issueTrackingUrl: action.room.issueTrackingUrl,
         passwordProtected: action.room.passwordProtected,
         cardConfig: {
           ordered: action.room.cardConfig,
@@ -43,6 +45,7 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
           roomId: event.roomId,
           autoReveal: event.payload.autoReveal,
           withConfidence: event.payload.withConfidence,
+          issueTrackingUrl: event.payload.issueTrackingUrl,
           passwordProtected: event.payload.passwordProtected,
           cardConfig: {
             ordered: event.payload.cardConfig,
@@ -79,25 +82,14 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
         }
       };
 
-    case EVENT_ACTION_TYPES.autoRevealOn:
+    case EVENT_ACTION_TYPES.roomConfigSet:
       return {
         ...state,
-        autoReveal: true
-      };
-    case EVENT_ACTION_TYPES.autoRevealOff:
-      return {
-        ...state,
-        autoReveal: false
-      };
-    case EVENT_ACTION_TYPES.confidenceOn:
-      return {
-        ...state,
-        withConfidence: true
-      };
-    case EVENT_ACTION_TYPES.confidenceOff:
-      return {
-        ...state,
-        withConfidence: false
+        autoReveal: !!event.payload.autoReveal,
+        withConfidence: !!event.payload.withConfidence,
+        issueTrackingUrl: event.payload.issueTrackingUrl
+          ? event.payload.issueTrackingUrl
+          : undefined
       };
     case EVENT_ACTION_TYPES.passwordSet:
       return {

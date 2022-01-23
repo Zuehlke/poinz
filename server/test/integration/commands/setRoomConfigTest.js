@@ -1,7 +1,7 @@
 import uuid from '../../../src/uuid';
 import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
 
-test('Should produce autoRevealOff & autoRevealOn events', async () => {
+test('Should produce roomConfigSet event with all properties set', async () => {
   const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
   const commandId = uuid();
 
@@ -9,31 +9,45 @@ test('Should produce autoRevealOff & autoRevealOn events', async () => {
     {
       id: commandId,
       roomId: roomId,
-      name: 'toggleAutoReveal',
-      payload: {}
+      name: 'setRoomConfig',
+      payload: {
+        autoReveal: true,
+        withConfidence: true,
+        issueTrackingUrl: 'https://www.some.url.com/issues/{ISSUE}'
+      }
     },
     userId
   );
 
-  expect(producedEvents).toMatchEvents(commandId, roomId, 'autoRevealOff');
-  expect(room.autoReveal).toBe(false);
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'roomConfigSet');
 
-  const commandId2 = uuid();
-  const {producedEvents: producedEvents2, room: room2} = await processor(
-    {
-      id: commandId2,
-      roomId: roomId,
-      name: 'toggleAutoReveal',
-      payload: {}
-    },
-    userId
-  );
-
-  expect(producedEvents2).toMatchEvents(commandId2, roomId, 'autoRevealOn');
-  expect(room2.autoReveal).toBe(true);
+  expect(room.autoReveal).toBe(true);
+  expect(room.withConfidence).toBe(true);
+  expect(room.issueTrackingUrl).toBe('https://www.some.url.com/issues/{ISSUE}');
 });
 
-test('Should not produce "revealed" event if autoReveal is off', async () => {
+test('Should produce roomConfigSet event with no properties set (default values in room)', async () => {
+  const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();
+  const commandId = uuid();
+
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId: roomId,
+      name: 'setRoomConfig',
+      payload: {}
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'roomConfigSet');
+
+  expect(room.autoReveal).toBe(false);
+  expect(room.withConfidence).toBe(false);
+  expect(room.issueTrackingUrl).toBeUndefined();
+});
+
+test('Should not produce "revealed" on estimation if autoReveal is off', async () => {
   const {roomId, storyId, userIdOne, userIdTwo, processor, mockRoomsStore} =
     await prepTwoUsersInOneRoomWithOneStory();
 

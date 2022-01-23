@@ -104,6 +104,9 @@ const roomSchema = {
     withConfidence: {
       type: 'boolean'
     },
+    issueTrackingUrl: {
+      type: ['string', 'undefined', 'null']
+    },
     markedForDeletion: {
       type: 'boolean'
     },

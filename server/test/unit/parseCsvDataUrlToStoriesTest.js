@@ -78,3 +78,19 @@ test('parse csv with generic fields: "title" "description"  "key"', async () => 
     title: 'PRJ-123 first story'
   });
 });
+
+test('include issue deeplink URL into description if issue-tracking url is provided', async () => {
+  const dataUrl = textToCsvDataUrl(
+    'Issue key,Summary,description\nPRJ-123,Some Title,Some description'
+  );
+
+  const stories = parseCsvDataUrlToStories(dataUrl, 'https://jira.zuehlke.com/browse/{ISSUE}');
+
+  expect(stories.length).toBe(1);
+  expect(stories[0]).toMatchObject({
+    description: 'https://jira.zuehlke.com/browse/PRJ-123\n\nSome description',
+    estimations: {},
+    storyId: EXPECT_UUID_MATCHING,
+    title: 'PRJ-123 Some Title'
+  });
+});

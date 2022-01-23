@@ -36,12 +36,9 @@ export const EVENT_ACTION_TYPES = {
   storyTrashed: 'STORY_TRASHED',
   storyRestored: 'STORY_RESTORED',
   cardConfigSet: 'CARD_CONFIG_SET',
-  autoRevealOn: 'AUTO_REVEAL_ON',
-  autoRevealOff: 'AUTO_REVEAL_OFF',
-  confidenceOn: 'CONFIDENCE_ON',
-  confidenceOff: 'CONFIDENCE_OFF',
   passwordSet: 'PASSWORD_SET',
   passwordCleared: 'PASSWORD_CLEARED',
+  roomConfigSet: 'ROOM_CONFIG_SET',
   tokenIssued: 'TOKEN_ISSUED'
 };
 

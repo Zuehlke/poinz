@@ -108,7 +108,12 @@ test('estimatingTest: Adding Stories, estimate them', async () => {
   await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
 
   // activate confidence levels on this room
-  await client.cmdAndWait(client.cmds.toggleConfidence(roomId, firstUserId));
+  await client.cmdAndWait(
+    client.cmds.setRoomConfig(roomId, firstUserId, {
+      autoReveal: true /*default*/,
+      withConfidence: true
+    })
+  );
 
   // first user adds two stories
   const [storyAddedOne] = await client.cmdAndWait(
@@ -293,8 +298,8 @@ test('includeAndExcludeTest: two users, one excludes and includes himself. Then 
   client.disconnect();
 });
 
-test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', async () => {
-  const outputFilename = 'roomSettingsTest.json';
+test('roomConfigTest:  user configures room (cardConfig and autoReveal/confidence/issueTrackingUrl)', async () => {
+  const outputFilename = 'roomConfigTest.json';
 
   const client = poinzSocketClientFactory();
 
@@ -311,8 +316,20 @@ test('roomSettingsTest:  user configures room (cardConfig and autoReveal)', asyn
     ])
   );
 
-  await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
-  await client.cmdAndWait(client.cmds.toggleAutoReveal(roomId, firstUserId));
+  await client.cmdAndWait(
+    client.cmds.setRoomConfig(roomId, firstUserId, {
+      autoReveal: false,
+      withConfidence: true,
+      issueTrackingUrl: 'https://some.url.com'
+    })
+  );
+  await client.cmdAndWait(
+    client.cmds.setRoomConfig(roomId, firstUserId, {
+      autoReveal: true,
+      withConfidence: false,
+      issueTrackingUrl: ''
+    })
+  );
 
   // in the end, write to file and close socket
   await dumpEventsToFile(client.getAllReceivedEvents(), outputFilename);

@@ -6,7 +6,7 @@ import {getCardConfigInOrder} from '../../../app/state/room/roomSelectors';
 let scenario;
 
 beforeAll(async () => {
-  scenario = await loadEventsFromJson('roomSettingsTest.json');
+  scenario = await loadEventsFromJson('roomConfigTest.json');
 });
 
 beforeEach(() => {
@@ -34,13 +34,18 @@ test('autoReveal', () => {
 
   modifiedState = reduceMultipleEvents(
     getScenarioStartingState(joinedEvtOne.correlationId),
-    scenario.getNextEvents(7) // up until before first toggle
+    scenario.getNextEvents(7) // up until before "roomConfigSet" event
   );
+
   expect(modifiedState.room.autoReveal).toBe(true); // default is true
 
-  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // autoRevealOff
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // first roomConfigSet event
   expect(modifiedState.room.autoReveal).toBe(false);
+  expect(modifiedState.room.withConfidence).toBe(true);
+  expect(modifiedState.room.issueTrackingUrl).toBe('https://some.url.com');
 
-  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // autoRevealOn
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); //  second roomConfigSet event
   expect(modifiedState.room.autoReveal).toBe(true);
+  expect(modifiedState.room.withConfidence).toBe(false);
+  expect(modifiedState.room.issueTrackingUrl).toBeUndefined();
 });

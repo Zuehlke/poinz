@@ -37,7 +37,7 @@ const importStoriesCommandHandler = {
   schema,
   fn: (pushEvent, room, command) => {
     try {
-      const stories = parseCsvDataUrlToStories(command.payload.data);
+      const stories = parseCsvDataUrlToStories(command.payload.data, room.issueTrackingUrl);
 
       if (stories.length < 1) {
         pushImportFailed(pushEvent, room, new Error('No Stories in payload'));

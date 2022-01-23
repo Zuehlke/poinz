@@ -31,7 +31,7 @@
   "toggleMenu": "Settings",
   "customRoomName": "Custom Room Name",
   "welcomeBack": "Welcome back",
-  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is potentially publicly available! We do not recommend that you use PoinZ as a permanent information storage. PoinZ is provided as is without warranty of any kind!",
+  "disclaimer": "Use Poinz at your own risk! Be aware that all information that you enter is potentially publicly available! We do not recommend that you use PoinZ as a permanent information storage. PoinZ is provided as is, without warranty of any kind!",
   "markSpectator": "Mark as spectator",
   "spectatorInfo": "Spectators cannot participate in estimations. They still can add and modify stories.",
   "spectator": "Spectator",
@@ -90,5 +90,8 @@
   "confidenceInfo": "Allow users to specify whether they are unsure (not confident) or very sure (very confident) when estimating a story.",
   "toggleConfidence": "Enable confidence",
   "includeUnsureEstimations": "Include low confidence estimations",
-  "more": "More..."
+  "more": "More...",
+  "issueTrackingUrl": "Issue Tracking URL",
+  "issueTrackingUrlInfo": "If you set a URL to your Issue Tracking System (e.g. Jira) here, all stories will contain a deeplink to the respective issue after importing them. The placeholder {ISSUE} will be replaced with the issue key.",
+  "issueTrackingUrlExample": "https://my.jira.com/browse/{ISSUE}"
 }

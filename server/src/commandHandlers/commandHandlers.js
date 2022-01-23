@@ -18,9 +18,8 @@ import setEmail from './setEmail';
 import setAvatar from './setAvatar';
 import toggleExclude from './toggleExclude';
 import setCardConfig from './setCardConfig';
-import toggleAutoReveal from './toggleAutoReveal';
-import toggleConfidence from './toggleConfidence';
 import setPassword from './setPassword';
+import setRoomConfig from './setRoomConfig';
 
 export default {
   addStory,
@@ -43,8 +42,7 @@ export default {
   setAvatar,
   toggleExclude,
   setCardConfig,
-  toggleAutoReveal,
-  toggleConfidence,
+  setRoomConfig,
   setPassword
 };
 

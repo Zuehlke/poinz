@@ -94,7 +94,11 @@ ISS-123,The Title, some Description
 ISS-554,Another Story, With a description
 ```
 
-PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.
+PoinZ will also parse a default **Jira** issue export, where column headers are named: "Issue Key", "Summary", "Description".
+
+( PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.)
+
+Note: If you want to link to your Issue Tracking System, check out [Issue Tracking URL](#issue-tracking-url).
 
 ### Editing stories
 
@@ -192,7 +196,7 @@ moderators.
 
 These settings will affect the room and thus all users in the same room.
 
-<img src="https://user-images.githubusercontent.com/1777143/98459633-fbea8e80-219c-11eb-863b-c27d9a6b8f87.png" width="150" />
+<img src="https://user-images.githubusercontent.com/1777143/150672684-d3eed4d0-c362-425f-a891-5cc45bab07be.png" width="300" />
 
 #### Auto Reveal
 
@@ -219,7 +223,7 @@ For an existing room without password protection, the room settings allow you to
 override an existing password. If you click the save button with an empty password field, you remove the password
 protection of that room.
 
-<img src="https://user-images.githubusercontent.com/1777143/105578826-379bfa00-5d83-11eb-9a34-6fea1abcd9d3.png" width="300" />
+<img src="https://user-images.githubusercontent.com/1777143/105578826-379bfa00-5d83-11eb-9a34-6fea1abcd9d3.png" width="250" />
 
 #### Confidence
 
@@ -228,7 +232,7 @@ story. See [Estimating with "Confidence Levels"](#estimating-with-confidence-lev
 
 #### Custom Cards
 
-<img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="150" />
+<img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="250" />
 
 If the default set of cards does not meet your needs, you can change it.
 
@@ -239,6 +243,16 @@ If the default set of cards does not meet your needs, you can change it.
 You can also use the text editor and edit the json array directly.
 
 If you click on "Default", you immediately restore the default card configuration.
+
+#### Issue Tracking URL
+
+<img src="https://user-images.githubusercontent.com/1777143/150672743-742c01e2-7b1b-4fb7-9ba4-3321901ead76.png" width="250" />
+
+If you want to link your imported stories to your Issue Tracking (e.g. Jira), you can set a URL here. E.g. *https://my.jira.com/browse/{ISSUE}*.
+The placeholder {ISSUE} will be replaced with the issue key.
+
+If you [import stories](#importing-stories) (via csv) PoinZ will add a deeplink to the respective issue description. 
+
 
 ## Security
 

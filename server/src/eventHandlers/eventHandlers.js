@@ -21,13 +21,10 @@ import excludedFromEstimations from './excludedFromEstimations';
 import includedInEstimations from './includedInEstimations';
 import consensusAchieved from './consensusAchieved';
 import cardConfigSet from './cardConfigSet';
-import autoRevealOff from './autoRevealOff';
-import autoRevealOn from './autoRevealOn';
-import confidenceOn from './confidenceOn';
-import confidenceOff from './confidenceOff';
 import passwordSet from './passwordSet';
 import passwordCleared from './passwordCleared';
 import tokenIssued from './tokenIssued';
+import roomConfigSet from './roomConfigSet';
 
 export default {
   connectionLost,
@@ -53,10 +50,7 @@ export default {
   excludedFromEstimations,
   includedInEstimations,
   cardConfigSet,
-  autoRevealOff,
-  autoRevealOn,
-  confidenceOn,
-  confidenceOff,
+  roomConfigSet,
   passwordSet,
   passwordCleared,
   tokenIssued

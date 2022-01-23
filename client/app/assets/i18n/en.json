@@ -92,6 +92,6 @@
   "includeUnsureEstimations": "Include low confidence estimations",
   "more": "More...",
   "issueTrackingUrl": "Issue Tracking URL",
-  "issueTrackingUrlInfo": "If you set a URL to your issue tracking system (e.g. Jira) here, all stories will contain a deeplink to the respective issue after importing them. The placeholder {ISSUE} will be replaced with the issue key.",
+  "issueTrackingUrlInfo": "If you set a URL to your Issue Tracking System (e.g. Jira) here, all stories will contain a deeplink to the respective issue after importing them. The placeholder {ISSUE} will be replaced with the issue key.",
   "issueTrackingUrlExample": "https://my.jira.com/browse/{ISSUE}"
 }

@@ -5,11 +5,11 @@ import PropTypes from 'prop-types';
 import {L10nContext} from '../../services/l10n';
 import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
 import {
-  toggleAutoReveal,
-  toggleConfidence,
   setCardConfig,
   setPassword,
-  setIssueTrackingUrl
+  setRoomConfigToggleConfidence,
+  setRoomConfigToggleAutoReveal,
+  setRoomConfigIssueTrackingUrl
 } from '../../state/actions/commandActions';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
@@ -27,10 +27,10 @@ const RoomSettings = ({
   cardConfig,
   roomId,
   setCardConfig,
-  toggleAutoReveal,
-  toggleConfidence,
-  setIssueTrackingUrl,
   setPassword,
+  setRoomConfigToggleConfidence,
+  setRoomConfigToggleAutoReveal,
+  setRoomConfigIssueTrackingUrl,
   passwordProtected
 }) => {
   const {t} = useContext(L10nContext);
@@ -59,7 +59,11 @@ const RoomSettings = ({
         <h5>{t('toggleAutoReveal')}</h5>
         {t('autoRevealInfo')}
 
-        <p onClick={toggleAutoReveal} className="clickable" data-testid="toggleAutoReveal">
+        <p
+          onClick={setRoomConfigToggleAutoReveal}
+          className="clickable"
+          data-testid="toggleAutoReveal"
+        >
           <i className={autoReveal ? 'icon-check' : 'icon-check-empty'}></i> {t('autoReveal')}
         </p>
       </StyledSection>
@@ -124,7 +128,11 @@ const RoomSettings = ({
         <h5>{t('confidence')}</h5>
         {t('confidenceInfo')}
 
-        <p onClick={toggleConfidence} className="clickable" data-testid="toggleConfidence">
+        <p
+          onClick={setRoomConfigToggleConfidence}
+          className="clickable"
+          data-testid="toggleConfidence"
+        >
           <i className={withConfidence ? 'icon-check' : 'icon-check-empty'}></i>{' '}
           {t('toggleConfidence')}
         </p>
@@ -168,7 +176,7 @@ const RoomSettings = ({
           <button
             data-testid="setIssueTrackingUrlButton"
             className="pure-button pure-button-primary"
-            onClick={() => setIssueTrackingUrl(myIssueTrackingUrl)}
+            onClick={() => setRoomConfigIssueTrackingUrl(myIssueTrackingUrl)}
           >
             <i className="icon-floppy" />
           </button>
@@ -200,7 +208,7 @@ const RoomSettings = ({
   function onIssueTrackingUrlKeyPress(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      setIssueTrackingUrl(myIssueTrackingUrl);
+      setRoomConfigIssueTrackingUrl(myIssueTrackingUrl);
     }
   }
 };
@@ -210,11 +218,11 @@ RoomSettings.propTypes = {
   autoReveal: PropTypes.bool,
   withConfidence: PropTypes.bool,
   issueTrackingUrl: PropTypes.string,
-  toggleAutoReveal: PropTypes.func,
-  toggleConfidence: PropTypes.func,
   setCardConfig: PropTypes.func,
   setPassword: PropTypes.func,
-  setIssueTrackingUrl: PropTypes.func,
+  setRoomConfigToggleConfidence: PropTypes.func,
+  setRoomConfigToggleAutoReveal: PropTypes.func,
+  setRoomConfigIssueTrackingUrl: PropTypes.func,
   cardConfig: PropTypes.array,
   roomId: PropTypes.string,
   passwordProtected: PropTypes.bool
@@ -231,10 +239,10 @@ export default connect(
     passwordProtected: state.room.passwordProtected
   }),
   {
-    toggleAutoReveal,
-    toggleConfidence,
     setCardConfig,
-    setIssueTrackingUrl,
-    setPassword
+    setPassword,
+    setRoomConfigToggleConfidence,
+    setRoomConfigToggleAutoReveal,
+    setRoomConfigIssueTrackingUrl
   }
 )(RoomSettings);

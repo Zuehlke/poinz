@@ -82,30 +82,14 @@ export default function roomReducer(state = roomInitialState, action, ownUserId)
         }
       };
 
-    case EVENT_ACTION_TYPES.autoRevealOn:
+    case EVENT_ACTION_TYPES.roomConfigSet:
       return {
         ...state,
-        autoReveal: true
-      };
-    case EVENT_ACTION_TYPES.autoRevealOff:
-      return {
-        ...state,
-        autoReveal: false
-      };
-    case EVENT_ACTION_TYPES.confidenceOn:
-      return {
-        ...state,
-        withConfidence: true
-      };
-    case EVENT_ACTION_TYPES.confidenceOff:
-      return {
-        ...state,
-        withConfidence: false
-      };
-    case EVENT_ACTION_TYPES.issueTrackingUrlSet:
-      return {
-        ...state,
-        issueTrackingUrlSet: event.payload.url
+        autoReveal: !!event.payload.autoReveal,
+        withConfidence: !!event.payload.withConfidence,
+        issueTrackingUrl: event.payload.issueTrackingUrl
+          ? event.payload.issueTrackingUrl
+          : undefined
       };
     case EVENT_ACTION_TYPES.passwordSet:
       return {

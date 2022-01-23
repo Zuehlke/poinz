@@ -196,7 +196,7 @@ moderators.
 
 These settings will affect the room and thus all users in the same room.
 
-<img src="https://user-images.githubusercontent.com/1777143/150672684-d3eed4d0-c362-425f-a891-5cc45bab07be.png" width="150" />
+<img src="https://user-images.githubusercontent.com/1777143/150672684-d3eed4d0-c362-425f-a891-5cc45bab07be.png" width="300" />
 
 #### Auto Reveal
 

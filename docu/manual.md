@@ -94,6 +94,8 @@ ISS-123,The Title, some Description
 ISS-554,Another Story, With a description
 ```
 
+PoinZ will also parse a default **Jira** issue export, where column headers are named: "Issue Key", "Summary", "Description".
+
 PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.
 
 ### Editing stories

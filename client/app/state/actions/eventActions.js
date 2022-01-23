@@ -40,6 +40,7 @@ export const EVENT_ACTION_TYPES = {
   autoRevealOff: 'AUTO_REVEAL_OFF',
   confidenceOn: 'CONFIDENCE_ON',
   confidenceOff: 'CONFIDENCE_OFF',
+  issueTrackingUrlSet: 'ISSUETRACKINGURL_SET',
   passwordSet: 'PASSWORD_SET',
   passwordCleared: 'PASSWORD_CLEARED',
   tokenIssued: 'TOKEN_ISSUED'

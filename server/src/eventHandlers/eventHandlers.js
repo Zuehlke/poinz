@@ -25,6 +25,7 @@ import autoRevealOff from './autoRevealOff';
 import autoRevealOn from './autoRevealOn';
 import confidenceOn from './confidenceOn';
 import confidenceOff from './confidenceOff';
+import issueTrackingUrlSet from './issueTrackingUrlSet';
 import passwordSet from './passwordSet';
 import passwordCleared from './passwordCleared';
 import tokenIssued from './tokenIssued';
@@ -57,6 +58,7 @@ export default {
   autoRevealOn,
   confidenceOn,
   confidenceOff,
+  issueTrackingUrlSet,
   passwordSet,
   passwordCleared,
   tokenIssued

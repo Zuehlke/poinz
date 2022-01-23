@@ -302,6 +302,17 @@ export const setCardConfig =
     });
   };
 
+export const setIssueTrackingUrl =
+  (url = []) =>
+  (dispatch, getState, sendCommand) => {
+    sendCommand({
+      name: 'setIssueTrackingUrl',
+      payload: {
+        url
+      }
+    });
+  };
+
 export const setPassword = (password) => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'setPassword',

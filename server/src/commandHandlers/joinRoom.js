@@ -150,6 +150,7 @@ function joinExistingRoom(pushEvent, room, command, userId) {
     cardConfig: room.cardConfig ? room.cardConfig : defaultCardConfig,
     autoReveal: room.autoReveal,
     withConfidence: room.withConfidence,
+    issueTrackingUrl: room.issueTrackingUrl,
     passwordProtected: !!room.password
   };
 

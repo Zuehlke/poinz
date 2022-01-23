@@ -20,6 +20,7 @@ import toggleExclude from './toggleExclude';
 import setCardConfig from './setCardConfig';
 import toggleAutoReveal from './toggleAutoReveal';
 import toggleConfidence from './toggleConfidence';
+import setIssueTrackingUrl from './setIssueTrackingUrl';
 import setPassword from './setPassword';
 
 export default {
@@ -45,6 +46,7 @@ export default {
   setCardConfig,
   toggleAutoReveal,
   toggleConfidence,
+  setIssueTrackingUrl,
   setPassword
 };
 

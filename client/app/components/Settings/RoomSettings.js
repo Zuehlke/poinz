@@ -8,7 +8,8 @@ import {
   toggleAutoReveal,
   toggleConfidence,
   setCardConfig,
-  setPassword
+  setPassword,
+  setIssueTrackingUrl
 } from '../../state/actions/commandActions';
 import PasswordField from '../common/PasswordField';
 import RoomExportFileDownload from './RoomExportFileDownload';
@@ -22,11 +23,13 @@ const RoomSettings = ({
   shown,
   autoReveal,
   withConfidence,
+  issueTrackingUrl,
   cardConfig,
   roomId,
   setCardConfig,
   toggleAutoReveal,
   toggleConfidence,
+  setIssueTrackingUrl,
   setPassword,
   passwordProtected
 }) => {
@@ -41,6 +44,12 @@ const RoomSettings = ({
   React.useEffect(() => {
     setMyRoomPassword('');
   }, [passwordProtected]);
+
+  // derive issueTrackingUrl for input field from prop
+  const [myIssueTrackingUrl, setMyIssueTrackingUrl] = useState(issueTrackingUrl || '');
+  React.useEffect(() => {
+    setMyIssueTrackingUrl(issueTrackingUrl || '');
+  }, [issueTrackingUrl]);
 
   return (
     <StyledArea>
@@ -141,6 +150,32 @@ const RoomSettings = ({
       </StyledSection>
 
       <StyledSection>
+        <h5>{t('issueTrackingUrl')}</h5>
+        {t('issueTrackingUrlInfo')}
+
+        <StyledTextInput>
+          <input
+            data-testid="issueTrackingUrlInput"
+            type="text"
+            autoComplete="url"
+            id="issueTrackingUrl"
+            placeholder={t('issueTrackingUrlExample')}
+            value={myIssueTrackingUrl}
+            onChange={(e) => setMyIssueTrackingUrl(e.target.value)}
+            onKeyPress={onIssueTrackingUrlKeyPress}
+          />
+
+          <button
+            data-testid="setIssueTrackingUrlButton"
+            className="pure-button pure-button-primary"
+            onClick={() => setIssueTrackingUrl(myIssueTrackingUrl)}
+          >
+            <i className="icon-floppy" />
+          </button>
+        </StyledTextInput>
+      </StyledSection>
+
+      <StyledSection>
         <h5>{t('export')}</h5>
         {t('exportInfo')}
 
@@ -161,16 +196,25 @@ const RoomSettings = ({
   function savePassword() {
     setPassword(myRoomPassword);
   }
+
+  function onIssueTrackingUrlKeyPress(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      setIssueTrackingUrl(myIssueTrackingUrl);
+    }
+  }
 };
 
 RoomSettings.propTypes = {
   shown: PropTypes.bool,
   autoReveal: PropTypes.bool,
   withConfidence: PropTypes.bool,
+  issueTrackingUrl: PropTypes.string,
   toggleAutoReveal: PropTypes.func,
   toggleConfidence: PropTypes.func,
   setCardConfig: PropTypes.func,
   setPassword: PropTypes.func,
+  setIssueTrackingUrl: PropTypes.func,
   cardConfig: PropTypes.array,
   roomId: PropTypes.string,
   passwordProtected: PropTypes.bool
@@ -181,6 +225,7 @@ export default connect(
     shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
     autoReveal: state.room.autoReveal,
     withConfidence: state.room.withConfidence,
+    issueTrackingUrl: state.room.issueTrackingUrl,
     cardConfig: getCardConfigInOrder(state),
     roomId: getRoomId(state),
     passwordProtected: state.room.passwordProtected
@@ -189,6 +234,7 @@ export default connect(
     toggleAutoReveal,
     toggleConfidence,
     setCardConfig,
+    setIssueTrackingUrl,
     setPassword
   }
 )(RoomSettings);

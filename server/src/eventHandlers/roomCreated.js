@@ -8,7 +8,8 @@ function roomCreatedEventHandler(room, eventPayload) {
     stories: [],
     created: Date.now(),
     autoReveal: true,
-    withConfidence: false
+    withConfidence: false,
+    issueTrackingUrl: undefined
   };
 
   if (eventPayload.password) {

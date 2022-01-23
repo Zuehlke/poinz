@@ -1,3 +1,10 @@
+### 0.14.0: 2022-99-99
+
+* Link imported stories to issue tracking system
+* Unused rooms will now be kept for two months instead of one
+* Replace uuidv4 with nanoid
+* Dependencies updated
+
 ### 0.13.4: 2022-01-06
 
 * New function in the active Backlog: Move all (visible) stories to the trash

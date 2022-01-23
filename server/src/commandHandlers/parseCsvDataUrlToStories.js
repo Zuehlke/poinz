@@ -12,10 +12,11 @@ const STORY_DESCRIPTION_CHAR_LIMIT = 2000;
  * parses the given data url (data:text/csv;base64,U3VtbWFyeSxJc3N1ZSBrZXksSXNzdW.......) containing a list of "issues" (e.g. from jira)
  * into Poinz stories
  *
- * @param data
+ * @param {string} data
+ * @param {string} issueTrackingUrlPattern
  * @return {object[]}
  */
-export default function parseCsvDataUrlToStories(data) {
+export default function parseCsvDataUrlToStories(data, issueTrackingUrlPattern = '') {
   try {
     LOGGER.debug('Parsing stories...');
 
@@ -32,13 +33,15 @@ export default function parseCsvDataUrlToStories(data) {
       throw new Error('Got errors from parsing or input got truncated...');
     }
 
-    return results.data.map(issueObjectToStory).filter((story) => !!story);
+    return results.data
+      .map(issueObjectToStory.bind(undefined, issueTrackingUrlPattern))
+      .filter((story) => !!story);
   } catch (err) {
     throw new Error('Could not parse to stories ' + err);
   }
 }
 
-function issueObjectToStory(issueObject) {
+function issueObjectToStory(issueTrackingUrlPattern, issueObject) {
   const title = getTitleFromIssueObject(issueObject);
 
   if (!title) {
@@ -47,14 +50,14 @@ function issueObjectToStory(issueObject) {
 
   return {
     title,
-    description: getDescriptionFromIssueObject(issueObject),
+    description: getDescriptionFromIssueObject(issueTrackingUrlPattern, issueObject),
     storyId: uuid(),
     estimations: {},
     createdAt: Date.now()
   };
 }
 
-const KEY_PROPERTY_NAMES = ['Issue key', 'Issue', 'issue', 'Key', 'key'];
+const KEY_PROPERTY_NAMES = ['Issue key', 'Issue Key', 'Issue', 'issue', 'Key', 'key'];
 const TITLE_PROPERTY_NAMES = ['Summary', 'summary', 'Title', 'title'];
 const DESCR_PROPERTY_NAMES = ['Description', 'description', 'Descr', 'descr'];
 
@@ -73,12 +76,19 @@ function getTitleFromIssueObject(issueObject) {
   return title.trim().substring(0, STORY_TITLE_CHAR_LIMIT);
 }
 
-function getDescriptionFromIssueObject(issueObject) {
+function getDescriptionFromIssueObject(issueTrackingUrlPattern, issueObject) {
   let description = '';
+  const keyProp = KEY_PROPERTY_NAMES.find(isPropMatch.bind(issueObject));
+  if (issueTrackingUrlPattern && keyProp) {
+    description += issueTrackingUrlPattern.replace(/\{ISSUE}/, issueObject[keyProp]);
+    description += '\n\n';
+  }
+
   const descrProp = DESCR_PROPERTY_NAMES.find(isPropMatch.bind(issueObject));
   if (descrProp) {
     description += issueObject[descrProp];
   }
+
   return description.trim().substring(0, STORY_DESCRIPTION_CHAR_LIMIT);
 }
 

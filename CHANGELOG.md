@@ -1,4 +1,4 @@
-### 0.14.0: 2022-99-99
+### 0.14.0: 2022-01-23
 
 * Link imported stories to issue tracking system
 * Unused rooms will now be kept for two months instead of one

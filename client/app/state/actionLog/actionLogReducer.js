@@ -87,20 +87,27 @@ export default function (state, action, oldState) {
     case EVENT_ACTION_TYPES.excludedFromEstimations: {
       const isOwn = getOwnUserId(state) === payload.userId;
       if (isOwn) {
-        return updateLogInState(`${username} excluded himself/herself from estimations`);
+        return updateLogInState(
+          `${username} excluded himself/herself from estimations (Spectator)`
+        );
       } else {
         return updateLogInState(
-          `${username} excluded ${getUsername(state, payload.userId)} from estimations`
+          `${username} excluded ${getUsername(state, payload.userId)} from estimations (Spectator)`
         );
       }
     }
     case EVENT_ACTION_TYPES.includedInEstimations: {
       const isOwn = getOwnUserId(state) === payload.userId;
       if (isOwn) {
-        return updateLogInState(`${username} included himself/herself in estimations`);
+        return updateLogInState(
+          `${username} included himself/herself in estimations (no longer a Spectator)`
+        );
       } else {
         return updateLogInState(
-          `${username} included ${getUsername(state, payload.userId)} in estimations`
+          `${username} included ${getUsername(
+            state,
+            payload.userId
+          )} in estimations (no longer a Spectator)`
         );
       }
     }
@@ -166,10 +173,15 @@ export default function (state, action, oldState) {
     // ROOM configuration
     case EVENT_ACTION_TYPES.cardConfigSet:
       return updateLogInState(`${username} set new custom card configuration for this room`);
-    case EVENT_ACTION_TYPES.autoRevealOn:
-      return updateLogInState(`${username} enabled auto reveal for this room`);
-    case EVENT_ACTION_TYPES.autoRevealOff:
-      return updateLogInState(`${username} disabled auto reveal for this room`);
+    case EVENT_ACTION_TYPES.roomConfigSet: {
+      const autoRevealOnOff = state.room.autoReveal ? 'on' : 'off';
+      const confidenceOnOff = state.room.withConfidence ? 'on' : 'off';
+      const url = state.room.issueTrackingUrl ? state.room.issueTrackingUrl : '-';
+
+      return updateLogInState(
+        `${username} set the room configuration: Auto Reveal is ${autoRevealOnOff}, Confidence is ${confidenceOnOff}, Issue Tracking URL is ${url}`
+      );
+    }
     case EVENT_ACTION_TYPES.passwordSet:
       return updateLogInState(`${username} set a password for this room`);
     case EVENT_ACTION_TYPES.passwordCleared:

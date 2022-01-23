@@ -105,7 +105,7 @@ const roomSchema = {
       type: 'boolean'
     },
     issueTrackingUrl: {
-      type: ['string', 'undefined']
+      type: ['string', 'undefined', 'null']
     },
     markedForDeletion: {
       type: 'boolean'

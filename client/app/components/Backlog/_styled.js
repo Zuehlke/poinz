@@ -179,7 +179,7 @@ export const StyledStoryToolbar = styled.div`
 
 export const StyledStoryText = styled.div`
   overflow-x: hidden;
-  white-space: pre-wrap;
+  white-space: ${({md}) => (md ? 'inherit' : 'pre-wrap')};
 `;
 
 export const StyledHighlightButtonWrapper = styled.div`

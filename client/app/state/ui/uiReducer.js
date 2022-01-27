@@ -1,9 +1,15 @@
 import getDayOfYear from 'date-fns/getDayOfYear';
 
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
-import {getHideNewUserHints, setHideNewUserHints} from '../clientSettingsStore';
+import {
+  getHideNewUserHints,
+  getMarkdownEnabled,
+  setHideNewUserHints,
+  setMarkdownEnabled
+} from '../clientSettingsStore';
 import {
   BACKLOG_SIDEBAR_TOGGLED,
+  MARKDOWN_TOGGLED,
   NEW_USER_HINTS_HIDDEN,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_TOGGLED
@@ -16,7 +22,8 @@ export const uiInitialState = {
   applause: false,
   unseenError: false,
   easterEggActive: isHalloweenSeason(),
-  newUserHintHidden: getHideNewUserHints()
+  newUserHintHidden: getHideNewUserHints(),
+  markdownEnabled: getMarkdownEnabled()
 };
 
 /**
@@ -80,6 +87,10 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
     case NEW_USER_HINTS_HIDDEN: {
       setHideNewUserHints(true);
       return {...state, newUserHintHidden: true};
+    }
+    case MARKDOWN_TOGGLED: {
+      setMarkdownEnabled(!state.markdownEnabled);
+      return {...state, markdownEnabled: !state.markdownEnabled};
     }
     case LOCATION_CHANGED: {
       return {...state, pathname: action.pathname};

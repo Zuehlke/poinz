@@ -32,3 +32,5 @@ export const setPresetUserId = (userId) => setItem('presetUserId', userId);
 
 export const getHideNewUserHints = () => getItem('hideNewUserHints') === 'true';
 export const setHideNewUserHints = (flag) => setItem('hideNewUserHints', flag);
+export const getMarkdownEnabled = () => getItem('markdownEnabled') === 'true';
+export const setMarkdownEnabled = (flag) => setItem('markdownEnabled', flag);

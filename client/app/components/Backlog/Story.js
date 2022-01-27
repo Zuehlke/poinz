@@ -2,6 +2,8 @@ import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 import {L10nContext} from '../../services/l10n';
 import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
@@ -33,7 +35,8 @@ const Story = ({
   editStory,
   trashStory,
   isWaiting,
-  isStoryEstimated
+  isStoryEstimated,
+  markdownEnabled
 }) => {
   const {t, format} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
@@ -72,8 +75,13 @@ const Story = ({
         // only display story text and creation date for highlighted story. Improves overall readability / usability (see #24)
         isHighlighted && (
           <React.Fragment>
-            <StyledStoryText data-testid="storyText">
-              <Anchorify text={story.description || ''} />
+            <StyledStoryText data-testid="storyText" md={markdownEnabled}>
+              {markdownEnabled && (
+                <ReactMarkdown linkTarget="_blank" remarkPlugins={[remarkGfm]}>
+                  {story.description || ''}
+                </ReactMarkdown>
+              )}
+              {!markdownEnabled && <Anchorify text={story.description || ''} />}
             </StyledStoryText>
 
             <StyledHighlightButtonWrapper>
@@ -122,6 +130,7 @@ Story.propTypes = {
   isWaiting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
   isStoryEstimated: PropTypes.bool,
+  markdownEnabled: PropTypes.bool,
   selectedStoryId: PropTypes.string,
   onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
@@ -133,7 +142,8 @@ export default connect(
   (state, props) => ({
     selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryWaiting(state, props.story.id),
-    isStoryEstimated: isThisStoryEstimated(state, props.story.id)
+    isStoryEstimated: isThisStoryEstimated(state, props.story.id),
+    markdownEnabled: state.ui.markdownEnabled
   }),
   {selectStory, editStory, trashStory}
 )(Story);

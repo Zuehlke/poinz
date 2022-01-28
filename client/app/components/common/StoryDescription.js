@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
@@ -9,14 +9,17 @@ import {toggleMarkdownEnabled} from '../../state/actions/uiStateActions';
 import {StyledStoryText, StyledStoryTextExpandButton, StyledToggleIcon} from './_styled';
 
 const StoryDescription = ({
-  textExpandThreshold = 200,
   text = '',
+  storyId,
+  textExpandThreshold = 200,
   markdownEnabled,
   toggleMarkdownEnabled,
   showMarkdownToggle = true,
   scroll = true
 }) => {
   const [textExpanded, setTextExpanded] = useState(false);
+  useEffect(() => setTextExpanded(false), [storyId]); // reset expanded state to false if story id changes.
+
   const originalTextLength = text.length;
   const textToDisplay =
     originalTextLength <= textExpandThreshold || textExpanded
@@ -63,6 +66,7 @@ const StoryDescription = ({
 };
 
 StoryDescription.propTypes = {
+  storyId: PropTypes.string,
   text: PropTypes.string,
   markdownEnabled: PropTypes.bool,
   toggleMarkdownEnabled: PropTypes.func,

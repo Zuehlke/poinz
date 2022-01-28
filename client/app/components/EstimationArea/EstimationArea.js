@@ -58,7 +58,11 @@ const EstimationArea = ({
           {hasConsensus && <ValueBadge cardValue={selectedStory.consensus} />}
         </StyledStoryTitle>
 
-        <StoryDescription text={selectedStory.description} textExpandThreshold={500} />
+        <StoryDescription
+          storyId={selectedStory.id}
+          text={selectedStory.description}
+          textExpandThreshold={500}
+        />
 
         {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
         {easterEggActive && hasConsensus && applause && <EasterEgg />}

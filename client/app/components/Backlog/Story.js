@@ -73,6 +73,7 @@ const Story = ({
         isHighlighted && (
           <React.Fragment>
             <StoryDescription
+              storyId={story.id}
               text={story.description}
               showMarkdownToggle={false}
               scroll={false}

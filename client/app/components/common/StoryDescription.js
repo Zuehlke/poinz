@@ -54,7 +54,7 @@ const StoryDescription = ({
         )}
       </StyledStoryText>
 
-      {showMarkdownToggle && (
+      {showMarkdownToggle && (originalTextLength > 0) && (
         <StyledToggleIcon
           on={markdownEnabled ? '1' : ''}
           className="icon-markdown"

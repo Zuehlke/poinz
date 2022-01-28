@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import {
   COLOR_BACKGROUND_GREY,
+  COLOR_BLUE,
   COLOR_LIGHT_GREY,
   COLOR_LIGHTER_GREY,
   COLOR_ORANGE,
@@ -57,7 +58,12 @@ export const StyledEditForm = styled.form`
   }
 
   textarea {
-    min-height: 64px;
+    min-height: 128px;
+    margin-top: 2px;
+
+    &:focus {
+      border-bottom: 1px solid ${COLOR_BLUE};
+    }
   }
 `;
 
@@ -72,6 +78,10 @@ export const StyledAddForm = styled(StyledEditForm)`
   margin: 0 8px;
   padding: 8px 16px 16px 16px;
   border: 1px solid ${COLOR_LIGHTER_GREY};
+
+  textarea {
+    min-height: 64px;
+  }
 `;
 
 export const StyledBacklogInfoText = styled.div`
@@ -131,8 +141,12 @@ export const StyledStory = styled.div`
   box-sizing: border-box;
   border: 1px solid ${COLOR_LIGHTER_GREY};
   cursor: pointer;
-  border-left: ${({selected}) =>
-    selected ? '2px solid ' + COLOR_ORANGE : '1px solid ' + COLOR_LIGHTER_GREY};
+  border-left: ${({selected, highlighted}) =>
+    selected
+      ? '2px solid ' + COLOR_ORANGE
+      : highlighted
+      ? '1px solid ' + COLOR_BLUE
+      : '1px solid ' + COLOR_LIGHTER_GREY};
 
   &:hover {
     box-shadow: ${({noShadow}) =>
@@ -175,11 +189,6 @@ export const StyledStoryToolbar = styled.div`
       }
     }
   }
-`;
-
-export const StyledStoryText = styled.div`
-  overflow-x: hidden;
-  white-space: ${({md}) => (md ? 'inherit' : 'pre-wrap')};
 `;
 
 export const StyledHighlightButtonWrapper = styled.div`

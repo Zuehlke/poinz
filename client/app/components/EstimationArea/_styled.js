@@ -37,24 +37,6 @@ const FlashAnimation = keyframes`
   }
 `;
 
-export const StyledStoryText = styled.div`
-  margin-top: 4px;
-  white-space: ${({md}) => (md ? 'inherit' : 'pre-wrap')};
-  display: inline-block;
-  overflow-x: auto;
-  width: 100%;
-  position: relative;
-`;
-
-export const StyledToggleIcon = styled.i`
-  display: inline-block;
-  color: ${({on}) => (on ? COLOR_ORANGE : 'inherit')};
-  cursor: pointer;
-  position: absolute;
-  bottom: 16px;
-  right: 8px;
-`;
-
 export const StyledApplauseHighlight = styled.div`
   position: absolute;
   user-select: none;

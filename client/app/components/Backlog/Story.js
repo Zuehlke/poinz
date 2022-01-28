@@ -1,9 +1,6 @@
 import React, {useContext} from 'react';
 import {connect} from 'react-redux';
-import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 
 import {L10nContext} from '../../services/l10n';
 import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
@@ -13,11 +10,11 @@ import {selectStory, trashStory} from '../../state/actions/commandActions';
 import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
 import ValueBadge from '../common/ValueBadge';
 import UndecidedBadge from '../common/UndecidedBadge';
+import StoryDescription from '../common/StoryDescription';
 
 import {
   StyledStoryToolbar,
   StyledStory,
-  StyledStoryText,
   StyledHighlightButtonWrapper,
   StyledStoryAttributes
 } from './_styled';
@@ -35,8 +32,7 @@ const Story = ({
   editStory,
   trashStory,
   isWaiting,
-  isStoryEstimated,
-  markdownEnabled
+  isStoryEstimated
 }) => {
   const {t, format} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
@@ -48,6 +44,7 @@ const Story = ({
       data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={onStoryClicked}
       selected={isSelected}
+      highlighted={isHighlighted}
       className={isWaiting ? 'waiting-spinner' : ''}
     >
       <StyledStoryToolbar>
@@ -75,15 +72,12 @@ const Story = ({
         // only display story text and creation date for highlighted story. Improves overall readability / usability (see #24)
         isHighlighted && (
           <React.Fragment>
-            <StyledStoryText data-testid="storyText" md={markdownEnabled}>
-              {markdownEnabled && (
-                <ReactMarkdown linkTarget="_blank" remarkPlugins={[remarkGfm]}>
-                  {story.description || ''}
-                </ReactMarkdown>
-              )}
-              {!markdownEnabled && <Anchorify text={story.description || ''} />}
-            </StyledStoryText>
-
+            <StoryDescription
+              text={story.description}
+              showMarkdownToggle={false}
+              scroll={false}
+              textExpandThreshold={100}
+            />
             <StyledHighlightButtonWrapper>
               <StyledStoryAttributes>
                 <span>{format.formatDateTime(story.createdAt)}</span>
@@ -130,7 +124,6 @@ Story.propTypes = {
   isWaiting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
   isStoryEstimated: PropTypes.bool,
-  markdownEnabled: PropTypes.bool,
   selectedStoryId: PropTypes.string,
   onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
@@ -142,8 +135,7 @@ export default connect(
   (state, props) => ({
     selectedStoryId: getSelectedStoryId(state),
     isWaiting: isThisStoryWaiting(state, props.story.id),
-    isStoryEstimated: isThisStoryEstimated(state, props.story.id),
-    markdownEnabled: state.ui.markdownEnabled
+    isStoryEstimated: isThisStoryEstimated(state, props.story.id)
   }),
   {selectStory, editStory, trashStory}
 )(Story);

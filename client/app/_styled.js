@@ -33,6 +33,8 @@ const Global = createGlobalStyle`
     .pure-group {
       input:first-child, textarea:first-child, input:last-child, textarea:last-child {
         border-radius: 0;
+        top:0;
+        margin-top:4px;
       }
 
       textarea {

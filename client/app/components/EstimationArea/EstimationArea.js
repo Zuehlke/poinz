@@ -18,7 +18,7 @@ import Cards from './Cards';
 import ValueBadge from '../common/ValueBadge';
 import EstimationSummary from './EstimationSummary';
 import EasterEgg from '../common/EasterEgg';
-import StoryDescription from './StoryDescription';
+import StoryDescription from '../common/StoryDescription';
 
 import {StyledStoryTitle} from '../_styled';
 import {
@@ -58,7 +58,7 @@ const EstimationArea = ({
           {hasConsensus && <ValueBadge cardValue={selectedStory.consensus} />}
         </StyledStoryTitle>
 
-        <StoryDescription text={selectedStory.description} />
+        <StoryDescription text={selectedStory.description} textExpandThreshold={500} />
 
         {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
         {easterEggActive && hasConsensus && applause && <EasterEgg />}

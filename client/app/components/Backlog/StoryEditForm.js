@@ -42,7 +42,6 @@ const StoryEditForm = ({story, selectedStoryId, changeStory, cancelEditStory, is
 
           <textarea
             className="pure-input-1"
-            rows="1"
             placeholder={t('description')}
             value={storyDescr}
             onChange={onDescriptionChange}

@@ -12,6 +12,11 @@ export const StyledEstimationMatrix = styled.div`
   padding: 8px;
   margin: 16px;
 
+  h4 {
+    margin-bottom: 16px;
+  }
+
+
   /* the header row*/
 
   > div:first-of-type {
@@ -27,31 +32,22 @@ export const StyledEMRow = styled.div`
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
+  margin-top: 4px;
 
-  > div:first-child {
-    padding: 8px 4px;
-    width: 19%;
-    border-right: 1px solid ${COLOR_LIGHTER_GREY};
-
-    h4 {
-      margin: 0 0 4px 0;
-      font-size: 14px;
-    }
+  h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
   }
 
-  &:hover {
-    box-shadow: inset 0 82px 50px -60px rgb(194 194 194 / 45%);
-  }
-`;
-
-export const StyledEMRowDate = styled.div`
-  font-size: 12px;
 `;
 
 export const StyledEstimationMatrixCell = styled.div`
-  padding: 4px 0;
+  padding: 4px;
   width: ${({width}) => width}%;
-
+  background: ${({color}) => color};
+  color: white;
+  border-radius: 12px;
+  text-align: center;
   display: flex;
   justify-content: center;
 `;

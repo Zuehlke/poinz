@@ -26,7 +26,6 @@ const EstimationMatrix = ({estimatedStories, cardConfig}) => {
     <StyledEstimationMatrix data-testid="matrix">
       <StyledStoryTitle>{t('matrix')}</StyledStoryTitle>
       <StyledEMRow>
-        <div>&nbsp;</div>
         {cardConfig.map((cc) => (
           <StyledEstimationMatrixCell key={'header:' + cc.value} width={columnWidth}>
             <ValueBadge cardValue={cc.value} />
@@ -36,8 +35,7 @@ const EstimationMatrix = ({estimatedStories, cardConfig}) => {
 
       {!hasEstimatedStories && (
         <StyledEMRow>
-          <div>&nbsp;</div>
-          <StyledEstimationMatrixCell width={80}>
+          <StyledEstimationMatrixCell width={99}>
             {t('noStoriesForMatrix')}
           </StyledEstimationMatrixCell>
         </StyledEMRow>
@@ -55,7 +53,7 @@ const EstimationMatrix = ({estimatedStories, cardConfig}) => {
 };
 
 const getColWidth = (cardConfigCount) => {
-  const colWidthPercentage = 80 / cardConfigCount;
+  const colWidthPercentage = 99 / cardConfigCount;
   return Math.round((colWidthPercentage + Number.EPSILON) * 100) / 100;
 };
 

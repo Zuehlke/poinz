@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {connect} from 'react-redux';
-import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -11,11 +10,11 @@ import {selectStory, trashStory} from '../../state/actions/commandActions';
 import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSelectors';
 import ValueBadge from '../common/ValueBadge';
 import UndecidedBadge from '../common/UndecidedBadge';
+import StoryDescription from '../common/StoryDescription';
 
 import {
   StyledStoryToolbar,
   StyledStory,
-  StyledStoryText,
   StyledHighlightButtonWrapper,
   StyledStoryAttributes
 } from './_styled';
@@ -45,6 +44,7 @@ const Story = ({
       data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={onStoryClicked}
       selected={isSelected}
+      highlighted={isHighlighted}
       className={isWaiting ? 'waiting-spinner' : ''}
     >
       <StyledStoryToolbar>
@@ -72,10 +72,13 @@ const Story = ({
         // only display story text and creation date for highlighted story. Improves overall readability / usability (see #24)
         isHighlighted && (
           <React.Fragment>
-            <StyledStoryText data-testid="storyText">
-              <Anchorify text={story.description || ''} />
-            </StyledStoryText>
-
+            <StoryDescription
+              storyId={story.id}
+              text={story.description}
+              showMarkdownToggle={false}
+              scroll={false}
+              textExpandThreshold={100}
+            />
             <StyledHighlightButtonWrapper>
               <StyledStoryAttributes>
                 <span>{format.formatDateTime(story.createdAt)}</span>

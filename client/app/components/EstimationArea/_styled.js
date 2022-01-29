@@ -37,14 +37,6 @@ const FlashAnimation = keyframes`
   }
 `;
 
-export const StyledStoryText = styled.div`
-  margin-top: 4px;
-  white-space: pre-wrap;
-  display: inline-block;
-  overflow-x: auto;
-  width: 100%;
-`;
-
 export const StyledApplauseHighlight = styled.div`
   position: absolute;
   user-select: none;

@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
 import {connect} from 'react-redux';
-import Anchorify from 'react-anchorify-text';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 
@@ -19,14 +18,14 @@ import Cards from './Cards';
 import ValueBadge from '../common/ValueBadge';
 import EstimationSummary from './EstimationSummary';
 import EasterEgg from '../common/EasterEgg';
+import StoryDescription from '../common/StoryDescription';
 
 import {StyledStoryTitle} from '../_styled';
 import {
   EstimationAreaButtons,
   StyledApplauseHighlight,
   StyledEstimation,
-  StyledSelectedStory,
-  StyledStoryText
+  StyledSelectedStory
 } from './_styled';
 
 /**
@@ -59,9 +58,11 @@ const EstimationArea = ({
           {hasConsensus && <ValueBadge cardValue={selectedStory.consensus} />}
         </StyledStoryTitle>
 
-        <StyledStoryText>
-          <Anchorify text={selectedStory.description || ''} />
-        </StyledStoryText>
+        <StoryDescription
+          storyId={selectedStory.id}
+          text={selectedStory.description}
+          textExpandThreshold={500}
+        />
 
         {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
         {easterEggActive && hasConsensus && applause && <EasterEgg />}

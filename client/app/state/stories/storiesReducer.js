@@ -72,7 +72,8 @@ export default function storiesReducer(state = storiesInitialState, action, ownU
     case EVENT_ACTION_TYPES.storyTrashed:
       return modifyStory(state, event.payload.storyId, (story) => ({
         ...story,
-        trashed: true
+        trashed: true,
+        editMode: false
       }));
     case EVENT_ACTION_TYPES.storyRestored:
       return modifyStory(state, event.payload.storyId, (story) => ({

@@ -92,3 +92,28 @@ export const StyledDropdown = styled.div`
     width: auto;
   }
 `;
+
+export const StyledStoryText = styled.div`
+  margin-top: 4px;
+  white-space: ${({md}) => (md ? 'inherit' : 'pre-wrap')};
+  display: inline-block;
+  overflow-x: ${({scroll}) => (scroll ? 'auto' : 'hidden')};
+  width: 100%;
+  position: relative;
+`;
+
+export const StyledToggleIcon = styled.i`
+  display: inline-block;
+  color: ${({on}) => (on ? COLOR_ORANGE : 'inherit')};
+  cursor: pointer;
+  position: absolute;
+  bottom: 16px;
+  right: 8px;
+`;
+
+export const StyledStoryTextExpandButton = styled.button`
+  display: block;
+  padding: 3px;
+  font-size: small;
+  margin: 4px 0 0 0;
+`;

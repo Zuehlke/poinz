@@ -21,7 +21,7 @@
     "cypress:run": "cypress run",
     "serve": "cross-env BABEL_ENV=development webpack serve --config webpack.config.js --progress",
     "build": "cross-env BABEL_ENV=production webpack --progress --bail --json --config  webpack.production.config.js > webpack-build-stats.json",
-    "build:analyze": "cross-env BABEL_ENV=production webpack --progress --colors --bail --config  webpack.analysis.config.js"
+    "build:analyze": "cross-env BABEL_ENV=production webpack --progress --bail --config  webpack.analysis.config.js"
   },
   "jest": {
     "testMatch": [
@@ -47,10 +47,12 @@
     "react-anchorify-text": "2.4.1",
     "react-dom": "17.0.2",
     "react-dropzone": "11.5.1",
+    "react-markdown": "^8.0.0",
     "react-redux": "7.2.6",
     "react-test-renderer": "17.0.2",
     "redux": "4.1.2",
     "redux-thunk": "2.4.1",
+    "remark-gfm": "^3.0.1",
     "reselect": "4.1.5",
     "socket.io-client": "4.4.1",
     "styled-components": "5.3.3"

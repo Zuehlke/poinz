@@ -1,3 +1,7 @@
+### 0.15.0: 2022-99-99
+
+* Markdown support in story description
+
 ### 0.14.0: 2022-01-23
 
 * Link imported stories to issue tracking system

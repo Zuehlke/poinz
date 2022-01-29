@@ -79,7 +79,11 @@ marked with a **orange bar** on the left.
 ### Adding stories
 
 Simply fill in the form on the top left. The *Title* is mandatory, the *Description* is optional. Any url in the
-description will be rendered as clickable link.
+description will be rendered as a clickable link.
+
+You can also use markdown syntax in the story description. You can toggle between markdown and plaintext on the bottom right of the story description:
+
+![Markdown support](https://user-images.githubusercontent.com/1777143/151653695-a5367261-a31c-4a21-871a-fcb93b0a30de.png)
 
 ### Importing stories
 

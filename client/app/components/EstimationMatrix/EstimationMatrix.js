@@ -9,6 +9,7 @@ import {L10nContext} from '../../services/l10n';
 import EstimationMatrixRow from './EstimationMatrixRow';
 
 import {StyledEMRow, StyledEstimationMatrix, StyledEstimationMatrixCell} from './_styled';
+import {StyledStoryTitle} from '../_styled';
 
 /**
  * Display a table with all estimated stories (all stories with consensus), ordered by estimation value
@@ -23,6 +24,7 @@ const EstimationMatrix = ({estimatedStories, cardConfig}) => {
 
   return (
     <StyledEstimationMatrix data-testid="matrix">
+      <StyledStoryTitle>{t('matrix')}</StyledStoryTitle>
       <StyledEMRow>
         <div>&nbsp;</div>
         {cardConfig.map((cc) => (

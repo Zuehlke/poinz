@@ -31,12 +31,8 @@ const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown}) => (
     <Backlog />
 
     <StyledBoardCenter>
-      {!matrixShown && (
-        <React.Fragment>
-          <Users />
-          {isAStorySelected && <EstimationArea />}
-        </React.Fragment>
-      )}
+      <Users />
+      {isAStorySelected && !matrixShown && <EstimationArea />}
 
       {matrixShown && <EstimationMatrix />}
     </StyledBoardCenter>

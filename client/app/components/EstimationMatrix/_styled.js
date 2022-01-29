@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import {COLOR_LIGHT_GREY} from '../colors';
+
+import {COLOR_LIGHTER_GREY} from '../colors';
 
 export const StyledEstimationMatrix = styled.div`
   display: flex;
@@ -11,12 +12,13 @@ export const StyledEstimationMatrix = styled.div`
   padding: 8px;
   margin: 16px;
 
-  > div:first-child {
-    /* the header row*/
-    border-bottom: 2px solid ${COLOR_LIGHT_GREY};
+  /* the header row*/
+
+  > div:first-of-type {
+    border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
 
     &:hover {
-      background: transparent;
+      box-shadow: none;
     }
   }
 `;
@@ -29,10 +31,11 @@ export const StyledEMRow = styled.div`
   > div:first-child {
     padding: 8px 4px;
     width: 19%;
-    border-right: 2px solid ${COLOR_LIGHT_GREY};
+    border-right: 1px solid ${COLOR_LIGHTER_GREY};
 
     h4 {
       margin: 0 0 4px 0;
+      font-size: 14px;
     }
   }
 

@@ -10,6 +10,7 @@ import {
 import {
   BACKLOG_SIDEBAR_TOGGLED,
   MARKDOWN_TOGGLED,
+  MATRIX_TOGGLED,
   NEW_USER_HINTS_HIDDEN,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_TOGGLED
@@ -19,6 +20,7 @@ import {LOCATION_CHANGED} from '../actions/commandActions';
 export const uiInitialState = {
   backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
   sidebar: undefined,
+  matrixShown: false,
   applause: false,
   unseenError: false,
   easterEggActive: isHalloweenSeason(),
@@ -72,6 +74,13 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
           unseenError: action.sidebarKey === SIDEBAR_ACTIONLOG ? false : state.unseenError
         };
       }
+    }
+
+    case MATRIX_TOGGLED: {
+      return {
+        ...state,
+        matrixShown: !state.matrixShown
+      };
     }
 
     case BACKLOG_SIDEBAR_TOGGLED: {

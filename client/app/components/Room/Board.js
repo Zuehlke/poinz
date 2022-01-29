@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 
 import Help from '../Help/Help';
 import FeedbackHint from './FeedbackHint';
-import Estimation from '../EstimationArea/EstimationArea';
+import EstimationArea from '../EstimationArea/EstimationArea';
 import Settings from '../Settings/Settings';
 import Users from '../Users/Users';
 import ActionLog from '../ActionLog/ActionLog';
 import Backlog from '../Backlog/Backlog';
+import EstimationMatrix from '../EstimationMatrix/EstimationMatrix';
 
-import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
 import {getRoomId} from '../../state/room/roomSelectors';
 import {isAStorySelected} from '../../state/stories/storiesSelectors';
 import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
+
+import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -24,13 +26,19 @@ import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
  * - the current story
  * - cards
  */
-const Board = ({roomId, isAStorySelected, sidebarShown}) => (
+const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown}) => (
   <StyledBoard id={roomId}>
     <Backlog />
 
     <StyledBoardCenter>
-      <Users />
-      {isAStorySelected && <Estimation />}
+      {!matrixShown && (
+        <React.Fragment>
+          <Users />
+          {isAStorySelected && <EstimationArea />}
+        </React.Fragment>
+      )}
+
+      {matrixShown && <EstimationMatrix />}
     </StyledBoardCenter>
 
     <StyledSidebarRight shown={sidebarShown}>
@@ -46,11 +54,13 @@ const Board = ({roomId, isAStorySelected, sidebarShown}) => (
 Board.propTypes = {
   roomId: PropTypes.string,
   isAStorySelected: PropTypes.bool,
-  sidebarShown: PropTypes.bool
+  sidebarShown: PropTypes.bool,
+  matrixShown: PropTypes.bool
 };
 
 export default connect((state) => ({
   roomId: getRoomId(state),
   isAStorySelected: isAStorySelected(state),
-  sidebarShown: !!getCurrentSidebarIfAny(state)
+  sidebarShown: !!getCurrentSidebarIfAny(state),
+  matrixShown: state.ui.matrixShown
 }))(Board);

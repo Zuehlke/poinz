@@ -8,17 +8,25 @@ import ValueBadge from '../common/ValueBadge';
 import {L10nContext} from '../../services/l10n';
 import EstimationMatrixRow from './EstimationMatrixRow';
 
-import {StyledEMRow, StyledEstimationMatrix, StyledEstimationMatrixCell} from './_styled';
+import {
+  StyledEMRow,
+  StyledEstimationMatrix,
+  StyledEstimationMatrixCell,
+  StyledNoStoriesHint
+} from './_styled';
 import {StyledStoryTitle} from '../_styled';
 
 /**
- * Display a table with all estimated stories (all stories with consensus), ordered by estimation value
- *
+ * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
  */
 const EstimationMatrix = ({estimatedStories, cardConfig}) => {
   const {t} = useContext(L10nContext);
   const hasEstimatedStories = estimatedStories.length > 0;
-  estimatedStories.sort((sA, sB) => sA.consensus - sB.consensus);
+  estimatedStories.sort(
+    (sA, sB) =>
+      cardConfig.findIndex((cc) => cc.value === sA.consensus) -
+      cardConfig.findIndex((cc) => cc.value === sB.consensus)
+  );
 
   let columnWidth = getColWidth(cardConfig.length);
 
@@ -36,10 +44,11 @@ const EstimationMatrix = ({estimatedStories, cardConfig}) => {
       {!hasEstimatedStories && (
         <StyledEMRow>
           <StyledEstimationMatrixCell width={99}>
-            {t('noStoriesForMatrix')}
+            <StyledNoStoriesHint>{t('noStoriesForMatrix')}</StyledNoStoriesHint>
           </StyledEstimationMatrixCell>
         </StyledEMRow>
       )}
+
       {estimatedStories.map((story) => (
         <EstimationMatrixRow
           story={story}

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {COLOR_LIGHTER_GREY} from '../colors';
+import {COLOR_FONT_GREY, COLOR_LIGHTER_GREY} from '../colors';
 
 export const StyledEstimationMatrix = styled.div`
   display: flex;
@@ -15,7 +15,6 @@ export const StyledEstimationMatrix = styled.div`
   h4 {
     margin-bottom: 16px;
   }
-
 
   /* the header row*/
 
@@ -38,7 +37,6 @@ export const StyledEMRow = styled.div`
     margin: 0 0 4px 0;
     font-size: 14px;
   }
-
 `;
 
 export const StyledEstimationMatrixCell = styled.div`
@@ -50,4 +48,8 @@ export const StyledEstimationMatrixCell = styled.div`
   text-align: center;
   display: flex;
   justify-content: center;
+`;
+
+export const StyledNoStoriesHint = styled.span`
+  color: ${COLOR_FONT_GREY};
 `;

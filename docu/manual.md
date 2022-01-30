@@ -175,6 +175,18 @@ user ChromeU was very unsure about the story being "2", whereas Foxy was very su
 
 ![estimating_with_confidence_revealed](https://user-images.githubusercontent.com/1777143/135748049-3be28220-17f6-490a-a80e-838d7390d67e.png)
 
+
+### Estimation Matrix
+
+The Estimation Matrix displays a table with all estimated stories (all stories with consensus), ordered by estimation value. 
+This allows you and your team members to estimate the current story in relation to other stories which improves your estimation results.
+
+You can toggle between the Matrix and the Story via the small toggle bottom on the right, just below the users. 
+
+<img src="https://user-images.githubusercontent.com/1777143/151691920-496244fa-6395-4c8a-bc59-61c84d7cca5e.png" width="300" />
+
+
+
 ## Settings
 
 ### User Settings

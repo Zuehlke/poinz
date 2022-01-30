@@ -32,7 +32,7 @@ const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatri
   <StyledBoard id={roomId}>
     <Backlog />
 
-    <StyledBoardCenter>
+    <StyledBoardCenter data-testid="board">
       <Users />
 
       <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />

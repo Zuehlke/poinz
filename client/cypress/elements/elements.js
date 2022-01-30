@@ -20,6 +20,9 @@ const elements = {
   },
 
   Room: {
+    matrixToggle: () => cy.get(tid('board', 'matrixToggle')),
+    estimationMatrix: () => cy.get(tid('board', 'matrix')),
+
     TopBar: {
       logo: () => cy.get(tid('topBar', 'logo')),
       whoami: () => cy.get(tid('topBar', 'whoami')),
@@ -30,6 +33,8 @@ const elements = {
     EstimationArea: {
       estimationCard: (cardValue) => cy.get(tid(`estimationCard.${cardValue}`)),
       storyConsensus: () => cy.get(tid('estimationArea', 'story', 'cardValueBadge')),
+      markdownToggleButton: () => cy.get(tid('estimationArea', 'story', 'markdownToggleButton')),
+      storyDescription: () => cy.get(tid('estimationArea', 'story', 'storyText')),
       newRoundButton: () => cy.get(tid('estimationArea', 'newRoundButton')),
       summaryCard: (cardValue) => cy.get(tid(`summaryCard.${cardValue}`))
     },

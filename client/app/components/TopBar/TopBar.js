@@ -8,7 +8,6 @@ import WhoAmI from './WhoAmI';
 import {
   toggleBacklogSidebar,
   toggleSidebar,
-  toggleMatrix,
   SIDEBAR_HELP,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_SETTINGS
@@ -31,11 +30,9 @@ const TopBar = ({
   leaveRoom,
   toggleSidebar,
   toggleBacklogSidebar,
-  toggleMatrix,
   sidebar,
   unseenError,
-  backlogShown,
-  matrixShown
+  backlogShown
 }) => {
   const {t} = useContext(L10nContext);
 
@@ -57,17 +54,6 @@ const TopBar = ({
 
         <StyledTopRight>
           <WhoAmI />
-
-          <StyledQuickMenuButton
-            data-testid="matrixToggle"
-            className={`clickable pure-button pure-button-primary matrix-toggle ${
-              matrixShown ? 'pure-button-active' : ''
-            } `}
-            onClick={toggleMatrix}
-            title={t('matrix')}
-          >
-            <i className="icon-table"></i>
-          </StyledQuickMenuButton>
 
           <StyledQuickMenuButton
             data-testid="settingsToggle"
@@ -121,9 +107,7 @@ TopBar.propTypes = {
   toggleBacklogSidebar: PropTypes.func,
   backlogShown: PropTypes.bool,
   unseenError: PropTypes.bool,
-  matrixShown: PropTypes.bool,
   toggleSidebar: PropTypes.func,
-  toggleMatrix: PropTypes.func,
   sidebar: PropTypes.string,
   leaveRoom: PropTypes.func
 };
@@ -132,8 +116,7 @@ export default connect(
   (state) => ({
     backlogShown: isBacklogShown(state),
     sidebar: getCurrentSidebarIfAny(state),
-    unseenError: hasUnseenError(state),
-    matrixShown: state.ui.matrixShown
+    unseenError: hasUnseenError(state)
   }),
-  {toggleBacklogSidebar, toggleSidebar, toggleMatrix, leaveRoom}
+  {toggleBacklogSidebar, toggleSidebar, leaveRoom}
 )(TopBar);

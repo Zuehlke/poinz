@@ -33,9 +33,6 @@ export const StyledBoard = styled.div`
   background: ${COLOR_BACKGROUND_GREY};
   flex-grow: 1;
   display: flex;
-
-  @media ${device.desktop} {
-  }
 `;
 
 export const StyledBoardCenter = styled.div`
@@ -95,5 +92,15 @@ export const StyledFeedbackHint = styled.div`
     position: absolute;
     top: 4px;
     right: 4px;
+  }
+`;
+
+export const StyledMatrixToggle = styled.div`
+  padding: 0 16px;
+  display: none;
+  justify-content: flex-end;
+
+  @media ${device.desktop} {
+    display: flex;
   }
 `;

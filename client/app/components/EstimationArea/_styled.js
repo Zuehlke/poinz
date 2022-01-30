@@ -61,22 +61,6 @@ export const StyledSelectedStory = styled.div`
   position: relative;
 `;
 
-export const StyledConfidenceButtons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-
-  @media ${device.desktop} {
-    display: block;
-  }
-`;
-
-export const StyledConfButton = styled.button`
-  font-size: small;
-  box-shadow: ${({active}) => (active ? 'inset 1px 2px 12px -4px #424242' : 'inherit')};
-  background: ${({active}) => (active ? ' #afaeae' : '#e6e6e6')};
-`;
-
 export const StyledCards = styled.div`
   margin-top: 16px;
 `;

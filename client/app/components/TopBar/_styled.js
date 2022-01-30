@@ -104,6 +104,18 @@ export const StyledQuickMenuButton = styled.a`
   &:hover {
     background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   }
+
+  /* Hide "Estimation Matrix" toggle button on non-desktop */
+
+  &.matrix-toggle {
+    display: none;
+  }
+
+  @media ${device.desktop} {
+    &.matrix-toggle {
+      display: block;
+    }
+  }
 `;
 
 const shaky = keyframes`

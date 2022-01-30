@@ -319,6 +319,12 @@
       "search": [
         "markdown"
       ]
+    },
+    {
+      "uid": "c819c6225685bae2eed1b8da13e629fa",
+      "css": "list-alt",
+      "code": 59421,
+      "src": "fontawesome"
     }
   ]
 }

@@ -33,8 +33,8 @@ const Global = createGlobalStyle`
     .pure-group {
       input:first-child, textarea:first-child, input:last-child, textarea:last-child {
         border-radius: 0;
-        top:0;
-        margin-top:4px;
+        top: 0;
+        margin-top: 4px;
       }
 
       textarea {
@@ -134,6 +134,15 @@ const Global = createGlobalStyle`
     cursor: pointer;
   }
 
+  .pure-button-group .pure-button:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .pure-button-group .pure-button:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
 
   /**  ----   changing browser scrollbars ---- **/
   @media ${device.desktop} {

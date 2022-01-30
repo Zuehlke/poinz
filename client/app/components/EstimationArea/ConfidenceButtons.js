@@ -2,12 +2,13 @@ import React, {useContext} from 'react';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {StyledConfButton, StyledConfidenceButtons} from './_styled';
+
+import {StyledToggleButton, StyledToggleButtonGroup} from '../common/_styled';
 
 const ConfidenceButtons = ({onConfidenceChange, selectedConfidence}) => {
   const {t} = useContext(L10nContext);
   return (
-    <StyledConfidenceButtons className="pure-button-group" role="group">
+    <StyledToggleButtonGroup className="pure-button-group" role="group">
       <ConfButton
         label={t('confidenceUnsure')}
         title={t('confidenceUnsureTitle')}
@@ -26,7 +27,7 @@ const ConfidenceButtons = ({onConfidenceChange, selectedConfidence}) => {
         onClick={() => onConfidenceChange(1)}
         active={selectedConfidence > 0}
       />
-    </StyledConfidenceButtons>
+    </StyledToggleButtonGroup>
   );
 };
 ConfidenceButtons.propTypes = {
@@ -35,7 +36,7 @@ ConfidenceButtons.propTypes = {
 };
 
 const ConfButton = ({label, title, onClick, active}) => (
-  <StyledConfButton
+  <StyledToggleButton
     className="pure-button"
     type="button"
     onClick={onClick}
@@ -43,7 +44,7 @@ const ConfButton = ({label, title, onClick, active}) => (
     title={title}
   >
     {label}
-  </StyledConfButton>
+  </StyledToggleButton>
 );
 
 ConfButton.propTypes = {

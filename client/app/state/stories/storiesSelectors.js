@@ -20,6 +20,15 @@ export const getTrashedStories = createSelector([getStoriesById], (stories) =>
 );
 
 /**
+ * Returns active & trashed stories that have a consensus value. Never returns undefined. will potentially return an empty array.
+ * @return {object[]}
+ */
+export const getAllStoriesWithConsensus = createSelector(
+  [getActiveStories, getTrashedStories],
+  (active, trashed) => active.filter(hasStoryConsensus).concat(trashed.filter(hasStoryConsensus))
+);
+
+/**
  * Returns true if our room contains stories and a story is selected.
  * False otherwise
  */

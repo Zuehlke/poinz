@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from '../colors';
+import {COLOR_FONT_GREY, COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from '../colors';
 import {device, ZuehlkeFont} from '../dimensions';
 
 export const StyledAvatar = styled.img`
@@ -116,4 +116,23 @@ export const StyledStoryTextExpandButton = styled.button`
   padding: 3px;
   font-size: small;
   margin: 4px 0 0 0;
+`;
+
+export const StyledToggleButtonGroup = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  @media ${device.desktop} {
+    display: block;
+  }
+`;
+
+export const StyledToggleButton = styled.button`
+  padding: 4px 8px;
+  font-size: small;
+  box-shadow: ${({active}) =>
+    active ? '0 0 0 1px rgb(0 0 0 / 15%) inset, 0 0 6px rgb(0 0 0 / 20%) inset' : 'inherit'};
+  color: ${({active}) => (active ? '#fff' : COLOR_FONT_GREY)};
+  background: ${({active}) => (active ? COLOR_ORANGE : '#e6e6e6')};
 `;

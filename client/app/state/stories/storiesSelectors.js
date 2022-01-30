@@ -13,17 +13,19 @@ export const getActiveStories = createSelector([getStoriesById], (stories) =>
 );
 
 /**
- * Returns active stories that have a consensus value. Never returns undefined. will potentially return an empty array.
- * @return {object[]}
- */
-export const getActiveStoriesWithConsensus = createSelector([getActiveStories], (stories) =>
-  stories.filter(hasStoryConsensus)
-);
-/**
  * Returns trashed stories as array. Never returns undefined.
  */
 export const getTrashedStories = createSelector([getStoriesById], (stories) =>
   stories ? Object.values(stories).filter((s) => s.trashed) : []
+);
+
+/**
+ * Returns active & trashed stories that have a consensus value. Never returns undefined. will potentially return an empty array.
+ * @return {object[]}
+ */
+export const getAllStoriesWithConsensus = createSelector(
+  [getActiveStories, getTrashedStories],
+  (active, trashed) => active.filter(hasStoryConsensus).concat(trashed.filter(hasStoryConsensus))
 );
 
 /**

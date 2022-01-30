@@ -95,5 +95,6 @@
   "issueTrackingUrlInfo": "Wenn du stories von deinem Issue Tracking System (Bsp. Jira) importierst, kannst du hier eine URL angeben, so dass alle stories einen Link zum jeweiligen Issue enthalten.",
   "issueTrackingUrlExample": "https://my.jira.com/browse/{ISSUE}",
   "matrix": "Schätz-Matrix",
-  "noStoriesForMatrix": "Es gibt noch keine geschätzten Stories in deinem Raum..."
+  "noStoriesForMatrix": "Es gibt noch keine geschätzten Stories in deinem Raum...",
+  "matrixIncludeTrashed": "Inklusive gelöschte Stories"
 }

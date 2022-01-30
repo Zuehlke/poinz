@@ -95,5 +95,6 @@
   "issueTrackingUrlInfo": "If you set a URL to your Issue Tracking System (e.g. Jira) here, all stories will contain a deeplink to the respective issue after importing them. The placeholder {ISSUE} will be replaced with the issue key.",
   "issueTrackingUrlExample": "https://my.jira.com/browse/{ISSUE}",
   "matrix": "Estimation Matrix",
-  "noStoriesForMatrix": "There are no estimated stories in your room, yet..."
+  "noStoriesForMatrix": "There are no estimated stories in your room, yet...",
+  "matrixIncludeTrashed": "Include trashed stories"
 }

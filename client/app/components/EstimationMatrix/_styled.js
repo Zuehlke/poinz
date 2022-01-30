@@ -14,6 +14,10 @@ export const StyledEstimationMatrix = styled.div`
 
   h4 {
     margin-bottom: 16px;
+
+    > span {
+      font-weight: normal;
+    }
   }
 
   /* the header row*/

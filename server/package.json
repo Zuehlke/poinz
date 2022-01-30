@@ -57,6 +57,7 @@
     "@babel/core": "7.16.10",
     "@babel/preset-env": "7.16.11",
     "@babel/register": "7.16.9",
+    "@faker-js/faker": "^6.0.0-alpha.5",
     "babel-jest": "27.4.6",
     "eslint": "8.7.0",
     "jest": "27.4.7",

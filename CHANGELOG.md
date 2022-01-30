@@ -1,7 +1,7 @@
 ### 0.15.0: 2022-01-30
 
-* Markdown support in story description
-* Estimation Matrix that gives an overview of all estimated stories in your room
+* Markdown support in story description (#233, thanks for the suggestion @martin-sos)
+* Estimation Matrix that gives an overview of all estimated stories in your room (#234, thanks for the suggestion @martin-sos)
 
 ### 0.14.0: 2022-01-23
 
@@ -27,7 +27,7 @@
 
 ### 0.12.0: 2021-09-17
 
-* Display "Recommendation" in Estimation Summary: the first card that is larger than the numerical average. Eexcept numerical average is within 10% of the lower card. (#207, thanks to #ecaron)
+* Display "Recommendation" in Estimation Summary: the first card that is larger than the numerical average. Eexcept numerical average is within 10% of the lower card. (#207, thanks to @ecaron)
 * You can now settle for any card. (Previously, only cards that were chosen by at least one user were possible settle values).
 * Dependencies updated
 

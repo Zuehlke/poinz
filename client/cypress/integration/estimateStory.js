@@ -22,4 +22,11 @@ it('join new room, add a story, estimate the story (alone)', function () {
 
   Room.EstimationArea.storyConsensus().contains('13'); // auto-revealed and showing consensus (since we have only one user in the room)
   Room.EstimationArea.newRoundButton().click(); // revealed  -> "new Round" button is shown
+
+  // can toggle between story and estimation matrix
+  Room.matrixToggle().find('button:nth-child(2)').click();
+  Room.estimationMatrix().find('h4').contains('Estimation Matrix');
+  // and toggle back
+  Room.matrixToggle().find('button:nth-child(2)').click();
+  Room.EstimationArea.estimationCard(8);
 });

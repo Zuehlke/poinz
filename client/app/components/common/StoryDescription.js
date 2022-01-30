@@ -56,6 +56,7 @@ const StoryDescription = ({
 
       {showMarkdownToggle && originalTextLength > 0 && (
         <StyledToggleIcon
+          data-testid="markdownToggleButton"
           on={markdownEnabled ? '1' : ''}
           className="icon-markdown"
           onClick={toggleMarkdownEnabled}

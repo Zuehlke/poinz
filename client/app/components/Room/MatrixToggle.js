@@ -9,7 +9,7 @@ import {StyledMatrixToggle} from './_styled';
 const MatrixToggle = ({onToggle, matrixShown}) => {
   const {t} = useContext(L10nContext);
   return (
-    <StyledMatrixToggle>
+    <StyledMatrixToggle data-testid="matrixToggle">
       <StyledToggleButtonGroup className="pure-button-group" role="group">
         <StyledToggleButton
           className="pure-button"

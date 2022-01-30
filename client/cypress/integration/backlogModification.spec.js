@@ -39,6 +39,7 @@ it('join new room, add a story with a title and description, modify it', functio
   Backlog.SelectedStory.description().contains('..onthenextline');
   Backlog.SelectedStory.description().find('a'); // jira url in description is correctly rendered as link ( <a ...> tag)
 
+  // switch story to edit mode
   Backlog.SelectedStory.editButton().click();
   Backlog.SelectedStory.titleField().type(this.stories[3].title);
   Backlog.SelectedStory.descriptionField().clear().type(this.stories[3].description);
@@ -48,6 +49,41 @@ it('join new room, add a story with a title and description, modify it', functio
   // changes are saved
   Backlog.SelectedStory.title().contains(this.stories[3].title);
   Backlog.SelectedStory.description().contains(this.stories[3].description);
+  Room.EstimationArea.storyDescription().contains(this.stories[3].description);
+
+  // switch story to edit mode again and put some markdown into the description
+  Backlog.SelectedStory.editButton().click();
+  Backlog.SelectedStory.titleField().type(this.stories[3].title);
+  Backlog.SelectedStory.descriptionField()
+    .clear()
+    .type(
+      this.stories[3].description +
+        `
+#### H4 A Heading
+
+* some list-item
+* second list-item
+
+*italic*
+
+**bold**
+
+`
+    );
+
+  Backlog.SelectedStory.saveChangesButton().click();
+
+  // plaintext rendered
+  Room.EstimationArea.storyDescription().contains('# H4 A Heading');
+
+  // now toggle the markdown rendering
+  Room.EstimationArea.markdownToggleButton().click();
+
+  Room.EstimationArea.storyDescription().find('h4').contains('A Heading');
+  Room.EstimationArea.storyDescription().find('ul');
+  Room.EstimationArea.storyDescription().find('li');
+  Room.EstimationArea.storyDescription().find('strong').contains('bold');
+  Room.EstimationArea.storyDescription().find('em').contains('italic');
 });
 
 it('join new room, add a story trash it, restore it, trash it again and delete it', function () {

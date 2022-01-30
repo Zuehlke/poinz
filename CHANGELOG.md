@@ -1,6 +1,7 @@
-### 0.15.0: 2022-99-99
+### 0.15.0: 2022-01-30
 
 * Markdown support in story description
+* Estimation Matrix that gives an overview of all estimated stories in your room
 
 ### 0.14.0: 2022-01-23
 

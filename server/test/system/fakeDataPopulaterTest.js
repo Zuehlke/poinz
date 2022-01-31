@@ -9,13 +9,17 @@ const ROOM_ID = 'bxgut1lr5a9im8xi9ap67';
 /**
  * Use this "test" to add a bunch of dummy users to a running PoinZ room. Good for testing & debugging and UI tweaking.
  */
-test.skip('adds fake users to your PoinZ room', async () => {
-  const userCount = 3;
+test('adds fake users to your PoinZ room', async () => {
+  const userCount = 14;
   for (let u = 0; u < userCount; u++) {
     const client = poinzSocketClientFactory();
     const userId = uuid();
     await client.cmdAndWait(client.cmds.joinRoom(ROOM_ID, userId, faker.name.firstName()), 2);
+    await client.cmdAndWait(client.cmds.setAvatar(ROOM_ID, userId, u), 1);
   }
+
+  // do not disconnect sockets, we want to leave users "online" in room.
+  // as a consequence, jest test runner will not stop...
 });
 
 
@@ -37,6 +41,7 @@ test.skip('adds fake stories to your PoinZ room', async () => {
 
   await client.cmdAndWait(client.cmds.leaveRoom(ROOM_ID, userId, false), 1);
 
+  client.disconnect();
 });
 
 

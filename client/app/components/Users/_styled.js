@@ -21,6 +21,7 @@ export const StyledUser = styled.div`
   align-items: center;
   padding: 0;
   margin-top: 4px;
+  margin-bottom: 8px;
 
   position: relative;
   color: ${({isOwn, shaded}) => (shaded ? COLOR_LIGHT_GREY : isOwn ? COLOR_ORANGE : 'inherit')};
@@ -67,7 +68,7 @@ export const StyledUserEstimation = styled.div`
   box-sizing: border-box;
   font-size: 18px;
   border: ${({revealed}) =>
-    revealed ? '2px solid  ' + COLOR_LIGHTER_GREY : '2px dashed ' + COLOR_LIGHTER_GREY};
+          revealed ? '2px solid  ' + COLOR_LIGHTER_GREY : '2px dashed ' + COLOR_LIGHTER_GREY};
   background: transparent;
   color: ${COLOR_LIGHT_GREY};
   font-family: ${ZuehlkeFont};

@@ -34,6 +34,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       kick,
       setUsername,
       setEmail,
+      setAvatar,
       toggleExclude,
       addStory,
       changeStory,
@@ -191,6 +192,16 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       userId,
       payload: {
         email
+      }
+    });
+  }
+  function setAvatar(roomId, userId, avatarNumber) {
+    return sendCommand({
+      name: 'setAvatar',
+      roomId,
+      userId,
+      payload: {
+        avatar:avatarNumber
       }
     });
   }

@@ -56,7 +56,7 @@ const Cards = ({
   }
 
   function onCardClick(value) {
-    if (ownEstimate === value) {
+    if (ownEstimate && ownEstimate.value === value) {
       clearStoryEstimate();
     } else {
       giveStoryEstimate(value, confidence);

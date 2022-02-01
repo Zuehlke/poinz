@@ -11,16 +11,17 @@ export const StyledAvatar = styled.img`
   filter: ${({shaded}) => (shaded ? 'grayscale(100%)' : 'none')};
   opacity: ${({shaded}) => (shaded ? '0.6' : '1')};
 
+  /* smaller avatar icons in mobile view */
   margin: 0;
   width: 32px;
   height: 32px;
   padding: 4px;
 
-  @media ${device.modernMobile} {
+  @media ${device.desktop} {
     width: 60px;
     height: 60px;
-    padding: 4px;
     margin: 0 auto;
+    padding: 4px;
   }
 `;
 

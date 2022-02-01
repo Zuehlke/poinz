@@ -11,7 +11,7 @@ export const StyledRoom = styled.div`
 `;
 
 export const StyledRoomFooter = styled.div`
-  margin-bottom: 8px;
+  padding: 4px 2px;
   font-size: 9px;
   color: ${COLOR_FONT_GREY};
   background: ${COLOR_BACKGROUND_GREY};

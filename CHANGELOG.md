@@ -1,3 +1,10 @@
+### 0.15.1: 2022-02-01
+
+* Fix a bug that prevented users from clearing their current estimate
+* UI Tweaking for mobile devices (smaller user avatars and cards)
+* Switched to node.js 16 LTS
+* dependencies updated
+
 ### 0.15.0: 2022-01-30
 
 * Markdown support in story description (#233, thanks for the suggestion @martin-sos)

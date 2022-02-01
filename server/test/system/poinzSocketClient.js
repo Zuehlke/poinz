@@ -201,7 +201,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       roomId,
       userId,
       payload: {
-        avatar:avatarNumber
+        avatar: avatarNumber
       }
     });
   }

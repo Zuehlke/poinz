@@ -22,7 +22,6 @@ test('adds fake users to your PoinZ room', async () => {
   // as a consequence, jest test runner will not stop...
 });
 
-
 /**
  * Use this "test" to add dummy stories
  */
@@ -43,5 +42,3 @@ test.skip('adds fake stories to your PoinZ room', async () => {
 
   client.disconnect();
 });
-
-

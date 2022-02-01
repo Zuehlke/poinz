@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import {device} from '../dimensions';
 import {
   COLOR_BACKGROUND_GREY,
   COLOR_LIGHT_GREY,
@@ -18,9 +17,6 @@ export const StyledActionLog = styled.div`
   overflow-y: auto;
   height: 100%;
   background: ${COLOR_BACKGROUND_GREY};
-
-  @media ${device.desktop} {
-  }
 
   h5 {
     color: ${COLOR_ORANGE};

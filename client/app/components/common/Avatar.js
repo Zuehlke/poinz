@@ -8,7 +8,9 @@ import {StyledAvatar} from './_styled';
 const Avatar = ({user, isOwn, shaded, onClick}) => {
   const avatarImageSource = user.email
     ? `https://www.gravatar.com/avatar/${user.emailHash}?size=60`
-    : user.avatar ? avatarIcons[user.avatar % avatarIcons.length] : avatarIcons[0];
+    : user.avatar
+    ? avatarIcons[user.avatar % avatarIcons.length]
+    : avatarIcons[0];
 
   return (
     <StyledAvatar

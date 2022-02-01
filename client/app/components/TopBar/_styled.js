@@ -149,8 +149,8 @@ export const StyledBacklogToggle = styled.a`
   display: block;
   font-size: 10px;
   z-index: 10;
-  width: 34px;
-  height: 34px;
+  width: 35px;
+  height: 35px;
   background: ${COLOR_BLUE};
 
   @media ${device.desktop} {
@@ -164,7 +164,7 @@ export const StyledBacklogToggleIcon = styled.span`
   position: relative;
   display: inline-block;
   box-sizing: border-box;
-  padding: 8px;
+  padding: 10px 9px;
   height: 100%;
   width: 100%;
 

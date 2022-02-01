@@ -30,3 +30,28 @@ it('join new room, add a story, estimate the story (alone)', function () {
   Room.matrixToggle().find('button:nth-child(2)').click();
   Room.EstimationArea.estimationCard(8);
 });
+
+it('join new room, add a story, estimate & clear estimate (alone)', function () {
+  cy.visit('/');
+
+  Landing.joinButton().click();
+  Landing.usernameField().type(this.user.username);
+  Landing.joinButton().click();
+
+  Room.Backlog.StoryAddForm.titleField().type(this.stories[3].title);
+  Room.Backlog.StoryAddForm.descriptionField().type(this.stories[3].description);
+  Room.Backlog.StoryAddForm.addButton().click();
+
+  // we have to disable autoReveal, so that we can clear our estimation.
+  Room.TopBar.settingsToggleButton().click();
+  Room.Settings.autoRevealToggle().click();
+  Room.TopBar.settingsToggleButton().click();
+
+  Room.EstimationArea.estimationCard(13).click();
+  Room.Users.userEstimationGiven(13);
+  Room.EstimationArea.estimationCard(13).click(); // this is the second click on "13" -> clearStoryEstimate
+  Room.Users.userEstimationGiven(13).should('not.exist');
+
+  Room.EstimationArea.estimationCard(8).click();
+  Room.Users.userEstimationGiven(8);
+});

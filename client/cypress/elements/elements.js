@@ -36,7 +36,8 @@ const elements = {
       markdownToggleButton: () => cy.get(tid('estimationArea', 'story', 'markdownToggleButton')),
       storyDescription: () => cy.get(tid('estimationArea', 'story', 'storyText')),
       newRoundButton: () => cy.get(tid('estimationArea', 'newRoundButton')),
-      summaryCard: (cardValue) => cy.get(tid(`summaryCard.${cardValue}`))
+      summaryCard: (cardValue) => cy.get(tid(`summaryCard.${cardValue}`)),
+      confidenceButtons: () => cy.get(tid('estimationArea', 'confidenceButtons'))
     },
 
     Users: {
@@ -51,7 +52,9 @@ const elements = {
       settingsContainer: () => cy.get(tid('settings')),
       usernameField: () => cy.get(tid('settings', 'usernameInput')),
       saveUsernameButton: () => cy.get(tid('settings', 'saveUsernameButton')),
-      roomPasswordField: () => cy.get(tid('settings', 'roomPasswordInput'))
+      roomPasswordField: () => cy.get(tid('settings', 'roomPasswordInput')),
+      autoRevealToggle: () => cy.get(tid('settings', 'toggleAutoReveal')),
+      confidenceToggle: () => cy.get(tid('settings', 'toggleConfidence'))
     },
 
     Backlog: {

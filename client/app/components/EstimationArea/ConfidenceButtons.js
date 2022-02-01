@@ -8,7 +8,11 @@ import {StyledToggleButton, StyledToggleButtonGroup} from '../common/_styled';
 const ConfidenceButtons = ({onConfidenceChange, selectedConfidence}) => {
   const {t} = useContext(L10nContext);
   return (
-    <StyledToggleButtonGroup className="pure-button-group" role="group">
+    <StyledToggleButtonGroup
+      className="pure-button-group"
+      role="group"
+      data-testid="confidenceButtons"
+    >
       <ConfButton
         label={t('confidenceUnsure')}
         title={t('confidenceUnsureTitle')}

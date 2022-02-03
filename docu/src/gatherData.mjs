@@ -93,14 +93,16 @@ async function handleSingleCmdHandlerFile(filePath) {
   }
 
   // compact events, remove duplicates
-  cmdHandlerInfo.events = Object.values(cmdHandlerInfo.events.reduce((total, current) => {
-    if (total[current.eventName] && current.restricted) {
-      total[current.eventName].restricted = true;
-    } else {
-      total[current.eventName] = current
-    }
-    return total;
-  }, []));
+  cmdHandlerInfo.events = Object.values(
+    cmdHandlerInfo.events.reduce((total, current) => {
+      if (total[current.eventName] && current.restricted) {
+        total[current.eventName].restricted = true;
+      } else {
+        total[current.eventName] = current;
+      }
+      return total;
+    }, [])
+  );
 
   // sort events alphabetically
   cmdHandlerInfo.events.sort((evA, evB) => evA.eventName.localeCompare(evB.eventName));
@@ -161,12 +163,14 @@ function getEventListFromCmdHandlers(commandHandlerInfo) {
     return total;
   };
 
-  const eventMap = commandHandlerInfo.reduce((total, currentCmdHandler) => (
-    currentCmdHandler.events.reduce(
-      (innerTotal, e) => addEventTotal(innerTotal, e, currentCmdHandler.commandName),
-      total
-    )
-  ), {});
+  const eventMap = commandHandlerInfo.reduce(
+    (total, currentCmdHandler) =>
+      currentCmdHandler.events.reduce(
+        (innerTotal, e) => addEventTotal(innerTotal, e, currentCmdHandler.commandName),
+        total
+      ),
+    {}
+  );
 
   return Object.values(eventMap);
 }

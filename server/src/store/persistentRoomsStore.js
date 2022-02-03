@@ -173,6 +173,10 @@ async function saveRoom(room) {
  * @return {Promise<object | undefined>}
  */
 async function getRoomById(roomId) {
+  if (!roomId) {
+    throw new Error('Cannot get Room from persistentStore if no roomId is provided!');
+  }
+
   const room = await roomsCollection.findOne({id: roomId});
 
   if (room) {

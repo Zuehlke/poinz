@@ -39,6 +39,7 @@ test('nonexisting room', async () => {
 
   expect(roomCreatedEvent.userId).toEqual(userId);
   expect(roomCreatedEvent.payload).toEqual({});
+  expect(roomCreatedEvent.restricted).toBe(true);
 
   expect(joinedRoomEvent.userId).toEqual(userId);
   expect(joinedRoomEvent.payload).toEqual({
@@ -126,6 +127,7 @@ test('existing room with matching user already in room (re-join) ', async () => 
   expect(producedEvents).toMatchEvents(
     commandId,
     roomId,
+    // no "roomCreated" event - it already existed
     'joinedRoom',
     'usernameSet',
     'emailSet',

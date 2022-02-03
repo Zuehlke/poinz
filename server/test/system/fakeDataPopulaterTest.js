@@ -4,12 +4,12 @@ import poinzSocketClientFactory from './poinzSocketClient.js';
 import uuid from '../../src/uuid.js';
 
 /* SET YOUR ROOM ID HERE*/
-const ROOM_ID = 'bxgut1lr5a9im8xi9ap67';
+const ROOM_ID = '';
 
 /**
  * Use this "test" to add a bunch of dummy users to a running PoinZ room. Good for testing & debugging and UI tweaking.
  */
-test('adds fake users to your PoinZ room', async () => {
+test.skip('adds fake users to your PoinZ room', async () => {
   const userCount = 14;
   for (let u = 0; u < userCount; u++) {
     const client = poinzSocketClientFactory();

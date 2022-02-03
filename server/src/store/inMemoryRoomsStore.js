@@ -39,7 +39,7 @@ async function housekeeping() {
 
 async function getRoomById(roomId) {
   if (!roomId) {
-    return undefined;
+    throw new Error('Cannot get Room from inMemoryStore if no roomId is provided!');
   }
 
   const room = rooms[roomId];
@@ -47,11 +47,11 @@ async function getRoomById(roomId) {
     return undefined;
   }
 
-  return detatchObject(room);
+  return detachObject(room);
 }
 
 async function saveRoom(room) {
-  rooms[room.id] = detatchObject(room);
+  rooms[room.id] = detachObject(room);
 }
 
 async function getAllRooms() {
@@ -69,4 +69,4 @@ function getStoreType() {
  *
  * Works for our use!
  */
-const detatchObject = (obj) => JSON.parse(JSON.stringify(obj));
+const detachObject = (obj) => JSON.parse(JSON.stringify(obj));

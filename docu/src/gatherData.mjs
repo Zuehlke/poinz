@@ -49,13 +49,14 @@ async function handleSingleCmdHandlerFile(filePath) {
       const {callee, arguments: args, loc} = node;
 
       if (callee.type === 'Identifier' && callee.name === 'pushEvent') {
+        const isRestrictedEvent = args.length > 2 && args[2].value === true;
         const eventName = args[0].value;
         console.log(
           `   command "${chalk.yellow.bold(commandName)}" produces event "${chalk.yellow.bold(
             eventName
           )}"  (commandHandler file ${filePath} , line ${loc.start.line})`
         );
-        cmdHandlerInfo.events.push(eventName);
+        cmdHandlerInfo.events.push({eventName, restricted: isRestrictedEvent});
       }
     },
 
@@ -91,11 +92,8 @@ async function handleSingleCmdHandlerFile(filePath) {
     );
   }
 
-  // throw away duplicate event names
-  cmdHandlerInfo.events = [...new Set(cmdHandlerInfo.events)];
-
   // sort them alphabetically
-  cmdHandlerInfo.events.sort();
+  cmdHandlerInfo.events.sort((evA, evB) => evA.eventName.localeCompare(evB.eventName));
 
   return cmdHandlerInfo;
 }
@@ -138,15 +136,18 @@ function getFirstBlockComment(parseResult) {
  * just pull out all events from all cmdHandlers into a single list. hold reference to names of producing commands.
  */
 function getEventListFromCmdHandlers(commandHandlerInfo) {
-  const addEventTotal = (total, event, commandName) => {
-    if (!total[event]) {
-      total[event] = {
-        eventName: event,
+  const addEventTotal = (total, {eventName, restricted}, commandName) => {
+    if (!total[eventName]) {
+      total[eventName] = {
+        eventName,
+        restricted,
         byCommands: []
       };
+    } else if (restricted) {
+      total[eventName].restricted = true; // an event could  be "pushed" restricted and unrestricted... would not make sense, but we cannot quarantee that it is not the case.
     }
-    total[event].byCommands.push(commandName);
-    total[event].byCommands = uniqueArray(total[event].byCommands);
+    total[eventName].byCommands.push(commandName);
+    total[eventName].byCommands = uniqueArray(total[eventName].byCommands);
     return total;
   };
 
@@ -164,7 +165,7 @@ function getEventListFromCmdHandlers(commandHandlerInfo) {
  * use "import" statements in file "commandHandlers.js" to find all commandHandlers
  * we cannot "readDir" the cmdHandlersDirPath, since it contains also other files...
  *
- * @return {string[]} list of filenames
+ * @return {Promise<string[]>} list of filenames
  */
 async function getListOfCommandHandlerFiles(cmdHandlersDirPath) {
   const {result} = await parseFile(path.join(cmdHandlersDirPath, 'commandHandlers.js'));

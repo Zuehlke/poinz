@@ -96,5 +96,5 @@ reducer but to choose a more "real-life" approach by reducing a series of events
 To make sure, that the test-input (series of events) is valid/correct/up-2-date, there is a backend system test that
 produces these scenarios and stores them as json files.
 
-See **server/test/integration/eventReducerScenarioGeneratorTest.js**
+See **server/test/system/eventReducerScenarioGenerators/**
 

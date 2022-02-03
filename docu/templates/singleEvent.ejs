@@ -6,6 +6,8 @@ Produced by: <% evtInfo.byCommands.forEach((c) => { -%>
 **[<%= c %>](#<%= c %>)** <% }) -%>
 
 
+<%= evtInfo.restricted ? "NOTE: This event is marked as **restricted** and is thus only sent to the one client that triggered it." :""%>
+
 Description
 
 ```text

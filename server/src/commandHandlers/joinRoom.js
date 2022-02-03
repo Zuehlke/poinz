@@ -56,8 +56,8 @@ const schema = {
 };
 
 const joinRoomCommandHandler = {
-  canCreateRoom: true,
-  skipUserIdRoomCheck: true, // will not check whether userId is part of the room.  for most other commands this is a precondition. not for "joinRoom".
+  canCreateRoom: true, // set to true -> this command is allowed to create a new room object. see commandProcessor:loadRoom() for more information
+  skipUserIdRoomCheck: true, // set to true -> will not check whether userId is part of the room. see commandProcessor:preConditions() for more information
   schema,
   fn: (pushEvent, room, command, userId) => {
     if (room.pristine) {
@@ -71,15 +71,19 @@ const joinRoomCommandHandler = {
 export default joinRoomCommandHandler;
 
 function joinNewRoom(pushEvent, room, command, userId) {
-  pushEvent('roomCreated', {
-    password: command.payload.password ? hashRoomPassword(command.payload.password) : undefined
-  });
+  pushEvent(
+    'roomCreated',
+    {
+      password: command.payload.password ? hashRoomPassword(command.payload.password) : undefined
+    },
+    true
+  );
 
   const avatar = Number.isInteger(command.payload.avatar) ? command.payload.avatar : 0;
 
   // produce a "roomJoined" event for our new room
-  // this event must contain all information about the room, such that every joining user gets the current room state!
-  // since it is a new room, no stories , no selectedStory, only one (our) user
+  // this event must contain all necessary information about the room, such that every joining user gets the current room state!
+  // since it is a new room, no stories, no selectedStory, only one (our) user
   const joinedRoomEventPayload = {
     users: [
       {

@@ -41,6 +41,9 @@ export function newMockRoomsStore(initialRoom) {
 
   return {
     getRoomById: (id) => {
+      if (!id) {
+        throw new Error('Cannot get Room from mockStore if no roomId is provided!');
+      }
       if (!room || room.id !== id) {
         return Promise.resolve(undefined);
       }

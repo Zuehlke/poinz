@@ -5,6 +5,7 @@ import {EVENT_ACTION_TYPES} from '../actions/eventActions';
 import {getMatchingCardConfig, getRoomId} from '../room/roomSelectors';
 import {getStoryById} from '../stories/storiesSelectors';
 import {getOwnUserId, getUsersById} from '../users/usersSelectors';
+import {getPendingJoinCommandId} from '../commandTracking/commandTrackingSelectors';
 
 /*
  * will contain human readable "log messages" of actions (events) that did take place in the current room
@@ -29,22 +30,21 @@ export default function (state, action, oldState) {
 
   switch (action.type) {
     // joining / leaving / kicking
-    case EVENT_ACTION_TYPES.roomCreated:
-      return updateLogInState(`Room "${payload.id}" created`);
-    case EVENT_ACTION_TYPES.joinedRoom: {
-      const isOwnJoin = getOwnUserId(state) === event.userId;
-      const message = isOwnJoin
-        ? `You joined room "${getRoomId(state)}"`
-        : `${username || 'New user'} joined`;
-
-      if (isOwnJoin) {
+    case EVENT_ACTION_TYPES.roomCreated: {
+      if (event.correlationId === getPendingJoinCommandId(state)) {
         return {
           ...state,
-          actionLog: [toLogItem(message)]
+          actionLog: [toLogItem(`You created room "${event.roomId}"`)]
         };
       } else {
-        return updateLogInState(message);
+        return state;
       }
+    }
+    case EVENT_ACTION_TYPES.joinedRoom: {
+      const message = action.ourJoin
+        ? `You joined room "${getRoomId(state)}"`
+        : `${username || 'New user'} joined`;
+      return updateLogInState(message);
     }
     case EVENT_ACTION_TYPES.leftRoom: {
       if (event.userId === getOwnUserId(oldState)) {
@@ -56,13 +56,20 @@ export default function (state, action, oldState) {
         return updateLogInState(`${getUsername(oldState, event.userId)} left the room`);
       }
     }
-    case EVENT_ACTION_TYPES.kicked:
-      return updateLogInState(
-        `${getUsername(oldState, payload.userId)} was kicked from the room by ${getUsername(
-          oldState,
-          event.userId
-        )}`
-      );
+    case EVENT_ACTION_TYPES.kicked: {
+      const kickerName = getUsername(oldState, event.userId);
+      const youGotKicked = oldState.users.ownUserId === payload.userId;
+      if (youGotKicked) {
+        return {
+          ...state,
+          actionLog: [toLogItem(`You were kicked from the room by ${kickerName}`)] // clear actionLog, just add our new item
+        };
+      } else {
+        return updateLogInState(
+          `${getUsername(oldState, payload.userId)} was kicked from the room by ${kickerName}`
+        );
+      }
+    }
     case EVENT_ACTION_TYPES.connectionLost:
       return updateLogInState(`${username} lost the connection`);
 

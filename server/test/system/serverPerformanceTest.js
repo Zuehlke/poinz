@@ -33,17 +33,17 @@ async function addNstories(numberOfStoriesToAdd) {
     eventCountBeforeAddingStories + numberOfStoriesToAdd
   );
 
-  console.log('disconnecting');
   client.disconnect();
 }
 
-test('serverPerformance: join 100 users to same room', async () => {
+test('serverPerformance: join 30 users to same room', async () => {
   const roomId = uuid();
 
   const numberOfUsers = 30;
   const numberOfEventsForFirstJoin = 5; // 5 events on first join, when room gets created: roomCreated, joinedRoom, avatarSet, storyAdded, storySelected
   const numberOfEventsForOtherJoins = 2; //   2 events for all suceeding users :joinedRoom, avatarSet
 
+  console.log(`adding ${numberOfUsers} users to room ${roomId}`);
   const clientPromises = new Array(numberOfUsers).fill(1).map(async (_, index) => {
     const client = poinzSocketClientFactory();
     const userId = uuid();

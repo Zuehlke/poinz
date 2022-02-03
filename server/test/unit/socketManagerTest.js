@@ -93,8 +93,8 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
   expect(socket.join.mock.calls[0][0]).toEqual(roomOneId);
   expect(socket.join.mock.calls[1][0]).toEqual(roomTwoId);
 
-  // 7 events produced and sent (roomCreated, joinedRoom, avatarSet, storyAdded, storySelected    then leftRoom  then again roomCreated, joinedRoom, avatarSet, storyAdded, storySelected)
-  expect(sendEventToRoom.mock.calls.length).toBe(11);
+  // events produced and sent (-roomCreated -RESTRICTED-, joinedRoom, avatarSet, storyAdded, storySelected    then leftRoom  then again -roomCreated -RESTRICTED-, joinedRoom, avatarSet, storyAdded, storySelected)
+  expect(sendEventToRoom.mock.calls.length).toBe(11 - 2);
 
   expect(removeSocketFromRoomByIds.mock.calls.length).toBe(1);
 });
@@ -231,7 +231,7 @@ test('emits commandRejected if no userId is present in "normal" command', async 
   expect(socket.join.mock.calls.length).toBe(1);
   expect(socket.join.mock.calls[0][0]).toEqual(roomOneId);
 
-  expect(sendEventToRoom.mock.calls.length).toBe(5); // created, joined, avatarSet, storyAdded, storySelected
+  expect(sendEventToRoom.mock.calls.length).toBe(4); // -roomCreated - RESTRICTED_, joinedRoom, avatarSet, storyAdded, storySelected
 
   expect(socket.cmdRejectedEvts.length).toBe(1); // the commandRejectedEvent gets emitted to the one socket (not the room)
   expect(socket.cmdRejectedEvts[0]).toMatchObject({
@@ -275,9 +275,9 @@ test('should handle disconnect for mapped user', async () => {
   expect(removeSocketFromRoomByIds.mock.calls[0][0]).toBe(socket.id);
   expect(removeSocketFromRoomByIds.mock.calls[0][1]).toBe(roomId);
 
-  // created, joined, avatarSet, storyAdded, storySelected  AND "connectionLost"
-  expect(sendEventToRoom.mock.calls.length).toBe(6);
-  expect(sendEventToRoom.mock.calls[5][1]).toMatchObject({
+  // -roomCreated-RESTRICTED-, joinedRoom, avatarSet, storyAdded, storySelected  AND "connectionLost"
+  expect(sendEventToRoom.mock.calls.length).toBe(5);
+  expect(sendEventToRoom.mock.calls[4][1]).toMatchObject({
     name: 'connectionLost'
   });
 });

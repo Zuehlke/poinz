@@ -17,10 +17,9 @@ const LOGGER = getLogger('commandProcessor');
  *
  * The command processor handles all incoming commands. And performs the same 7 steps for each command (details see below).
  *
- * - If a command is processed successfully, a list of produced events is returned (wrapped in a promise)
+ * If a command is processed successfully, a list of produced events is returned (wrapped in a promise)
  *
- * - Command processing can fail due to a number of reasons: unknown command, invalid structure, preconditions that fail, etc.
- *   In this case, the returned promise will reject with an Error
+ * Command processing can fail due to a number of reasons: unknown command, invalid structure, preconditions that fail, etc. In this case, the returned promise will reject with an Error
  *
  * @param {object} commandHandlers A collection of command handlers indexed by command name
  * @param {object} baseCommandSchema The base command schema that every command must fulfil. (can be referenced by all commands).
@@ -50,13 +49,13 @@ export default function commandProcessorFactory(
    *  (is asynchronous - returns a Promise)
    *  For every command the following steps are done.
    *
-   *  1. Validation
-   *  2. Find matching command handler
-   *  3. Load room
-   *  4. Precondition check
-   *  5. Handle Command
-   *  6. Apply events
-   *  7. Store room
+   *  1. Validation {@link validate}
+   *  2. Find matching command handler {@link findMatchingCommandHandler}
+   *  3. Load room {@link logCommand}
+   *  4. Precondition check {@link preConditions}
+   *  5. Handle Command  {@link handle}
+   *  6. Apply events {@link applyEvents}
+   *  7. Store room {@link saveRoomBackToStore}
    *
    *  Every step can throw an error which will reject the promise.
    *
@@ -111,9 +110,10 @@ export default function commandProcessorFactory(
         saveRoomBackToStore
       ];
 
+      // sequencially invoke one step after another. wait for each single step to resolve, before proceeding
       await steps.reduce((p, step) => p.then(() => step(context, command)), Promise.resolve(null));
     } catch (err) {
-      proceed(err); // proceed with next job in queue
+      proceed(err); // pass error object and proceed with next job in queue
       return;
     }
 
@@ -154,13 +154,7 @@ export default function commandProcessorFactory(
    * @returns {Promise} returns a promise that resolves as soon as the room was successfully loaded
    */
   async function loadRoom(ctx, cmd) {
-    if (!cmd.roomId) {
-      throw new Error(
-        'No roomId given in Command. this is invalid and should have been caught by command validation (schema).'
-      );
-    }
-
-    // try loading by id
+    // try loading the room by its id
     const room = await store.getRoomById(cmd.roomId);
     if (room) {
       ctx.room = room;
@@ -246,7 +240,7 @@ export default function commandProcessorFactory(
           correlationId: cmd.id,
           name: eventName,
           roomId: updatedRoom.id,
-          restricted,
+          restricted: restricted || undefined,
           payload: eventPayload
         });
 
@@ -268,9 +262,9 @@ export default function commandProcessorFactory(
   }
 
   /**
-   *  7. Store modified room object (asynchronous)
+   *  7. Store modified room object
    *  Command was processed successfully and all produced events were applied and modified the room object.
-   *  Now store the new state.
+   *  Now validate and store the new state.
    *
    *  @returns {Promise} returns a promise that resolves as soon as the room is stored
    */

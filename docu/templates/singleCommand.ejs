@@ -9,7 +9,7 @@ Description
 ```
 
 Produces: <%  cmdInfo.events.forEach( (e) => { -%>
-**[<%= e.eventName %>](#<%= e.eventName %>)**, <% })-%>
+**[<%= e.eventName %><%= e.restricted ? " (restricted)":"" %>](#<%= e.eventName %>)**, <% })-%>
 
 
 <details>

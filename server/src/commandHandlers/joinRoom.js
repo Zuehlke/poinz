@@ -3,7 +3,7 @@ import defaultCardConfig from '../defaultCardConfig';
 import sampleStory from './joinRoomSampleStory';
 import {calcEmailHash} from './setEmail';
 import {modifyUser} from '../eventHandlers/roomModifiers';
-import {hashRoomPassword, checkRoomPassword} from '../auth/roomPasswordService';
+import {checkRoomPassword} from '../auth/roomPasswordService';
 import {issueJwt, validateJwt} from '../auth/jwtService';
 
 /**
@@ -71,13 +71,7 @@ const joinRoomCommandHandler = {
 export default joinRoomCommandHandler;
 
 function joinNewRoom(pushEvent, room, command, userId) {
-  pushEvent(
-    'roomCreated',
-    {
-      password: command.payload.password ? hashRoomPassword(command.payload.password) : undefined
-    },
-    true
-  );
+  pushEvent('roomCreated', {}, true); // #242 we ignore passwords when creating new rooms on-the fly
 
   const avatar = Number.isInteger(command.payload.avatar) ? command.payload.avatar : 0;
 
@@ -97,13 +91,9 @@ function joinNewRoom(pushEvent, room, command, userId) {
     cardConfig: defaultCardConfig,
     autoReveal: true,
     withConfidence: false,
-    passwordProtected: !!command.payload.password
+    passwordProtected: false
   };
   pushEvent('joinedRoom', joinedRoomEventPayload);
-
-  if (command.payload.password) {
-    pushEvent('tokenIssued', {token: issueJwt(userId, room.id)}, true);
-  }
 
   if (command.payload.username) {
     pushEvent('usernameSet', {
@@ -175,6 +165,7 @@ function joinExistingRoom(pushEvent, room, command, userId) {
   pushEvent('joinedRoom', joinedRoomEventPayload);
 
   if (room.password && !command.payload.token) {
+    // for pw-protected rooms: if the joinCommand did not yet contain a token, then issue a new token
     pushEvent('tokenIssued', {token: issueJwt(userId, room.id)}, true);
   }
 

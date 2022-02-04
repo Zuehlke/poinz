@@ -6,7 +6,6 @@ import {L10nContext} from '../../services/l10n';
 import {joinRoom} from '../../state/actions/commandActions';
 import {ROOM_ID_REGEX} from '../frontendInputValidation';
 import {getUsersPresets} from '../../state/users/usersSelectors';
-import PasswordField from '../common/PasswordField';
 import ValidatedInput from '../common/ValidatedInput';
 
 import {
@@ -27,7 +26,6 @@ const JoinRoomForm = ({presetUsername, joinRoom}) => {
   const {t} = useContext(L10nContext);
   const [showExtended, setShowExtended] = useState(false);
   const [customRoomId, setCustomRoomId] = useState('');
-  const [customRoomPassword, setCustomRoomPassword] = useState('');
 
   return (
     <StyledEyecatcher>
@@ -78,31 +76,14 @@ const JoinRoomForm = ({presetUsername, joinRoom}) => {
               allLowercase={true}
               autoComplete="organization"
             />
-
-            <PasswordField
-              placeholder={t('optionalPassword')}
-              onChange={(evt) => setCustomRoomPassword(evt.target.value)}
-              value={customRoomPassword}
-              onKeyPress={onPwInputFieldKeyPress}
-            />
           </React.Fragment>
         )}
       </StyledLandingForm>
     </StyledEyecatcher>
   );
 
-  function onPwInputFieldKeyPress(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      onTriggerJoin();
-    }
-  }
-
   function onTriggerJoin() {
-    joinRoom(
-      customRoomId ? customRoomId : undefined,
-      customRoomPassword ? customRoomPassword : undefined
-    );
+    joinRoom(customRoomId ? customRoomId : undefined);
   }
 };
 

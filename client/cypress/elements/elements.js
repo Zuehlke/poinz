@@ -53,6 +53,7 @@ const elements = {
       usernameField: () => cy.get(tid('settings', 'usernameInput')),
       saveUsernameButton: () => cy.get(tid('settings', 'saveUsernameButton')),
       roomPasswordField: () => cy.get(tid('settings', 'roomPasswordInput')),
+      roomPasswordInputRepeat: () => cy.get(tid('settings', 'roomPasswordInputRepeat')),
       autoRevealToggle: () => cy.get(tid('settings', 'toggleAutoReveal')),
       confidenceToggle: () => cy.get(tid('settings', 'toggleConfidence'))
     },

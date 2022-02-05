@@ -44,16 +44,19 @@ test('joinAndLeaveWithPassword', async () => {
   const client = poinzSocketClientFactory();
   const userId = uuid();
 
-  //  user joins, creates room on the fly with password "1234"
+  //  user joins, creates room on the fly
   await client.cmdAndWait(
-    client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com', '1234'),
+    client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com'),
     3
   );
+
+  // user sets password
+  await client.cmdAndWait(client.cmds.setPassword(roomId, userId, '1234'), 1);
 
   //  user re-joins, with correct password
   await client.cmdAndWait(
     client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com', '1234'),
-    3
+    4
   );
 
   // in the end, write to file and close socket

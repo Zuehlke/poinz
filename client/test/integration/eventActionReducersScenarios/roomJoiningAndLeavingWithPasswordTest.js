@@ -16,7 +16,7 @@ test('You create a room with password', () => {
   let modifiedState;
 
   const joinedEvent = scenario.events[1];
-  const tokenIssuedEvent = scenario.events[2];
+  const tokenIssuedEvent = scenario.events[9];
 
   modifiedState = reduceMultipleEvents(
     getScenarioStartingState(joinedEvent.correlationId),

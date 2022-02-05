@@ -118,9 +118,16 @@ describe('REST endpoint', () => {
     const roomId = uuid();
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
+    await client.cmdAndWait(
+      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de'),
+      7
+    );
+    await client.cmdAndWait(client.cmds.setPassword(roomId, userId, '1234'), 1);
+
+    // re-join existing room with password, in order to get a token
     const events = await client.cmdAndWait(
       client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de', '1234'),
-      3
+      2
     );
     client.disconnect();
 
@@ -131,7 +138,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${events[2].payload.token}`
+        Authorization: `Bearer ${events[1].payload.token}`
       }
     });
 
@@ -148,9 +155,10 @@ describe('REST endpoint', () => {
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
     await client.cmdAndWait(
-      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de', '1234'),
-      3
+      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de'),
+      7
     );
+    await client.cmdAndWait(client.cmds.setPassword(roomId, userId, '1234'), 1);
     client.disconnect();
 
     // export the room
@@ -160,7 +168,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${issueJwt(roomId, userId)}` // this token will be generated with another secret -> invalid
+        Authorization: `Bearer ${issueJwt(roomId, 'some-user-id')}`
       }
     });
 

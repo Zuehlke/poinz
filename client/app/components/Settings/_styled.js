@@ -41,6 +41,10 @@ export const StyledSection = styled.div`
   border: 1px solid ${COLOR_LIGHTER_GREY};
   padding: 8px;
   margin: 0 0 16px 0;
+
+  button + button {
+    margin-left: 4px;
+  }
 `;
 
 export const StyledTextInput = styled.div`

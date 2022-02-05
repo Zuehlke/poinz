@@ -1,9 +1,11 @@
-import axios from 'axios';
-
 /**
  *
  * @return {Promise<*>}
  */
+import checkStatusCode from './checkStatusCode';
+
 export function getAppStatus() {
-  return axios.get('/api/status').then((response) => response.data);
+  return fetch('/api/status')
+    .then(checkStatusCode)
+    .then((response) => response.json());
 }

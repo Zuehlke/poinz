@@ -37,7 +37,6 @@
     "edge 18"
   ],
   "dependencies": {
-    "axios": "0.25.0",
     "history": "5.2.0",
     "loglevel": "1.8.0",
     "nanoid": "3.2.0",
@@ -54,7 +53,8 @@
     "remark-gfm": "^3.0.1",
     "reselect": "4.1.5",
     "socket.io-client": "4.4.1",
-    "styled-components": "5.3.3"
+    "styled-components": "5.3.3",
+    "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
     "@babel/core": "7.16.12",

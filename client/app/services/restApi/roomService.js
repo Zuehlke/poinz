@@ -1,6 +1,6 @@
-import axios from 'axios';
+import checkStatusCode from './checkStatusCode';
 
-const getHeaders = (userToken) => (userToken ? {Authorization: `Bearer ${userToken}`} : {});
+const buildHeaderObject = (userToken) => (userToken ? {Authorization: `Bearer ${userToken}`} : {});
 
 /**
  * Get the full room data from the PoinZ backend.
@@ -11,11 +11,11 @@ const getHeaders = (userToken) => (userToken ? {Authorization: `Bearer ${userTok
  * @return {Promise<*>}
  */
 export function getRoom(roomId, userToken) {
-  return axios
-    .get('/api/room/' + roomId, {
-      headers: getHeaders(userToken)
-    })
-    .then((response) => response.data);
+  return fetch('/api/room/' + roomId, {
+    headers: buildHeaderObject(userToken)
+  })
+    .then(checkStatusCode)
+    .then((response) => response.json());
 }
 
 /**
@@ -27,9 +27,9 @@ export function getRoom(roomId, userToken) {
  * @return {Promise<*>}
  */
 export function getRoomExport(roomId, userToken) {
-  return axios
-    .get('/api/export/room/' + roomId, {
-      headers: getHeaders(userToken)
-    })
-    .then((response) => response.data);
+  return fetch('/api/export/room/' + roomId, {
+    headers: buildHeaderObject(userToken)
+  })
+    .then(checkStatusCode)
+    .then((response) => response.json());
 }

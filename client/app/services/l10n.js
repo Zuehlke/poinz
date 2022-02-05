@@ -22,7 +22,7 @@ export const L10nContext = React.createContext(undefined);
  * Provides "t" "setLanguage" and "language"  to Children (via react's useContext)
  * Usage:
  *   const {t} = useContext(L10nContext);
- *   return <div >{t('some-translation-key')}</div>;
+ *   return <div >{t('room')}</div>;
  *
  */
 export const WithL10n = ({children}) => {

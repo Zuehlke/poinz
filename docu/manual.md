@@ -41,9 +41,15 @@ You can join a room in three different ways
 
 1. Visit the [landing page](https://poinz.herokuapp.com/) and click the big button **"Join new room"**. You will join a
    new room with a randomly assigned unique room id.
-2. Visit the [landing page](https://poinz.herokuapp.com/), extend the form and enter a custom room name, then hit Enter
+
+![Join Room Form](https://user-images.githubusercontent.com/1777143/97100613-89a28600-1695-11eb-9d03-94a482cc0678.png)
+
+2. Visit the [landing page](https://poinz.herokuapp.com/), **extend** the form and enter a custom room name, then hit Enter
    or click the join button. If the room with this custom name (the room id) already exists, you will join it. Otherwise
    a new room is created.
+
+![Join Room Form extended](https://user-images.githubusercontent.com/1777143/152639158-54568b8d-a170-465e-bc29-bf81ced30b6c.png)
+
 3. Join a room directly by visiting the room url. (e.g. https://poinz.herokuapp.com/test
    or  https://poinz.herokuapp.com/a-random-room-id-here). If the room with this name/id already exists, you will join
    it. Otherwise a new room is created.
@@ -51,7 +57,6 @@ You can join a room in three different ways
 PoinZ will ask you for a username on your first visit. Afterwards your username is stored in the LocalStorage of your
 browser and reused on subsequent joins.
 
-![Join Room Form](https://user-images.githubusercontent.com/1777143/97100613-89a28600-1695-11eb-9d03-94a482cc0678.png)
 
 ### Leaving a room
 
@@ -170,7 +175,7 @@ If the feature is enabled, users will be able to select "Unsure" /  "Default" / 
 
 ![estimating_with_confidence](https://user-images.githubusercontent.com/1777143/135747987-de44939e-d90f-4ea4-8c05-f5820e3bbbbd.png)
 
-After the story is revealed, the played cards are marked accordingly. In this example, Sergio did not specify his confidence (i.e. selected "Default"), 
+After the story is revealed, the played cards are marked accordingly. In this example, Sergio did not specify his confidence (i.e. selected "Default"),
 user ChromeU was very unsure about the story being "2", whereas Foxy was very sure, this story is "13"!
 
 ![estimating_with_confidence_revealed](https://user-images.githubusercontent.com/1777143/135748049-3be28220-17f6-490a-a80e-838d7390d67e.png)
@@ -178,10 +183,10 @@ user ChromeU was very unsure about the story being "2", whereas Foxy was very su
 
 ### Estimation Matrix
 
-The Estimation Matrix displays a table with all estimated stories (all stories with consensus), ordered by estimation value. 
+The Estimation Matrix displays a table with all estimated stories (all stories with consensus), ordered by estimation value.
 This allows you and your team members to estimate the current story in relation to other stories which improves your estimation results.
 
-You can toggle between the Matrix and the Story via the small toggle bottom on the right, just below the users. 
+You can toggle between the Matrix and the Story via the small toggle bottom on the right, just below the users.
 
 <img src="https://user-images.githubusercontent.com/1777143/151691920-496244fa-6395-4c8a-bc59-61c84d7cca5e.png" width="300" />
 
@@ -193,7 +198,7 @@ You can toggle between the Matrix and the Story via the small toggle bottom on t
 
 These settings will affect your user.
 
-<img src="https://user-images.githubusercontent.com/1777143/98459634-fc832500-219c-11eb-9c24-dac484541e86.png" width="150" />
+![User settings](https://user-images.githubusercontent.com/1777143/98459634-fc832500-219c-11eb-9c24-dac484541e86.png)
 
 #### Avatar and Email
 
@@ -212,7 +217,7 @@ moderators.
 
 These settings will affect the room and thus all users in the same room.
 
-<img src="https://user-images.githubusercontent.com/1777143/150672684-d3eed4d0-c362-425f-a891-5cc45bab07be.png" width="300" />
+![Room settings](https://user-images.githubusercontent.com/1777143/150672684-d3eed4d0-c362-425f-a891-5cc45bab07be.png)
 
 #### Auto Reveal
 
@@ -226,20 +231,17 @@ If this flag is removed, Poinz will not auto reveal and you can manually reveal 
 By default, everybody can join your room. You can optionally set a password in order to protect unauthorized access to
 your room.
 
-**Setting a room password during creation**
-
-When creating a new room, extend the "Join" button and set a new password (second input field, "Optional password").
-Users will then be prompted for the password when they are joining your room.
-
-<img src="https://user-images.githubusercontent.com/1777143/105578774-d70cbd00-5d82-11eb-9d25-ee48b6d5d4bf.png" width="300" />
-
 **Setting a room password in an existing Room**
 
-For an existing room without password protection, the room settings allow you to set a new password. You can also
-override an existing password. If you click the save button with an empty password field, you remove the password
-protection of that room.
+For an existing room without password protection, the room settings allow you to set a new password.
+You can of course also override or remove an existing password.
 
-<img src="https://user-images.githubusercontent.com/1777143/105578826-379bfa00-5d83-11eb-9a34-6fea1abcd9d3.png" width="250" />
+![Room settings password protection not set](https://user-images.githubusercontent.com/1777143/152639068-ca609d73-b0cb-4302-a6b8-dd5d4db65075.png)
+![Room settings password protection set](https://user-images.githubusercontent.com/1777143/152639067-14d27f6e-e736-4528-8d9b-821860fa6c94.png)
+
+On all subsequent joins to a password protected room, the user is prompted with a password form:
+
+![Password form](https://user-images.githubusercontent.com/1777143/152639234-19a06a04-93c5-4a5e-ab2a-ffc74f6b6ab9.png)
 
 #### Confidence
 
@@ -248,7 +250,7 @@ story. See [Estimating with "Confidence Levels"](#estimating-with-confidence-lev
 
 #### Custom Cards
 
-<img src="https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png" width="250" />
+![Custom cards](https://user-images.githubusercontent.com/1777143/98459768-238e2680-219e-11eb-9c05-c8d734fe2c81.png)
 
 If the default set of cards does not meet your needs, you can change it.
 
@@ -262,19 +264,19 @@ If you click on "Default", you immediately restore the default card configuratio
 
 #### Issue Tracking URL
 
-<img src="https://user-images.githubusercontent.com/1777143/150672743-742c01e2-7b1b-4fb7-9ba4-3321901ead76.png" width="250" />
+![Room settings issue tracking](https://user-images.githubusercontent.com/1777143/150672743-742c01e2-7b1b-4fb7-9ba4-3321901ead76.png)
 
 If you want to link your imported stories to your Issue Tracking (e.g. Jira), you can set a URL here. E.g. *https://my.jira.com/browse/{ISSUE}*.
 The placeholder {ISSUE} will be replaced with the issue key.
 
-If you [import stories](#importing-stories) (via csv) PoinZ will add a deeplink to the respective issue description. 
+If you [import stories](#importing-stories) (via csv) PoinZ will add a deeplink to the respective issue description.
 
 
 ## Security
 
 By default, everybody that knows the name/ID of your room can join your room, without further authorization.
 
-> **This means, anonymous people can read, modify and delete your stories as soon as they know the room ID.**
+> :exclamation: **This means, anonymous people can read, modify and delete your stories as soon as they know the room ID.** :exclamation:
 
 This is by design. When we created PoinZ, we wanted a most simple solution, without the hassle of registration and user
 management.
@@ -282,4 +284,5 @@ management.
 However, you might want to protect your data in some way. See ["Password Protection"](#password-protection) for more
 information.
 
-At any time, you are using PoinZ at your own risk!
+:warning: At any time, you are using PoinZ at your own risk! Be aware that all information that you enter is potentially publicly available!
+We do not recommend that you use PoinZ as a permanent information storage. PoinZ is provided as is, without warranty of any kind! :warning:

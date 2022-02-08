@@ -48,7 +48,7 @@ const Landing = ({waitingForJoin, actionLog}) => {
           </StyledInfoText>
         </StyledEyecatcher>
 
-        {actionLog && actionLog.length > 0 && (
+        {actionLog?.length > 0 && (
           <StyledEyecatcher>
             <StyledActionLog>
               {actionLog.map((entry, index) => (

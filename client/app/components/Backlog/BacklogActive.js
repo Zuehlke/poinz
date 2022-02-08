@@ -32,7 +32,7 @@ const sortAndFilterStories = (activeStories, comparator, query) => {
  */
 const useDrop = (onFilesDrop) => {
   const onDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles && acceptedFiles.length > 0) {
+    if (acceptedFiles?.length > 0) {
       onFilesDrop(acceptedFiles[0]);
     }
   }, []);

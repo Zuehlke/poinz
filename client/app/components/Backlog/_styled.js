@@ -224,19 +224,19 @@ export const StyledBacklogToolbar = styled.form`
     padding: 0;
   }
 
-  > i {
+  > div > i {
     display: block;
     min-width: 16px;
     text-align: center;
   }
 
-  > i.icon-exchange {
+  > div > i.icon-exchange {
     margin-left: 4px;
     margin-right: 8px;
     transform: rotate(90deg);
   }
 
-  > i.icon-trash:hover {
+  > div > i.icon-trash:hover {
     color: ${COLOR_WARNING};
   }
 `;

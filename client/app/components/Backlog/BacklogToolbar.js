@@ -82,42 +82,45 @@ const BacklogToolbar = ({filterQuery, onQueryChanged, sorting, onSortingChanged,
         autoComplete="new-password"
         onChange={(e) => onQueryChanged(e.target.value)}
       />
-      <i
-        onClick={() => setExtendedSort(!extendedSort)}
-        className="clickable icon-exchange"
-        title={t('sort')}
-        data-testid="sortButton"
-      />
 
-      <i
-        onClick={() => setExtendedMore(!extendedMore)}
-        className="clickable icon-ellipsis-vert"
-        title={t('more')}
-      />
+      <div ref={sortDropdownRef}>
+        <i
+          onClick={() => setExtendedSort(!extendedSort)}
+          className="clickable icon-exchange"
+          title={t('sort')}
+          data-testid="sortButton"
+        />
+        {extendedSort && (
+          <StyledDropdown data-testid="sortOptions">
+            {sortings.map((sortingItem) => (
+              <StyledSortDropdownItem
+                selected={sortingItem.id === sorting.id}
+                className="clickable"
+                key={`sorting-item-${sortingItem.id}`}
+                onClick={() => onSortingOptionClicked(sortingItem)}
+              >
+                {t(sortingItem.labelKey)}
+              </StyledSortDropdownItem>
+            ))}
+          </StyledDropdown>
+        )}
+      </div>
 
-      {extendedSort && (
-        <StyledDropdown ref={sortDropdownRef} data-testid="sortOptions">
-          {sortings.map((sortingItem) => (
-            <StyledSortDropdownItem
-              selected={sortingItem.id === sorting.id}
-              className="clickable"
-              key={`sorting-item-${sortingItem.id}`}
-              onClick={() => onSortingOptionClicked(sortingItem)}
-            >
-              {t(sortingItem.labelKey)}
+      <div ref={moreDropdownRef}>
+        <i
+          onClick={() => setExtendedMore(!extendedMore)}
+          className="clickable icon-ellipsis-vert"
+          title={t('more')}
+        />
+        {extendedMore && (
+          <StyledDropdown data-testid="moreOptions">
+            <StyledSortDropdownItem className="clickable" onClick={onTrashAll}>
+              <i className="icon icon-trash"></i>
+              {t('trashAllStories')}
             </StyledSortDropdownItem>
-          ))}
-        </StyledDropdown>
-      )}
-
-      {extendedMore && (
-        <StyledDropdown ref={moreDropdownRef} data-testid="moreOptions">
-          <StyledSortDropdownItem className="clickable" onClick={onTrashAll}>
-            <i className="icon icon-trash"></i>
-            {t('trashAllStories')}
-          </StyledSortDropdownItem>
-        </StyledDropdown>
-      )}
+          </StyledDropdown>
+        )}
+      </div>
     </StyledBacklogToolbar>
   );
 

@@ -64,6 +64,7 @@ You can leave a room by clicking the **leave** button in the top right corner. I
 while you are in a room, other users will see you as "disconnected".
 
 ![TopBar Quick Menu](https://user-images.githubusercontent.com/1777143/97100648-dd14d400-1695-11eb-88ac-53540c09608d.png)
+
 ![Disconnected Users](https://user-images.githubusercontent.com/1777143/97101301-94144e00-169c-11eb-9dc8-bfc5ed949c6a.png)
 
 ### Removing other users from the room
@@ -71,10 +72,12 @@ while you are in a room, other users will see you as "disconnected".
 You can remove ("kick") other users from the room:
 
 1. First click on the avatar of the user
-2. Click on the **leave** button on the right to kick the user. If you click the **cross** on the left, you cancel the
-   action and the user stays in the room.
+2. Click on the **leave** button on the right to kick the user. 
 
-![Kick User](https://user-images.githubusercontent.com/1777143/97100674-4b599680-1696-11eb-94a0-892d65e43219.png)
+(If you click outside of the avatar, the additional menu will be closed and the user stays in the room.)
+
+
+![Kick User](https://user-images.githubusercontent.com/1777143/153208812-fe48231a-9fc3-4e73-b6a3-7114fb49a446.png)
 
 ## The Story Backlog
 
@@ -208,10 +211,12 @@ avatar.
 
 #### Spectator
 
-If you mark yourself as "spectator", you exclude yourself from estimation and can no longer take part in estimating
+If you mark yourself as "spectator", you exclude yourself from estimations and can no longer take part in estimating
 stories. If auto reveal is enabled, PoinZ will "ignore you" and reveal the story as soon as all other users did estimate
 the current story. You can still modify the backlog and [settle](#settle). This is helpful for Scrum Masters /
 moderators.
+
+You can also mark others as "spectator" by clicking on their avatar and then clicking the eye icon.
 
 ### Room Settings
 

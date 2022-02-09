@@ -31,7 +31,7 @@ The board contains the [**Backlog**](#the-story-backlog) (list of stories on the
 Area**](#estimating), where we see all users in the room as well as the currently selected story (in the middle).
 Optionally the [**Settings**](#settings) menu or the **Action Log** on the right.
 
-![The Board](https://user-images.githubusercontent.com/1777143/97100788-84ded180-1697-11eb-9737-6ef82b5fc73b.png)
+![The Board](https://user-images.githubusercontent.com/1777143/153183459-f8e054c7-0d41-4119-9688-4c71a4af65fb.png)
 
 ## Joining and leaving rooms
 
@@ -198,7 +198,7 @@ You can toggle between the Matrix and the Story via the small toggle bottom on t
 
 These settings will affect your user.
 
-![User settings](https://user-images.githubusercontent.com/1777143/98459634-fc832500-219c-11eb-9c24-dac484541e86.png)
+![User settings](https://user-images.githubusercontent.com/1777143/153183453-eb20dfb7-df10-4ff3-885c-92a3fa700e6a.png)
 
 #### Avatar and Email
 

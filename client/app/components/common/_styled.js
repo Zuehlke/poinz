@@ -132,8 +132,8 @@ export const StyledToggleButtonGroup = styled.div`
 export const StyledToggleButton = styled.button`
   padding: 4px 8px;
   font-size: small;
-  box-shadow: ${({active}) =>
-    active ? '0 0 0 1px rgb(0 0 0 / 15%) inset, 0 0 6px rgb(0 0 0 / 20%) inset' : 'inherit'};
+  box-shadow: ${({active}) => (active ? 'none' : 'inherit')};
   color: ${({active}) => (active ? '#fff' : COLOR_FONT_GREY)};
   background: ${({active}) => (active ? COLOR_ORANGE : '#e6e6e6')};
+  border-right: ${({active}) => (active ? '1px solid transparent' : '1px solid rgba(0,0,0,.2)')};
 `;

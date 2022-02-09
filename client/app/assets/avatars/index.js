@@ -18,6 +18,7 @@ import PIGGY from './piggy_tr_64.png';
 import RACOON from './racoon_tr_64.png';
 import TIGER from './tiger_tr_64.png';
 import ZEBRA from './zebra_tr_64.png';
+import SPECIALAVATAR from './special.png';
 
 export default [
   ZEBRA, // let zebra be the default - it is mostly white
@@ -41,3 +42,5 @@ export default [
   RACOON,
   TIGER
 ];
+
+export const SPECIAL = SPECIALAVATAR;

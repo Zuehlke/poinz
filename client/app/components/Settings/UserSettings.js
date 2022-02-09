@@ -101,7 +101,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
               selected={user.avatar === index}
               src={aIcn}
               key={'aIcn_' + aIcn}
-              onClick={() => setAvatar(index)}
+              onClick={onMiniAvatarClicked.bind(undefined, index)}
             />
           ))}
         </StyledAvatarGrid>
@@ -145,6 +145,14 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
       </StyledSection>
     </StyledArea>
   );
+
+  function onMiniAvatarClicked(index, evt) {
+    if (evt.ctrlKey && evt.altKey) {
+      setAvatar(-1);
+    } else {
+      setAvatar(index);
+    }
+  }
 
   function saveUsername() {
     if (myUsername?.length) {

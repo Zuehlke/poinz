@@ -1,5 +1,11 @@
 import styled, {keyframes} from 'styled-components';
-import {COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_PURPLE, COLOR_WARNING} from '../colors';
+import {
+  COLOR_BACKGROUND_GREY,
+  COLOR_BLUE,
+  COLOR_FONT_GREY,
+  COLOR_PURPLE,
+  COLOR_WARNING
+} from '../colors';
 import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
 import {StyledAvatar, StyledDropdown} from '../common/_styled';
 
@@ -53,7 +59,7 @@ export const StyledWhoAmI = styled.div`
     width: 27px;
     height: 27px;
     padding: 1px;
-    border: 3px solid white;
+    border: 1px solid ${COLOR_FONT_GREY};
     cursor: pointer;
 
     &:hover {

@@ -6,7 +6,7 @@ import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
 import UserSettings from './UserSettings';
 import RoomSettings from './RoomSettings';
 
-import {StyledLicenseHint, StyledSettings} from './_styled';
+import {StyledSettings} from './_styled';
 import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 
 /**
@@ -21,11 +21,6 @@ const Settings = ({shown}) => (
 
       <RoomSettings />
     </form>
-
-    <StyledLicenseHint>
-      Avatar Icons (c) by DELEKET{' '}
-      <a href="https://www.deviantart.com/deleket">https://www.deviantart.com/deleket</a>
-    </StyledLicenseHint>
   </StyledSettings>
 );
 

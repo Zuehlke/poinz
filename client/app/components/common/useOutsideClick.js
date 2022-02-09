@@ -3,7 +3,7 @@ import {useEffect} from 'react';
 const useOutsideClick = (ref, onOutside) => {
   useEffect(() => {
     function handleMousedownEvent(event) {
-      if (ref.current && !ref.current.contains(event.target)) {
+      if (!ref.current?.contains(event.target)) {
         onOutside();
       }
     }

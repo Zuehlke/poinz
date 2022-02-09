@@ -13,17 +13,17 @@ class ErrorBoundary extends React.Component {
   }
 
   onError(event) {
-    reportError('EVENT_HANDLER', event && event.error ? event.error.stack : '');
+    reportError('EVENT_HANDLER', event?.error?.stack || '');
   }
 
   onUnhandledPromiseRejection(event) {
-    reportError('PROMISE_REJECTION', event && event.reason ? event.reason.stack : '');
+    reportError('PROMISE_REJECTION', event?.reason?.stack || '');
   }
 
   componentDidCatch(error) {
     // will be invoked for errors/exception during rendering of React components.
     // see https://reactjs.org/docs/error-boundaries.html
-    reportError('RENDERING', error && error.stack ? error.stack : '');
+    reportError('RENDERING', error?.stack || '');
   }
 
   componentDidMount() {

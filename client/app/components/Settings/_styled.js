@@ -78,15 +78,9 @@ export const StyledRadioButton = styled.div`
   }
 `;
 
-export const StyledLicenseHint = styled.div`
-  font-size: small;
-  margin-bottom: 12px;
-  margin-top: 12px;
-`;
-
 export const StyledAvatarGrid = styled.div`
-  margin-top: 24px;
-  margin-bottom: 24px;
+  margin-top: 12px;
+  margin-bottom: 12px;
   display: flex;
   flex-wrap: wrap;
 `;

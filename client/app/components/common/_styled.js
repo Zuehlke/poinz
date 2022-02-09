@@ -9,19 +9,19 @@ export const StyledAvatar = styled.img`
   background: #fff;
   display: block;
   filter: ${({shaded}) => (shaded ? 'grayscale(100%)' : 'none')};
-  opacity: ${({shaded}) => (shaded ? '0.6' : '1')};
+  opacity: ${({shaded}) => (shaded ? '0.3' : '1')};
 
   /* smaller avatar icons in mobile view */
   margin: 0;
-  width: 32px;
-  height: 32px;
-  padding: 4px;
+  width: 36px;
+  height: 36px;
+  padding: 1px;
 
   @media ${device.desktop} {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     margin: 0 auto;
-    padding: 4px;
+    padding: 2px;
   }
 `;
 

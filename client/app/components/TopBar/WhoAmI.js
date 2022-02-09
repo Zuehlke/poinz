@@ -12,17 +12,17 @@ import {StyledDropdown} from '../common/_styled';
 
 const WhoAmI = ({user, roomId}) => {
   const roomUrl = `${window.location.origin}/${roomId}`;
-  const dropdownRef = useRef(null);
+  const whoamIRef = useRef(null);
   const [extended, setExtended] = useState(false);
 
-  useOutsideClick(dropdownRef, () => setExtended(false));
+  useOutsideClick(whoamIRef, () => setExtended(false));
 
   return (
-    <StyledWhoAmI data-testid="whoami">
-      <Avatar user={user} isOwn={false} shaded={false} onClick={() => setExtended(true)} />
+    <StyledWhoAmI data-testid="whoami" ref={whoamIRef}>
+      <Avatar user={user} isOwn={false} shaded={false} onClick={() => setExtended(!extended)} />
 
       {extended && (
-        <StyledDropdown ref={dropdownRef} data-testid="whoamiDropdown" className="pure-form">
+        <StyledDropdown data-testid="whoamiDropdown" className="pure-form">
           <div>
             <i className="icon-user" /> {user.username}
           </div>

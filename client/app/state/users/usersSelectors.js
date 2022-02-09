@@ -16,7 +16,7 @@ export const getUserCount = createSelector([getUsersById], (users) => {
 });
 
 export const getOwnUsername = createSelector([getUsersById, getOwnUserId], (users, ownUserId) =>
-  users && users[ownUserId] ? users[ownUserId].username : '-'
+  users?.[ownUserId] ? users[ownUserId].username : '-'
 );
 
 /**

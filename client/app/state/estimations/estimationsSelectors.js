@@ -11,7 +11,7 @@ export const getEstimations = (state) => state.estimations;
 export const getOwnEstimate = createSelector(
   [getSelectedStoryId, getEstimations, getOwnUserId],
   (selectedStoryId, estimations, ownUserId) =>
-    estimations && estimations[selectedStoryId] && estimations[selectedStoryId][ownUserId]
+    estimations?.[selectedStoryId] && estimations[selectedStoryId][ownUserId]
 );
 
 /**
@@ -20,7 +20,7 @@ export const getOwnEstimate = createSelector(
 export const getEstimationsForCurrentlySelectedStory = createSelector(
   [getSelectedStoryId, getEstimations],
   (selectedStoryId, estimations) =>
-    estimations && estimations[selectedStoryId] ? estimations[selectedStoryId] : {}
+    estimations?.[selectedStoryId] ? estimations[selectedStoryId] : {}
 );
 
 export const isThisStoryEstimated = (state, storyId) => {

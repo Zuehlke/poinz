@@ -100,10 +100,8 @@ export default function commandTrackingReducer(
 }
 
 const isAuthFailedJoinRejected = (event) => {
-  if (event.payload && event.payload.command && event.payload.command.name === 'joinRoom') {
-    const reason = event.payload.reason;
-
-    return reason.includes('Not Authorized');
+  if (event.payload?.command?.name === 'joinRoom') {
+    return event.payload.reason.includes('Not Authorized');
   }
   return false;
 };

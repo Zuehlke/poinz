@@ -1,6 +1,6 @@
 {
   "name": "poinz-server",
-  "version": "0.15.1",
+  "version": "0.15.2",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -53,14 +53,14 @@
     "winston-daily-rotate-file": "4.6.0"
   },
   "devDependencies": {
-    "@babel/cli": "7.16.8",
-    "@babel/core": "7.16.12",
+    "@babel/cli": "7.17.0",
+    "@babel/core": "7.17.2",
     "@babel/preset-env": "7.16.11",
-    "@babel/register": "7.16.9",
+    "@babel/register": "7.17.0",
     "@faker-js/faker": "^6.0.0-alpha.5",
-    "babel-jest": "27.4.6",
+    "babel-jest": "27.5.1",
     "eslint": "8.8.0",
-    "jest": "27.4.7",
+    "jest": "27.5.1",
     "socket.io-client": "4.4.1"
   },
   "engines": {

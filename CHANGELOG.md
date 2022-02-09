@@ -1,3 +1,9 @@
+### 0.15.2: 2022-02-09
+
+* Introduce new set of avatars (more variety, gender-neutral, cute animals)
+* Password improvements: password repeat field in room settings to prevent typos. Remove password field on landing page.
+* dependencies updated
+
 ### 0.15.1: 2022-02-01
 
 * Fix a bug that prevented users from clearing their current estimate

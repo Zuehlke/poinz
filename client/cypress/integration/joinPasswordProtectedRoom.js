@@ -26,6 +26,13 @@ it('join random room, open settings, set password. then rejoin room', function (
 
   Room.Settings.roomPasswordField().type('1234{enter}');
 
+  // nothing happened, because password must be typed twice (repeated, in order to prevent typos)
+  Room.Settings.settingsContainer()
+    .find(tid('sectionPasswordProtection'))
+    .contains('This room is currently not protected');
+
+  Room.Settings.roomPasswordInputRepeat().type('1234{enter}');
+
   Room.Settings.settingsContainer()
     .find(tid('sectionPasswordProtection'))
     .contains('This room is protected by a password');

@@ -10,7 +10,7 @@ test('resetAndClearPassword', async () => {
   const client = poinzSocketClientFactory();
   const userId = uuid();
 
-  //  user joins, creates room on the fly without password
+  //  user joins, creates room on the fly
   await client.cmdAndWait(
     client.cmds.joinRoom(roomId, userId, 'super-creator', 'tst@gmail.com'),
     3

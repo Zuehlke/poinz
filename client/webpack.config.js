@@ -22,7 +22,10 @@ const definePlugin = new webpack.DefinePlugin({
 module.exports = {
   mode: 'development',
 
-  entry: './app/app.js',
+  entry: [
+    'whatwg-fetch', // polyfill for fetch() for InternetExplorer https://github.com/github/fetch
+    './app/app.js'
+  ],
 
   output: {
     path: path.join(__dirname, 'dist'),

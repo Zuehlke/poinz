@@ -7,6 +7,7 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from '../colors';
+import {StyledPasswordInput} from '../common/_styled';
 
 export const StyledSettings = styled.div`
   background: ${COLOR_BACKGROUND_GREY};
@@ -40,6 +41,10 @@ export const StyledSection = styled.div`
   border: 1px solid ${COLOR_LIGHTER_GREY};
   padding: 8px;
   margin: 0 0 16px 0;
+
+  button + button {
+    margin-left: 4px;
+  }
 `;
 
 export const StyledTextInput = styled.div`
@@ -51,8 +56,12 @@ export const StyledTextInput = styled.div`
     width: 82%;
     border: none;
     border-bottom: 1px solid ${COLOR_LIGHTER_GREY};
-    padding: 1px 0;
+    padding: 0.5em 0;
     margin-right: 4px;
+  }
+
+  ${StyledPasswordInput} {
+    width: 100%;
   }
 `;
 

@@ -1,5 +1,13 @@
-import axios from 'axios';
+import checkStatusCode from './checkStatusCode';
 
 export function reportError(type, error) {
-  return axios.post('/api/errorlog', {type, error}).then((response) => response.data);
+  return fetch('/api/errorlog', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({type, error})
+  })
+    .then(checkStatusCode)
+    .then((response) => response.text());
 }

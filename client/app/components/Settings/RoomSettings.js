@@ -41,9 +41,18 @@ const RoomSettings = ({
   }, [shown]);
 
   const [myRoomPassword, setMyRoomPassword] = useState(''); // we never [can] pre-set the pw.
+  const [myRoomPasswordRepeat, setMyRoomPasswordRepeat] = useState('');
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
   React.useEffect(() => {
     setMyRoomPassword('');
+    setMyRoomPasswordRepeat('');
   }, [passwordProtected]);
+
+  React.useEffect(() => {
+    setPasswordsMatch(
+      myRoomPasswordRepeat === myRoomPassword && myRoomPassword && myRoomPassword.length
+    );
+  }, [myRoomPassword, myRoomPasswordRepeat]);
 
   // derive issueTrackingUrl for input field from prop
   const [myIssueTrackingUrl, setMyIssueTrackingUrl] = useState(issueTrackingUrl || '');
@@ -75,53 +84,50 @@ const RoomSettings = ({
         </h5>
         {t('passwordProtectionInfo')}
 
-        {passwordProtected && (
-          <div>
-            <p>{t('roomIsProtected')}</p>
-            <StyledTextInput>
-              <PasswordField
-                data-testid="roomPasswordInput"
-                onKeyPress={onRoomPasswordKeyPress}
-                onChange={(e) => setMyRoomPassword(e.target.value)}
-                value={myRoomPassword}
-                placeholder={t('setNewPassword')}
-                isNewPassword={true}
-              />
+        <div>
+          {passwordProtected && <p>{t('roomIsProtected')}</p>}
+          {!passwordProtected && <p>{t('roomIsNotProtected')}</p>}
+          <StyledTextInput>
+            <PasswordField
+              data-testid="roomPasswordInput"
+              onKeyPress={onRoomPasswordKeyPress}
+              onChange={(e) => setMyRoomPassword(e.target.value)}
+              value={myRoomPassword}
+              placeholder={t('setNewPassword')}
+              isNewPassword={true}
+            />
+          </StyledTextInput>
+          <StyledTextInput>
+            <PasswordField
+              data-testid="roomPasswordInputRepeat"
+              onKeyPress={onRoomPasswordKeyPress}
+              onChange={(e) => setMyRoomPasswordRepeat(e.target.value)}
+              value={myRoomPasswordRepeat}
+              placeholder={t('repeatNewPassword')}
+              isNewPassword={true}
+            />
+          </StyledTextInput>
 
-              <button
-                data-testid="savePasswordButton"
-                className="pure-button pure-button-primary"
-                onClick={savePassword}
-              >
-                <i className="icon-floppy" />
-              </button>
-            </StyledTextInput>
-          </div>
-        )}
+          <button
+            data-testid="savePasswordButton"
+            className="pure-button pure-button-primary"
+            onClick={savePassword}
+            disabled={!passwordsMatch}
+          >
+            <i className="icon-floppy" />
+          </button>
 
-        {!passwordProtected && (
-          <div>
-            <p>{t('roomIsNotProtected')}</p>
-            <StyledTextInput>
-              <PasswordField
-                data-testid="roomPasswordInput"
-                onKeyPress={onRoomPasswordKeyPress}
-                onChange={(e) => setMyRoomPassword(e.target.value)}
-                value={myRoomPassword}
-                placeholder={t('setNewPassword')}
-                isNewPassword={true}
-              />
-
-              <button
-                data-testid="savePasswordButton"
-                className="pure-button pure-button-primary"
-                onClick={savePassword}
-              >
-                <i className="icon-floppy" />
-              </button>
-            </StyledTextInput>
-          </div>
-        )}
+          {passwordProtected && (
+            <button
+              data-testid="clearPasswordButton"
+              className="pure-button"
+              onClick={clearPassword}
+            >
+              {t('removePassword')}
+              <i className="icon-ccw button-icon-right" />
+            </button>
+          )}
+        </div>
       </StyledSection>
 
       <StyledSection>
@@ -202,7 +208,13 @@ const RoomSettings = ({
   }
 
   function savePassword() {
-    setPassword(myRoomPassword);
+    if (passwordsMatch) {
+      setPassword(myRoomPassword);
+    }
+  }
+
+  function clearPassword() {
+    setPassword('');
   }
 
   function onIssueTrackingUrlKeyPress(e) {

@@ -27,10 +27,11 @@ export async function dumpEventsToFile(events, outputFilename) {
   const outputFileExists = await fileExists(outputFullPath);
 
   if (!outputFileExists) {
-    await fs.writeFile(outputFullPath, JSON.stringify(events), 'utf-8');
+    await dumpEventsFile(outputFullPath, events, true);
   } else {
     // usually, the output json already exists (for existing tests, since output files are committed to the repository)
-    // in this case, perform a "uuid-ignoring" diff
+    // in this case, dont write the new list of event to a file every time.
+    // perform a comparison between the old and the new list of events while ignoring all "dynamic" properties like uuids &  timestamps
     const previousEvents = await readJsonFile(outputFullPath);
     const serializedWithResettedIdsPrevious = JSON.stringify(
       resetIdAndTokenProperties(previousEvents),
@@ -43,7 +44,7 @@ export async function dumpEventsToFile(events, outputFilename) {
       4
     );
     if (serializedWithResettedIdsPrevious !== serializedWithResettedIdsNext) {
-      await fs.writeFile(outputFullPath, JSON.stringify(events), 'utf-8');
+      await dumpEventsFile(outputFullPath, events, true);
 
       // for debugging purposes, if you wonder why the event files get written:
       await fs.writeFile(outputFullPath + '_PREV', serializedWithResettedIdsPrevious, 'utf-8');
@@ -52,41 +53,56 @@ export async function dumpEventsToFile(events, outputFilename) {
   }
 }
 
+async function dumpEventsFile(path, events, compact = false) {
+  await fs.writeFile(path, JSON.stringify(events, null, compact ? 0 : 4), 'utf-8');
+}
+
+const PROPERTY_NAMES_TO_RESET = [
+  'id',
+  'roomId',
+  'correlationId',
+  'userId',
+  'selectedStory',
+  'storyId',
+  'token',
+  'createdAt'
+];
+
 /**
- * recursively traverses given js object. sets "*id", "selectedStory" and "token" properties to "-1".
- * @param {*} object
+ * recursively traverses given js obj. sets "*id", "selectedStory" and "token" properties to "-1".
+ * @param {*} obj
  * @return {string|{}|*}
  */
-function resetIdAndTokenProperties(object) {
-  if (!object) {
-    return object;
-  } else if (Array.isArray(object)) {
-    return object.map(resetIdAndTokenProperties);
-  } else if (typeof object === 'string') {
-    return object;
-  } else if (typeof object === 'object') {
-    return Object.keys(object).reduce((newObj, k) => {
-      if (
-        [
-          'id',
-          'roomId',
-          'correlationId',
-          'userId',
-          'selectedStory',
-          'storyId',
-          'token',
-          'createdAt'
-        ].includes(k)
-      ) {
-        newObj[k] = '-1';
+function resetIdAndTokenProperties(obj) {
+  if (!obj) {
+    return obj;
+  } else if (Array.isArray(obj)) {
+    return obj.map(resetIdAndTokenProperties);
+  } else if (typeof obj === 'string') {
+    return obj;
+  } else if (typeof obj === 'object') {
+    return Object.keys(obj).reduce((newObj, k) => {
+      if (PROPERTY_NAMES_TO_RESET.includes(k) && typeof obj[k] === 'string') {
+        newObj[k] = '[ID]';
+      } else if (PROPERTY_NAMES_TO_RESET.includes(k) && typeof obj[k] === 'number') {
+        newObj[k] = '[NUMBER]';
+      } else if (k === 'estimations' || k === 'estimationsConfidence') {
+        newObj[k] = resetAllPropertyNames(obj[k]);
       } else {
-        newObj[k] = resetIdAndTokenProperties(object[k]);
+        newObj[k] = resetIdAndTokenProperties(obj[k]);
       }
       return newObj;
     }, {});
   } else {
-    return object; // for everything else that is truthy (boolean true, numbers)
+    return obj; // for everything else that is truthy (boolean true, numbers)
   }
+}
+
+function resetAllPropertyNames(obj) {
+  return Object.keys(obj).reduce((newObj, k, index) => {
+    newObj[`p${index}`] = obj[k];
+    return newObj;
+  }, {});
 }
 
 async function fileExists(fullFilePath) {

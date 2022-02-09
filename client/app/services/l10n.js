@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import Polyglot from 'node-polyglot';
 
 import {getPresetLanguage, setPresetLanguage} from '../state/clientSettingsStore';
 import translationsEN from '../assets/i18n/en.json';
@@ -8,6 +7,7 @@ import translationsDE from '../assets/i18n/de.json';
 import {getLocalizedFormats} from './timeUtil';
 
 const DEFAULT_LANGUAGE = 'en';
+const INTERPOLATION_REGEX = /%\{(.*?)\}/g;
 
 const dictionary = {
   en: translationsEN,
@@ -17,19 +17,17 @@ const dictionary = {
 export const L10nContext = React.createContext(undefined);
 
 /**
- * Wraps children in Context Provider.
+ * Wraps given children in Context Provider.
+ *
  * Provides "t" "setLanguage" and "language"  to Children (via react's useContext)
+ * Usage:
+ *   const {t} = useContext(L10nContext);
+ *   return <div >{t('room')}</div>;
  *
- * Internally holds reference to polyglot instance, currently used language
- * see https://www.npmjs.com/package/node-polyglot
- *
- * @param children
- * @return {JSX.Element}
- * @constructor
  */
 export const WithL10n = ({children}) => {
   const initialLanguage = getPresetLanguage() || DEFAULT_LANGUAGE;
-  const polyglot = new Polyglot({phrases: dictionary[initialLanguage]});
+  let currentPhrases = dictionary[initialLanguage];
   const initTranslatorState = {
     t,
     setLanguage,
@@ -43,20 +41,39 @@ export const WithL10n = ({children}) => {
 
   /**
    * The most-used method! "t" in most components.
-   *
-   * Custom wrapper for polyglot translator function with same signature.
-   * Provides default translation for missing keys. (during development, better visibility)
+   * Lookup given translationKey in current dictionary (according to currently set language).
+   * Can interpolate translations with given data. Interpolation pattern is %{somePropertyKeyHere}
    */
   function t(translationKey, data) {
-    return polyglot.t(translationKey, {
-      ...data,
-      _: `!!!${translationKey}!!!`
-    });
+    let phrase;
+    if (typeof currentPhrases[translationKey] === 'string') {
+      phrase = currentPhrases[translationKey];
+    } else {
+      phrase = `!!!${translationKey}!!!`;
+    }
+    if (!data) {
+      return phrase;
+    }
+
+    // Interpolate: Creates a `RegExp` object for each interpolation placeholder.
+    let result = phrase;
+    result = String.prototype.replace.call(
+      result,
+      INTERPOLATION_REGEX,
+      function (expression, argument) {
+        if (!Object.prototype.hasOwnProperty.call(data, argument) || data[argument] === null) {
+          return expression;
+        }
+        return data[argument];
+      }
+    );
+
+    return result;
   }
 
   function setLanguage(lang) {
     setPresetLanguage(lang);
-    polyglot.replace(dictionary[lang]);
+    currentPhrases = dictionary[lang];
     setTranslator({
       t,
       setLanguage,

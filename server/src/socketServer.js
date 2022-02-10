@@ -40,6 +40,11 @@ function init(httpServer, store) {
   });
 }
 
+/**
+ * returns a "rateLimiter(socketId)" function that will resolve if passed socketId is allowed to send commands within the current period.
+ *
+ * https://github.com/animir/node-rate-limiter-flexible
+ */
 function initCommandRateLimiter() {
   const COMMANDS_PER_SECOND_LIMIT = 4;
   const rateLimiter = new RateLimiterMemory({
@@ -48,7 +53,7 @@ function initCommandRateLimiter() {
   });
 
   return (socketId) =>
-    rateLimiter.consume(socketId, 1).catch((rateLimiterRes) => {
+    rateLimiter.consume(socketId).catch((rateLimiterRes) => {
       // limit in current period reached
       // if a client sends more than COMMANDS_PER_SECOND_LIMIT commands within the same second on the same socket, we just ignore all subsequent commands.
 

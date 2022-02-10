@@ -48,6 +48,9 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
     }
   }
 
+  /**
+   * if produced events contain a "joinedRoom" event, register the socket with the room
+   */
   function updateSocketRegistryJoining(userId, producedEvents, socket) {
     const joinedRoomEvent = getJoinedRoomEvent(producedEvents);
     if (joinedRoomEvent) {
@@ -58,6 +61,9 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
     }
   }
 
+  /**
+   * if produced events contain a "leftRoom" or "connectionLost" event, remove the socket from the registry
+   */
   function updateSocketRegistryLeavingOrConnectionLost(userId, producedEvents, socket) {
     const leftRoomOrConnectionLostEvent = getLeftRoomOrConnectionLostEvent(producedEvents);
     if (leftRoomOrConnectionLostEvent) {
@@ -171,7 +177,7 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
    * a "leaveRoom" command that will mark the user.
    */
   async function onDisconnect(socket) {
-    // socket.rooms is at this moment already emptied (by socketIO)
+    // socket.rooms is at this moment already emptied (by socket.IO)
     const mapping = registry.getMapping(socket.id);
 
     if (!mapping) {

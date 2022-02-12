@@ -117,7 +117,11 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
 
     if (msg.name === 'joinRoom') {
       // if no userId is given, we expect a "joinRoom" command. This is the only command that can omit the userId.
-      return uuid();
+      const newUserId = uuid();
+      LOGGER.info(
+        `Creating new userId ${newUserId} for socket ${socketId} joining room=${msg.roomId}`
+      );
+      return newUserId;
     }
 
     throw new Error(`Command must provide userId. msg.name=${msg.name}`);
@@ -125,7 +129,7 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
 
   /**
    * Send produced events to all sockets in room (by default).
-   * In special cases, a event is "restricted", these get only sent back to the user that sent the correlating command.
+   * In special cases, a event is "restricted", these get only sent back to the one user that sent the correlating command.
    *
    * @param producedEvents
    * @param roomId
@@ -173,24 +177,19 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
   }
 
   /**
-   * if the socket is disconnected (e.g. user closed browser tab), manually produce and handle
-   * a "leaveRoom" command that will mark the user.
+   * if the socket is disconnected (e.g. user closed browser tab), we manually produce and handle
+   * a "leaveRoom" command that will mark the user as "disconnected".
    */
   async function onDisconnect(socket) {
     // socket.rooms is at this moment already emptied (by socket.IO)
     const mapping = registry.getMapping(socket.id);
 
     if (!mapping) {
-      // this happens if user is on landing page, socket is opened, then leaves, never joined a room. perfectly fine.
-      LOGGER.debug(`Socket ${socket.id} disconnected. no mapping...`);
+      // this happens if user is on landing page, socket was opened, then user leaves - socket disconnects, user never joined a room. Perfectly fine.
       return;
     }
 
     const {userId, roomId} = mapping;
-
-    LOGGER.debug(
-      `Socket ${socket.id} disconnected. Socket is currently mapping to user ${userId} in room ${roomId}`
-    );
 
     if (registry.isLastSocketForUserId(userId)) {
       // we trigger a "leaveRoom" command
@@ -205,13 +204,9 @@ export default function socketManagerFactory(store, sendEventToRoom, removeSocke
       };
       await handleIncomingCommand(socket, leaveRoomCommand);
     } else {
-      LOGGER.debug(
-        `User ${userId} in room ${roomId}, has more open sockets. Removing mapping for socket ${socket.id}`
-      );
+      // we have another socket mapped for that userId (e.g. multiple tabs open)
+      // just remove the mapping for this socketId
       registry.removeSocketMapping(socket.id);
-
-      // also remove socket.io sockets from socket.io "room" , so that they no longer receive events from the room, they left (or were kicked from)
-      removeSocketFromRoomByIds(socket.id, roomId);
     }
   }
 }

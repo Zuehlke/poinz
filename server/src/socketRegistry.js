@@ -80,17 +80,6 @@ export default function socketRegistryFactory() {
     const socketsOfThatUser = Object.entries(registry).filter(
       (entry) => entry[1].userId === userId
     );
-    if (socketsOfThatUser.length > 1) {
-      LOGGER.debug(
-        `User ${userId} has multiple open sockets:  ${regEntriesToString(socketsOfThatUser)}`
-      );
-    }
     return socketsOfThatUser.length === 1;
-  }
-
-  function regEntriesToString(regEntries) {
-    return regEntries
-      .map((re) => `${re[0]} -> [user ${re[1].userId}, room ${re[1].roomId}]`)
-      .join('     ');
   }
 }

@@ -37,7 +37,7 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
   });
 };
 const isRoomIdGivenInPathname = (pathname) =>
-  pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
+  pathname?.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
 
 export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
   const state = getState();

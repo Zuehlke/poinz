@@ -9,6 +9,7 @@ import {
   MARKDOWN_TOGGLED,
   MATRIX_TOGGLED,
   NEW_USER_HINTS_HIDDEN,
+  MATRIX_INCL_TRSH_TOGGLED,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_TOGGLED
 } from '../actions/uiStateActions';
@@ -24,7 +25,8 @@ export const uiInitialState = {
   unseenError: false,
   easterEggActive: isHalloweenSeason(),
   newUserHintHidden: getItem(HIDE_NEW_USER_HINTS) === 'true',
-  markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true'
+  markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true',
+  matrixIncludeTrashedStories: false
 };
 
 persistOnStateChange(MARKDOWN_ENABLED, (state) => state.ui.markdownEnabled);
@@ -92,6 +94,13 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
       return {
         ...state,
         matrixShown: !state.matrixShown
+      };
+    }
+
+    case MATRIX_INCL_TRSH_TOGGLED: {
+      return {
+        ...state,
+        matrixIncludeTrashedStories: !state.matrixIncludeTrashedStories
       };
     }
 

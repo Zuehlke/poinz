@@ -6,6 +6,7 @@ import commandTrackingReducer from './commandTracking/commandTrackingReducer';
 import roomReducer from './room/roomReducer';
 import {getOwnUserId} from './users/usersSelectors';
 import uiReducer from './ui/uiReducer';
+import joiningReducer from './joining/joiningReducer';
 
 const combinedNewReducers = combineReducers({
   users: usersReducer,
@@ -13,7 +14,8 @@ const combinedNewReducers = combineReducers({
   estimations: estimationsReducer,
   commandTracking: commandTrackingReducer,
   room: roomReducer,
-  ui: uiReducer
+  ui: uiReducer,
+  joining: joiningReducer
 });
 
 export default function (state, action) {

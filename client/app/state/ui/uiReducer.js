@@ -1,12 +1,9 @@
 import getDayOfYear from 'date-fns/getDayOfYear';
 
+import {getItem, persistOnStateChange} from '../clientSettingsStore';
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
-import {
-  getHideNewUserHints,
-  getMarkdownEnabled,
-  setHideNewUserHints,
-  setMarkdownEnabled
-} from '../clientSettingsStore';
+import {LOCATION_CHANGED} from '../actions/commandActions';
+
 import {
   BACKLOG_SIDEBAR_TOGGLED,
   MARKDOWN_TOGGLED,
@@ -15,7 +12,9 @@ import {
   SIDEBAR_ACTIONLOG,
   SIDEBAR_TOGGLED
 } from '../actions/uiStateActions';
-import {LOCATION_CHANGED} from '../actions/commandActions';
+
+const HIDE_NEW_USER_HINTS = 'hideNewUserHints';
+const MARKDOWN_ENABLED = 'markdownEnabled';
 
 export const uiInitialState = {
   backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
@@ -24,9 +23,12 @@ export const uiInitialState = {
   applause: false,
   unseenError: false,
   easterEggActive: isHalloweenSeason(),
-  newUserHintHidden: getHideNewUserHints(),
-  markdownEnabled: getMarkdownEnabled()
+  newUserHintHidden: getItem(HIDE_NEW_USER_HINTS) === 'true',
+  markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true'
 };
+
+persistOnStateChange(MARKDOWN_ENABLED, (state) => state.ui.markdownEnabled);
+persistOnStateChange(HIDE_NEW_USER_HINTS, (state) => state.ui.newUserHintHidden);
 
 /**
  *
@@ -39,11 +41,15 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
   switch (action.type) {
     case EVENT_ACTION_TYPES.joinedRoom: {
       if (action.ourJoin) {
-        return {...state, unseenError: false};
+        return {
+          ...state,
+          unseenError: false
+        };
       } else {
         return state;
       }
     }
+
     case EVENT_ACTION_TYPES.leftRoom: {
       if (action.event.userId === ownUserId) {
         return {...uiInitialState};
@@ -53,7 +59,7 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
     }
     case EVENT_ACTION_TYPES.storySelected: {
       if (action.event.userId === ownUserId) {
-        // if story was selected by ourself, make sure to hide matrix / show defaul story view
+        // if story was selected by ourself, make sure to hide matrix / show default story view
         return {...state, applause: false, matrixShown: false};
       } else {
         return {...state, applause: false};
@@ -100,19 +106,18 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
     }
 
     case NEW_USER_HINTS_HIDDEN: {
-      setHideNewUserHints(true);
       return {...state, newUserHintHidden: true};
     }
     case MARKDOWN_TOGGLED: {
-      setMarkdownEnabled(!state.markdownEnabled);
       return {...state, markdownEnabled: !state.markdownEnabled};
     }
     case LOCATION_CHANGED: {
       return {...state, pathname: action.pathname};
     }
 
-    case EVENT_ACTION_TYPES.commandRejected:
+    case EVENT_ACTION_TYPES.commandRejected: {
       return {...state, unseenError: true};
+    }
   }
 
   return state;

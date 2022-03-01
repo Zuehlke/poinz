@@ -2,7 +2,7 @@ import poinzSocketClientFactory from '../poinzSocketClient';
 import uuid from '../../../src/uuid';
 import {dumpEventsToFile} from './index';
 
-test('disconnectAndKick: two users, one disconnects, kick him', async () => {
+test('Two users, one disconnects, you kick him', async () => {
   const outputFilename = 'disconnectAndKickTest.json';
 
   // we need two clients, since on "connectionLost" , server removes socket of "leaving" user from room
@@ -13,17 +13,18 @@ test('disconnectAndKick: two users, one disconnects, kick him', async () => {
   const firstUserId = uuid();
   const secondUserId = uuid();
 
-  const eventsFromJoin = await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 5);
-  await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
+  const eventsFromJoin = await clientA.cmdAndWait(
+    clientA.cmds.joinRoom(roomId, firstUserId, 'Jim'),
+    6
+  );
 
-  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
-  await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
+  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId, 'John'), 3);
 
   // second user estimates default (sample) story
 
-  const storyAdded = eventsFromJoin[3];
+  const storyAddedEvent = eventsFromJoin[4];
   await clientB.cmdAndWait(
-    clientB.cmds.giveEstimate(roomId, secondUserId, storyAdded.payload.storyId, 8)
+    clientB.cmds.giveEstimate(roomId, secondUserId, storyAddedEvent.payload.storyId, 8)
   );
 
   // second user looses connection ("leaves" with "connectionLost"=true)

@@ -19,7 +19,7 @@ test('Two users in a room, the other one disconnects, then you kick him', () => 
 
   const joinedEvtOne = scenario.events[1];
   const joinedEvtTwo = scenario.events[6];
-  const addedEvt = scenario.events[3];
+  const addedEvt = scenario.events[4];
 
   modifiedState = reduceMultipleEvents(
     getScenarioStartingState(joinedEvtOne.correlationId),

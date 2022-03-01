@@ -1,5 +1,6 @@
 import uuid from '../../src/uuid';
 import poinzSocketClientFactory from './poinzSocketClient';
+import {faker} from '@faker-js/faker';
 
 /**
  * These tests send commands over a real socket connection to a running PoinZ backend on localhost:3000
@@ -18,9 +19,12 @@ async function addNstories(numberOfStoriesToAdd) {
   const roomId = uuid();
   const userId = uuid();
 
-  const eventCountBeforeAddingStories = 5;
+  const eventCountBeforeAddingStories = 6;
 
-  await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), eventCountBeforeAddingStories);
+  await client.cmdAndWait(
+    client.cmds.joinRoom(roomId, userId, faker.name.firstName()),
+    eventCountBeforeAddingStories
+  );
 
   for (let i = 0; i < numberOfStoriesToAdd; i++) {
     await client.cmdAndWait(
@@ -40,8 +44,8 @@ test('serverPerformance: join 30 users to same room', async () => {
   const roomId = uuid();
 
   const numberOfUsers = 30;
-  const numberOfEventsForFirstJoin = 5; // 5 events on first join, when room gets created: roomCreated, joinedRoom, avatarSet, storyAdded, storySelected
-  const numberOfEventsForOtherJoins = 2; //   2 events for all suceeding users :joinedRoom, avatarSet
+  const numberOfEventsForFirstJoin = 6; // 6 events on first join, when room gets created: roomCreated, joinedRoom, usernameSet, avatarSet, storyAdded, storySelected
+  const numberOfEventsForOtherJoins = 3; //   2 events for all succeeding users :joinedRoom, usernameSet, avatarSet
 
   console.log(`adding ${numberOfUsers} users to room ${roomId}`);
   const clientPromises = new Array(numberOfUsers).fill(1).map(async (_, index) => {
@@ -50,8 +54,10 @@ test('serverPerformance: join 30 users to same room', async () => {
 
     const numberOfEventsOnJoin =
       index === 0 ? numberOfEventsForFirstJoin : numberOfEventsForOtherJoins;
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), numberOfEventsOnJoin);
-    await client.cmdAndWait(client.cmds.setUsername(roomId, userId, 'testuser-' + index), 1);
+    await client.cmdAndWait(
+      client.cmds.joinRoom(roomId, userId, 'testuser-' + index),
+      numberOfEventsOnJoin
+    );
 
     return client;
   });

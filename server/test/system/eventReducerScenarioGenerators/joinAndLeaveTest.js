@@ -14,17 +14,18 @@ test('joinAndLeave', async () => {
   const secondUserId = uuid();
 
   // first user joins, adds story, estimates it alone
-  const firstJoinEvents = await clientA.cmdAndWait(clientA.cmds.joinRoom(roomId, firstUserId), 5);
-  await clientA.cmdAndWait(clientA.cmds.setUsername(roomId, firstUserId, 'Jim'));
+  const firstJoinEvents = await clientA.cmdAndWait(
+    clientA.cmds.joinRoom(roomId, firstUserId, 'Jim'),
+    6
+  );
 
   await clientA.cmdAndWait(
-    clientA.cmds.giveEstimate(roomId, firstUserId, firstJoinEvents[3].payload.storyId, 4, 1),
+    clientA.cmds.giveEstimate(roomId, firstUserId, firstJoinEvents[4].payload.storyId, 4, 1),
     3 // given, revealed, consensus
   );
 
   // second user joins room with already a estimated story in it
-  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId), 2);
-  await clientB.cmdAndWait(clientB.cmds.setUsername(roomId, secondUserId, 'John'));
+  await clientB.cmdAndWait(clientB.cmds.joinRoom(roomId, secondUserId, 'John'), 3);
   await clientB.cmdAndWait(clientB.cmds.setEmail(roomId, secondUserId, 'test.johnny@gmail.com'));
 
   const cmdId = clientA.cmds.leaveRoom(roomId, firstUserId);
@@ -52,6 +53,9 @@ test('joinAndLeaveWithPassword', async () => {
 
   // user sets password
   await client.cmdAndWait(client.cmds.setPassword(roomId, userId, '1234'), 1);
+
+  // user leaves
+  await client.cmdAndWait(client.cmds.leaveRoom(roomId, userId), 1);
 
   //  user re-joins, with correct password
   await client.cmdAndWait(

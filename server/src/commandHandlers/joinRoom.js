@@ -48,6 +48,7 @@ const schema = {
               type: 'string'
             }
           },
+          required: ['username'],
           additionalProperties: false
         }
       }
@@ -95,11 +96,9 @@ function joinNewRoom(pushEvent, room, command, userId) {
   };
   pushEvent('joinedRoom', joinedRoomEventPayload);
 
-  if (command.payload.username) {
-    pushEvent('usernameSet', {
-      username: command.payload.username
-    });
-  }
+  pushEvent('usernameSet', {
+    username: command.payload.username
+  });
 
   if (command.payload.email) {
     pushEvent('emailSet', {
@@ -169,11 +168,9 @@ function joinExistingRoom(pushEvent, room, command, userId) {
     pushEvent('tokenIssued', {token: issueJwt(userId, room.id)}, true);
   }
 
-  if (userObject.username) {
-    pushEvent('usernameSet', {
-      username: userObject.username
-    });
-  }
+  pushEvent('usernameSet', {
+    username: userObject.username
+  });
 
   if (userObject.email) {
     pushEvent('emailSet', {
@@ -222,9 +219,7 @@ function getMatchingUserObjectFromRoom(room, command, userId) {
     // use the already matching user (re-use already existing state like "excluded" flag etc.)
     // values from command payload take precedence.
 
-    if (command.payload.username) {
-      matchingExistingUser.username = command.payload.username;
-    }
+    matchingExistingUser.username = command.payload.username;
 
     if (command.payload.email) {
       matchingExistingUser.email = command.payload.email;

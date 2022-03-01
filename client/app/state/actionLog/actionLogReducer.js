@@ -5,7 +5,7 @@ import {EVENT_ACTION_TYPES} from '../actions/eventActions';
 import {getMatchingCardConfig, getRoomId} from '../room/roomSelectors';
 import {getStoryById} from '../stories/storiesSelectors';
 import {getOwnUserId, getUsersById} from '../users/usersSelectors';
-import {getPendingJoinCommandId} from '../commandTracking/commandTrackingSelectors';
+import {getPendingJoinCommandId} from '../joining/joiningSelectors';
 
 /*
  * will contain human readable "log messages" of actions (events) that did take place in the current room

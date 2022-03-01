@@ -1,5 +1,4 @@
 import initialState from '../../../app/state/initialState.js';
-import * as clientSettingsStore from '../../../app/state/clientSettingsStore';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 import {
@@ -26,13 +25,13 @@ beforeEach(() => {
 test('You join an existing room', () => {
   let modifiedState;
 
-  const otherUserJoinedEvent = scenario.events[2];
+  const otherUserJoinedEvent = scenario.events[1];
   const otherUserId = otherUserJoinedEvent.userId;
 
   const ourJoinEvent = scenario.events[9];
   const ourUserId = ourJoinEvent.userId;
 
-  const storyAddedEvent = scenario.events[3];
+  const storyAddedEvent = scenario.events[4];
   const storyId = storyAddedEvent.payload.storyId;
 
   scenario.getNextEvents(9); // "fast forward" to before second user (that's us!) joined
@@ -84,11 +83,6 @@ test('You join an existing room', () => {
       [otherUserId]: {value: 4, confidence: 1}
     }
   });
-
-  expect(clientSettingsStore.getPresetUserId()).toEqual(ourUserId);
-  expect(clientSettingsStore.getPresetAvatar()).toEqual(scenario.events[10].payload.avatar);
-  expect(clientSettingsStore.getPresetUsername()).toEqual(scenario.events[11].payload.username);
-  expect(clientSettingsStore.getPresetEmail()).toEqual(scenario.events[12].payload.email);
 });
 
 test('You in a room, other user joins ', () => {
@@ -125,19 +119,18 @@ test('You in a room, other user joins ', () => {
       username: 'Jim'
     }
   });
-
-  expect(clientSettingsStore.getPresetUserId()).toEqual(ourUserId);
 });
 
 test('You join an existing room, the other leaves', () => {
   let modifiedState;
+  const roomCreatedEvent = scenario.events[0];
   const otherJoinEvent = scenario.events[1];
   const otherUserId = otherJoinEvent.userId;
 
   const ourJoinEvent = scenario.events[9];
   const ourUserId = ourJoinEvent.userId;
 
-  const storyAddedEvent = scenario.events[3];
+  const storyAddedEvent = scenario.events[4];
   const storyId = storyAddedEvent.payload.storyId;
 
   scenario.getNextEvents(9); // "fast forward" to before second user (that's us!) joined
@@ -147,12 +140,12 @@ test('You join an existing room, the other leaves', () => {
     scenario.getNextEvents(4)
   );
 
-  expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
+  expect(modifiedState.room.roomId).toEqual(roomCreatedEvent.roomId);
   expect(getOwnUserId(modifiedState)).toEqual(ourUserId); // we got the userId from the server, correctly set to state
   expect(getUserCount(modifiedState)).toBe(2);
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent()); // leftRoom event
-  expect(modifiedState.room.roomId).toEqual(scenario.events[0].roomId);
+  expect(modifiedState.room.roomId).toEqual(roomCreatedEvent.roomId);
   expect(getOwnUserId(modifiedState)).toEqual(ourUserId);
   expect(getUserCount(modifiedState)).toBe(1); // only one user left
   expect(getSortedUserArray(modifiedState)[0].id).toBe(ourUserId);
@@ -189,9 +182,20 @@ test('You in a room, other user joins, you leave', () => {
 
   modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
 
-  // When own user leaves , action log is reset and just one "you left" line is added
+  // When own user leaves , action log is reset and just one "you left the room" line is added
   expect(getActionLog(modifiedState).length).toBe(1);
-  // so we set it to an empty array manually here
-  modifiedState.actionLog = [];
-  expect(modifiedState).toEqual({...initialState()});
+
+  // so we re-set it manually here for comparison
+  modifiedState.actionLog = initialState().actionLog;
+
+  expect(modifiedState).toEqual({
+    ...initialState(),
+    joining: {
+      authFailed: false,
+      userdata: {
+        avatar: 0,
+        userId: ourJoinEvent.userId
+      }
+    }
+  });
 });

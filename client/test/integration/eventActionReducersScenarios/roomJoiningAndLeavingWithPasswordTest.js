@@ -12,14 +12,14 @@ beforeEach(() => {
   scenario.reset();
 });
 
-test('You create a room with password', () => {
+test('You create a room on the fly, then set password & you re-join with that password', () => {
   let modifiedState;
 
-  const joinedEvent = scenario.events[1];
-  const tokenIssuedEvent = scenario.events[9];
+  const secondJoinedEvent = scenario.events[9];
+  const tokenIssuedEvent = scenario.events[10];
 
   modifiedState = reduceMultipleEvents(
-    getScenarioStartingState(joinedEvent.correlationId),
+    getScenarioStartingState(secondJoinedEvent.correlationId),
     scenario.events
   );
 

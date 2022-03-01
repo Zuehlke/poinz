@@ -23,16 +23,6 @@ test('1000 "addStory" commands/events', async () => {
   let eventCounter = 0;
   let commandCounter = 0;
 
-  await processor(
-    {
-      id: uuid(),
-      name: 'joinRoom',
-      roomId,
-      payload: {}
-    },
-    userId
-  );
-
   console.log(`--- Starting test with "addStory" until ${totalEvents} events are received --`);
   console.time('commandProcessorPerformance');
 
@@ -41,7 +31,9 @@ test('1000 "addStory" commands/events', async () => {
       id: uuid(),
       roomId,
       name: 'joinRoom',
-      payload: {}
+      payload: {
+        username: 'Jimmy'
+      }
     },
     userId
   )

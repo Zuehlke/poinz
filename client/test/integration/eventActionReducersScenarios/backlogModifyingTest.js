@@ -23,7 +23,7 @@ test('Adding Stories', async () => {
   let modifiedState;
 
   const joinedEvtOne = scenario.events[1];
-  const addedEvtDefault = scenario.events[3]; // on room creation, a default "sample" story is already added
+  const addedEvtDefault = scenario.events[4]; // on room creation, a default "sample" story is already added
   const addedEvtOne = scenario.events[9];
   const addedEvtTwo = scenario.events[10];
 

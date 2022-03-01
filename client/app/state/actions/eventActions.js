@@ -2,9 +2,9 @@ import log from 'loglevel';
 
 import history from '../getBrowserHistory';
 import {getRoom} from '../../services/restApi/roomService';
-import {getPendingJoinCommandId} from '../commandTracking/commandTrackingSelectors';
 import {getRoomId} from '../room/roomSelectors';
 import {getOwnUserToken} from '../users/usersSelectors';
+import {getPendingJoinCommandId} from '../joining/joiningSelectors';
 
 /* TYPES */
 export const ROOM_STATE_FETCHED = 'ROOM_STATE_FETCHED';
@@ -115,7 +115,17 @@ const dispatchSpecificEvent = (dispatch, event, state) => {
  * If a command failed, the server sends a "commandRejected" event.
  * From some rejections, we might be able to recover by reloading the room state from the backend.
  * Obviously there are situations where there is a mismatch between server and client state.
+ * (e.g. race condition when two users act "nearly simultaneously": first user reveals story, second user changes his estimation, before "storyRevealed" reached his browser -> giveStoryEstimate will be rejected)
  */
+const RECOVERABLE_COMMANDS = [
+  'giveStoryEstimate',
+  'clearStoryEstimate',
+  'newEstimationRound',
+  'reveal',
+  'deleteStory',
+  'trashStory',
+  'kick'
+];
 const tryToRecoverOnRejection = (event, dispatch, getState) => {
   const state = getState();
   if (!event.payload || !event.payload.command || !getRoomId(state)) {
@@ -123,14 +133,7 @@ const tryToRecoverOnRejection = (event, dispatch, getState) => {
   }
 
   const failedCommandName = event.payload.command.name;
-
-  if (
-    failedCommandName === 'giveStoryEstimate' ||
-    failedCommandName === 'clearStoryEstimate' ||
-    failedCommandName === 'newEstimationRound' ||
-    failedCommandName === 'reveal' ||
-    failedCommandName === 'kick'
-  ) {
+  if (RECOVERABLE_COMMANDS.includes(failedCommandName)) {
     getRoom(getRoomId(state), getOwnUserToken(state)).then((data) =>
       dispatch({
         type: ROOM_STATE_FETCHED,

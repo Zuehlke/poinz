@@ -9,6 +9,7 @@ import history from './getBrowserHistory';
 import appConfig from '../services/appConfig';
 import {getOwnUserId} from './users/usersSelectors';
 import {getRoomId} from './room/roomSelectors';
+import {registerReduxStore} from './clientSettingsStore';
 
 /**
  * configures and sets up the redux store.
@@ -44,6 +45,9 @@ export default function configureStore(initialState) {
     // leak store to window object for debugging purposes during cypress tests
     window.__POINZ_REDUX_STORE__ = store;
   }
+
+  // register instance of our reduxStore with clientSettingsStore (localStorage persistence)
+  registerReduxStore(store);
 
   // create our hub instance, provide it with "dispatch", "getUserId" and "getRoomId" callbacks
   hub = hubFactory(

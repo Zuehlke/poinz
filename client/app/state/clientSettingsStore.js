@@ -1,36 +1,45 @@
 const POINZ_NAMESPACE = 'poinz_';
 
-function getItem(key) {
+const persisters = [];
+
+/**
+ *
+ * @param {string} key The key that should be used to store the value in localStorage
+ * @param {function} selector A selector function that must return the value from the redux state that should be persisted on change
+ */
+export const persistOnStateChange = (key, selector) => {
+  persisters.push({
+    key,
+    selector
+  });
+};
+
+/**
+ * called once during initialization of the PoinZ client app
+ *
+ * @param {object} store The redux store
+ */
+export const registerReduxStore = (store) => {
+  const onStoreChange = () => {
+    const reduxNextState = store.getState();
+    persisters.forEach((persister) => {
+      const newStateValue = persister.selector(reduxNextState);
+      if (persister.oldStateValue !== newStateValue) {
+        persister.oldStateValue = newStateValue;
+        setItem(persister.key, newStateValue);
+      }
+    });
+  };
+  store.subscribe(onStoreChange);
+};
+
+export function getItem(key) {
   return localStorage.getItem(POINZ_NAMESPACE + key);
 }
 
 function setItem(key, value) {
-  localStorage.setItem(POINZ_NAMESPACE + key, value);
+  localStorage.setItem(POINZ_NAMESPACE + key, value ?? '');
 }
-
-export const getUserPresets = () => ({
-  username: getPresetUsername(),
-  userId: getPresetUserId(),
-  avatar: getPresetAvatar(),
-  email: getPresetEmail()
-});
-
-export const getPresetUsername = () => getItem('presetUserName');
-export const setPresetUsername = (username) => setItem('presetUserName', username);
 
 export const getPresetLanguage = () => getItem('presetLanguage');
 export const setPresetLanguage = (language) => setItem('presetLanguage', language);
-
-export const getPresetEmail = () => getItem('presetEmail');
-export const setPresetEmail = (email) => setItem('presetEmail', email);
-
-export const getPresetAvatar = () => parseInt(getItem('presetAvatar'), 10);
-export const setPresetAvatar = (avatar) => setItem('presetAvatar', avatar);
-
-export const getPresetUserId = () => getItem('presetUserId');
-export const setPresetUserId = (userId) => setItem('presetUserId', userId);
-
-export const getHideNewUserHints = () => getItem('hideNewUserHints') === 'true';
-export const setHideNewUserHints = (flag) => setItem('hideNewUserHints', flag);
-export const getMarkdownEnabled = () => getItem('markdownEnabled') === 'true';
-export const setMarkdownEnabled = (flag) => setItem('markdownEnabled', flag);

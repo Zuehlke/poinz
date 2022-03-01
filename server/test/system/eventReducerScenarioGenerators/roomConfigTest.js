@@ -10,8 +10,7 @@ test('roomConfig:  user configures room (cardConfig and autoReveal/confidence/is
   const roomId = uuid();
   const firstUserId = uuid();
 
-  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
-  await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId, 'Jim'), 6);
 
   await client.cmdAndWait(
     client.cmds.setCardConfig(roomId, firstUserId, [

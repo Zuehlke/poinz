@@ -12,7 +12,6 @@ import Backlog from '../Backlog/Backlog';
 import EstimationMatrix from '../EstimationMatrix/EstimationMatrix';
 import MatrixToggle from './MatrixToggle';
 
-import {getRoomId} from '../../state/room/roomSelectors';
 import {isAStorySelected} from '../../state/stories/storiesSelectors';
 import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 import {toggleMatrix} from '../../state/actions/uiStateActions';
@@ -62,7 +61,6 @@ Board.propTypes = {
 
 export default connect(
   (state) => ({
-    roomId: getRoomId(state),
     isAStorySelected: isAStorySelected(state),
     sidebarShown: !!getCurrentSidebarIfAny(state),
     matrixShown: state.ui.matrixShown

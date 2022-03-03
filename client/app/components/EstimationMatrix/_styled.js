@@ -10,7 +10,7 @@ export const StyledEstimationMatrix = styled.div`
   background: #fff;
   border: 1px solid #e8e8e8;
   padding: 8px;
-  margin: 16px;
+  margin: 8px 16px;
 
   h4 {
     margin-bottom: 16px;

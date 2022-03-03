@@ -60,12 +60,7 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
       }
     }
     case EVENT_ACTION_TYPES.storySelected: {
-      if (action.event.userId === ownUserId) {
-        // if story was selected by ourself, make sure to hide matrix / show default story view
-        return {...state, applause: false, matrixShown: false};
-      } else {
-        return {...state, applause: false};
-      }
+      return {...state, applause: false};
     }
     case EVENT_ACTION_TYPES.consensusAchieved:
       return {...state, applause: true};

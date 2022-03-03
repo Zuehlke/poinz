@@ -10,9 +10,6 @@ export const StyledHelp = styled.div`
   padding: 0 8px;
   background: ${COLOR_BACKGROUND_GREY};
 
-  @media ${device.desktop} {
-  }
-
   h5 {
     color: ${COLOR_ORANGE};
     font-weight: 700;

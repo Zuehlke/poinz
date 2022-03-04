@@ -52,6 +52,12 @@ export const StyledEstimationMatrixCell = styled.div`
   text-align: center;
   display: flex;
   justify-content: center;
+  cursor: pointer;
+  min-height: 1em;
+`;
+
+export const StyledEmptyEstimationMatrixCell = styled(StyledEstimationMatrixCell)`
+  background: ${({isOver}) => (isOver ? 'blue' : 'transparent')};
 `;
 
 export const StyledNoStoriesHint = styled.span`

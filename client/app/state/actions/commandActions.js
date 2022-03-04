@@ -175,12 +175,11 @@ export const giveStoryEstimate = (value, confidence) => (dispatch, getState, sen
   });
 };
 
-export const settleEstimation = (value) => (dispatch, getState, sendCommand) => {
-  const state = getState();
+export const settleEstimation = (storyId, value) => (dispatch, getState, sendCommand) => {
   sendCommand({
     name: 'settleEstimation',
     payload: {
-      storyId: getSelectedStoryId(state),
+      storyId,
       value
     }
   });

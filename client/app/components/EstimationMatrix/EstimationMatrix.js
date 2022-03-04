@@ -1,12 +1,16 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import {getAllStoriesWithConsensus} from '../../state/stories/storiesSelectors';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
 import ValueBadge from '../common/ValueBadge';
 import {L10nContext} from '../../services/l10n';
 import EstimationMatrixRow from './EstimationMatrixRow';
+import {toggleMatrixIncludeTrashed} from '../../state/actions/uiStateActions';
+import {settleEstimation} from '../../state/actions/commandActions';
 
 import {
   StyledEMRow,
@@ -15,7 +19,10 @@ import {
   StyledNoStoriesHint
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
-import {toggleMatrixIncludeTrashed} from '../../state/actions/uiStateActions';
+
+export const ItemTypes = {
+  STORY: 'story'
+};
 
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
@@ -24,7 +31,8 @@ const EstimationMatrix = ({
   estimatedStories,
   cardConfig,
   includeTrashedStories,
-  toggleMatrixIncludeTrashed
+  toggleMatrixIncludeTrashed,
+  settleEstimation
 }) => {
   const [filteredAndSortedStories, setFilteredAndSortedStories] = useState([]);
 
@@ -46,40 +54,43 @@ const EstimationMatrix = ({
   let columnWidth = getColWidth(cardConfig.length);
 
   return (
-    <StyledEstimationMatrix data-testid="matrix">
-      <StyledStoryTitle>
-        {t('matrix')}
-        <span onClick={toggleMatrixIncludeTrashed} className="clickable">
-          <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
-          {t('matrixIncludeTrashed')}
-        </span>
-      </StyledStoryTitle>
+    <DndProvider backend={HTML5Backend}>
+      <StyledEstimationMatrix data-testid="matrix">
+        <StyledStoryTitle>
+          {t('matrix')}
+          <span onClick={toggleMatrixIncludeTrashed} className="clickable">
+            <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
+            {t('matrixIncludeTrashed')}
+          </span>
+        </StyledStoryTitle>
 
-      <StyledEMRow>
-        {cardConfig.map((cc) => (
-          <StyledEstimationMatrixCell key={'header:' + cc.value} width={columnWidth}>
-            <ValueBadge cardValue={cc.value} />
-          </StyledEstimationMatrixCell>
-        ))}
-      </StyledEMRow>
-
-      {filteredAndSortedStories.length < 1 && (
         <StyledEMRow>
-          <StyledEstimationMatrixCell width={99}>
-            <StyledNoStoriesHint>{t('noStoriesForMatrix')}</StyledNoStoriesHint>
-          </StyledEstimationMatrixCell>
+          {cardConfig.map((cc) => (
+            <StyledEstimationMatrixCell key={'header:' + cc.value} width={columnWidth}>
+              <ValueBadge cardValue={cc.value} />
+            </StyledEstimationMatrixCell>
+          ))}
         </StyledEMRow>
-      )}
 
-      {filteredAndSortedStories.map((story) => (
-        <EstimationMatrixRow
-          story={story}
-          key={story.id}
-          cardConfig={cardConfig}
-          columnWidthPercentage={columnWidth}
-        />
-      ))}
-    </StyledEstimationMatrix>
+        {filteredAndSortedStories.length < 1 && (
+          <StyledEMRow>
+            <StyledEstimationMatrixCell width={99}>
+              <StyledNoStoriesHint>{t('noStoriesForMatrix')}</StyledNoStoriesHint>
+            </StyledEstimationMatrixCell>
+          </StyledEMRow>
+        )}
+
+        {filteredAndSortedStories.map((story) => (
+          <EstimationMatrixRow
+            story={story}
+            key={story.id}
+            cardConfig={cardConfig}
+            columnWidthPercentage={columnWidth}
+            onStoryDropped={settleEstimation}
+          />
+        ))}
+      </StyledEstimationMatrix>
+    </DndProvider>
   );
 };
 
@@ -101,5 +112,5 @@ export default connect(
     cardConfig: getCardConfigInOrder(state),
     includeTrashedStories: state.ui.matrixIncludeTrashedStories
   }),
-  {toggleMatrixIncludeTrashed}
+  {toggleMatrixIncludeTrashed, settleEstimation}
 )(EstimationMatrix);

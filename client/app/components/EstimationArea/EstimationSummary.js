@@ -9,6 +9,7 @@ import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/e
 import {settleEstimation} from '../../state/actions/commandActions';
 import {
   getSelectedStoryConsensusValue,
+  getSelectedStoryId,
   hasSelectedStoryConsensus
 } from '../../state/stories/storiesSelectors';
 import {getCardConfigInOrder, getMatchingCardConfig} from '../../state/room/roomSelectors';
@@ -22,6 +23,7 @@ import {StyledCardsWrapper, StyledEstimationSummary, StyledEstimationSummaryList
  * Displays an overview on how many users did estimate, which cards how often. (after reveal)
  */
 const EstimationSummary = ({
+  storyId,
   withConfidence,
   summaries,
   usersInRoomCount,
@@ -100,7 +102,7 @@ const EstimationSummary = ({
   );
 
   function onCardClick(value) {
-    settleEstimation(value);
+    settleEstimation(storyId, value);
   }
 };
 
@@ -127,6 +129,7 @@ export default connect(
     });
 
     return {
+      storyId: getSelectedStoryId(state),
       usersInRoomCount: getUserCount(state),
       cardConfig,
       summaries,

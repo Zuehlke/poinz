@@ -20,7 +20,7 @@ const MARKDOWN_ENABLED = 'markdownEnabled';
 export const uiInitialState = {
   backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
   sidebar: undefined,
-  matrixShown: false,
+  matrixShown: true,
   applause: false,
   unseenError: false,
   easterEggActive: isHalloweenSeason(),

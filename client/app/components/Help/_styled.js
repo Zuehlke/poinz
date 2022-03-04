@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import {device} from '../dimensions';
 import {COLOR_BACKGROUND_GREY, COLOR_ORANGE} from '../colors';
 
 export const StyledHelp = styled.div`

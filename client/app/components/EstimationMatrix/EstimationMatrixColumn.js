@@ -10,7 +10,11 @@ import {StyledEMColumn, StyledEMStory} from './_styled';
 export const EstimationMatrixColumn = ({stories, columnWidth, cc, onStoryDropped}) => {
   const [{isOver}, drop] = useDrop(() => ({
     accept: ItemTypes.STORY,
-    drop: (item) => onStoryDropped(item.id, cc.value),
+    drop: (item) => {
+      if (item.consensus !== cc.value) {
+        onStoryDropped(item.id, cc.value);
+      }
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver()
     })
@@ -41,7 +45,7 @@ const EstimationMatrixStory = ({color, story}) => {
   const [{isDragging}, drag] = useDrag(
     () => ({
       type: ItemTypes.STORY,
-      item: {id: story.id},
+      item: {id: story.id, consensus: story.consensus},
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging()
       })

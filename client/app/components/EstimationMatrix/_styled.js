@@ -56,11 +56,8 @@ export const StyledEMColumn = styled.div`
     box-sizing: border-box;
     display: flex;
     justify-content: center;
-  }
-
-  h4 {
-    margin: 0 0 4px 0;
-    font-size: 14px;
+    align-items: center;
+    min-height: 2em;
   }
 `;
 
@@ -76,7 +73,12 @@ export const StyledEMStory = styled.div`
   display: flex;
   justify-content: center;
   cursor: pointer;
-  min-height: 1em;
+  overflow-x: hidden;
+
+  h4 {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+  }
 `;
 
 export const StyledNoStoriesHint = styled.div`

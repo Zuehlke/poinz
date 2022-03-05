@@ -37,6 +37,7 @@ export const StyledValueBadge = styled.div`
   align-items: center;
 
   > div {
+    user-select: none;
     font-size: 12px;
     color: white;
     font-family: ${ZuehlkeFont};

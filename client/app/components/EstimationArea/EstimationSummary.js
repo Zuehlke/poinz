@@ -107,6 +107,7 @@ const EstimationSummary = ({
 };
 
 EstimationSummary.propTypes = {
+  storyId: PropTypes.string,
   summaries: PropTypes.array,
   cardConfig: PropTypes.array,
   withConfidence: PropTypes.bool,

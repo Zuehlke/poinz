@@ -6,18 +6,12 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import {getAllStoriesWithConsensus} from '../../state/stories/storiesSelectors';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
-import ValueBadge from '../common/ValueBadge';
 import {L10nContext} from '../../services/l10n';
-import EstimationMatrixRow from './EstimationMatrixRow';
 import {toggleMatrixIncludeTrashed} from '../../state/actions/uiStateActions';
 import {settleEstimation} from '../../state/actions/commandActions';
+import EstimationMatrixColumn from './EstimationMatrixColumn';
 
-import {
-  StyledEMRow,
-  StyledEstimationMatrix,
-  StyledEstimationMatrixCell,
-  StyledNoStoriesHint
-} from './_styled';
+import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} from './_styled';
 import {StyledStoryTitle} from '../_styled';
 
 export const ItemTypes = {
@@ -34,24 +28,13 @@ const EstimationMatrix = ({
   toggleMatrixIncludeTrashed,
   settleEstimation
 }) => {
-  const [filteredAndSortedStories, setFilteredAndSortedStories] = useState([]);
+  const columnWidth = getColWidth(cardConfig.length);
+  const {t} = useContext(L10nContext);
+  const [groupedStories, setGroupedStories] = useState({});
 
   useEffect(() => {
-    const stories = !includeTrashedStories
-      ? estimatedStories.filter((s) => !s.trashed)
-      : estimatedStories;
-    stories.sort(
-      (sA, sB) =>
-        cardConfig.findIndex((cc) => cc.value === sA.consensus) -
-        cardConfig.findIndex((cc) => cc.value === sB.consensus)
-    );
-
-    setFilteredAndSortedStories(stories);
+    setGroupedStories(deriveGroupedStories(estimatedStories, includeTrashedStories));
   }, [estimatedStories, includeTrashedStories]);
-
-  const {t} = useContext(L10nContext);
-
-  let columnWidth = getColWidth(cardConfig.length);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -64,46 +47,34 @@ const EstimationMatrix = ({
           </span>
         </StyledStoryTitle>
 
-        <StyledEMRow>
+        <StyledEMColumnsContainer>
           {cardConfig.map((cc) => (
-            <StyledEstimationMatrixCell key={'header:' + cc.value} width={columnWidth}>
-              <ValueBadge cardValue={cc.value} />
-            </StyledEstimationMatrixCell>
+            <EstimationMatrixColumn
+              onStoryDropped={settleEstimation}
+              key={'header:' + cc.value}
+              columnWidth={columnWidth}
+              cc={cc}
+              stories={groupedStories[cc.value] || []}
+            />
           ))}
-        </StyledEMRow>
+        </StyledEMColumnsContainer>
 
-        {filteredAndSortedStories.length < 1 && (
-          <StyledEMRow>
-            <StyledEstimationMatrixCell width={99}>
-              <StyledNoStoriesHint>{t('noStoriesForMatrix')}</StyledNoStoriesHint>
-            </StyledEstimationMatrixCell>
-          </StyledEMRow>
+        {Object.keys(groupedStories).length < 1 && (
+          <StyledNoStoriesHint>
+            <span>{t('noStoriesForMatrix')}</span>
+          </StyledNoStoriesHint>
         )}
-
-        {filteredAndSortedStories.map((story) => (
-          <EstimationMatrixRow
-            story={story}
-            key={story.id}
-            cardConfig={cardConfig}
-            columnWidthPercentage={columnWidth}
-            onStoryDropped={settleEstimation}
-          />
-        ))}
       </StyledEstimationMatrix>
     </DndProvider>
   );
-};
-
-const getColWidth = (cardConfigCount) => {
-  const colWidthPercentage = 99 / cardConfigCount;
-  return Math.round((colWidthPercentage + Number.EPSILON) * 100) / 100;
 };
 
 EstimationMatrix.propTypes = {
   estimatedStories: PropTypes.array,
   cardConfig: PropTypes.array,
   includeTrashedStories: PropTypes.bool,
-  toggleMatrixIncludeTrashed: PropTypes.func.isRequired
+  toggleMatrixIncludeTrashed: PropTypes.func.isRequired,
+  settleEstimation: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -114,3 +85,29 @@ export default connect(
   }),
   {toggleMatrixIncludeTrashed, settleEstimation}
 )(EstimationMatrix);
+
+const getColWidth = (cardConfigCount) => {
+  const colWidthPercentage = 99 / cardConfigCount;
+  return Math.round((colWidthPercentage + Number.EPSILON) * 100) / 100;
+};
+
+/**
+ * group stories according to estimation value.
+ *
+ * @param estimatedStories
+ * @param includeTrashedStories
+ * @return {object} Object that maps estimation value (consensus) to array of stories
+ */
+function deriveGroupedStories(estimatedStories, includeTrashedStories) {
+  const stories = !includeTrashedStories
+    ? estimatedStories.filter((s) => !s.trashed)
+    : estimatedStories;
+
+  return stories.reduce((total, current) => {
+    if (!total[current.consensus]) {
+      total[current.consensus] = [];
+    }
+    total[current.consensus].push(current);
+    return total;
+  }, {});
+}

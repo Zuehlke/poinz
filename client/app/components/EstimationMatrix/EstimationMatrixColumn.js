@@ -59,6 +59,7 @@ const EstimationMatrixStory = ({color, story}) => {
     </StyledEMStory>
   );
 };
+
 EstimationMatrixStory.propTypes = {
   color: PropTypes.string,
   story: PropTypes.object

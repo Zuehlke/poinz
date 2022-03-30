@@ -13,6 +13,7 @@ import EstimationMatrixColumn from './EstimationMatrixColumn';
 
 import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} from './_styled';
 import {StyledStoryTitle} from '../_styled';
+import {getSettlingStories} from '../../state/commandTracking/commandTrackingSelectors';
 
 export const ItemTypes = {
   STORY: 'story'
@@ -24,6 +25,7 @@ export const ItemTypes = {
 const EstimationMatrix = ({
   estimatedStories,
   cardConfig,
+  settlingStories,
   includeTrashedStories,
   toggleMatrixIncludeTrashed,
   settleEstimation
@@ -33,8 +35,10 @@ const EstimationMatrix = ({
   const [groupedStories, setGroupedStories] = useState({});
 
   useEffect(() => {
-    setGroupedStories(deriveGroupedStories(estimatedStories, includeTrashedStories));
-  }, [estimatedStories, includeTrashedStories]);
+    setGroupedStories(
+      deriveGroupedStories(estimatedStories, settlingStories, includeTrashedStories)
+    );
+  }, [estimatedStories, includeTrashedStories, settlingStories]);
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -72,6 +76,7 @@ const EstimationMatrix = ({
 EstimationMatrix.propTypes = {
   estimatedStories: PropTypes.array,
   cardConfig: PropTypes.array,
+  settlingStories: PropTypes.array,
   includeTrashedStories: PropTypes.bool,
   toggleMatrixIncludeTrashed: PropTypes.func.isRequired,
   settleEstimation: PropTypes.func.isRequired
@@ -81,7 +86,8 @@ export default connect(
   (state) => ({
     estimatedStories: getAllStoriesWithConsensus(state),
     cardConfig: getCardConfigInOrder(state),
-    includeTrashedStories: state.ui.matrixIncludeTrashedStories
+    includeTrashedStories: state.ui.matrixIncludeTrashedStories,
+    settlingStories: getSettlingStories(state)
   }),
   {toggleMatrixIncludeTrashed, settleEstimation}
 )(EstimationMatrix);
@@ -95,19 +101,22 @@ const getColWidth = (cardConfigCount) => {
  * group stories according to estimation value.
  *
  * @param estimatedStories
+ * @param settlingStories
  * @param includeTrashedStories
  * @return {object} Object that maps estimation value (consensus) to array of stories
  */
-function deriveGroupedStories(estimatedStories, includeTrashedStories) {
+function deriveGroupedStories(estimatedStories, settlingStories, includeTrashedStories) {
   const stories = !includeTrashedStories
     ? estimatedStories.filter((s) => !s.trashed)
     : estimatedStories;
 
   return stories.reduce((total, current) => {
-    if (!total[current.consensus]) {
-      total[current.consensus] = [];
+    const isSettling = settlingStories.find((ss) => ss.storyId === current.id);
+    const consensus = isSettling ? isSettling.value : current.consensus;
+    if (!total[consensus]) {
+      total[consensus] = [];
     }
-    total[current.consensus].push(current);
+    total[consensus].push(current);
     return total;
   }, {});
 }

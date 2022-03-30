@@ -1,7 +1,7 @@
 /**
  * A user manually "settles" on a value for a story. (hopefully after a discussion with everybody in the room).
  * This will produced "consensusAchieved".
- * This saves the team the time to start a new round and estimate the same value.
+ * This saves the team the time to start a new round where everybody has to estimate the same value.
  */
 import {getMatchingStoryOrThrow} from './commonPreconditions';
 

@@ -12,7 +12,7 @@ module.exports = {
       .find({})
       .forEach((room) => {
         if (room.users && !Array.isArray(room.users)) {
-          throw new Error('');
+          throw new Error('Expected "room.users" to be defined and to be an array!');
         }
 
         if (room.users.findIndex((u) => !u.username) >= 0) {

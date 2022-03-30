@@ -2,7 +2,7 @@ import poinzSocketClientFactory from '../poinzSocketClient';
 import uuid from '../../../src/uuid';
 import {dumpEventsToFile} from './index';
 
-test('estimating: Adding Stories, estimate them', async () => {
+test('Two users in room, adding Stories, estimate stories', async () => {
   const outputFilename = 'estimatingTest.json';
 
   const client = poinzSocketClientFactory();
@@ -11,13 +11,8 @@ test('estimating: Adding Stories, estimate them', async () => {
   const firstUserId = uuid();
   const secondUserId = uuid();
 
-  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 5);
-
-  await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId), 2);
-
-  await client.cmdAndWait(client.cmds.setUsername(roomId, firstUserId, 'Jim'));
-
-  await client.cmdAndWait(client.cmds.setUsername(roomId, secondUserId, 'John'));
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId, 'Jim'), 6);
+  await client.cmdAndWait(client.cmds.joinRoom(roomId, secondUserId, 'John'), 3);
 
   // activate confidence levels on this room
   await client.cmdAndWait(

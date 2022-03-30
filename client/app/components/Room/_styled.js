@@ -96,7 +96,7 @@ export const StyledFeedbackHint = styled.div`
 `;
 
 export const StyledMatrixToggle = styled.div`
-  padding: 0 16px;
+  padding: 12px 16px 0 16px;
   display: none;
   justify-content: flex-end;
 

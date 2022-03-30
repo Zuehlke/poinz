@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import {StyledPasswordFieldWrapper, StyledPasswordInput} from './_styled';
 
 const PasswordField = (props) => {
-  const {pw, placeholder, isNewPassword, onChange, onKeyPress} = props;
+  const {pw, placeholder, isNewPassword, onChange, onKeyPress, ...restProps} = props;
   const [isPwReadable, setIsPwReadable] = useState(false);
 
   return (
     <StyledPasswordFieldWrapper>
       <StyledPasswordInput
+        {...restProps}
         data-testid={props['data-testid']}
         type={isPwReadable ? 'text' : 'password'}
         placeholder={placeholder}

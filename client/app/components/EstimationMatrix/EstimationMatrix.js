@@ -15,12 +15,17 @@ import {
   StyledNoStoriesHint
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
+import {toggleMatrixIncludeTrashed} from '../../state/actions/uiStateActions';
 
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
  */
-const EstimationMatrix = ({estimatedStories, cardConfig}) => {
-  const [includeTrashedStories, setIncludeTrashedStories] = useState(false);
+const EstimationMatrix = ({
+  estimatedStories,
+  cardConfig,
+  includeTrashedStories,
+  toggleMatrixIncludeTrashed
+}) => {
   const [filteredAndSortedStories, setFilteredAndSortedStories] = useState([]);
 
   useEffect(() => {
@@ -44,10 +49,7 @@ const EstimationMatrix = ({estimatedStories, cardConfig}) => {
     <StyledEstimationMatrix data-testid="matrix">
       <StyledStoryTitle>
         {t('matrix')}
-        <span
-          onClick={() => setIncludeTrashedStories(!includeTrashedStories)}
-          className="clickable"
-        >
+        <span onClick={toggleMatrixIncludeTrashed} className="clickable">
           <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
           {t('matrixIncludeTrashed')}
         </span>
@@ -88,10 +90,16 @@ const getColWidth = (cardConfigCount) => {
 
 EstimationMatrix.propTypes = {
   estimatedStories: PropTypes.array,
-  cardConfig: PropTypes.array
+  cardConfig: PropTypes.array,
+  includeTrashedStories: PropTypes.bool,
+  toggleMatrixIncludeTrashed: PropTypes.func.isRequired
 };
 
-export default connect((state) => ({
-  estimatedStories: getAllStoriesWithConsensus(state),
-  cardConfig: getCardConfigInOrder(state)
-}))(EstimationMatrix);
+export default connect(
+  (state) => ({
+    estimatedStories: getAllStoriesWithConsensus(state),
+    cardConfig: getCardConfigInOrder(state),
+    includeTrashedStories: state.ui.matrixIncludeTrashedStories
+  }),
+  {toggleMatrixIncludeTrashed}
+)(EstimationMatrix);

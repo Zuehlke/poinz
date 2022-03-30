@@ -85,6 +85,9 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
 
   function checkWaitingPromises() {
     eventWaitPromises = eventWaitPromises.filter((ewp) => {
+      // if the reducerScenarioGenerator tests time out, use this to log received events
+      // console.log(`got receivedEvents so far: ${receivedEvents.map(ev => ev.name).join(' ')}`);
+
       const matchingEvents = receivedEvents.filter((ev) => ev.correlationId === ewp.correlationId);
 
       if (matchingEvents.length === ewp.expectedEventCount) {
@@ -195,6 +198,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       }
     });
   }
+
   function setAvatar(roomId, userId, avatarNumber) {
     return sendCommand({
       name: 'setAvatar',

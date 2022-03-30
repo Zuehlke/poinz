@@ -9,6 +9,10 @@ export const StyledUsers = styled.div`
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: stretch;
+
+  @media ${device.desktop} {
+    padding: 8px 16px 16px 12px;
+  }
 `;
 
 export const StyledUser = styled.div`

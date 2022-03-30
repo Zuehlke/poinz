@@ -3,9 +3,10 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {joinRoom} from '../../state/actions/commandActions';
+import uuid from '../../services/uuid';
+import {getJoinUserdata} from '../../state/joining/joiningSelectors';
+import {joinIfReady} from '../../state/actions/commandActions';
 import {ROOM_ID_REGEX} from '../frontendInputValidation';
-import {getUsersPresets} from '../../state/users/usersSelectors';
 import ValidatedInput from '../common/ValidatedInput';
 
 import {
@@ -20,9 +21,9 @@ import {
 /**
  * The form on the landing page where the user can join a room.
  * By default a new room (roomId is randomly generated in the ui).
- * User can optionally set a own roomId "roomName")
+ * User can optionally set own roomId "roomName")
  */
-const JoinRoomForm = ({presetUsername, joinRoom}) => {
+const JoinRoomForm = ({presetUsername, joinIfReady}) => {
   const {t} = useContext(L10nContext);
   const [showExtended, setShowExtended] = useState(false);
   const [customRoomId, setCustomRoomId] = useState('');
@@ -83,18 +84,20 @@ const JoinRoomForm = ({presetUsername, joinRoom}) => {
   );
 
   function onTriggerJoin() {
-    joinRoom(customRoomId ? customRoomId : undefined);
+    joinIfReady({
+      roomId: customRoomId || uuid()
+    });
   }
 };
 
 JoinRoomForm.propTypes = {
   presetUsername: PropTypes.string,
-  joinRoom: PropTypes.func
+  joinIfReady: PropTypes.func
 };
 
 export default connect(
   (state) => ({
-    presetUsername: getUsersPresets(state).username
+    presetUsername: getJoinUserdata(state)?.username
   }),
-  {joinRoom}
+  {joinIfReady}
 )(JoinRoomForm);

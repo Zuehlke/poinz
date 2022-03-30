@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import {device} from '../dimensions';
 import {COLOR_BACKGROUND_GREY, COLOR_ORANGE} from '../colors';
 
 export const StyledHelp = styled.div`
@@ -9,9 +8,6 @@ export const StyledHelp = styled.div`
   box-sizing: border-box;
   padding: 0 8px;
   background: ${COLOR_BACKGROUND_GREY};
-
-  @media ${device.desktop} {
-  }
 
   h5 {
     color: ${COLOR_ORANGE};

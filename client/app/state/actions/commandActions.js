@@ -1,30 +1,63 @@
 import {findNextStoryIdToEstimate} from '../estimations/estimationsSelectors';
 import appConfig from '../../services/appConfig';
-import uuid from '../../services/uuid';
 import history from '../getBrowserHistory';
-import {getOwnUserId, getOwnUserToken, getUsersPresets} from '../users/usersSelectors';
+import {getOwnUserId, getOwnUserToken} from '../users/usersSelectors';
 import {getSelectedStoryId} from '../stories/storiesSelectors';
 import {getRoomId} from '../room/roomSelectors';
+import {getJoinRoomId, getJoinUserdata} from '../joining/joiningSelectors';
 
 /* TYPES */
 export const COMMAND_SENT = 'COMMAND_SENT';
 export const LOCATION_CHANGED = 'LOCATION_CHANGED';
+export const JOIN_PROPERTIES_ADDED = 'JOIN_PROPERTIES_ADDED';
 
 /* ACTION CREATORS */
 
-/** technically these are in fact action creators, since they all dispatch a "COMMAND_SENT" action.. **/
+/**
+ * this is were we send different commands to the backend.
+ * these are in fact action creators, since they all dispatch a "COMMAND_SENT" action..
+ */
 
 /**
- * "location" changed in browser history (i.e. url changed).
- * send "joinRoom"  or "leaveRoom" commands if appropriate
+ * We collect join-information (preset userId, preset Email, roomId, username) from the user in different views in the app.
+ * From all these points, we can call {@link joinIfReady} and pass the properties we already have so far.
+ *
+ * @param {object} joinProps
+ */
+export const joinIfReady = (joinProps) => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  const roomId = joinProps.roomId ? joinProps.roomId.toLowerCase() : getJoinRoomId(state);
+  delete joinProps.roomId;
+
+  const joinUserdata = {
+    ...getJoinUserdata(state),
+    ...joinProps
+  };
+
+  dispatch({
+    type: JOIN_PROPERTIES_ADDED,
+    properties: joinUserdata,
+    roomId
+  });
+
+  if (joinUserdata.username && roomId) {
+    // if we have the two mandatory properties, we can join
+    joinRoom(roomId, joinUserdata, sendCommand);
+  }
+};
+
+/**
+ * "location" changed in browser history.
+ * - send "joinRoom" if path contains a roomId, but we have no room in state yet
+ * - if we have a room in state but path is empty (landing page), send "leaveRoom"
  */
 export const locationChanged = (pathname) => (dispatch, getState, sendCommand) => {
   const state = getState();
   const ourRoomId = getRoomId(state);
 
-  if (isRoomIdGivenInPathname(pathname) && !ourRoomId) {
-    joinRoom(pathname.substring(1))(dispatch, getState, sendCommand);
-  } else if ((!pathname || pathname.length < 2) && getOwnUserId(state) && ourRoomId) {
+  if (!ourRoomId && isRoomIdGivenInPathname(pathname)) {
+    joinIfReady({roomId: pathname.substring(1)})(dispatch, getState, sendCommand);
+  } else if (ourRoomId && isEmptyPathname(pathname) && getOwnUserId(state)) {
     sendCommand({
       name: 'leaveRoom',
       payload: {}
@@ -37,7 +70,8 @@ export const locationChanged = (pathname) => (dispatch, getState, sendCommand) =
   });
 };
 const isRoomIdGivenInPathname = (pathname) =>
-  pathname && pathname.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
+  pathname?.length > 1 && pathname.substring(1) !== appConfig.APP_STATUS_IDENTIFIER;
+const isEmptyPathname = (pathname) => !pathname || pathname.length < 2;
 
 export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
   const state = getState();
@@ -46,42 +80,37 @@ export const onSocketConnect = () => (dispatch, getState, sendCommand) => {
   if (ourRoomId) {
     // the socket connected. since we have a roomId in our client-side state, we can assume this is a "re-connect"
     // make sure we are in sync again with the backend state. send a joinRoom command.
-    joinRoom(ourRoomId)(dispatch, getState, sendCommand);
+    joinIfReady({roomId: ourRoomId, token: getOwnUserToken(state)})(
+      dispatch,
+      getState,
+      sendCommand
+    );
   }
 };
 
-export const joinRoom = (roomId, password) => (dispatch, getState, sendCommand) => {
-  const normalizedRoomId = roomId ? roomId.toLowerCase() : uuid();
-
-  const state = getState();
-
+const joinRoom = (roomId, userdata, sendCommand) => {
   const joinCommand = {
     name: 'joinRoom',
-    roomId: normalizedRoomId,
-    payload: {}
+    roomId,
+    payload: {
+      username: userdata.username // only payload prop that is mandatory
+    }
   };
 
-  const userPresets = getUsersPresets(state);
-
-  if (userPresets.username) {
-    joinCommand.payload.username = userPresets.username;
+  if (userdata.userId) {
+    joinCommand.userId = userdata.userId;
   }
-  if (userPresets.email) {
-    joinCommand.payload.email = userPresets.email;
+  if (userdata.email) {
+    joinCommand.payload.email = userdata.email;
   }
-  if (Number.isInteger(userPresets.avatar)) {
-    joinCommand.payload.avatar = userPresets.avatar;
+  if (userdata.avatar) {
+    joinCommand.payload.avatar = userdata.avatar;
   }
-  if (password) {
-    // join with cleartext password from UI input field
-    joinCommand.payload.password = password;
-  } else if (getOwnUserToken(state)) {
-    // join with jwt if present (after joining password-protected room, jwt is stored in our redux state)
-    joinCommand.payload.token = getOwnUserToken(state);
+  if (userdata.password) {
+    joinCommand.payload.password = userdata.password;
   }
-
-  if (userPresets.userId) {
-    joinCommand.userId = userPresets.userId;
+  if (userdata.token) {
+    joinCommand.payload.token = userdata.token;
   }
 
   sendCommand(joinCommand);

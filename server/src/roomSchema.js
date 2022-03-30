@@ -46,7 +46,7 @@ const userSchema = {
       format: 'uuid'
     },
     username: {
-      type: ['string', 'undefined', 'null'],
+      type: 'string',
       format: 'username'
     },
     email: {
@@ -66,7 +66,7 @@ const userSchema = {
       type: 'boolean'
     }
   },
-  required: ['id', 'avatar'],
+  required: ['id', 'avatar', 'username'],
   additionalProperties: false
 };
 

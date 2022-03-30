@@ -1,5 +1,6 @@
 import http from 'http';
 import socketIoClient from 'socket.io-client';
+import {faker} from '@faker-js/faker';
 
 import uuid from '../../src/uuid';
 import poinzSocketClientFactory from './poinzSocketClient';
@@ -59,7 +60,10 @@ describe('websocket endpoint', () => {
     const roomId = uuid();
     const firstUserId = uuid();
 
-    const receivedEvents = await client.cmdAndWait(client.cmds.joinRoom(roomId, firstUserId), 3);
+    const receivedEvents = await client.cmdAndWait(
+      client.cmds.joinRoom(roomId, firstUserId, faker.name.firstName()),
+      3
+    );
     client.disconnect();
 
     expect(receivedEvents[0].name).toBe('roomCreated');
@@ -92,7 +96,7 @@ describe('REST endpoint', () => {
     const roomId = uuid();
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 3);
+    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId, faker.name.firstName()), 3);
     client.disconnect();
 
     // export the room
@@ -195,14 +199,17 @@ describe('REST endpoint', () => {
     const roomId = uuid();
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    const eventsFromJoin = await client.cmdAndWait(client.cmds.joinRoom(roomId, userId), 5);
+    const eventsFromJoin = await client.cmdAndWait(
+      client.cmds.joinRoom(roomId, userId, faker.name.firstName()),
+      5
+    );
 
     await client.cmdAndWait(
-      client.cmds.trashStory(roomId, userId, eventsFromJoin[3].payload.storyId),
+      client.cmds.trashStory(roomId, userId, eventsFromJoin[4].payload.storyId),
       1
     );
     await client.cmdAndWait(
-      client.cmds.deleteStory(roomId, userId, eventsFromJoin[3].payload.storyId),
+      client.cmds.deleteStory(roomId, userId, eventsFromJoin[4].payload.storyId),
       1
     );
 

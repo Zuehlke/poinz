@@ -43,7 +43,9 @@ test('registering new joining user to socket.IO "room"', async () => {
     roomId,
     // here, no userId is passed along .  (i.e. new browser / first time using poinz / local storage cleared)
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'myName'
+    }
   };
   await socketManager.handleIncomingCommand(socket, joinCommand);
 
@@ -70,7 +72,9 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
     userId,
     roomId: roomOneId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'my-Held-User-name'
+    }
   });
   await socketManager.handleIncomingCommand(socket, {
     id: uuid(),
@@ -84,7 +88,9 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
     userId,
     roomId: roomTwoId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'my-Held-User-name'
+    }
   });
 
   expect(socket.cmdRejectedEvts.length).toBe(0); // no commands rejected
@@ -93,8 +99,11 @@ test('should correctly handle joining & leaving multiple rooms in sequence', asy
   expect(socket.join.mock.calls[0][0]).toEqual(roomOneId);
   expect(socket.join.mock.calls[1][0]).toEqual(roomTwoId);
 
-  // events produced and sent (-roomCreated -RESTRICTED-, joinedRoom, avatarSet, storyAdded, storySelected    then leftRoom  then again -roomCreated -RESTRICTED-, joinedRoom, avatarSet, storyAdded, storySelected)
-  expect(sendEventToRoom.mock.calls.length).toBe(11 - 2);
+  // events produced and sent (-roomCreated -RESTRICTED-, joinedRoom, usernameSet, avatarSet, storyAdded, storySelected
+  // then leftRoom
+  // then again -roomCreated -RESTRICTED-, joinedRoom, usernameSet, avatarSet, storyAdded, storySelected)
+  //
+  expect(sendEventToRoom.mock.calls.length).toBe(11);
 
   expect(removeSocketFromRoomByIds.mock.calls.length).toBe(1);
 });
@@ -115,7 +124,9 @@ test('should correctly use userId from command', async () => {
     userId,
     roomId: roomOneId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'myName'
+    }
   });
   await socketManager.handleIncomingCommand(socket, {
     id: uuid(),
@@ -153,22 +164,28 @@ test('should correctly handle "kick" case', async () => {
     userId: userIdOne,
     roomId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'user1'
+    }
   });
   await socketManager.handleIncomingCommand(socketTwo, {
     id: uuid(),
     userId: userIdTwo,
     roomId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'user2'
+    }
   });
-  // user two joins twice, same userId, separate socket (second browser tab!)
+  // user two joins twice, same userId, separate socket (second browser tab)
   await socketManager.handleIncomingCommand(socketThree, {
     id: uuid(),
     userId: userIdTwo,
     roomId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'user2'
+    }
   });
 
   // user one kicks user two
@@ -216,7 +233,9 @@ test('emits commandRejected if no userId is present in "normal" command', async 
     userId,
     roomId: roomOneId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'user1'
+    }
   });
   await socketManager.handleIncomingCommand(socket, {
     id: uuid(),
@@ -231,7 +250,7 @@ test('emits commandRejected if no userId is present in "normal" command', async 
   expect(socket.join.mock.calls.length).toBe(1);
   expect(socket.join.mock.calls[0][0]).toEqual(roomOneId);
 
-  expect(sendEventToRoom.mock.calls.length).toBe(4); // -roomCreated - RESTRICTED_, joinedRoom, avatarSet, storyAdded, storySelected
+  expect(sendEventToRoom.mock.calls.length).toBe(5); // -roomCreated - RESTRICTED_, joinedRoom, usernameSet, avatarSet, storyAdded, storySelected
 
   expect(socket.cmdRejectedEvts.length).toBe(1); // the commandRejectedEvent gets emitted to the one socket (not the room)
   expect(socket.cmdRejectedEvts[0]).toMatchObject({
@@ -266,7 +285,9 @@ test('should handle disconnect for mapped user', async () => {
     userId,
     roomId,
     name: 'joinRoom',
-    payload: {}
+    payload: {
+      username: 'user1'
+    }
   });
 
   await socketManager.onDisconnect(socket);
@@ -275,9 +296,9 @@ test('should handle disconnect for mapped user', async () => {
   expect(removeSocketFromRoomByIds.mock.calls[0][0]).toBe(socket.id);
   expect(removeSocketFromRoomByIds.mock.calls[0][1]).toBe(roomId);
 
-  // -roomCreated-RESTRICTED-, joinedRoom, avatarSet, storyAdded, storySelected  AND "connectionLost"
-  expect(sendEventToRoom.mock.calls.length).toBe(5);
-  expect(sendEventToRoom.mock.calls[4][1]).toMatchObject({
+  // -roomCreated-RESTRICTED-, joinedRoom, avatarSet, usernameSet, storyAdded, storySelected  AND "connectionLost"
+  expect(sendEventToRoom.mock.calls.length).toBe(6);
+  expect(sendEventToRoom.mock.calls[5][1]).toMatchObject({
     name: 'connectionLost'
   });
 });

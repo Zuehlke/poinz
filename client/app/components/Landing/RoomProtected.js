@@ -3,12 +3,9 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {joinRoom} from '../../state/actions/commandActions';
+import {joinIfReady} from '../../state/actions/commandActions';
+import {getPendingJoinCommandId} from '../../state/joining/joiningSelectors';
 import PasswordField from '../common/PasswordField';
-import {
-  getJoinFailedAuthRoomId,
-  getPendingJoinCommandId
-} from '../../state/commandTracking/commandTrackingSelectors';
 import GithubRibbon from './GithubRibbon';
 
 import {
@@ -23,7 +20,7 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a password input field.
  * If user wants to join a room that is protected by a password
  */
-const RoomProtected = ({roomId, pendingJoinCommandId, joinRoom}) => {
+const RoomProtected = ({joinIfReady, pendingJoinCommandId}) => {
   const {t} = useContext(L10nContext);
   const [password, setPassword] = useState('');
   const [spinning, setSpinning] = useState(false);
@@ -47,6 +44,7 @@ const RoomProtected = ({roomId, pendingJoinCommandId, joinRoom}) => {
             {!spinning && (
               <React.Fragment>
                 <PasswordField
+                  autoFocus={true}
                   data-testid="roomPasswordInput"
                   placeholder={t('password')}
                   onChange={onInputChange}
@@ -85,20 +83,18 @@ const RoomProtected = ({roomId, pendingJoinCommandId, joinRoom}) => {
 
   function join() {
     setSpinning(true);
-    joinRoom(roomId, password);
+    joinIfReady({password});
   }
 };
 
 RoomProtected.propTypes = {
-  joinRoom: PropTypes.func,
-  roomId: PropTypes.string,
+  joinIfReady: PropTypes.func,
   pendingJoinCommandId: PropTypes.string
 };
 
 export default connect(
   (state) => ({
-    roomId: getJoinFailedAuthRoomId(state),
     pendingJoinCommandId: getPendingJoinCommandId(state)
   }),
-  {joinRoom}
+  {joinIfReady}
 )(RoomProtected);

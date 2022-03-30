@@ -188,7 +188,7 @@ test('existing room with matching user already in room (re-join) ', async () => 
   });
 });
 
-test('existing room with user match, command has no preset properties', async () => {
+test('existing room with user match, command has no email nor avatar in payload', async () => {
   const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom(
     'custom-user-name'
   );
@@ -209,7 +209,8 @@ test('existing room with user match, command has no preset properties', async ()
       roomId,
       name: 'joinRoom',
       payload: {
-        // no preset username, email, avatar (which is valid) (user has cleared local storage manually?)
+        // no preset email & avatar (which is valid) (user can clear local storage manually, or use inkognito tab)
+        username: 'edited-username' // client will prompt user for name, before sending join
       }
     },
     userId
@@ -234,7 +235,7 @@ test('existing room with user match, command has no preset properties', async ()
         disconnected: false,
         email: 'super@test.com',
         id: userId,
-        username: 'custom-user-name',
+        username: 'edited-username',
         avatar: 1
       }
     ],
@@ -246,7 +247,7 @@ test('existing room with user match, command has no preset properties', async ()
 
   expect(usernameSetEvent.userId).toEqual(userId);
   expect(usernameSetEvent.payload).toEqual({
-    username: 'custom-user-name'
+    username: 'edited-username'
   });
 
   expect(emailSetEvent.userId).toEqual(userId);
@@ -267,7 +268,7 @@ test('existing room with user match, command has no preset properties', async ()
         id: userId,
         email: 'super@test.com',
         emailHash: '230016156266ce4617c6a181f81b6ee1',
-        username: 'custom-user-name',
+        username: 'edited-username',
         avatar: 1
       }
     ],
@@ -315,7 +316,7 @@ test('space in custom room id', async () => {
   expect(room.id).toBe(roomIdSanitized);
 });
 
-test('existing room but completely new user, command has no preset properties', async () => {
+test('existing room but completely new user, command has no preset properties (avatar, email)', async () => {
   const {processor, userId, roomId} = await prepOneUserInOneRoom();
 
   // a new user joins room
@@ -327,14 +328,15 @@ test('existing room but completely new user, command has no preset properties', 
       roomId,
       name: 'joinRoom',
       payload: {
-        // no preset username, email, avatar (which is valid) (user has cleared local storage manually?)
+        // no preset email, avatar (which is valid) (user can clear local storage manually, or inkognito tab)
+        username: 'mySuperHero'
       }
     },
     newUserId
   );
 
-  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'avatarSet');
-  const [joinedRoomEvent, avatarSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'usernameSet', 'avatarSet');
+  const [joinedRoomEvent, usernameSetEvent, avatarSetEvent] = producedEvents;
 
   expect(joinedRoomEvent.userId).toEqual(newUserId);
   expect(joinedRoomEvent.payload).toEqual({
@@ -351,13 +353,19 @@ test('existing room but completely new user, command has no preset properties', 
         avatar: 0,
         disconnected: false,
         excluded: false,
-        id: newUserId
+        id: newUserId,
+        username: 'mySuperHero'
       }
     ],
     cardConfig: defaultCardConfig,
     autoReveal: true,
     withConfidence: false,
     passwordProtected: false
+  });
+
+  expect(usernameSetEvent.userId).toEqual(newUserId);
+  expect(usernameSetEvent.payload).toEqual({
+    username: 'mySuperHero'
   });
 
   expect(avatarSetEvent.userId).toEqual(newUserId);
@@ -454,6 +462,7 @@ test('existing room with password : match cleartext pw', async () => {
       roomId,
       name: 'joinRoom',
       payload: {
+        username: 'some-user',
         password: 'some-nice-password' // <<- password matches
       }
     },
@@ -461,8 +470,15 @@ test('existing room with password : match cleartext pw', async () => {
   );
 
   // successful join
-  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'tokenIssued', 'avatarSet');
-  const [joinedRoomEvent, tokenIssuedEvent, avatarSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'joinedRoom',
+    'tokenIssued',
+    'usernameSet',
+    'avatarSet'
+  );
+  const [joinedRoomEvent, tokenIssuedEvent, usernameSetEvent, avatarSetEvent] = producedEvents;
 
   expect(joinedRoomEvent.userId).toEqual(newUserId);
   expect(joinedRoomEvent.payload.passwordProtected).toBe(true);
@@ -471,6 +487,7 @@ test('existing room with password : match cleartext pw', async () => {
   expect(tokenIssuedEvent.restricted).toBe(true); // if this flag is not set, event will be broadcasted to all users in room (like all other events) !
   expect(tokenIssuedEvent.payload.token).toBeDefined();
 
+  expect(usernameSetEvent.userId).toEqual(newUserId);
   expect(avatarSetEvent.userId).toEqual(newUserId);
 });
 
@@ -494,6 +511,7 @@ test('existing room with password : can join with token', async () => {
       roomId,
       name: 'joinRoom',
       payload: {
+        username: 'some-user',
         token
       }
     },
@@ -526,6 +544,7 @@ test('existing room with password : password missing', async () => {
         roomId,
         name: 'joinRoom',
         payload: {
+          username: 'just-some-user-name'
           // <<- no password given in payload
         }
       },
@@ -551,6 +570,7 @@ test('existing room with password : password mismatch', async () => {
         roomId,
         name: 'joinRoom',
         payload: {
+          username: 'my-super-user-name',
           password: 'this-does-not-match-the-first-one' // <<-
         }
       },
@@ -570,6 +590,7 @@ test('existing room without password : password given in payload', async () => {
       roomId,
       name: 'joinRoom',
       payload: {
+        username: 'prima-super-name',
         password: 'some-nice-password' // <<- password matches
       }
     },
@@ -577,10 +598,11 @@ test('existing room without password : password given in payload', async () => {
   );
 
   // successful join, password in payload is just ignored
-  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'avatarSet');
-  const [joinedRoomEvent, avatarSetEvent] = producedEvents;
+  expect(producedEvents).toMatchEvents(commandId, roomId, 'joinedRoom', 'usernameSet', 'avatarSet');
+  const [joinedRoomEvent, usernameSetEvent, avatarSetEvent] = producedEvents;
 
   expect(joinedRoomEvent.userId).toEqual(newUserId);
+  expect(usernameSetEvent.userId).toEqual(newUserId);
   expect(avatarSetEvent.userId).toEqual(newUserId);
 
   expect(room.password).toBe(undefined);

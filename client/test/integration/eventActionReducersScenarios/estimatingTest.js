@@ -23,7 +23,7 @@ test('Estimation with two users', () => {
   let modifiedState;
 
   const joinedEvtOne = scenario.events[1];
-  const joinedEvtTwo = scenario.events[5];
+  const joinedEvtTwo = scenario.events[6];
 
   const addedEvtOne = scenario.events[10];
   const storyIdOne = addedEvtOne.payload.storyId;

@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {getPendingJoinCommandId} from '../../state/commandTracking/commandTrackingSelectors';
 import {getActionLog} from '../../state/actionLog/actionLogSelectors';
 import appConfig from '../../services/appConfig';
 import JoinRoomForm from './JoinRoomForm';
@@ -18,13 +17,14 @@ import {
   StyledInfoText,
   StyledChangelog
 } from './_styled';
+import {getJoinRoomId} from '../../state/joining/joiningSelectors';
 
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({waitingForJoin, actionLog}) => {
+const Landing = ({pendingJoin, actionLog}) => {
   const {t} = useContext(L10nContext);
-  if (waitingForJoin) {
+  if (pendingJoin) {
     return (
       <StyledLanding>
         <GithubRibbon />
@@ -70,13 +70,13 @@ const Landing = ({waitingForJoin, actionLog}) => {
 };
 
 Landing.propTypes = {
-  waitingForJoin: PropTypes.bool,
+  pendingJoin: PropTypes.bool,
   actionLog: PropTypes.array
 };
 
 export default connect((state) => ({
   actionLog: getActionLog(state),
-  waitingForJoin: !!getPendingJoinCommandId(state)
+  pendingJoin: !!getJoinRoomId(state)
 }))(Landing);
 
 const Loader = ({t}) => (

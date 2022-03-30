@@ -8,26 +8,30 @@ import AppStatus from './AppStatus/AppStatus';
 import Landing from './Landing/Landing';
 import appConfig from '../services/appConfig';
 import RoomProtected from './Landing/RoomProtected';
-import {getOwnUserId, getUserCount, getUsersPresets} from '../state/users/usersSelectors';
+import {getOwnUserId, getUserCount} from '../state/users/usersSelectors';
 import {getRoomId} from '../state/room/roomSelectors';
-import {hasJoinFailedAuthorization} from '../state/commandTracking/commandTrackingSelectors';
+import {getJoinRoomId, getJoinUserdata, hasJoinFailedAuth} from '../state/joining/joiningSelectors';
 
 const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
 
 /**
- * The Main component decides whether to display the landing page or the poinz estimation board (a room).
- * If the user did never set his username/name in a previous session, display "whoAreYou" with a username input field.
- * If the selected room matches the special id "poinzstatus" an app status view is displayed. (does not contain private data).
+ * The Main component switches between top-level views (somewhat a basic routing).
  */
-const Main = ({roomId, userCount, userId, presetUsername, pathname, authorizationFailed}) => {
-  const hasRoomIdAndUsers = roomId && userCount > 0 && userId;
-  if (getNormalizedRoomId(pathname) === appConfig.APP_STATUS_IDENTIFIER) {
+const Main = ({
+  roomDataIsLoaded,
+  roomId,
+  hasJoinFailedAuth,
+  isAppStatusUrlPath,
+  joinUserdata,
+  joinRoomId
+}) => {
+  if (isAppStatusUrlPath) {
     return <AppStatus />;
-  } else if (authorizationFailed) {
+  } else if (hasJoinFailedAuth) {
     return <RoomProtected />;
-  } else if (hasRoomIdAndUsers && presetUsername) {
-    return <Room />;
-  } else if (hasRoomIdAndUsers) {
+  } else if (roomDataIsLoaded) {
+    return <Room roomId={roomId} />;
+  } else if (joinRoomId && !joinUserdata.username) {
     return <WhoAreYou />;
   } else {
     return <Landing />;
@@ -35,19 +39,19 @@ const Main = ({roomId, userCount, userId, presetUsername, pathname, authorizatio
 };
 
 Main.propTypes = {
-  roomId: PropTypes.string,
-  userCount: PropTypes.number,
-  userId: PropTypes.string,
-  presetUsername: PropTypes.string,
-  pathname: PropTypes.string,
-  authorizationFailed: PropTypes.bool
+  hasJoinFailedAuth: PropTypes.bool,
+  joinUserdata: PropTypes.object,
+  joinRoomId: PropTypes.string, // roomId during join workflow
+  roomId: PropTypes.string, // roomId after successful join
+  roomDataIsLoaded: PropTypes.bool,
+  isAppStatusUrlPath: PropTypes.bool
 };
 
 export default connect((state) => ({
-  pathname: state.ui.pathname,
+  roomDataIsLoaded: getRoomId(state) && getUserCount(state) > 0 && !!getOwnUserId(state),
   roomId: getRoomId(state),
-  userCount: getUserCount(state),
-  userId: getOwnUserId(state),
-  presetUsername: getUsersPresets(state).username,
-  authorizationFailed: hasJoinFailedAuthorization(state)
+  joinUserdata: getJoinUserdata(state),
+  joinRoomId: getJoinRoomId(state),
+  hasJoinFailedAuth: hasJoinFailedAuth(state),
+  isAppStatusUrlPath: getNormalizedRoomId(state.ui.pathname) === appConfig.APP_STATUS_IDENTIFIER
 }))(Main);

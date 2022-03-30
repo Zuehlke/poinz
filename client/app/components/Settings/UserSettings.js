@@ -155,7 +155,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
   }
 
   function saveUsername() {
-    if (myUsername?.length) {
+    if (myUsername?.length > 2) {
       setUsername(myUsername);
     }
   }

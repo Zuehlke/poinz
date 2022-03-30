@@ -1,11 +1,4 @@
 import {EVENT_ACTION_TYPES, ROOM_STATE_FETCHED} from '../actions/eventActions';
-import {
-  setPresetAvatar,
-  setPresetEmail,
-  setPresetUserId,
-  setPresetUsername
-} from '../clientSettingsStore';
-import {getUserPresets} from '../clientSettingsStore';
 
 /*
  * in our frontend, we store users as object (key is the user's id).
@@ -14,8 +7,7 @@ import {getUserPresets} from '../clientSettingsStore';
 export const usersInitialState = {
   ownUserId: undefined,
   ownUserToken: undefined,
-  usersById: {},
-  presets: getUserPresets() // presets, stored in localStorage; username, userId, avatar, email
+  usersById: {}
 };
 
 /**
@@ -38,11 +30,8 @@ export default function usersReducer(state = usersInitialState, action, ownUserI
     // joining, leaving room
     case EVENT_ACTION_TYPES.joinedRoom: {
       if (action.ourJoin) {
-        setPresetUserId(event.userId);
-
         return {
           ...state,
-          presets: {...state.presets, userId: event.userId},
           ownUserId: event.userId,
           usersById: indexUsers(event.payload.users)
         };
@@ -81,10 +70,6 @@ export default function usersReducer(state = usersInitialState, action, ownUserI
       }
     }
     case EVENT_ACTION_TYPES.connectionLost: {
-      if (!state.usersById[event.userId]) {
-        return state;
-      }
-
       return modifyUser(state, event.userId, (user) => ({
         ...user,
         disconnected: true
@@ -93,52 +78,25 @@ export default function usersReducer(state = usersInitialState, action, ownUserI
 
     // user properties modifications
     case EVENT_ACTION_TYPES.avatarSet: {
-      const intermediateState = modifyUser(state, event.userId, (user) => ({
+      return modifyUser(state, event.userId, (user) => ({
         ...user,
         avatar: event.payload.avatar
       }));
-
-      if (state.ownUserId === event.userId) {
-        setPresetAvatar(event.payload.avatar);
-        return {
-          ...intermediateState,
-          presets: {...state.presets, avatar: event.payload.avatar}
-        };
-      } else {
-        return intermediateState;
-      }
     }
+
     case EVENT_ACTION_TYPES.emailSet: {
-      const intermediateState = modifyUser(state, event.userId, (user) => ({
+      return modifyUser(state, event.userId, (user) => ({
         ...user,
         email: event.payload.email,
         emailHash: event.payload.emailHash
       }));
-
-      if (state.ownUserId === event.userId) {
-        setPresetEmail(event.payload.email);
-        return {
-          ...intermediateState,
-          presets: {...state.presets, email: event.payload.email}
-        };
-      } else {
-        return intermediateState;
-      }
     }
+
     case EVENT_ACTION_TYPES.usernameSet: {
-      const intermediateState = modifyUser(state, event.userId, (user) => ({
+      return modifyUser(state, event.userId, (user) => ({
         ...user,
         username: event.payload.username
       }));
-      if (state.ownUserId === event.userId) {
-        setPresetUsername(event.payload.username);
-        return {
-          ...intermediateState,
-          presets: {...state.presets, username: event.payload.username}
-        };
-      } else {
-        return intermediateState;
-      }
     }
 
     // including / excluding user from estimation
@@ -181,6 +139,9 @@ function indexUsers(usersArray) {
  */
 function modifyUser(state, userId, modifier) {
   if (!userId) {
+    return state;
+  }
+  if (!state.usersById[userId]) {
     return state;
   }
   const modifiedUser = modifier(state.usersById[userId]);

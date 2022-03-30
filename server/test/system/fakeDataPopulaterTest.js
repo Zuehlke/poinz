@@ -1,5 +1,4 @@
-const {faker} = require('@faker-js/faker');
-
+import {faker} from '@faker-js/faker';
 import poinzSocketClientFactory from './poinzSocketClient.js';
 import uuid from '../../src/uuid.js';
 

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
-import {setUsername} from '../../state/actions/commandActions';
+import {joinIfReady} from '../../state/actions/commandActions';
 import {USERNAME_REGEX} from '../frontendInputValidation';
 import GithubRibbon from './GithubRibbon';
 
@@ -19,7 +19,7 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({setUsername}) => {
+const WhoAreYou = ({joinIfReady}) => {
   const {t} = useContext(L10nContext);
   const [myUsername, setMyUsername] = useState('');
 
@@ -48,7 +48,7 @@ const WhoAreYou = ({setUsername}) => {
               type="button"
               data-testid="joinButton"
               className="pure-button pure-button-primary button-save"
-              onClick={saveUsername}
+              onClick={join}
             >
               {t('join')}
             </button>
@@ -61,7 +61,7 @@ const WhoAreYou = ({setUsername}) => {
   function onUsernameKeyPress(e) {
     if (e.key === 'Enter') {
       e.preventDefault();
-      saveUsername();
+      join();
     }
   }
 
@@ -72,16 +72,18 @@ const WhoAreYou = ({setUsername}) => {
     }
   }
 
-  function saveUsername() {
+  function join() {
     // username length minimum is 3 characters
     if (myUsername && myUsername.length > 2) {
-      setUsername(myUsername);
+      joinIfReady({
+        username: myUsername
+      });
     }
   }
 };
 
 WhoAreYou.propTypes = {
-  setUsername: PropTypes.func
+  joinIfReady: PropTypes.func
 };
 
-export default connect(() => ({}), {setUsername})(WhoAreYou);
+export default connect(() => ({}), {joinIfReady})(WhoAreYou);

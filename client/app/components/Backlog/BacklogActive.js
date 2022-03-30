@@ -3,12 +3,13 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
-import {importCsvFile, trashStories} from '../../state/actions/commandActions';
+import {importCsvFile, trashStories, setStoriesOrder} from '../../state/actions/commandActions';
 import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
 import {L10nContext} from '../../services/l10n';
+import {defaultSorting, manualSorting} from './backlogSortings';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
-import BacklogToolbar, {defaultSorting} from './BacklogToolbar';
+import BacklogToolbar from './BacklogToolbar';
 
 import {
   StyledStories,
@@ -60,7 +61,7 @@ const useSortingAndFiltering = (activeStories) => {
     setSortedStories(sortAndFilterStories(activeStories, sorting.comp, filterQuery));
   }, [activeStories, sorting, filterQuery]);
 
-  return {filterQuery, setFilterQuery, sorting, setSorting, sortedStories};
+  return {filterQuery, setFilterQuery, sorting, setSorting, sortedStories, setSortedStories};
 };
 
 /**
@@ -83,7 +84,13 @@ const useHighlightedStory = (selectedStoryId, activeStories) => {
 /**
  * List of active stories. Accepts drops of csv files for importing stories. Provides means to filter and sort active stories.
  */
-const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStories}) => {
+const BacklogActive = ({
+                         activeStories,
+                         selectedStoryId,
+                         importCsvFile,
+                         trashStories,
+                         setStoriesOrder
+                       }) => {
   const {t} = useContext(L10nContext);
   const hasActiveStories = activeStories.length > 0;
 
@@ -92,13 +99,42 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStor
     activeStories
   );
 
-  const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories} =
+  const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories, setSortedStories} =
     useSortingAndFiltering(activeStories);
 
-  // only trash the currently visible stories (after filtering)
+  // on "trashAll", do only trash the currently visible stories (after filtering was applied)
   const onTrashAll = () => trashStories(sortedStories.map((story) => story.id));
 
   const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDrop(importCsvFile);
+
+  // move dragged story to the position of hoveredStory
+  console.log('defining "locallyMoveStoryInList" ',sortedStories.length)
+  const locallyMoveStoryInList = (draggedStoryId, hoveredStoryId) => {
+    const draggedStory = findStoryObjectById(draggedStoryId);
+
+    const draggedIndex = findStoryIndexById(draggedStoryId);
+    const hoveredIndex = findStoryIndexById(hoveredStoryId);
+    sortedStories.splice(draggedIndex, 1);
+    sortedStories.splice(hoveredIndex, 0, draggedStory);
+
+    setSortedStories([...sortedStories]);
+  };
+
+  const onStoryDragDropped = (draggedStoryId, hoveredStoryId) => {
+    setSorting(manualSorting);
+    setStoriesOrder(sortedStories.map((s) => s.id));
+  };
+
+  // const findStoryIndexById = useCallback(
+  //   (storyId) => sortedStories.findIndex((s) => s.id === storyId),
+  //   [sortedStories, activeStories]
+  // );
+  // const findStoryObjectById = useCallback(
+  //   (storyId) => sortedStories.find((s) => s.id === storyId),
+  //   [sortedStories, activeStories]
+  // );
+  const findStoryIndexById = (storyId) => sortedStories.findIndex((s) => s.id === storyId);
+  const findStoryObjectById = (storyId) => sortedStories.find((s) => s.id === storyId);
 
   return (
     <StyledBacklogActive {...getRootProps()}>
@@ -123,13 +159,15 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStor
           <StyledStories data-testid="activeStories">
             {sortedStories.map((story) =>
               story.editMode ? (
-                <StoryEditForm key={story.id} story={story} />
+                <StoryEditForm key={story.id} story={story}/>
               ) : (
                 <Story
                   key={story.id}
                   story={story}
                   isHighlighted={story.id === highlightedStoryId}
                   onStoryClicked={() => setHighlightedStoryId(story.id)}
+                  onStoryDragHover={locallyMoveStoryInList}
+                  onStoryDragDropped={onStoryDragDropped}
                 />
               )
             )}
@@ -146,7 +184,8 @@ BacklogActive.propTypes = {
   activeStories: PropTypes.array,
   selectedStoryId: PropTypes.string,
   importCsvFile: PropTypes.func.isRequired,
-  trashStories: PropTypes.func.isRequired
+  trashStories: PropTypes.func.isRequired,
+  setStoriesOrder: PropTypes.func.isRequired
 };
 
 export default connect(
@@ -154,5 +193,5 @@ export default connect(
     activeStories: getActiveStories(state),
     selectedStoryId: getSelectedStoryId(state)
   }),
-  {importCsvFile, trashStories}
+  {importCsvFile, trashStories, setStoriesOrder}
 )(BacklogActive);

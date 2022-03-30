@@ -141,6 +141,7 @@ export const StyledStory = styled.div`
   box-sizing: border-box;
   border: 1px solid ${COLOR_LIGHTER_GREY};
   cursor: pointer;
+  opacity: ${(props) => (props.isDragging ? 0 : 1)};
   border-left: ${({selected, highlighted}) =>
     selected
       ? '2px solid ' + COLOR_ORANGE

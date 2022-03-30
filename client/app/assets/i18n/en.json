@@ -74,6 +74,7 @@
   "titleZtoA": "Title Z-A",
   "withConsensusFirst": "With Consensus",
   "withoutConsensusFirst": "Without Consensus",
+  "manual": "Manual ordering",
   "filter": "Filter...",
   "estimationSummary": "Estimation Summary",
   "consensusAchieved": "Consensus achieved!",

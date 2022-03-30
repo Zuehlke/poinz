@@ -1,6 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import Help from '../Help/Help';
 import FeedbackHint from './FeedbackHint';
@@ -18,6 +20,11 @@ import {toggleMatrix} from '../../state/actions/uiStateActions';
 
 import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
 
+export const DnDItemTypes = {
+  MATRIX_STORY: 'matrixStory',
+  BACKLOG_STORY: 'backlogStory'
+};
+
 /**
  * The board is the main working area as soon as a room was joined.
  * It contains
@@ -28,26 +35,28 @@ import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
  * - cards
  */
 const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatrix}) => (
-  <StyledBoard id={roomId}>
-    <Backlog />
+  <DndProvider backend={HTML5Backend}>
+    <StyledBoard id={roomId}>
+      <Backlog />
 
-    <StyledBoardCenter data-testid="board">
-      <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />
+      <StyledBoardCenter data-testid="board">
+        <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />
 
-      {isAStorySelected && !matrixShown && <Users />}
-      {isAStorySelected && !matrixShown && <EstimationArea />}
+        {isAStorySelected && !matrixShown && <Users />}
+        {isAStorySelected && !matrixShown && <EstimationArea />}
 
-      {matrixShown && <EstimationMatrix />}
-    </StyledBoardCenter>
+        {matrixShown && <EstimationMatrix />}
+      </StyledBoardCenter>
 
-    <StyledSidebarRight shown={sidebarShown}>
-      <Settings />
-      <ActionLog />
-      <Help />
-    </StyledSidebarRight>
+      <StyledSidebarRight shown={sidebarShown}>
+        <Settings />
+        <ActionLog />
+        <Help />
+      </StyledSidebarRight>
 
-    <FeedbackHint />
-  </StyledBoard>
+      <FeedbackHint />
+    </StyledBoard>
+  </DndProvider>
 );
 
 Board.propTypes = {

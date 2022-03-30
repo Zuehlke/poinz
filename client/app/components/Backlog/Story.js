@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {useDrag, useDrop} from 'react-dnd';
 
 import {L10nContext} from '../../services/l10n';
 import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
@@ -19,6 +20,7 @@ import {
   StyledStoryAttributes
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
+import {DnDItemTypes} from '../Room/Board';
 
 /**
  * One story in the (active) backlog.
@@ -32,20 +34,51 @@ const Story = ({
   editStory,
   trashStory,
   isWaiting,
-  isStoryEstimated
+  isStoryEstimated,
+  onStoryDragHover,
+  onStoryDragDropped
 }) => {
   const {t, format} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
 
+  const [{isDragging}, drag] = useDrag(
+    () => ({
+      type: DnDItemTypes.BACKLOG_STORY,
+      item: {id: story.id},
+      collect: (monitor) => ({
+        isDragging: !!monitor.isDragging()
+      })
+    }),
+    [story.id]
+  );
+
+  const [, drop] = useDrop(() => ({
+    accept: DnDItemTypes.BACKLOG_STORY,
+    drop: (item) => {
+      console.log('dropped story ', item.id, 'on', story.id);
+      onStoryDragDropped(item.id, story.id);
+    },
+    hover: (item) => {
+      if (item.id !== story.id) {
+        onStoryDragHover(item.id, story.id);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver()
+    })
+  }));
+
   return (
     <StyledStory
+      ref={(node) => drag(drop(node))}
       id={'story.' + story.id}
       data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={onStoryClicked}
       selected={isSelected}
       highlighted={isHighlighted}
       className={isWaiting ? 'waiting-spinner' : ''}
+      isDragging={isDragging}
     >
       <StyledStoryToolbar>
         <i
@@ -129,7 +162,9 @@ Story.propTypes = {
   onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
-  trashStory: PropTypes.func
+  trashStory: PropTypes.func,
+  onStoryDragHover: PropTypes.func,
+  onStoryDragDropped: PropTypes.func
 };
 
 export default connect(

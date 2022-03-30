@@ -36,10 +36,6 @@ const settleEstimationCommandHandler = {
   preCondition: (room, command) => {
     const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
 
-    if (room.selectedStory !== command.payload.storyId) {
-      throw new Error('Can only settle estimation for currently selected story!');
-    }
-
     if (!matchingStory.revealed) {
       throw new Error('You cannot settle estimation for a story that was NOT YET revealed!');
     }

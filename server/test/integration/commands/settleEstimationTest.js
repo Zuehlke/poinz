@@ -95,6 +95,74 @@ test('Should also allow value (to settle) that was not estimated by anyone (as o
   });
 });
 
+test('Should allow to settle on all stories with consensus (not only the selected story)', async () => {
+  const {roomId, userIdOne, userIdTwo, processor, storyId} =
+    await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
+
+  const userTwoGiveEstmCommandId = uuid();
+  const {producedEvents: userTwoEstimatedEvents} = await processor(
+    {
+      id: userTwoGiveEstmCommandId,
+      roomId: roomId,
+      name: 'giveStoryEstimate',
+      payload: {
+        storyId,
+        value: 5
+      }
+    },
+    userIdTwo
+  );
+
+  // the mockRoom already contains estimation of first user -> thus on second user estimation, story is revealed (no consensus, different estm values)
+  expect(userTwoEstimatedEvents).toMatchEvents(
+    userTwoGiveEstmCommandId,
+    roomId,
+    'storyEstimateGiven',
+    'revealed'
+  );
+
+  // second story is added and selected
+  const {producedEvents: addStoryEvents} = await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'addStory',
+      payload: {
+        title: 'second story'
+      }
+    },
+    userIdTwo
+  );
+
+  await processor(
+    {
+      id: uuid(),
+      roomId: roomId,
+      name: 'selectStory',
+      payload: {
+        storyId: addStoryEvents[0].payload.storyId
+      }
+    },
+    userIdTwo
+  );
+
+  const settleCommandId = uuid();
+  const {producedEvents: settleEvents} = await processor(
+    {
+      id: settleCommandId,
+      roomId: roomId,
+      name: 'settleEstimation',
+      payload: {
+        storyId, // the storyId of the first story
+        value: 5
+      }
+    },
+    userIdOne
+  );
+
+  expect(settleEvents).toMatchEvents(settleCommandId, roomId, 'consensusAchieved');
+});
+
 describe('preconditions', () => {
   test('Should throw if storyId does not match a story in the room', async () => {
     const {roomId, userIdOne, userIdTwo, processor, storyId} =
@@ -127,64 +195,6 @@ describe('preconditions', () => {
         userIdOne
       )
     ).rejects.toThrow('Given story unknown does not belong to room ');
-  });
-
-  test('Should throw if storyId does not match currently selected story', async () => {
-    const {roomId, userIdOne, userIdTwo, processor, storyId} =
-      await prepTwoUsersInOneRoomWithOneStoryAndEstimate();
-
-    await processor(
-      {
-        id: uuid(),
-        roomId: roomId,
-        name: 'giveStoryEstimate',
-        payload: {
-          storyId,
-          value: 5
-        }
-      },
-      userIdTwo
-    );
-
-    // second story is added and selected
-    const {producedEvents: addStoryEvents} = await processor(
-      {
-        id: uuid(),
-        roomId: roomId,
-        name: 'addStory',
-        payload: {
-          title: 'second story'
-        }
-      },
-      userIdTwo
-    );
-
-    await processor(
-      {
-        id: uuid(),
-        roomId: roomId,
-        name: 'selectStory',
-        payload: {
-          storyId: addStoryEvents[0].payload.storyId
-        }
-      },
-      userIdTwo
-    );
-
-    return expect(
-      processor(
-        {
-          id: uuid(),
-          roomId: roomId,
-          name: 'settleEstimation',
-          payload: {
-            storyId, // the storyId of the first story
-            value: 5
-          }
-        },
-        userIdOne
-      )
-    ).rejects.toThrow('Can only settle estimation for currently selected story!');
   });
 
   test('Should throw if story is not revealed', async () => {

@@ -1,3 +1,7 @@
+### 0.16.1: 2022-12-31
+
+* ...maintenance
+
 ### 0.16.0: 2022-03-30
 
 * Introduce Drag'n'Drop of stories in the estimation matrix. Stories can be dragged to other columns in order to "settle" on a new value.

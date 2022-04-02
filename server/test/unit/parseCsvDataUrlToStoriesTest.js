@@ -79,6 +79,23 @@ test('parse csv with generic fields: "title" "description"  "key"', async () => 
   });
 });
 
+test('parse csv with additional "consensus" ', async () => {
+  const dataUrl = textToCsvDataUrl(
+    'title,key,consensus,description\nfirst story,PRJ-123,3,this is a test'
+  );
+
+  const stories = parseCsvDataUrlToStories(dataUrl);
+
+  expect(stories.length).toBe(1);
+  expect(stories[0]).toMatchObject({
+    description: 'this is a test',
+    estimations: {},
+    storyId: EXPECT_UUID_MATCHING,
+    title: 'PRJ-123 first story',
+    consensus: 3
+  });
+});
+
 test('include issue deeplink URL into description if issue-tracking url is provided', async () => {
   const dataUrl = textToCsvDataUrl(
     'Issue key,Summary,description\nPRJ-123,Some Title,Some description'

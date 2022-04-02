@@ -22,5 +22,5 @@ jobs:
       - name: run tests
         run: npm test
 
-      - name: run build
+      - name: build app & docker image
         run: npm run build

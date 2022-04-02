@@ -21,14 +21,17 @@ jobs:
       - name: dependency check
         run: npm run dependencyCheck
 
-      - name: run tests
+      - name: run all tests
         run: npm test
 
-      - name: run build
+      - name: build app & docker image
         run: npm run build
 
       # push docker image to repo (the --all-tags flag was introduced in version v20.10, older versions pushed all images automatically if no tag was provided)
-      - name: create docker tag
+      - name: push docker image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           docker -v;
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;

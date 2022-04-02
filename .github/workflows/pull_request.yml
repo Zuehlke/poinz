@@ -1,0 +1,23 @@
+name: pull request
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install dependencies
+        run: npm i
+
+      - name: dependency check
+        run: npm run dependencyCheck
+
+      - name: run tests
+        run: npm test
+
+      - name: run build
+        run: npm run build

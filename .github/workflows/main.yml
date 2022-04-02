@@ -1,0 +1,31 @@
+name: master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install dependencies
+        run: npm i
+
+      - name: dependency check
+        run: npm run dependencyCheck
+
+      - name: run tests
+        run: npm test
+
+      - name: run build
+        run: npm run build
+
+      - name: create docker tag
+        run: |
+          docker -v;
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
+          docker image push --all-tags "${DOCKER_USERNAME}/poinz" || docker image push "${DOCKER_USERNAME}/poinz";

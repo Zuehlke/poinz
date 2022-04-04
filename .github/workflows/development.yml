@@ -1,6 +1,10 @@
-name: pull request
+# run build on every push (expect master branch) and PR
+name: development
 
 on:
+  push:
+    branches:
+      - !master
   pull_request:
 
 jobs:

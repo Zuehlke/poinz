@@ -1,8 +1,6 @@
 import React, {useContext, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import {getAllStoriesWithConsensus} from '../../state/stories/storiesSelectors';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
@@ -41,35 +39,33 @@ const EstimationMatrix = ({
   }, [estimatedStories, includeTrashedStories, settlingStories]);
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <StyledEstimationMatrix data-testid="matrix">
-        <StyledStoryTitle>
-          {t('matrix')}
-          <span onClick={toggleMatrixIncludeTrashed} className="clickable">
-            <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
-            {t('matrixIncludeTrashed')}
-          </span>
-        </StyledStoryTitle>
+    <StyledEstimationMatrix data-testid="matrix">
+      <StyledStoryTitle>
+        {t('matrix')}
+        <span onClick={toggleMatrixIncludeTrashed} className="clickable">
+          <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
+          {t('matrixIncludeTrashed')}
+        </span>
+      </StyledStoryTitle>
 
-        <StyledEMColumnsContainer>
-          {cardConfig.map((cc) => (
-            <EstimationMatrixColumn
-              onStoryDropped={settleEstimation}
-              key={'header:' + cc.value}
-              columnWidth={columnWidth}
-              cc={cc}
-              stories={groupedStories[cc.value] || []}
-            />
-          ))}
-        </StyledEMColumnsContainer>
+      <StyledEMColumnsContainer>
+        {cardConfig.map((cc) => (
+          <EstimationMatrixColumn
+            onStoryDropped={settleEstimation}
+            key={'header:' + cc.value}
+            columnWidth={columnWidth}
+            cc={cc}
+            stories={groupedStories[cc.value] || []}
+          />
+        ))}
+      </StyledEMColumnsContainer>
 
-        {Object.keys(groupedStories).length < 1 && (
-          <StyledNoStoriesHint>
-            <span>{t('noStoriesForMatrix')}</span>
-          </StyledNoStoriesHint>
-        )}
-      </StyledEstimationMatrix>
-    </DndProvider>
+      {Object.keys(groupedStories).length < 1 && (
+        <StyledNoStoriesHint>
+          <span>{t('noStoriesForMatrix')}</span>
+        </StyledNoStoriesHint>
+      )}
+    </StyledEstimationMatrix>
   );
 };
 

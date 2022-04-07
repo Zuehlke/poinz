@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
 import Board from './Board';
 import TopBar from '../TopBar/TopBar';
@@ -16,11 +18,13 @@ const Room = ({roomId}) => {
   }, [roomId]);
 
   return (
-    <StyledRoom>
-      <TopBar />
-      <Board roomId={roomId} />
-      <RoomFooter />
-    </StyledRoom>
+    <DndProvider backend={HTML5Backend}>
+      <StyledRoom>
+        <TopBar />
+        <Board roomId={roomId} />
+        <RoomFooter />
+      </StyledRoom>
+    </DndProvider>
   );
 };
 

@@ -8,15 +8,19 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from '../colors';
-import {LEFT_MENU_WIDTH, device} from '../dimensions';
+import {device, TOPBAR_HEIGHT} from '../dimensions';
 
-export const StyledBacklog = styled.div`
+export const StyledBacklog = styled.div.attrs((props) => ({
+  style: {
+    width: props.shown ? '100%' : props.width + 'px'
+  }
+}))`
   position: relative;
   box-sizing: border-box;
-  width: 100%;
   padding: 8px 0 0 0;
   background: ${COLOR_BACKGROUND_GREY};
   flex-shrink: 0;
+  flex-grow: 0;
 
   display: ${({shown}) => (shown ? 'flex' : 'none')};
   flex-direction: column;
@@ -25,18 +29,43 @@ export const StyledBacklog = styled.div`
 
   @media ${device.desktop} {
     display: flex;
-    width: ${LEFT_MENU_WIDTH}px;
+  }
+`;
+
+export const StyledBacklogWidthDragHandle = styled.div`
+  display: none; /* in mobile view, we cannot resize backlog*/
+  top: 8px;
+  right: 0;
+  position: absolute;
+  bottom: 8px;
+  border-right: 1px solid ${COLOR_LIGHTER_GREY};
+  width: 4px;
+
+  &:hover {
+    cursor: ew-resize;
+    background: ${COLOR_LIGHTER_GREY};
   }
 
-  &:after {
-    content: '';
-    @media ${device.desktop} {
-      border-right: 1px solid ${COLOR_LIGHTER_GREY};
-    }
-    top: 8px;
-    right: 0;
-    position: absolute;
-    bottom: 8px;
+  @media ${device.desktop} {
+    display: block;
+  }
+`;
+
+export const StyledBacklogWidthDragLayer = styled.div`
+  position: fixed;
+  pointer-events: none;
+  z-index: 5000;
+  left: 0;
+  top: ${TOPBAR_HEIGHT}px;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.4);
+
+  > div {
+    height: 100%;
+    width: 4px;
+    z-index: 5000;
+    background: ${COLOR_LIGHTER_GREY};
   }
 `;
 

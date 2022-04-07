@@ -6,7 +6,7 @@ import {
   COLOR_PURPLE,
   COLOR_WARNING
 } from '../colors';
-import {LEFT_MENU_WIDTH, device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
+import {device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
 import {StyledAvatar, StyledDropdown} from '../common/_styled';
 
 export const StyledTopBar = styled.div`
@@ -149,7 +149,7 @@ export const StyledBacklogToggle = styled.a`
 
   @media ${device.desktop} {
     position: fixed;
-    left: ${LEFT_MENU_WIDTH};
+    left: -100px;
     display: none;
   }
 `;

@@ -2,6 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
+import {useDragLayer} from 'react-dnd';
+
 import Help from '../Help/Help';
 import FeedbackHint from './FeedbackHint';
 import EstimationArea from '../EstimationArea/EstimationArea';
@@ -17,6 +19,8 @@ import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 import {toggleMatrix} from '../../state/actions/uiStateActions';
 
 import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
+import {StyledBacklogWidthDragLayer} from '../Backlog/_styled';
+import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
 
 /**
  * The board is the main working area as soon as a room was joined.
@@ -29,6 +33,7 @@ import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
  */
 const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatrix}) => (
   <StyledBoard id={roomId}>
+    <BacklogWidthDragLayer />
     <Backlog />
 
     <StyledBoardCenter data-testid="board">
@@ -66,3 +71,35 @@ export default connect(
   }),
   {toggleMatrix}
 )(Board);
+
+/**
+ * Layer above the board that is shown during backlog "width" dragging (i.e. resizinging of backlog)
+ */
+const BacklogWidthDragLayer = () => {
+  const {isDragging, initialOffset, currentOffset} = useDragLayer((monitor) => ({
+    initialOffset: monitor.getInitialSourceClientOffset(),
+    currentOffset: monitor.getSourceClientOffset(),
+    isDragging: monitor.isDragging()
+  }));
+
+  if (!isDragging) {
+    return null;
+  }
+
+  return (
+    <StyledBacklogWidthDragLayer>
+      <div style={getItemStyles(initialOffset, currentOffset)}></div>
+    </StyledBacklogWidthDragLayer>
+  );
+
+  function getItemStyles(initialOffset, currentOffset) {
+    if (!initialOffset || !currentOffset) {
+      return {display: 'none'};
+    }
+    const transform = `translate(${Math.max(currentOffset.x, DEFAULT_BACKLOG_WIDTH)}px)`;
+    return {
+      transform,
+      WebkitTransform: transform
+    };
+  }
+};

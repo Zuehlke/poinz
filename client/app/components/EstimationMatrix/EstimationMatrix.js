@@ -13,10 +13,6 @@ import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} f
 import {StyledStoryTitle} from '../_styled';
 import {getSettlingStories} from '../../state/commandTracking/commandTrackingSelectors';
 
-export const ItemTypes = {
-  STORY: 'story'
-};
-
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
  */

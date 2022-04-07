@@ -12,6 +12,7 @@ import BacklogTrash from './BacklogTrash';
 import StoryAddForm from './StoryAddForm';
 import BacklogModeButtons from './BacklogModeButtons';
 import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
+import {DRAG_ITEM_TYPES} from '../Room/Board';
 
 import {StyledBacklog, StyledBacklogWidthDragHandle} from './_styled';
 
@@ -30,10 +31,10 @@ const Backlog = ({backlogShown, trashedStoriesCount, activeStoriesCount}) => {
   // We just need the dragging functionality, and set the new width of the backlog on "end(...)"
   const [, drag, preview] = useDrag(
     () => ({
-      type: 'BACKLOG_WIDTH_HANDLE',
+      type: DRAG_ITEM_TYPES.backlogWidthHandle,
       end: (item, monitor) => {
         const {x} = monitor.getSourceClientOffset();
-        setBacklogWidth(Math.max(DEFAULT_BACKLOG_WIDTH, x));
+        setBacklogWidth(Math.max(DEFAULT_BACKLOG_WIDTH, x + 1));
       }
     }),
     []
@@ -46,7 +47,12 @@ const Backlog = ({backlogShown, trashedStoriesCount, activeStoriesCount}) => {
 
   return (
     <StyledBacklog shown={backlogShown} data-testid="backlog" width={backlogWidth}>
-      <StyledBacklogWidthDragHandle ref={drag} />
+      <StyledBacklogWidthDragHandle ref={drag}>
+        <div />
+        <div />
+        <div />
+      </StyledBacklogWidthDragHandle>
+
       <BacklogModeButtons
         t={t}
         onShowBacklog={() => setShowTrash(false)}

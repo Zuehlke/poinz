@@ -22,6 +22,11 @@ import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
 import {StyledBacklogWidthDragLayer} from '../Backlog/_styled';
 import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
 
+export const DRAG_ITEM_TYPES = {
+  backlogWidthHandle: 'BACKLOG_WIDTH_HANDLE',
+  matrixStory: 'MATRIX_STORY'
+};
+
 /**
  * The board is the main working area as soon as a room was joined.
  * It contains
@@ -73,16 +78,19 @@ export default connect(
 )(Board);
 
 /**
- * Layer above the board that is shown during backlog "width" dragging (i.e. resizinging of backlog)
+ * Layer above the board that is shown during backlog "width" dragging (i.e. resizinging of backlog).
+ * See https://react-dnd.github.io/react-dnd/examples/drag-around/custom-drag-layer
+ *
  */
 const BacklogWidthDragLayer = () => {
-  const {isDragging, initialOffset, currentOffset} = useDragLayer((monitor) => ({
+  const {isDragging, itemType, initialOffset, currentOffset} = useDragLayer((monitor) => ({
     initialOffset: monitor.getInitialSourceClientOffset(),
     currentOffset: monitor.getSourceClientOffset(),
-    isDragging: monitor.isDragging()
+    isDragging: monitor.isDragging(),
+    itemType: monitor.getItemType()
   }));
 
-  if (!isDragging) {
+  if (!isDragging || itemType !== DRAG_ITEM_TYPES.backlogWidthHandle) {
     return null;
   }
 

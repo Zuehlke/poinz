@@ -39,15 +39,37 @@ export const StyledBacklogWidthDragHandle = styled.div`
   position: absolute;
   bottom: 8px;
   border-right: 1px solid ${COLOR_LIGHTER_GREY};
-  width: 4px;
+  width: 6px;
+
+  transition: all 0.15s ease-in-out;
+
+  /** the "dots" **/
+
+  > div {
+    background: ${COLOR_BLUE};
+    height: 3px;
+    width: 3px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+    margin-right: 2px;
+    display: none;
+  }
 
   &:hover {
     cursor: ew-resize;
-    background: ${COLOR_LIGHTER_GREY};
+    border-right: 1px solid ${COLOR_BLUE};
+    opacity: 0.7;
+
+    > div {
+      display: block;
+    }
   }
 
   @media ${device.desktop} {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
   }
 `;
 
@@ -63,9 +85,9 @@ export const StyledBacklogWidthDragLayer = styled.div`
 
   > div {
     height: 100%;
-    width: 4px;
+    width: 1px;
     z-index: 5000;
-    background: ${COLOR_LIGHTER_GREY};
+    background: ${COLOR_BLUE};
   }
 `;
 

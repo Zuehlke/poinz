@@ -59,7 +59,6 @@
   "customCardsDuplicateError": "Karten-Wert darf nur einmal vorkommen!",
   "help": "Hilfe",
   "password": "Passwort",
-  "optionalPassword": "Optionales Passwort",
   "setNewPassword": "Neues Passwort...",
   "repeatNewPassword": "Passwort wiederholen...",
   "removePassword": "Passwort entfernen",

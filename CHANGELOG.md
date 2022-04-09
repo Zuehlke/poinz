@@ -1,3 +1,14 @@
+### 0.16.1: 2022-12-31
+
+* ...maintenance
+
+### 0.16.0: 2022-03-30
+
+* Introduce Drag'n'Drop of stories in the estimation matrix. Stories can be dragged to other columns in order to "settle" on a new value.
+* Remember "Include Trashed Stories" flag in estimation matrix
+* Technical improvement: do not allow users to join without username. joinCommand is sent after collecting username from user.
+* dependencies updated
+
 ### 0.15.2: 2022-02-09
 
 * Introduce new set of avatars (more variety, gender-neutral, cute animals)

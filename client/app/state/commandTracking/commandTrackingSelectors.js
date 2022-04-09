@@ -35,6 +35,22 @@ const isClearingEstimate = (state, cardValue) => {
 };
 
 /**
+ * Will return an array of objects containing "storyId" and "value" for every currently pending "settleEstimation" command.
+ * Array can of course be empty. Array will most probably contain one story at a time (if any).
+ *
+ * @param state
+ * @return {object[]}
+ */
+export const getSettlingStories = (state) => {
+  const pendingSettleCommands = getAllMatchingPendingCommands(state, 'settleEstimation');
+  if (!pendingSettleCommands || pendingSettleCommands.length < 1) {
+    return [];
+  }
+
+  return pendingSettleCommands.map((sCmd) => sCmd.payload);
+};
+
+/**
  * Returns true if this story (in the backlog) (specified by its id) should be shown "waiting".
  * (either because you selected it or trashed it)
  */

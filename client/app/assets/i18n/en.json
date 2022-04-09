@@ -59,7 +59,6 @@
   "customCardsDuplicateError": "Make sure that you have unique values!",
   "help": "Help",
   "password": "Password",
-  "optionalPassword": "Optional password",
   "setNewPassword": "Set new password...",
   "repeatNewPassword": "Repeat password...",
   "removePassword": "Remove password",

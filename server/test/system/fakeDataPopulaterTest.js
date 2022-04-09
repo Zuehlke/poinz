@@ -5,7 +5,7 @@ import uuid from '../../src/uuid.js';
 /* SET YOUR ROOM ID HERE and remove .skip */
 const ROOM_ID = 'sergio';
 
-describe(`populating room "${ROOM_ID}" with fake data`, () => {
+describe.skip(`populating room "${ROOM_ID}" with fake data`, () => {
   /**
    * Use this "test" to add a bunch of dummy users to a running PoinZ room. Good for testing & debugging and UI tweaking.
    */

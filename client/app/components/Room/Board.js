@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {DndProvider} from 'react-dnd';
-import {HTML5Backend} from 'react-dnd-html5-backend';
+
+import {useDragLayer} from 'react-dnd';
 
 import Help from '../Help/Help';
 import FeedbackHint from './FeedbackHint';
@@ -19,10 +19,12 @@ import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 import {toggleMatrix} from '../../state/actions/uiStateActions';
 
 import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
+import {StyledBacklogWidthDragLayer} from '../Backlog/_styled';
+import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
 
-export const DnDItemTypes = {
-  MATRIX_STORY: 'matrixStory',
-  BACKLOG_STORY: 'backlogStory'
+export const DRAG_ITEM_TYPES = {
+  backlogWidthHandle: 'BACKLOG_WIDTH_HANDLE',
+  matrixStory: 'MATRIX_STORY'
 };
 
 /**
@@ -35,28 +37,27 @@ export const DnDItemTypes = {
  * - cards
  */
 const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatrix}) => (
-  <DndProvider backend={HTML5Backend}>
-    <StyledBoard id={roomId}>
-      <Backlog />
+  <StyledBoard id={roomId}>
+    <BacklogWidthDragLayer />
+    <Backlog />
 
-      <StyledBoardCenter data-testid="board">
-        <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />
+    <StyledBoardCenter data-testid="board">
+      <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />
 
-        {isAStorySelected && !matrixShown && <Users />}
-        {isAStorySelected && !matrixShown && <EstimationArea />}
+      {isAStorySelected && !matrixShown && <Users />}
+      {isAStorySelected && !matrixShown && <EstimationArea />}
 
-        {matrixShown && <EstimationMatrix />}
-      </StyledBoardCenter>
+      {matrixShown && <EstimationMatrix />}
+    </StyledBoardCenter>
 
-      <StyledSidebarRight shown={sidebarShown}>
-        <Settings />
-        <ActionLog />
-        <Help />
-      </StyledSidebarRight>
+    <StyledSidebarRight shown={sidebarShown}>
+      <Settings />
+      <ActionLog />
+      <Help />
+    </StyledSidebarRight>
 
-      <FeedbackHint />
-    </StyledBoard>
-  </DndProvider>
+    <FeedbackHint />
+  </StyledBoard>
 );
 
 Board.propTypes = {
@@ -75,3 +76,38 @@ export default connect(
   }),
   {toggleMatrix}
 )(Board);
+
+/**
+ * Layer above the board that is shown during backlog "width" dragging (i.e. resizinging of backlog).
+ * See https://react-dnd.github.io/react-dnd/examples/drag-around/custom-drag-layer
+ *
+ */
+const BacklogWidthDragLayer = () => {
+  const {isDragging, itemType, initialOffset, currentOffset} = useDragLayer((monitor) => ({
+    initialOffset: monitor.getInitialSourceClientOffset(),
+    currentOffset: monitor.getSourceClientOffset(),
+    isDragging: monitor.isDragging(),
+    itemType: monitor.getItemType()
+  }));
+
+  if (!isDragging || itemType !== DRAG_ITEM_TYPES.backlogWidthHandle) {
+    return null;
+  }
+
+  return (
+    <StyledBacklogWidthDragLayer>
+      <div style={getItemStyles(initialOffset, currentOffset)}></div>
+    </StyledBacklogWidthDragLayer>
+  );
+
+  function getItemStyles(initialOffset, currentOffset) {
+    if (!initialOffset || !currentOffset) {
+      return {display: 'none'};
+    }
+    const transform = `translate(${Math.max(currentOffset.x, DEFAULT_BACKLOG_WIDTH)}px)`;
+    return {
+      transform,
+      WebkitTransform: transform
+    };
+  }
+};

@@ -61,7 +61,9 @@ const groupByKey = (fileResults) =>
 
 async function getUsedKeysInAppFiles() {
   const files = await glob('../client/app/**/*.js', {cwd: dirname});
-  console.log(`Checking ${files.length} js files for translation key use...`);
+
+  console.log(chalk.blue.bold(`Getting all used translation keys in ${files.length} js files...`));
+
   const filePromises = files.map(async (fileName) => {
     const content = await fs.readFile(path.join(dirname, fileName), 'utf-8');
     return findTranslationKeysInFileContent(fileName, content);
@@ -70,6 +72,7 @@ async function getUsedKeysInAppFiles() {
   const keys = groupByKey(fileResults);
   keys.sort((kA, kB) => kA.key.localeCompare(kB.key));
 
+  console.log(`    Got ${keys.length} translation keys...`);
   return keys;
 }
 
@@ -77,6 +80,8 @@ async function getUsedKeysInAppFiles() {
  * check whether for all used keys, there exists a DE and EN translation
  */
 function checkMissing(keys) {
+  console.log(chalk.blue.bold(`(A) : Check if every used translation key has a EN & DE Translation...`));
+
   const missingTranslations = keys
     .map((key) => {
       key.isTranslatedDE = DEFINED_KEYS_DE.includes(key.key);
@@ -93,22 +98,26 @@ function checkMissing(keys) {
     );
   });
 
-  if (missingTranslations.length > 0) {
+  if (missingTranslations.length < 1) {
+    console.log(chalk.green(`    all keys are translated`));
+  } else  {
     throw new Error('Check failed');
   }
 }
 
 function checkUnused(keys) {
+  console.log(chalk.blue.bold(`(B) : Check if every translation is used in the app...`));
+
   const usedKeyStrings = keys.map((k) => k.key);
 
   const unusedDE = DEFINED_KEYS_DE.filter((deKey) => !usedKeyStrings.includes(deKey));
   const unusedEN = DEFINED_KEYS_EN.filter((enKey) => !usedKeyStrings.includes(enKey));
 
   unusedDE.forEach((unusedDeKey) => {
-    console.warn(`Defined DE key "${unusedDeKey}" is not used..`);
+    console.warn(`    Defined DE key "${unusedDeKey}" is not used`);
   });
   unusedEN.forEach((unusedEnKey) => {
-    console.warn(`Defined EN key "${unusedEnKey}" is not used..`);
+    console.warn(`    Defined EN key "${unusedEnKey}" is not used`);
   });
 
   if (unusedDE.length > 0 || unusedEN.length) {
@@ -123,5 +132,4 @@ async function check() {
 
   checkUnused(keys);
 
-  console.log(`checked ${keys.length} translation keys...`);
 }

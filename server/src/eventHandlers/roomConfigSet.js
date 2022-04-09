@@ -1,5 +1,6 @@
 /**
- *
+ * sets autoReveal, withConfidence flags on room.
+ * sets issueTrackingUrl on room
  */
 const roomConfigSetEventHandler = (room, eventPayload) => {
   return {

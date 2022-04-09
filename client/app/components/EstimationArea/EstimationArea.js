@@ -33,7 +33,7 @@ import {
  * - the currently selected story
  * - a list of available cards if the user can currently give estimations.
  * - action buttons ("reveal manually" and "new round")
- *
+ * - estimation summary if the story is revealed
  */
 const EstimationArea = ({
   selectedStory,
@@ -107,7 +107,7 @@ const EstimationArea = ({
             )}
           </EstimationAreaButtons>
 
-          <EstimationSummary />
+          <EstimationSummary storyId={selectedStory.id} />
         </React.Fragment>
       )}
 

@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 
 import {COLOR_FONT_GREY, COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} from '../colors';
 import {device, ZuehlkeFont} from '../dimensions';
@@ -137,4 +137,27 @@ export const StyledToggleButton = styled.button`
   color: ${({active}) => (active ? '#fff' : COLOR_FONT_GREY)};
   background: ${({active}) => (active ? COLOR_ORANGE : '#e6e6e6')};
   border-right: ${({active}) => (active ? '1px solid transparent' : '1px solid rgba(0,0,0,.2)')};
+`;
+
+export const shakyAnimation = keyframes`
+  10%, 90% {
+    transform: rotate(-10deg);
+  }
+
+  20%, 80% {
+    transform: rotate(10deg);
+  }
+
+  30%, 50%, 70% {
+    transform: rotate(-20deg);
+  }
+
+  40%, 60% {
+    transform: rotate(20deg);
+  }
+`;
+
+export const StyledShakyIcon = styled.i`
+  animation: ${shakyAnimation} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both infinite;
+  transform: rotate(0);
 `;

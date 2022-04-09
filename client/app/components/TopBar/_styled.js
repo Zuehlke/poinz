@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components';
+import styled from 'styled-components';
 import {
   COLOR_BACKGROUND_GREY,
   COLOR_BLUE,
@@ -7,7 +7,7 @@ import {
   COLOR_WARNING
 } from '../colors';
 import {device, TOPBAR_HEIGHT, ZuehlkeFont} from '../dimensions';
-import {StyledAvatar, StyledDropdown} from '../common/_styled';
+import {shakyAnimation, StyledAvatar, StyledDropdown} from '../common/_styled';
 
 export const StyledTopBar = styled.div`
   position: relative;
@@ -112,29 +112,11 @@ export const StyledQuickMenuButton = styled.a`
   }
 `;
 
-const shaky = keyframes`
-  10%, 90% {
-    transform: rotate(-10deg);
-  }
-
-  20%, 80% {
-    transform: rotate(10deg);
-  }
-
-  30%, 50%, 70% {
-    transform: rotate(-20deg);
-  }
-
-  40%, 60% {
-    transform: rotate(20deg);
-  }
-`;
-
 export const StyledIconExclamation = styled.i`
   position: absolute;
   right: 4px;
   color: ${COLOR_WARNING};
-  animation: ${shaky} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both 4;
+  animation: ${shakyAnimation} 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both 4;
   transform: rotate(0);
 `;
 

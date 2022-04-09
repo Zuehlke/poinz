@@ -12,15 +12,20 @@ import Users from '../Users/Users';
 import ActionLog from '../ActionLog/ActionLog';
 import Backlog from '../Backlog/Backlog';
 import EstimationMatrix from '../EstimationMatrix/EstimationMatrix';
-import MatrixToggle from './MatrixToggle';
-
-import {isAStorySelected} from '../../state/stories/storiesSelectors';
-import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
-import {toggleMatrix} from '../../state/actions/uiStateActions';
+import {getSelectedStoryId} from '../../state/stories/storiesSelectors';
+import {getCurrentMainView, getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
+import {
+  MAINVIEW_DETAIL,
+  MAINVIEW_MATRIX,
+  MAINVIEW_ROOM,
+  toggleMainView
+} from '../../state/actions/uiStateActions';
+import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
+import MainViewToggle from './MainViewToggle';
 
 import {StyledBoard, StyledBoardCenter, StyledSidebarRight} from './_styled';
 import {StyledBacklogWidthDragLayer} from '../Backlog/_styled';
-import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
+import StoryDetailView from '../EstimationArea/StoryDetailView';
 
 export const DRAG_ITEM_TYPES = {
   backlogWidthHandle: 'BACKLOG_WIDTH_HANDLE',
@@ -36,18 +41,28 @@ export const DRAG_ITEM_TYPES = {
  * - the current story
  * - cards
  */
-const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatrix}) => (
+const Board = ({roomId, selectedStoryId, sidebarShown, currentMainView, toggleMainView}) => (
   <StyledBoard id={roomId}>
     <BacklogWidthDragLayer />
     <Backlog />
 
     <StyledBoardCenter data-testid="board">
-      <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />
+      <MainViewToggle
+        onChange={toggleMainView}
+        currentMainView={currentMainView}
+        selectedStoryId={selectedStoryId}
+      />
 
-      {isAStorySelected && !matrixShown && <Users />}
-      {isAStorySelected && !matrixShown && <EstimationArea />}
+      {currentMainView === MAINVIEW_ROOM && (
+        <React.Fragment>
+          <Users />
+          {selectedStoryId && <EstimationArea />}
+        </React.Fragment>
+      )}
 
-      {matrixShown && <EstimationMatrix />}
+      {currentMainView === MAINVIEW_DETAIL && <StoryDetailView />}
+
+      {currentMainView === MAINVIEW_MATRIX && <EstimationMatrix />}
     </StyledBoardCenter>
 
     <StyledSidebarRight shown={sidebarShown}>
@@ -62,19 +77,19 @@ const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatri
 
 Board.propTypes = {
   roomId: PropTypes.string,
-  isAStorySelected: PropTypes.bool,
+  selectedStoryId: PropTypes.string,
   sidebarShown: PropTypes.bool,
-  matrixShown: PropTypes.bool,
-  toggleMatrix: PropTypes.func
+  currentMainView: PropTypes.string,
+  toggleMainView: PropTypes.func
 };
 
 export default connect(
   (state) => ({
-    isAStorySelected: isAStorySelected(state),
+    selectedStoryId: getSelectedStoryId(state),
     sidebarShown: !!getCurrentSidebarIfAny(state),
-    matrixShown: state.ui.matrixShown
+    currentMainView: getCurrentMainView(state)
   }),
-  {toggleMatrix}
+  {toggleMainView}
 )(Board);
 
 /**

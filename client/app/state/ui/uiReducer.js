@@ -7,11 +7,13 @@ import {LOCATION_CHANGED} from '../actions/commandActions';
 import {
   BACKLOG_SIDEBAR_TOGGLED,
   MARKDOWN_TOGGLED,
-  MATRIX_TOGGLED,
   NEW_USER_HINTS_HIDDEN,
   MATRIX_INCL_TRSH_TOGGLED,
   SIDEBAR_ACTIONLOG,
-  SIDEBAR_TOGGLED
+  SIDEBAR_TOGGLED,
+  MAINVIEW_TOGGLED,
+  MAINVIEW_ROOM,
+  STORY_HIGHLIGHTED
 } from '../actions/uiStateActions';
 
 const HIDE_NEW_USER_HINTS = 'hideNewUserHints';
@@ -26,7 +28,9 @@ export const uiInitialState = {
   easterEggActive: isHalloweenSeason(),
   newUserHintHidden: getItem(HIDE_NEW_USER_HINTS) === 'true',
   markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true',
-  matrixIncludeTrashedStories: false
+  matrixIncludeTrashedStories: false,
+  mainView: MAINVIEW_ROOM,
+  highlightedStoryId: undefined
 };
 
 persistOnStateChange(MARKDOWN_ENABLED, (state) => state.ui.markdownEnabled);
@@ -60,7 +64,11 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
       }
     }
     case EVENT_ACTION_TYPES.storySelected: {
-      return {...state, applause: false};
+      return {
+        ...state,
+        applause: false,
+        highlightedStoryId: state.highlightedStoryId || action.event.payload.storyId
+      };
     }
     case EVENT_ACTION_TYPES.consensusAchieved:
       return {...state, applause: true};
@@ -68,6 +76,10 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
       return {...state, applause: false};
 
     //  ui only actions, triggered by the user. e.g. hide / show menues, etc.
+
+    case STORY_HIGHLIGHTED: {
+      return {...state, highlightedStoryId: action.storyId};
+    }
 
     case SIDEBAR_TOGGLED: {
       if (state.sidebar === action.sidebarKey) {
@@ -85,10 +97,14 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
       }
     }
 
-    case MATRIX_TOGGLED: {
+    case MAINVIEW_TOGGLED: {
+      if (state.mainView === action.mainViewKey) {
+        return state;
+      }
+
       return {
         ...state,
-        matrixShown: !state.matrixShown
+        mainView: action.mainViewKey
       };
     }
 

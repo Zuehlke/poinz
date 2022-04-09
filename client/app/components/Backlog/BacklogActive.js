@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
 import {importCsvFile, trashStories} from '../../state/actions/commandActions';
-import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
+import {getActiveStories} from '../../state/stories/storiesSelectors';
 import {L10nContext} from '../../services/l10n';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
@@ -16,6 +16,8 @@ import {
   StyledFileImportDropZoneOverlay,
   StyledBacklogInfoText
 } from './_styled';
+import {highlightStory} from '../../state/actions/uiStateActions';
+import {getHighlightedStoryId} from '../../state/ui/uiSelectors';
 
 const sortAndFilterStories = (activeStories, comparator, query) => {
   const lcQuery = query.toLowerCase();
@@ -64,33 +66,17 @@ const useSortingAndFiltering = (activeStories) => {
 };
 
 /**
- *
- * @param selectedStoryId
- * @param activeStories
- * @return {{highlightedStoryId, setHighlightedStoryId}}
- */
-const useHighlightedStory = (selectedStoryId, activeStories) => {
-  const [highlightedStoryId, setHighlightedStoryId] = useState(selectedStoryId);
-  useEffect(() => {
-    if (!highlightedStoryId || !activeStories.find((s) => s.id === highlightedStoryId)) {
-      setHighlightedStoryId(selectedStoryId);
-    }
-  }, [selectedStoryId, activeStories]);
-
-  return {highlightedStoryId, setHighlightedStoryId};
-};
-
-/**
  * List of active stories. Accepts drops of csv files for importing stories. Provides means to filter and sort active stories.
  */
-const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStories}) => {
+const BacklogActive = ({
+  activeStories,
+  highlightedStoryId,
+  highlightStory,
+  importCsvFile,
+  trashStories
+}) => {
   const {t} = useContext(L10nContext);
   const hasActiveStories = activeStories.length > 0;
-
-  const {highlightedStoryId, setHighlightedStoryId} = useHighlightedStory(
-    selectedStoryId,
-    activeStories
-  );
 
   const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories} =
     useSortingAndFiltering(activeStories);
@@ -129,7 +115,7 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStor
                   key={story.id}
                   story={story}
                   isHighlighted={story.id === highlightedStoryId}
-                  onStoryClicked={() => setHighlightedStoryId(story.id)}
+                  onStoryClicked={() => highlightStory(story.id)}
                 />
               )
             )}
@@ -144,15 +130,16 @@ const BacklogActive = ({activeStories, selectedStoryId, importCsvFile, trashStor
 
 BacklogActive.propTypes = {
   activeStories: PropTypes.array,
-  selectedStoryId: PropTypes.string,
   importCsvFile: PropTypes.func.isRequired,
-  trashStories: PropTypes.func.isRequired
+  trashStories: PropTypes.func.isRequired,
+  highlightedStoryId: PropTypes.string.isRequired,
+  highlightStory: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
     activeStories: getActiveStories(state),
-    selectedStoryId: getSelectedStoryId(state)
+    highlightedStoryId: getHighlightedStoryId(state)
   }),
-  {importCsvFile, trashStories}
+  {importCsvFile, trashStories, highlightStory}
 )(BacklogActive);

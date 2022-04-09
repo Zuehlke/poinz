@@ -46,6 +46,11 @@ export const getSelectedStory = createSelector(
   (selectedStoryId, stories) => stories && selectedStoryId && stories[selectedStoryId]
 );
 
+export const getStoryForId = createSelector(
+  [getStoriesById, (state, storyId) => storyId],
+  (stories, storyId) => stories && storyId && stories[storyId]
+);
+
 /**
  * Returns true if our room contains stories, and a story is selected and this story was estimated with consensus (all values the same).
  * False otherwise

@@ -9,7 +9,6 @@ import {getEstimationsForCurrentlySelectedStory} from '../../state/estimations/e
 import {settleEstimation} from '../../state/actions/commandActions';
 import {
   getSelectedStoryConsensusValue,
-  getSelectedStoryId,
   hasSelectedStoryConsensus
 } from '../../state/stories/storiesSelectors';
 import {getCardConfigInOrder, getMatchingCardConfig} from '../../state/room/roomSelectors';
@@ -130,7 +129,6 @@ export default connect(
     });
 
     return {
-      storyId: getSelectedStoryId(state),
       usersInRoomCount: getUserCount(state),
       cardConfig,
       summaries,

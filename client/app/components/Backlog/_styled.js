@@ -46,13 +46,14 @@ export const StyledBacklogWidthDragHandle = styled.div`
   /** the "dots" **/
 
   > div {
+    transition: all 0.15s ease-in-out;
     background: ${COLOR_BLUE};
     height: 3px;
     width: 3px;
     border-radius: 50%;
     margin-bottom: 4px;
     margin-right: 2px;
-    display: none;
+    opacity: 0;
   }
 
   &:hover {
@@ -61,7 +62,7 @@ export const StyledBacklogWidthDragHandle = styled.div`
     opacity: 0.7;
 
     > div {
-      display: block;
+      opacity: 0.7;
     }
   }
 

@@ -80,7 +80,9 @@ async function getUsedKeysInAppFiles() {
  * check whether for all used keys, there exists a DE and EN translation
  */
 function checkMissing(keys) {
-  console.log(chalk.blue.bold(`(A) : Check if every used translation key has a EN & DE Translation...`));
+  console.log(
+    chalk.blue.bold(`(A) : Check if every used translation key has a EN & DE Translation...`)
+  );
 
   const missingTranslations = keys
     .map((key) => {
@@ -100,7 +102,7 @@ function checkMissing(keys) {
 
   if (missingTranslations.length < 1) {
     console.log(chalk.green(`    all keys are translated`));
-  } else  {
+  } else {
     throw new Error('Check failed');
   }
 }
@@ -131,5 +133,4 @@ async function check() {
   checkMissing(keys);
 
   checkUnused(keys);
-
 }

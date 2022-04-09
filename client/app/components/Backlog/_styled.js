@@ -8,15 +8,19 @@ import {
   COLOR_ORANGE,
   COLOR_WARNING
 } from '../colors';
-import {LEFT_MENU_WIDTH, device} from '../dimensions';
+import {device, TOPBAR_HEIGHT} from '../dimensions';
 
-export const StyledBacklog = styled.div`
+export const StyledBacklog = styled.div.attrs((props) => ({
+  style: {
+    width: props.shown ? '100%' : props.width + 'px'
+  }
+}))`
   position: relative;
   box-sizing: border-box;
-  width: 100%;
   padding: 8px 0 0 0;
   background: ${COLOR_BACKGROUND_GREY};
   flex-shrink: 0;
+  flex-grow: 0;
 
   display: ${({shown}) => (shown ? 'flex' : 'none')};
   flex-direction: column;
@@ -25,18 +29,65 @@ export const StyledBacklog = styled.div`
 
   @media ${device.desktop} {
     display: flex;
-    width: ${LEFT_MENU_WIDTH}px;
+  }
+`;
+
+export const StyledBacklogWidthDragHandle = styled.div`
+  display: none; /* in mobile view, we cannot resize backlog*/
+  top: 8px;
+  right: 0;
+  position: absolute;
+  bottom: 8px;
+  border-right: 1px solid ${COLOR_LIGHTER_GREY};
+  width: 6px;
+
+  transition: all 0.15s ease-in-out;
+
+  /** the "dots" **/
+
+  > div {
+    background: ${COLOR_BLUE};
+    height: 3px;
+    width: 3px;
+    border-radius: 50%;
+    margin-bottom: 4px;
+    margin-right: 2px;
+    display: none;
   }
 
-  &:after {
-    content: '';
-    @media ${device.desktop} {
-      border-right: 1px solid ${COLOR_LIGHTER_GREY};
+  &:hover {
+    cursor: ew-resize;
+    border-right: 1px solid ${COLOR_BLUE};
+    opacity: 0.7;
+
+    > div {
+      display: block;
     }
-    top: 8px;
-    right: 0;
-    position: absolute;
-    bottom: 8px;
+  }
+
+  @media ${device.desktop} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+  }
+`;
+
+export const StyledBacklogWidthDragLayer = styled.div`
+  position: fixed;
+  pointer-events: none;
+  z-index: 5000;
+  left: 0;
+  top: ${TOPBAR_HEIGHT}px;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.4);
+
+  > div {
+    height: 100%;
+    width: 1px;
+    z-index: 5000;
+    background: ${COLOR_BLUE};
   }
 `;
 

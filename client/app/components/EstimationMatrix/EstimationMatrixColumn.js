@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useDrag, useDrop} from 'react-dnd';
 
-import {ItemTypes} from './EstimationMatrix';
 import ValueBadge from '../common/ValueBadge';
+import {DRAG_ITEM_TYPES} from '../Room/Board';
 
 import {StyledEMColumn, StyledEMStory} from './_styled';
 
 export const EstimationMatrixColumn = ({stories, columnWidth, cc, onStoryDropped}) => {
   const [{isOver}, drop] = useDrop(() => ({
-    accept: ItemTypes.STORY,
+    accept: DRAG_ITEM_TYPES.matrixStory,
     drop: (item) => {
       if (item.consensus !== cc.value) {
         onStoryDropped(item.id, cc.value);
@@ -44,7 +44,7 @@ export default EstimationMatrixColumn;
 const EstimationMatrixStory = ({color, story}) => {
   const [{isDragging}, drag] = useDrag(
     () => ({
-      type: ItemTypes.STORY,
+      type: DRAG_ITEM_TYPES.matrixStory,
       item: {id: story.id, consensus: story.consensus},
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging()

@@ -307,11 +307,11 @@ export const changeStory = (storyId, title, description) => (dispatch, getState,
   });
 };
 
-export const setStoriesOrder = (storyIds) => (dispatch, getState, sendCommand) => {
+export const setSortOrder = (storyIds) => (dispatch, getState, sendCommand) => {
   sendCommand({
-    name: 'setStoriesOrder',
+    name: 'setSortOrder',
     payload: {
-      storyIds
+      sortOrder: storyIds
     }
   });
 };

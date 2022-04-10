@@ -12,6 +12,7 @@ import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSel
 import ValueBadge from '../common/ValueBadge';
 import UndecidedBadge from '../common/UndecidedBadge';
 import StoryDescription from '../common/StoryDescription';
+import {DRAG_ITEM_TYPES} from '../Room/Board';
 
 import {
   StyledStoryToolbar,
@@ -20,7 +21,6 @@ import {
   StyledStoryAttributes
 } from './_styled';
 import {StyledStoryTitle} from '../_styled';
-import {DnDItemTypes} from '../Room/Board';
 
 /**
  * One story in the (active) backlog.
@@ -35,39 +35,40 @@ const Story = ({
   trashStory,
   isWaiting,
   isStoryEstimated,
-  onStoryDragHover,
-  onStoryDragDropped
+  dndMoveStory,
+  dndFindStory
 }) => {
   const {t, format} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
 
+  const originalIndex = dndFindStory(story.id).index;
   const [{isDragging}, drag] = useDrag(
     () => ({
-      type: DnDItemTypes.BACKLOG_STORY,
-      item: {id: story.id},
+      type: DRAG_ITEM_TYPES.backlogStory,
+      item: {id: story.id, originalIndex},
       collect: (monitor) => ({
-        isDragging: !!monitor.isDragging()
-      })
-    }),
-    [story.id]
-  );
-
-  const [, drop] = useDrop(() => ({
-    accept: DnDItemTypes.BACKLOG_STORY,
-    drop: (item) => {
-      console.log('dropped story ', item.id, 'on', story.id);
-      onStoryDragDropped(item.id, story.id);
-    },
-    hover: (item) => {
-      if (item.id !== story.id) {
-        onStoryDragHover(item.id, story.id);
+        isDragging: monitor.isDragging()
+      }),
+      end: (item, monitor) => {
+        const {id: droppedId, originalIndex} = item;
+        dndMoveStory(droppedId, originalIndex, monitor.didDrop());
       }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver()
-    })
-  }));
+    }),
+    [story.id, originalIndex, dndMoveStory]
+  );
+  const [, drop] = useDrop(
+    () => ({
+      accept: DRAG_ITEM_TYPES.backlogStory,
+      hover({id: draggedId}) {
+        if (draggedId !== story.id) {
+          const {index} = dndFindStory(story.id);
+          dndMoveStory(draggedId, index, false);
+        }
+      }
+    }),
+    [dndFindStory, dndMoveStory]
+  );
 
   return (
     <StyledStory
@@ -163,8 +164,8 @@ Story.propTypes = {
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
   trashStory: PropTypes.func,
-  onStoryDragHover: PropTypes.func,
-  onStoryDragDropped: PropTypes.func
+  dndMoveStory: PropTypes.func,
+  dndFindStory: PropTypes.func
 };
 
 export default connect(

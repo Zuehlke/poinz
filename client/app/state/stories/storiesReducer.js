@@ -1,5 +1,5 @@
 /*
- * in our frontend, we store stories as object (key is the story's id). this differs from the PoinZ Backend, where stories is a array...
+ * in our frontend, we store stories as object (key is the story's id). this differs from the PoinZ Backend, where "stories" is a array...
  */
 import {EVENT_ACTION_TYPES, ROOM_STATE_FETCHED} from '../actions/eventActions';
 import {STORY_EDIT_MODE_CANCELLED, STORY_EDIT_MODE_ENTERED} from '../actions/uiStateActions';
@@ -86,6 +86,25 @@ export default function storiesReducer(state = storiesInitialState, action, ownU
       return {
         ...state,
         storiesById: modifiedStoriesById
+      };
+    }
+    case EVENT_ACTION_TYPES.sortOrderSet: {
+      const modifiedStories = Object.values(state.storiesById).map((stateStory) => {
+        let sortOrder = action.event.payload.sortOrder.indexOf(stateStory.id);
+
+        if (sortOrder < 0 || stateStory.trashed) {
+          sortOrder = undefined;
+        }
+
+        return {
+          ...stateStory,
+          sortOrder
+        };
+      });
+
+      return {
+        ...state,
+        storiesById: indexStories(modifiedStories)
       };
     }
 

@@ -24,7 +24,8 @@ import {DEFAULT_BACKLOG_WIDTH} from '../dimensions';
 
 export const DRAG_ITEM_TYPES = {
   backlogWidthHandle: 'BACKLOG_WIDTH_HANDLE',
-  matrixStory: 'MATRIX_STORY'
+  matrixStory: 'MATRIX_STORY',
+  backlogStory: 'BACKLOG_STORY'
 };
 
 /**

@@ -39,7 +39,8 @@ export const EVENT_ACTION_TYPES = {
   passwordSet: 'PASSWORD_SET',
   passwordCleared: 'PASSWORD_CLEARED',
   roomConfigSet: 'ROOM_CONFIG_SET',
-  tokenIssued: 'TOKEN_ISSUED'
+  tokenIssued: 'TOKEN_ISSUED',
+  sortOrderSet: 'SORT_ORDER_SET'
 };
 
 /* ACTION CREATORS */

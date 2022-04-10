@@ -20,6 +20,7 @@ import toggleExclude from './toggleExclude';
 import setCardConfig from './setCardConfig';
 import setPassword from './setPassword';
 import setRoomConfig from './setRoomConfig';
+import setSortOrder from './setSortOrder';
 
 export default {
   addStory,
@@ -43,7 +44,8 @@ export default {
   toggleExclude,
   setCardConfig,
   setRoomConfig,
-  setPassword
+  setPassword,
+  setSortOrder
 };
 
 /**

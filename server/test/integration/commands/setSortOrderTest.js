@@ -4,20 +4,7 @@ import {prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
 test('Should produce sortOrderSet event', async () => {
   const {userId, processor, roomId, mockRoomsStore} = await prepOneUserInOneRoomWithOneStory();
 
-  // add additional stories
-  for (let s = 0; s < 4; s++) {
-    await processor(
-      {
-        id: uuid(),
-        roomId,
-        name: 'addStory',
-        payload: {
-          title: 'Test-Story ' + s
-        }
-      },
-      userId
-    );
-  }
+  await addAdditionalStories(processor, roomId, userId, 4);
   const room = await mockRoomsStore.getRoomById(roomId);
   const storyIds = room.stories.map((s) => s.id);
 
@@ -75,20 +62,7 @@ describe('preconditions', () => {
   test('Should throw if less storyIds in command than in room', async () => {
     const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
 
-    // add additional stories
-    for (let s = 0; s < 4; s++) {
-      await processor(
-        {
-          id: uuid(),
-          roomId,
-          name: 'addStory',
-          payload: {
-            title: 'Test-Story ' + s
-          }
-        },
-        userId
-      );
-    }
+    await addAdditionalStories(processor, roomId, userId, 4);
 
     return expect(
       processor(
@@ -110,20 +84,7 @@ describe('preconditions', () => {
   test('Should throw if storyIds in command do not match ids in room', async () => {
     const {userId, processor, roomId} = await prepOneUserInOneRoomWithOneStory();
 
-    // add additional stories
-    for (let s = 0; s < 4; s++) {
-      await processor(
-        {
-          id: uuid(),
-          roomId,
-          name: 'addStory',
-          payload: {
-            title: 'Test-Story ' + s
-          }
-        },
-        userId
-      );
-    }
+    await addAdditionalStories(processor, roomId, userId, 4);
 
     return expect(
       processor(
@@ -141,4 +102,46 @@ describe('preconditions', () => {
       /Precondition Error during "setSortOrder": Given sortOrder contains storyIds that do not match stories in our room!/
     );
   });
+
+  test('Should throw if storyIds in command do not match ids in room (id twice)', async () => {
+    const {userId, processor, roomId, mockRoomsStore} = await prepOneUserInOneRoomWithOneStory();
+
+    await addAdditionalStories(processor, roomId, userId, 4);
+
+    const room = await mockRoomsStore.getRoomById(roomId);
+    const storyIds = room.stories.map((s) => s.id);
+
+    return expect(
+      processor(
+        {
+          id: uuid(),
+          roomId,
+          name: 'setSortOrder',
+          payload: {
+            sortOrder: [storyIds[4], storyIds[3], storyIds[2], storyIds[1], storyIds[1]] // <-  storyIds[1] twice - storyIds[0] missing
+          }
+        },
+        userId
+      )
+    ).rejects.toThrow(
+      /Precondition Error during "setSortOrder": Given sortOrder contains 4 storyIds. However, we have 5 stories in our room!/
+    );
+  });
 });
+
+async function addAdditionalStories(processor, roomId, userId, n) {
+  // add additional stories
+  for (let s = 0; s < n; s++) {
+    await processor(
+      {
+        id: uuid(),
+        roomId,
+        name: 'addStory',
+        payload: {
+          title: 'Test-Story ' + s
+        }
+      },
+      userId
+    );
+  }
+}

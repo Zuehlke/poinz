@@ -41,6 +41,7 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       selectStory,
       trashStory,
       restoreStory,
+      setSortOrder,
       deleteStory,
       giveEstimate,
       clearEstimate,
@@ -273,6 +274,17 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       userId,
       payload: {
         storyId
+      }
+    });
+  }
+
+  function setSortOrder(roomId, userId, storyIds) {
+    return sendCommand({
+      name: 'setSortOrder',
+      roomId,
+      userId,
+      payload: {
+        sortOrder: storyIds
       }
     });
   }

@@ -28,14 +28,15 @@ const setSortOrderCommandHandler = {
   schema,
   preCondition: (room, command) => {
     const activeStoriesInRoom = room.stories.filter((s) => !s.trashed);
+    const sortOrderInCommand = [...new Set(command.payload.sortOrder)]; // remove any duplicates
 
-    if (activeStoriesInRoom.length !== command.payload.sortOrder.length) {
+    if (activeStoriesInRoom.length !== sortOrderInCommand.length) {
       throw new Error(
-        `Given sortOrder contains ${command.payload.sortOrder.length} storyIds. However, we have ${activeStoriesInRoom.length} stories in our room!`
+        `Given sortOrder contains ${sortOrderInCommand.length} storyIds. However, we have ${activeStoriesInRoom.length} stories in our room!`
       );
     }
 
-    const allIdsInCommandPresentInRoom = command.payload.sortOrder.every(
+    const allIdsInCommandPresentInRoom = sortOrderInCommand.every(
       (storyId) => !!activeStoriesInRoom.find((s) => s.id === storyId)
     );
 

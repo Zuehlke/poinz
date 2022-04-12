@@ -35,6 +35,7 @@ const Story = ({
   trashStory,
   isWaiting,
   isStoryEstimated,
+  dndDragEnd,
   dndMoveStory,
   dndFindStory
 }) => {
@@ -52,7 +53,11 @@ const Story = ({
       }),
       end: (item, monitor) => {
         const {id: droppedId, originalIndex} = item;
-        dndMoveStory(droppedId, originalIndex, monitor.didDrop());
+        if (monitor.didDrop()) {
+          dndDragEnd();
+        } else {
+          dndMoveStory(droppedId, originalIndex);
+        }
       }
     }),
     [story.id, originalIndex, dndMoveStory]
@@ -164,6 +169,7 @@ Story.propTypes = {
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
   trashStory: PropTypes.func,
+  dndDragEnd: PropTypes.func,
   dndMoveStory: PropTypes.func,
   dndFindStory: PropTypes.func
 };

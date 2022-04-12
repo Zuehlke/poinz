@@ -121,22 +121,20 @@ const BacklogActive = ({
     [sortedStories]
   );
   const dndMoveStory = useCallback(
-    (id, atIndex, allDone) => {
-      if (allDone) {
-        setSortOrder(sortedStories.map((s) => s.id));
-      } else {
-        const {story, index} = dndFindStory(id);
-
-        const newlySortedStories = [...sortedStories];
-        newlySortedStories.splice(index, 1);
-        newlySortedStories.splice(atIndex, 0, story);
-        setSorting(manualSorting);
-
-        setSortedStories(newlySortedStories);
-      }
+    (id, atIndex) => {
+      const {story, index} = dndFindStory(id);
+      const newlySortedStories = [...sortedStories];
+      newlySortedStories.splice(index, 1);
+      newlySortedStories.splice(atIndex, 0, story);
+      setSorting(manualSorting);
+      setSortedStories(newlySortedStories);
     },
     [dndFindStory, sortedStories, setSortedStories]
   );
+
+  const dndDragEnd = useCallback(() => {
+    setSortOrder(sortedStories.map((s) => s.id));
+  }, [sortedStories, setSortOrder]);
 
   // important, so that the user can drag stories to the end of the list (drop after last story)
   const [, drop] = useDrop(() => ({accept: DRAG_ITEM_TYPES.backlogStory}));
@@ -170,6 +168,7 @@ const BacklogActive = ({
                   story={story}
                   isHighlighted={story.id === highlightedStoryId}
                   onStoryClicked={() => setHighlightedStoryId(story.id)}
+                  dndDragEnd={dndDragEnd}
                   dndMoveStory={dndMoveStory}
                   dndFindStory={dndFindStory}
                 />

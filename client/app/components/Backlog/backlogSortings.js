@@ -58,6 +58,8 @@ const sortings = [
         return -1;
       } else if (!isSortOrderDefined(sA) && isSortOrderDefined(sB)) {
         return 1;
+      } else if (!isSortOrderDefined(sA) && !isSortOrderDefined(sB)) {
+        return defaultSorting.comp(sA, sB);
       } else {
         return sA.sortOrder - sB.sortOrder;
       }

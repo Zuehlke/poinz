@@ -32,6 +32,9 @@ const storySchema = {
     },
     revealed: {
       type: 'boolean'
+    },
+    sortOrder: {
+      type: ['number', 'undefined', 'null']
     }
   },
   required: ['id', 'title', 'createdAt'],

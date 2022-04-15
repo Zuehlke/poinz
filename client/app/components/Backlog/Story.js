@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import {useDrag, useDrop} from 'react-dnd';
 
 import {L10nContext} from '../../services/l10n';
 import {getSelectedStoryId, hasStoryConsensus} from '../../state/stories/storiesSelectors';
@@ -11,6 +12,7 @@ import {isThisStoryWaiting} from '../../state/commandTracking/commandTrackingSel
 import ValueBadge from '../common/ValueBadge';
 import UndecidedBadge from '../common/UndecidedBadge';
 import StoryDescription from '../common/StoryDescription';
+import {DRAG_ITEM_TYPES} from '../Room/Board';
 
 import {
   StyledStoryToolbar,
@@ -32,20 +34,52 @@ const Story = ({
   editStory,
   trashStory,
   isWaiting,
-  isStoryEstimated
+  isStoryEstimated,
+  dndDragEnd,
+  dndMoveStory,
+  dndFindStory
 }) => {
   const {t, format} = useContext(L10nContext);
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
 
+  const originalIndex = dndFindStory(story.id).index;
+  const [{isDragging}, drag] = useDrag(
+    () => ({
+      type: DRAG_ITEM_TYPES.backlogStory,
+      item: () => ({id: story.id, originalIndex}),
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging()
+      }),
+      end: (item, monitor) => {
+        dndDragEnd(item.id, item.originalIndex, monitor.didDrop());
+      }
+    }),
+    [story.id, originalIndex, dndMoveStory]
+  );
+  const [, drop] = useDrop(
+    () => ({
+      accept: DRAG_ITEM_TYPES.backlogStory,
+      hover({id: draggedId}) {
+        if (draggedId !== story.id) {
+          const {index} = dndFindStory(story.id);
+          dndMoveStory(draggedId, index, false);
+        }
+      }
+    }),
+    [dndFindStory, dndMoveStory]
+  );
+
   return (
     <StyledStory
+      ref={(node) => drag(drop(node))}
       id={'story.' + story.id}
       data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={onStoryClicked}
       selected={isSelected}
       highlighted={isHighlighted}
       className={isWaiting ? 'waiting-spinner' : ''}
+      isDragging={isDragging}
     >
       <StyledStoryToolbar>
         <i
@@ -129,7 +163,10 @@ Story.propTypes = {
   onStoryClicked: PropTypes.func,
   selectStory: PropTypes.func,
   editStory: PropTypes.func,
-  trashStory: PropTypes.func
+  trashStory: PropTypes.func,
+  dndDragEnd: PropTypes.func,
+  dndMoveStory: PropTypes.func,
+  dndFindStory: PropTypes.func
 };
 
 export default connect(

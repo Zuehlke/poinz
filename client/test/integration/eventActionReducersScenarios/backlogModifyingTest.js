@@ -114,3 +114,28 @@ test('Trashing, Restoring and Deleting stories', () => {
 
   expect(getStoriesById(modifiedState)[addedEvtTwo.payload.storyId].trashed).toBe(false);
 });
+
+test('manual ordering', () => {
+  let modifiedState;
+
+  const joinedEvtOne = scenario.events[1];
+
+  modifiedState = reduceMultipleEvents(
+    getScenarioStartingState(joinedEvtOne.correlationId),
+    scenario.getNextEvents(20) // up until and including first "sortOrderSet"
+  );
+
+  const sortOrderSetOne = scenario.events[19];
+  const sortOrderSetTwo = scenario.events[20];
+
+  const getCurrentStoriesAndOrder = (state) =>
+    Object.values(getStoriesById(state))
+      .sort((sA, sB) => sA.sortOrder - sB.sortOrder)
+      .map((s) => s.id);
+
+  expect(getCurrentStoriesAndOrder(modifiedState)).toEqual(sortOrderSetOne.payload.sortOrder);
+
+  modifiedState = reduceMultipleEvents(modifiedState, scenario.getSingleNextEvent());
+
+  expect(getCurrentStoriesAndOrder(modifiedState)).toEqual(sortOrderSetTwo.payload.sortOrder);
+});

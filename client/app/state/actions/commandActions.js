@@ -307,6 +307,15 @@ export const changeStory = (storyId, title, description) => (dispatch, getState,
   });
 };
 
+export const setSortOrder = (storyIds) => (dispatch, getState, sendCommand) => {
+  sendCommand({
+    name: 'setSortOrder',
+    payload: {
+      sortOrder: storyIds
+    }
+  });
+};
+
 export const trashStories = (storyIds) => (dispatch, getState, sendCommand) => {
   storyIds.forEach((id) =>
     sendCommand({

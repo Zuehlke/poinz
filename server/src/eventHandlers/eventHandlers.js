@@ -25,6 +25,7 @@ import passwordSet from './passwordSet';
 import passwordCleared from './passwordCleared';
 import tokenIssued from './tokenIssued';
 import roomConfigSet from './roomConfigSet';
+import sortOrderSet from './sortOrderSet';
 
 export default {
   connectionLost,
@@ -53,5 +54,6 @@ export default {
   roomConfigSet,
   passwordSet,
   passwordCleared,
-  tokenIssued
+  tokenIssued,
+  sortOrderSet
 };

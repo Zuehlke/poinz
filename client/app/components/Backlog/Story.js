@@ -47,17 +47,12 @@ const Story = ({
   const [{isDragging}, drag] = useDrag(
     () => ({
       type: DRAG_ITEM_TYPES.backlogStory,
-      item: {id: story.id, originalIndex},
+      item: () => ({id: story.id, originalIndex}),
       collect: (monitor) => ({
         isDragging: monitor.isDragging()
       }),
       end: (item, monitor) => {
-        const {id: droppedId, originalIndex} = item;
-        if (monitor.didDrop()) {
-          dndDragEnd();
-        } else {
-          dndMoveStory(droppedId, originalIndex);
-        }
+        dndDragEnd(item.id, item.originalIndex, monitor.didDrop());
       }
     }),
     [story.id, originalIndex, dndMoveStory]

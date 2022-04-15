@@ -86,9 +86,17 @@ const useStoryDnD = (sortedStories, setSortedStories, setSorting, setSortOrder) 
     [dndFindStory, sortedStories, setSortedStories]
   );
 
-  const dndDragEnd = useCallback(() => {
-    setSortOrder(sortedStories.map((s) => s.id));
-  }, [sortedStories, setSortOrder]);
+  const dndDragEnd = useCallback(
+    (id, originalIndex, didDrop) => {
+      if (!didDrop) {
+        // cancelled drag (e.g. outside container drop) > move story back to its original place
+        dndMoveStory(id, originalIndex);
+      } else {
+        setSortOrder(sortedStories.map((s) => s.id));
+      }
+    },
+    [sortedStories, setSortOrder]
+  );
 
   // important, so that the user can drag stories to the end of the list (drop after last story)
   const [, drop] = useDrop(() => ({accept: DRAG_ITEM_TYPES.backlogStory}));

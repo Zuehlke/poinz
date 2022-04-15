@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import {COLOR_BACKGROUND_GREY, COLOR_ORANGE} from '../colors';
+import {COLOR_BACKGROUND_GREY} from '../colors';
 
 export const StyledHelp = styled.div`
   display: ${({shown}) => (shown ? 'block' : 'none')};
@@ -8,12 +8,8 @@ export const StyledHelp = styled.div`
   box-sizing: border-box;
   padding: 0 8px;
   background: ${COLOR_BACKGROUND_GREY};
-
-  h5 {
-    color: ${COLOR_ORANGE};
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
+  height: 100%;
+  overflow-y: auto;
 `;
 
 export const StyledHelpInner = styled.div`

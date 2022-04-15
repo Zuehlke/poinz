@@ -19,13 +19,6 @@ export const StyledSettings = styled.div`
 
   height: 100%;
   overflow-y: auto;
-
-  h5 {
-    color: ${COLOR_ORANGE};
-    font-weight: 700;
-    margin-bottom: 8px;
-    margin-top: 0;
-  }
 `;
 
 export const StyledArea = styled.div`
@@ -33,17 +26,6 @@ export const StyledArea = styled.div`
 
   > h4 {
     margin-bottom: 8px;
-  }
-`;
-
-export const StyledSection = styled.div`
-  background: white;
-  border: 1px solid ${COLOR_LIGHTER_GREY};
-  padding: 8px;
-  margin: 0 0 16px 0;
-
-  button + button {
-    margin-left: 4px;
   }
 `;
 

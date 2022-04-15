@@ -1,6 +1,7 @@
-### 0.16.1: 2022-12-31
+### 0.17.0: 2022-12-31
 
-* ...maintenance
+* Manual sorting of stories in backlog via drag'n'drop  #252
+* Backlog resizable: Width of backlog can be set with mouse #265
 
 ### 0.16.0: 2022-03-30
 

@@ -5,7 +5,8 @@ import {useDrag} from 'react-dnd';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 
 import {getActiveStories, getTrashedStories} from '../../state/stories/storiesSelectors';
-import {isBacklogShown} from '../../state/ui/uiSelectors';
+import {getBacklogWidth, isBacklogShown} from '../../state/ui/uiSelectors';
+import {setBacklogWidth} from '../../state/actions/uiStateActions';
 import {L10nContext} from '../../services/l10n';
 import BacklogActive from './BacklogActive';
 import BacklogTrash from './BacklogTrash';
@@ -22,10 +23,15 @@ import {StyledBacklog, StyledBacklogWidthDragHandle} from './_styled';
  * if trash is active, only a list of "trashed" stories is displayed
  *
  */
-const Backlog = ({backlogShown, trashedStoriesCount, activeStoriesCount}) => {
+const Backlog = ({
+  backlogShown,
+  backlogWidth,
+  setBacklogWidth,
+  trashedStoriesCount,
+  activeStoriesCount
+}) => {
   const {t} = useContext(L10nContext);
   const [showTrash, setShowTrash] = useState(false);
-  const [backlogWidth, setBacklogWidth] = useState(DEFAULT_BACKLOG_WIDTH);
 
   // There is no corresponding drop / useDrop.
   // We just need the dragging functionality, and set the new width of the backlog on "end(...)"
@@ -37,7 +43,7 @@ const Backlog = ({backlogShown, trashedStoriesCount, activeStoriesCount}) => {
         setBacklogWidth(Math.max(DEFAULT_BACKLOG_WIDTH, x + 1));
       }
     }),
-    []
+    [setBacklogWidth]
   );
 
   useEffect(() => {
@@ -71,12 +77,18 @@ const Backlog = ({backlogShown, trashedStoriesCount, activeStoriesCount}) => {
 
 Backlog.propTypes = {
   backlogShown: PropTypes.bool,
+  backlogWidth: PropTypes.number,
+  setBacklogWidth: PropTypes.func.isRequired,
   trashedStoriesCount: PropTypes.number.isRequired,
   activeStoriesCount: PropTypes.number.isRequired
 };
 
-export default connect((state) => ({
-  backlogShown: isBacklogShown(state),
-  trashedStoriesCount: getTrashedStories(state).length,
-  activeStoriesCount: getActiveStories(state).length
-}))(Backlog);
+export default connect(
+  (state) => ({
+    backlogShown: isBacklogShown(state),
+    backlogWidth: getBacklogWidth(state),
+    trashedStoriesCount: getTrashedStories(state).length,
+    activeStoriesCount: getActiveStories(state).length
+  }),
+  {setBacklogWidth}
+)(Backlog);

@@ -3,6 +3,7 @@ import getDayOfYear from 'date-fns/getDayOfYear';
 import {getItem, persistOnStateChange} from '../clientSettingsStore';
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
 import {LOCATION_CHANGED} from '../actions/commandActions';
+import {DEFAULT_BACKLOG_WIDTH} from '../../components/dimensions';
 
 import {
   BACKLOG_SIDEBAR_TOGGLED,
@@ -11,14 +12,17 @@ import {
   NEW_USER_HINTS_HIDDEN,
   MATRIX_INCL_TRSH_TOGGLED,
   SIDEBAR_ACTIONLOG,
-  SIDEBAR_TOGGLED
+  SIDEBAR_TOGGLED,
+  BACKLOG_WIDTH_SET
 } from '../actions/uiStateActions';
 
 const HIDE_NEW_USER_HINTS = 'hideNewUserHints';
 const MARKDOWN_ENABLED = 'markdownEnabled';
+const BACKLOG_WIDTH = 'backlogWidth';
 
 export const uiInitialState = {
   backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
+  backlogWidth: parseInt(getItem(BACKLOG_WIDTH) || DEFAULT_BACKLOG_WIDTH, 10),
   sidebar: undefined,
   matrixShown: false,
   applause: false,
@@ -31,6 +35,7 @@ export const uiInitialState = {
 
 persistOnStateChange(MARKDOWN_ENABLED, (state) => state.ui.markdownEnabled);
 persistOnStateChange(HIDE_NEW_USER_HINTS, (state) => state.ui.newUserHintHidden);
+persistOnStateChange(BACKLOG_WIDTH, (state) => state.ui.backlogWidth);
 
 /**
  *
@@ -83,6 +88,13 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
           unseenError: action.sidebarKey === SIDEBAR_ACTIONLOG ? false : state.unseenError
         };
       }
+    }
+
+    case BACKLOG_WIDTH_SET: {
+      return {
+        ...state,
+        backlogWidth: action.width
+      };
     }
 
     case MATRIX_TOGGLED: {

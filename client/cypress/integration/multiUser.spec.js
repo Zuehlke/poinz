@@ -45,7 +45,7 @@ it('multi user estimation with two rounds, consensus on second round', function 
 
   // our user estimates... nothing is auto-revealed, other user did not estimate so far
   Room.EstimationArea.estimationCard(5).click();
-  Room.Users.userEstimationGiven(5); // my user displays my card as "value given" (without showing the actual value)
+  Room.Users.userEstimationGiven(5, false); // my user displays my card as "value given" (without showing the actual value)
 
   //  and I can change my mind...   several times ;)
   Room.EstimationArea.estimationCard(5).click(); // clearEstimation

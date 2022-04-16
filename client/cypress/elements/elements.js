@@ -43,7 +43,8 @@ const elements = {
     Users: {
       usersContainer: () => cy.get(tid('users')),
       usersList: () => cy.get(tid('users')).children(),
-      userEstimationGiven: (cardValue) => cy.get(tid('users', `userEstimationGiven.${cardValue}`)),
+      userEstimationGiven: (cardValue, revealed = false) =>
+        cy.get(tid('users', `${revealed ? 'revealed.' : ''}userEstimationGiven.${cardValue}`)),
       userEstimationGivenRevealed: (cardValue) =>
         cy.get(tid('users', `revealed.userEstimationGiven.${cardValue}`))
     },

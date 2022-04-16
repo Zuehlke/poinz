@@ -18,7 +18,7 @@ it('join new room, add a story, estimate the story (alone)', function () {
 
   Room.EstimationArea.estimationCard(13).click();
 
-  Room.Users.userEstimationGiven(13);
+  Room.Users.userEstimationGiven(13, true); // since auto reveal is on by default. and we are one single user in the room
 
   Room.EstimationArea.storyConsensus().contains('13'); // auto-revealed and showing consensus (since we have only one user in the room)
   Room.EstimationArea.newRoundButton().click(); // revealed  -> "new Round" button is shown
@@ -48,10 +48,10 @@ it('join new room, add a story, estimate & clear estimate (alone)', function () 
   Room.TopBar.settingsToggleButton().click();
 
   Room.EstimationArea.estimationCard(13).click();
-  Room.Users.userEstimationGiven(13);
+  Room.Users.userEstimationGiven(13, false); // not revealed
   Room.EstimationArea.estimationCard(13).click(); // this is the second click on "13" -> clearStoryEstimate
   Room.Users.userEstimationGiven(13).should('not.exist');
 
   Room.EstimationArea.estimationCard(8).click();
-  Room.Users.userEstimationGiven(8);
+  Room.Users.userEstimationGiven(8, false);
 });

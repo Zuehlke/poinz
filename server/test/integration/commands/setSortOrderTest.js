@@ -30,27 +30,24 @@ test('Should produce sortOrderSet event', async () => {
   expect(sortOrderSetEvent.payload.sortOrder).toEqual(manualOrderedStoryIds);
 
   // stories in room have "sortOrder" property set
-  expect(roomAfter.stories.map((s) => ({id: s.id, sortOrder: s.sortOrder}))).toEqual([
+  const stories = roomAfter.stories.map((s) => ({id: s.id, sortOrder: s.sortOrder}));
+  expect(stories.sort((sA, sB) => sA.sortOrder - sB.sortOrder)).toEqual([
     {
       id: manualOrderedStoryIds[0],
       sortOrder: 0
     },
-
     {
       id: manualOrderedStoryIds[1],
       sortOrder: 1
     },
-
     {
       id: manualOrderedStoryIds[2],
       sortOrder: 2
     },
-
     {
       id: manualOrderedStoryIds[3],
       sortOrder: 3
     },
-
     {
       id: manualOrderedStoryIds[4],
       sortOrder: 4
@@ -71,13 +68,13 @@ describe('preconditions', () => {
           roomId,
           name: 'setSortOrder',
           payload: {
-            sortOrder: ['some', 'other', 'ids']
+            sortOrder: [uuid(), uuid(), uuid()]
           }
         },
         userId
       )
     ).rejects.toThrow(
-      /Precondition Error during "setSortOrder": Given sortOrder contains 3 storyIds. However, we have 5 stories in our room!/
+      /Precondition Error during "setSortOrder": Given sortOrder contains 3 storyIds. However, we have 5/
     );
   });
 
@@ -93,7 +90,7 @@ describe('preconditions', () => {
           roomId,
           name: 'setSortOrder',
           payload: {
-            sortOrder: ['some', 'other', 'ids', 'alltogether', 'j']
+            sortOrder: [uuid(), uuid(), uuid(), uuid(), uuid()]
           }
         },
         userId
@@ -124,7 +121,7 @@ describe('preconditions', () => {
         userId
       )
     ).rejects.toThrow(
-      /Precondition Error during "setSortOrder": Given sortOrder contains 4 storyIds. However, we have 5 stories in our room!/
+      /Precondition Error during "setSortOrder": Given sortOrder contains 4 storyIds. However, we have 5/
     );
   });
 });

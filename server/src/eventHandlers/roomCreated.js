@@ -1,8 +1,8 @@
 /**
  * A room was created. Creates a new default room object
  */
-function roomCreatedEventHandler(room, eventPayload) {
-  const roomObject = {
+function roomCreatedEventHandler(room) {
+  return {
     id: room.id,
     users: [],
     stories: [],
@@ -11,12 +11,6 @@ function roomCreatedEventHandler(room, eventPayload) {
     withConfidence: false,
     issueTrackingUrl: undefined
   };
-
-  if (eventPayload.password) {
-    roomObject.password = eventPayload.password;
-  }
-
-  return roomObject;
 }
 
 export default roomCreatedEventHandler;

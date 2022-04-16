@@ -51,6 +51,60 @@ test('Should produce storyAdded events for all stories in data', async () => {
   expect(room.stories.length).toBe(4);
 });
 
+test('Should produce storyAdded and consensusAchieved events ', async () => {
+  const csvContent = await fs.readFile(
+    path.join(__dirname, '../../unit/testJiraIssueExportConsensus.csv'),
+    'utf-8'
+  );
+  const dataUrl = textToCsvDataUrl(csvContent);
+
+  const {userId, roomId, processor} = await prepOneUserInOneRoom();
+
+  const commandId = uuid();
+  const {producedEvents, room} = await processor(
+    {
+      id: commandId,
+      roomId,
+      name: 'importStories',
+      payload: {
+        data: dataUrl
+      }
+    },
+    userId
+  );
+
+  expect(producedEvents).toMatchEvents(
+    commandId,
+    roomId,
+    'storyAdded',
+    'consensusAchieved',
+    'storyAdded',
+    'consensusAchieved',
+    'storyAdded',
+    'storyAdded',
+    'storySelected'
+  );
+
+  const storyAddedEvent1 = producedEvents[0];
+  const storySelectedEvent = producedEvents[6];
+
+  expect(storyAddedEvent1.payload).toMatchObject({
+    title: 'SMRGR-6275 Something something Summary',
+    description: 'His account can be deactivated end of July.',
+    estimations: {}
+  });
+
+  expect(storySelectedEvent.name).toBe('storySelected');
+  expect(storySelectedEvent.payload).toEqual({
+    storyId: storyAddedEvent1.payload.storyId
+  });
+
+  expect(room.stories.length).toBe(4);
+  expect(room.stories[0].consensus).toBe(5);
+  expect(room.stories[1].consensus).toBe(3);
+  expect(room.stories[2].consensus).toBeUndefined();
+});
+
 test('Should produce importFailed event', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 

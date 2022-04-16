@@ -46,6 +46,13 @@ const importStoriesCommandHandler = {
 
       stories.forEach((story) => {
         pushEvent('storyAdded', story);
+        if (story.consensus) {
+          pushEvent('consensusAchieved', {
+            storyId: story.storyId,
+            value: story.consensus,
+            settled: true
+          });
+        }
       });
 
       if (!hasActiveStories(room)) {

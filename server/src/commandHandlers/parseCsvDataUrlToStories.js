@@ -23,7 +23,11 @@ export default function parseCsvDataUrlToStories(data, issueTrackingUrlPattern =
     const b64Data = data.substring(data.lastIndexOf(','));
     const plainData = Buffer.from(b64Data, 'base64').toString();
 
-    const results = parseCsv(plainData, {header: true, skipEmptyLines: true});
+    const results = parseCsv(plainData, {
+      header: true,
+      skipEmptyLines: true,
+      transformHeader: (h) => h.toLowerCase()
+    });
 
     if (
       (results.errors && results.errors.length > 0) ||
@@ -51,15 +55,18 @@ function issueObjectToStory(issueTrackingUrlPattern, issueObject) {
   return {
     title,
     description: getDescriptionFromIssueObject(issueTrackingUrlPattern, issueObject),
+    consensus: getConsensusFromIssueObject(issueObject),
     storyId: uuid(),
     estimations: {},
     createdAt: Date.now()
   };
 }
 
-const KEY_PROPERTY_NAMES = ['Issue key', 'Issue Key', 'Issue', 'issue', 'Key', 'key'];
-const TITLE_PROPERTY_NAMES = ['Summary', 'summary', 'Title', 'title'];
-const DESCR_PROPERTY_NAMES = ['Description', 'description', 'Descr', 'descr'];
+// properties are matched case in-sensitive. define them lowercase here
+const KEY_PROPERTY_NAMES = ['issue key', 'issue', 'key'];
+const TITLE_PROPERTY_NAMES = ['summary', 'title'];
+const DESCR_PROPERTY_NAMES = ['description', 'descr'];
+const CONSENSUS_PROPERTY_NAMES = ['points', 'consensus', 'value', 'storypoints', 'estimation'];
 
 function getTitleFromIssueObject(issueObject) {
   let title = '';
@@ -74,6 +81,17 @@ function getTitleFromIssueObject(issueObject) {
   }
 
   return title.trim().substring(0, STORY_TITLE_CHAR_LIMIT);
+}
+
+function getConsensusFromIssueObject(issueObject) {
+  const consensusProp = CONSENSUS_PROPERTY_NAMES.find(isPropMatch.bind(issueObject));
+  if (consensusProp) {
+    const value = issueObject[consensusProp];
+    if (!Number.isFinite(value)) {
+      const parsedValue = parseFloat(value);
+      return isNaN(parsedValue) ? undefined : parsedValue;
+    }
+  }
 }
 
 function getDescriptionFromIssueObject(issueTrackingUrlPattern, issueObject) {

@@ -14,9 +14,9 @@ import {
   StyledAvatarGrid,
   StyledMiniAvatar,
   StyledRadioButton,
-  StyledSection,
   StyledTextInput
 } from './_styled';
+import {StyledSection} from '../common/_styled';
 
 const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) => {
   const {t, language, setLanguage} = useContext(L10nContext);

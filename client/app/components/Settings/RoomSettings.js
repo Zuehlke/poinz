@@ -17,7 +17,8 @@ import {getCardConfigInOrder, getRoomId} from '../../state/room/roomSelectors';
 import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 import {CardConfigEditor} from './CardConfigEditor';
 
-import {StyledSection, StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
+import {StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
+import {StyledSection} from '../common/_styled';
 
 const RoomSettings = ({
   shown,

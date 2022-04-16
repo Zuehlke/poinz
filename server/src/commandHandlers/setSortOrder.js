@@ -1,6 +1,7 @@
 /**
  * A user re-orders the backlog manually.
- *
+ * This command will set the new sortOrder of all active stories in the room.
+ * Trashed stories will not be affected. (sortOrder = undefined).
  */
 const schema = {
   allOf: [
@@ -13,7 +14,12 @@ const schema = {
           type: 'object',
           properties: {
             sortOrder: {
-              type: 'array'
+              // list of story-ids. Must contain all ids of all untrashed stories in room.
+              type: 'array',
+              items: {
+                type: 'string',
+                format: 'uuid'
+              }
             }
           },
           required: ['sortOrder'],
@@ -32,7 +38,7 @@ const setSortOrderCommandHandler = {
 
     if (activeStoriesInRoom.length !== sortOrderInCommand.length) {
       throw new Error(
-        `Given sortOrder contains ${sortOrderInCommand.length} storyIds. However, we have ${activeStoriesInRoom.length} stories in our room!`
+        `Given sortOrder contains ${sortOrderInCommand.length} storyIds. However, we have ${activeStoriesInRoom.length} (untrashed) stories in our room!`
       );
     }
 

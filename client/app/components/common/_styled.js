@@ -138,3 +138,24 @@ export const StyledToggleButton = styled.button`
   background: ${({active}) => (active ? COLOR_ORANGE : '#e6e6e6')};
   border-right: ${({active}) => (active ? '1px solid transparent' : '1px solid rgba(0,0,0,.2)')};
 `;
+
+export const StyledSection = styled.div`
+  background: white;
+  border: 1px solid ${COLOR_LIGHTER_GREY};
+  padding: 8px;
+  margin: 0 0 16px 0;
+
+  button + button {
+    margin-left: 4px;
+  }
+
+  h5,
+  h4 {
+    /* changelog in help has already h4 set, style it down to h5 */
+    font-size: 0.83em;
+    color: ${COLOR_ORANGE};
+    font-weight: 700;
+    margin-bottom: 8px;
+    margin-top: 0;
+  }
+`;

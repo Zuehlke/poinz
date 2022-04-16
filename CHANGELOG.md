@@ -1,3 +1,9 @@
+### 0.17.0: 2222-12-31
+
+* Persist custom backlog width to local storage
+* Story points in imported stories stored as consensus #264
+* dependencies updated (react 18)
+
 ### 0.17.0: 2022-04-15
 
 * Manual sorting of stories in backlog via drag'n'drop  #252

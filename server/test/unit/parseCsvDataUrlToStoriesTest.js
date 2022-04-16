@@ -79,6 +79,20 @@ test('parse csv with generic fields: "title" "description"  "key"', async () => 
   });
 });
 
+test('parse correctly , case-insensitive', async () => {
+  const dataUrl = textToCsvDataUrl('tiTLe,Key,descRiption\nfirst story,PRJ-123,this is a test');
+
+  const stories = parseCsvDataUrlToStories(dataUrl);
+
+  expect(stories.length).toBe(1);
+  expect(stories[0]).toMatchObject({
+    description: 'this is a test',
+    estimations: {},
+    storyId: EXPECT_UUID_MATCHING,
+    title: 'PRJ-123 first story'
+  });
+});
+
 test('parse csv with additional "consensus" ', async () => {
   const dataUrl = textToCsvDataUrl(
     'title,key,consensus,description\nfirst story,PRJ-123,3,this is a test'

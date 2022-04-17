@@ -92,7 +92,10 @@ const useStoryDnD = (sortedStories, setSortedStories, setSorting, setSortOrder) 
         // cancelled drag (e.g. outside container drop) > move story back to its original place
         dndMoveStory(id, originalIndex);
       } else {
-        setSortOrder(sortedStories.map((s) => s.id));
+        const stillSameSortOrder = sortedStories.every((s, i) => s.sortOrder === i);
+        if (!stillSameSortOrder) {
+          setSortOrder(sortedStories.map((s) => s.id));
+        }
       }
     },
     [sortedStories, setSortOrder]

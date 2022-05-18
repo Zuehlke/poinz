@@ -105,7 +105,7 @@ export default function joiningReducer(state = joiningInitialState, action, ownU
     }
 
     case EVENT_ACTION_TYPES.usernameSet: {
-      if (state.ownUserId === event.userId) {
+      if (ownUserId === event.userId) {
         return {
           ...state,
           userdata: {

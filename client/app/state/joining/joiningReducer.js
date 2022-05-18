@@ -118,6 +118,14 @@ export default function joiningReducer(state = joiningInitialState, action, ownU
       }
     }
 
+    case EVENT_ACTION_TYPES.leftRoom: {
+      if (ownUserId === event.userId) {
+        return {...joiningInitialState};
+      } else {
+        return state;
+      }
+    }
+
     case EVENT_ACTION_TYPES.commandRejected: {
       if (isAuthFailedJoinRejected(action.event)) {
         // joinRoom failed to a a password-protected room.

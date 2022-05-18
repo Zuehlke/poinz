@@ -8,7 +8,15 @@ import {importCsvFile} from '../../state/actions/commandActions';
 import {StyledFileImportDropZoneOverlay} from './_styled';
 
 const ACCEPTED_MIME_TYPES =
-  'text/csv, application/vnd.ms-excel, application/csv, text/x-csv, application/x-csv, text/comma-separated-values, text/x-comma-separated-values';
+  {
+    'text/csv': ['.csv'],
+    'application/vnd.ms-excel': ['.csv'],
+    'application/csv': ['.csv'],
+    'text/x-csv': ['.csv'],
+    'application/x-csv': ['.csv'],
+    'text/comma-separated-values': ['.csv'],
+    'text/x-comma-separated-values': ['.csv'],
+  };
 
 /**
  * Handles CSV file drop & importing

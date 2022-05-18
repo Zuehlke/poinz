@@ -89,7 +89,7 @@ function spawnAndPrint(command, args, options) {
 
   return new Promise((resolve, reject) =>
     spawned.on('exit', (code) =>
-      code !== 0 ? reject(new Error('Error in child process: ' + code)) : resolve()
+      code !== 0 ? reject(new Error(` Error in child process: ${code} - was trying to run "${command}"  with args "${args}" and options "${JSON.stringify(options)}"`)) : resolve()
     )
   );
 }

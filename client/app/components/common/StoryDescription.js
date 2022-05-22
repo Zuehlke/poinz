@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import Anchorify from 'react-anchorify-text';
+import Linkify from 'react-linkify';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -34,7 +34,7 @@ const StoryDescription = ({
             {textToDisplay}
           </ReactMarkdown>
         )}
-        {!markdownEnabled && <Anchorify text={textToDisplay} />}
+        {!markdownEnabled && <Linkify>{textToDisplay}</Linkify>}
 
         {originalTextLength > textExpandThreshold && !textExpanded && (
           <StyledStoryTextExpandButton

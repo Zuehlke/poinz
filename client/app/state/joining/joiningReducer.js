@@ -105,7 +105,7 @@ export default function joiningReducer(state = joiningInitialState, action, ownU
     }
 
     case EVENT_ACTION_TYPES.usernameSet: {
-      if (state.ownUserId === event.userId) {
+      if (ownUserId === event.userId) {
         return {
           ...state,
           userdata: {
@@ -113,6 +113,14 @@ export default function joiningReducer(state = joiningInitialState, action, ownU
             username: event.payload.username
           }
         };
+      } else {
+        return state;
+      }
+    }
+
+    case EVENT_ACTION_TYPES.leftRoom: {
+      if (ownUserId === event.userId) {
+        return {...joiningInitialState};
       } else {
         return state;
       }

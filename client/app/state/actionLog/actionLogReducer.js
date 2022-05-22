@@ -142,6 +142,8 @@ export default function (state, action, oldState) {
         : 'Currently no story is selected';
       return updateLogInState(line);
     }
+    case EVENT_ACTION_TYPES.sortOrderSet:
+      return updateLogInState(`${username} changed the order of the stories in the backlog`);
     case EVENT_ACTION_TYPES.importFailed:
       return updateLogInState('CSV import failed. ' + payload.message);
 

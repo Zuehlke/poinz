@@ -193,8 +193,7 @@ test('You in a room, other user joins, you leave', () => {
     joining: {
       authFailed: false,
       userdata: {
-        avatar: 0,
-        userId: ourJoinEvent.userId
+        avatar: 0
       }
     }
   });

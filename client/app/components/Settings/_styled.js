@@ -139,6 +139,12 @@ export const StyledTextarea = styled.textarea`
   min-height: 300px;
 `;
 
+export const StyledCadConfigEditor = styled.div`
+  .pure-u-1-2 {
+    width: 49%;
+  }
+`;
+
 export const ErrorMsg = styled.p`
   color: ${COLOR_WARNING};
   margin-bottom: 2px;

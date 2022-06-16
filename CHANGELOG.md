@@ -1,3 +1,8 @@
+### 0.17.2: 2022-06-16
+
+* Minor fixes for custom card config editor
+* dependencies updated
+
 ### 0.17.1: 2022-05-22
 
 * Fix a bug where username change was not correctly persisted #275

@@ -21,15 +21,15 @@
     "docu": "node docu/src/docuGenerator.mjs"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.12",
+    "@babel/core": "^7.18.5",
     "chalk": "^5.0.1",
     "cross-spawn": "7.0.3",
-    "del": "6.1.0",
+    "del": "6.1.1",
     "ejs": "^3.1.8",
     "fs-extra": "10.1.0",
     "glob": "^8.0.3",
-    "npm-check-updates": "13.0.1",
-    "prettier": "2.6.2"
+    "npm-check-updates": "13.1.5",
+    "prettier": "2.7.0"
   },
   "engines": {
     "node": ">=16"

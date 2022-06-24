@@ -39,19 +39,19 @@ Optionally the [**Settings**](#settings) menu or the **Action Log** on the right
 
 You can join a room in three different ways
 
-1. Visit the [landing page](https://poinz.herokuapp.com/) and click the big button **"Join new room"**. You will join a
+1. Visit the [landing page](https://poinz.app) and click the big button **"Join new room"**. You will join a
    new room with a randomly assigned unique room id.
 
 ![Join Room Form](https://user-images.githubusercontent.com/1777143/97100613-89a28600-1695-11eb-9d03-94a482cc0678.png)
 
-2. Visit the [landing page](https://poinz.herokuapp.com/), **extend** the form and enter a custom room name, then hit Enter
+2. Visit the [landing page](https://poinz.app), **extend** the form and enter a custom room name, then hit Enter
    or click the join button. If the room with this custom name (the room id) already exists, you will join it. Otherwise
    a new room is created.
 
 ![Join Room Form extended](https://user-images.githubusercontent.com/1777143/152639158-54568b8d-a170-465e-bc29-bf81ced30b6c.png)
 
-3. Join a room directly by visiting the room url. (e.g. https://poinz.herokuapp.com/test
-   or  https://poinz.herokuapp.com/a-random-room-id-here). If the room with this name/id already exists, you will join
+3. Join a room directly by visiting the room url. (e.g. https://poinz.app/test
+   or  https://poinz.app/a-random-room-id-here). If the room with this name/id already exists, you will join
    it. Otherwise a new room is created.
 
 PoinZ will ask you for a username on your first visit. Afterwards your username is stored in the LocalStorage of your

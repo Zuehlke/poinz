@@ -1,3 +1,8 @@
+### 0.17.3: 2022-07-09
+
+* Changed background on landing page
+* dependencies updated
+
 ### 0.17.2: 2022-06-16
 
 * Minor fixes for custom card config editor

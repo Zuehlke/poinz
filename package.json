@@ -29,7 +29,8 @@
     "fs-extra": "10.1.0",
     "glob": "^8.0.3",
     "npm-check-updates": "16.0.5",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "@mermaid-js/mermaid-cli": "^9.1.5"
   },
   "engines": {
     "node": ">=16"

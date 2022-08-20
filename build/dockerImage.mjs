@@ -14,7 +14,7 @@ import util from 'util';
 import fs from 'fs-extra';
 import {exec} from 'child_process';
 import {spawn} from 'cross-spawn';
-import del from 'del';
+import {deleteAsync} from 'del';
 
 const execPromised = util.promisify(exec);
 
@@ -35,7 +35,7 @@ build()
 async function build() {
   // 1. clean-up output directories
   console.log('clean up deploy/ and client/dist/');
-  await del([
+  await deleteAsync([
     './deploy/',
     './deploy/package.json',
     '!./client/dist/index.html',

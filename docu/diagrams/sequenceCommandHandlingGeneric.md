@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
   autonumber
   participant PoinZ.Client
@@ -9,3 +10,4 @@ sequenceDiagram
   Note right of PoinZ.Backend: Events are broadcasted to all users in room
   PoinZ.Backend->>PoinZ.Client: event1
   PoinZ.Backend-->>-PoinZ.Client: event2
+```

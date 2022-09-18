@@ -24,7 +24,7 @@ async function generateMermaidDiagrams() {
   await Promise.all(
     files.map(async (file) => {
       console.log(`   generating mermaid diagram for ${file.fileName}`);
-      await execPromised(`mmdc -i ${file.filePath} -o ${file.filePath}.svg`);
+      await execPromised(`mmdc -i ${file.filePath}`);
     })
   );
 }

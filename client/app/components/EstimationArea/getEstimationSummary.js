@@ -69,16 +69,21 @@ function buildSummaryForValues(estmValues, cardConfig) {
  * @param cardConfig
  */
 function getRecommendation(numericalAverage, cardConfig) {
-  const cards = cardConfig.map((cc) => cc.value);
-  cards.sort((cA, cB) => cA - cB);
+  const cardValues = cardConfig.map((cc) => cc.value);
+  cardValues.sort((cA, cB) => cA - cB); // sort values, lowest to highest
 
-  const cardHigherIndex = cards.findIndex((v) => v > numericalAverage);
-  const cardHigher = cards[cardHigherIndex];
-  const cardLower = cards[cardHigherIndex - 1];
+  // find first card that is higher than numerical average
+  const cardHigherIndex = cardValues.findIndex((v) => v > numericalAverage);
+  const cardHigher = cardValues[cardHigherIndex];
+  const cardLower = cardValues[cardHigherIndex - 1];
 
-  const diff = numericalAverage - cardLower;
+  const diff = numericalAverage - cardLower; // "delta" between the next lower card value and the numerical average
 
-  return diff <= 0.1 * cardLower ? cardLower : cardHigher;
+  if (diff <= 0.1 * cardLower) {
+    return cardLower; // if the numerical average is within 10% of the lower card value, take the lower card
+  } else {
+    return cardHigher; // otherwise (most of the cases!) take the next higher card.
+  }
 }
 
 const average = (values) => {

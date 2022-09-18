@@ -1,3 +1,7 @@
+### 0.17.4: 2022-09-18
+
+* dependencies updated
+
 ### 0.17.3: 2022-07-09
 
 * Changed background on landing page

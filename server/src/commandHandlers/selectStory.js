@@ -1,4 +1,4 @@
-import {throwIfStoryTrashed} from './commonPreconditions';
+import {throwIfStoryTrashed} from './commonPreconditions.js';
 
 /**
  * A user selected a story (marked it as the "current" story to estimate)

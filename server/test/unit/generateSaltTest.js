@@ -1,4 +1,4 @@
-import generateSalt from '../../src/auth/generateSalt';
+import generateSalt from '../../src/auth/generateSalt.js';
 
 test('generateSalt default length', () => {
   const salt = generateSalt();

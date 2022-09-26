@@ -1,15 +1,18 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 import http from 'http';
 import express from 'express';
 import sslifyEnforce from 'express-sslify';
 
-import settings from './settings';
-import socketServer from './socketServer';
-import getLogger from './getLogger';
-import restApiFactory from './restApi/rest';
-import roomsStoreFactory from './store/roomStoreFactory';
+import settings from './settings.js';
+import socketServer from './socketServer.js';
+import getLogger from './getLogger.js';
+import restApiFactory from './restApi/rest.js';
+import roomsStoreFactory from './store/roomStoreFactory.js';
 
 const LOGGER = getLogger('server');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 startup().catch((err) => {
   LOGGER.error('Could not start up! ' + err.message);

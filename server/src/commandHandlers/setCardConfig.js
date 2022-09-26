@@ -1,7 +1,7 @@
 /**
  * A user sets a custom card configuration on the room.
  */
-import defaultCardConfig from '../defaultCardConfig';
+import defaultCardConfig from '../defaultCardConfig.js';
 
 const schema = {
   allOf: [

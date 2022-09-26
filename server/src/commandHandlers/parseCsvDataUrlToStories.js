@@ -1,7 +1,6 @@
-import {parse as parseCsv} from 'papaparse';
-
-import uuid from '../uuid';
-import getLogger from '../getLogger';
+import uuid from '../uuid.js';
+import getLogger from '../getLogger.js';
+import papa from 'papaparse';
 
 const LOGGER = getLogger('storyImportParser');
 
@@ -23,7 +22,7 @@ export default function parseCsvDataUrlToStories(data, issueTrackingUrlPattern =
     const b64Data = data.substring(data.lastIndexOf(','));
     const plainData = Buffer.from(b64Data, 'base64').toString();
 
-    const results = parseCsv(plainData, {
+    const results = papa.parse(plainData, {
       header: true,
       skipEmptyLines: true,
       transformHeader: (h) => h.toLowerCase()

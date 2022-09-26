@@ -3,7 +3,7 @@
  * This will produced "consensusAchieved".
  * This saves the team the time to start a new round where everybody has to estimate the same value.
  */
-import {getMatchingStoryOrThrow} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions.js';
 
 const schema = {
   allOf: [

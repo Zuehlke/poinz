@@ -2,6 +2,7 @@ import uuid from '../../src/uuid';
 import socketManagerFactory from '../../src/socketManager';
 
 import {newMockRoomsStore} from './testUtils';
+import {jest} from '@jest/globals';
 
 /**
  *

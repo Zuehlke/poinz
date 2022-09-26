@@ -1,4 +1,4 @@
-import {modifyUser} from './roomModifiers';
+import {modifyUser} from './roomModifiers.js';
 
 /**
  * Marks user as "disconnected".

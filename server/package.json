@@ -1,6 +1,7 @@
 {
   "name": "poinz-server",
   "version": "0.17.4",
+  "type": "module",
   "description": "Distributed Planning Poker",
   "private": true,
   "author": "xeronimus@gmail.com",
@@ -10,17 +11,16 @@
     "type": "git",
     "url": "https://github.com/Zuehlke/poinz.git"
   },
-  "main": "lib/server.js",
+  "main": "src/server.js",
   "scripts": {
     "build": "babel src -d lib --source-maps true",
-    "test": "jest \"./test/unit\" \"./test/integration\"",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js \"./test/unit\" \"./test/integration\"",
     "test:system": "jest \"./test/system\"",
     "test:migration": "jest --runInBand \"./test/migrations\"",
     "pretest": "npm run lint",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\" \"migrations/**/*.js\" \"./*js\"",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"migrations/**/*.js\" \"./*js\"",
-    "start": "node lib/server.js",
-    "start:dev": "node src/server.dev.js",
+    "start": "node src/server.js",
     "migrate:status": "migrate-mongo status",
     "migrate:down": "migrate-mongo down",
     "migrate": "migrate-mongo up"
@@ -45,7 +45,7 @@
     "jsonwebtoken": "^8.5.1",
     "migrate-mongo": "9.0.0",
     "mongodb": "4.9.1",
-    "nanoid": "3.3.4",
+    "nanoid": "4.0.0",
     "papaparse": "5.3.2",
     "rate-limiter-flexible": "^2.3.10",
     "socket.io": "4.5.2",
@@ -54,14 +54,10 @@
     "winston-daily-rotate-file": "4.7.1"
   },
   "devDependencies": {
-    "@babel/cli": "7.18.10",
-    "@babel/core": "7.19.1",
-    "@babel/preset-env": "7.19.1",
-    "@babel/register": "7.18.9",
+    "@jest/globals": "^29.0.3",
     "@faker-js/faker": "^7.5.0",
-    "babel-jest": "29.0.3",
     "eslint": "8.23.1",
-    "jest": "29.0.3",
+    "jest": "^29.0.3",
     "socket.io-client": "4.5.2"
   },
   "engines": {

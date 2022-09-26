@@ -2,7 +2,7 @@
  * A user clears his estimation value for a certain story.
  * Users may only clear estimation for the currently selected story.
  */
-import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions';
+import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions.js';
 
 const schema = {
   allOf: [

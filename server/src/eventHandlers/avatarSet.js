@@ -1,4 +1,4 @@
-import {modifyUser} from './roomModifiers';
+import {modifyUser} from './roomModifiers.js';
 
 /**
  * user sets his avatar (number)

@@ -1,4 +1,4 @@
-import {getMatchingStoryOrThrow} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions.js';
 
 /**
  * A user restores a story.

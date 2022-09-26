@@ -1,4 +1,4 @@
-import {getMatchingUserOrThrow} from './commonPreconditions';
+import {getMatchingUserOrThrow} from './commonPreconditions.js';
 
 /**
  *

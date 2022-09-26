@@ -1,9 +1,9 @@
 import express from 'express';
 import {json as jsonParser} from 'body-parser';
 
-import {validateJwt} from '../auth/jwtService';
-import {mapAppStatusDto, mapRoomExportDto, mapRoomStateDto} from './dtoMapper';
-import getLogger from '../getLogger';
+import {validateJwt} from '../auth/jwtService.js';
+import {mapAppStatusDto, mapRoomExportDto, mapRoomStateDto} from './dtoMapper.js';
+import getLogger from '../getLogger.js';
 
 const CLIENT_ERROR_LOGGER = getLogger('clientError');
 

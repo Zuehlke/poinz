@@ -3,6 +3,10 @@ import path from 'path';
 
 import parseCsvDataUrlToStories from '../../src/commandHandlers/parseCsvDataUrlToStories';
 import {EXPECT_UUID_MATCHING, textToCsvDataUrl} from './testUtils';
+import {fileURLToPath} from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 test('parse real jira csv', async () => {
   const csvContent = await fs.readFile(path.join(__dirname, './testJiraIssueExport.csv'), 'utf-8');

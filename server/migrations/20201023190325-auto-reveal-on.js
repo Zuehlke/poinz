@@ -1,4 +1,4 @@
-import { toBulkOps} from '../migrate-util.js';
+import {toBulkOps} from '../migrate-util.js';
 
 /**
  * sets autoReveal "true" on all rooms that do not have the property set to either true or false.

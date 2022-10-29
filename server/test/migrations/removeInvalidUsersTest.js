@@ -1,7 +1,7 @@
-import uuid from '../../src/uuid';
-import initDb from './db';
-import removeInvalidUsers from '../../migrations/20201019095546-remove-invalid-users';
-import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
+import uuid from '../../src/uuid.js';
+import initDb from './db.js';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil.js';
+import {up} from '../../migrations/20201019095546-remove-invalid-users.js';
 
 test('DBMIGRATION: remove users without "id" (up)', async () => {
   const [db, roomz] = await initDb();
@@ -24,7 +24,7 @@ test('DBMIGRATION: remove users without "id" (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await removeInvalidUsers.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
@@ -80,7 +80,7 @@ test('DBMIGRATION: room with only valid users (up)', async () => {
   await roomz.insertOne(preRoomTwo);
 
   // migrate "up"
-  const bWriteResult = await removeInvalidUsers.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const roomOne = await roomz.findOne({id: roomId});

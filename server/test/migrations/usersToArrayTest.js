@@ -1,6 +1,6 @@
-import uuid from '../../src/uuid';
-import initDb from './db';
-import usersToArray from '../../migrations/20201014180128-users-to-array';
+import uuid from '../../src/uuid.js';
+import initDb from './db.js';
+import {up, down} from '../../migrations/20201014180128-users-to-array.js';
 
 test('DBMIGRATION: migrate users object to array (up)', async () => {
   const [db, roomz] = await initDb();
@@ -47,7 +47,7 @@ test('DBMIGRATION: migrate users object to array (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await usersToArray.up(db);
+  const bWriteResult = await up(db);
   if (bWriteResult.modifiedCount !== 1) {
     throw new Error('do not run migration tests simultaneously!');
   }
@@ -109,7 +109,7 @@ test('DBMIGRATION: migrate users array back to object (down)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "down"
-  const bWriteResult = await usersToArray.down(db);
+  const bWriteResult = await down(db);
   if (bWriteResult.modifiedCount !== 1) {
     throw new Error('do not run migration tests simultaneously!');
   }

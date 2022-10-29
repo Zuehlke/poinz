@@ -1,7 +1,7 @@
-import uuid from '../../src/uuid';
-import initDb from './db';
-import avatarToZero from '../../migrations/20201017054522-avatar-to-zero';
-import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
+import uuid from '../../src/uuid.js';
+import initDb from './db.js';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil.js';
+import {up} from '../../migrations/20201017054522-avatar-to-zero.js';
 
 test('DBMIGRATION: set avatar to zero if undefined or null (up)', async () => {
   const [db, roomz] = await initDb();
@@ -50,7 +50,7 @@ test('DBMIGRATION: set avatar to zero if undefined or null (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await avatarToZero.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});

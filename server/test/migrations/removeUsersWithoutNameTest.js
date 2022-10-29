@@ -1,7 +1,7 @@
 import uuid from '../../src/uuid';
-import initDb from './db';
-import removeUsersWithoutName from '../../migrations/20220301180047-remove-users-without-username';
-import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
+import initDb from './db.js';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil.js';
+import {up} from '../../migrations/20220301180047-remove-users-without-username.js';
 
 test('DBMIGRATION: remove users without a username (up)', async () => {
   const [db, roomz] = await initDb();
@@ -36,7 +36,7 @@ test('DBMIGRATION: remove users without a username (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await removeUsersWithoutName.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});

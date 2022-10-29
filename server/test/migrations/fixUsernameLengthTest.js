@@ -1,7 +1,7 @@
-import uuid from '../../src/uuid';
-import initDb from './db';
-import fixUsernameLength from '../../migrations/20201019134711-fix-username-length';
-import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
+import uuid from '../../src/uuid.js';
+import initDb from './db.js';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil.js';
+import {up} from '../../migrations/20201019134711-fix-username-length.js';
 
 test('DBMIGRATION: fix length of username {3,80} (up)', async () => {
   const [db, roomz] = await initDb();
@@ -36,7 +36,7 @@ test('DBMIGRATION: fix length of username {3,80} (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await fixUsernameLength.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});

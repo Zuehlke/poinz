@@ -1,8 +1,11 @@
 import {promises as fs} from 'fs';
 import path from 'path';
+import * as url from 'url';
 
 import uuid from '../../../src/uuid';
 import {prepOneUserInOneRoom, textToCsvDataUrl} from '../../unit/testUtils';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 test('Should produce storyAdded events for all stories in data', async () => {
   const csvContent = await fs.readFile(

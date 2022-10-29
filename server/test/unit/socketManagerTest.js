@@ -1,7 +1,9 @@
-import uuid from '../../src/uuid';
-import socketManagerFactory from '../../src/socketManager';
+import {jest} from '@jest/globals';
 
-import {newMockRoomsStore} from './testUtils';
+import uuid from '../../src/uuid.js';
+import socketManagerFactory from '../../src/socketManager.js';
+
+import {newMockRoomsStore} from './testUtils.js';
 
 /**
  *

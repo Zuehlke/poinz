@@ -12,13 +12,13 @@
   },
   "type": "module",
   "scripts": {
-    "test": "jest \"./test/unit\" \"./test/integration\"",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest \"./test/unit\" \"./test/integration\"",
     "test:system": "jest \"./test/system\"",
     "test:migration": "jest --runInBand \"./test/migrations\"",
     "pretest": "npm run lint",
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\" \"migrations/**/*.js\" \"./*js\"",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"migrations/**/*.js\" \"./*js\"",
-    "start": "node lib/server.js",
+    "start": "node src/server.js",
     "migrate:status": "migrate-mongo status",
     "migrate:down": "migrate-mongo down",
     "migrate": "migrate-mongo up"

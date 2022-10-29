@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
-import uuid from '../../../src/uuid';
-import {issueJwt, validateJwt} from '../../../src/auth/jwtService';
+import uuid from '../../../src/uuid.js';
+import {issueJwt, validateJwt} from '../../../src/auth/jwtService.js';
 
 test('issue a new jwt', () => {
   const userId = uuid();

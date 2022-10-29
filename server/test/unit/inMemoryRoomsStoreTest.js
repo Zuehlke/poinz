@@ -1,5 +1,5 @@
-import uuid from '../../src/uuid';
-import inMemoryRoomsStore from '../../src/store/inMemoryRoomsStore';
+import uuid from '../../src/uuid.js';
+import inMemoryRoomsStore from '../../src/store/inMemoryRoomsStore.js';
 
 test('should save and retrieve a room', async () => {
   const roomId = uuid();

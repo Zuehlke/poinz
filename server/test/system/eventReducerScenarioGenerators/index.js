@@ -1,6 +1,8 @@
 import path from 'path';
 import {promises as fs, constants as fsConst} from 'fs';
+import * as url from 'url';
 
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 const clientEventActionReducerScenarioDir = path.resolve(
   __dirname,
   '../../../../client/test/integration/eventActionReducersScenarios/events'

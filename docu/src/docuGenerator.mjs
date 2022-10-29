@@ -1,6 +1,7 @@
 import path from 'path';
-import fs from 'fs';
+import fs from 'fs-extra';
 import chalk from 'chalk';
+import {fileURLToPath} from 'url';
 
 import settings from '../docuSettings.mjs';
 import generateMermaidDiagrams from './generateMermaidDiagrams.mjs';
@@ -24,7 +25,8 @@ async function generate() {
 
   const data = await gatherData(settings.cmdHandlersDirPath, settings.evtHandlersDirPath);
 
-  const markdownString = await renderDocu(data);
+  const version = await getPoinzVersionFromPackageJson();
+  const markdownString = await renderDocu(data, version);
   await fs.promises.writeFile(
     path.join(settings.docuOutputDirPath, './commandAndEventDocu.md'),
     markdownString,
@@ -33,4 +35,14 @@ async function generate() {
 
   console.log(chalk.blue.bold('\n\nGenerating svg graphics from diagrams...\n'));
   await generateMermaidDiagrams();
+}
+
+
+async function getPoinzVersionFromPackageJson() {
+  const dirname = path.dirname(fileURLToPath(import.meta.url));
+  const pkgJsonPath = path.resolve(dirname, '../../package.json');
+
+  const pkg = await fs.readJson(pkgJsonPath);
+
+  return pkg.version;
 }

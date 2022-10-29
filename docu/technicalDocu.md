@@ -70,17 +70,17 @@ Then the events are sent back to the client. (This is somewhat inspired by [CQRS
 
 The following diagram shows the basic attributes of every command and event:
 
-![command event structure](./diagrams/ermCommandEvent.md.svg)
+![command event structure](./diagrams/ermCommandEvent.md-1.svg)
 
 
 Simple sequence diagram that shows the basic flow and command handling:
 
-![Generic command handling](./diagrams/sequenceCommandHandlingGeneric.md.svg)
+![Generic command handling](./diagrams/sequenceCommandHandlingGeneric.md-1.svg)
 
 
 Example with a simple command that produces just one event:
 
-![Simple example](./diagrams/sequenceCommandHandlingExample.md.svg)
+![Simple example](./diagrams/sequenceCommandHandlingExample.md-1.svg)
 
 For a list of all the commands and their respective events, see the generated [command and event docu](/docu/commandAndEventDocu.md);
 

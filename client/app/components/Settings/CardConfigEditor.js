@@ -4,7 +4,13 @@ import PropTypes from 'prop-types';
 import uuid from '../../services/uuid';
 import CardConfigEditorItem from './CardConfigEditorItem';
 
-import {AddItemButton, ErrorMsg, StyledItems, StyledTextarea} from './_styled';
+import {
+  AddItemButton,
+  ErrorMsg,
+  StyledCadConfigEditor,
+  StyledItems,
+  StyledTextarea
+} from './_styled';
 
 /**
  *
@@ -12,14 +18,16 @@ import {AddItemButton, ErrorMsg, StyledItems, StyledTextarea} from './_styled';
 export const CardConfigEditor = ({cardConfig, onSave, t}) => {
   const [validationError, setValidationError] = useState('');
   const [internalCC, setInternalCC] = useState(addIds(cardConfig));
+  const [internalCcString, setInternalCcString] = useState(JSON.stringify(cardConfig, null, 4));
   const [showTextEditor, setShowTextEditor] = useState(false);
 
   useEffect(() => {
     setInternalCC(addIds(cardConfig));
+    setInternalCcString(JSON.stringify(cardConfig, null, 4));
   }, [cardConfig]);
 
   return (
-    <div>
+    <StyledCadConfigEditor>
       <div className="pure-g">
         <button
           className={`pure-u-1-2 pure-button pure-button-stripped ${
@@ -41,12 +49,7 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
         </button>
       </div>
 
-      {showTextEditor && (
-        <StyledTextarea
-          value={JSON.stringify(stripIds(internalCC), null, 4)}
-          onChange={onTextChange}
-        />
-      )}
+      {showTextEditor && <StyledTextarea value={internalCcString} onChange={onTextChange} />}
 
       {!showTextEditor && (
         <StyledItems>
@@ -82,7 +85,7 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
       <button type="button" className="pure-button" onClick={() => onSave()}>
         {t('default')} <i className="icon-ccw" />
       </button>
-    </div>
+    </StyledCadConfigEditor>
   );
 
   function onAdd() {
@@ -92,6 +95,7 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
 
   function onTextChange(e) {
     try {
+      setInternalCcString(e.target.value);
       const modifiedCC = JSON.parse(e.target.value);
       setAndValidate(addIds(modifiedCC));
     } catch (err) {

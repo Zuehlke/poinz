@@ -3,7 +3,7 @@ import fs from 'fs';
 import chalk from 'chalk';
 
 import settings from '../docuSettings.mjs';
-import downloadMermaidDiagramsAsSvg from './downloadMermaidDiagramsAsSvg.mjs';
+import generateMermaidDiagrams from './generateMermaidDiagrams.mjs';
 import gatherData from './gatherData.mjs';
 import renderDocu from './renderDocu.mjs';
 
@@ -32,5 +32,5 @@ async function generate() {
   );
 
   console.log(chalk.blue.bold('\n\nGenerating svg graphics from diagrams...\n'));
-  await downloadMermaidDiagramsAsSvg();
+  await generateMermaidDiagrams();
 }

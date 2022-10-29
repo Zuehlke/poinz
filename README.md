@@ -9,7 +9,7 @@ PoinZ (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. 
 
 The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.
 
-Checkout the App at [https://poinz.herokuapp.com/](https://poinz.herokuapp.com/)
+Checkout the App at [https://www.poinz.app](https://www.poinz.app)
 
 ![poinz_screenshot](https://user-images.githubusercontent.com/1777143/153183461-03a0e0b4-239a-4c7b-a49d-a285be828f09.png)
 

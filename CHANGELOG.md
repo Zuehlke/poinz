@@ -1,5 +1,20 @@
-### 0.17.0: 2222-12-31
+### 0.17.4: 2022-09-18
 
+* dependencies updated
+
+### 0.17.3: 2022-07-09
+
+* Changed background on landing page
+* dependencies updated
+
+### 0.17.2: 2022-06-16
+
+* Minor fixes for custom card config editor
+* dependencies updated
+
+### 0.17.1: 2022-05-22
+
+* Fix a bug where username change was not correctly persisted #275
 * Persist custom backlog width to local storage
 * Story points in imported stories stored as consensus #264
 * dependencies updated (react 18)

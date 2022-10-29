@@ -1,3 +1,4 @@
+```mermaid
 erDiagram
   Command }|--|{ Event : produces
   Command {
@@ -15,3 +16,4 @@ erDiagram
     string name
     object payload
   }
+```

@@ -39,19 +39,19 @@ Optionally the [**Settings**](#settings) menu or the **Action Log** on the right
 
 You can join a room in three different ways
 
-1. Visit the [landing page](https://poinz.herokuapp.com/) and click the big button **"Join new room"**. You will join a
+1. Visit the [landing page](https://poinz.app) and click the big button **"Join new room"**. You will join a
    new room with a randomly assigned unique room id.
 
 ![Join Room Form](https://user-images.githubusercontent.com/1777143/97100613-89a28600-1695-11eb-9d03-94a482cc0678.png)
 
-2. Visit the [landing page](https://poinz.herokuapp.com/), **extend** the form and enter a custom room name, then hit Enter
+2. Visit the [landing page](https://poinz.app), **extend** the form and enter a custom room name, then hit Enter
    or click the join button. If the room with this custom name (the room id) already exists, you will join it. Otherwise
    a new room is created.
 
 ![Join Room Form extended](https://user-images.githubusercontent.com/1777143/152639158-54568b8d-a170-465e-bc29-bf81ced30b6c.png)
 
-3. Join a room directly by visiting the room url. (e.g. https://poinz.herokuapp.com/test
-   or  https://poinz.herokuapp.com/a-random-room-id-here). If the room with this name/id already exists, you will join
+3. Join a room directly by visiting the room url. (e.g. https://poinz.app/test
+   or  https://poinz.app/a-random-room-id-here). If the room with this name/id already exists, you will join
    it. Otherwise a new room is created.
 
 PoinZ will ask you for a username on your first visit. Afterwards your username is stored in the LocalStorage of your
@@ -168,6 +168,21 @@ You can *reveal* the story at any time by clicking the blue **Reveal** button. E
 estimate. PoinZ then displays all given estimates for this story (visible for all users).
 
 ![reveal](https://user-images.githubusercontent.com/1777143/97101241-08022680-169c-11eb-97de-9a27244c3dca.png)
+
+### Numerical average and Recommendation
+
+After the estimations are revealed, PoinZ will display the numerical average (the sum of all estimated card values, divided by number of estimations) as well as a recommendation.
+
+![recommendation](https://user-images.githubusercontent.com/1777143/190894580-4bc83999-d55e-44e7-805c-fa4954a3f305.png)
+
+The recommendation is chosen as follows:
+
+* The numerical average will always fall between two cards (except if consensus is achieved)
+* The recommendation is either the higher of these two cards, or the lower one.
+* Most of the time, **the higher card is chosen as recommendation** except, if the average is "really close" to the lower card (within 10% of the card value).
+
+In the example shown, the lower card would be **13** the higher card is **21**. 21 is chosen as recommendation, since the numerical average of **19.5** is not within 10% of 13 ((19.5 - 13) > 0.1*13).
+See [getEstimationSummary.js](/client/app/components/EstimationArea/getEstimationSummary.js); for the implementation.
 
 ### Estimating with "Confidence Levels"
 

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import backgroundImage from '../../assets/landing_bg_z2020_lightblue.jpg';
+import backgroundImage from '../../assets/landing_bg_z2022_grey.jpg';
 import {COLOR_FONT_GREY, COLOR_ORANGE} from '../colors';
 import {device} from '../dimensions';
 

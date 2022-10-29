@@ -4,7 +4,7 @@
  * If story is already revealed, reject command.
  *
  */
-import {getMatchingStoryOrThrow} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions.js';
 
 const schema = {
   allOf: [

@@ -1,5 +1,5 @@
-import parseCsvDataUrlToStories from './parseCsvDataUrlToStories';
-import hasActiveStories from './hasActiveStories';
+import parseCsvDataUrlToStories from './parseCsvDataUrlToStories.js';
+import hasActiveStories from './hasActiveStories.js';
 
 /**
  * A user wants to import multiple stories.

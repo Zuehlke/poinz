@@ -1,9 +1,9 @@
 /**
  * A user manually "settles" on a value for a story. (hopefully after a discussion with everybody in the room).
- * This will produced "consensusAchieved".
+ * This will produce "consensusAchieved".
  * This saves the team the time to start a new round where everybody has to estimate the same value.
  */
-import {getMatchingStoryOrThrow} from './commonPreconditions';
+import {getMatchingStoryOrThrow} from './commonPreconditions.js';
 
 const schema = {
   allOf: [

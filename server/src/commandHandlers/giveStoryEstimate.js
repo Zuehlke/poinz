@@ -6,7 +6,7 @@
  * A user that is marked as excluded (see toggleExclude/excludedFromEstimations)  cannot give estimations
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced (by default, if room setting is not altered. see "autoReveal")
  */
-import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions';
+import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions.js';
 
 const schema = {
   allOf: [

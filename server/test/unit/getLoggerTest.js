@@ -1,5 +1,6 @@
-import getLogger from '../../src/getLogger';
 import Transport from 'winston-transport';
+
+import getLogger from '../../src/getLogger.js';
 
 test('must not log passwords', () => {
   // a custom winston transport that just stores all logged messages in an array

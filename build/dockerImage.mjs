@@ -11,8 +11,8 @@
 import path from 'path';
 import {fileURLToPath} from 'url';
 import util from 'util';
-import fs from 'fs-extra';
 import {exec} from 'child_process';
+import fs from 'fs-extra';
 import {spawn} from 'cross-spawn';
 import {deleteAsync} from 'del';
 
@@ -53,24 +53,21 @@ async function build() {
   await fs.copy('./client/dist', './deploy/public/assets');
   await fs.copy('./client/index.html', './deploy/public/index.html');
 
-  // 3. transpile backend sources
+  // 3. install dependencies for backend
   console.log('installing npm dependencies for server...');
   await spawnAndPrint('npm', ['install'], {cwd: serverDirPath});
 
-  console.log('building backend (babel transpile)...');
-  await spawnAndPrint('./node_modules/.bin/babel', './src/ -d ./lib'.split(' '), {
-    cwd: serverDirPath
-  });
-
   // 4. copy client and backend to "deploy" folder
-  await fs.copy('./server/lib', './deploy/lib');
+  await fs.copy('./server/src', './deploy/src');
   await fs.copy('./server/package.json', './deploy/package.json');
 
   //  5. build docker image (see Dockerfile)
   const gitInfo = await getGitInformation();
   await startBuildingDockerImage(gitInfo);
 
-  console.log('Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 -d xeronimus/poinz');
+  console.log(
+    'Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 --name poinz_local -d xeronimus/poinz'
+  );
 }
 
 /**

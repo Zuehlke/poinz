@@ -1,4 +1,4 @@
-import {throwIfStoryTrashed} from './commonPreconditions';
+import {throwIfStoryTrashed} from './commonPreconditions.js';
 
 /**
  * A user changes the title and/or description of a story

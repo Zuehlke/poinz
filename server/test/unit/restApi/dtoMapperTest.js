@@ -1,4 +1,8 @@
-import {mapAppStatusDto, mapRoomExportDto, mapRoomStateDto} from '../../../src/restApi/dtoMapper';
+import {
+  mapAppStatusDto,
+  mapRoomExportDto,
+  mapRoomStateDto
+} from '../../../src/restApi/dtoMapper.js';
 
 const exampleRoom = {
   id: '1b370339-a8f9-411c-8a42-540609a2bcdb',

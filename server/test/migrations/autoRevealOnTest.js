@@ -1,7 +1,7 @@
-import uuid from '../../src/uuid';
-import initDb from './db';
-import autoRevealOn from '../../migrations/20201023190325-auto-reveal-on';
-import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
+import uuid from '../../src/uuid.js';
+import initDb from './db.js';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil.js';
+import {up, down} from '../../migrations/20201023190325-auto-reveal-on';
 
 test('DBMIGRATION: set autoReveal flag on every room (up)', async () => {
   const [db, roomz] = await initDb();
@@ -18,7 +18,7 @@ test('DBMIGRATION: set autoReveal flag on every room (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await autoRevealOn.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
@@ -42,7 +42,7 @@ test('DBMIGRATION: do not change autoReveal flag (when set to false) (up)', asyn
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await autoRevealOn.up(db);
+  const bWriteResult = await up(db);
   expect(bWriteResult).toBeUndefined();
 
   const room = await roomz.findOne({id: roomId});
@@ -66,7 +66,7 @@ test('DBMIGRATION: remove autoReveal flag on room (when set to false) (down)', a
   await roomz.insertOne(preRoom);
 
   // migrate "down"
-  const bWriteResult = await autoRevealOn.down(db);
+  const bWriteResult = await down(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
@@ -90,7 +90,7 @@ test('DBMIGRATION: remove autoReveal flag on room (when set to true) (down)', as
   await roomz.insertOne(preRoom);
 
   // migrate "down"
-  const bWriteResult = await autoRevealOn.down(db);
+  const bWriteResult = await down(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});

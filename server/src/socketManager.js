@@ -1,9 +1,9 @@
-import uuid from './uuid';
-import getLogger from './getLogger';
-import socketRegistryFactory from './socketRegistry';
-import commandProcessorFactory from './commandProcessor';
-import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers';
-import eventHandlers from './eventHandlers/eventHandlers';
+import uuid from './uuid.js';
+import getLogger from './getLogger.js';
+import socketRegistryFactory from './socketRegistry.js';
+import commandProcessorFactory from './commandProcessor.js';
+import commandHandlers, {baseCommandSchema} from './commandHandlers/commandHandlers.js';
+import eventHandlers from './eventHandlers/eventHandlers.js';
 
 const LOGGER = getLogger('socketManager');
 

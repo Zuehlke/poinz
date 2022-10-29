@@ -1,4 +1,4 @@
-import {hashRoomPassword, checkRoomPassword} from '../../../src/auth/roomPasswordService';
+import {hashRoomPassword, checkRoomPassword} from '../../../src/auth/roomPasswordService.js';
 
 test('get hashed password with salt', () => {
   const hashed = hashRoomPassword('this-is-my-superPassword');

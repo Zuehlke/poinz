@@ -1,6 +1,6 @@
-import persistentRoomsStore from './persistentRoomsStore';
-import inMemoryRoomsStore from './inMemoryRoomsStore';
-import getLogger from '../getLogger';
+import persistentRoomsStore from './persistentRoomsStore.js';
+import inMemoryRoomsStore from './inMemoryRoomsStore.js';
+import getLogger from '../getLogger.js';
 
 const LOGGER = getLogger('roomStoreFactory');
 

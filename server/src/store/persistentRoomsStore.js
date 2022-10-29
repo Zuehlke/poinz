@@ -1,6 +1,6 @@
 import {MongoClient} from 'mongodb';
 
-import getLogger from '../getLogger';
+import getLogger from '../getLogger.js';
 
 const COLLECTION_NAME = 'rooms';
 

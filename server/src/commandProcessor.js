@@ -1,14 +1,14 @@
 import util from 'util';
 import fastq from 'fastq';
 
-import uuid from './uuid';
-import getLogger from './getLogger';
-import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions';
+import uuid from './uuid.js';
+import getLogger from './getLogger.js';
+import {throwIfUserIdNotFoundInRoom} from './commandHandlers/commonPreconditions.js';
 import {
   commandSchemaValidatorFactory,
   roomSchemaValidatorFactory,
   getSchemasFromRealCommandHandlers
-} from './validation/schemaValidators';
+} from './validation/schemaValidators.js';
 
 const LOGGER = getLogger('commandProcessor');
 

@@ -1,8 +1,11 @@
 import {promises as fs} from 'fs';
 import path from 'path';
+import * as url from 'url';
 
-import parseCsvDataUrlToStories from '../../src/commandHandlers/parseCsvDataUrlToStories';
-import {EXPECT_UUID_MATCHING, textToCsvDataUrl} from './testUtils';
+import parseCsvDataUrlToStories from '../../src/commandHandlers/parseCsvDataUrlToStories.js';
+import {EXPECT_UUID_MATCHING, textToCsvDataUrl} from './testUtils.js';
+
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 test('parse real jira csv', async () => {
   const csvContent = await fs.readFile(path.join(__dirname, './testJiraIssueExport.csv'), 'utf-8');

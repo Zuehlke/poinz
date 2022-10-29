@@ -1,7 +1,7 @@
-import uuid from '../../src/uuid';
-import initDb from './db';
-import storiesToArray from '../../migrations/20201014181259-stories-to-array';
-import {throwIfBulkWriteResultInvalid} from './migrationTestUtil';
+import uuid from '../../src/uuid.js';
+import initDb from './db.js';
+import {throwIfBulkWriteResultInvalid} from './migrationTestUtil.js';
+import {up, down} from '../../migrations/20201014181259-stories-to-array.js';
 
 test('DBMIGRATION: migrate "stories" object to array (up)', async () => {
   const [db, roomz] = await initDb();
@@ -58,7 +58,7 @@ test('DBMIGRATION: migrate "stories" object to array (up)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await storiesToArray.up(db);
+  const bWriteResult = await up(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});
@@ -127,7 +127,7 @@ test('DBMIGRATION: migrate "stories" array back to object (down)', async () => {
   await roomz.insertOne(preRoom);
 
   // migrate "up"
-  const bWriteResult = await storiesToArray.down(db);
+  const bWriteResult = await down(db);
   throwIfBulkWriteResultInvalid(bWriteResult);
 
   const room = await roomz.findOne({id: roomId});

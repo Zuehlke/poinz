@@ -1,6 +1,6 @@
-import defaultCardConfig from '../../../src/defaultCardConfig';
-import setCardConfig from '../../../src/commandHandlers/setCardConfig';
-import {commandSchemaValidatorFactory} from '../../../src/validation/schemaValidators';
+import defaultCardConfig from '../../../src/defaultCardConfig.js';
+import setCardConfig from '../../../src/commandHandlers/setCardConfig.js';
+import {commandSchemaValidatorFactory} from '../../../src/validation/schemaValidators.js';
 
 const validate = commandSchemaValidatorFactory({
   command: {},

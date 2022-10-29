@@ -1,7 +1,7 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 
-import settings from './settings';
+import settings from './settings.js';
 
 export default getLogger;
 

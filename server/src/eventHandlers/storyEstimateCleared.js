@@ -1,4 +1,4 @@
-import {modifyStory} from './roomModifiers';
+import {modifyStory} from './roomModifiers.js';
 
 /**
  * Removes a previously set estimation value on the given story for the given user

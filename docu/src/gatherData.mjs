@@ -186,7 +186,7 @@ async function getListOfCommandHandlerFiles(cmdHandlersDirPath) {
   const imports = [];
   babel.traverse(result, {
     ImportDeclaration: (nodePath) => {
-      imports.push(nodePath.node.source.value + '.js');
+      imports.push(nodePath.node.source.value);
     }
   });
 

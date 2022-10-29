@@ -3,7 +3,7 @@
  * @param {object[]} arr
  * @return {object}
  */
-const indexById = (arr) =>
+export const indexById = (arr) =>
   Array.isArray(arr)
     ? arr.reduce((total, currItem) => {
         if (!currItem.id) {
@@ -14,7 +14,7 @@ const indexById = (arr) =>
       }, {})
     : {};
 
-const toBulkOps = (opsArray, room) => {
+export const toBulkOps = (opsArray, room) => {
   opsArray.push({
     replaceOne: {
       filter: {_id: room._id},
@@ -22,9 +22,4 @@ const toBulkOps = (opsArray, room) => {
       upsert: false
     }
   });
-};
-
-module.exports = {
-  indexById,
-  toBulkOps
 };

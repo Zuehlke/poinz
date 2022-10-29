@@ -1,7 +1,9 @@
-import uuid from '../../src/uuid';
-import {newMockRoomsStore} from './testUtils';
-import processorFactory, {sanitizeRoomId} from '../../src/commandProcessor';
-import {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
+import {jest} from '@jest/globals';
+
+import uuid from '../../src/uuid.js';
+import {newMockRoomsStore} from './testUtils.js';
+import processorFactory, {sanitizeRoomId} from '../../src/commandProcessor.js';
+import {baseCommandSchema} from '../../src/commandHandlers/commandHandlers.js';
 
 test('process a dummy command successfully: create room on the fly', async () => {
   const processor = processorFactory(

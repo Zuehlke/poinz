@@ -1,4 +1,4 @@
-import {modifyStory} from './roomModifiers';
+import {modifyStory} from './roomModifiers.js';
 
 /**
  * Stores consensus estimation value (that everybody agreed on) on story.

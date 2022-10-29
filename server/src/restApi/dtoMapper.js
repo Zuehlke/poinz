@@ -1,4 +1,4 @@
-import defaultCardConfig from '../defaultCardConfig';
+import defaultCardConfig from '../defaultCardConfig.js';
 
 /**
  * Maps room to limited set of properties for export (room as file download).

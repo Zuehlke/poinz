@@ -2,7 +2,7 @@
  * A user removes a disconnected user from the room.
  *
  */
-import {throwIfUserIdNotFoundInRoom} from './commonPreconditions';
+import {throwIfUserIdNotFoundInRoom} from './commonPreconditions.js';
 
 const schema = {
   allOf: [

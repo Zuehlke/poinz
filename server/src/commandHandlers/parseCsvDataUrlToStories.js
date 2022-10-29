@@ -1,7 +1,9 @@
-import {parse as parseCsv} from 'papaparse';
+import papaparse from 'papaparse';
 
-import uuid from '../uuid';
-import getLogger from '../getLogger';
+import uuid from '../uuid.js';
+import getLogger from '../getLogger.js';
+
+const {parse: parseCsv} = papaparse;
 
 const LOGGER = getLogger('storyImportParser');
 

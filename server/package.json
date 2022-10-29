@@ -10,9 +10,8 @@
     "type": "git",
     "url": "https://github.com/Zuehlke/poinz.git"
   },
-  "main": "lib/server.js",
+  "type": "module",
   "scripts": {
-    "build": "babel src -d lib --source-maps true",
     "test": "jest \"./test/unit\" \"./test/integration\"",
     "test:system": "jest \"./test/system\"",
     "test:migration": "jest --runInBand \"./test/migrations\"",
@@ -20,7 +19,6 @@
     "lint": "eslint \"src/**/*.js\" \"test/**/*.js\" \"migrations/**/*.js\" \"./*js\"",
     "format": "prettier --write \"src/**/*.js\" \"test/**/*.js\" \"migrations/**/*.js\" \"./*js\"",
     "start": "node lib/server.js",
-    "start:dev": "node src/server.dev.js",
     "migrate:status": "migrate-mongo status",
     "migrate:down": "migrate-mongo down",
     "migrate": "migrate-mongo up"

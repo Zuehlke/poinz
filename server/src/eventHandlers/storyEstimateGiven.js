@@ -1,7 +1,7 @@
 /**
  * Stores the given estimation value on the story for the given user
  */
-import {modifyStory} from './roomModifiers';
+import {modifyStory} from './roomModifiers.js';
 
 const storyEstimateGivenEventHandler = (room, eventPayload, userId) => {
   let modifiedRoom = modifyStory(room, eventPayload.storyId, (story) => ({

@@ -1,4 +1,4 @@
-import getLogger from './getLogger';
+import getLogger from './getLogger.js';
 
 const LOGGER = getLogger('socketRegistry');
 

@@ -1,5 +1,5 @@
-import uuid from '../uuid';
-import hasActiveStories from './hasActiveStories';
+import uuid from '../uuid.js';
+import hasActiveStories from './hasActiveStories.js';
 
 /**
  * A user adds a story to the estimation backlog of the room

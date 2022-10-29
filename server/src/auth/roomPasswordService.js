@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-import generateSalt from './generateSalt';
+import generateSalt from './generateSalt.js';
 
 /**
  * Checks whether the given cleartext password generates the same hash as the one that is provided.

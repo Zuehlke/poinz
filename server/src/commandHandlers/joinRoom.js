@@ -1,10 +1,10 @@
-import uuid from '../uuid';
-import defaultCardConfig from '../defaultCardConfig';
-import sampleStory from './joinRoomSampleStory';
-import {calcEmailHash} from './setEmail';
-import {modifyUser} from '../eventHandlers/roomModifiers';
-import {checkRoomPassword} from '../auth/roomPasswordService';
-import {issueJwt, validateJwt} from '../auth/jwtService';
+import uuid from '../uuid.js';
+import defaultCardConfig from '../defaultCardConfig.js';
+import sampleStory from './joinRoomSampleStory.js';
+import {calcEmailHash} from './setEmail.js';
+import {modifyUser} from '../eventHandlers/roomModifiers.js';
+import {checkRoomPassword} from '../auth/roomPasswordService.js';
+import {issueJwt, validateJwt} from '../auth/jwtService.js';
 
 /**
  * A user joins a room.

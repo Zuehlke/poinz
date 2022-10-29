@@ -1,8 +1,8 @@
-import socketIo from 'socket.io';
+import {Server} from 'socket.io';
 import {RateLimiterMemory} from 'rate-limiter-flexible';
 
-import socketManagerFactory from './socketManager';
-import getLogger from './getLogger';
+import socketManagerFactory from './socketManager.js';
+import getLogger from './getLogger.js';
 
 const LOGGER = getLogger('socketServer');
 
@@ -14,9 +14,9 @@ export default {
 };
 
 function init(httpServer, store) {
-  io = socketIo(httpServer);
+  io = new Server(httpServer);
 
-  // we dont want to pass "io" down to socketManager and registry. pass down callbacks instead...
+  // we don't want to pass "io" down to socketManager and registry. pass down callbacks instead...
   const socketManager = socketManagerFactory(
     store,
     (roomId, event) => io.to(roomId).emit('event', event),

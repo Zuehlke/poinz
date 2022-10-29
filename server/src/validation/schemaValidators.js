@@ -1,9 +1,9 @@
 import util from 'util';
 import tv4 from 'tv4';
 
-import getLogger from '../getLogger';
-import {registerCustomFormats} from './customFormats';
-import roomSchema from '../roomSchema';
+import getLogger from '../getLogger.js';
+import {registerCustomFormats} from './customFormats.js';
+import roomSchema from '../roomSchema.js';
 
 const LOGGER = getLogger('commandSchemaValidator');
 

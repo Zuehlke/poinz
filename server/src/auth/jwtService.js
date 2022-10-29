@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import generateSalt from './generateSalt';
+import generateSalt from './generateSalt.js';
 
 const ISSUER = 'POINZ';
 

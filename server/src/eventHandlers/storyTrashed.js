@@ -1,4 +1,4 @@
-import {modifyStory} from './roomModifiers';
+import {modifyStory} from './roomModifiers.js';
 
 /**
  * Marks matching story as "trashed".  Story stays in room.

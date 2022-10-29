@@ -1,4 +1,4 @@
-import {modifyStory} from './roomModifiers';
+import {modifyStory} from './roomModifiers.js';
 
 /**
  * Clears all estimations on story, sets "revealed" flag to false and erases "consensus"

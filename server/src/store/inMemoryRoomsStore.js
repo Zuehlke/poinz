@@ -1,4 +1,4 @@
-import getLogger from '../getLogger';
+import getLogger from '../getLogger.js';
 
 /**
  *  This is the non-persistent (in-memory) roomsStore implementation.

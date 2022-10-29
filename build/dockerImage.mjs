@@ -65,7 +65,9 @@ async function build() {
   const gitInfo = await getGitInformation();
   await startBuildingDockerImage(gitInfo);
 
-  console.log('Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 --name poinz_local -d xeronimus/poinz');
+  console.log(
+    'Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 --name poinz_local -d xeronimus/poinz'
+  );
 }
 
 /**

@@ -22,7 +22,7 @@ WORKDIR /usr/src/poinz
 
 # Bundle app source
 COPY deploy/public /usr/src/poinz/public
-COPY deploy/lib /usr/src/poinz/lib
+COPY deploy/src /usr/src/poinz/src
 COPY deploy/package.json /usr/src/poinz/
 
 # install app dependencies

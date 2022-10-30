@@ -37,7 +37,6 @@ async function generate() {
   await generateMermaidDiagrams();
 }
 
-
 async function getPoinzVersionFromPackageJson() {
   const dirname = path.dirname(fileURLToPath(import.meta.url));
   const pkgJsonPath = path.resolve(dirname, '../../package.json');

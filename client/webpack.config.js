@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const execSync = require('child_process').execSync;
 
 const packageInformation = require('./package.json');
-const readChangelogToHtml = require('./readChangelogToHtml');
+const parseChangelogMd = require('./parseChangelogMd');
 
 /**
  * The variable __POINT_CONFIG__ will be available on the global scope.
@@ -15,7 +15,7 @@ const definePlugin = new webpack.DefinePlugin({
     version: packageInformation.version + '-dev', // PoinZ version that is displayed in the ui
     vcsInfo: getGitInformation(),
     buildTime: Date.now(),
-    changeLog: readChangelogToHtml()
+    changeLog: parseChangelogMd()
   })
 });
 

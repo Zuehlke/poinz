@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 
 const packageInformation = require('./package.json');
-const readChangelogToHtml = require('./readChangelogToHtml');
+const parseChangelogMd = require('./parseChangelogMd');
 const defaultConfig = require('./webpack.config.js');
 
 const definePlugin = new webpack.DefinePlugin({
@@ -9,7 +9,7 @@ const definePlugin = new webpack.DefinePlugin({
     env: 'production',
     version: packageInformation.version,
     buildTime: Date.now(),
-    changeLog: readChangelogToHtml()
+    changeLog: parseChangelogMd()
   })
 });
 

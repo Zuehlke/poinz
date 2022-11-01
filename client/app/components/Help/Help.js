@@ -6,10 +6,10 @@ import {L10nContext} from '../../services/l10n';
 import {SIDEBAR_HELP} from '../../state/actions/uiStateActions';
 import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
 import Avatar from '../common/Avatar';
+import Changelog from '../common/Changelog';
 import appConfig from '../../services/appConfig';
 
 import {StyledHelp, StyledHelpInner} from './_styled';
-import {StyledChangelog} from '../Landing/_styled';
 import {StyledSection} from '../common/_styled';
 
 /**
@@ -51,7 +51,7 @@ const Help = ({shown}) => {
         </StyledSection>
 
         <StyledSection>
-          <StyledChangelog dangerouslySetInnerHTML={{__html: appConfig.changeLog}} />
+          <Changelog changelog={appConfig.changeLog} />
         </StyledSection>
       </StyledHelpInner>
     </StyledHelp>

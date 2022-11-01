@@ -159,3 +159,32 @@ export const StyledSection = styled.div`
     margin-top: 0;
   }
 `;
+
+export const StyledChangelog = styled.div`
+  ul {
+    margin: 0;
+    margin-bottom: 22px;
+    padding: 0;
+    list-style-type: none;
+
+    h1 {
+      margin: 0;
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
+    }
+
+    ul {
+      margin-left: 22px;
+      list-style-type: square;
+
+      li {
+        margin-bottom: 4px;
+      }
+    }
+  }
+`;

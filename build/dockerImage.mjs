@@ -112,6 +112,8 @@ function startBuildingDockerImage(gitInfo) {
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
   const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} .`;
 
+  console.log(` $ docker ${cmdArgs}`); // will be something like : docker build -t xeronimus/poinz:latest -t registry.heroku.com/poinz/web .
+
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(dirname, '..')});
 }
 

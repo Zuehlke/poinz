@@ -41,7 +41,6 @@
     "express-sslify": "1.2.0",
     "fastq": "1.13.0",
     "jsonwebtoken": "^8.5.1",
-    "migrate-mongo": "9.0.0",
     "mongodb": "4.11.0",
     "nanoid": "4.0.0",
     "papaparse": "5.3.2",
@@ -52,6 +51,7 @@
     "winston-daily-rotate-file": "4.7.1"
   },
   "devDependencies": {
+    "migrate-mongo": "9.0.0",
     "@faker-js/faker": "^7.6.0",
     "eslint": "8.26.0",
     "jest": "29.2.2",

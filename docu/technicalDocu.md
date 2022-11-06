@@ -11,6 +11,7 @@ Checkout the [user manual](./manual.md), if you need help with PoinZ features an
 * Install `nodeJS` at v14+ and `npm` at v6+.
 * Install git
 * Install `docker` if you want to build PoinZ
+* Install a local mongodb instance  (or run it in a local docker container  $docker run -v mongo_volume:/data/db --name flyx-mongo -p 27017:27017 -d mongo )
 
 Fork & checkout the repository then install all npm dependencies.
 

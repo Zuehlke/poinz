@@ -7,6 +7,8 @@ import {getActionLog} from '../../state/actionLog/actionLogSelectors';
 import appConfig from '../../services/appConfig';
 import JoinRoomForm from './JoinRoomForm';
 import GithubRibbon from './GithubRibbon';
+import {getJoinRoomId} from '../../state/joining/joiningSelectors';
+import Changelog from '../common/Changelog';
 
 import {
   StyledActionLog,
@@ -14,10 +16,8 @@ import {
   StyledLandingInner,
   StyledLanding,
   StyledLoadingSpinner,
-  StyledInfoText,
-  StyledChangelog
+  StyledInfoText
 } from './_styled';
-import {getJoinRoomId} from '../../state/joining/joiningSelectors';
 
 /**
  * The "landing" page where the user can enter a room name to join
@@ -62,7 +62,7 @@ const Landing = ({pendingJoin, actionLog}) => {
         )}
 
         <StyledEyecatcher>
-          <StyledChangelog dangerouslySetInnerHTML={{__html: appConfig.changeLog}} />
+          <Changelog changelog={appConfig.changeLog} />
         </StyledEyecatcher>
       </StyledLandingInner>
     </StyledLanding>

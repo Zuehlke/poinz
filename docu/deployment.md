@@ -24,23 +24,7 @@ A more suitable deployment might be needed in the future.
 
 in August 2020 we had to switch from mLab to mongoDB Atlas. (https://cloud.mongodb.com/).
 
-Currently we use a free-tier (AWS / Ireland (eu-west-1), M0 Sandbox (General),  Replica Set - 3 node, no backups). 
+Currently, we use a free-tier (AWS / Ireland (eu-west-1), M0 Sandbox (General),  Replica Set - 3 node, no backups). 
 See also https://docs.atlas.mongodb.com/reference/free-shared-limitations/ for limitations.
 
 Environment variable "ATLAS_DB_URI" is set via heroku dashboard. It's read in settings.js and toggles persistent storage.
- 
-### Heroku log monitoring with Logz.io
-
-```$  heroku drains:add "https://listener-nl.logz.io:8081?token=[TOKEN]" -a poinz```
-
-If you want to manually analyze production logs on heroku, use the heroku cli on your dev machine:
-
-```$ heroku logs -n 200 -a poinz --source app```
-
-#### Logz.io grok parsing
-
-We use this [grok](https://logz.io/blog/logstash-grok/) pattern to parse our loglines for Kibana.
-
-```text
-^%{TIMESTAMP_ISO8601:ts} %{LOGLEVEL:level}: \|POINZ\| \[%{WORD:component}\] (%{GREEDYDATA:action} user=%{NOTSPACE:userId} room=%{NOTSPACE:roomId})?%{GREEDYDATA:message}
-```

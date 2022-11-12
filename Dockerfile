@@ -10,6 +10,7 @@ WORKDIR /usr/src/poinz
 COPY deploy/public /usr/src/poinz/public
 COPY deploy/src /usr/src/poinz/src
 COPY deploy/package.json /usr/src/poinz/
+COPY deploy/package-lock.json /usr/src/poinz/
 
 # install app dependencies
 RUN npm install --omit=dev

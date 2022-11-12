@@ -18,7 +18,8 @@
     "build": "node build/dockerImage.mjs",
     "dependencyCheck": "ncu --packageFile ./package.json > npm_dependencies_report.poinz.md && ncu --packageFile ./client/package.json > npm_dependencies_report.poinz-client.md && ncu --packageFile ./server/package.json > npm_dependencies_report.poinz-server.md ",
     "postinstall": "cd client/ && npm i && cd ../server && npm i",
-    "docu": "node docu/src/docuGenerator.mjs"
+    "docu": "node docu/src/docuGenerator.mjs",
+    "docu:diagrams": "node docu/src/docuGenerator.mjs -- diagrams"
   },
   "devDependencies": {
     "@babel/core": "^7.20.2",

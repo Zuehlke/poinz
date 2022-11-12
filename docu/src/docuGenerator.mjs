@@ -33,8 +33,10 @@ async function generate() {
     'utf-8'
   );
 
-  console.log(chalk.blue.bold('\n\nGenerating svg graphics from diagrams...\n'));
-  await generateMermaidDiagrams();
+  if(process.argv.length > 3 && process.argv[3] === 'diagrams'){
+    console.log(chalk.blue.bold('\n\nGenerating svg graphics from diagrams...\n'));
+    await generateMermaidDiagrams();
+  }
 }
 
 async function getPoinzVersionFromPackageJson() {

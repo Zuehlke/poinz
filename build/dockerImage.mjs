@@ -35,12 +35,7 @@ build()
 async function build() {
   // 1. clean-up output directories
   console.log('clean up deploy/ and client/dist/');
-  await deleteAsync([
-    './deploy/',
-    './deploy/package.json',
-    '!./client/dist/index.html',
-    './client/dist/**/*'
-  ]);
+  await deleteAsync(['./deploy/', './client/dist/**/*']);
 
   // 2. build poinz client (webpack)
   console.log('installing npm dependencies for client...');
@@ -60,6 +55,7 @@ async function build() {
   // 4. copy client and backend to "deploy" folder
   await fs.copy('./server/src', './deploy/src');
   await fs.copy('./server/package.json', './deploy/package.json');
+  await fs.copy('./server/package-lock.json', './deploy/package-lock.json');
 
   //  5. build docker image (see Dockerfile)
   const gitInfo = await getGitInformation();
@@ -110,7 +106,7 @@ function startBuildingDockerImage(gitInfo) {
   const userAndProject = `${user}/poinz`;
   const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
-  const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} .`;
+  const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} --network=host .`;
 
   console.log(` $ docker ${cmdArgs}`); // will be something like : docker build -t xeronimus/poinz:latest -t registry.heroku.com/poinz/web .
 

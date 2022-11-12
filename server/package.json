@@ -54,7 +54,7 @@
     "migrate-mongo": "9.0.0",
     "@faker-js/faker": "^7.6.0",
     "eslint": "8.27.0",
-    "jest": "29.2.2",
+    "jest": "29.3.1",
     "socket.io-client": "4.5.3"
   },
   "engines": {

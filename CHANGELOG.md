@@ -1,4 +1,4 @@
-### 0.17.5: 0000-00-00
+### 0.17.5: 2022-11-19
 
 * dependencies updated
 * switched to ESM in backend

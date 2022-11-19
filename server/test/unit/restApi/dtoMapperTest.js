@@ -121,6 +121,77 @@ test('mapRoomExportDto: basic', async () => {
   });
 });
 
+test('mapRoomExportDto: with confidence', async () => {
+  const exampleRoomWithConfidence = {
+    id: 'cykbubk243leltd6p43ix',
+    users: [
+      {
+        disconnected: false,
+        id: 'rd0zb3s5xvdkzh4a7jypj',
+        avatar: 15,
+        username: 'Sergio',
+        email: 'set@zuehlke.com',
+        emailHash: 'd2bb0fb7ae7e208f0a2384ec08d708ef'
+      },
+      {
+        id: 'i1wl7azsnna9jjsx3-fdf',
+        username: 'SergioFF',
+        avatar: 0,
+        disconnected: false,
+        excluded: false
+      }
+    ],
+    stories: [
+      {
+        id: 'uauwcveac7xg0d6bx9uay',
+        title: 'Welcome to your PoinZ room!',
+        estimations: {
+          'i1wl7azsnna9jjsx3-fdf': 1,
+          rd0zb3s5xvdkzh4a7jypj: 2
+        },
+        createdAt: 1668846951691,
+        description: 'This is a sample story that we already created for you',
+        revealed: true,
+        estimationsConfidence: {
+          rd0zb3s5xvdkzh4a7jypj: 1,
+          'i1wl7azsnna9jjsx3-fdf': -1
+        }
+      }
+    ],
+    created: 1668846951691,
+    autoReveal: true,
+    withConfidence: true,
+    selectedStory: 'uauwcveac7xg0d6bx9uay',
+    lastActivity: 1668847150040,
+    markedForDeletion: false
+  };
+
+  const roomExportDto = mapRoomExportDto(exampleRoomWithConfidence);
+
+  expect(roomExportDto).toMatchObject({
+    roomId: 'cykbubk243leltd6p43ix',
+    exportedAt: expect.any(Number)
+  });
+
+  expect(roomExportDto.stories[0]).toMatchObject({
+    title: 'Welcome to your PoinZ room!',
+    estimations: [
+      {
+        username: 'SergioFF',
+        value: 1,
+        userId: 'i1wl7azsnna9jjsx3-fdf',
+        confidence: -1
+      },
+      {
+        username: 'Sergio',
+        value: 2,
+        userId: 'rd0zb3s5xvdkzh4a7jypj',
+        confidence: 1
+      }
+    ]
+  });
+});
+
 test('mapRoomExportDto: handles undefined', async () => {
   const roomExportDto = mapRoomExportDto(undefined);
 

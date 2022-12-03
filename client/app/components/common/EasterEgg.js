@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import getDayOfYear from 'date-fns/getDayOfYear';
+import set from 'date-fns/set';
 
 /**
  * displays animated falling (like snowflages) gifs
@@ -120,22 +122,18 @@ const StyledEasterEgg = styled.div`
   }
 `;
 
-/** currently these are all halloween themed gifs **/
-const giphyLinks = [
-  'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
-  'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
-  'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
-  'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
-  'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
-  'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
-];
-
 const EasterEgg = () => {
-  shuffle(giphyLinks);
+  const activeEasterEgg = getActiveSeasonalEasterEgg(new Date());
+  if (!activeEasterEgg) {
+    return null;
+  }
+
+  const iconLinks = [...activeEasterEgg.iconLinks];
+  shuffle(iconLinks);
 
   return (
     <StyledEasterEgg>
-      {giphyLinks.map((link) => (
+      {iconLinks.map((link) => (
         <div key={link} className="snowflake">
           <img src={link} />
         </div>
@@ -158,3 +156,44 @@ function shuffle(array) {
 
   return array;
 }
+
+export function getActiveSeasonalEasterEgg(nowDate) {
+  return seasonalEasterEggs.find((sEe) => sEe.active(nowDate));
+}
+
+const seasonalEasterEggs = [
+  {
+    id: 'halloween',
+    active: (nowDate) => {
+      const currentDayOfYear = getDayOfYear(nowDate);
+      const startSeason = getDayOfYear(set(new Date(), {month: 9, date: 26}));
+      const endSeason = getDayOfYear(set(new Date(), {month: 10, date: 3}));
+      return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
+    },
+    iconLinks: [
+      'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
+      'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
+      'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
+      'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
+      'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
+      'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
+    ]
+  },
+  {
+    id: 'xmas',
+    active: (nowDate) => {
+      const currentDayOfYear = getDayOfYear(nowDate);
+      const startSeason = getDayOfYear(set(new Date(), {month: 11, date: 1}));
+      const endSeason = getDayOfYear(set(new Date(), {month: 11, date: 28}));
+      return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
+    },
+    iconLinks: [
+      'https://media.giphy.com/media/RkDyUOdk2uUHeLZnst/giphy.gif', // x-mas tree
+      'https://media4.giphy.com/media/Fb7tsxISJCeMoIeUwm/giphy.gif', // skating snowman
+      'https://media0.giphy.com/media/tNbXuyMMSaZydoQ7kG/giphy.gif', // bells
+      'https://media3.giphy.com/media/B2KYCOdRfelrDqdNcI/giphy.gif', // gifts
+      'https://media0.giphy.com/media/sVnW3fFvKwyRlPZ83h/giphy.gif', // gift
+      'https://media4.giphy.com/media/dCuCnt6GU5xQGWzqoi/giphy.gif' // christmas stockings
+    ]
+  }
+];

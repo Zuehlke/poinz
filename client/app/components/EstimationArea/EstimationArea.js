@@ -41,7 +41,6 @@ const EstimationArea = ({
   applause,
   consensusCardConfig,
   hasConsensus,
-  easterEggActive,
   userCanCurrentlyEstimate,
   newEstimationRound,
   reveal,
@@ -65,7 +64,7 @@ const EstimationArea = ({
         />
 
         {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
-        {easterEggActive && hasConsensus && applause && <EasterEgg />}
+        {hasConsensus && applause && <EasterEgg />}
       </StyledSelectedStory>
 
       {!revealed && (
@@ -122,7 +121,6 @@ EstimationArea.propTypes = {
   selectedStory: PropTypes.object,
   consensusCardConfig: PropTypes.object,
   hasConsensus: PropTypes.bool,
-  easterEggActive: PropTypes.bool,
   applause: PropTypes.bool,
   hasNextStory: PropTypes.bool,
   newEstimationRound: PropTypes.func,
@@ -148,7 +146,6 @@ export default connect(
       consensusCardConfig,
       hasConsensus,
       userCanCurrentlyEstimate,
-      easterEggActive: state.ui.easterEggActive,
       applause: hasApplause(state),
       hasNextStory: !!findNextStoryIdToEstimate(state)
     };

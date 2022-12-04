@@ -4,8 +4,37 @@ import getDayOfYear from 'date-fns/getDayOfYear';
 import set from 'date-fns/set';
 
 /**
- * displays animated falling (like snowflages) gifs
+ * displays animated falling (like snowflakes) gifs
  */
+
+const seasonalEasterEggs = [
+  {
+    id: 'halloween',
+    startSeason: {month: 9, date: 26}, // starting with 26th of October
+    endSeason: {month: 10, date: 3}, // ending with 3rd of November
+    iconLinks: [
+      'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
+      'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
+      'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
+      'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
+      'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
+      'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
+    ]
+  },
+  {
+    id: 'xmas',
+    startSeason: {month: 11, date: 1}, // starting with 1st of december
+    endSeason: {month: 11, date: 28}, // ending with 28th of december
+    iconLinks: [
+      'https://media.giphy.com/media/RkDyUOdk2uUHeLZnst/giphy.gif', // x-mas tree
+      'https://media4.giphy.com/media/Fb7tsxISJCeMoIeUwm/giphy.gif', // skating snowman
+      'https://media0.giphy.com/media/tNbXuyMMSaZydoQ7kG/giphy.gif', // bells
+      'https://media3.giphy.com/media/B2KYCOdRfelrDqdNcI/giphy.gif', // gifts
+      'https://media0.giphy.com/media/sVnW3fFvKwyRlPZ83h/giphy.gif', // gift
+      'https://media4.giphy.com/media/dCuCnt6GU5xQGWzqoi/giphy.gif' // christmas stockings
+    ]
+  }
+];
 
 const StyledEasterEgg = styled.div`
   user-select: none;
@@ -158,42 +187,12 @@ function shuffle(array) {
 }
 
 export function getActiveSeasonalEasterEgg(nowDate) {
-  return seasonalEasterEggs.find((sEe) => sEe.active(nowDate));
-}
+  return seasonalEasterEggs.find((ee) => isEasterEggActive(ee));
 
-const seasonalEasterEggs = [
-  {
-    id: 'halloween',
-    active: (nowDate) => {
-      const currentDayOfYear = getDayOfYear(nowDate);
-      const startSeason = getDayOfYear(set(new Date(), {month: 9, date: 26}));
-      const endSeason = getDayOfYear(set(new Date(), {month: 10, date: 3}));
-      return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
-    },
-    iconLinks: [
-      'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
-      'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
-      'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
-      'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
-      'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
-      'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
-    ]
-  },
-  {
-    id: 'xmas',
-    active: (nowDate) => {
-      const currentDayOfYear = getDayOfYear(nowDate);
-      const startSeason = getDayOfYear(set(new Date(), {month: 11, date: 1}));
-      const endSeason = getDayOfYear(set(new Date(), {month: 11, date: 28}));
-      return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
-    },
-    iconLinks: [
-      'https://media.giphy.com/media/RkDyUOdk2uUHeLZnst/giphy.gif', // x-mas tree
-      'https://media4.giphy.com/media/Fb7tsxISJCeMoIeUwm/giphy.gif', // skating snowman
-      'https://media0.giphy.com/media/tNbXuyMMSaZydoQ7kG/giphy.gif', // bells
-      'https://media3.giphy.com/media/B2KYCOdRfelrDqdNcI/giphy.gif', // gifts
-      'https://media0.giphy.com/media/sVnW3fFvKwyRlPZ83h/giphy.gif', // gift
-      'https://media4.giphy.com/media/dCuCnt6GU5xQGWzqoi/giphy.gif' // christmas stockings
-    ]
+  function isEasterEggActive(eeSpec) {
+    const currentDayOfYear = getDayOfYear(nowDate);
+    const startSeason = getDayOfYear(set(nowDate, eeSpec.startSeason));
+    const endSeason = getDayOfYear(set(nowDate, eeSpec.endSeason));
+    return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
   }
-];
+}

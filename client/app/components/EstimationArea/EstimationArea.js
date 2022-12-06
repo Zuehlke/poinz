@@ -41,11 +41,11 @@ const EstimationArea = ({
   applause,
   consensusCardConfig,
   hasConsensus,
-  easterEggActive,
   userCanCurrentlyEstimate,
   newEstimationRound,
   reveal,
-  hasNextStory
+  hasNextStory,
+  activeEasterEgg
 }) => {
   const {t} = useContext(L10nContext);
   const revealed = selectedStory.revealed;
@@ -65,7 +65,9 @@ const EstimationArea = ({
         />
 
         {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
-        {easterEggActive && hasConsensus && applause && <EasterEgg />}
+        {hasConsensus && activeEasterEgg && applause && (
+          <EasterEgg activeEasterEgg={activeEasterEgg} />
+        )}
       </StyledSelectedStory>
 
       {!revealed && (
@@ -122,11 +124,11 @@ EstimationArea.propTypes = {
   selectedStory: PropTypes.object,
   consensusCardConfig: PropTypes.object,
   hasConsensus: PropTypes.bool,
-  easterEggActive: PropTypes.bool,
   applause: PropTypes.bool,
   hasNextStory: PropTypes.bool,
   newEstimationRound: PropTypes.func,
-  reveal: PropTypes.func
+  reveal: PropTypes.func,
+  activeEasterEgg: PropTypes.object
 };
 
 export default connect(
@@ -148,9 +150,9 @@ export default connect(
       consensusCardConfig,
       hasConsensus,
       userCanCurrentlyEstimate,
-      easterEggActive: state.ui.easterEggActive,
       applause: hasApplause(state),
-      hasNextStory: !!findNextStoryIdToEstimate(state)
+      hasNextStory: !!findNextStoryIdToEstimate(state),
+      activeEasterEgg: state.ui.activeEasterEgg
     };
   },
   {newEstimationRound, reveal, selectNextStory}

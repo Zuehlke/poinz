@@ -1,5 +1,3 @@
-import getDayOfYear from 'date-fns/getDayOfYear';
-
 import {getItem, persistOnStateChange} from '../clientSettingsStore';
 import {EVENT_ACTION_TYPES} from '../actions/eventActions';
 import {LOCATION_CHANGED} from '../actions/commandActions';
@@ -15,6 +13,7 @@ import {
   SIDEBAR_TOGGLED,
   BACKLOG_WIDTH_SET
 } from '../actions/uiStateActions';
+import {getActiveSeasonalEasterEgg} from '../../components/common/EasterEgg';
 
 const HIDE_NEW_USER_HINTS = 'hideNewUserHints';
 const MARKDOWN_ENABLED = 'markdownEnabled';
@@ -27,9 +26,9 @@ export const uiInitialState = {
   matrixShown: false,
   applause: false,
   unseenError: false,
-  easterEggActive: isHalloweenSeason(),
   newUserHintHidden: getItem(HIDE_NEW_USER_HINTS) === 'true',
   markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true',
+  activeEasterEgg: getActiveSeasonalEasterEgg(new Date()), // will be either a easterEgg Season Spec or undefined
   matrixIncludeTrashedStories: false
 };
 
@@ -137,10 +136,4 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
   }
 
   return state;
-}
-
-function isHalloweenSeason() {
-  const now = new Date();
-  const currentDayOfYear = getDayOfYear(now);
-  return currentDayOfYear > 288 && currentDayOfYear < 319; // between 15. October and 15.November (close enough, in leap years this is shifted by one day)
 }

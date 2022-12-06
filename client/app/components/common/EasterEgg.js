@@ -1,9 +1,64 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
+import getDayOfYear from 'date-fns/getDayOfYear';
+import set from 'date-fns/set';
+import sub from 'date-fns/sub';
+import add from 'date-fns/add';
 
 /**
- * displays animated falling (like snowflages) gifs
+ * displays animated falling (like snowflakes) gifs
  */
+
+const seasonalEasterEggs = [
+  {
+    id: 'easter',
+    startSeason: (nowDate) => {
+      const easter = getDateOfEasterForYear(nowDate.getFullYear());
+      const startSeasonDate = sub(easter, {days: 7}); // easter season should start a week before
+      return {month: startSeasonDate.getMonth(), date: startSeasonDate.getDate()};
+    },
+    endSeason: (nowDate) => {
+      const easter = getDateOfEasterForYear(nowDate.getFullYear());
+      const endSeasonDate = add(easter, {days: 1}); // easter season should end the day after
+      return {month: endSeasonDate.getMonth(), date: endSeasonDate.getDate()};
+    },
+    iconLinks: [
+      'https://media3.giphy.com/media/NVNWGtev2NrXz1b54w/giphy.gif', // bunny with basket
+      'https://media0.giphy.com/media/ZNzKz4LjWsGe54PeWA/giphy.gif', // bunny
+      'https://media2.giphy.com/media/iGHtDr5TKbxc2SJuJB/giphy.gif', // eggs
+      'https://media0.giphy.com/media/7swzhV08oePcZLZmcy/giphy.gif', // flowers
+      'https://media3.giphy.com/media/PkA7m0pPjWqidwhnEE/giphy.gif' // chicken
+    ]
+  },
+  {
+    id: 'halloween',
+    startSeason: {month: 9, date: 26}, // starting with 26th of October
+    endSeason: {month: 10, date: 3}, // ending with 3rd of November
+    iconLinks: [
+      'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
+      'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
+      'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
+      'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
+      'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
+      'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
+    ]
+  },
+  {
+    id: 'xmas',
+    startSeason: {month: 11, date: 1}, // starting with 1st of december
+    endSeason: {month: 11, date: 28}, // ending with 28th of december
+    iconLinks: [
+      'https://media.giphy.com/media/RkDyUOdk2uUHeLZnst/giphy.gif', // x-mas tree
+      'https://media4.giphy.com/media/Fb7tsxISJCeMoIeUwm/giphy.gif', // skating snowman
+      'https://media0.giphy.com/media/tNbXuyMMSaZydoQ7kG/giphy.gif', // bells
+      'https://media3.giphy.com/media/B2KYCOdRfelrDqdNcI/giphy.gif', // gifts
+      'https://media0.giphy.com/media/sVnW3fFvKwyRlPZ83h/giphy.gif', // gift
+      'https://media4.giphy.com/media/dCuCnt6GU5xQGWzqoi/giphy.gif', // christmas stockings
+      'https://media2.giphy.com/media/KD7GBscDYwNDauSGoP/giphy.gif' // merry christmas
+    ]
+  }
+];
 
 const StyledEasterEgg = styled.div`
   user-select: none;
@@ -120,28 +175,27 @@ const StyledEasterEgg = styled.div`
   }
 `;
 
-/** currently these are all halloween themed gifs **/
-const giphyLinks = [
-  'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
-  'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
-  'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
-  'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
-  'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
-  'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
-];
+const EasterEgg = ({activeEasterEgg}) => {
+  if (!activeEasterEgg) {
+    return null;
+  }
 
-const EasterEgg = () => {
-  shuffle(giphyLinks);
+  const iconLinks = [...activeEasterEgg.iconLinks];
+  shuffle(iconLinks);
 
   return (
     <StyledEasterEgg>
-      {giphyLinks.map((link) => (
+      {iconLinks.map((link) => (
         <div key={link} className="snowflake">
           <img src={link} />
         </div>
       ))}
     </StyledEasterEgg>
   );
+};
+
+EasterEgg.propTypes = {
+  activeEasterEgg: PropTypes.object
 };
 
 export default EasterEgg;
@@ -157,4 +211,51 @@ function shuffle(array) {
   }
 
   return array;
+}
+
+/**
+ *
+ * @param {Date} nowDate
+ * @returns {  id: string,   iconLinks: string[]}   | undefined}
+ */
+export function getActiveSeasonalEasterEgg(nowDate) {
+  return seasonalEasterEggs.find((ee) => isEasterEggActive(ee));
+
+  function isEasterEggActive(eeSpec) {
+    const currentDayOfYear = getDayOfYear(nowDate);
+    const startSeason = getDayOfYear(
+      set(
+        nowDate,
+        eeSpec.startSeason instanceof Function ? eeSpec.startSeason(nowDate) : eeSpec.startSeason
+      )
+    );
+    const endSeason = getDayOfYear(
+      set(
+        nowDate,
+        eeSpec.endSeason instanceof Function ? eeSpec.endSeason(nowDate) : eeSpec.endSeason
+      )
+    );
+    return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
+  }
+}
+
+/**
+ * returns the date of the Easter sunday for a given year
+ * @param {Number} y
+ * @returns {Date}
+ */
+function getDateOfEasterForYear(y) {
+  let date, a, b, c, m, d;
+
+  date = new Date();
+  date.setHours(0, 0, 0, 0);
+  date.setFullYear(y);
+  a = y % 19;
+  b = 2200 <= y && y <= 2299 ? (11 * a + 4) % 30 : (11 * a + 5) % 30;
+  c = b === 0 || (b === 1 && a > 10) ? b + 1 : b;
+  m = 1 <= c && c <= 19 ? 3 : 2;
+  d = (50 - c) % 31;
+  date.setMonth(m, d);
+  date.setMonth(m, d + (7 - date.getDay()));
+  return date;
 }

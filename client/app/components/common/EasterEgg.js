@@ -28,8 +28,7 @@ const seasonalEasterEggs = [
       'https://media0.giphy.com/media/ZNzKz4LjWsGe54PeWA/giphy.gif', // bunny
       'https://media2.giphy.com/media/iGHtDr5TKbxc2SJuJB/giphy.gif', // eggs
       'https://media0.giphy.com/media/7swzhV08oePcZLZmcy/giphy.gif', // flowers
-      'https://media3.giphy.com/media/PkA7m0pPjWqidwhnEE/giphy.gif', // chicken
-      'https://media2.giphy.com/media/KD7GBscDYwNDauSGoP/giphy.gif' // merry christmas
+      'https://media3.giphy.com/media/PkA7m0pPjWqidwhnEE/giphy.gif' // chicken
     ]
   },
   {
@@ -55,7 +54,8 @@ const seasonalEasterEggs = [
       'https://media0.giphy.com/media/tNbXuyMMSaZydoQ7kG/giphy.gif', // bells
       'https://media3.giphy.com/media/B2KYCOdRfelrDqdNcI/giphy.gif', // gifts
       'https://media0.giphy.com/media/sVnW3fFvKwyRlPZ83h/giphy.gif', // gift
-      'https://media4.giphy.com/media/dCuCnt6GU5xQGWzqoi/giphy.gif' // christmas stockings
+      'https://media4.giphy.com/media/dCuCnt6GU5xQGWzqoi/giphy.gif', // christmas stockings
+      'https://media2.giphy.com/media/KD7GBscDYwNDauSGoP/giphy.gif' // merry christmas
     ]
   }
 ];

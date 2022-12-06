@@ -1,3 +1,8 @@
+### 0.17.6: 2022-12-06
+
+* (more) seasonal easter eggs
+* dependencies updated
+
 ### 0.17.5: 2022-11-19
 
 * dependencies updated

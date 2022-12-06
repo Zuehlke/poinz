@@ -2,12 +2,35 @@ import React from 'react';
 import styled from 'styled-components';
 import getDayOfYear from 'date-fns/getDayOfYear';
 import set from 'date-fns/set';
+import sub from 'date-fns/sub';
+import add from 'date-fns/add';
 
 /**
  * displays animated falling (like snowflakes) gifs
  */
 
 const seasonalEasterEggs = [
+  {
+    id: 'easter',
+    startSeason: (nowDate) => {
+      const easter = getDateOfEasterForYear(nowDate.getFullYear());
+      const startSeasonDate = sub(easter, {days: 7}); // easter season should start a week before
+      return {month: startSeasonDate.getMonth(), date: startSeasonDate.getDate()};
+    },
+    endSeason: (nowDate) => {
+      const easter = getDateOfEasterForYear(nowDate.getFullYear());
+      const endSeasonDate = add(easter, {days: 1}); // easter season should end the day after
+      return {month: endSeasonDate.getMonth(), date: endSeasonDate.getDate()};
+    },
+    iconLinks: [
+      'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
+      'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
+      'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
+      'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
+      'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
+      'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
+    ]
+  },
   {
     id: 'halloween',
     startSeason: {month: 9, date: 26}, // starting with 26th of October
@@ -191,8 +214,60 @@ export function getActiveSeasonalEasterEgg(nowDate) {
 
   function isEasterEggActive(eeSpec) {
     const currentDayOfYear = getDayOfYear(nowDate);
-    const startSeason = getDayOfYear(set(nowDate, eeSpec.startSeason));
-    const endSeason = getDayOfYear(set(nowDate, eeSpec.endSeason));
+    const startSeason = getDayOfYear(
+      set(
+        nowDate,
+        eeSpec.startSeason instanceof Function ? eeSpec.startSeason(nowDate) : eeSpec.startSeason
+      )
+    );
+    const endSeason = getDayOfYear(
+      set(
+        nowDate,
+        eeSpec.endSeason instanceof Function ? eeSpec.endSeason(nowDate) : eeSpec.endSeason
+      )
+    );
     return currentDayOfYear >= startSeason && currentDayOfYear <= endSeason;
   }
+}
+
+/**
+ * returns the date of the Easter sunday for a given year
+ * @param {Number} y
+ * @returns {Date}
+ */
+function getDateOfEasterForYear(y) {
+  var date, a, b, c, m, d;
+
+  // Instantiate the date object.
+  date = new Date();
+
+  // Set the timestamp to midnight.
+  date.setHours(0, 0, 0, 0);
+
+  // Set the year.
+  date.setFullYear(y);
+
+  // Find the golden number.
+  a = y % 19;
+
+  // Choose which version of the algorithm to use based on the given year.
+  b = 2200 <= y && y <= 2299 ? (11 * a + 4) % 30 : (11 * a + 5) % 30;
+
+  // Determine whether or not to compensate for the previous step.
+  c = b === 0 || (b === 1 && a > 10) ? b + 1 : b;
+
+  // Use c first to find the month: April or March.
+  m = 1 <= c && c <= 19 ? 3 : 2;
+
+  // Then use c to find the full moon after the northward equinox.
+  d = (50 - c) % 31;
+
+  // Mark the date of that full moon—the "Paschal" full moon.
+  date.setMonth(m, d);
+
+  // Count forward the number of days until the following Sunday (Easter).
+  date.setMonth(m, d + (7 - date.getDay()));
+
+  // Gregorian Western Easter Sunday
+  return date;
 }

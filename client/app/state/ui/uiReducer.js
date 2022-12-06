@@ -13,6 +13,7 @@ import {
   SIDEBAR_TOGGLED,
   BACKLOG_WIDTH_SET
 } from '../actions/uiStateActions';
+import {getActiveSeasonalEasterEgg} from '../../components/common/EasterEgg';
 
 const HIDE_NEW_USER_HINTS = 'hideNewUserHints';
 const MARKDOWN_ENABLED = 'markdownEnabled';
@@ -27,6 +28,7 @@ export const uiInitialState = {
   unseenError: false,
   newUserHintHidden: getItem(HIDE_NEW_USER_HINTS) === 'true',
   markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true',
+  activeEasterEgg: getActiveSeasonalEasterEgg(new Date()), // will be either a easterEgg Season Spec or undefined
   matrixIncludeTrashedStories: false
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import getDayOfYear from 'date-fns/getDayOfYear';
 import set from 'date-fns/set';
 import sub from 'date-fns/sub';
@@ -23,12 +24,12 @@ const seasonalEasterEggs = [
       return {month: endSeasonDate.getMonth(), date: endSeasonDate.getDate()};
     },
     iconLinks: [
-      'https://media.giphy.com/media/AFDLK5jU756dW/giphy.gif',
-      'https://media.giphy.com/media/NvzEjCsGlXsYCbgiGP/giphy.gif',
-      'https://media.giphy.com/media/5PhD4XcqZkNhN9asdV/giphy.gif',
-      'https://media.giphy.com/media/xT9IgzmIOFMa6vOQW4/giphy.gif',
-      'https://media.giphy.com/media/Gc53XljpCgo6I/giphy.gif',
-      'https://media.giphy.com/media/buys0RyOKVU88BcUbV/giphy.gif'
+      'https://media3.giphy.com/media/NVNWGtev2NrXz1b54w/giphy.gif', // bunny with basket
+      'https://media0.giphy.com/media/ZNzKz4LjWsGe54PeWA/giphy.gif', // bunny
+      'https://media2.giphy.com/media/iGHtDr5TKbxc2SJuJB/giphy.gif', // eggs
+      'https://media0.giphy.com/media/7swzhV08oePcZLZmcy/giphy.gif', // flowers
+      'https://media3.giphy.com/media/PkA7m0pPjWqidwhnEE/giphy.gif', // chicken
+      'https://media2.giphy.com/media/KD7GBscDYwNDauSGoP/giphy.gif' // merry christmas
     ]
   },
   {
@@ -174,8 +175,7 @@ const StyledEasterEgg = styled.div`
   }
 `;
 
-const EasterEgg = () => {
-  const activeEasterEgg = getActiveSeasonalEasterEgg(new Date());
+const EasterEgg = ({activeEasterEgg}) => {
   if (!activeEasterEgg) {
     return null;
   }
@@ -194,6 +194,10 @@ const EasterEgg = () => {
   );
 };
 
+EasterEgg.propTypes = {
+  activeEasterEgg: PropTypes.object
+};
+
 export default EasterEgg;
 
 function shuffle(array) {
@@ -209,6 +213,11 @@ function shuffle(array) {
   return array;
 }
 
+/**
+ *
+ * @param {Date} nowDate
+ * @returns {  id: string,   iconLinks: string[]}   | undefined}
+ */
 export function getActiveSeasonalEasterEgg(nowDate) {
   return seasonalEasterEggs.find((ee) => isEasterEggActive(ee));
 
@@ -236,38 +245,17 @@ export function getActiveSeasonalEasterEgg(nowDate) {
  * @returns {Date}
  */
 function getDateOfEasterForYear(y) {
-  var date, a, b, c, m, d;
+  let date, a, b, c, m, d;
 
-  // Instantiate the date object.
   date = new Date();
-
-  // Set the timestamp to midnight.
   date.setHours(0, 0, 0, 0);
-
-  // Set the year.
   date.setFullYear(y);
-
-  // Find the golden number.
   a = y % 19;
-
-  // Choose which version of the algorithm to use based on the given year.
   b = 2200 <= y && y <= 2299 ? (11 * a + 4) % 30 : (11 * a + 5) % 30;
-
-  // Determine whether or not to compensate for the previous step.
   c = b === 0 || (b === 1 && a > 10) ? b + 1 : b;
-
-  // Use c first to find the month: April or March.
   m = 1 <= c && c <= 19 ? 3 : 2;
-
-  // Then use c to find the full moon after the northward equinox.
   d = (50 - c) % 31;
-
-  // Mark the date of that full moon—the "Paschal" full moon.
   date.setMonth(m, d);
-
-  // Count forward the number of days until the following Sunday (Easter).
   date.setMonth(m, d + (7 - date.getDay()));
-
-  // Gregorian Western Easter Sunday
   return date;
 }

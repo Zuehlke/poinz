@@ -126,14 +126,25 @@ describe('REST endpoint', () => {
       client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de'),
       7
     );
-    await client.cmdAndWait(client.cmds.setPassword(roomId, userId, '1234'), 1);
+
+    const customRandomPassword = faker.internet.password(16);
+    await client.cmdAndWait(client.cmds.setPassword(roomId, userId, customRandomPassword), 1);
 
     // re-join existing room with password, in order to get a token
-    const events = await client.cmdAndWait(
-      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de', '1234'),
+    const joinRoomEvents = await client.cmdAndWait(
+      client.cmds.joinRoom(
+        roomId,
+        userId,
+        'some-user-name',
+        'test@tester.de',
+        customRandomPassword
+      ),
       2
     );
     client.disconnect();
+
+    const validToken = joinRoomEvents[1].payload.token;
+    expect(validToken).toBeDefined(); // just to make sure we got the token from the correct event (at index 1)
 
     // export the room
     const {statusCode, body} = await httpGetJSON({
@@ -142,14 +153,13 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${events[1].payload.token}`
+        Authorization: `Bearer ${validToken}`
       }
     });
 
     expect(statusCode).toBe(200);
-    expect(body).toMatchObject({
-      roomId
-    });
+    expect(body.roomId).toBe(roomId);
+    expect(body.stories).toBeDefined();
     expect(body.stories.length).toBe(1);
   });
 
@@ -159,12 +169,15 @@ describe('REST endpoint', () => {
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
     await client.cmdAndWait(
-      client.cmds.joinRoom(roomId, userId, 'some-user-name', 'test@tester.de'),
+      client.cmds.joinRoom(roomId, userId, 'some-user-name', faker.internet.email()),
       7
     );
-    await client.cmdAndWait(client.cmds.setPassword(roomId, userId, '1234'), 1);
+
+    const customRandomPassword = faker.internet.password(16);
+    await client.cmdAndWait(client.cmds.setPassword(roomId, userId, customRandomPassword), 1);
     client.disconnect();
 
+    const newTokenThatDoesNotMatch = issueJwt(roomId, 'some-user-id');
     // export the room
     const {statusCode} = await httpGetJSON({
       host: 'localhost',
@@ -172,7 +185,7 @@ describe('REST endpoint', () => {
       path: '/api/export/room/' + roomId,
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${issueJwt(roomId, 'some-user-id')}`
+        Authorization: `Bearer ${newTokenThatDoesNotMatch}`
       }
     });
 

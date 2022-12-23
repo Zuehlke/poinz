@@ -7,10 +7,10 @@ test('issue a new jwt', () => {
   const userId = uuid();
   const roomId = uuid();
 
-  const jwt = issueJwt(userId, roomId);
+  const token = issueJwt(userId, roomId);
 
-  expect(jwt).toBeDefined();
-  expect(typeof jwt).toBe('string');
+  expect(token).toBeDefined();
+  expect(typeof token).toBe('string');
 });
 
 test('verify jwt', () => {

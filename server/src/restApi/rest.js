@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import {validateJwt} from '../auth/jwtService.js';
+import {verifyJwt} from '../auth/jwtService.js';
 import {mapAppStatusDto, mapRoomExportDto, mapRoomStateDto} from './dtoMapper.js';
 import getLogger from '../getLogger.js';
 
@@ -114,11 +114,11 @@ export default function restApiFactory(app, store) {
       return false;
     }
 
-    const payload = validateJwt(token, roomId);
-    if (!payload) {
+    const tokenPayload = verifyJwt(token, roomId);
+    if (!tokenPayload) {
       return false;
     }
-    return !!room.users.find((usr) => usr.id === payload.sub);
+    return !!room.users.find((usr) => usr.id === tokenPayload.sub);
   }
 
   function validateSanitizeAndLogError(requestBody) {

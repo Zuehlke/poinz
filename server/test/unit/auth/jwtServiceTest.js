@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import uuid from '../../../src/uuid.js';
-import {issueJwt, validateJwt} from '../../../src/auth/jwtService.js';
+import {issueJwt, verifyJwt} from '../../../src/auth/jwtService.js';
 
 test('issue a new jwt', () => {
   const userId = uuid();
@@ -19,13 +19,13 @@ test('verify jwt', () => {
 
   const token = issueJwt(userId, roomId);
 
-  const payload = validateJwt(token, roomId);
-  expect(payload).toBeDefined();
-  expect(payload.sub).toBe(userId);
-  expect(payload.aud).toBe(roomId);
+  const tokenPayload = verifyJwt(token, roomId);
+  expect(tokenPayload).toBeDefined();
+  expect(tokenPayload.sub).toBe(userId);
+  expect(tokenPayload.aud).toBe(roomId);
 });
 
-test('verify jwt: fail salt', () => {
+test('verify jwt: fail secret', () => {
   const userId = uuid();
   const roomId = uuid();
 
@@ -36,9 +36,9 @@ test('verify jwt: fail salt', () => {
       aud: roomId,
       iss: 'POINZ'
     },
-    'arbitrarySalt'
+    'arbitrary-Secret'
   );
 
-  const payload = validateJwt(token, roomId);
-  expect(payload).toBeUndefined();
+  const tokenPayload = verifyJwt(token, roomId);
+  expect(tokenPayload).toBeUndefined();
 });

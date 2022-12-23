@@ -217,7 +217,7 @@ test('mapRoomStateDto: basic', async () => {
     passwordProtected: true
   });
 
-  expect(roomExportDto.password).toBeUndefined();
+  expect(roomExportDto.password).toBeUndefined(); // make sure to not export password!
 });
 
 test('mapRoomStateDto: handles undefined', async () => {

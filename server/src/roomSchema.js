@@ -122,7 +122,9 @@ const roomSchema = {
         salt: {
           type: 'string'
         }
-      }
+      },
+      additionalProperties: false,
+      required: ['hash', 'salt']
     }
   },
   required: ['id', 'stories', 'users', 'created', 'lastActivity', 'markedForDeletion'],

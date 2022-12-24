@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
 
-import generateSalt from './generateSalt.js';
+import generateSafeRandomHexString from './generateSafeRandomHexString.js';
 
 const ISSUER = 'POINZ';
 
 /*
- * Generate a new Salt on server startup.
+ * Generate a new secret on server startup.
  * If the PoinZ server is restarted, all users in password-protected rooms need to re-enter the room password, which is acceptable.
  */
-const jwtSalt = generateSalt();
+const jwtSecret = generateSafeRandomHexString();
 
 /**
  * generate a new JWT for the given user in the given room
@@ -24,25 +24,25 @@ export function issueJwt(userId, roomId) {
       aud: roomId,
       iss: ISSUER
     },
-    jwtSalt
+    jwtSecret
   );
 }
 
 const getExpInMinutesFromNow = (minutes) => Math.floor(Date.now() / 1000) + 60 * minutes;
 
 /**
- * Validates given JWT.
- * - must be encrypted with our salt
+ * Verifies given JWT.
+ * - must be encrypted with our secret key
  * - issuer must match
  * - roomId must match
  *
  * @param token
- * @param roomId
- * @return {boolean}
+ * @param {string} roomId
+ * @return {object | undefined} The token payload if JWT is valid. undefined otherwise.
  */
-export function validateJwt(token, roomId) {
+export function verifyJwt(token, roomId) {
   try {
-    return jwt.verify(token, jwtSalt, {
+    return jwt.verify(token, jwtSecret, {
       audience: roomId, // will check if "aud" in payload matches roomId
       issuer: ISSUER
     });

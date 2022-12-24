@@ -4,7 +4,7 @@ import sampleStory from './joinRoomSampleStory.js';
 import {calcEmailHash} from './setEmail.js';
 import {modifyUser} from '../eventHandlers/roomModifiers.js';
 import {checkRoomPassword} from '../auth/roomPasswordService.js';
-import {issueJwt, validateJwt} from '../auth/jwtService.js';
+import {issueJwt, verifyJwt} from '../auth/jwtService.js';
 
 /**
  * A user joins a room.
@@ -200,8 +200,8 @@ function throwIfJoinIsForbidden(room, cmdPayload) {
       throw new Error('Not Authorized!');
     }
   } else if (cmdPayload.token) {
-    const isValid = validateJwt(cmdPayload.token, room.id);
-    if (!isValid) {
+    const tokenPayload = verifyJwt(cmdPayload.token, room.id);
+    if (!tokenPayload) {
       throw new Error('Not Authorized!');
     }
   } else {

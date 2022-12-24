@@ -1,6 +1,6 @@
 import {hashRoomPassword, checkRoomPassword} from '../../../src/auth/roomPasswordService.js';
 
-test('get hashed password with salt', () => {
+test('get hashed password with key', () => {
   const hashed = hashRoomPassword('this-is-my-superPassword');
 
   expect(hashed.hash).toBeDefined();

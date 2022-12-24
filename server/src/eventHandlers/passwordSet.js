@@ -4,7 +4,10 @@
 const passwordSetEventHandler = (room, eventPayload) => {
   return {
     ...room,
-    password: eventPayload.password
+    password: {
+      hash: eventPayload.password.hash,
+      salt: eventPayload.password.salt
+    }
   };
 };
 

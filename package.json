@@ -22,15 +22,15 @@
     "docu:diagrams": "node docu/src/docuGenerator.mjs -- diagrams"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.5",
-    "chalk": "^5.1.2",
+    "@babel/core": "^7.20.7",
+    "chalk": "^5.2.0",
     "cross-spawn": "7.0.3",
     "del": "7.0.0",
     "ejs": "^3.1.8",
     "fs-extra": "11.1.0",
     "glob": "^8.0.3",
-    "npm-check-updates": "16.4.3",
-    "prettier": "2.8.0",
+    "npm-check-updates": "16.6.2",
+    "prettier": "2.8.1",
     "@mermaid-js/mermaid-cli": "^9.2.2"
   },
   "engines": {

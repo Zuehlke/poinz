@@ -45,7 +45,7 @@ $ npm run build
 This will copy all backend and client files to `deploy/`.
 And then start the docker build.
 
-See [Deployment](docu/deployment.md) for more information.
+See [Deployment](/docu/deployment.md) for more information.
 
 To start the newly built image locally, in detached mode with port forwarding:
 ```

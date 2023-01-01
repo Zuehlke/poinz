@@ -15,8 +15,6 @@ test('parse 0.17.6: 2022-09-18', () => {
 
 });
 
-
-// TODO: rewrite these tests
 test('parse 0.17.6-XX: 2022-10-09', () => {
   const result = parseChangelogMdItem(` 0.17.6-XX: 2022-10-09
 

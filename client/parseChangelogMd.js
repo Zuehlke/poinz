@@ -1,6 +1,7 @@
-const parseUtils = require('./parseUtils');
 const path = require('path');
 const fs = require('fs');
+
+const parseChangelogMdItem = require('./parseChangelogMdItem');
 
 module.exports = parseChangelogMd;
 
@@ -14,8 +15,7 @@ module.exports = parseChangelogMd;
 function parseChangelogMd() {
   let markdownInput = fs.readFileSync(path.resolve(__dirname, '../CHANGELOG.md'), 'utf-8').trim();
   const itemsPlain = markdownInput.split('###').filter((i) => !!i);
-  console.log(itemsPlain)
-  return itemsPlain.map(parseUtils.parseItem);
+  return itemsPlain.map(parseChangelogMdItem);
 }
 
 parseChangelogMd();

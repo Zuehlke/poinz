@@ -1,20 +1,18 @@
-const path = require('path');
-const fs = require('fs');
-
 /* SemVer Pattern based on Semantic Versioning 2.0.0 (https://semver.org/spec/v2.0.0.html) and
  * https://regex101.com/r/vkijKf/1/
  */
-const SEMVER_PATTERN = /(?<version>^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?):/g;
+const SEMVER_PATTERN =
+  /(?<version>^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?):/g;
 const DATE_PATTERN = /:\s*(?<date>\d{4}-\d{2}-\d{2})/g;
 
-module.exports = {matchAndGetNamedGroup, parseItem, SEMVER_PATTERN};
+module.exports = parseChangelogMdItem;
 
 /**
  *
  * @param {string} plainItem
  * @returns {{date: string, changes: string[], version: string}}
  */
-function parseItem(plainItem) {
+function parseChangelogMdItem(plainItem) {
   const version = matchAndGetNamedGroup(plainItem, SEMVER_PATTERN, 'version');
   if (!version) {
     throw new Error('Could not parse CHANGELOG.md : item has no valid semver version!');

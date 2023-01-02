@@ -12,7 +12,6 @@ test('parse 0.17.6: 2022-09-18', () => {
 
   expect(result.version).toBe('0.17.6');
   expect(result.date).toBe('2022-09-18');
-
 });
 
 test('parse 0.17.6-XX: 2022-10-09', () => {
@@ -32,7 +31,7 @@ test('parse 10.20.30: 2022-07-09', () => {
 * dependencies updated
 
 `);
-  
+
   expect(result.version).toBe('10.20.30');
 });
 
@@ -42,7 +41,7 @@ test('parse 1.0.0-alpha: 2022-07-09', () => {
 * dependencies updated
 
 `);
-  
+
   expect(result.version).toBe('1.0.0-alpha');
 });
 

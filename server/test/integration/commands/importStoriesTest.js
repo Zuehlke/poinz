@@ -45,6 +45,7 @@ test('Should produce storyAdded events for all stories in data', async () => {
   expect(storyAddedEvent1.payload).toMatchObject({
     title: 'SMRGR-6275 Something something Summary',
     description: 'His account can be deactivated end of July.',
+    key: 'SMRGR-6275',
     estimations: {}
   });
   expect(storySelectedEvent.payload).toEqual({
@@ -52,6 +53,12 @@ test('Should produce storyAdded events for all stories in data', async () => {
   });
 
   expect(room.stories.length).toBe(4);
+
+  expect(room.stories[0]).toMatchObject({
+    title: 'SMRGR-6275 Something something Summary',
+    description: 'His account can be deactivated end of July.',
+    key: 'SMRGR-6275'
+  });
 });
 
 test('Should produce storyAdded and consensusAchieved events ', async () => {
@@ -93,6 +100,7 @@ test('Should produce storyAdded and consensusAchieved events ', async () => {
 
   expect(storyAddedEvent1.payload).toMatchObject({
     title: 'SMRGR-6275 Something something Summary',
+    key: 'SMRGR-6275',
     description: 'His account can be deactivated end of July.',
     estimations: {}
   });

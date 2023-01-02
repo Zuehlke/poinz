@@ -18,12 +18,14 @@ test('parse real jira csv', async () => {
 
   expect(stories[0]).toMatchObject({
     description: 'His account can be deactivated end of July.',
+    key: 'SMRGR-6275',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-6275 Something something Summary'
   });
   expect(stories[1]).toMatchObject({
     description: 'Hi Test,',
+    key: 'SMRGR-3672',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-3672 Delete Users'
@@ -41,6 +43,7 @@ Time in Canberra ACT, Australia
 Sdgsdgsdg
 
 Much appreciated! =)`,
+    key: 'SMRGR-2643',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-2643 timezone from AWST to HKT/SGT'
@@ -54,6 +57,7 @@ Steps to reproduce:
  * sdhgfhdhfdh
 
 Dsfh`,
+    key: 'SMRGR-2151',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'SMRGR-2151 Optimize messages'
@@ -76,6 +80,7 @@ test('parse csv with generic fields: "title" "description"  "key"', async () => 
   expect(stories.length).toBe(1);
   expect(stories[0]).toMatchObject({
     description: 'this is a test',
+    key: 'PRJ-123',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'PRJ-123 first story'
@@ -90,6 +95,7 @@ test('parse correctly , case-insensitive', async () => {
   expect(stories.length).toBe(1);
   expect(stories[0]).toMatchObject({
     description: 'this is a test',
+    key: 'PRJ-123',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'PRJ-123 first story'
@@ -106,6 +112,7 @@ test('parse csv with additional "consensus" ', async () => {
   expect(stories.length).toBe(1);
   expect(stories[0]).toMatchObject({
     description: 'this is a test',
+    key: 'PRJ-123',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'PRJ-123 first story',
@@ -123,6 +130,7 @@ test('include issue deeplink URL into description if issue-tracking url is provi
   expect(stories.length).toBe(1);
   expect(stories[0]).toMatchObject({
     description: 'https://jira.zuehlke.com/browse/PRJ-123\n\nSome description',
+    key: 'PRJ-123',
     estimations: {},
     storyId: EXPECT_UUID_MATCHING,
     title: 'PRJ-123 Some Title'

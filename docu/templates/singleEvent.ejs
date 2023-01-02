@@ -1,9 +1,9 @@
-### Event "<%= evtInfo.eventName %>" <a name="<%= evtInfo.eventName %>"></a>
+### Event "<%= evtInfo.eventName.trim() %>"
 
 Source: [<%= evtInfo.relativeFilePath %>](<%= evtInfo.relativeFilePath %>)
 
 Produced by: <% evtInfo.byCommands.forEach((c) => { -%>
-**[<%= c %>](#<%= c %>)** <% }) -%>
+**[<%= c %>](#command-<%= c %>)** <% }) -%>
 
 
 <%= evtInfo.restricted ? "NOTE: This event is marked as **restricted** and is thus only sent to the one client that triggered it." :""%>

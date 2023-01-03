@@ -29,7 +29,7 @@ jobs:
         run: npm test
 
       - name: build app & docker image
-        run: npm run build
+        run: npm run build:dockerImage
 
       # push docker image to repo (the --all-tags flag was introduced in version v20.10, older versions pushed all images automatically if no tag was provided)
       - name: push docker image

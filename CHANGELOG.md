@@ -1,3 +1,7 @@
+### 0.17.7: 2023-00-00
+
+* split build process into two parts (extracted building docker image to separate build step)
+
 ### 0.17.6: 2022-12-06
 
 * (more) seasonal easter eggs

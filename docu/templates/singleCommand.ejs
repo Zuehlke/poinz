@@ -1,4 +1,4 @@
-### Command "<%=  cmdInfo.commandName %>" <a name="<%=cmdInfo.commandName%>"></a>
+### Command "<%=  cmdInfo.commandName.trim() %>"
 
 Source: [<%=cmdInfo.relativeFilePath %>](<%=cmdInfo.relativeFilePath %>)
 
@@ -9,7 +9,7 @@ Description
 ```
 
 Produces: <%  cmdInfo.events.forEach( (e) => { -%>
-**[<%= e.eventName %><%= e.restricted ? " (restricted)":"" %>](#<%= e.eventName %>)**, <% })-%>
+**[<%= e.eventName %><%= e.restricted ? " (restricted)":"" %>](#event-<%= e.eventName %>)**, <% })%>
 
 
 <details>

@@ -15,7 +15,8 @@
     "format": "cd client/ && npm run format && cd ../server/ && npm run format  && cd ../ && prettier --write \"build/*.js\"  \"build/*.mjs\" \"docu/**/*.mjs\" ",
     "test": "cd client/ && npm test &&  cd ../server && npm test",
     "prebuild": "node build/checkTranslationKeys.mjs && npm run docu",
-    "build": "node build/dockerImage.mjs",
+    "build": "node build/build.mjs",
+    "build:dockerImage": "npm run build && node build/dockerImage.mjs",
     "dependencyCheck": "ncu --packageFile ./package.json > npm_dependencies_report.poinz.md && ncu --packageFile ./client/package.json > npm_dependencies_report.poinz-client.md && ncu --packageFile ./server/package.json > npm_dependencies_report.poinz-server.md ",
     "postinstall": "cd client/ && npm i && cd ../server && npm i",
     "docu": "node docu/src/docuGenerator.mjs",
@@ -31,7 +32,7 @@
     "glob": "^8.0.3",
     "npm-check-updates": "16.6.2",
     "prettier": "2.8.1",
-    "@mermaid-js/mermaid-cli": "^9.2.2"
+    "@mermaid-js/mermaid-cli": "^9.3.0"
   },
   "engines": {
     "node": ">=16"

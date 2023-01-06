@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../../unit/testUtils';
+import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../../testUtils.js';
 
 test('Should produce newEstimationRoundStarted event', async () => {
   const {processor, roomId, storyId, userIdOne, mockRoomsStore} =

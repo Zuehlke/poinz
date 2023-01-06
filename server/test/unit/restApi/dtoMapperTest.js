@@ -23,6 +23,7 @@ const exampleRoom = {
     {
       title: 'second',
       description: 's2 description',
+      key: 's2-issue-key',
       id: 'cda908b1-bbf9-4b04-8cf7-bf636c5cd8bd',
       estimations: {
         '0afab6a7-2b26-4bbc-bb46-294ce255729c': 3,
@@ -91,6 +92,7 @@ test('mapRoomExportDto: basic', async () => {
       {
         title: 'second',
         description: 's2 description',
+        key: 's2-issue-key',
         estimations: [
           {
             username: 'Foxy',

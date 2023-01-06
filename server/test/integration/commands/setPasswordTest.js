@@ -1,4 +1,4 @@
-import {prepOneUserInOneRoom} from '../../unit/testUtils';
+import {prepOneUserInOneRoom} from '../../testUtils.js';
 import uuid from '../../../src/uuid';
 import {hashRoomPassword} from '../../../src/auth/roomPasswordService';
 

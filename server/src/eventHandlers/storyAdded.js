@@ -12,6 +12,9 @@ const storyAddedEventHandler = (room, eventPayload) => {
   if (eventPayload.description) {
     newStory.description = eventPayload.description;
   }
+  if (eventPayload.key) {
+    newStory.key = eventPayload.key;
+  }
 
   const modifiedStories = [...room.stories, newStory];
 

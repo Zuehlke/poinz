@@ -1,4 +1,4 @@
-import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../../testUtils.js';
 import uuid from '../../../src/uuid';
 
 test('Should produce kicked event (userOne kicks disconnected userTwo)', async () => {

@@ -8,6 +8,7 @@ const {parse: parseCsv} = papaparse;
 const LOGGER = getLogger('storyImportParser');
 
 const STORY_TITLE_CHAR_LIMIT = 100;
+const STORY_KEY_CHAR_LIMIT = 100;
 const STORY_DESCRIPTION_CHAR_LIMIT = 2000;
 
 /**
@@ -58,6 +59,7 @@ function issueObjectToStory(issueTrackingUrlPattern, issueObject) {
     title,
     description: getDescriptionFromIssueObject(issueTrackingUrlPattern, issueObject),
     consensus: getConsensusFromIssueObject(issueObject),
+    key: getKeyFromIssueObject(issueObject),
     storyId: uuid(),
     estimations: {},
     createdAt: Date.now()
@@ -83,6 +85,15 @@ function getTitleFromIssueObject(issueObject) {
   }
 
   return title.trim().substring(0, STORY_TITLE_CHAR_LIMIT);
+}
+
+function getKeyFromIssueObject(issueObject) {
+  const keyProp = KEY_PROPERTY_NAMES.find(isPropMatch.bind(issueObject));
+  if (keyProp) {
+    return issueObject[keyProp].trim().substring(0, STORY_KEY_CHAR_LIMIT);
+  } else {
+    return undefined;
+  }
 }
 
 function getConsensusFromIssueObject(issueObject) {

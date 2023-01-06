@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepEmpty, prepOneUserInOneRoom} from '../../unit/testUtils';
+import {prepEmpty, prepOneUserInOneRoom} from '../../testUtils.js';
 import defaultCardConfig from '../../../src/defaultCardConfig';
 import {hashRoomPassword} from '../../../src/auth/roomPasswordService';
 import {issueJwt} from '../../../src/auth/jwtService';

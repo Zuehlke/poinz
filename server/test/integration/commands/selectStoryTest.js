@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
+import {prepOneUserInOneRoomWithOneStory} from '../../testUtils.js';
 
 test('Should produce storySelected event', async () => {
   const {roomId, userId, storyId, processor} = await prepOneUserInOneRoomWithOneStory();

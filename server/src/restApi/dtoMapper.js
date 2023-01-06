@@ -29,6 +29,7 @@ function mapStoryExportDto(story, users) {
   return {
     title: story.title,
     description: story.description,
+    key: story.key,
     consensus: story.consensus,
     estimations: Object.entries(story.estimations).map((entry) => {
       const matchingUser = usernamesMap[entry[0]];

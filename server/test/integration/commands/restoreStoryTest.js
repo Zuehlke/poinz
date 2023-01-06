@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
+import {EXPECT_UUID_MATCHING, prepOneUserInOneRoomWithOneStory} from '../../testUtils.js';
 
 test('Should produce storyRestored event', async () => {
   const {userId, processor, roomId, storyId, mockRoomsStore} =

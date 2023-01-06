@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../../testUtils.js';
 
 test('ownUser: toggleExclude  -> excluded', async () => {
   const {userIdOne, userIdTwo, processor, roomId} = await prepTwoUsersInOneRoomWithOneStory();

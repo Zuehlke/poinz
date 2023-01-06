@@ -1,10 +1,10 @@
-import uuid from '../../src/uuid';
+import uuid from '../src/uuid.js';
 
 // we want to test with our real command- and event handlers.
-import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
-import eventHandlers from '../../src/eventHandlers/eventHandlers';
-import commandProcessorFactory from '../../src/commandProcessor';
-import {roomSchemaValidatorFactory} from '../../src/validation/schemaValidators';
+import commandHandlers, {baseCommandSchema} from '../src/commandHandlers/commandHandlers.js';
+import eventHandlers from '../src/eventHandlers/eventHandlers.js';
+import commandProcessorFactory from '../src/commandProcessor.js';
+import {roomSchemaValidatorFactory} from '../src/validation/schemaValidators.js';
 
 const validateRoom = roomSchemaValidatorFactory();
 

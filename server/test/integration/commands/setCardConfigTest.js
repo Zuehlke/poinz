@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepOneUserInOneRoom} from '../../unit/testUtils';
+import {prepOneUserInOneRoom} from '../../testUtils.js';
 
 test('Should produce cardConfigSet event', async () => {
   const {processor, roomId, userId} = await prepOneUserInOneRoom();

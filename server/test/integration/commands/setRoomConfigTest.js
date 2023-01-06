@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepTwoUsersInOneRoomWithOneStory} from '../../unit/testUtils';
+import {prepTwoUsersInOneRoomWithOneStory} from '../../testUtils.js';
 
 test('Should produce roomConfigSet event with all properties set', async () => {
   const {roomId, userIdOne: userId, processor} = await prepTwoUsersInOneRoomWithOneStory();

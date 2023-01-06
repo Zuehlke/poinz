@@ -3,7 +3,7 @@ import {jest} from '@jest/globals';
 import uuid from '../../src/uuid.js';
 import socketManagerFactory from '../../src/socketManager.js';
 
-import {newMockRoomsStore} from './testUtils.js';
+import {newMockRoomsStore} from '../testUtils.js';
 
 /**
  *

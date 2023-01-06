@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepOneUserInOneRoomWithOneStory} from '../../unit/testUtils';
+import {prepOneUserInOneRoomWithOneStory} from '../../testUtils.js';
 
 test('Should produce storyDeleted event', async () => {
   const {userId, processor, roomId, storyId, mockRoomsStore} =

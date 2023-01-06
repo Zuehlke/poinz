@@ -3,13 +3,13 @@ import path from 'path';
 import * as url from 'url';
 
 import uuid from '../../../src/uuid';
-import {prepOneUserInOneRoom, textToCsvDataUrl} from '../../unit/testUtils';
+import {prepOneUserInOneRoom, textToCsvDataUrl} from '../../testUtils.js';
 
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 test('Should produce storyAdded events for all stories in data', async () => {
   const csvContent = await fs.readFile(
-    path.join(__dirname, '../../unit/testJiraIssueExport.csv'),
+    path.join(__dirname, '../../testJiraIssueExport.csv'),
     'utf-8'
   );
   const dataUrl = textToCsvDataUrl(csvContent);
@@ -63,7 +63,7 @@ test('Should produce storyAdded events for all stories in data', async () => {
 
 test('Should produce storyAdded and consensusAchieved events ', async () => {
   const csvContent = await fs.readFile(
-    path.join(__dirname, '../../unit/testJiraIssueExportConsensus.csv'),
+    path.join(__dirname, '../../testJiraIssueExportConsensus.csv'),
     'utf-8'
   );
   const dataUrl = textToCsvDataUrl(csvContent);

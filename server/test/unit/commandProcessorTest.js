@@ -1,7 +1,7 @@
 import {jest} from '@jest/globals';
 
 import uuid from '../../src/uuid.js';
-import {newMockRoomsStore} from './testUtils.js';
+import {newMockRoomsStore} from '../testUtils.js';
 import processorFactory, {sanitizeRoomId} from '../../src/commandProcessor.js';
 import {baseCommandSchema} from '../../src/commandHandlers/commandHandlers.js';
 

@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../../unit/testUtils';
+import {prepTwoUsersInOneRoomWithOneStoryAndEstimate} from '../../testUtils.js';
 
 test('Should produce consensusAchieved event', async () => {
   const {roomId, storyId, userIdTwo, processor} =

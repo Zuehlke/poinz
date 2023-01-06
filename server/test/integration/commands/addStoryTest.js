@@ -1,5 +1,5 @@
 import uuid from '../../../src/uuid';
-import {EXPECT_UUID_MATCHING, prepOneUserInOneRoom} from '../../unit/testUtils';
+import {EXPECT_UUID_MATCHING, prepOneUserInOneRoom} from '../../testUtils.js';
 
 test('Should produce storyAdded and storySelected event (since it is the first story added to the room)', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();

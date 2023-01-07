@@ -10,6 +10,7 @@ import './backlogModification.cy';
 import './changeRoomSettings.cy';
 import './changeUserSettings.cy';
 import './estimateStory.cy';
+import './exportStories.cy';
 import './joinNewRandomRoom.cy';
 import './joinPasswordProtectedRoom.cy';
 import './mobileMenuToggling.cy';

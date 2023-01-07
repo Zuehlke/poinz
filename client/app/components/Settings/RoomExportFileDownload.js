@@ -9,7 +9,12 @@ import {getOwnUserToken} from '../../state/users/usersSelectors';
 const RoomExportFileDownload = ({roomId, userToken}) => {
   const {t} = useContext(L10nContext);
   return (
-    <button type="button" className="pure-button pure-button-primary" onClick={onDownloadClick}>
+    <button
+      type="button"
+      className="pure-button pure-button-primary"
+      onClick={onDownloadClick}
+      data-testid="storiesExportButton"
+    >
       {t('exportLinkText')} <i className="icon-download-cloud"></i>
     </button>
   );

@@ -56,7 +56,8 @@ const elements = {
       roomPasswordField: () => cy.get(tid('settings', 'roomPasswordInput')),
       roomPasswordInputRepeat: () => cy.get(tid('settings', 'roomPasswordInputRepeat')),
       autoRevealToggle: () => cy.get(tid('settings', 'toggleAutoReveal')),
-      confidenceToggle: () => cy.get(tid('settings', 'toggleConfidence'))
+      confidenceToggle: () => cy.get(tid('settings', 'toggleConfidence')),
+      storiesExportButton: () => cy.get(tid('settings', 'storiesExportButton'))
     },
 
     Backlog: {

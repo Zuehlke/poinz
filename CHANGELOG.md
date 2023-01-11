@@ -1,8 +1,9 @@
-### 0.17.7: 2023-00-00
+### 0.18.0: 2023-01-12
 
-* split build process into two parts (extracted building docker image to separate build step)
+* preserve "story-key" when importing stories from an external tool via csv (#323)
+* split build process into two parts (extracted building docker image to separate build step) (#317)
 * dependencies updated
-* 
+
 ### 0.17.6: 2022-12-06
 
 * (more) seasonal easter eggs

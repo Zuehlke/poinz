@@ -1,3 +1,7 @@
+### 0.18.1: 2023-01-15
+
+* Fix for favicon not working: webmanifest file was not copied during build (#309)
+
 ### 0.18.0: 2023-01-12
 
 * preserve "story-key" when importing stories from an external tool via csv (#323)

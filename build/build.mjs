@@ -34,6 +34,7 @@ async function build() {
   console.log('...copying built client to ./deploy/public');
   await fs.copy('./client/dist', './deploy/public/assets');
   await fs.copy('./client/index.html', './deploy/public/index.html');
+  await fs.copy('./client/site.webmanifest', './deploy/public/site.webmanifest');
 
   // 3. install dependencies for backend
   console.log('(3/4) Installing npm dependencies for server...');

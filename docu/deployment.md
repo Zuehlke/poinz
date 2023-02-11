@@ -7,7 +7,7 @@ Custom domain **poinz.app** points to https://poinz.herokuapp.com/
 
 ### Heroku deployment
 
-* Build Docker image with ```$ npm run build```
+* Build Docker image with ```$ npm run build:dockerImage```
 
 * Retrieve heroku auth token : ```$ heroku auth:token```. (If you are not already logged in, you have to login first: ```$ heroku auth:login``` ).
 

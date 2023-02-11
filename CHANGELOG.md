@@ -1,3 +1,8 @@
+### 0.18.2: 2023-02-11
+
+* Renamed all occurences of "PoinZ" to "Poinz"
+* Dependencies updated
+
 ### 0.18.1: 2023-01-15
 
 * Fix for favicon not working: webmanifest file was not copied during build (#309)

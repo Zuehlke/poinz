@@ -1,11 +1,11 @@
-# PoinZ - Distributed Planning Poker
+# Poinz - Distributed Planning Poker
 
 [![Build Status](https://github.com/Zuehlke/poinz/actions/workflows/master.yml/badge.svg)](https://github.com/Zuehlke/poinz/actions/workflows/master.yml)
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Release](https://img.shields.io/github/v/release/Zuehlke/PoinZ.svg?style=flat)]()
-[![Last Commit](https://img.shields.io/github/last-commit/Zuehlke/PoinZ.svg?style=flat)]()
+[![GitHub Release](https://img.shields.io/github/v/release/Zuehlke/Poinz.svg?style=flat)]()
+[![Last Commit](https://img.shields.io/github/last-commit/Zuehlke/Poinz.svg?style=flat)]()
 
-PoinZ (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. It allows to easily estimate items of interest (e.g. "stories").
+Poinz (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. It allows to easily estimate items of interest (e.g. "stories").
 
 The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.
 

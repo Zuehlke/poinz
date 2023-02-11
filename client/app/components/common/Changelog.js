@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {StyledChangelog} from './_styled';
 
 /**
- * Displays a list of PoinZ "Versions" (changelog items)
+ * Displays a list of Poinz versions (changelog items)
  * The input data is parsed from CHANGELOG.md during webpack build...
  */
 const Changelog = ({changelog}) => {

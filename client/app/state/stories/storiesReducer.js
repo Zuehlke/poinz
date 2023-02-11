@@ -1,5 +1,5 @@
 /*
- * in our frontend, we store stories as object (key is the story's id). this differs from the PoinZ Backend, where "stories" is a array...
+ * in our frontend, we store stories as object (key is the story's id). this differs from the Poinz Backend, where "stories" is a array...
  */
 import {EVENT_ACTION_TYPES, ROOM_STATE_FETCHED} from '../actions/eventActions';
 import {STORY_EDIT_MODE_CANCELLED, STORY_EDIT_MODE_ENTERED} from '../actions/uiStateActions';

@@ -1,13 +1,13 @@
 ```mermaid
 sequenceDiagram
   autonumber
-  participant PoinZ.Client
-  participant PoinZ.Backend
-  PoinZ.Client->>+PoinZ.Backend: command
-  Note right of PoinZ.Backend: Validation. Is it a known command. Does the command match the schema.
-  Note right of PoinZ.Backend: CommandHandler produces 1-N events
-  Note right of PoinZ.Backend: EventHandlers modify room
-  Note right of PoinZ.Backend: Events are broadcasted to all users in room
-  PoinZ.Backend->>PoinZ.Client: event1
-  PoinZ.Backend-->>-PoinZ.Client: event2
+  participant Poinz.Client
+  participant Poinz.Backend
+  Poinz.Client->>+Poinz.Backend: command
+  Note right of Poinz.Backend: Validation. Is it a known command. Does the command match the schema.
+  Note right of Poinz.Backend: CommandHandler produces 1-N events
+  Note right of Poinz.Backend: EventHandlers modify room
+  Note right of Poinz.Backend: Events are broadcasted to all users in room
+  Poinz.Backend->>Poinz.Client: event1
+  Poinz.Backend-->>-Poinz.Client: event2
 ```

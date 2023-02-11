@@ -49,7 +49,7 @@ const TopBar = ({
               <span></span>
             </StyledBacklogToggleIcon>
           </StyledBacklogToggle>
-          <StyledPoinzLogo data-testid="logo">PoinZ</StyledPoinzLogo>
+          <StyledPoinzLogo data-testid="logo">Poinz</StyledPoinzLogo>
         </StyledTopLeft>
 
         <StyledTopRight>

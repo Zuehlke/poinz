@@ -1,8 +1,8 @@
-# PoinZ technical documentation
+# Poinz technical documentation
 
-This page provides information about building and developing PoinZ, as well as its architecture.
+This page provides information about building and developing Poinz, as well as its architecture.
 
-Checkout the [user manual](./manual.md), if you need help with PoinZ features and use cases...
+Checkout the [user manual](./manual.md), if you need help with Poinz features and use cases...
 
 ## Development
 
@@ -10,7 +10,7 @@ Checkout the [user manual](./manual.md), if you need help with PoinZ features an
 
 * Install `nodeJS` at v14+ and `npm` at v6+.
 * Install git
-* Install `docker` if you want to build PoinZ
+* Install `docker` if you want to build Poinz
 * Install a local mongodb instance  (or run it in a local docker container  $docker run -v mongo_volume:/data/db --name flyx-mongo -p 27017:27017 -d mongo )
 
 Fork & checkout the repository then install all npm dependencies.
@@ -56,10 +56,10 @@ $ docker run -p 3000:3000 -d xeronimus/poinz
 
 ### Technologies and Frameworks
 
-The PoinZ Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
+The Poinz Client is built with [ReactJS](https://facebook.github.io/react/) and [redux](https://github.com/reactjs/redux).
 [Webpack](https://webpack.github.io/) serves as bundling tool.
 
-The PoinZ Backend is a nodeJS [express](http://expressjs.com/) server.
+The Poinz Backend is a nodeJS [express](http://expressjs.com/) server.
 
 Client and server communicate mostly over websockets ([socket.io](https://socket.io/)). The Backend provides a few REST endpoints as well.
 

@@ -146,7 +146,7 @@ test('mapRoomExportDto: with confidence', async () => {
     stories: [
       {
         id: 'uauwcveac7xg0d6bx9uay',
-        title: 'Welcome to your PoinZ room!',
+        title: 'Welcome to your Poinz room!',
         estimations: {
           'i1wl7azsnna9jjsx3-fdf': 1,
           rd0zb3s5xvdkzh4a7jypj: 2
@@ -176,7 +176,7 @@ test('mapRoomExportDto: with confidence', async () => {
   });
 
   expect(roomExportDto.stories[0]).toMatchObject({
-    title: 'Welcome to your PoinZ room!',
+    title: 'Welcome to your Poinz room!',
     estimations: [
       {
         username: 'SergioFF',

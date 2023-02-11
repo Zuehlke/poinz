@@ -3,7 +3,7 @@ import checkStatusCode from './checkStatusCode';
 const buildHeaderObject = (userToken) => (userToken ? {Authorization: `Bearer ${userToken}`} : {});
 
 /**
- * Get the full room data from the PoinZ backend.
+ * Get the full room data from the Poinz backend.
  * besides users, stories and estimations also includes room configuration, card Config, currently selected card, etc.
  *
  * @param {string} roomId
@@ -19,7 +19,7 @@ export function getRoom(roomId, userToken) {
 }
 
 /**
- * Get a room object from the PoinZ backend for export.
+ * Get a room object from the Poinz backend for export.
  * Contains stories, and their estimations
  *
  * @param {string} roomId

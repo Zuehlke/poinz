@@ -1,7 +1,7 @@
 
 # Deployment
 
-PoinZ is currently deployed on a free-tier [heroku](https://www.heroku.com/) dyno. With mongodb as persistent storage on [MongoDB atlas](https://www.mongodb.com/cloud/atlas).
+Poinz is currently deployed on a free-tier [heroku](https://www.heroku.com/) dyno. With mongodb as persistent storage on [MongoDB atlas](https://www.mongodb.com/cloud/atlas).
 
 Custom domain **poinz.app** points to https://poinz.herokuapp.com/
 

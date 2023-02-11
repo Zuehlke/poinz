@@ -1,7 +1,7 @@
 import {tid} from '../support/commands';
 
 /**
- *  This file specifies selectors for elements in the PoinZ UI.
+ *  This file specifies selectors for elements in the Poinz UI.
  *
  *  The root Object ist structured into Views -> Components. (Uppercase)
  *  All functions (lowercase) must return/yield Cypress Elements (.get  .find  .first  .children )

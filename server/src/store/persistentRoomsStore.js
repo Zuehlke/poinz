@@ -7,7 +7,7 @@ const COLLECTION_NAME = 'rooms';
 // on every server start, we run DB "Housekeeping".
 // if a room has a "lastActivity" timestamp that is older than X days, it is marked for deletion.
 // in the next subsequent housekeeping run, these rooms are deleted!
-// in January 22 we raised it from 31 days (a month) to 61 days (two months)
+// in January 2022 we raised it from 31 days (a month) to 61 days (two months)
 const AUTOMATIC_ROOM_DELETION_THRESHOLD_DAYS = 61;
 
 const LOGGER = getLogger('persistentRoomsStore');

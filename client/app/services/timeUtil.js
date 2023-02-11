@@ -54,7 +54,7 @@ function normalizeDateOrTs(dateOrTs) {
 }
 
 /**
- * Currently PoinZ only supports English and German.
+ * Currently Poinz only supports English and German.
  * We do not want to include all date-fns locales!
  *
  * @param language

@@ -1,4 +1,4 @@
-// properties / settings for PoinZ backend
+// properties / settings for Poinz backend
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 

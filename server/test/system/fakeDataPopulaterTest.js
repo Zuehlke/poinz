@@ -7,9 +7,9 @@ const ROOM_ID = 'sergio';
 
 describe.skip(`populating room "${ROOM_ID}" with fake data`, () => {
   /**
-   * Use this "test" to add a bunch of dummy users to a running PoinZ room. Good for testing & debugging and UI tweaking.
+   * Use this "test" to add a bunch of dummy users to a running Poinz room. Good for testing & debugging and UI tweaking.
    */
-  test('adds fake users to your PoinZ room', async () => {
+  test('adds fake users to your Poinz room', async () => {
     const userCount = 14;
     for (let u = 0; u < userCount; u++) {
       const client = poinzSocketClientFactory();
@@ -25,7 +25,7 @@ describe.skip(`populating room "${ROOM_ID}" with fake data`, () => {
   /**
    * Use this "test" to add dummy stories
    */
-  test('adds fake stories to your PoinZ room', async () => {
+  test('adds fake stories to your Poinz room', async () => {
     const userId = uuid();
     const client = poinzSocketClientFactory();
     await client.cmdAndWait(client.cmds.joinRoom(ROOM_ID, userId, faker.name.firstName()), 2);

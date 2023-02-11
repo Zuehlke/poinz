@@ -26,7 +26,7 @@ test(ROOM_STATE_FETCHED + ' should correctly be reduced to state ', () => {
       stories: [
         {
           id: storyId,
-          title: 'Welcome to your PoinZ room!',
+          title: 'Welcome to your Poinz room!',
           estimations: {
             [userId]: 0.5
           },
@@ -62,7 +62,7 @@ test(ROOM_STATE_FETCHED + ' should correctly be reduced to state ', () => {
   expect(getActiveStories(modifiedState).length).toBe(1);
   expect(getStoriesById(modifiedState)[action.room.stories[0].id]).toEqual({
     id: storyId,
-    title: 'Welcome to your PoinZ room!',
+    title: 'Welcome to your Poinz room!',
     // without the estimations
     createdAt: 1613281970621,
     description: 'description'

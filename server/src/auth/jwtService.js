@@ -6,7 +6,7 @@ const ISSUER = 'POINZ';
 
 /*
  * Generate a new secret on server startup.
- * If the PoinZ server is restarted, all users in password-protected rooms need to re-enter the room password, which is acceptable.
+ * If the Poinz server is restarted, all users in password-protected rooms need to re-enter the room password, which is acceptable.
  */
 const jwtSecret = generateSafeRandomHexString();
 

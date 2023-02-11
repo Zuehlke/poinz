@@ -2,7 +2,7 @@ import {EVENT_ACTION_TYPES, ROOM_STATE_FETCHED} from '../actions/eventActions';
 
 /*
  * in our frontend, we store users as object (key is the user's id).
- * this differs from the PoinZ Backend, where users is a array...
+ * this differs from the Poinz Backend, where users is a array...
  */
 export const usersInitialState = {
   ownUserId: undefined,

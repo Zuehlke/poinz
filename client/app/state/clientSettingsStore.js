@@ -15,7 +15,7 @@ export const persistOnStateChange = (key, selector) => {
 };
 
 /**
- * called once during initialization of the PoinZ client app
+ * called once during initialization of the Poinz client app
  *
  * @param {object} store The redux store
  */

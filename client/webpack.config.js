@@ -12,7 +12,7 @@ const parseChangelogMd = require('./parseChangelogMd');
 const definePlugin = new webpack.DefinePlugin({
   __POINZ_CONFIG__: JSON.stringify({
     env: 'dev',
-    version: packageInformation.version + '-dev', // PoinZ version that is displayed in the ui
+    version: packageInformation.version + '-dev', // Poinz version that is displayed in the ui
     vcsInfo: getGitInformation(),
     buildTime: Date.now(),
     changeLog: parseChangelogMd()

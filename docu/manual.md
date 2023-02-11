@@ -1,4 +1,4 @@
-# PoinZ user manual
+# Poinz user manual
 
 This page gives you an overview on the features and most common use cases.
 
@@ -54,7 +54,7 @@ You can join a room in three different ways
    or  https://poinz.app/a-random-room-id-here). If the room with this name/id already exists, you will join
    it. Otherwise a new room is created.
 
-PoinZ will ask you for a username on your first visit. Afterwards your username is stored in the LocalStorage of your
+Poinz will ask you for a username on your first visit. Afterwards your username is stored in the LocalStorage of your
 browser and reused on subsequent joins.
 
 
@@ -106,9 +106,9 @@ ISS-123,The Title, some Description
 ISS-554,Another Story, With a description
 ```
 
-PoinZ will also parse a default **Jira** issue export, where column headers are named: "Issue Key", "Summary", "Description".
+Poinz will also parse a default **Jira** issue export, where column headers are named: "Issue Key", "Summary", "Description".
 
-( PoinZ uses [papaparse](https://www.papaparse.com/) to parse the given csv file.)
+( Poinz uses [papaparse](https://www.papaparse.com/) to parse the given csv file.)
 
 Note: If you want to link to your Issue Tracking System, check out [Issue Tracking URL](#issue-tracking-url).
 
@@ -165,13 +165,13 @@ If all users estimated the same value, *consensus* is achieved, and the story wi
 ### Manually reveal estimates
 
 You can *reveal* the story at any time by clicking the blue **Reveal** button. Even if not all users in the room did
-estimate. PoinZ then displays all given estimates for this story (visible for all users).
+estimate. Poinz then displays all given estimates for this story (visible for all users).
 
 ![reveal](https://user-images.githubusercontent.com/1777143/97101241-08022680-169c-11eb-97de-9a27244c3dca.png)
 
 ### Numerical average and Recommendation
 
-After the estimations are revealed, PoinZ will display the numerical average (the sum of all estimated card values, divided by number of estimations) as well as a recommendation.
+After the estimations are revealed, Poinz will display the numerical average (the sum of all estimated card values, divided by number of estimations) as well as a recommendation.
 
 ![recommendation](https://user-images.githubusercontent.com/1777143/190894580-4bc83999-d55e-44e7-805c-fa4954a3f305.png)
 
@@ -221,13 +221,13 @@ These settings will affect your user.
 #### Avatar and Email
 
 Choose an avatar to be displayed in the Estimation Area, visible for all users in the room. If you set an email address
-that is registered with https://gravatar.com, the gravatar "Icon" will be used. This overrides any selected PoinZ
+that is registered with https://gravatar.com, the gravatar "Icon" will be used. This overrides any selected Poinz
 avatar.
 
 #### Spectator
 
 If you mark yourself as "spectator", you exclude yourself from estimations and can no longer take part in estimating
-stories. If auto reveal is enabled, PoinZ will "ignore you" and reveal the story as soon as all other users did estimate
+stories. If auto reveal is enabled, Poinz will "ignore you" and reveal the story as soon as all other users did estimate
 the current story. You can still modify the backlog and [settle](#settle). This is helpful for Scrum Masters /
 moderators.
 
@@ -241,7 +241,7 @@ These settings will affect the room and thus all users in the same room.
 
 #### Auto Reveal
 
-By default, PoinZ will reveal the current story automatically (all given estimation values are shown) as soon as all
+By default, Poinz will reveal the current story automatically (all given estimation values are shown) as soon as all
 users in the room did estimate the current story. **Excluded** (spectators) and **Disconnected** users are ignored.
 
 If this flag is removed, Poinz will not auto reveal and you can manually reveal the story.
@@ -289,7 +289,7 @@ If you click on "Default", you immediately restore the default card configuratio
 If you want to link your imported stories to your Issue Tracking (e.g. Jira), you can set a URL here. E.g. *https://my.jira.com/browse/{ISSUE}*.
 The placeholder {ISSUE} will be replaced with the issue key.
 
-If you [import stories](#importing-stories) (via csv) PoinZ will add a deeplink to the respective issue description.
+If you [import stories](#importing-stories) (via csv) Poinz will add a deeplink to the respective issue description.
 
 
 ## Security
@@ -298,11 +298,11 @@ By default, everybody that knows the name/ID of your room can join your room, wi
 
 > :exclamation: **This means, anonymous people can read, modify and delete your stories as soon as they know the room ID.** :exclamation:
 
-This is by design. When we created PoinZ, we wanted a most simple solution, without the hassle of registration and user
+This is by design. When we created Poinz, we wanted a most simple solution, without the hassle of registration and user
 management.
 
 However, you might want to protect your data in some way. See ["Password Protection"](#password-protection) for more
 information.
 
-:warning: At any time, you are using PoinZ at your own risk! Be aware that all information that you enter is potentially publicly available!
-We do not recommend that you use PoinZ as a permanent information storage. PoinZ is provided as is, without warranty of any kind! :warning:
+:warning: At any time, you are using Poinz at your own risk! Be aware that all information that you enter is potentially publicly available!
+We do not recommend that you use Poinz as a permanent information storage. Poinz is provided as is, without warranty of any kind! :warning:

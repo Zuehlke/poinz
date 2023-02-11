@@ -3,7 +3,7 @@ import poinzSocketClientFactory from './poinzSocketClient';
 import {faker} from '@faker-js/faker';
 
 /**
- * These tests send commands over a real socket connection to a running PoinZ backend on localhost:3000
+ * These tests send commands over a real socket connection to a running Poinz backend on localhost:3000
  *
  */
 

@@ -42,7 +42,7 @@ it('create new room (custom name) on the fly when joining by url', function () {
   const customRoomName = 'e2e-room-' + nanoid();
 
   cy.clearLocalStorage(); // this should not be needed.  Cypress promises to clear all local storage in between tests.
-  // however, here, when joining  a new room by url, I get a lot of "joinCommands" that contain the username -> PoinZ does not show the username prompt, and the .type on line 47 will fail.
+  // however, here, when joining  a new room by url, I get a lot of "joinCommands" that contain the username -> Poinz does not show the username prompt, and the .type on line 47 will fail.
 
   cy.visit('/' + customRoomName);
 

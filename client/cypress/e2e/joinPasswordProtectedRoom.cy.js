@@ -37,7 +37,7 @@ it('join random room, open settings, set password. then rejoin room', function (
     .find(tid('sectionPasswordProtection'))
     .contains('This room is protected by a password');
 
-  // reload page, PoinZ displays password input
+  // reload page, Poinz displays password input
   cy.visit('/' + customRoomName);
 
   // no password, just enter

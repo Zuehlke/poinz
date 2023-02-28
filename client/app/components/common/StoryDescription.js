@@ -20,23 +20,31 @@ const StoryDescription = ({
   const [textExpanded, setTextExpanded] = useState(false);
   useEffect(() => setTextExpanded(false), [storyId]); // reset expanded state to false if story id changes.
 
-  const originalTextLength = text.length;
-  const textToDisplay =
-    originalTextLength <= textExpandThreshold || textExpanded
+  const originalDescriptionLength = text.length;
+  const descriptionString =
+    originalDescriptionLength <= textExpandThreshold || textExpanded
       ? text
       : text.substring(0, textExpandThreshold) + '...';
+
+  const linkRenderer = (href, linkText, key) => (
+    <a target="blank" href={href} rel="noopener noreferrer" key={key}>
+      {linkText}
+    </a>
+  );
 
   return (
     <React.Fragment>
       <StyledStoryText md={markdownEnabled} scroll={scroll} data-testid="storyText">
         {markdownEnabled && (
           <ReactMarkdown linkTarget="_blank" remarkPlugins={[remarkGfm]}>
-            {textToDisplay}
+            {descriptionString}
           </ReactMarkdown>
         )}
-        {!markdownEnabled && <Linkify>{textToDisplay}</Linkify>}
+        {!markdownEnabled && (
+          <Linkify componentDecorator={linkRenderer}> {descriptionString} </Linkify>
+        )}
 
-        {originalTextLength > textExpandThreshold && !textExpanded && (
+        {originalDescriptionLength > textExpandThreshold && !textExpanded && (
           <StyledStoryTextExpandButton
             className="pure-button pure-button-primary"
             onClick={() => setTextExpanded(true)}
@@ -44,7 +52,7 @@ const StoryDescription = ({
             <i className="icon-angle-double-down"></i>
           </StyledStoryTextExpandButton>
         )}
-        {originalTextLength > textExpandThreshold && textExpanded && (
+        {originalDescriptionLength > textExpandThreshold && textExpanded && (
           <StyledStoryTextExpandButton
             className="pure-button pure-button-primary"
             onClick={() => setTextExpanded(false)}
@@ -54,7 +62,7 @@ const StoryDescription = ({
         )}
       </StyledStoryText>
 
-      {showMarkdownToggle && originalTextLength > 0 && (
+      {showMarkdownToggle && originalDescriptionLength > 0 && (
         <StyledToggleIcon
           data-testid="markdownToggleButton"
           on={markdownEnabled ? '1' : ''}

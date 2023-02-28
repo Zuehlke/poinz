@@ -125,6 +125,17 @@ export const StyledCCTableCell = styled.div`
   }
 `;
 
+export const StyledCCTableHeader = styled.div`
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+
+  ${StyledCCTableCell} {
+    background: #e6e6e6;
+    color: rgba(0, 0, 0, 0.8);
+  }
+`;
+
 export const StyledColorBadge = styled.span`
   display: inline-block;
   width: 12px;

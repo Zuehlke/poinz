@@ -8,6 +8,8 @@ import {
   AddItemButton,
   ErrorMsg,
   StyledCadConfigEditor,
+  StyledCCTableCell,
+  StyledCCTableHeader,
   StyledItems,
   StyledTextarea
 } from './_styled';
@@ -53,6 +55,15 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
 
       {!showTextEditor && (
         <StyledItems>
+          <StyledCCTableHeader>
+            <StyledCCTableCell>{t('label')}</StyledCCTableCell>
+            <StyledCCTableCell>{t('value')}</StyledCCTableCell>
+            <StyledCCTableCell style={{width: 'auto', minWidth: '160px', flexGrow: 1}}>
+              {t('color')}
+            </StyledCCTableCell>
+            <StyledCCTableCell style={{width: '25%'}}></StyledCCTableCell>
+          </StyledCCTableHeader>
+
           {internalCC.map((ccItem, index) => (
             <CardConfigEditorItem
               key={ccItem.id}
@@ -66,7 +77,7 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
             />
           ))}
           <AddItemButton className="pure-button" type="button" onClick={onAdd}>
-            <i className="icon-plus"></i> Add Card
+            <i className="icon-plus"></i> {t('addCard')}
           </AddItemButton>
         </StyledItems>
       )}

@@ -98,5 +98,9 @@
   "issueTrackingUrlExample": "https://my.jira.com/browse/{ISSUE}",
   "matrix": "Estimation Matrix",
   "noStoriesForMatrix": "There are no estimated stories in your room, yet...",
-  "matrixIncludeTrashed": "Include trashed stories"
+  "matrixIncludeTrashed": "Include trashed stories",
+  "addCard": "Add Card",
+  "value": "Value",
+  "label": "Label",
+  "color": "Color"
 }

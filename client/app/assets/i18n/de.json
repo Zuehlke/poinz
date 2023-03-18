@@ -98,5 +98,9 @@
   "issueTrackingUrlExample": "https://my.jira.com/browse/{ISSUE}",
   "matrix": "Schätz-Matrix",
   "noStoriesForMatrix": "Es gibt noch keine geschätzten Stories in deinem Raum...",
-  "matrixIncludeTrashed": "Inklusive gelöschte Stories"
+  "matrixIncludeTrashed": "Inklusive gelöschte Stories",
+  "addCard": "Karte hinzufügen",
+  "value": "Wert",
+  "label": "Name",
+  "color": "Farbe"
 }

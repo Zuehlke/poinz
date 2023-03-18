@@ -8,6 +8,8 @@ import {
   AddItemButton,
   ErrorMsg,
   StyledCadConfigEditor,
+  StyledCCTableCell,
+  StyledCCTableHeader,
   StyledItems,
   StyledTextarea
 } from './_styled';
@@ -18,13 +20,19 @@ import {
 export const CardConfigEditor = ({cardConfig, onSave, t}) => {
   const [validationError, setValidationError] = useState('');
   const [internalCC, setInternalCC] = useState(addIds(cardConfig));
-  const [internalCcString, setInternalCcString] = useState(JSON.stringify(cardConfig, null, 4));
+  const [internalCcString, setInternalCcString] = useState(
+    deriveInternalCcStringFromCC(cardConfig)
+  );
   const [showTextEditor, setShowTextEditor] = useState(false);
 
   useEffect(() => {
     setInternalCC(addIds(cardConfig));
-    setInternalCcString(JSON.stringify(cardConfig, null, 4));
+    setInternalCcString(deriveInternalCcStringFromCC(cardConfig));
   }, [cardConfig]);
+
+  function deriveInternalCcStringFromCC(cc) {
+    return JSON.stringify(stripIds(cc), null, 4);
+  }
 
   return (
     <StyledCadConfigEditor>
@@ -52,23 +60,37 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
       {showTextEditor && <StyledTextarea value={internalCcString} onChange={onTextChange} />}
 
       {!showTextEditor && (
-        <StyledItems>
-          {internalCC.map((ccItem, index) => (
-            <CardConfigEditorItem
-              key={ccItem.id}
-              item={ccItem}
-              isFirst={index === 0}
-              isLast={index === internalCC.length - 1}
-              onChange={onChangedItem.bind(undefined, index)}
-              onDelete={onDelete.bind(undefined, index)}
-              onUp={onUp.bind(undefined, index)}
-              onDown={onDown.bind(undefined, index)}
-            />
-          ))}
-          <AddItemButton className="pure-button" type="button" onClick={onAdd}>
-            <i className="icon-plus"></i> Add Card
-          </AddItemButton>
-        </StyledItems>
+        <React.Fragment>
+          <StyledItems>
+            <StyledCCTableHeader>
+              <StyledCCTableCell>{t('label')}</StyledCCTableCell>
+              <StyledCCTableCell>{t('value')}</StyledCCTableCell>
+              <StyledCCTableCell style={{width: 'auto', minWidth: '160px', flexGrow: 1}}>
+                {t('color')}
+              </StyledCCTableCell>
+              <StyledCCTableCell style={{width: '25%'}}></StyledCCTableCell>
+            </StyledCCTableHeader>
+
+            {internalCC.map((ccItem, index) => (
+              <CardConfigEditorItem
+                key={ccItem.id}
+                item={ccItem}
+                isFirst={index === 0}
+                isLast={index === internalCC.length - 1}
+                onChange={onChangedItem.bind(undefined, index)}
+                onDelete={onDelete.bind(undefined, index)}
+                onUp={onUp.bind(undefined, index)}
+                onDown={onDown.bind(undefined, index)}
+              />
+            ))}
+          </StyledItems>
+
+          <div className="pure-g">
+            <AddItemButton className="pure-button" type="button" onClick={onAdd}>
+              <i className="icon-plus"></i> {t('addCard')}
+            </AddItemButton>
+          </div>
+        </React.Fragment>
       )}
 
       {validationError && <ErrorMsg>{validationError}</ErrorMsg>}
@@ -112,6 +134,7 @@ export const CardConfigEditor = ({cardConfig, onSave, t}) => {
     }
 
     setInternalCC(cc);
+    setInternalCcString(deriveInternalCcStringFromCC(cc));
   }
 
   function onChangedItem(index, changedItem) {

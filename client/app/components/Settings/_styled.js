@@ -88,10 +88,8 @@ export const StyledExpandButton = styled.button`
 `;
 
 export const StyledItems = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: table;
   border: 1px solid #ccc;
-  margin-bottom: 8px;
 
   > div button {
     display: inline-block;
@@ -101,14 +99,18 @@ export const StyledItems = styled.div`
   }
 `;
 
+export const StyledCCTableRow = styled.div`
+  display: table-row;
+`;
+
 export const StyledCCTableCell = styled.div`
+  display: table-cell;
   position: relative;
   box-sizing: border-box;
-  flex-grow: 0;
   padding: 0.2em 0.2em;
   overflow: hidden;
   list-style: none;
-  width: 15%;
+  min-width: 15%;
 
   input[type='text'],
   input[type='number'] {
@@ -125,6 +127,17 @@ export const StyledCCTableCell = styled.div`
   }
 `;
 
+export const StyledCCTableHeader = styled.div`
+  width: 100%;
+  display: table-row;
+  border-bottom: 1px solid #ccc;
+
+  ${StyledCCTableCell} {
+    background: #e6e6e6;
+    color: rgba(0, 0, 0, 0.8);
+  }
+`;
+
 export const StyledColorBadge = styled.span`
   display: inline-block;
   width: 12px;
@@ -137,11 +150,17 @@ export const StyledTextarea = styled.textarea`
   width: 100%;
   font-family: monospace;
   min-height: 300px;
+  margin-bottom: 8px;
+  border: 1px solid #ccc;
 `;
 
 export const StyledCadConfigEditor = styled.div`
   .pure-u-1-2 {
     width: 49%;
+  }
+
+  ${StyledItems} + .pure-g {
+    margin-bottom: 8px;
   }
 `;
 
@@ -155,6 +174,5 @@ export const AddItemButton = styled.button`
   width: 100%;
   margin: 0;
   padding: 3px;
-  display: inline-block;
   font-size: small;
 `;

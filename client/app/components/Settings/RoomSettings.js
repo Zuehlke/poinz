@@ -36,9 +36,9 @@ const RoomSettings = ({
 }) => {
   const {t} = useContext(L10nContext);
 
-  const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(false);
+  const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(true);
   React.useEffect(() => {
-    setCustomCardConfigExpanded(false);
+    setCustomCardConfigExpanded(true);
   }, [shown]);
 
   const [myRoomPassword, setMyRoomPassword] = useState(''); // we never [can] pre-set the pw.

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {StyledCCTableCell, StyledColorBadge} from './_styled';
+import {StyledCCTableCell, StyledCCTableRow, StyledColorBadge} from './_styled';
 
 /**
  * one item in the editor. consists of three input fields for label,value,color as well as "move" and "delete" buttons
  */
 const CardConfigEditorItem = ({item, isLast, isFirst, onChange, onUp, onDown, onDelete}) => {
   return (
-    <React.Fragment>
+    <StyledCCTableRow>
       <StyledCCTableCell>
         <input type="text" defaultValue={item.label} onBlur={onValueChange.bind(this, 'label')} />
       </StyledCCTableCell>
@@ -20,11 +20,11 @@ const CardConfigEditorItem = ({item, isLast, isFirst, onChange, onUp, onDown, on
           onBlur={onValueChange.bind(this, 'value')}
         />
       </StyledCCTableCell>
-      <StyledCCTableCell style={{width: 'auto', flexGrow: 1}}>
+      <StyledCCTableCell style={{width: 'auto'}}>
         <StyledColorBadge color={item.color} />
         <input type="text" defaultValue={item.color} onBlur={onValueChange.bind(this, 'color')} />
       </StyledCCTableCell>
-      <StyledCCTableCell style={{width: '25%'}}>
+      <StyledCCTableCell>
         <button
           type="button"
           className="pure-button"
@@ -45,7 +45,7 @@ const CardConfigEditorItem = ({item, isLast, isFirst, onChange, onUp, onDown, on
           <i className="icon-trash"></i>
         </button>
       </StyledCCTableCell>
-    </React.Fragment>
+    </StyledCCTableRow>
   );
 
   function onValueChange(propName, e) {

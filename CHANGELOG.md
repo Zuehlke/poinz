@@ -1,3 +1,8 @@
+### 0.18.3: 2023-03-19
+
+* Fixed some issues with editor for custom card configuration
+* Dependencies updated
+
 ### 0.18.2: 2023-02-11
 
 * Renamed all occurences of "PoinZ" to "Poinz"

@@ -1,5 +1,5 @@
 /**
- * Build-Script for our PoinZ Backend and frontend
+ * Build-Script for our Poinz Backend and frontend
  * Will produce a /deploy folder that contains the backend (built) and the client (built). Ready to deploy on a server with nodejs runtime.
  * */
 import path from 'path';

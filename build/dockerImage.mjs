@@ -1,5 +1,5 @@
 /**
- * Build-Script for our PoinZ Docker Image
+ * Build-Script for our Poinz Docker Image
  * Make sure to invoke "./build.mjs" first!
  *
  * */

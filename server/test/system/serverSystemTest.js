@@ -61,7 +61,7 @@ describe('websocket endpoint', () => {
     const firstUserId = uuid();
 
     const receivedEvents = await client.cmdAndWait(
-      client.cmds.joinRoom(roomId, firstUserId, faker.name.firstName()),
+      client.cmds.joinRoom(roomId, firstUserId, faker.person.firstName()),
       3
     );
     client.disconnect();
@@ -96,7 +96,7 @@ describe('REST endpoint', () => {
     const roomId = uuid();
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
-    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId, faker.name.firstName()), 3);
+    await client.cmdAndWait(client.cmds.joinRoom(roomId, userId, faker.person.firstName()), 3);
     client.disconnect();
 
     // export the room
@@ -213,7 +213,7 @@ describe('REST endpoint', () => {
     const userId = uuid();
     const client = poinzSocketClientFactory(backendUrl);
     const eventsFromJoin = await client.cmdAndWait(
-      client.cmds.joinRoom(roomId, userId, faker.name.firstName()),
+      client.cmds.joinRoom(roomId, userId, faker.person.firstName()),
       5
     );
 

@@ -22,7 +22,7 @@ async function addNstories(numberOfStoriesToAdd) {
   const eventCountBeforeAddingStories = 6;
 
   await client.cmdAndWait(
-    client.cmds.joinRoom(roomId, userId, faker.name.firstName()),
+    client.cmds.joinRoom(roomId, userId, faker.person.firstName()),
     eventCountBeforeAddingStories
   );
 

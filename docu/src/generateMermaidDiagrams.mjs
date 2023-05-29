@@ -1,9 +1,9 @@
 import path from 'path';
-import glob from 'glob';
-import settings from '../docuSettings.mjs';
-
+import {glob} from 'glob';
 import util from 'util';
 import {exec} from 'child_process';
+
+import settings from '../docuSettings.mjs';
 
 const execPromised = util.promisify(exec);
 
@@ -34,18 +34,10 @@ async function generateMermaidDiagrams() {
  * @return {Promise<{filePath:string,fileName,string}>}
  */
 async function listMarkdownFiles() {
-  return new Promise((resolve, reject) => {
-    glob('**/*.md', {cwd: settings.diagramsDirPath}, (err, matchingFileNames) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(
-          matchingFileNames.map((fileName) => ({
-            filePath: path.resolve(settings.diagramsDirPath, fileName),
-            fileName
-          }))
-        );
-      }
-    });
-  });
+  const matchingFileNames = await glob('**/*.md', {cwd: settings.diagramsDirPath});
+
+  return matchingFileNames.map((fileName) => ({
+    filePath: path.resolve(settings.diagramsDirPath, fileName),
+    fileName
+  }));
 }

@@ -14,7 +14,7 @@ describe.skip(`populating room "${ROOM_ID}" with fake data`, () => {
     for (let u = 0; u < userCount; u++) {
       const client = poinzSocketClientFactory();
       const userId = uuid();
-      await client.cmdAndWait(client.cmds.joinRoom(ROOM_ID, userId, faker.name.firstName()), 2);
+      await client.cmdAndWait(client.cmds.joinRoom(ROOM_ID, userId, faker.person.firstName()), 2);
       await client.cmdAndWait(client.cmds.setAvatar(ROOM_ID, userId, u), 1);
     }
 
@@ -28,7 +28,7 @@ describe.skip(`populating room "${ROOM_ID}" with fake data`, () => {
   test('adds fake stories to your Poinz room', async () => {
     const userId = uuid();
     const client = poinzSocketClientFactory();
-    await client.cmdAndWait(client.cmds.joinRoom(ROOM_ID, userId, faker.name.firstName()), 2);
+    await client.cmdAndWait(client.cmds.joinRoom(ROOM_ID, userId, faker.person.firstName()), 2);
 
     const storyCount = 3;
 

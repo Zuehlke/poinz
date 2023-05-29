@@ -1,11 +1,9 @@
 import path from 'path';
 import chalk from 'chalk';
-import util from 'util';
-import globCb from 'glob';
+import {glob} from 'glob';
 import fs from 'fs-extra';
 import {URL, fileURLToPath} from 'url';
 
-const glob = util.promisify(globCb);
 const TRANSLATION_INVOKE_PATTERN = /[\{|\s*|\(]t\('([^\)]*)'[,|\)]/g;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 

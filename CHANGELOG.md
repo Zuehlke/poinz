@@ -1,3 +1,7 @@
+### 0.18.4: 2023-05-29
+
+* Dependencies updated
+
 ### 0.18.3: 2023-03-19
 
 * Fixed some issues with editor for custom card configuration

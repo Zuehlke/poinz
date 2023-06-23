@@ -21,7 +21,7 @@ const exampleRoom = {
   ],
   stories: [
     {
-      title: 'second',
+      title: 'second story',
       description: 's2 description',
       key: 's2-issue-key',
       id: 'cda908b1-bbf9-4b04-8cf7-bf636c5cd8bd',
@@ -33,7 +33,7 @@ const exampleRoom = {
       revealed: true
     },
     {
-      title: 'first',
+      title: 'first story',
       description: 's1 descr',
       id: 'a4ed287c-1cfd-49d4-b237-577b7190e76e',
       estimations: {
@@ -44,8 +44,8 @@ const exampleRoom = {
       revealed: true
     },
     {
-      title: 'trashed',
-      description: '',
+      title: 'trashed story',
+      description: 'the description of the trashed story',
       id: 'b3f1cf71-9d04-4e14-9785-696401552561',
       estimations: {},
       createdAt: 1599544313982,
@@ -85,40 +85,50 @@ test('mapAppStatusDto: handles empty', () => {
 test('mapRoomExportDto: basic', async () => {
   const roomExportDto = mapRoomExportDto(exampleRoom);
 
-  expect(roomExportDto).toMatchObject({
+  expect(roomExportDto).toEqual({
     roomId: '1b370339-a8f9-411c-8a42-540609a2bcdb',
     exportedAt: expect.any(Number),
     stories: [
       {
-        title: 'second',
+        title: 'second story',
         description: 's2 description',
         key: 's2-issue-key',
         estimations: [
           {
+            userId: '0afab6a7-2b26-4bbc-bb46-294ce255729c',
             username: 'Foxy',
             value: 3
           },
           {
+            userId: '8d85c095-87bf-4e8f-9957-1e2b621f83de',
             username: 'Sergio',
             value: 3
           }
         ]
       },
       {
-        title: 'first',
+        title: 'first story',
         description: 's1 descr',
         estimations: [
           {
+            userId: '0afab6a7-2b26-4bbc-bb46-294ce255729c',
             username: 'Foxy',
             value: 13
           },
           {
+            userId: '8d85c095-87bf-4e8f-9957-1e2b621f83de',
             username: 'Sergio',
             value: 5
           }
         ]
+      },
+      // as of "import poinz json" , the export also contains the trashed stories
+      {
+        title: 'trashed story',
+        description: 'the description of the trashed story',
+        estimations: [],
+        trashed: true
       }
-      // export must not include the "trashed" story
     ]
   });
 });

@@ -14,9 +14,7 @@ export function mapRoomExportDto(room) {
   return {
     roomId: room.id,
     exportedAt: Date.now(),
-    stories: room.stories
-      .filter((story) => !story.trashed)
-      .map((story) => mapStoryExportDto(story, room.users))
+    stories: room.stories.map((story) => mapStoryExportDto(story, room.users))
   };
 }
 
@@ -26,11 +24,9 @@ function mapStoryExportDto(story, users) {
     return total;
   }, {});
 
-  return {
+  const mappedStory = {
     title: story.title,
     description: story.description,
-    key: story.key,
-    consensus: story.consensus,
     estimations: Object.entries(story.estimations).map((entry) => {
       const matchingUser = usernamesMap[entry[0]];
       const mappedEstm = {
@@ -48,6 +44,21 @@ function mapStoryExportDto(story, users) {
       return mappedEstm;
     })
   };
+
+  // set these optional properties only if they are set/true in the story
+  if (story.trashed) {
+    mappedStory.trashed = true;
+  }
+
+  if (story.consensus) {
+    mappedStory.consensus = story.consensus;
+  }
+
+  if (story.key) {
+    mappedStory.key = story.key;
+  }
+
+  return mappedStory;
 }
 
 /**

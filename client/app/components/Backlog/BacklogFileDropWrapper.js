@@ -14,7 +14,9 @@ const ACCEPTED_MIME_TYPES = {
   'text/x-csv': ['.csv'],
   'application/x-csv': ['.csv'],
   'text/comma-separated-values': ['.csv'],
-  'text/x-comma-separated-values': ['.csv']
+  'text/x-comma-separated-values': ['.csv'],
+
+  'application/json': ['.json']
 };
 
 /**

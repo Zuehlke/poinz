@@ -5,7 +5,7 @@ import getLogger from '../getLogger.js';
 
 const {parse: parseCsv} = papaparse;
 
-const LOGGER = getLogger('storyImportParser');
+const LOGGER = getLogger('storyImportParserCsv');
 
 const STORY_TITLE_CHAR_LIMIT = 100;
 const STORY_KEY_CHAR_LIMIT = 100;

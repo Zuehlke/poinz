@@ -1,0 +1,55 @@
+{
+  "roomId": "qkss0zewp4byd27gdpb_w",
+  "exportedAt": 1687528183935,
+  "stories": [
+    {
+      "title": "Welcome to your Poinz room!",
+      "description": "This is a sample story that we already created for you.\n\n - On the left, you can edit your stories and add new ones.\n - Below you can estimate this story by clicking on one of the cards.\n - Invite your teammates by sharing the url with them.\n\nPlease note: If a Poinz room is unused for more than two months, it will get deleted automatically!\n\nFor more information, refer to the manual https://github.com/Zuehlke/poinz/blob/master/docu/manual.md",
+      "estimations": [
+        {
+          "username": "Sergio",
+          "value": 34,
+          "userId": "i1wl7azsnna9jjsx3-fdf"
+        },
+        {
+          "username": "Sergio",
+          "value": 3,
+          "userId": "rd0zb3s5xvdkzh4a7jypj"
+        }
+      ]
+    },
+    {
+      "title": "Second story",
+      "estimations": [
+        {
+          "username": "Sergio",
+          "value": 3,
+          "userId": "rd0zb3s5xvdkzh4a7jypj"
+        },
+        {
+          "username": "Sergio",
+          "value": 3,
+          "userId": "i1wl7azsnna9jjsx3-fdf"
+        }
+      ],
+      "consensus": 3
+    },
+    {
+      "title": "Story that was trashed",
+      "description": "adsg",
+      "estimations": [
+        {
+          "username": "Sergio",
+          "value": 0.5,
+          "userId": "rd0zb3s5xvdkzh4a7jypj"
+        },
+        {
+          "username": "Sergio",
+          "value": -2,
+          "userId": "i1wl7azsnna9jjsx3-fdf"
+        }
+      ],
+      "trashed": true
+    }
+  ]
+}

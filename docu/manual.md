@@ -95,6 +95,10 @@ You can also use markdown syntax in the story description. You can toggle betwee
 
 ### Importing stories
 
+Poinz can import stories from files, so that you can transfer existing stories from other applications to Poinz.
+
+#### CSV
+
 Drag and Drop a csv file with stories (e.g. an export from Jira) on to the backlog. The csv file should contain column
 headers on the first line.
 
@@ -111,6 +115,11 @@ Poinz will also parse a default **Jira** issue export, where column headers are 
 ( Poinz uses [papaparse](https://www.papaparse.com/) to parse the given csv file.)
 
 Note: If you want to link to your Issue Tracking System, check out [Issue Tracking URL](#issue-tracking-url).
+
+
+#### JSON
+
+Drag and Drop a json file with stories on to the backlog. Poinz expects the json file to have the same format as its own [exported files](#export)
 
 ### Editing stories
 
@@ -291,6 +300,50 @@ The placeholder {ISSUE} will be replaced with the issue key.
 
 If you [import stories](#importing-stories) (via csv) Poinz will add a deeplink to the respective issue description.
 
+#### Export
+
+You can export all stories in the current room as a json file. The json file will have the following format:
+
+```json
+{
+  "roomId": "the-room-id",
+  "exportedAt": 1688220364329,
+  "stories": [
+    {
+      "title": "Test Story",
+      "consensus": 21,
+      "estimations": [
+        {
+          "username": "Sergio",
+          "value": 21,
+          "userId": "xnq_h8cbzs3btgcr8z15t"
+        },
+        {
+          "username": "Fritz",
+          "value": 21,
+          "userId": "rpdt-4943-_xy8l35k988"
+        }
+      ]
+    }
+  ]
+}
+```
+
+As of [#358](https://github.com/Zuehlke/poinz/issues/358), the export also contains trashed stories.
+
+```json
+{
+  "roomId": "the-room-id",
+  "exportedAt": 1688220703294,
+  "stories": [
+    {
+      "title": "Trashed Story",
+      "estimations": [],
+      "trashed": true
+    }
+  ]
+}
+```
 
 ## Security
 

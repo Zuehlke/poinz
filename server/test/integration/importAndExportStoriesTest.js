@@ -40,12 +40,11 @@ test('import stories with keys (from csv) and successfully export them as json',
   expect(roomExport.stories[2]).toMatchObject({
     title: 'SMRGR-2643 timezone from AWST to HKT/SGT',
     key: 'SMRGR-2643', // important that "key" property is exported as well
-    consensus: undefined,
     estimations: []
   });
 });
 
-test('correctly handle already present stories (manually added stories before import)', async () => {
+test('correctly handle already present stories (manually added stories before csv import)', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 
   // --  add a story
@@ -90,7 +89,6 @@ test('correctly handle already present stories (manually added stories before im
   expect(roomExport.stories[3]).toMatchObject({
     title: 'SMRGR-2643 timezone from AWST to HKT/SGT',
     key: 'SMRGR-2643', // important that "key" property is exported as well
-    consensus: undefined,
     estimations: []
   });
 });

@@ -42,7 +42,7 @@ const Landing = ({pendingJoin, actionLog}) => {
         <JoinRoomForm />
 
         <StyledEyecatcher>
-          <StyledInfoText small={true}>
+          <StyledInfoText $small={true}>
             <i className="icon-attention"></i>
             {t('disclaimer')}
           </StyledInfoText>

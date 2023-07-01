@@ -13,7 +13,7 @@ export const StyledSettings = styled.div`
   background: ${COLOR_BACKGROUND_GREY};
   box-sizing: border-box;
   padding: 0 8px;
-  display: ${({shown}) => (shown ? 'flex' : 'none')};
+  display: ${({$shown}) => ($shown ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: space-between;
 
@@ -73,7 +73,7 @@ export const StyledMiniAvatar = styled.img`
   height: 32px;
   margin-right: 4px;
   border-radius: 50%;
-  border: ${({selected}) => (selected ? '2px solid ' + COLOR_ORANGE : '2px solid transparent')};
+  border: ${({$selected}) => ($selected ? '2px solid ' + COLOR_ORANGE : '2px solid transparent')};
   padding: 2px;
 
   &:hover {
@@ -143,7 +143,7 @@ export const StyledColorBadge = styled.span`
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: ${({color}) => color};
+  background-color: ${({$color}) => $color};
 `;
 
 export const StyledTextarea = styled.textarea`

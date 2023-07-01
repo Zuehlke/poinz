@@ -14,7 +14,9 @@ const ACCEPTED_MIME_TYPES = {
   'text/x-csv': ['.csv'],
   'application/x-csv': ['.csv'],
   'text/comma-separated-values': ['.csv'],
-  'text/x-comma-separated-values': ['.csv']
+  'text/x-comma-separated-values': ['.csv'],
+
+  'application/json': ['.json']
 };
 
 /**
@@ -37,9 +39,9 @@ const BacklogFileDropWrapper = ({importCsvFile, children}) => {
   return (
     <div {...getRootProps()}>
       <StyledFileImportDropZoneOverlay
-        active={isDragActive}
-        isAccept={isDragAccept}
-        isReject={isDragReject}
+        $active={isDragActive}
+        $isAccept={isDragAccept}
+        $isReject={isDragReject}
       />
       {children}
     </div>

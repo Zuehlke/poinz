@@ -21,7 +21,7 @@ const CardConfigEditorItem = ({item, isLast, isFirst, onChange, onUp, onDown, on
         />
       </StyledCCTableCell>
       <StyledCCTableCell style={{width: 'auto'}}>
-        <StyledColorBadge color={item.color} />
+        <StyledColorBadge $color={item.color} />
         <input type="text" defaultValue={item.color} onBlur={onValueChange.bind(this, 'color')} />
       </StyledCCTableCell>
       <StyledCCTableCell>

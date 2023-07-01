@@ -36,9 +36,9 @@ export const StyledEMColumn = styled.div`
   margin-top: 4px;
   padding: 0 2px;
   box-sizing: border-box;
-  width: ${({width}) => width}%;
-  background: ${({isOver}) => (isOver ? dzOverlayAcceptBg : 'transparent')};
-  border: ${({isOver}) => (isOver ? dzOverlayAcceptBorder : '4px solid transparent')};
+  width: ${({$width}) => $width}%;
+  background: ${({$isOver}) => ($isOver ? dzOverlayAcceptBg : 'transparent')};
+  border: ${({$isOver}) => ($isOver ? dzOverlayAcceptBorder : '4px solid transparent')};
 
   /** header row **/
 
@@ -65,8 +65,8 @@ export const StyledEMStory = styled.div`
   padding: 4px;
   margin: 2px 0;
   width: 100%;
-  background: ${({color}) => color};
-  opacity: ${({isDragging}) => (isDragging ? 0.2 : 1)};
+  background: ${({$color}) => $color};
+  opacity: ${({$isDragging}) => ($isDragging ? 0.2 : 1)};
   color: white;
   border-radius: 4px;
   text-align: center;

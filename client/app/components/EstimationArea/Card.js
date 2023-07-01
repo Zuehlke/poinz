@@ -14,8 +14,8 @@ const Card = ({isWaiting, isSelected, cardCfg, onClick}) => {
     <StyledCard onClick={onClick} data-testid={'estimationCard.' + cardCfg.value}>
       <StyledCardInner
         className={isWaiting ? 'waiting-spinner' : ''}
-        cardColor={cardCfg.color}
-        selected={isSelected}
+        $cardColor={cardCfg.color}
+        $selected={isSelected}
       >
         {cardCfg.label}
       </StyledCardInner>

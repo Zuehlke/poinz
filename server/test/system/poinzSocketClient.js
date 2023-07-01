@@ -48,7 +48,8 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       newRound,
       setCardConfig,
       setPassword,
-      setRoomConfig
+      setRoomConfig,
+      importStories
     }
   };
 
@@ -296,6 +297,17 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       userId,
       payload: {
         storyId
+      }
+    });
+  }
+
+  function importStories(roomId, userId, dataUrl) {
+    return sendCommand({
+      name: 'importStories',
+      roomId,
+      userId,
+      payload: {
+        data: dataUrl
       }
     });
   }

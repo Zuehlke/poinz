@@ -25,7 +25,7 @@ const StoryEditForm = ({story, selectedStoryId, changeStory, cancelEditStory, is
 
   return (
     <StyledStory
-      noShadow={true}
+      $noShadow={true}
       className={isWaiting ? 'waiting-spinner' : ''}
       data-testid={isSelected ? 'storySelected' : 'story'}
     >

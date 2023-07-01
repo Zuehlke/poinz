@@ -20,7 +20,7 @@ export const StyledUser = styled.div`
   margin-bottom: 4px;
 
   position: relative;
-  color: ${({isOwn, shaded}) => (shaded ? COLOR_LIGHT_GREY : isOwn ? COLOR_ORANGE : 'inherit')};
+  color: ${({$isOwn, $shaded}) => ($shaded ? COLOR_LIGHT_GREY : $isOwn ? COLOR_ORANGE : 'inherit')};
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -52,8 +52,8 @@ export const StyledUserBadge = styled.span`
 
 export const StyledUserEstimation = styled.div`
   box-sizing: border-box;
-  border: ${({revealed}) =>
-    revealed ? '2px solid  ' + COLOR_LIGHTER_GREY : '2px dashed ' + COLOR_LIGHTER_GREY};
+  border: ${({$revealed}) =>
+    $revealed ? '2px solid  ' + COLOR_LIGHTER_GREY : '2px dashed ' + COLOR_LIGHTER_GREY};
   background: transparent;
   color: ${COLOR_LIGHT_GREY};
   font-family: ${ZuehlkeFont};
@@ -86,8 +86,8 @@ export const StyledUserEstimation = styled.div`
 export const StyledUserEstimationGiven = styled(StyledUserEstimation)`
   position: relative;
   border: 4px solid white;
-  color: ${({revealed}) => (revealed ? 'white' : COLOR_LIGHTER_GREY)};
-  background: ${({revealed, valueColor}) => (revealed ? valueColor : COLOR_LIGHT_GREY)};
+  color: ${({$revealed}) => ($revealed ? 'white' : COLOR_LIGHTER_GREY)};
+  background: ${({$revealed, $valueColor}) => ($revealed ? $valueColor : COLOR_LIGHT_GREY)};
 
   > i {
     font-size: small;
@@ -112,7 +112,7 @@ export const StyledUserEstimationExcluded = styled(StyledUserEstimation)`
 `;
 
 export const StyledEyeIcon = styled.i`
-  color: ${({active}) => (active ? COLOR_ORANGE : COLOR_LIGHT_GREY)};
+  color: ${({$active}) => ($active ? COLOR_ORANGE : COLOR_LIGHT_GREY)};
 `;
 
 export const StyledUserQuickMenu = styled.span`

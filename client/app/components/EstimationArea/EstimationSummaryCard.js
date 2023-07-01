@@ -11,10 +11,10 @@ const EstimationSummaryCard = ({t, cardCfg, count, onClick}) => {
     <StyledEstmSummCard
       data-testid={`summaryCard.${cardCfg.value}`}
       onClick={onClick}
-      clickable={true}
+      $clickable={true}
       title={t('settle', {label: cardCfg.label})}
     >
-      <StyledEstmSummCardInner wasEstimated={!!count} cardColor={cardCfg.color}>
+      <StyledEstmSummCardInner $wasEstimated={!!count} $cardColor={cardCfg.color}>
         {cardCfg.label}
         {count && <span>{count}</span>}
       </StyledEstmSummCardInner>

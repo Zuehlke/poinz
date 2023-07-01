@@ -4,8 +4,7 @@ import {faker} from '@faker-js/faker';
 
 /**
  * These tests send commands over a real socket connection to a running Poinz backend on localhost:3000
- *
- */
+ * */
 
 test('serverPerformance: Add 100 Stories', async () => {
   await addNstories(100);

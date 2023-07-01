@@ -4,8 +4,8 @@ const EMAIL_MAX_LENGTH = 254;
 const ROOMID_REGEX = /^[-a-z0-9_]+$/; // roomId must not contain uppercase values
 const UUIDv4_OR_NANOID_REGEX =
   /^([0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|[-a-z0-9_]{21})$/; // either an old uuidv4 (lowercase) or a nanoid (limited alphabet, no uppercase letters)
-const CsvDATAURL_REGEX =
-  /^data:(text\/csv|application\/vnd.ms-excel|application\/csv|text\/x-csv|application\/x-csv|text\/comma-separated-values|text\/x-comma-separated-values);base64,/;
+const CsvJsonDATAURL_REGEX =
+  /^data:(text\/csv|application\/vnd.ms-excel|application\/csv|text\/x-csv|application\/x-csv|text\/comma-separated-values|text\/x-comma-separated-values|application\/json);base64,/;
 const USERNAME_REGEX = /^.{3,80}$/;
 
 /**
@@ -46,9 +46,14 @@ export function registerCustomFormats(tvi) {
     )
   );
   tvi.addFormat(
-    'csvDataUrl',
-    validateStringFormat.bind(undefined, CsvDATAURL_REGEX, 'must be a valid text/csv data url')
+    'csvOrJsonDataUrl',
+    validateStringFormat.bind(
+      undefined,
+      CsvJsonDATAURL_REGEX,
+      'must be a valid text/csv or application/json data url'
+    )
   );
+
   tvi.addFormat(
     'username',
     validateStringFormat.bind(undefined, USERNAME_REGEX, 'must be a valid username')

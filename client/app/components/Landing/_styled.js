@@ -53,7 +53,7 @@ export const StyledInfoText = styled.div`
   align-items: center;
 
   i {
-    font-size: ${({small}) => (small ? '20px' : '30px')};
+    font-size: ${({$small}) => ($small ? '20px' : '30px')};
     margin-right: 16px;
   }
 `;

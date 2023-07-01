@@ -43,7 +43,7 @@ const BacklogToolbar = ({filterQuery, onQueryChanged, sorting, onSortingChanged,
           <StyledDropdown data-testid="sortOptions">
             {sortings.map((sortingItem) => (
               <StyledSortDropdownItem
-                selected={sortingItem.id === sorting.id}
+                $selected={sortingItem.id === sorting.id}
                 className="clickable"
                 key={`sorting-item-${sortingItem.id}`}
                 onClick={() => onSortingOptionClicked(sortingItem)}

@@ -51,7 +51,7 @@ const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatri
       {matrixShown && <EstimationMatrix />}
     </StyledBoardCenter>
 
-    <StyledSidebarRight shown={sidebarShown}>
+    <StyledSidebarRight $shown={sidebarShown}>
       <Settings />
       <ActionLog />
       <Help />

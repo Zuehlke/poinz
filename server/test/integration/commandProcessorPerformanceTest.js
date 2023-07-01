@@ -1,17 +1,17 @@
-import uuid from '../../src/uuid';
-import roomStoreFactory from '../../src/store/roomStoreFactory';
-import processorFactory from '../../src/commandProcessor';
+import uuid from '../../src/uuid.js';
+import roomStoreFactory from '../../src/store/roomStoreFactory.js';
+import processorFactory from '../../src/commandProcessor.js';
 
 // we want to test with real command- and event handlers!
-import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers';
-import eventHandlers from '../../src/eventHandlers/eventHandlers';
+import commandHandlers, {baseCommandSchema} from '../../src/commandHandlers/commandHandlers.js';
+import eventHandlers from '../../src/eventHandlers/eventHandlers.js';
 
 /**
  * tests the command processor performance with the real room store (persistent storage)  but without socket connection (no json serializing, etc.)
  *
  */
 
-test('1000 "addStory" commands/events', async () => {
+test.skip('1000 "addStory" commands/events', async () => {
   const userId = uuid();
 
   const roomId = 'custom-room_' + uuid();

@@ -9,8 +9,7 @@ const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 test('parse real jira csv', async () => {
   const csvContent = await fs.readFile(path.join(__dirname, '../testJiraIssueExport.csv'), 'utf-8');
-  const base64data = Buffer.from(csvContent).toString('base64');
-  const dataUrl = 'data:text/csv;base64,' + base64data;
+  const dataUrl = textToCsvDataUrl(csvContent);
 
   const stories = parseCsvDataUrlToStories(dataUrl);
 

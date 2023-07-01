@@ -4,12 +4,12 @@ import {COLOR_FONT_GREY, COLOR_LIGHT_GREY, COLOR_LIGHTER_GREY, COLOR_ORANGE} fro
 import {device, ZuehlkeFont} from '../dimensions';
 
 export const StyledAvatar = styled.img`
-  border: ${({isOwn}) => (isOwn ? '2px solid ' + COLOR_ORANGE : '2px solid ' + COLOR_LIGHT_GREY)};
+  border: ${({$isOwn}) => ($isOwn ? '2px solid ' + COLOR_ORANGE : '2px solid ' + COLOR_LIGHT_GREY)};
   border-radius: 50%;
   background: #fff;
   display: block;
-  filter: ${({shaded}) => (shaded ? 'grayscale(100%)' : 'none')};
-  opacity: ${({shaded}) => (shaded ? '0.3' : '1')};
+  filter: ${({$shaded}) => ($shaded ? 'grayscale(100%)' : 'none')};
+  opacity: ${({$shaded}) => ($shaded ? '0.3' : '1')};
 
   /* smaller avatar icons in mobile view */
   margin: 0;
@@ -32,7 +32,7 @@ export const StyledValueBadge = styled.div`
   border-radius: 50%;
   margin-left: 8px;
   flex-shrink: 0;
-  background: ${({cardColor}) => (cardColor ? cardColor : COLOR_LIGHTER_GREY)};
+  background: ${({$cardColor}) => ($cardColor ? $cardColor : COLOR_LIGHTER_GREY)};
   justify-content: center;
   align-items: center;
 
@@ -97,16 +97,16 @@ export const StyledDropdown = styled.div`
 
 export const StyledStoryText = styled.div`
   margin-top: 4px;
-  white-space: ${({md}) => (md ? 'inherit' : 'pre-wrap')};
+  white-space: ${({$md}) => ($md ? 'inherit' : 'pre-wrap')};
   display: inline-block;
-  overflow-x: ${({scroll}) => (scroll ? 'auto' : 'hidden')};
+  overflow-x: ${({$scroll}) => ($scroll ? 'auto' : 'hidden')};
   width: 100%;
   position: relative;
 `;
 
 export const StyledToggleIcon = styled.i`
   display: inline-block;
-  color: ${({on}) => (on ? COLOR_ORANGE : 'inherit')};
+  color: ${({$on}) => ($on ? COLOR_ORANGE : 'inherit')};
   cursor: pointer;
   position: absolute;
   bottom: 16px;
@@ -133,10 +133,10 @@ export const StyledToggleButtonGroup = styled.div`
 export const StyledToggleButton = styled.button`
   padding: 4px 8px;
   font-size: small;
-  box-shadow: ${({active}) => (active ? 'none' : 'inherit')};
-  color: ${({active}) => (active ? '#fff' : COLOR_FONT_GREY)};
-  background: ${({active}) => (active ? COLOR_ORANGE : '#e6e6e6')};
-  border-right: ${({active}) => (active ? '1px solid transparent' : '1px solid rgba(0,0,0,.2)')};
+  box-shadow: ${({$active}) => ($active ? 'none' : 'inherit')};
+  color: ${({$active}) => ($active ? '#fff' : COLOR_FONT_GREY)};
+  background: ${({$active}) => ($active ? COLOR_ORANGE : '#e6e6e6')};
+  border-right: ${({$active}) => ($active ? '1px solid transparent' : '1px solid rgba(0,0,0,.2)')};
 `;
 
 export const StyledSection = styled.div`

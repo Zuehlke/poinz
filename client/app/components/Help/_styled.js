@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {COLOR_BACKGROUND_GREY} from '../colors';
 
 export const StyledHelp = styled.div`
-  display: ${({shown}) => (shown ? 'block' : 'none')};
+  display: ${({$shown}) => ($shown ? 'block' : 'none')};
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
   padding: 0 8px;

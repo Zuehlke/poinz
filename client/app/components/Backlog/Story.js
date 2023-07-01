@@ -76,10 +76,10 @@ const Story = ({
       id={'story.' + story.id}
       data-testid={isSelected ? 'storySelected' : 'story'}
       onClick={onStoryClicked}
-      selected={isSelected}
-      highlighted={isHighlighted}
+      $selected={isSelected}
+      $highlighted={isHighlighted}
       className={isWaiting ? 'waiting-spinner' : ''}
-      isDragging={isDragging}
+      $isDragging={isDragging}
     >
       <StyledStoryToolbar>
         <i

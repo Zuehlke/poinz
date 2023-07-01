@@ -44,7 +44,7 @@ test('import stories with keys (from csv) and successfully export them as json',
   });
 });
 
-test('correctly handle already present stories (manually added stories before import)', async () => {
+test('correctly handle already present stories (manually added stories before csv import)', async () => {
   const {userId, roomId, processor} = await prepOneUserInOneRoom();
 
   // --  add a story

@@ -23,8 +23,8 @@ export function textToCsvDataUrl(csvContent) {
   return 'data:text/csv;base64,' + base64data;
 }
 
-export function textToJsonDataUrl(csvContent) {
-  const base64data = Buffer.from(csvContent).toString('base64');
+export function textToJsonDataUrl(jsonContent) {
+  const base64data = Buffer.from(jsonContent).toString('base64');
   return 'data:application/json;base64,' + base64data;
 }
 

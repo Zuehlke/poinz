@@ -52,7 +52,7 @@ const Backlog = ({
   }, []);
 
   return (
-    <StyledBacklog shown={backlogShown} data-testid="backlog" width={backlogWidth}>
+    <StyledBacklog $shown={backlogShown} data-testid="backlog" $width={backlogWidth}>
       <StyledBacklogWidthDragHandle ref={drag}>
         <div />
         <div />

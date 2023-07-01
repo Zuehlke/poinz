@@ -34,7 +34,7 @@ const StoryDescription = ({
 
   return (
     <React.Fragment>
-      <StyledStoryText md={markdownEnabled} scroll={scroll} data-testid="storyText">
+      <StyledStoryText $md={markdownEnabled} $scroll={scroll} data-testid="storyText">
         {markdownEnabled && (
           <ReactMarkdown linkTarget="_blank" remarkPlugins={[remarkGfm]}>
             {descriptionString}
@@ -65,7 +65,7 @@ const StoryDescription = ({
       {showMarkdownToggle && originalDescriptionLength > 0 && (
         <StyledToggleIcon
           data-testid="markdownToggleButton"
-          on={markdownEnabled ? '1' : ''}
+          $on={markdownEnabled ? '1' : ''}
           className="icon-markdown"
           onClick={toggleMarkdownEnabled}
         ></StyledToggleIcon>

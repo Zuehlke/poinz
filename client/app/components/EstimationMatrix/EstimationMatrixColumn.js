@@ -21,7 +21,7 @@ export const EstimationMatrixColumn = ({stories, columnWidth, cc, onStoryDropped
   }));
 
   return (
-    <StyledEMColumn ref={drop} width={columnWidth} isOver={isOver}>
+    <StyledEMColumn ref={drop} $width={columnWidth} $isOver={isOver}>
       <div>
         <ValueBadge cardValue={cc.value} />
       </div>
@@ -54,7 +54,7 @@ const EstimationMatrixStory = ({color, story}) => {
   );
 
   return (
-    <StyledEMStory ref={drag} color={color} isDragging={isDragging}>
+    <StyledEMStory ref={drag} $color={color} $isDragging={isDragging}>
       <h4>{story.title}</h4>
     </StyledEMStory>
   );

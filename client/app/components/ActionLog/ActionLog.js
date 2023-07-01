@@ -20,13 +20,13 @@ import {
 const ActionLog = ({actionLog, shown}) => {
   const {t} = useContext(L10nContext);
   return (
-    <StyledActionLog shown={shown}>
+    <StyledActionLog $shown={shown}>
       <h4>{t('log')}</h4>
 
       <StyledActionLogInner>
         <StyledActionLogList>
           {actionLog.map((entry) => (
-            <StyledActionLogListItem isError={entry.isError} key={`logline_${entry.logId}`}>
+            <StyledActionLogListItem $isError={entry.isError} key={`logline_${entry.logId}`}>
               <span>{entry.tstamp}</span>
               <span style={{whiteSpace: 'pre-line'}}>{entry.message}</span>
             </StyledActionLogListItem>

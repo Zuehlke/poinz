@@ -64,14 +64,14 @@ const EstimationArea = ({
           textExpandThreshold={500}
         />
 
-        {hasConsensus && applause && <StyledApplauseHighlight color={consensusCardConfig.color} />}
+        {hasConsensus && applause && <StyledApplauseHighlight $color={consensusCardConfig.color} />}
         {hasConsensus && activeEasterEgg && applause && (
           <EasterEgg activeEasterEgg={activeEasterEgg} />
         )}
       </StyledSelectedStory>
 
       {!revealed && (
-        <EstimationAreaButtons alignment="space-between">
+        <EstimationAreaButtons $alignment="space-between">
           <button
             type="button"
             className="pure-button pure-button-primary"
@@ -85,7 +85,7 @@ const EstimationArea = ({
 
       {revealed && (
         <React.Fragment>
-          <EstimationAreaButtons alignment="flex-end">
+          <EstimationAreaButtons $alignment="flex-end">
             <button
               type="button"
               className="pure-button pure-button-primary"

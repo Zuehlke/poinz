@@ -98,7 +98,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
         <StyledAvatarGrid data-testid="avatarGrid">
           {avatarIcons.map((aIcn, index) => (
             <StyledMiniAvatar
-              selected={user.avatar === index}
+              $selected={user.avatar === index}
               src={aIcn}
               key={'aIcn_' + aIcn}
               onClick={onMiniAvatarClicked.bind(undefined, index)}

@@ -39,9 +39,9 @@ const BacklogFileDropWrapper = ({importCsvFile, children}) => {
   return (
     <div {...getRootProps()}>
       <StyledFileImportDropZoneOverlay
-        active={isDragActive}
-        isAccept={isDragAccept}
-        isReject={isDragReject}
+        $active={isDragActive}
+        $isAccept={isDragAccept}
+        $isReject={isDragReject}
       />
       {children}
     </div>

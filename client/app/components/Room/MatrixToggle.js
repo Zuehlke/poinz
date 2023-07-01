@@ -15,7 +15,7 @@ const MatrixToggle = ({onToggle, matrixShown}) => {
           className="pure-button"
           type="button"
           onClick={onToggle}
-          active={!matrixShown}
+          $active={!matrixShown}
           title={'Story'}
         >
           <i className="icon-list-alt" />
@@ -25,7 +25,7 @@ const MatrixToggle = ({onToggle, matrixShown}) => {
           className="pure-button"
           type="button"
           onClick={onToggle}
-          active={matrixShown}
+          $active={matrixShown}
           title={t('matrix')}
         >
           <i className="icon-table" />

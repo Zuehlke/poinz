@@ -14,7 +14,7 @@ export const StyledEstimation = styled.div`
 export const EstimationAreaButtons = styled.div`
   margin-top: 16px;
   display: flex;
-  justify-content: ${({alignment}) => alignment};
+  justify-content: ${({$alignment}) => $alignment};
 
   > button {
     margin-right: 4px;
@@ -45,8 +45,8 @@ export const StyledApplauseHighlight = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  border: ${({color}) => '1px solid ' + color};
-  box-shadow: ${({color}) => '0 0 10px ' + color};
+  border: ${({$color}) => '1px solid ' + $color};
+  box-shadow: ${({$color}) => '0 0 10px ' + $color};
   animation-name: ${FlashAnimation};
   animation-duration: 2s;
   animation-timing-function: linear;
@@ -96,12 +96,12 @@ export const StyledCard = styled.button`
 
 export const StyledCardInner = styled.div`
   position: relative;
-  background: ${({cardColor}) => (cardColor ? cardColor : 'white')};
-  color: ${({cardColor}) => (cardColor ? 'white' : 'inherit')};
+  background: ${({$cardColor}) => ($cardColor ? $cardColor : 'white')};
+  color: ${({$cardColor}) => ($cardColor ? 'white' : 'inherit')};
   padding: 28px 0;
   box-sizing: border-box;
   border-radius: 12px;
-  border: ${({selected}) => (selected ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
+  border: ${({$selected}) => ($selected ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
 
   &:hover {
     box-shadow: inset 0 -113px 113px -44px rgba(19, 18, 18, 0.39);
@@ -122,7 +122,7 @@ export const StyledEstmSummCard = styled(StyledCard)`
   &,
   &:focus,
   &:hover {
-    cursor: ${({clickable}) => (clickable ? 'pointer' : 'default')};
+    cursor: ${({$clickable}) => ($clickable ? 'pointer' : 'default')};
   }
 `;
 
@@ -130,8 +130,8 @@ export const StyledEstmSummCardInner = styled(StyledCardInner)`
   height: 80px; /* slightly smaller cards in estimation summary */
   padding: 23px 0;
 
-  opacity: ${({wasEstimated}) => (wasEstimated ? 1 : 0.3)};
-  border: ${({wasEstimated}) => (wasEstimated ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
+  opacity: ${({$wasEstimated}) => ($wasEstimated ? 1 : 0.3)};
+  border: ${({$wasEstimated}) => ($wasEstimated ? '2px solid ' + COLOR_ORANGE : '2px solid white')};
 
   > span {
     display: block;

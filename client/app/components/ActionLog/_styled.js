@@ -9,7 +9,7 @@ import {
 } from '../colors';
 
 export const StyledActionLog = styled.div`
-  display: ${({shown}) => (shown ? 'block' : 'none')};
+  display: ${({$shown}) => ($shown ? 'block' : 'none')};
   -webkit-overflow-scrolling: touch;
   box-sizing: border-box;
   padding: 0 8px;
@@ -40,8 +40,8 @@ export const StyledActionLogListItem = styled.li`
   margin-bottom: 8px;
   box-sizing: border-box;
   border: 1px solid ${COLOR_LIGHTER_GREY};
-  border-left: ${({isError}) =>
-    isError ? '2px solid ' + COLOR_WARNING : '1px solid ' + COLOR_LIGHTER_GREY};
+  border-left: ${({$isError}) =>
+    $isError ? '2px solid ' + COLOR_WARNING : '1px solid ' + COLOR_LIGHTER_GREY};
 
   > span {
     display: block;

@@ -12,7 +12,7 @@ import {device, TOPBAR_HEIGHT} from '../dimensions';
 
 export const StyledBacklog = styled.div.attrs((props) => ({
   style: {
-    width: props.shown ? '100%' : props.width + 'px'
+    width: props.$shown ? '100%' : props.$width + 'px'
   }
 }))`
   position: relative;
@@ -22,7 +22,7 @@ export const StyledBacklog = styled.div.attrs((props) => ({
   flex-shrink: 0;
   flex-grow: 0;
 
-  display: ${({shown}) => (shown ? 'flex' : 'none')};
+  display: ${({$shown}) => ($shown ? 'flex' : 'none')};
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;
@@ -160,7 +160,7 @@ const dzOverlayRejectBorder = '4px dashed rgba(255, 130, 10, 0.3)';
 const dzOverlayRejectBg = 'rgba(255, 130, 10, 0.06)';
 
 export const StyledFileImportDropZoneOverlay = styled.div`
-  display: ${({active}) => (active ? 'block' : 'none')};
+  display: ${({$active}) => ($active ? 'block' : 'none')};
   position: absolute;
   left: 0;
   right: 0;
@@ -169,18 +169,18 @@ export const StyledFileImportDropZoneOverlay = styled.div`
   margin: 4px;
   font-size: 62px;
   color: rgba(0, 153, 204, 0.25);
-  z-index: ${({active}) => (active ? 1000 : 0)};
+  z-index: ${({$active}) => ($active ? 1000 : 0)};
 
-  border: ${({active, isAccept, isReject}) =>
-    active && isAccept
+  border: ${({$active, $isAccept, $isReject}) =>
+    $active && $isAccept
       ? dzOverlayAcceptBorder
-      : active && isReject
+      : $active && $isReject
       ? dzOverlayRejectBorder
       : 'none'};
-  background: ${({active, isAccept, isReject}) =>
-    active && isAccept
+  background: ${({$active, $isAccept, $isReject}) =>
+    $active && $isAccept
       ? dzOverlayAcceptBg
-      : active && isReject
+      : $active && $isReject
       ? dzOverlayRejectBg
       : 'transparent'};
 `;
@@ -193,17 +193,17 @@ export const StyledStory = styled.div`
   box-sizing: border-box;
   border: 1px solid ${COLOR_LIGHTER_GREY};
   cursor: pointer;
-  opacity: ${(props) => (props.isDragging ? 0 : 1)};
-  border-left: ${({selected, highlighted}) =>
-    selected
+  opacity: ${(props) => (props.$isDragging ? 0 : 1)};
+  border-left: ${({$selected, $highlighted}) =>
+    $selected
       ? '2px solid ' + COLOR_ORANGE
-      : highlighted
+      : $highlighted
       ? '1px solid ' + COLOR_BLUE
       : '1px solid ' + COLOR_LIGHTER_GREY};
 
   &:hover {
-    box-shadow: ${({noShadow}) =>
-      noShadow ? 'none' : 'inset 0 82px 50px -60px rgba(194, 194, 194, 0.45)'};
+    box-shadow: ${({$noShadow}) =>
+      $noShadow ? 'none' : 'inset 0 82px 50px -60px rgba(194, 194, 194, 0.45)'};
   }
 `;
 
@@ -295,7 +295,7 @@ export const StyledBacklogToolbar = styled.form`
 `;
 
 export const StyledSortDropdownItem = styled.div`
-  color: ${({selected}) => (selected ? COLOR_LIGHTER_GREY : 'inherit')};
+  color: ${({$selected}) => ($selected ? COLOR_LIGHTER_GREY : 'inherit')};
 
   > i {
     margin-right: 4px;

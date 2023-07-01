@@ -42,7 +42,7 @@ export const StyledBoardCenter = styled.div`
 `;
 
 export const StyledSidebarRight = styled.div`
-  display: ${({shown}) => (shown ? 'block' : 'none')};
+  display: ${({$shown}) => ($shown ? 'block' : 'none')};
   position: relative;
   flex-shrink: 0;
   width: 100%;

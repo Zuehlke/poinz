@@ -9,8 +9,8 @@ const Avatar = ({user, isOwn, shaded, onClick}) => (
   <StyledAvatar
     className="avatar"
     src={getImageSource(user)}
-    isOwn={isOwn}
-    shaded={shaded}
+    $isOwn={isOwn}
+    $shaded={shaded}
     onClick={onClick}
   />
 );

@@ -17,7 +17,7 @@ import {StyledSection} from '../common/_styled';
 const Help = ({shown}) => {
   const {t} = useContext(L10nContext);
   return (
-    <StyledHelp shown={shown}>
+    <StyledHelp $shown={shown}>
       <h4>{t('help')}</h4>
 
       <StyledHelpInner>

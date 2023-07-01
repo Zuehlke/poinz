@@ -70,7 +70,7 @@ const TopBar = ({
             className={`clickable pure-button pure-button-primary ${
               sidebar === SIDEBAR_ACTIONLOG ? 'pure-button-active' : ''
             }`}
-            warning={unseenError}
+            $warning={unseenError}
             onClick={toggleSidebar.bind(undefined, SIDEBAR_ACTIONLOG)}
             title={t('toggleLog')}
           >

@@ -102,7 +102,7 @@ export const StyledQuickMenuButton = styled.a`
   font-size: 22px;
   padding: 4px 8px;
   box-sizing: border-box;
-  color: ${({warning}) => (warning ? COLOR_WARNING : 'white')};
+  color: ${({$warning}) => ($warning ? COLOR_WARNING : 'white')};
   border-radius: 0;
   background: ${COLOR_BLUE};
   position: relative;

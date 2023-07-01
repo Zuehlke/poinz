@@ -31,7 +31,7 @@ const UserEstimationCard = ({
 
   if (!userHasEstimation) {
     return (
-      <StyledUserEstimation revealed={revealed}>
+      <StyledUserEstimation $revealed={revealed}>
         <span>{estimationValueToDisplay}</span>
       </StyledUserEstimation>
     );
@@ -43,8 +43,8 @@ const UserEstimationCard = ({
 
   return (
     <StyledUserEstimationGiven
-      revealed={revealed}
-      valueColor={matchingCardConfig.color}
+      $revealed={revealed}
+      $valueColor={matchingCardConfig.color}
       data-testid={`${revealed ? 'revealed.' : ''}userEstimationGiven.${matchingCardConfig.value}`}
     >
       {showHighConfMarker && (

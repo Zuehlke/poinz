@@ -15,7 +15,7 @@ import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
  * - changing settings for the room like autoReveal (affects the room and thus all users in the same room)
  */
 const Settings = ({shown}) => (
-  <StyledSettings shown={shown} data-testid="settings">
+  <StyledSettings $shown={shown} data-testid="settings">
     <form className="pure-form" onSubmit={(e) => e.preventDefault()}>
       <UserSettings />
 

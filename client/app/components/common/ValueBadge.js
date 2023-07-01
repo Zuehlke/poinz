@@ -6,7 +6,10 @@ import {StyledValueBadge} from './_styled';
 import {getMatchingCardConfig} from '../../state/room/roomSelectors';
 
 const ValueBadge = ({cardConfigItem}) => (
-  <StyledValueBadge cardColor={cardConfigItem && cardConfigItem.color} data-testid="cardValueBadge">
+  <StyledValueBadge
+    $cardColor={cardConfigItem && cardConfigItem.color}
+    data-testid="cardValueBadge"
+  >
     <div>{cardConfigItem.label}</div>
   </StyledValueBadge>
 );

@@ -44,7 +44,7 @@ const ConfButton = ({label, title, onClick, active}) => (
     className="pure-button"
     type="button"
     onClick={onClick}
-    active={active}
+    $active={active}
     title={title}
   >
     {label}

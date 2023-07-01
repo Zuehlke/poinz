@@ -43,7 +43,7 @@ const User = ({
   const [quickMenuShown, setQuickMenuShown] = useState(false);
 
   return (
-    <StyledUser data-testid="user" isOwn={isOwnUser} shaded={isDisconnected || quickMenuShown}>
+    <StyledUser data-testid="user" $isOwn={isOwnUser} $shaded={isDisconnected || quickMenuShown}>
       <StyledUserBadge>
         {isExcluded && <i className="icon-eye"></i>}
         {isDisconnected && <i className="icon-flash"></i>}
@@ -60,7 +60,7 @@ const User = ({
       {quickMenuShown && (
         <StyledUserQuickMenu ref={quickMenuRef}>
           <StyledEyeIcon
-            active={isExcluded}
+            $active={isExcluded}
             className="icon-eye"
             onClick={onEyeIconClick}
             title={t('markSpectator')}

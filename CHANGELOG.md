@@ -1,3 +1,10 @@
+### 0.19.0: 2023-07-01
+
+* Stories import from json file (#358)
+* Backlog toolbar always shown (filter, sort, dropdown menu)
+* File upload button in backlog dropdown menu
+* Dependencies updated
+
 ### 0.18.4: 2023-05-29
 
 * Dependencies updated

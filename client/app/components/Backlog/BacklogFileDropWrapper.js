@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, createContext} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
@@ -19,8 +19,11 @@ const ACCEPTED_MIME_TYPES = {
   'application/json': ['.json']
 };
 
+// we put the dropzone "open" callback into a context so that we can use it from child components
+export const OpenFileDialogContext = createContext(() => {});
+
 /**
- * Handles CSV file drop & importing
+ * Handles CSV and JSON file drop & importing
  */
 const BacklogFileDropWrapper = ({importCsvFile, children}) => {
   const onDrop = useCallback((acceptedFiles) => {
@@ -28,7 +31,7 @@ const BacklogFileDropWrapper = ({importCsvFile, children}) => {
       importCsvFile(acceptedFiles[0]);
     }
   }, []);
-  const {getRootProps, isDragActive, isDragAccept, isDragReject} = useDropzone({
+  const {getRootProps, isDragActive, isDragAccept, isDragReject, open} = useDropzone({
     onDrop,
     multiple: false,
     noClick: true,
@@ -43,7 +46,7 @@ const BacklogFileDropWrapper = ({importCsvFile, children}) => {
         $isAccept={isDragAccept}
         $isReject={isDragReject}
       />
-      {children}
+      <OpenFileDialogContext.Provider value={open}>{children}</OpenFileDialogContext.Provider>
     </div>
   );
 };

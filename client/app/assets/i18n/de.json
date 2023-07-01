@@ -102,5 +102,6 @@
   "addCard": "Karte hinzufügen",
   "value": "Wert",
   "label": "Name",
-  "color": "Farbe"
+  "color": "Farbe",
+  "importFromFile": "Stories aus einer Datei importieren"
 }

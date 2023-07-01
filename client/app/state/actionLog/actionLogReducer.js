@@ -145,7 +145,7 @@ export default function (state, action, oldState) {
     case EVENT_ACTION_TYPES.sortOrderSet:
       return updateLogInState(`${username} changed the order of the stories in the backlog`);
     case EVENT_ACTION_TYPES.importFailed:
-      return updateLogInState('CSV import failed. ' + payload.message);
+      return updateLogInState('Story import failed. ' + payload.message);
 
     // estimating
     // storyEstimateGiven and storyEstimateCleared are not logged!

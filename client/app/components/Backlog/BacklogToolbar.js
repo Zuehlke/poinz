@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {L10nContext} from '../../services/l10n';
 import useOutsideClick from '../common/useOutsideClick';
 import sortings from './backlogSortings';
+import {OpenFileDialogContext} from './BacklogFileDropWrapper';
 
 import {StyledDropdown} from '../common/_styled';
 import {StyledBacklogToolbar, StyledSortDropdownItem} from './_styled';
@@ -13,6 +14,9 @@ import {StyledBacklogToolbar, StyledSortDropdownItem} from './_styled';
  */
 const BacklogToolbar = ({filterQuery, onQueryChanged, sorting, onSortingChanged, onTrashAll}) => {
   const {t} = useContext(L10nContext);
+
+  const openFileDialog = useContext(OpenFileDialogContext);
+
   const sortDropdownRef = useRef(null);
   const moreDropdownRef = useRef(null);
   const [extendedSort, setExtendedSort] = useState(false);
@@ -63,6 +67,10 @@ const BacklogToolbar = ({filterQuery, onQueryChanged, sorting, onSortingChanged,
         />
         {extendedMore && (
           <StyledDropdown data-testid="moreOptions">
+            <StyledSortDropdownItem className="clickable" onClick={() => openFileDialog()}>
+              <i className="icon icon-upload-cloud"></i>
+              {t('importFromFile')}
+            </StyledSortDropdownItem>
             <StyledSortDropdownItem className="clickable" onClick={onTrashAll}>
               <i className="icon icon-trash"></i>
               {t('trashAllStories')}

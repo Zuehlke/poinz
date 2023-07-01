@@ -1,10 +1,13 @@
-const path = require('path');
-const util = require('util');
-const fs = require('fs-extra');
-const {exec} = require('child_process');
-const del = require('del');
+import path from 'path';
+import util from 'util';
+import fs from 'fs-extra';
+import {exec} from 'child_process';
+import {deleteAsync} from 'del';
+import {fileURLToPath} from 'url';
 
 const execPromised = util.promisify(exec);
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const POINZ_CLIENT_FONT_DIR = path.resolve(__dirname, '../client/app/assets/font');
 
@@ -54,6 +57,6 @@ async function grab(inputZipFile) {
 
   if (weNeedToExtract) {
     console.log(`deleting "${targetExtractedFontelloDirname}"`);
-    await del(targetExtractedFontelloDirname, {force: true});
+    await deleteAsync(targetExtractedFontelloDirname, {force: true});
   }
 }

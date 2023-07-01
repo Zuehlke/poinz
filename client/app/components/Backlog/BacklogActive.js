@@ -131,38 +131,32 @@ const BacklogActive = ({activeStories, selectedStoryId, trashStories, setSortOrd
   return (
     <StyledBacklogActive ref={containerDropRef}>
       <BacklogFileDropWrapper>
+        <BacklogToolbar
+          onTrashAll={onTrashAll}
+          onSortingChanged={setSorting}
+          sorting={sorting}
+          onQueryChanged={setFilterQuery}
+          filterQuery={filterQuery}
+        />
         {activeStories.length > 0 && (
-          <React.Fragment>
-            {activeStories.length > 1 && (
-              <BacklogToolbar
-                onTrashAll={onTrashAll}
-                onSortingChanged={setSorting}
-                sorting={sorting}
-                onQueryChanged={setFilterQuery}
-                filterQuery={filterQuery}
-              />
+          <StyledStories data-testid="activeStories">
+            {sortedStories.map((story) =>
+              story.editMode ? (
+                <StoryEditForm key={story.id} story={story} />
+              ) : (
+                <Story
+                  key={story.id}
+                  story={story}
+                  isHighlighted={story.id === highlightedStoryId}
+                  onStoryClicked={() => setHighlightedStoryId(story.id)}
+                  dndDragEnd={dndDragEnd}
+                  dndMoveStory={dndMoveStory}
+                  dndFindStory={dndFindStory}
+                />
+              )
             )}
-
-            <StyledStories data-testid="activeStories">
-              {sortedStories.map((story) =>
-                story.editMode ? (
-                  <StoryEditForm key={story.id} story={story} />
-                ) : (
-                  <Story
-                    key={story.id}
-                    story={story}
-                    isHighlighted={story.id === highlightedStoryId}
-                    onStoryClicked={() => setHighlightedStoryId(story.id)}
-                    dndDragEnd={dndDragEnd}
-                    dndMoveStory={dndMoveStory}
-                    dndFindStory={dndFindStory}
-                  />
-                )
-              )}
-            </StyledStories>
-          </React.Fragment>
+          </StyledStories>
         )}
-
         {activeStories.length < 1 && (
           <StyledBacklogInfoText>{t('noActiveStories')}</StyledBacklogInfoText>
         )}

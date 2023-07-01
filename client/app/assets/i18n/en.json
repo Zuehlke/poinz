@@ -102,5 +102,6 @@
   "addCard": "Add Card",
   "value": "Value",
   "label": "Label",
-  "color": "Color"
+  "color": "Color",
+  "importFromFile": "Import stories from file"
 }

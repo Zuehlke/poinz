@@ -120,6 +120,24 @@ test('parse csv with additional "consensus" ', async () => {
   });
 });
 
+test('parse csv with Jira Data Center "consensus" ', async () => {
+  const dataUrl = textToCsvDataUrl(
+    'title,key,Custom field (Story Points),description\nfirst story,PRJ-123,3,this is a test'
+  );
+
+  const stories = parseCsvDataUrlToStories(dataUrl);
+
+  expect(stories.length).toBe(1);
+  expect(stories[0]).toMatchObject({
+    description: 'this is a test',
+    key: 'PRJ-123',
+    estimations: {},
+    storyId: EXPECT_UUID_MATCHING,
+    title: 'PRJ-123 first story',
+    consensus: 3
+  });
+});
+
 test('include issue deeplink URL into description if issue-tracking url is provided', async () => {
   const dataUrl = textToCsvDataUrl(
     'Issue key,Summary,description\nPRJ-123,Some Title,Some description'

@@ -17,6 +17,7 @@ import EstimationMatrixColumn from './EstimationMatrixColumn';
 import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} from './_styled';
 import {StyledStoryTitle} from '../_styled';
 import {getStoriesWithPendingSetValueCommand} from '../../state/commandTracking/commandTrackingSelectors';
+import EstimationMatrixColumnUnestimated from './EstimationMatrixColumnUnestimated';
 
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
@@ -49,10 +50,9 @@ const EstimationMatrix = ({
       </StyledStoryTitle>
 
       <StyledEMColumnsContainer>
-        <EstimationMatrixColumn
+        <EstimationMatrixColumnUnestimated
           key={'header:-unestimated'}
           columnWidth={columnWidth}
-          cc={{color: '#cccccc', value: -200, label: '-'}}
           stories={unestimatedStories}
         />
 

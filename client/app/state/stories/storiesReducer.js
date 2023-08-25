@@ -118,7 +118,6 @@ export default function storiesReducer(state = storiesInitialState, action, ownU
         consensus: event.payload.value
       }));
     case EVENT_ACTION_TYPES.storyValueSet:
-      console.log('storyValue set', event.payload.storyId, event.payload.value);
       return modifyStory(state, event.payload.storyId, (story) => ({
         ...story,
         consensus: event.payload.value,

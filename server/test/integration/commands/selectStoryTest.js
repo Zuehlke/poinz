@@ -62,13 +62,13 @@ describe('preconditions', () => {
           roomId,
           name: 'selectStory',
           payload: {
-            storyId: 'story-not-in-room'
+            storyId: uuid()
           }
         },
         userId
       )
     ).rejects.toThrow(
-      /Precondition Error during "selectStory": Given story story-not-in-room does not belong to room .*/
+      /Precondition Error during "selectStory": Given story .* does not belong to room .*/
     );
   });
 

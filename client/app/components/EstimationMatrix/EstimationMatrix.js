@@ -2,37 +2,42 @@ import React, {useContext, useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
-import {getAllStoriesWithConsensus} from '../../state/stories/storiesSelectors';
+import {
+  getActiveStoriesWithConsensus,
+  getActiveStoriesWithoutConsensus,
+  getAllStoriesWithConsensus,
+  getAllStoriesWithoutConsensus
+} from '../../state/stories/storiesSelectors';
 import {getCardConfigInOrder} from '../../state/room/roomSelectors';
 import {L10nContext} from '../../services/l10n';
 import {toggleMatrixIncludeTrashed} from '../../state/actions/uiStateActions';
-import {settleEstimation} from '../../state/actions/commandActions';
+import {setStoryValue} from '../../state/actions/commandActions';
 import EstimationMatrixColumn from './EstimationMatrixColumn';
 
 import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} from './_styled';
 import {StyledStoryTitle} from '../_styled';
-import {getSettlingStories} from '../../state/commandTracking/commandTrackingSelectors';
+import {getStoriesWithPendingSetValueCommand} from '../../state/commandTracking/commandTrackingSelectors';
+import EstimationMatrixColumnUnestimated from './EstimationMatrixColumnUnestimated';
 
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
  */
 const EstimationMatrix = ({
+  unestimatedStories,
   estimatedStories,
   cardConfig,
-  settlingStories,
+  pendingSetValueStories,
   includeTrashedStories,
   toggleMatrixIncludeTrashed,
-  settleEstimation
+  setStoryValue
 }) => {
-  const columnWidth = getColWidth(cardConfig.length);
+  const columnWidth = getColWidth(cardConfig.length + 1);
   const {t} = useContext(L10nContext);
-  const [groupedStories, setGroupedStories] = useState({});
+  const [groupedStories, setGroupedStories] = useState({}); // grouped by consensus value
 
   useEffect(() => {
-    setGroupedStories(
-      deriveGroupedStories(estimatedStories, settlingStories, includeTrashedStories)
-    );
-  }, [estimatedStories, includeTrashedStories, settlingStories]);
+    setGroupedStories(deriveGroupedStories(estimatedStories, pendingSetValueStories));
+  }, [estimatedStories, pendingSetValueStories]);
 
   return (
     <StyledEstimationMatrix data-testid="matrix">
@@ -45,9 +50,15 @@ const EstimationMatrix = ({
       </StyledStoryTitle>
 
       <StyledEMColumnsContainer>
+        <EstimationMatrixColumnUnestimated
+          key={'header:-unestimated'}
+          columnWidth={columnWidth}
+          stories={unestimatedStories}
+        />
+
         {cardConfig.map((cc) => (
           <EstimationMatrixColumn
-            onStoryDropped={settleEstimation}
+            onStoryDropped={setStoryValue}
             key={'header:' + cc.value}
             columnWidth={columnWidth}
             cc={cc}
@@ -66,22 +77,28 @@ const EstimationMatrix = ({
 };
 
 EstimationMatrix.propTypes = {
+  unestimatedStories: PropTypes.array,
   estimatedStories: PropTypes.array,
   cardConfig: PropTypes.array,
-  settlingStories: PropTypes.array,
+  pendingSetValueStories: PropTypes.array,
   includeTrashedStories: PropTypes.bool,
   toggleMatrixIncludeTrashed: PropTypes.func.isRequired,
-  settleEstimation: PropTypes.func.isRequired
+  setStoryValue: PropTypes.func.isRequired
 };
 
 export default connect(
   (state) => ({
-    estimatedStories: getAllStoriesWithConsensus(state),
+    unestimatedStories: state.ui.matrixIncludeTrashedStories
+      ? getAllStoriesWithoutConsensus(state)
+      : getActiveStoriesWithoutConsensus(state),
+    estimatedStories: state.ui.matrixIncludeTrashedStories
+      ? getAllStoriesWithConsensus(state)
+      : getActiveStoriesWithConsensus(state),
     cardConfig: getCardConfigInOrder(state),
     includeTrashedStories: state.ui.matrixIncludeTrashedStories,
-    settlingStories: getSettlingStories(state)
+    pendingSetValueStories: getStoriesWithPendingSetValueCommand(state)
   }),
-  {toggleMatrixIncludeTrashed, settleEstimation}
+  {toggleMatrixIncludeTrashed, setStoryValue}
 )(EstimationMatrix);
 
 const getColWidth = (cardConfigCount) => {
@@ -93,18 +110,13 @@ const getColWidth = (cardConfigCount) => {
  * group stories according to estimation value.
  *
  * @param estimatedStories
- * @param settlingStories
- * @param includeTrashedStories
+ * @param pendingSetValueStories
  * @return {object} Object that maps estimation value (consensus) to array of stories
  */
-function deriveGroupedStories(estimatedStories, settlingStories, includeTrashedStories) {
-  const stories = !includeTrashedStories
-    ? estimatedStories.filter((s) => !s.trashed)
-    : estimatedStories;
-
-  return stories.reduce((total, current) => {
-    const isSettling = settlingStories.find((ss) => ss.storyId === current.id);
-    const consensus = isSettling ? isSettling.value : current.consensus;
+function deriveGroupedStories(estimatedStories, pendingSetValueStories) {
+  return estimatedStories.reduce((total, current) => {
+    const isPending = pendingSetValueStories.find((ss) => ss.storyId === current.id);
+    const consensus = isPending ? isPending.value : current.consensus;
     if (!total[consensus]) {
       total[consensus] = [];
     }

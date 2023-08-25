@@ -1,3 +1,8 @@
+### 0.19.1: 2023-08-25
+
+* Show stories without estimation in most-left column in estimation matrix (#364)
+* Dependencies updated
+
 ### 0.19.0: 2023-07-01
 
 * Stories import from json file (#358)
@@ -55,15 +60,15 @@
 
 ### 0.17.1: 2022-05-22
 
-* Fix a bug where username change was not correctly persisted #275
+* Fix a bug where username change was not correctly persisted (#275)
 * Persist custom backlog width to local storage
-* Story points in imported stories stored as consensus #264
+* Story points in imported stories stored as consensus (#264)
 * dependencies updated (react 18)
 
 ### 0.17.0: 2022-04-15
 
-* Manual sorting of stories in backlog via drag'n'drop  #252
-* Backlog resizable: Width of backlog can be set with mouse #265
+* Manual sorting of stories in backlog via drag'n'drop  (#252)
+* Backlog resizable: Width of backlog can be set with mouse (#265)
 * dependencies updated
 
 ### 0.16.0: 2022-03-30

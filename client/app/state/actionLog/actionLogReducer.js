@@ -162,6 +162,14 @@ export default function (state, action, oldState) {
 
       return updateLogInState(message);
     }
+    case EVENT_ACTION_TYPES.storyValueSet: {
+      const matchingCardConfig = getMatchingCardConfig(state, payload.value);
+      let message = `${username} manually set value for story "${getStoryTitle(
+        state,
+        payload.storyId
+      )}" to ${matchingCardConfig.label}`;
+      return updateLogInState(message);
+    }
     case EVENT_ACTION_TYPES.revealed: {
       const storyTitle = getStoryTitle(state, payload.storyId);
       const message = payload.manually

@@ -21,6 +21,7 @@ import setCardConfig from './setCardConfig.js';
 import setPassword from './setPassword.js';
 import setRoomConfig from './setRoomConfig.js';
 import setSortOrder from './setSortOrder.js';
+import setStoryValue from './setStoryValue.js';
 
 export default {
   addStory,
@@ -45,12 +46,13 @@ export default {
   setCardConfig,
   setRoomConfig,
   setPassword,
-  setSortOrder
+  setSortOrder,
+  setStoryValue
 };
 
 /**
  * The other command schemas reference this base schema.
- * Thus every command must also adhere to these properties...
+ * Thus, every command must also adhere to these properties...
  */
 export const baseCommandSchema = {
   id: 'command',
@@ -58,7 +60,7 @@ export const baseCommandSchema = {
   properties: {
     id: {
       type: 'string',
-      minLength: 1
+      format: 'uuid'
     },
     userId: {
       type: 'string',

@@ -47,7 +47,7 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'clearStoryEstimate',
           payload: {
-            storyId: 'unknown'
+            storyId: uuid() // <<- new, unknown id
           }
         },
         userId

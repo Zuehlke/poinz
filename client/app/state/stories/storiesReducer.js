@@ -117,6 +117,12 @@ export default function storiesReducer(state = storiesInitialState, action, ownU
         ...story,
         consensus: event.payload.value
       }));
+    case EVENT_ACTION_TYPES.storyValueSet:
+      return modifyStory(state, event.payload.storyId, (story) => ({
+        ...story,
+        consensus: event.payload.value,
+        revealed: true
+      }));
     case EVENT_ACTION_TYPES.revealed:
       return modifyStory(state, event.payload.storyId, (story) => ({
         ...story,

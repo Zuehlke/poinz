@@ -46,6 +46,8 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       giveEstimate,
       clearEstimate,
       newRound,
+      settleEstimation,
+      setStoryValue,
       setCardConfig,
       setPassword,
       setRoomConfig,
@@ -332,6 +334,30 @@ export default function poinzSocketClientFactory(backendUrl = 'http://localhost:
       userId,
       payload: {
         storyId
+      }
+    });
+  }
+
+  function settleEstimation(roomId, userId, storyId, value) {
+    return sendCommand({
+      name: 'settleEstimation',
+      roomId,
+      userId,
+      payload: {
+        storyId,
+        value
+      }
+    });
+  }
+
+  function setStoryValue(roomId, userId, storyId, value) {
+    return sendCommand({
+      name: 'setStoryValue',
+      roomId,
+      userId,
+      payload: {
+        storyId,
+        value
       }
     });
   }

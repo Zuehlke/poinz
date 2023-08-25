@@ -40,6 +40,11 @@ export const StyledEMColumn = styled.div`
   background: ${({$isOver}) => ($isOver ? dzOverlayAcceptBg : 'transparent')};
   border: ${({$isOver}) => ($isOver ? dzOverlayAcceptBorder : '4px solid transparent')};
 
+  &:first-of-type {
+    border-right: 1px solid ${COLOR_LIGHTER_GREY};
+    padding-right: 4px;
+  }
+
   /** header row **/
 
   > div:first-of-type {

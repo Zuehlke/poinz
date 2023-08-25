@@ -1,4 +1,4 @@
-import {nanoid} from 'nanoid';
+import uuid from '../../app/services/uuid';
 import socketIo from 'socket.io-client';
 
 // ***********************************************
@@ -43,7 +43,7 @@ Cypress.Commands.add('sendCommands', (socketIdentifier, commands) => {
     commands.forEach((cmd) => {
       w.__POINZ_E2E__[socketIdentifier].emit('command', {
         ...cmd,
-        id: nanoid()
+        id: uuid()
       });
     });
   });

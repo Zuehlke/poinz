@@ -15,7 +15,8 @@ const schema = {
           type: 'object',
           properties: {
             storyId: {
-              type: 'string'
+              type: 'string',
+              format: 'uuid'
             },
             title: {
               type: 'string',

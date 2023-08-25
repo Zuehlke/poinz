@@ -185,6 +185,16 @@ export const settleEstimation = (storyId, value) => (dispatch, getState, sendCom
   });
 };
 
+export const setStoryValue = (storyId, value) => (dispatch, getState, sendCommand) => {
+  sendCommand({
+    name: 'setStoryValue',
+    payload: {
+      storyId,
+      value
+    }
+  });
+};
+
 export const clearStoryEstimate = () => (dispatch, getState, sendCommand) => {
   const state = getState();
   sendCommand({

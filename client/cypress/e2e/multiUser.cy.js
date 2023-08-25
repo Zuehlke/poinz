@@ -1,4 +1,4 @@
-import {nanoid} from 'nanoid';
+import uuid from '../../app/services/uuid';
 import {tid} from '../support/commands';
 import {Landing, Room} from '../elements/elements';
 
@@ -9,7 +9,7 @@ beforeEach(function () {
 });
 
 it('multi user estimation with two rounds, consensus on second round', function () {
-  const roomId = 'multi-user-e2e_' + nanoid().toLowerCase();
+  const roomId = 'multi-user-e2e_' + uuid().toLowerCase();
 
   cy.visit('/' + roomId);
 
@@ -21,8 +21,8 @@ it('multi user estimation with two rounds, consensus on second round', function 
   // -- the following will open an additional socket to the backend, so that we can add another user to the room
   // Cypress does not support multiple browsers!   see    https://docs.cypress.io/guides/references/trade-offs.html
   // see ../support/commands.js
-  const userTwoSocket = nanoid();
-  const userTwoUserId = nanoid().toLowerCase();
+  const userTwoSocket = uuid();
+  const userTwoUserId = uuid();
   cy.openNewSocket(userTwoSocket);
   cy.sendCommands(userTwoSocket, [
     {
@@ -103,7 +103,7 @@ it('multi user estimation with two rounds, consensus on second round', function 
 });
 
 it('estimation summary and settling on a value', function () {
-  const roomId = 'multi-user-e2e_' + nanoid().toLowerCase();
+  const roomId = 'multi-user-e2e_' + uuid().toLowerCase();
 
   cy.visit('/' + roomId);
 
@@ -112,8 +112,8 @@ it('estimation summary and settling on a value', function () {
   Room.TopBar.whoami().click();
   Room.TopBar.whoamiDropdown().contains(this.user.username);
 
-  const userTwoSocket = nanoid();
-  const userTwoUserId = nanoid().toLowerCase();
+  const userTwoSocket = uuid();
+  const userTwoUserId = uuid();
   cy.openNewSocket(userTwoSocket);
   cy.sendCommands(userTwoSocket, [
     {

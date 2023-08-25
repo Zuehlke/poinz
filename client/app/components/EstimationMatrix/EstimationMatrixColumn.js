@@ -1,24 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useDrag, useDrop} from 'react-dnd';
+import {useDrop} from 'react-dnd';
 
 import ValueBadge from '../common/ValueBadge';
 import {DRAG_ITEM_TYPES} from '../Room/Board';
+import EstimationMatrixStory from './EstimationMatrixStory';
 
-import {StyledEMColumn, StyledEMStory} from './_styled';
+import {StyledEMColumn} from './_styled';
 
 export const EstimationMatrixColumn = ({stories, columnWidth, cc, onStoryDropped}) => {
-  const [{isOver}, drop] = useDrop(() => ({
-    accept: DRAG_ITEM_TYPES.matrixStory,
-    drop: (item) => {
-      if (item.consensus !== cc.value) {
-        onStoryDropped(item.id, cc.value);
-      }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver()
-    })
-  }));
+  const [{isOver}, drop] = useDrop(
+    () => ({
+      accept: onStoryDropped ? DRAG_ITEM_TYPES.matrixStory : '_NONE_',
+      drop: (item) => {
+        if (onStoryDropped && item.consensus !== cc.value) {
+          // if item.consensus and cc.value is the same - story was dropped on original/current column
+          // only invoke onStoryDropped if current consensus is not equal to target column (cc.value)
+          onStoryDropped(item.id, cc.value);
+        }
+      },
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver()
+      })
+    }),
+    [stories, cc, onStoryDropped]
+  );
 
   return (
     <StyledEMColumn ref={drop} $width={columnWidth} $isOver={isOver}>
@@ -40,27 +46,3 @@ EstimationMatrixColumn.propTypes = {
 };
 
 export default EstimationMatrixColumn;
-
-const EstimationMatrixStory = ({color, story}) => {
-  const [{isDragging}, drag] = useDrag(
-    () => ({
-      type: DRAG_ITEM_TYPES.matrixStory,
-      item: {id: story.id, consensus: story.consensus},
-      collect: (monitor) => ({
-        isDragging: !!monitor.isDragging()
-      })
-    }),
-    [story.id]
-  );
-
-  return (
-    <StyledEMStory ref={drag} $color={color} $isDragging={isDragging}>
-      <h4>{story.title}</h4>
-    </StyledEMStory>
-  );
-};
-
-EstimationMatrixStory.propTypes = {
-  color: PropTypes.string,
-  story: PropTypes.object
-};

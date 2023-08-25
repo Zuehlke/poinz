@@ -70,7 +70,14 @@ function issueObjectToStory(issueTrackingUrlPattern, issueObject) {
 const KEY_PROPERTY_NAMES = ['issue key', 'issue', 'key'];
 const TITLE_PROPERTY_NAMES = ['summary', 'title'];
 const DESCR_PROPERTY_NAMES = ['description', 'descr'];
-const CONSENSUS_PROPERTY_NAMES = ['points', 'consensus', 'value', 'storypoints', 'estimation', 'custom field (story points)' ];
+const CONSENSUS_PROPERTY_NAMES = [
+  'points',
+  'consensus',
+  'value',
+  'storypoints',
+  'estimation',
+  'custom field (story points)'
+];
 
 function getTitleFromIssueObject(issueObject) {
   let title = '';

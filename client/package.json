@@ -18,6 +18,8 @@
     "test:e2e": "npm run cypress:run",
     "pretest": "npm run lint",
     "cypress:run": "cypress run --headed --spec \"cypress/e2e/_all.cy.js\"",
+    "cypress:runheadless": "cypress run --headless --spec \"**/!(_all).cy.js\"",
+    "cypress:open": "cypress open --e2e",
     "serve": "cross-env BABEL_ENV=development webpack serve --config webpack.config.js --progress",
     "build": "cross-env BABEL_ENV=production webpack --progress --bail --config  webpack.production.config.js",
     "build:analyze": "cross-env BABEL_ENV=production webpack --progress --bail --config  webpack.analysis.config.js"

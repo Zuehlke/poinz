@@ -1,3 +1,8 @@
+### 0.19.1: 2023-08-25
+
+* Show stories without estimation in most-left column in estimation matrix (#364)
+* Dependencies updated
+
 ### 0.19.0: 2023-07-01
 
 * Stories import from json file (#358)

@@ -64,7 +64,7 @@ describe('preconditions', () => {
           roomId,
           name: 'reveal',
           payload: {
-            storyId: 'anotherStory'
+            storyId: uuid() // <<- new id, does not match story in room
           }
         },
         userId

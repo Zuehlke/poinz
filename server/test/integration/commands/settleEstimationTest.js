@@ -180,13 +180,13 @@ describe('preconditions', () => {
           roomId: roomId,
           name: 'settleEstimation',
           payload: {
-            storyId: 'unknown',
+            storyId: uuid(), // <<-
             value: 5
           }
         },
         userIdOne
       )
-    ).rejects.toThrow('Given story unknown does not belong to room ');
+    ).rejects.toThrow(/Given story .* does not belong to room /);
   });
 
   test('Should throw if story is not revealed', async () => {

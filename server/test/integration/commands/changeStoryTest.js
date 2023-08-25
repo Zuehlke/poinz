@@ -76,7 +76,7 @@ describe('preconditions', () => {
           roomId,
           name: 'changeStory',
           payload: {
-            storyId: 'some-unknown-story',
+            storyId: uuid(), // <<- new uuid that does not match any story in the room
             title: 'NewTitle',
             description: 'New Description'
           }
@@ -84,7 +84,7 @@ describe('preconditions', () => {
         userIdOne
       )
     ).rejects.toThrow(
-      /Precondition Error during "changeStory": Given story some-unknown-story does not belong to room .*/
+      /Precondition Error during "changeStory": Given story .* does not belong to room .*/
     );
   });
 

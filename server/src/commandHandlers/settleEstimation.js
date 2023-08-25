@@ -19,7 +19,7 @@ const schema = {
           properties: {
             storyId: {
               type: 'string',
-              minLength: 1
+              format: 'uuid'
             },
             value: {
               type: 'number'

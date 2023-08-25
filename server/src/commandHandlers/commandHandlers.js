@@ -60,7 +60,7 @@ export const baseCommandSchema = {
   properties: {
     id: {
       type: 'string',
-      minLength: 1
+      format: 'uuid'
     },
     userId: {
       type: 'string',

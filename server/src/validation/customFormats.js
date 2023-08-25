@@ -33,7 +33,7 @@ export function registerCustomFormats(tvi) {
   );
 
   /**
-   *  format "uid"  will match either the previously used UUIDv4 (https://www.npmjs.com/package/uuid) or the newly used nanoid (https://www.npmjs.com/package/nanoid)
+   *  format "uuid"  will match either the previously used UUIDv4 (https://www.npmjs.com/package/uuid) or the newly used nanoid (https://www.npmjs.com/package/nanoid)
    *  we still need to accept old uuidv4, there are still such ids present in our persistent store in production.
    *  **/
 

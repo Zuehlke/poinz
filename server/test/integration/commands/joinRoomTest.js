@@ -189,9 +189,8 @@ test('existing room with matching user already in room (re-join) ', async () => 
 });
 
 test('existing room with user match, command has no email nor avatar in payload', async () => {
-  const {processor, userId, roomId, mockRoomsStore} = await prepOneUserInOneRoom(
-    'custom-user-name'
-  );
+  const {processor, userId, roomId, mockRoomsStore} =
+    await prepOneUserInOneRoom('custom-user-name');
 
   mockRoomsStore.manipulate((room) => {
     room.users[0].email = 'super@test.com';

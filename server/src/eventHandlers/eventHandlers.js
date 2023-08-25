@@ -26,6 +26,7 @@ import passwordCleared from './passwordCleared.js';
 import tokenIssued from './tokenIssued.js';
 import roomConfigSet from './roomConfigSet.js';
 import sortOrderSet from './sortOrderSet.js';
+import storyValueSet from './storyValueSet.js';
 
 export default {
   connectionLost,
@@ -55,5 +56,6 @@ export default {
   passwordSet,
   passwordCleared,
   tokenIssued,
-  sortOrderSet
+  sortOrderSet,
+  storyValueSet
 };

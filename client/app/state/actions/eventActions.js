@@ -40,7 +40,8 @@ export const EVENT_ACTION_TYPES = {
   passwordCleared: 'PASSWORD_CLEARED',
   roomConfigSet: 'ROOM_CONFIG_SET',
   tokenIssued: 'TOKEN_ISSUED',
-  sortOrderSet: 'SORT_ORDER_SET'
+  sortOrderSet: 'SORT_ORDER_SET',
+  storyValueSet: 'STORY_VALUE_SET'
 };
 
 /* ACTION CREATORS */

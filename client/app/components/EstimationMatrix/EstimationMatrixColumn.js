@@ -8,17 +8,22 @@ import {DRAG_ITEM_TYPES} from '../Room/Board';
 import {StyledEMColumn, StyledEMStory} from './_styled';
 
 export const EstimationMatrixColumn = ({stories, columnWidth, cc, onStoryDropped}) => {
-  const [{isOver}, drop] = useDrop(() => ({
-    accept: DRAG_ITEM_TYPES.matrixStory,
-    drop: (item) => {
-      if (item.consensus !== cc.value) {
-        onStoryDropped(item.id, cc.value);
-      }
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver()
-    })
-  }));
+  const [{isOver}, drop] = useDrop(
+    () => ({
+      accept: onStoryDropped ? DRAG_ITEM_TYPES.matrixStory : '_NONE_',
+      drop: (item) => {
+        if (onStoryDropped && item.consensus !== cc.value) {
+          // if item.consensus and cc.value is the same - story was dropped on original/current column
+          // only invoke onStoryDropped if current consensus is not equal to target column (cc.value)
+          onStoryDropped(item.id, cc.value);
+        }
+      },
+      collect: (monitor) => ({
+        isOver: !!monitor.isOver()
+      })
+    }),
+    [stories, cc, onStoryDropped]
+  );
 
   return (
     <StyledEMColumn ref={drop} $width={columnWidth} $isOver={isOver}>
@@ -50,7 +55,7 @@ const EstimationMatrixStory = ({color, story}) => {
         isDragging: !!monitor.isDragging()
       })
     }),
-    [story.id]
+    [story] // if anything changes in the story (especially the consensus), don't use cached values
   );
 
   return (

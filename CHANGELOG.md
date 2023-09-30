@@ -1,3 +1,7 @@
+### 0.20.1: 2023-09-30
+
+* Bugfix
+
 ### 0.20.0: 2023-09-30
 
 * Sorting of stories in estimation matrix (#370)

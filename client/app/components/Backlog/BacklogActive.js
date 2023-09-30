@@ -6,15 +6,15 @@ import {useDrop} from 'react-dnd';
 import {trashStories, setSortOrder} from '../../state/actions/commandActions';
 import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
 import {L10nContext} from '../../services/l10n';
-import {manualSorting} from './backlogSortings';
+import {manualSorting} from '../common/storySortings';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import BacklogToolbar from './BacklogToolbar';
 import {DRAG_ITEM_TYPES} from '../Room/Board';
 import BacklogFileDropWrapper from './BacklogFileDropWrapper';
+import useStorySortingAndFiltering from './useStorySortingAndFiltering';
 
 import {StyledStories, StyledBacklogInfoText, StyledBacklogActive} from './_styled';
-import useStorySortingAndFiltering from '../common/useStorySortingAndFiltering';
 
 /**
  *

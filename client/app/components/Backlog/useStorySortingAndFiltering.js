@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {defaultSorting} from '../Backlog/backlogSortings';
+import {defaultSorting} from '../common/storySortings';
 
 /**
  *

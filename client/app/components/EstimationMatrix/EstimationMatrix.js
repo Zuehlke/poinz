@@ -18,6 +18,8 @@ import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} f
 import {StyledStoryTitle} from '../_styled';
 import {getStoriesWithPendingSetValueCommand} from '../../state/commandTracking/commandTrackingSelectors';
 import EstimationMatrixColumnUnestimated from './EstimationMatrixColumnUnestimated';
+import useStorySortingAndFiltering from '../common/useStorySortingAndFiltering';
+import {defaultSorting} from '../Backlog/backlogSortings';
 
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
@@ -35,8 +37,12 @@ const EstimationMatrix = ({
   const {t} = useContext(L10nContext);
   const [groupedStories, setGroupedStories] = useState({}); // grouped by consensus value
 
+  const {sortedStories: sortedUnestimatedStories} = useStorySortingAndFiltering(unestimatedStories);
+
   useEffect(() => {
-    setGroupedStories(deriveGroupedStories(estimatedStories, pendingSetValueStories));
+    setGroupedStories(
+      deriveGroupedStories(estimatedStories, pendingSetValueStories, defaultSorting)
+    );
   }, [estimatedStories, pendingSetValueStories]);
 
   return (
@@ -53,7 +59,7 @@ const EstimationMatrix = ({
         <EstimationMatrixColumnUnestimated
           key={'header:-unestimated'}
           columnWidth={columnWidth}
-          stories={unestimatedStories}
+          stories={sortedUnestimatedStories}
         />
 
         {cardConfig.map((cc) => (
@@ -111,10 +117,12 @@ const getColWidth = (cardConfigCount) => {
  *
  * @param estimatedStories
  * @param pendingSetValueStories
+ * @param sorting
  * @return {object} Object that maps estimation value (consensus) to array of stories
  */
-function deriveGroupedStories(estimatedStories, pendingSetValueStories) {
-  return estimatedStories.reduce((total, current) => {
+function deriveGroupedStories(estimatedStories, pendingSetValueStories, sorting) {
+  // group by consensus
+  const groupedStoriesUnsorted = estimatedStories.reduce((total, current) => {
     const isPending = pendingSetValueStories.find((ss) => ss.storyId === current.id);
     const consensus = isPending ? isPending.value : current.consensus;
     if (!total[consensus]) {
@@ -123,4 +131,12 @@ function deriveGroupedStories(estimatedStories, pendingSetValueStories) {
     total[consensus].push(current);
     return total;
   }, {});
+
+  // now sort each story-array
+  const groupedStoriesSorted = {};
+  Object.entries(groupedStoriesUnsorted).forEach(([consensus, stories]) => {
+    groupedStoriesSorted[consensus] = stories.sort(sorting.comp);
+  });
+
+  return groupedStoriesSorted;
 }

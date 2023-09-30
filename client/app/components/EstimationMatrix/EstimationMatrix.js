@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, useRef} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -13,11 +13,20 @@ import {L10nContext} from '../../services/l10n';
 import {toggleMatrixIncludeTrashed} from '../../state/actions/uiStateActions';
 import {setStoryValue} from '../../state/actions/commandActions';
 import EstimationMatrixColumn from './EstimationMatrixColumn';
-
-import {StyledEMColumnsContainer, StyledEstimationMatrix, StyledNoStoriesHint} from './_styled';
-import {StyledStoryTitle} from '../_styled';
 import {getStoriesWithPendingSetValueCommand} from '../../state/commandTracking/commandTrackingSelectors';
 import EstimationMatrixColumnUnestimated from './EstimationMatrixColumnUnestimated';
+import {defaultSorting, matrixSortings} from '../common/storySortings';
+import useOutsideClick from '../common/useOutsideClick';
+
+import {
+  StyledEMColumnsContainer,
+  StyledEstimationMatrix,
+  StyledMatrixHeader,
+  StyledMatrixTools,
+  StyledNoStoriesHint
+} from './_styled';
+import {StyledDropdown} from '../common/_styled';
+import {StyledSortDropdownItem} from '../Backlog/_styled';
 
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
@@ -34,26 +43,62 @@ const EstimationMatrix = ({
   const columnWidth = getColWidth(cardConfig.length + 1);
   const {t} = useContext(L10nContext);
   const [groupedStories, setGroupedStories] = useState({}); // grouped by consensus value
+  const [sortedUnestimatedStories, setSortedUnestimatedStories] = useState(unestimatedStories);
+  const [extendedSort, setExtendedSort] = useState(false);
+  const [sorting, setSorting] = useState(defaultSorting);
 
   useEffect(() => {
-    setGroupedStories(deriveGroupedStories(estimatedStories, pendingSetValueStories));
-  }, [estimatedStories, pendingSetValueStories]);
+    setGroupedStories(deriveGroupedStories(estimatedStories, pendingSetValueStories, sorting));
+  }, [estimatedStories, pendingSetValueStories, sorting]);
+
+  useEffect(() => {
+    setSortedUnestimatedStories(unestimatedStories.sort(sorting.comp));
+  }, [unestimatedStories, sorting, setSortedUnestimatedStories]);
+
+  const sortDropdownRef = useRef(null);
+  useOutsideClick(sortDropdownRef, () => setExtendedSort(false));
 
   return (
     <StyledEstimationMatrix data-testid="matrix">
-      <StyledStoryTitle>
-        {t('matrix')}
-        <span onClick={toggleMatrixIncludeTrashed} className="clickable">
-          <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
-          {t('matrixIncludeTrashed')}
-        </span>
-      </StyledStoryTitle>
+      <StyledMatrixHeader>
+        <h4>{t('matrix')}</h4>
+
+        <StyledMatrixTools>
+          <span onClick={toggleMatrixIncludeTrashed} className="clickable">
+            <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
+            {t('matrixIncludeTrashed')}
+          </span>
+
+          <div ref={sortDropdownRef}>
+            <i
+              onClick={() => setExtendedSort(!extendedSort)}
+              className="clickable icon-exchange"
+              title={t('sort')}
+              data-testid="sortButton"
+            />
+            {extendedSort && (
+              <StyledDropdown data-testid="sortOptions">
+                {matrixSortings.map((sortingItem) => (
+                  <StyledSortDropdownItem
+                    $selected={sortingItem.id === sorting.id}
+                    className="clickable"
+                    key={`sorting-item-${sortingItem.id}`}
+                    onClick={() => onSortingOptionClicked(sortingItem)}
+                  >
+                    {t(sortingItem.labelKey)}
+                  </StyledSortDropdownItem>
+                ))}
+              </StyledDropdown>
+            )}
+          </div>
+        </StyledMatrixTools>
+      </StyledMatrixHeader>
 
       <StyledEMColumnsContainer>
         <EstimationMatrixColumnUnestimated
           key={'header:-unestimated'}
           columnWidth={columnWidth}
-          stories={unestimatedStories}
+          stories={sortedUnestimatedStories}
         />
 
         {cardConfig.map((cc) => (
@@ -74,6 +119,11 @@ const EstimationMatrix = ({
       )}
     </StyledEstimationMatrix>
   );
+
+  function onSortingOptionClicked(sortingItem) {
+    setExtendedSort(false);
+    setSorting(sortingItem);
+  }
 };
 
 EstimationMatrix.propTypes = {
@@ -111,10 +161,12 @@ const getColWidth = (cardConfigCount) => {
  *
  * @param estimatedStories
  * @param pendingSetValueStories
+ * @param sorting
  * @return {object} Object that maps estimation value (consensus) to array of stories
  */
-function deriveGroupedStories(estimatedStories, pendingSetValueStories) {
-  return estimatedStories.reduce((total, current) => {
+function deriveGroupedStories(estimatedStories, pendingSetValueStories, sorting) {
+  // group by consensus
+  const groupedStoriesUnsorted = estimatedStories.reduce((total, current) => {
     const isPending = pendingSetValueStories.find((ss) => ss.storyId === current.id);
     const consensus = isPending ? isPending.value : current.consensus;
     if (!total[consensus]) {
@@ -123,4 +175,12 @@ function deriveGroupedStories(estimatedStories, pendingSetValueStories) {
     total[consensus].push(current);
     return total;
   }, {});
+
+  // now sort each story-array
+  const groupedStoriesSorted = {};
+  Object.entries(groupedStoriesUnsorted).forEach(
+    ([consensus, stories]) => (groupedStoriesSorted[consensus] = stories.sort(sorting.comp))
+  );
+
+  return groupedStoriesSorted;
 }

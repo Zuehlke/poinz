@@ -94,3 +94,30 @@ export const StyledNoStoriesHint = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const StyledMatrixHeader = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+
+  > h4 {
+    margin-top: 8px;
+    margin-bottom: 0;
+    line-height: 24px;
+    overflow-x: hidden;
+  }
+`;
+
+export const StyledMatrixTools = styled.div`
+  display: flex;
+
+  > div {
+    margin-left: 8px;
+  }
+
+  i.icon-exchange {
+    margin-left: 4px;
+    margin-right: 8px;
+    transform: rotate(90deg);
+  }
+`;

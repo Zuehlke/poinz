@@ -6,37 +6,15 @@ import {useDrop} from 'react-dnd';
 import {trashStories, setSortOrder} from '../../state/actions/commandActions';
 import {getActiveStories, getSelectedStoryId} from '../../state/stories/storiesSelectors';
 import {L10nContext} from '../../services/l10n';
-import {defaultSorting, manualSorting} from './backlogSortings';
+import {manualSorting} from '../common/storySortings';
 import StoryEditForm from './StoryEditForm';
 import Story from './Story';
 import BacklogToolbar from './BacklogToolbar';
 import {DRAG_ITEM_TYPES} from '../Room/Board';
 import BacklogFileDropWrapper from './BacklogFileDropWrapper';
+import useStorySortingAndFiltering from './useStorySortingAndFiltering';
 
 import {StyledStories, StyledBacklogInfoText, StyledBacklogActive} from './_styled';
-
-const sortAndFilterStories = (activeStories, comparator, query) => {
-  const lcQuery = query.toLowerCase();
-  let shallowCopy = query
-    ? [...activeStories.filter((s) => s.title.toLowerCase().includes(lcQuery))]
-    : [...activeStories];
-  return shallowCopy.sort(comparator);
-};
-
-/**
- * @param {object[]} activeStories
- * @return {{setSorting, setFilterQuery, sorting, sortedStories, filterQuery}}
- */
-const useSortingAndFiltering = (activeStories) => {
-  const [filterQuery, setFilterQuery] = useState('');
-  const [sorting, setSorting] = useState(defaultSorting);
-  const [sortedStories, setSortedStories] = useState(activeStories);
-  useEffect(() => {
-    setSortedStories(sortAndFilterStories(activeStories, sorting.comp, filterQuery));
-  }, [activeStories, sorting, filterQuery]);
-
-  return {filterQuery, setFilterQuery, sorting, setSorting, sortedStories, setSortedStories};
-};
 
 /**
  *
@@ -119,7 +97,7 @@ const BacklogActive = ({activeStories, selectedStoryId, trashStories, setSortOrd
   );
 
   const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories, setSortedStories} =
-    useSortingAndFiltering(activeStories);
+    useStorySortingAndFiltering(activeStories);
 
   const {dndFindStory, dndMoveStory, dndDragEnd, containerDropRef} = useStoryDnD(
     sortedStories,

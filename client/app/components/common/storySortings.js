@@ -74,3 +74,5 @@ export default sortings;
 export const defaultSorting = sortings[0];
 
 export const manualSorting = sortings[6];
+
+export const matrixSortings = sortings.slice(0, 4); // in the estimation matrix, we want to provide only a reduced set of sorting options

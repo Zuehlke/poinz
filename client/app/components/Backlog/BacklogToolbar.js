@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
 import useOutsideClick from '../common/useOutsideClick';
-import sortings from './backlogSortings';
+import sortings from '../common/storySortings';
 import {OpenFileDialogContext} from './BacklogFileDropWrapper';
 
 import {StyledDropdown} from '../common/_styled';

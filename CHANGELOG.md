@@ -1,3 +1,8 @@
+### 0.20.0: 2023-09-30
+
+* Sorting of stories in estimation matrix (#370)
+* Dependencies updated
+
 ### 0.19.1: 2023-08-25
 
 * Show stories without estimation in most-left column in estimation matrix (#364)

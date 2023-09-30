@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import Linkify from 'react-linkify';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
+import {visit} from 'unist-util-visit';
 import remarkGfm from 'remark-gfm';
 
 import {toggleMarkdownEnabled} from '../../state/actions/uiStateActions';
@@ -36,7 +37,7 @@ const StoryDescription = ({
     <React.Fragment>
       <StyledStoryText $md={markdownEnabled} $scroll={scroll} data-testid="storyText">
         {markdownEnabled && (
-          <ReactMarkdown linkTarget="_blank" remarkPlugins={[remarkGfm]}>
+          <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeExternalLinkTarget]}>
             {descriptionString}
           </ReactMarkdown>
         )}
@@ -90,3 +91,18 @@ export default connect(
   }),
   {toggleMarkdownEnabled}
 )(StoryDescription);
+
+/**
+ * adds target="_blank" and rel="noopener noreferrer nofollow"
+ * to all links in the html tree that is generated from the story-description in markdown format
+ */
+function rehypeExternalLinkTarget() {
+  return function (tree) {
+    visit(tree, 'element', function (node) {
+      if (node.tagName === 'a' && typeof node.properties.href === 'string') {
+        node.properties.target = '_blank';
+        node.properties.rel = 'noopener noreferrer nofollow';
+      }
+    });
+  };
+}

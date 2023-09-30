@@ -1,5 +1,5 @@
-# let's use node 16.x  on Debian 11 ("bullseye")    see  https://hub.docker.com/_/node
-FROM node:16-bullseye
+# let's use node 18.x  on Debian 11 ("bullseye")    see  https://hub.docker.com/_/node
+FROM node:18-bullseye
 
 # Create app directories
 RUN mkdir -p /usr/src/poinz/public

@@ -35,6 +35,6 @@
     "@mermaid-js/mermaid-cli": "^10.4.0"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   }
 }

@@ -58,6 +58,6 @@
     "socket.io-client": "4.7.2"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   }
 }

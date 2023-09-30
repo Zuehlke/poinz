@@ -1,8 +1,29 @@
 import uuid from '../../src/uuid';
 import persistentRoomsStore from '../../src/store/persistentRoomsStore';
+import {MongoClient} from 'mongodb';
 
 const LOCAL_MONGODB_CONNECTION_URI = 'mongodb://localhost:27017';
 const LOCAL_MONGODB_TEST_DB_NAME = 'poinz_integration_test';
+
+/**
+ * to purge the test-db before each test.
+ * we do it here, we don't want to have a collection.deleteMany{} in production code
+ * @return {Promise<void>}
+ */
+async function connectToDbDirectlyAndClearRoomsCollection() {
+  let clientInstance = new MongoClient(
+    LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME,
+    {
+      serverSelectionTimeoutMS: 4000
+    }
+  );
+
+  clientInstance = await clientInstance.connect();
+  const dbInstance = clientInstance.db(); // connection string contains db name
+  await dbInstance.command({ping: 1});
+  const roomsCollection = dbInstance.collection('rooms');
+  await roomsCollection.deleteMany({});
+}
 
 describe('initialization', () => {
   test('should connect to running mongoDB instance', async () => {
@@ -27,6 +48,10 @@ describe('initialization', () => {
 });
 
 describe('save, update and fetch', () => {
+  beforeEach(async () => {
+    await connectToDbDirectlyAndClearRoomsCollection();
+  });
+
   beforeAll(async () => {
     await persistentRoomsStore.init(
       LOCAL_MONGODB_CONNECTION_URI + '/' + LOCAL_MONGODB_TEST_DB_NAME
@@ -81,22 +106,96 @@ describe('save, update and fetch', () => {
     expect(retrievedRoom.additional).toBe('....data...');
   });
 
-  test('should return all Rooms', async () => {
+  test('should return Rooms', async () => {
     const roomObject = {
       id: uuid(),
-      users: {},
-      other: 'data'
+      users: []
     };
     await persistentRoomsStore.saveRoom(roomObject);
 
-    const allRooms = await persistentRoomsStore.getAllRooms();
+    const allRooms = await persistentRoomsStore.getRooms(5000, 0, false);
 
     expect(allRooms).toBeDefined();
-    expect(Object.values(allRooms).length).toBeGreaterThan(0);
+    expect(Object.values(allRooms).length).toBe(1);
 
     const matchingRoomFromMap = allRooms[roomObject.id];
     expect(matchingRoomFromMap).toBeDefined();
     expect(matchingRoomFromMap.id).toBe(roomObject.id);
+  });
+
+  test('should return Rooms paginated', async () => {
+    const roomObjectOne = {
+      id: uuid(),
+      users: []
+    };
+    const roomObjectTwo = {
+      id: uuid(),
+      users: []
+    };
+    const roomObjectThree = {
+      id: uuid(),
+      users: []
+    };
+    await persistentRoomsStore.saveRoom(roomObjectOne);
+    await persistentRoomsStore.saveRoom(roomObjectTwo);
+    await persistentRoomsStore.saveRoom(roomObjectThree);
+
+    const rooms = await persistentRoomsStore.getRooms(2, 1, false);
+
+    expect(rooms).toBeDefined();
+    expect(Object.values(rooms).length).toBe(2);
+  });
+
+  test('should return only Rooms with active users (non-disconnected)', async () => {
+    const roomObjectDisconnectedUser = {
+      id: uuid(),
+      users: [
+        {
+          disconnected: true,
+          id: uuid(),
+          avatar: 5,
+          username: 'Sergio'
+        }
+      ]
+    };
+    const roomObjectConnectedUser = {
+      id: uuid(),
+      users: [
+        {
+          disconnected: false,
+          id: uuid(),
+          avatar: 5,
+          username: 'Sergio'
+        }
+      ]
+    };
+    const roomObjectConnectedUser2 = {
+      id: uuid(),
+      users: [
+        {
+          id: uuid(),
+          avatar: 5,
+          username: 'Sergio'
+        }
+      ]
+    };
+    const roomObjectNoUser = {
+      id: uuid(),
+      users: []
+    };
+
+    await persistentRoomsStore.saveRoom(roomObjectDisconnectedUser);
+    await persistentRoomsStore.saveRoom(roomObjectConnectedUser);
+    await persistentRoomsStore.saveRoom(roomObjectConnectedUser2);
+    await persistentRoomsStore.saveRoom(roomObjectNoUser);
+
+    const allRooms = await persistentRoomsStore.getRooms(5000, 0, false);
+    expect(allRooms).toBeDefined();
+    expect(Object.values(allRooms).length).toBe(4);
+
+    const activeRooms = await persistentRoomsStore.getRooms(5000, 0, true);
+    expect(activeRooms).toBeDefined();
+    expect(Object.values(activeRooms).length).toBe(2);
   });
 });
 

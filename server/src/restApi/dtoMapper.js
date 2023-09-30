@@ -97,12 +97,13 @@ export function mapRoomStateDto(room) {
 
 /**
  *
- * @param {object[]} allRooms List of all rooms from the store
+ * @param {object[]} rooms List rooms from the store
+ * @param {number} totalRoomCount
  * @param {string} storeType
- * @return {{roomCount: number, rooms: {userCount: *, created: number|*, userCountDisconnected: *, lastActivity: number|*, markedForDeletion: boolean|[]|*, storyCount: *}[], storeInfo: (string|*), uptime: number}}
+ * @return {{roomCount: number, totalRoomCount: number, storeInfo: string, mappedRooms: {userCount: *, created: *, userCountDisconnected: *, lastActivity: *, markedForDeletion: *, storyCount: *}[], uptime: number}}
  */
-export function mapAppStatusDto(allRooms, storeType) {
-  const rooms = Object.values(allRooms).map((room) => ({
+export function mapAppStatusDto(rooms, totalRoomCount, storeType) {
+  const mappedRooms = Object.values(rooms).map((room) => ({
     storyCount: room.stories.length,
     userCount: room.users.length,
     userCountDisconnected: room.users.filter((user) => user.disconnected).length,
@@ -112,9 +113,10 @@ export function mapAppStatusDto(allRooms, storeType) {
   }));
 
   return {
-    rooms,
-    roomCount: rooms.length,
-    uptime: Math.floor(process.uptime()),
-    storeInfo: storeType
+    rooms: mappedRooms,
+    roomCount: mappedRooms.length,
+    storeInfo: storeType,
+    totalRoomCount,
+    uptime: Math.floor(process.uptime())
   };
 }

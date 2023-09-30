@@ -26,6 +26,22 @@ test('should return backend status', async () => {
   expect(body.rooms.length).toBeDefined();
 });
 
+test('should return backend status, rooms paginated', async () => {
+  const {statusCode, body} = await httpGetJSON({
+    host: 'localhost',
+    port: 3000,
+    path: '/api/status?limit=50&offset=1',
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  expect(statusCode).toBe(200);
+  expect(body.roomCount).toBeDefined();
+  expect(body.rooms.length).toBeDefined();
+});
+
 test('should export room as json', async () => {
   // first make sure a room exists
   const roomId = uuid();

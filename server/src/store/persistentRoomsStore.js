@@ -30,7 +30,8 @@ export default {
   close,
   saveRoom,
   getRoomById,
-  getAllRooms,
+  getRooms,
+  getTotalRoomCount,
   housekeeping,
   getStoreType
 };
@@ -189,16 +190,33 @@ async function getRoomById(roomId) {
 
 /**
  *
- * @return {Promise<void>}
+ * @param limit
+ * @param offset
+ * @param onlyActive
+ * @return {Promise<*>} Returns a plain JS object, indexed by the roomIds (id->Room)
  */
-async function getAllRooms() {
-  const rooms = await roomsCollection.find().toArray();
+async function getRooms(limit, offset, onlyActive = false) {
+  const rooms = await roomsCollection
+    .find(onlyActive ? {users: {$elemMatch: {disconnected: {$ne: true}}}} : {})
+    .sort({
+      lastActivity: -1,
+      id: 1
+    })
+    .skip(offset)
+    .limit(limit)
+    .toArray();
 
   return rooms.reduce((roomsMap, currentRoom) => {
     delete currentRoom._id;
     roomsMap[currentRoom.id] = currentRoom;
     return roomsMap;
   }, {});
+}
+
+async function getTotalRoomCount(onlyActive = false) {
+  return await roomsCollection.countDocuments(
+    onlyActive ? {users: {$elemMatch: {disconnected: {$ne: true}}}} : {}
+  );
 }
 
 function getStoreType() {

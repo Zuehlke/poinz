@@ -134,14 +134,9 @@ export const StyledLandingForm = styled.form`
   }
 `;
 
+// see also globalStyle, client/app/_styled.js
 export const StyledGithubRibbon = styled.a`
-  position: fixed;
-  top: 0;
-  right: 0;
-  border: 0;
-
-  > img {
-    border: none;
-    outline: none;
+  &:before {
+    background-color: ${COLOR_ORANGE};
   }
 `;

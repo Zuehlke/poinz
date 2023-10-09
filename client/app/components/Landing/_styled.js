@@ -136,6 +136,8 @@ export const StyledLandingForm = styled.form`
 
 // see also globalStyle, client/app/_styled.js
 export const StyledGithubRibbon = styled.a`
+  position: fixed;
+
   &:before {
     background-color: ${COLOR_ORANGE};
   }

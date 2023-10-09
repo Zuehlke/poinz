@@ -1,3 +1,7 @@
+### 0.20.2: 2023-10-09
+
+* Fix "Fork me on GitHub" Ribbon
+
 ### 0.20.1: 2023-09-30
 
 * Bugfix

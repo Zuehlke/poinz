@@ -97,10 +97,9 @@ export const StyledWhoAmI = styled.div`
 // four buttons on the top right (settings, action log, help, leave room)
 export const StyledQuickMenuButton = styled.a`
   display: block;
-  width: ${TOPBAR_HEIGHT - 2}px;
   height: ${TOPBAR_HEIGHT - 2}px;
   font-size: 22px;
-  padding: 4px 8px;
+  padding: 4px 4px;
   box-sizing: border-box;
   color: ${({$warning}) => ($warning ? COLOR_WARNING : 'white')};
   border-radius: 0;

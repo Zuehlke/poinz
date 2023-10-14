@@ -25,8 +25,20 @@ export default function restApiFactory(app, store) {
   app.use('/api', restRouter);
 
   restRouter.get('/status', async (req, res) => {
-    const allRooms = await store.getAllRooms();
-    const status = mapAppStatusDto(allRooms, store.getStoreType());
+    // normalize query parameters
+    let normalizedLimit = req.query.limit && parseInt(req.query.limit, 10);
+    normalizedLimit = isNaN(normalizedLimit) ? 5000 : normalizedLimit;
+    let normalizedOffset = req.query.limit && parseInt(req.query.offset, 10);
+    normalizedOffset = isNaN(normalizedOffset) ? 0 : normalizedOffset;
+    const normalizedOnlyActiveRooms = req.query.onlyActive === 'true';
+
+    const totalRoomCount = await store.getTotalRoomCount(normalizedOnlyActiveRooms);
+    const rooms = await store.getRooms(
+      normalizedLimit,
+      normalizedOffset,
+      normalizedOnlyActiveRooms
+    );
+    const status = mapAppStatusDto(rooms, totalRoomCount, store.getStoreType());
     res.json(status);
   });
 

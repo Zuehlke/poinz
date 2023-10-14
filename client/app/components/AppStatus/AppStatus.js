@@ -13,7 +13,14 @@ import {
   StyledTopLeft,
   StyledTopRight
 } from '../TopBar/_styled';
-import {StyledAppStatus, StyledAppStatusMain, StyledRoomsList} from './_styled';
+import {
+  StyledAppStatus,
+  StyledAppStatusMain,
+  StyledRoomsList,
+  StyledRoomsListPagination
+} from './_styled';
+
+const ROOMS_PAGE_SIZE = 50;
 
 /**
  * Our "operations" view. Displays application status (which is fetched from the backend via REST).
@@ -22,11 +29,13 @@ import {StyledAppStatus, StyledAppStatusMain, StyledRoomsList} from './_styled';
  */
 const AppStatus = () => {
   const [appStatus, setAppStatus] = useState();
+  const [roomsPage, setRoomsPage] = useState(1);
+  const [onlyActiveRooms, setOnlyActiveRooms] = useState(false);
 
   const {format} = useContext(L10nContext);
 
   useEffect(() => {
-    loadAndSet();
+    loadAndSet(roomsPage, onlyActiveRooms);
   }, [format]);
 
   if (!appStatus) {
@@ -51,7 +60,7 @@ const AppStatus = () => {
             <StyledQuickMenuButton
               data-testid="reloadDataButton"
               className="clickable pure-button pure-button-primary"
-              onClick={loadAndSet}
+              onClick={() => loadAndSet(roomsPage, onlyActiveRooms)}
             >
               <i className="icon-arrows-cw"></i>
             </StyledQuickMenuButton>
@@ -69,10 +78,43 @@ const AppStatus = () => {
           Version: {appConfig.version} {format.formatDateTime(appConfig.buildTime)}
         </p>
         <p>Uptime: {appStatus.uptime}</p>
-        <p>Total rooms: {appStatus.roomCount}</p>
         <p>Running on: {appStatus.storeInfo}</p>
 
         <h3>Rooms</h3>
+
+        <StyledRoomsListPagination>
+          <button
+            type="button"
+            className="pure-button pure-button-primary"
+            onClick={onPrevClick}
+            disabled={roomsPage <= 1}
+          >
+            <i className="icon-left-big button-icon-left"></i>
+            PREV
+          </button>
+
+          <div>
+            Page {roomsPage} / {appStatus.totalPages}
+          </div>
+
+          <button
+            type="button"
+            className="pure-button pure-button-primary"
+            onClick={onFwdClick}
+            disabled={roomsPage >= appStatus.totalPages}
+          >
+            FWD <i className="icon-right-big button-icon-right"></i>
+          </button>
+
+          <span onClick={onActiveOnlyToggled} className="clickable">
+            <i className={onlyActiveRooms ? 'icon-check' : 'icon-check-empty'}></i> Show only active
+            rooms
+          </span>
+        </StyledRoomsListPagination>
+
+        <div>
+          <span>{appStatus.totalRoomCount} rooms</span>
+        </div>
 
         <StyledRoomsList>
           <TableHeaders />
@@ -84,16 +126,41 @@ const AppStatus = () => {
     </StyledAppStatus>
   );
 
-  function loadAndSet() {
+  function loadAndSet(page, onlyActive) {
     if (!format) {
       return; //  L10 not quite ready...
     }
 
-    getAppStatus().then((data) => {
+    getAppStatus(ROOMS_PAGE_SIZE, (page - 1) * ROOMS_PAGE_SIZE, onlyActive).then((data) => {
       data.uptime = format.secondsToDaysHoursMinutes(data.uptime);
       data.rooms.sort(roomComparator);
+      data.totalPages = Math.ceil(data.totalRoomCount / ROOMS_PAGE_SIZE);
+      data.totalPages = data.totalPages < 1 ? 1 : data.totalPages;
       setAppStatus(data);
     });
+  }
+
+  function onActiveOnlyToggled() {
+    const switchedFlag = !onlyActiveRooms;
+    setOnlyActiveRooms(switchedFlag);
+    setRoomsPage(1);
+    loadAndSet(1, switchedFlag);
+  }
+
+  function onPrevClick() {
+    if (roomsPage > 1) {
+      const newPage = roomsPage - 1;
+      setRoomsPage(newPage);
+      loadAndSet(newPage, onlyActiveRooms);
+    }
+  }
+
+  function onFwdClick() {
+    if (roomsPage < appStatus.totalPages) {
+      const newPage = roomsPage + 1;
+      setRoomsPage(newPage);
+      loadAndSet(newPage, onlyActiveRooms);
+    }
   }
 };
 

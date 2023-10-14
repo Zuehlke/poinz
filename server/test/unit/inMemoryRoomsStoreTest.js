@@ -64,3 +64,61 @@ test('has getStoreType() function', async () => {
   const storeTypeString = inMemoryRoomsStore.getStoreType();
   expect(storeTypeString).toBe('InMemoryRoomsStore');
 });
+
+async function addAHundredRooms() {
+  for (let r = 0; r < 100; r++) {
+    const roomObject = {
+      id: uuid(),
+      stories: [
+        {
+          id: '7sd58ihu7arg6qfazce67',
+          title: 'Welcome to your Poinz room!',
+          estimations: {},
+          createdAt: 1697271585071,
+          description: 'This is a sample story that we already created for you.'
+        }
+      ],
+      selectedStory: '7sd58ihu7arg6qfazce67',
+      autoReveal: true,
+      withConfidence: false,
+      passwordProtected: false,
+      users: [
+        {
+          disconnected: r % 2 === 0,
+          id: 'rd0zb3s5xvdkzh4a7jypj',
+          avatar: 5,
+          username: 'Sergio'
+        }
+      ]
+    };
+
+    await inMemoryRoomsStore.saveRoom(roomObject);
+  }
+}
+
+test('getRooms (all)', async () => {
+  await inMemoryRoomsStore.init();
+  await addAHundredRooms();
+  const rooms = await inMemoryRoomsStore.getRooms(4000, 0, false);
+  const roomsArray = Object.values(rooms);
+  expect(roomsArray.length).toBe(100);
+});
+
+test('getRooms (limited and with offset)', async () => {
+  await inMemoryRoomsStore.init();
+  await addAHundredRooms();
+  const rooms = await inMemoryRoomsStore.getRooms(20, 10, false);
+  const roomsArray = Object.values(rooms);
+  expect(roomsArray.length).toBe(20);
+});
+
+test('getRooms (active only)', async () => {
+  await inMemoryRoomsStore.init();
+  await addAHundredRooms();
+  const rooms = await inMemoryRoomsStore.getRooms(5000, 0, true);
+  const roomsArray = Object.values(rooms);
+  expect(roomsArray.length).toBe(50); // only every other (second) room, with a non-disconnected user
+
+  const allAreActive = roomsArray.every((r) => r.users.some((u) => !u.disconnected));
+  expect(allAreActive).toBe(true);
+});

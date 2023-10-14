@@ -61,7 +61,7 @@ const exampleRoom = {
 test('mapAppStatusDto: basic', () => {
   const allRooms = [exampleRoom];
 
-  const appStatusDto = mapAppStatusDto(allRooms, 'MockRoomsStore for unit tests');
+  const appStatusDto = mapAppStatusDto(allRooms, allRooms.length, 'MockRoomsStore for unit tests');
 
   expect(appStatusDto).toMatchObject({
     rooms: [{storyCount: 3, userCount: 2, userCountDisconnected: 0}],
@@ -72,7 +72,7 @@ test('mapAppStatusDto: basic', () => {
 });
 
 test('mapAppStatusDto: handles empty', () => {
-  const appStatusDto = mapAppStatusDto([], 'MockRoomsStore for unit tests');
+  const appStatusDto = mapAppStatusDto([], 0, 'MockRoomsStore for unit tests');
 
   expect(appStatusDto).toMatchObject({
     rooms: [],

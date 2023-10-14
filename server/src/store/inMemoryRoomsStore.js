@@ -5,23 +5,24 @@ import getLogger from '../getLogger.js';
  *  Switch between persistent / non-persistent store is done in settings.js
  */
 
-const rooms = {};
+let rooms = {};
 
 const LOGGER = getLogger('inMemoryRoomsStore');
 
 export default {
   init,
   close,
-  getRoomById,
   saveRoom,
-  getAllRooms,
+  getRoomById,
+  getRooms,
+  getTotalRoomCount,
   housekeeping,
   getStoreType
 };
 
 async function init() {
-  // nothing to do here
   LOGGER.info('Using in-memory storage');
+  rooms = {};
 }
 
 async function close() {
@@ -54,8 +55,31 @@ async function saveRoom(room) {
   rooms[room.id] = detachObject(room);
 }
 
-async function getAllRooms() {
-  return rooms;
+/**
+ *
+ * @param limit
+ * @param offset
+ * @param onlyActive
+ * @return {Promise<*>} Returns a plain JS object, indexed by the roomIds (id->Room)
+ */
+async function getRooms(limit, offset, onlyActive = false) {
+  const roomList = Object.values(rooms).slice(offset, offset + limit);
+
+  return roomList.reduce((roomsMap, currentRoom) => {
+    if (!onlyActive || currentRoom.users.some((u) => !u.disconnected)) {
+      roomsMap[currentRoom.id] = currentRoom;
+    }
+    return roomsMap;
+  }, {});
+}
+
+async function getTotalRoomCount(onlyActive = false) {
+  const roomList = Object.values(rooms);
+  if (onlyActive) {
+    return roomList.filter((r) => r.users.some((u) => !u.disconnected)).length;
+  } else {
+    return roomList.length;
+  }
 }
 
 function getStoreType() {

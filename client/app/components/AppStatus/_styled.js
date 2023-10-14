@@ -11,11 +11,15 @@ export const StyledAppStatusMain = styled.div`
 
 export const StyledRoomsList = styled.ul`
   display: table;
-  margin: 0;
+  margin: 4px 0;
   padding: 0;
 
   .headers {
     font-weight: 700;
+
+    > div {
+      border-bottom: 1px solid #ccc;
+    }
   }
 
   li {
@@ -23,7 +27,21 @@ export const StyledRoomsList = styled.ul`
 
     > div {
       display: table-cell;
-      padding: 0 4px;
+      padding: 2px 4px;
     }
+  }
+`;
+
+export const StyledRoomsListPagination = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+
+  > button {
+    font-size: 60%;
+  }
+
+  > div {
+    margin: 0 12px;
   }
 `;

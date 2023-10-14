@@ -1,3 +1,8 @@
+### 0.20.3: 2023-10-14
+
+* Small improvements in app status page
+* Dependencies updated
+
 ### 0.20.2: 2023-10-09
 
 * Fix "Fork me on GitHub" Ribbon
@@ -133,7 +138,7 @@
 
 ### 0.12.0: 2021-09-17
 
-* Display "Recommendation" in Estimation Summary: the first card that is larger than the numerical average. Eexcept numerical average is within 10% of the lower card. (#207, thanks to @ecaron)
+* Display "Recommendation" in Estimation Summary: the first card that is larger than the numerical average. Except numerical average is within 10% of the lower card. (#207, thanks to @ecaron)
 * You can now settle for any card. (Previously, only cards that were chosen by at least one user were possible settle values).
 * Dependencies updated
 

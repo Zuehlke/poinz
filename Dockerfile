@@ -1,7 +1,3 @@
-LABEL org.opencontainers.image.source=https://github.com/winterrific/poinz
-LABEL org.opencontainers.image.description="Poinz - agile poker"
-LABEL org.opencontainers.image.licenses=MIT
-
 # let's use node 18.x  on Debian 11 ("bullseye")    see  https://hub.docker.com/_/node
 FROM node:18-bullseye
 

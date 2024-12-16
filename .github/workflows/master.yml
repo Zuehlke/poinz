@@ -39,4 +39,5 @@ jobs:
         run: |
           docker -v;
           echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "$DOCKER_USERNAME" --password-stdin;
-          docker image push --all-tags "ghcr.io/${DOCKER_USERNAME}/poinz" || docker image push "ghcr.io/${DOCKER_USERNAME}/poinz";
+          docker tag poinz "ghcr.io/${DOCKER_USERNAME}/poinz:latest";
+          docker image push "ghcr.io/${DOCKER_USERNAME}/poinz:latest";

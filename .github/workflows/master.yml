@@ -34,9 +34,9 @@ jobs:
       # push docker image to repo (the --all-tags flag was introduced in version v20.10, older versions pushed all images automatically if no tag was provided)
       - name: push docker image
         env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.TOKEN }}
         run: |
           docker -v;
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin;
-          docker image push --all-tags "${DOCKER_USERNAME}/poinz" || docker image push "${DOCKER_USERNAME}/poinz";
+          echo "$DOCKER_PASSWORD" | docker login ghcr.io -u "$DOCKER_USERNAME" --password-stdin;
+          docker image push "ghcr.io/${DOCKER_USERNAME}/poinz:latest";

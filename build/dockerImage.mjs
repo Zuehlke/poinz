@@ -12,7 +12,7 @@ import {spawnAndPrint} from './buildUtils.mjs';
 
 const execPromised = util.promisify(exec);
 
-const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
+const HEROKU_DEPLOYMENT_TAG = 'ghcr.io/winterrific/poinz';
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -33,7 +33,7 @@ async function buildImage() {
     } (git-tags: ${gitInfo.tags.join(' ')})`
   );
 
-  const user = process.env.DOCKER_USERNAME || 'xeronimus';
+  const user = process.env.DOCKER_USERNAME || 'winterrific';
   const userAndProject = `${user}/poinz`;
   const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));

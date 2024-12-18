@@ -4,11 +4,8 @@ import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
 import {getActionLog} from '../../state/actionLog/actionLogSelectors';
-import appConfig from '../../services/appConfig';
 import JoinRoomForm from './JoinRoomForm';
-import GithubRibbon from './GithubRibbon';
 import {getJoinRoomId} from '../../state/joining/joiningSelectors';
-import Changelog from '../common/Changelog';
 
 import {
   StyledActionLog,
@@ -27,7 +24,6 @@ const Landing = ({pendingJoin, actionLog}) => {
   if (pendingJoin) {
     return (
       <StyledLanding>
-        <GithubRibbon />
         <StyledLandingInner>
           <Loader t={t} />
         </StyledLandingInner>
@@ -37,10 +33,8 @@ const Landing = ({pendingJoin, actionLog}) => {
 
   return (
     <StyledLanding>
-      <GithubRibbon />
       <StyledLandingInner>
         <JoinRoomForm />
-
         <StyledEyecatcher>
           <StyledInfoText $small={true}>
             <i className="icon-attention"></i>
@@ -60,10 +54,6 @@ const Landing = ({pendingJoin, actionLog}) => {
             </StyledActionLog>
           </StyledEyecatcher>
         )}
-
-        <StyledEyecatcher>
-          <Changelog changelog={appConfig.changeLog} />
-        </StyledEyecatcher>
       </StyledLandingInner>
     </StyledLanding>
   );

@@ -175,14 +175,14 @@ export const StyledFileImportDropZoneOverlay = styled.div`
     $active && $isAccept
       ? dzOverlayAcceptBorder
       : $active && $isReject
-      ? dzOverlayRejectBorder
-      : 'none'};
+        ? dzOverlayRejectBorder
+        : 'none'};
   background: ${({$active, $isAccept, $isReject}) =>
     $active && $isAccept
       ? dzOverlayAcceptBg
       : $active && $isReject
-      ? dzOverlayRejectBg
-      : 'transparent'};
+        ? dzOverlayRejectBg
+        : 'transparent'};
 `;
 
 export const StyledStory = styled.div`
@@ -198,8 +198,8 @@ export const StyledStory = styled.div`
     $selected
       ? '2px solid ' + COLOR_ORANGE
       : $highlighted
-      ? '1px solid ' + COLOR_BLUE
-      : '1px solid ' + COLOR_LIGHTER_GREY};
+        ? '1px solid ' + COLOR_BLUE
+        : '1px solid ' + COLOR_LIGHTER_GREY};
 
   &:hover {
     box-shadow: ${({$noShadow}) =>

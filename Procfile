@@ -1,1 +1,1 @@
-web: npm run build && cd deploy/ && npm install && npm start
+web: npm run build && cd www/js && npm install

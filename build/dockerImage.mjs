@@ -7,6 +7,7 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import util from 'util';
 import {exec} from 'child_process';
+import 'dotenv/config';
 
 import {spawnAndPrint} from './buildUtils.mjs';
 
@@ -35,17 +36,14 @@ async function buildImage() {
 
   const user = process.env.DOCKER_USERNAME || 'xeronimus';
   const userAndProject = `${user}/poinz`;
-  const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
+  const tags = [`${userAndProject}:latest`];
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
+  console.log(gitInfo)
   const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} --network=host .`;
 
-  console.log(` $ docker ${cmdArgs}`); // will be something like : docker build -t xeronimus/poinz:latest -t registry.heroku.com/poinz/web .
+  console.log(` $ docker ${cmdArgs}`); // will be something like : docker build -t damilare/poinz:latest -t registry.heroku.com/poinz/web .
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(dirname, '..')});
-
-  console.log(
-    'Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 --name poinz_local -d xeronimus/poinz'
-  );
 }
 
 function getGitInformation() {

@@ -1,3 +1,6 @@
+> [!IMPORTANT]  
+> The app is now accessible at [https://poinz.io](https://poinz.io)
+
 # Poinz - Distributed Planning Poker
 
 [![Build Status](https://github.com/Zuehlke/poinz/actions/workflows/master.yml/badge.svg)](https://github.com/Zuehlke/poinz/actions/workflows/master.yml)
@@ -8,8 +11,6 @@
 Poinz (/pɔɪnts/) is a simple web app for distributed teams in an agile setup. It allows to easily estimate items of interest (e.g. "stories").
 
 The goal was to provide a ready-to-use tool without the hassle of registration/login, setup and a lot of configuration.
-
-Checkout the App at [https://www.poinz.app](https://www.poinz.app)
 
 ![poinz_screenshot](https://user-images.githubusercontent.com/1777143/153183461-03a0e0b4-239a-4c7b-a49d-a285be828f09.png)
 

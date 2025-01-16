@@ -12,7 +12,7 @@
   },
   "scripts": {
     "ft": "npm run format && npm t",
-    "format": "cd client/ && npm run format && cd ../server/ && npm run format  && cd ../ && prettier --write \"build/*.mjs\" \"docu/**/*.mjs\" ",
+    "format": "cd client/ && npm run format && cd ../server/ && npm run format && cd ../poinz-e2e/ && npm run format && cd ../ && prettier --write \"build/*.mjs\" \"docu/**/*.mjs\" ",
     "test": "cd client/ && npm test &&  cd ../server && npm test",
     "prebuild": "node build/checkTranslationKeys.mjs && npm run docu",
     "build": "node build/build.mjs",

@@ -1,4 +1,4 @@
-import uuid from '../../app/services/uuid';
+import {customAlphabet} from 'nanoid';
 import socketIo from 'socket.io-client';
 
 // ***********************************************
@@ -20,6 +20,7 @@ import socketIo from 'socket.io-client';
  * @return {string}
  */
 export const tid = (...tid) => tid.map((t) => `[data-testid="${t}"]`).join(' ');
+export const customNanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyz-_', 21);
 
 Cypress.Commands.add('openNewSocket', (socketIdentifier) => {
   cy.window().then((w) => {
@@ -43,7 +44,7 @@ Cypress.Commands.add('sendCommands', (socketIdentifier, commands) => {
     commands.forEach((cmd) => {
       w.__POINZ_E2E__[socketIdentifier].emit('command', {
         ...cmd,
-        id: uuid()
+        id: customNanoid()
       });
     });
   });

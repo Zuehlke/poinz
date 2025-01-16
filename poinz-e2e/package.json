@@ -1,0 +1,27 @@
+{
+  "name": "poinz-e2e",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "lint": "eslint \"cypress/**/*.js\"",
+    "format": "prettier --write \"cypress/**/*.js\"",
+    "test:e2e": "npm run cypress:run",
+    "pretest": "npm run lint",
+    "cypress:run": "cypress run --headed --spec \"cypress/e2e/_all.cy.js\"",
+    "cypress:runheadless": "cypress run --headless --spec \"**/!(_all).cy.js\"",
+    "cypress:open": "cypress open --e2e"
+  },
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "cypress": "^13.17.0",
+    "nanoid": "5.0.1",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "socket.io-client": "4.7.2"
+  }
+}

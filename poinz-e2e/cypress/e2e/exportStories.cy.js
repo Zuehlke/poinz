@@ -1,4 +1,4 @@
-import uuid from '../../app/services/uuid';
+import {customNanoid} from '../support/commands';
 import path from 'path';
 
 import {Room, Landing} from '../elements/elements';
@@ -9,7 +9,7 @@ beforeEach(function () {
 });
 
 it('setup stories in new room and export them (download json)', function () {
-  const customRoomName = 'e2e-room-' + uuid();
+  const customRoomName = 'e2e-room-' + customNanoid();
 
   cy.visit('/');
   Landing.extendButton().click();

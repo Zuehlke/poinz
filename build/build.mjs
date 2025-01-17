@@ -33,11 +33,6 @@ async function build() {
 
   console.log('...copying built client to ./deploy/public');
   await fs.copy('./client/dist', './deploy/public/assets');
-  await fs.copy('./client/index.html', './deploy/public/index.html');
-  await fs.copy('./client/site.webmanifest', './deploy/public/site.webmanifest');
-  await fs.copy('./client/favicon.ico', './deploy/public/favicon.ico');
-  await fs.copy('./client/favicon-16x16.png', './deploy/public/favicon-16x16.png');
-  await fs.copy('./client/favicon-32x32.png', './deploy/public/favicon-32x32.png');
 
   // 3. install dependencies for backend
   console.log('(3/4) Installing npm dependencies for server...');

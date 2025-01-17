@@ -9,7 +9,7 @@
 
 const DATA_TEST_ID_REGEX = new RegExp('^data-testid$');
 
-module.exports = function ({types: t}) {
+export default function removeDataTestIdAttributes({types: t}) {
   return {
     visitor: {
       JSXElement({node}) {

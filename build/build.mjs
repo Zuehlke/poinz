@@ -26,13 +26,13 @@ async function build() {
   console.log('(1/4) Clean up deploy/ and client/dist/');
   await deleteAsync(['./deploy/', './client/dist/**/*']);
 
-  // 2. build poinz client (webpack)
-  console.log('(2/4) Installing npm dependencies for client and build it with webpack');
+  // 2. build poinz client
+  console.log('(2/4) Installing npm dependencies for client and build');
   await spawnAndPrint('npm', ['install'], {cwd: clientDirPath});
   await spawnAndPrint('npm', 'run build'.split(' '), {cwd: path.resolve(dirname, '../client')});
 
   console.log('...copying built client to ./deploy/public');
-  await fs.copy('./client/dist', './deploy/public/assets');
+  await fs.copy('./client/dist', './deploy/public');
 
   // 3. install dependencies for backend
   console.log('(3/4) Installing npm dependencies for server...');

@@ -12,11 +12,17 @@
   },
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "start": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.[jt]s?\" \"test/**/*.[jt]s?\" \"viteConfig/**/*.[jt]s\" \"./*.[jt]s\""
+    "format": "prettier --write \"src/**/*.[jt]s?\" \"cypress/**/*.js\" \"test/**/*.[jt]s\" \"viteConfig/**/*.[jt]s\" \"./*.[jt]s\"",
+    "test": "jest",
+    "test:e2e": "npm run cypress:run",
+    "pretest": "npm run lint",
+    "cypress:run": "cypress run --headed --spec \"cypress/e2e/_all.cy.js\"",
+    "cypress:runheadless": "cypress run --headless --spec \"**/!(_all).cy.js\"",
+    "cypress:open": "cypress open --e2e"
   },
   "dependencies": {
     "date-fns": "2.30.0",

@@ -1,0 +1,14 @@
+{
+  "env": {
+    "node": true
+  },
+  "globals": {
+    "jest": false,
+    "describe": false,
+    "test": false,
+    "expect": false,
+    "beforeAll": false,
+    "beforeEach": false,
+    "afterEach": false
+  }
+}

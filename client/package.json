@@ -16,7 +16,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "format": "prettier --write \"src/**/*.[jt]s?\" \"viteConfig/**/*.[jt]s\" \"./*.[jt]s\""
+    "format": "prettier --write \"src/**/*.[jt]s?\" \"test/**/*.[jt]s?\" \"viteConfig/**/*.[jt]s\" \"./*.[jt]s\""
   },
   "dependencies": {
     "date-fns": "2.30.0",

@@ -1,4 +1,5 @@
 import log from 'loglevel';
+import { io } from 'socket.io-client';
 
 import uuid from '../services/uuid';
 import appConfig from '../services/appConfig';

@@ -8,10 +8,10 @@ const TRANSLATION_INVOKE_PATTERN = /[\{|\s*|\(]t\('([^\)]*)'[,|\)]/g;
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DEFINED_KEYS_EN = getDefinedTranslationKeysFromRelativeFile(
-  '../client/app/assets/i18n/en.json'
+  '../client/src/assets/i18n/en.json'
 );
 const DEFINED_KEYS_DE = getDefinedTranslationKeysFromRelativeFile(
-  '../client/app/assets/i18n/de.json'
+  '../client/src/assets/i18n/de.json'
 );
 
 check().catch((err) => {

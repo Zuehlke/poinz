@@ -17,7 +17,7 @@ export default function removeDataTestIdAttributes({types: t}) {
       }
     }
   };
-};
+}
 
 const filterAttributes = (attrs) =>
   attrs.filter((attributeEntry) =>

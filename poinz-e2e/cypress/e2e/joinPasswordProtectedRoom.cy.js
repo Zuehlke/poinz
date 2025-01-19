@@ -1,5 +1,4 @@
-import uuid from '../../app/services/uuid';
-import {tid} from '../support/commands';
+import {tid, customNanoid} from '../support/commands';
 import {Landing, Room} from '../elements/elements';
 
 beforeEach(function () {
@@ -8,7 +7,7 @@ beforeEach(function () {
 });
 
 it('join random room, open settings, set password. then rejoin room', function () {
-  const customRoomName = 'e2e-room-' + uuid();
+  const customRoomName = 'e2e-room-' + customNanoid();
 
   cy.visit('/' + customRoomName);
 

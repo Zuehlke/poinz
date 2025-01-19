@@ -12,8 +12,8 @@
   },
   "scripts": {
     "start": "npm run serve",
-    "lint": "eslint \"app/**/*.js\" \"test/**/*.js\" \"cypress/**/*.js\"",
-    "format": "prettier --write \"app/**/*.js\" \"cypress/**/*.js\" \"test/**/*.js\" \"./*.js\"",
+    "lint": "eslint \"app/**/*.js\" \"test/**/*.js\"",
+    "format": "prettier --write \"app/**/*.js\" \"test/**/*.js\" \"./*.js\"",
     "test": "jest",
     "pretest": "npm run lint",
     "serve": "cross-env BABEL_ENV=development webpack serve --config webpack.config.js --progress",

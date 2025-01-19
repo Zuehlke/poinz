@@ -6,8 +6,8 @@ import {
   getOwnUserId,
   getUserCount,
   getUsersById
-} from '../../../app/state/users/usersSelectors';
-import {getStoriesById} from '../../../app/state/stories/storiesSelectors';
+} from '../../../src/state/users/usersSelectors';
+import {getStoriesById} from '../../../src/state/stories/storiesSelectors';
 
 let scenario;
 

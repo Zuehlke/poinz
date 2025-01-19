@@ -1,6 +1,6 @@
-import {joinIfReady} from '../../app/state/actions/commandActions';
-import initialState from '../../app/state/initialState';
-import rootReducer from '../../app/state/rootReducer';
+import {joinIfReady} from '../../src/state/actions/commandActions';
+import initialState from '../../src/state/initialState';
+import rootReducer from '../../src/state/rootReducer';
 
 test('joinIfReady: no presets in state: first username then roomId', () => {
   let state = initialState();

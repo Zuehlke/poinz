@@ -2,7 +2,7 @@
 import React, {useContext, useEffect} from 'react';
 import {create, act} from 'react-test-renderer';
 
-import {L10nContext, WithL10n} from '../../app/services/l10n';
+import {L10nContext, WithL10n} from '../../src/services/l10n';
 
 beforeEach(() => {
   const InnerComponent = () => {

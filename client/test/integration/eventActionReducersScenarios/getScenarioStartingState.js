@@ -1,6 +1,6 @@
-import initialState from '../../../app/state/initialState';
-import rootReducer from '../../../app/state/rootReducer';
-import {COMMAND_SENT} from '../../../app/state/actions/commandActions';
+import initialState from '../../../src/state/initialState';
+import rootReducer from '../../../src/state/rootReducer';
+import {COMMAND_SENT} from '../../../src/state/actions/commandActions';
 
 /**
  * Returns a shallow copy of the whole redux initial state  with the property "pendingJoinCommandId" correctly set to the given correlationId.

@@ -1,9 +1,9 @@
-import uuid from '../../../app/services/uuid';
-import {EVENT_ACTION_TYPES} from '../../../app/state/actions/eventActions';
-import rootReducer from '../../../app/state/rootReducer';
-import initialState from '../../../app/state/initialState';
-import {roomInitialState} from '../../../app/state/room/roomReducer';
-import {getActionLog} from '../../../app/state/actionLog/actionLogSelectors';
+import uuid from '../../../src/services/uuid';
+import {EVENT_ACTION_TYPES} from '../../../src/state/actions/eventActions';
+import rootReducer from '../../../src/state/rootReducer';
+import initialState from '../../../src/state/initialState';
+import {roomInitialState} from '../../../src/state/room/roomReducer';
+import {getActionLog} from '../../../src/state/actionLog/actionLogSelectors';
 import {EXPECT_UUID_MATCHING} from '../../testUtils';
 
 test(EVENT_ACTION_TYPES.commandRejected + ' should correctly be reduced to state ', () => {

@@ -5,9 +5,9 @@ import {
   getStoriesById,
   hasSelectedStoryConsensus,
   hasStoryConsensus
-} from '../../../app/state/stories/storiesSelectors';
-import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
-import {hasApplause} from '../../../app/state/ui/uiSelectors';
+} from '../../../src/state/stories/storiesSelectors';
+import {getEstimations} from '../../../src/state/estimations/estimationsSelectors';
+import {hasApplause} from '../../../src/state/ui/uiSelectors';
 
 let scenario;
 

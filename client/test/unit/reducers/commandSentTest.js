@@ -1,13 +1,13 @@
-import uuid from '../../../app/services/uuid';
-import rootReducer from '../../../app/state/rootReducer';
-import initialState from '../../../app/state/initialState';
-import {COMMAND_SENT} from '../../../app/state/actions/commandActions';
+import uuid from '../../../src/services/uuid';
+import rootReducer from '../../../src/state/rootReducer';
+import initialState from '../../../src/state/initialState';
+import {COMMAND_SENT} from '../../../src/state/actions/commandActions';
 import {
   hasMatchingPendingCommand,
   isThisCardWaiting,
   isThisStoryEditFormWaiting,
   isThisStoryWaiting
-} from '../../../app/state/commandTracking/commandTrackingSelectors';
+} from '../../../src/state/commandTracking/commandTrackingSelectors';
 
 test(COMMAND_SENT + ' : arbitrary command should correctly be reduced to state ', () => {
   const roomId = uuid();

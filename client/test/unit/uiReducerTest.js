@@ -5,9 +5,9 @@ import {
   SIDEBAR_HELP,
   toggleBacklogSidebar,
   toggleSidebar
-} from '../../app/state/actions/uiStateActions';
-import initialState from '../../app/state/initialState';
-import rootReducer from '../../app/state/rootReducer';
+} from '../../src/state/actions/uiStateActions';
+import initialState from '../../src/state/initialState';
+import rootReducer from '../../src/state/rootReducer';
 
 test(BACKLOG_SIDEBAR_TOGGLED, () => {
   const startingState = initialState();

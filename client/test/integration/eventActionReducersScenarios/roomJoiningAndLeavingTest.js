@@ -1,4 +1,4 @@
-import initialState from '../../../app/state/initialState.js';
+import initialState from '../../../src/state/initialState.js';
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 import {
@@ -6,10 +6,10 @@ import {
   getSortedUserArray,
   getUserCount,
   getUsersById
-} from '../../../app/state/users/usersSelectors';
-import {getStoriesById} from '../../../app/state/stories/storiesSelectors';
-import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
-import {getActionLog} from '../../../app/state/actionLog/actionLogSelectors';
+} from '../../../src/state/users/usersSelectors';
+import {getStoriesById} from '../../../src/state/stories/storiesSelectors';
+import {getEstimations} from '../../../src/state/estimations/estimationsSelectors';
+import {getActionLog} from '../../../src/state/actionLog/actionLogSelectors';
 import getScenarioStartingState from './getScenarioStartingState';
 
 let scenario;

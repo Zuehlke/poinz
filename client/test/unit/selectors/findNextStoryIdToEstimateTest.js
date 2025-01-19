@@ -1,5 +1,5 @@
-import {findNextStoryIdToEstimate} from '../../../app/state/estimations/estimationsSelectors';
-import initialState from '../../../app/state/initialState';
+import {findNextStoryIdToEstimate} from '../../../src/state/estimations/estimationsSelectors';
+import initialState from '../../../src/state/initialState';
 
 test('next unrevealed', () => {
   const state = {...initialState()};

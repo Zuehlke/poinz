@@ -6,7 +6,7 @@ import {
   getStoriesById,
   getTrashedStories,
   isAStorySelected
-} from '../../../app/state/stories/storiesSelectors';
+} from '../../../src/state/stories/storiesSelectors';
 import getScenarioStartingState from './getScenarioStartingState';
 
 let scenario;

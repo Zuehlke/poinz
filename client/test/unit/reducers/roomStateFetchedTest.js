@@ -1,15 +1,15 @@
-import uuid from '../../../app/services/uuid';
-import {ROOM_STATE_FETCHED} from '../../../app/state/actions/eventActions';
-import rootReducer from '../../../app/state/rootReducer';
-import initialState from '../../../app/state/initialState';
+import uuid from '../../../src/services/uuid';
+import {ROOM_STATE_FETCHED} from '../../../src/state/actions/eventActions';
+import rootReducer from '../../../src/state/rootReducer';
+import initialState from '../../../src/state/initialState';
 import {
   getActiveStories,
   getSelectedStoryId,
   getStoriesById
-} from '../../../app/state/stories/storiesSelectors';
-import {roomInitialState} from '../../../app/state/room/roomReducer';
-import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
-import {getCardConfigInOrder} from '../../../app/state/room/roomSelectors';
+} from '../../../src/state/stories/storiesSelectors';
+import {roomInitialState} from '../../../src/state/room/roomReducer';
+import {getEstimations} from '../../../src/state/estimations/estimationsSelectors';
+import {getCardConfigInOrder} from '../../../src/state/room/roomSelectors';
 
 test(ROOM_STATE_FETCHED + ' should correctly be reduced to state ', () => {
   const roomId = uuid();

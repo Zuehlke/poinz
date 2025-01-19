@@ -1,4 +1,4 @@
-import parseChangelogMdItem from '../../parseChangelogMdItem';
+import {parseChangelogMdItem} from '../../viteConfig/parseChangelogMdItem';
 
 // Note: The semver and date string under test need to start with a space based on the
 // results from the CHANGELOG.md after it is parsed

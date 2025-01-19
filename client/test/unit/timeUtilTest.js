@@ -1,4 +1,4 @@
-import {formatTime, getLocalizedFormats} from '../../app/services/timeUtil';
+import {formatTime, getLocalizedFormats} from '../../src/services/timeUtil';
 
 const l10Format = getLocalizedFormats();
 

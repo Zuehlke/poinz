@@ -1,5 +1,5 @@
-import rootReducer from '../../../app/state/rootReducer';
-import {eventReceived} from '../../../app/state/actions/eventActions';
+import rootReducer from '../../../src/state/rootReducer';
+import {eventReceived} from '../../../src/state/actions/eventActions';
 
 /**
  * reduce a series of given events ("at once" , in sequence)

@@ -11,7 +11,10 @@
     "cypress:runheadless": "cypress run --headless --spec \"**/!(_all).cy.js\"",
     "cypress:open": "cypress open --e2e"
   },
-  "author": "rex.shum@zuhlke.com",
+  "author": "",
+  "contributors": [
+    "rex.shum@zuhlke.com"
+  ],
   "license": "ISC",
   "engines": {
     "node": ">=18"

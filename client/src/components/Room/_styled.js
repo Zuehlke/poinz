@@ -4,7 +4,7 @@ import {COLOR_FONT_GREY, COLOR_BACKGROUND_GREY, COLOR_BLUE, COLOR_LIGHTER_GREY} 
 import {device, RIGHT_MENU_WIDTH, TOPBAR_HEIGHT} from '../dimensions';
 
 export const StyledRoom = styled.div`
-  height: 100svh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: stretch;

@@ -1,4 +1,4 @@
-import getEstimationSummary from '../../app/components/EstimationArea/getEstimationSummary';
+import getEstimationSummary from '../../src/components/EstimationArea/getEstimationSummary';
 
 const defaultCardConfig = [
   {label: '?', value: -2},

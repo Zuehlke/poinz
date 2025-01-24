@@ -1,5 +1,5 @@
-import initialState from '../../../app/state/initialState';
-import {getSortedUserArray} from '../../../app/state/users/usersSelectors';
+import initialState from '../../../src/state/initialState';
+import {getSortedUserArray} from '../../../src/state/users/usersSelectors';
 
 test('getSortedUserArray with initial state', () => {
   const state = {...initialState()};

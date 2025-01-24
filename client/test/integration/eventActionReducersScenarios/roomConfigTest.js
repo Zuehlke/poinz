@@ -1,7 +1,7 @@
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 import getScenarioStartingState from './getScenarioStartingState';
-import {getCardConfigInOrder} from '../../../app/state/room/roomSelectors';
+import {getCardConfigInOrder} from '../../../src/state/room/roomSelectors';
 
 let scenario;
 

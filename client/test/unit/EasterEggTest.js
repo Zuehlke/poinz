@@ -1,4 +1,4 @@
-import {getActiveSeasonalEasterEgg} from '../../app/components/common/EasterEgg';
+import {getActiveSeasonalEasterEgg} from '../../src/components/common/EasterEgg';
 
 test('correct active Christmas', () => {
   // arbitrary december

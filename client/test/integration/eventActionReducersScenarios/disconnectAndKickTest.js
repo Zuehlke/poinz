@@ -1,8 +1,8 @@
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 import getScenarioStartingState from './getScenarioStartingState';
-import {getUsersById} from '../../../app/state/users/usersSelectors';
-import {getEstimations} from '../../../app/state/estimations/estimationsSelectors';
+import {getUsersById} from '../../../src/state/users/usersSelectors';
+import {getEstimations} from '../../../src/state/estimations/estimationsSelectors';
 
 let scenario;
 

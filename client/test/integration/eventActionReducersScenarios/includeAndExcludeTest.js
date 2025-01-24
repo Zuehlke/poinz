@@ -1,7 +1,7 @@
 import reduceMultipleEvents from './reduceMultipleEvents';
 import loadEventsFromJson from './loadEventsFromJson';
 import getScenarioStartingState from './getScenarioStartingState';
-import {getUsersById} from '../../../app/state/users/usersSelectors';
+import {getUsersById} from '../../../src/state/users/usersSelectors';
 
 let scenario;
 

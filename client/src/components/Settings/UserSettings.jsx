@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import ValidatedInput from '../common/ValidatedInput';
@@ -18,8 +18,10 @@ import {
 } from './_styled';
 import {StyledSection} from '../common/_styled';
 
-const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) => {
+const UserSettings = () => {
   const {t, language, setLanguage} = useContext(L10nContext);
+  const dispatch = useDispatch();
+  const user = useSelector(getOwnUser);
   const {username, email, excluded} = user;
 
   // derive username for input field from prop
@@ -33,6 +35,28 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
   React.useEffect(() => {
     setMyEmail(user.email || '');
   }, [user.email]);
+
+  const onMiniAvatarClicked = (index, evt) => {
+    if (evt.ctrlKey && evt.altKey) {
+      dispatch(setAvatar(-1));
+    } else {
+      dispatch(setAvatar(index));
+    }
+  };
+
+  const saveUsername = () => {
+    if (myUsername?.length > 2) {
+      dispatch(setUsername(myUsername));
+    }
+  };
+
+  const saveEmail = () => {
+    dispatch(setEmail(myEmail));
+  };
+
+  const handleToggleExcluded = () => {
+    dispatch(toggleExcluded(user.id));
+  };
 
   return (
     <StyledArea>
@@ -101,7 +125,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
               $selected={user.avatar === index}
               src={aIcn}
               key={'aIcn_' + aIcn}
-              onClick={onMiniAvatarClicked.bind(undefined, index)}
+              onClick={(evt) => onMiniAvatarClicked(index, evt)}
             />
           ))}
         </StyledAvatarGrid>
@@ -136,7 +160,7 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
         {t('spectatorInfo')}
 
         <p
-          onClick={() => toggleExcluded(user.id)}
+          onClick={handleToggleExcluded}
           className="clickable"
           data-testid="excludedToggle"
         >
@@ -145,24 +169,6 @@ const UserSettings = ({user, setUsername, setEmail, setAvatar, toggleExcluded}) 
       </StyledSection>
     </StyledArea>
   );
-
-  function onMiniAvatarClicked(index, evt) {
-    if (evt.ctrlKey && evt.altKey) {
-      setAvatar(-1);
-    } else {
-      setAvatar(index);
-    }
-  }
-
-  function saveUsername() {
-    if (myUsername?.length > 2) {
-      setUsername(myUsername);
-    }
-  }
-
-  function saveEmail() {
-    setEmail(myEmail);
-  }
 };
 
 UserSettings.propTypes = {
@@ -173,14 +179,4 @@ UserSettings.propTypes = {
   setAvatar: PropTypes.func
 };
 
-export default connect(
-  (state) => ({
-    user: getOwnUser(state)
-  }),
-  {
-    toggleExcluded,
-    setUsername,
-    setEmail,
-    setAvatar
-  }
-)(UserSettings);
+export default UserSettings;

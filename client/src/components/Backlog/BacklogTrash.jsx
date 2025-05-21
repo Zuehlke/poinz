@@ -1,6 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector} from 'react-redux';
 
 import TrashedStory from './TrashedStory';
 import {getTrashedStories} from '../../state/stories/storiesSelectors';
@@ -11,8 +10,9 @@ import {L10nContext} from '../../services/l10n';
 /**
  * List of trashed stories
  */
-const BacklogTrash = ({trashedStories}) => {
+const BacklogTrash = () => {
   const {t} = useContext(L10nContext);
+  const trashedStories = useSelector(getTrashedStories);
   const hasTrashedStories = trashedStories.length > 0;
 
   return (
@@ -29,10 +29,4 @@ const BacklogTrash = ({trashedStories}) => {
   );
 };
 
-BacklogTrash.propTypes = {
-  trashedStories: PropTypes.array
-};
-
-export default connect((state) => ({
-  trashedStories: getTrashedStories(state)
-}))(BacklogTrash);
+export default BacklogTrash;

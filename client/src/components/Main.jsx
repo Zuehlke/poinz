@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Room from './Room/Room';
@@ -17,17 +17,21 @@ const getNormalizedRoomId = (pathname) => (pathname ? pathname.substr(1) : '');
 /**
  * The Main component switches between top-level views (somewhat a basic routing).
  */
-const Main = ({
-  roomDataIsLoaded,
-  roomId,
-  hasJoinFailedAuth,
-  isAppStatusUrlPath,
-  joinUserdata,
-  joinRoomId
-}) => {
+const Main = () => {
+  const roomId = useSelector(getRoomId);
+  const userCount = useSelector(getUserCount);
+  const ownUserId = useSelector(getOwnUserId);
+  const roomDataIsLoaded = roomId && userCount > 0 && !!ownUserId;
+  
+  const joinUserdata = useSelector(getJoinUserdata);
+  const joinRoomId = useSelector(getJoinRoomId);
+  const failedAuth = useSelector(hasJoinFailedAuth);
+  const pathname = useSelector(state => state.ui.pathname);
+  const isAppStatusUrlPath = getNormalizedRoomId(pathname) === appConfig.APP_STATUS_IDENTIFIER;
+
   if (isAppStatusUrlPath) {
     return <AppStatus />;
-  } else if (hasJoinFailedAuth) {
+  } else if (failedAuth) {
     return <RoomProtected />;
   } else if (roomDataIsLoaded) {
     return <Room roomId={roomId} />;
@@ -47,11 +51,4 @@ Main.propTypes = {
   isAppStatusUrlPath: PropTypes.bool
 };
 
-export default connect((state) => ({
-  roomDataIsLoaded: getRoomId(state) && getUserCount(state) > 0 && !!getOwnUserId(state),
-  roomId: getRoomId(state),
-  joinUserdata: getJoinUserdata(state),
-  joinRoomId: getJoinRoomId(state),
-  hasJoinFailedAuth: hasJoinFailedAuth(state),
-  isAppStatusUrlPath: getNormalizedRoomId(state.ui.pathname) === appConfig.APP_STATUS_IDENTIFIER
-}))(Main);
+export default Main;

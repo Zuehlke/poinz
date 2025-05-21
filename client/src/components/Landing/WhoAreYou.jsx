@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -19,9 +19,33 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a username input field.
  * As of issue #14, all users must provide a name, before they can participate in the estimation meeting.
  */
-const WhoAreYou = ({joinIfReady}) => {
+const WhoAreYou = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
   const [myUsername, setMyUsername] = useState('');
+
+  const onUsernameKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      join();
+    }
+  };
+
+  const onUsernameChange = (ev) => {
+    const usernameValue = ev.target.value;
+    if (USERNAME_REGEX.test(usernameValue)) {
+      setMyUsername(usernameValue);
+    }
+  };
+
+  const join = () => {
+    // username length minimum is 3 characters
+    if (myUsername && myUsername.length > 2) {
+      dispatch(joinIfReady({
+        username: myUsername
+      }));
+    }
+  };
 
   return (
     <StyledLanding>
@@ -57,33 +81,10 @@ const WhoAreYou = ({joinIfReady}) => {
       </StyledLandingInner>
     </StyledLanding>
   );
-
-  function onUsernameKeyPress(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      join();
-    }
-  }
-
-  function onUsernameChange(ev) {
-    const usernameValue = ev.target.value;
-    if (USERNAME_REGEX.test(usernameValue)) {
-      setMyUsername(usernameValue);
-    }
-  }
-
-  function join() {
-    // username length minimum is 3 characters
-    if (myUsername && myUsername.length > 2) {
-      joinIfReady({
-        username: myUsername
-      });
-    }
-  }
 };
 
 WhoAreYou.propTypes = {
   joinIfReady: PropTypes.func
 };
 
-export default connect(() => ({}), {joinIfReady})(WhoAreYou);
+export default WhoAreYou;

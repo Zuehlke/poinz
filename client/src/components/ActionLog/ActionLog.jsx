@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {SIDEBAR_ACTIONLOG} from '../../state/actions/uiStateActions';
@@ -17,8 +17,11 @@ import {
 /**
  * The ActionLog displays a chronological list of "actions" (backend events)
  */
-const ActionLog = ({actionLog, shown}) => {
+const ActionLog = () => {
   const {t} = useContext(L10nContext);
+  const shown = useSelector(state => getCurrentSidebarIfAny(state) === SIDEBAR_ACTIONLOG);
+  const actionLog = useSelector(getActionLog);
+  
   return (
     <StyledActionLog $shown={shown}>
       <h4>{t('log')}</h4>
@@ -42,7 +45,4 @@ ActionLog.propTypes = {
   actionLog: PropTypes.array
 };
 
-export default connect((state) => ({
-  shown: getCurrentSidebarIfAny(state) === SIDEBAR_ACTIONLOG,
-  actionLog: getActionLog(state)
-}))(ActionLog);
+export default ActionLog;

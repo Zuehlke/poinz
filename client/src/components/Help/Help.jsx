@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -14,8 +14,10 @@ import {StyledSection} from '../common/_styled';
 
 /**
  */
-const Help = ({shown}) => {
+const Help = () => {
   const {t} = useContext(L10nContext);
+  const shown = useSelector((state) => getCurrentSidebarIfAny(state) === SIDEBAR_HELP);
+
   return (
     <StyledHelp $shown={shown}>
       <h4>{t('help')}</h4>
@@ -62,6 +64,4 @@ Help.propTypes = {
   shown: PropTypes.bool
 };
 
-export default connect((state) => ({
-  shown: getCurrentSidebarIfAny(state) === SIDEBAR_HELP
-}))(Help);
+export default Help;

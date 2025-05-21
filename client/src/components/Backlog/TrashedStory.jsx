@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -12,21 +12,26 @@ import {StyledStoryTitle} from '../_styled';
 /**
  * One Trashed Story in the Trash
  */
-const TrashedStory = ({story, restoreStory, deleteStory}) => {
+const TrashedStory = ({story}) => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+
+  const handleRestore = () => dispatch(restoreStory(story.id));
+  const handleDelete = () => dispatch(deleteStory(story.id));
+
   return (
     <StyledStory>
       <StyledStoryToolbar>
         <i
           title={t('restore')}
           className="icon-level-up story-restore"
-          onClick={() => restoreStory(story.id)}
+          onClick={handleRestore}
           data-testid="restoreStoryButton"
         ></i>
         <i
           title={t('delete')}
           className="icon-cancel-circled story-delete"
-          onClick={() => deleteStory(story.id)}
+          onClick={handleDelete}
           data-testid="deleteStoryButton"
         />
       </StyledStoryToolbar>
@@ -40,9 +45,7 @@ const TrashedStory = ({story, restoreStory, deleteStory}) => {
 };
 
 TrashedStory.propTypes = {
-  story: PropTypes.object,
-  restoreStory: PropTypes.func.isRequired,
-  deleteStory: PropTypes.func.isRequired
+  story: PropTypes.object
 };
 
-export default connect(() => ({}), {restoreStory, deleteStory})(TrashedStory);
+export default TrashedStory;

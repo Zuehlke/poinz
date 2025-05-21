@@ -1,6 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector} from 'react-redux';
 
 import {SIDEBAR_SETTINGS} from '../../state/actions/uiStateActions';
 import UserSettings from './UserSettings';
@@ -14,20 +13,18 @@ import {getCurrentSidebarIfAny} from '../../state/ui/uiSelectors';
  * - changing settings for the user like username, language, avatar, email
  * - changing settings for the room like autoReveal (affects the room and thus all users in the same room)
  */
-const Settings = ({shown}) => (
-  <StyledSettings $shown={shown} data-testid="settings">
-    <form className="pure-form" onSubmit={(e) => e.preventDefault()}>
-      <UserSettings />
+const Settings = () => {
+  const shown = useSelector((state) => getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS);
 
-      <RoomSettings />
-    </form>
-  </StyledSettings>
-);
+  return (
+    <StyledSettings $shown={shown} data-testid="settings">
+      <form className="pure-form" onSubmit={(e) => e.preventDefault()}>
+        <UserSettings />
 
-Settings.propTypes = {
-  shown: PropTypes.bool
+        <RoomSettings />
+      </form>
+    </StyledSettings>
+  );
 };
 
-export default connect((state) => ({
-  shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS
-}))(Settings);
+export default Settings;

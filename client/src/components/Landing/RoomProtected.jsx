@@ -1,6 +1,5 @@
 import React, {useState, useContext, useEffect} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector, useDispatch} from 'react-redux';
 
 import {L10nContext} from '../../services/l10n';
 import {joinIfReady} from '../../state/actions/commandActions';
@@ -20,8 +19,10 @@ import {
  * Displays a landing page (same styles, zuehlke background) with a password input field.
  * If user wants to join a room that is protected by a password
  */
-const RoomProtected = ({joinIfReady, pendingJoinCommandId}) => {
+const RoomProtected = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+  const pendingJoinCommandId = useSelector(getPendingJoinCommandId);
   const [password, setPassword] = useState('');
   const [spinning, setSpinning] = useState(false);
 
@@ -30,6 +31,22 @@ const RoomProtected = ({joinIfReady, pendingJoinCommandId}) => {
       setSpinning(false);
     }
   }, [pendingJoinCommandId]);
+
+  const onInputKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      join();
+    }
+  };
+
+  const onInputChange = (ev) => {
+    setPassword(ev.target.value);
+  };
+
+  const join = () => {
+    setSpinning(true);
+    dispatch(joinIfReady({password}));
+  };
 
   return (
     <StyledLanding>
@@ -69,32 +86,6 @@ const RoomProtected = ({joinIfReady, pendingJoinCommandId}) => {
       </StyledLandingInner>
     </StyledLanding>
   );
-
-  function onInputKeyPress(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      join();
-    }
-  }
-
-  function onInputChange(ev) {
-    setPassword(ev.target.value);
-  }
-
-  function join() {
-    setSpinning(true);
-    joinIfReady({password});
-  }
 };
 
-RoomProtected.propTypes = {
-  joinIfReady: PropTypes.func,
-  pendingJoinCommandId: PropTypes.string
-};
-
-export default connect(
-  (state) => ({
-    pendingJoinCommandId: getPendingJoinCommandId(state)
-  }),
-  {joinIfReady}
-)(RoomProtected);
+export default RoomProtected;

@@ -1,13 +1,15 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
 import {getRoomExport} from '../../services/restApi/roomService';
 import {getOwnUserToken} from '../../state/users/usersSelectors';
 
-const RoomExportFileDownload = ({roomId, userToken}) => {
+const RoomExportFileDownload = ({roomId}) => {
   const {t} = useContext(L10nContext);
+  const userToken = useSelector(getOwnUserToken);
+  
   return (
     <button
       type="button"
@@ -54,10 +56,7 @@ const RoomExportFileDownload = ({roomId, userToken}) => {
 };
 
 RoomExportFileDownload.propTypes = {
-  roomId: PropTypes.string,
-  userToken: PropTypes.string
+  roomId: PropTypes.string
 };
 
-export default connect((state) => ({
-  userToken: getOwnUserToken(state)
-}))(RoomExportFileDownload);
+export default RoomExportFileDownload;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Avatar from '../common/Avatar';
@@ -7,14 +7,18 @@ import {hideNewUserHints} from '../../state/actions/uiStateActions';
 
 import {StyledFeedbackHint} from './_styled';
 
-const FeedbackHint = ({hintsHidden, hideNewUserHints}) => {
+const FeedbackHint = () => {
+  const dispatch = useDispatch();
+  const hintsHidden = useSelector(state => state.ui.newUserHintHidden);
+  const handleHideNewUserHints = () => dispatch(hideNewUserHints());
+
   if (hintsHidden) {
     return null;
   }
 
   return (
     <StyledFeedbackHint>
-      <i className="icon-cancel hide-hints" onClick={() => hideNewUserHints()}></i>
+      <i className="icon-cancel hide-hints" onClick={handleHideNewUserHints}></i>
       <div style={{width: '45px'}}>
         <Avatar
           user={{email: 'set@zuehlke.com', emailHash: 'd2bb0fb7ae7e208f0a2384ec08d708ef'}}
@@ -36,9 +40,4 @@ FeedbackHint.propTypes = {
   hideNewUserHints: PropTypes.func.isRequired
 };
 
-export default connect(
-  (state) => ({
-    hintsHidden: state.ui.newUserHintHidden
-  }),
-  {hideNewUserHints}
-)(FeedbackHint);
+export default FeedbackHint;

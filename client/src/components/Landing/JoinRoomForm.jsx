@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -23,10 +23,18 @@ import {
  * By default a new room (roomId is randomly generated in the ui).
  * User can optionally set own roomId "roomName")
  */
-const JoinRoomForm = ({presetUsername, joinIfReady}) => {
+const JoinRoomForm = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+  const presetUsername = useSelector((state) => getJoinUserdata(state)?.username);
   const [showExtended, setShowExtended] = useState(false);
   const [customRoomId, setCustomRoomId] = useState('');
+
+  const onTriggerJoin = () => {
+    dispatch(joinIfReady({
+      roomId: customRoomId || uuid()
+    }));
+  };
 
   return (
     <StyledEyecatcher>
@@ -82,12 +90,6 @@ const JoinRoomForm = ({presetUsername, joinIfReady}) => {
       </StyledLandingForm>
     </StyledEyecatcher>
   );
-
-  function onTriggerJoin() {
-    joinIfReady({
-      roomId: customRoomId || uuid()
-    });
-  }
 };
 
 JoinRoomForm.propTypes = {
@@ -95,9 +97,4 @@ JoinRoomForm.propTypes = {
   joinIfReady: PropTypes.func
 };
 
-export default connect(
-  (state) => ({
-    presetUsername: getJoinUserdata(state)?.username
-  }),
-  {joinIfReady}
-)(JoinRoomForm);
+export default JoinRoomForm;

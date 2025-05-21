@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -22,8 +22,11 @@ import {
 /**
  * The "landing" page where the user can enter a room name to join
  */
-const Landing = ({pendingJoin, actionLog}) => {
+const Landing = () => {
   const {t} = useContext(L10nContext);
+  const actionLog = useSelector(getActionLog);
+  const pendingJoin = useSelector((state) => !!getJoinRoomId(state));
+
   if (pendingJoin) {
     return (
       <StyledLanding>
@@ -74,11 +77,6 @@ Landing.propTypes = {
   actionLog: PropTypes.array
 };
 
-export default connect((state) => ({
-  actionLog: getActionLog(state),
-  pendingJoin: !!getJoinRoomId(state)
-}))(Landing);
-
 const Loader = ({t}) => (
   <StyledLoadingSpinner>
     <div>{t('loading')}</div>
@@ -89,3 +87,6 @@ const Loader = ({t}) => (
 Loader.propTypes = {
   t: PropTypes.func
 };
+
+
+export default Landing;

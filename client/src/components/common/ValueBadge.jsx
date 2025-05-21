@@ -1,24 +1,25 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {StyledValueBadge} from './_styled';
 import {getMatchingCardConfig} from '../../state/room/roomSelectors';
 
-const ValueBadge = ({cardConfigItem}) => (
-  <StyledValueBadge
-    $cardColor={cardConfigItem && cardConfigItem.color}
-    data-testid="cardValueBadge"
-  >
-    <div>{cardConfigItem.label}</div>
-  </StyledValueBadge>
-);
+const ValueBadge = ({cardValue}) => {
+  const cardConfigItem = useSelector(state => getMatchingCardConfig(state, cardValue));
 
-ValueBadge.propTypes = {
-  cardValue: PropTypes.number,
-  cardConfigItem: PropTypes.object
+  return (
+    <StyledValueBadge
+      $cardColor={cardConfigItem && cardConfigItem.color}
+      data-testid="cardValueBadge"
+    >
+      <div>{cardConfigItem.label}</div>
+    </StyledValueBadge>
+  );
 };
 
-export default connect((state, props) => ({
-  cardConfigItem: getMatchingCardConfig(state, props.cardValue)
-}))(ValueBadge);
+ValueBadge.propTypes = {
+  cardValue: PropTypes.number
+};
+
+export default ValueBadge;

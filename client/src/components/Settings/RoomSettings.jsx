@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -20,21 +20,17 @@ import {CardConfigEditor} from './CardConfigEditor';
 import {StyledExpandButton, StyledArea, StyledTextInput} from './_styled';
 import {StyledSection} from '../common/_styled';
 
-const RoomSettings = ({
-  shown,
-  autoReveal,
-  withConfidence,
-  issueTrackingUrl,
-  cardConfig,
-  roomId,
-  setCardConfig,
-  setPassword,
-  setRoomConfigToggleConfidence,
-  setRoomConfigToggleAutoReveal,
-  setRoomConfigIssueTrackingUrl,
-  passwordProtected
-}) => {
+const RoomSettings = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+
+  const shown = useSelector(state => getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS);
+  const autoReveal = useSelector(state => state.room.autoReveal);
+  const withConfidence = useSelector(state => state.room.withConfidence);
+  const issueTrackingUrl = useSelector(state => state.room.issueTrackingUrl);
+  const cardConfig = useSelector(getCardConfigInOrder);
+  const roomId = useSelector(getRoomId);
+  const passwordProtected = useSelector(state => state.room.passwordProtected);
 
   const [customCardConfigExpanded, setCustomCardConfigExpanded] = useState(true);
   React.useEffect(() => {
@@ -61,6 +57,36 @@ const RoomSettings = ({
     setMyIssueTrackingUrl(issueTrackingUrl || '');
   }, [issueTrackingUrl]);
 
+  const handleSetCardConfig = (cc) => dispatch(setCardConfig(cc));
+  const handleSetPassword = (pw) => dispatch(setPassword(pw));
+  const handleToggleConfidence = () => dispatch(setRoomConfigToggleConfidence());
+  const handleToggleAutoReveal = () => dispatch(setRoomConfigToggleAutoReveal());
+  const handleSetIssueTrackingUrl = (url) => dispatch(setRoomConfigIssueTrackingUrl(url));
+
+  const onRoomPasswordKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      savePassword();
+    }
+  };
+
+  const savePassword = () => {
+    if (passwordsMatch) {
+      handleSetPassword(myRoomPassword);
+    }
+  };
+
+  const clearPassword = () => {
+    handleSetPassword('');
+  };
+
+  const onIssueTrackingUrlKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSetIssueTrackingUrl(myIssueTrackingUrl);
+    }
+  };
+
   return (
     <StyledArea>
       <h4>{t('room')}</h4>
@@ -70,7 +96,7 @@ const RoomSettings = ({
         {t('autoRevealInfo')}
 
         <p
-          onClick={setRoomConfigToggleAutoReveal}
+          onClick={handleToggleAutoReveal}
           className="clickable"
           data-testid="toggleAutoReveal"
         >
@@ -136,7 +162,7 @@ const RoomSettings = ({
         {t('confidenceInfo')}
 
         <p
-          onClick={setRoomConfigToggleConfidence}
+          onClick={handleToggleConfidence}
           className="clickable"
           data-testid="toggleConfidence"
         >
@@ -160,7 +186,7 @@ const RoomSettings = ({
         )}
 
         {customCardConfigExpanded && (
-          <CardConfigEditor t={t} cardConfig={cardConfig} onSave={(cc) => setCardConfig(cc)} />
+          <CardConfigEditor t={t} cardConfig={cardConfig} onSave={handleSetCardConfig} />
         )}
       </StyledSection>
 
@@ -183,7 +209,7 @@ const RoomSettings = ({
           <button
             data-testid="setIssueTrackingUrlButton"
             className="pure-button pure-button-primary"
-            onClick={() => setRoomConfigIssueTrackingUrl(myIssueTrackingUrl)}
+            onClick={() => handleSetIssueTrackingUrl(myIssueTrackingUrl)}
           >
             <i className="icon-floppy" />
           </button>
@@ -200,30 +226,6 @@ const RoomSettings = ({
       </StyledSection>
     </StyledArea>
   );
-
-  function onRoomPasswordKeyPress(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      savePassword();
-    }
-  }
-
-  function savePassword() {
-    if (passwordsMatch) {
-      setPassword(myRoomPassword);
-    }
-  }
-
-  function clearPassword() {
-    setPassword('');
-  }
-
-  function onIssueTrackingUrlKeyPress(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      setRoomConfigIssueTrackingUrl(myIssueTrackingUrl);
-    }
-  }
 };
 
 RoomSettings.propTypes = {
@@ -241,21 +243,4 @@ RoomSettings.propTypes = {
   passwordProtected: PropTypes.bool
 };
 
-export default connect(
-  (state) => ({
-    shown: getCurrentSidebarIfAny(state) === SIDEBAR_SETTINGS,
-    autoReveal: state.room.autoReveal,
-    withConfidence: state.room.withConfidence,
-    issueTrackingUrl: state.room.issueTrackingUrl,
-    cardConfig: getCardConfigInOrder(state),
-    roomId: getRoomId(state),
-    passwordProtected: state.room.passwordProtected
-  }),
-  {
-    setCardConfig,
-    setPassword,
-    setRoomConfigToggleConfidence,
-    setRoomConfigToggleAutoReveal,
-    setRoomConfigIssueTrackingUrl
-  }
-)(RoomSettings);
+export default RoomSettings;

@@ -7,5 +7,6 @@ alwaysApply: false
 
 - we are still using javascript
 - if you are working on a js file, do not create a ts file, do everything in the javascript file
+- if you are creating new files you must use typescript
 
 - NEVER FINISH BEFORE YOU ARE NOT FINISHED, I DO NOT WANT TO HEAR "should I continue?"

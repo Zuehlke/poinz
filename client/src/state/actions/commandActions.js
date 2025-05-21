@@ -221,6 +221,8 @@ export const clearStoryEstimate = () => (dispatch, getState, sendCommand) => {
 };
 
 export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand) => {
+  trackEvent('new_estimation_round');
+
   sendCommand({
     name: 'newEstimationRound',
     payload: {

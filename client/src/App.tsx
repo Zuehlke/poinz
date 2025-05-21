@@ -12,19 +12,29 @@ import configureStore from './state/configureStore';
 import {WithL10n} from './services/l10n';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Main from './components/Main';
+import {usePostHogIdentify} from './hooks/usePostHogIdentify';
 
 import GlobalStyle from './_styled';
 
 log.setLevel(appConfig.env === 'dev' ? 'debug' : 'error');
 const store = configureStore(initialState());
 
+function AppContent() {
+  usePostHogIdentify();
+  return (
+    <>
+      <GlobalStyle />
+      <Main />
+    </>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
       <Provider store={store}>
         <WithL10n>
-          <GlobalStyle />
-          <Main />
+          <AppContent />
         </WithL10n>
       </Provider>
     </ErrorBoundary>

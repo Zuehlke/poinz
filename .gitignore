@@ -30,3 +30,4 @@ client/*.local
 webpack-build-stats.json
 deploy/
 npm_dependencies_report.*.md
+.env

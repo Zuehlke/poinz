@@ -1,6 +1,5 @@
 import React, {useCallback, useState, useEffect, useContext} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector, useDispatch} from 'react-redux';
 import {useDrop} from 'react-dnd';
 
 import {trashStories, setSortOrder} from '../../state/actions/commandActions';
@@ -88,8 +87,12 @@ const useStoryDnD = (sortedStories, setSortedStories, setSorting, setSortOrder) 
 /**
  * List of active stories. Accepts drops of csv files for importing stories. Provides means to filter and sort active stories.
  */
-const BacklogActive = ({activeStories, selectedStoryId, trashStories, setSortOrder}) => {
+const BacklogActive = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+
+  const activeStories = useSelector(getActiveStories);
+  const selectedStoryId = useSelector(getSelectedStoryId);
 
   const {highlightedStoryId, setHighlightedStoryId} = useHighlightedStory(
     selectedStoryId,
@@ -99,12 +102,21 @@ const BacklogActive = ({activeStories, selectedStoryId, trashStories, setSortOrd
   const {filterQuery, setFilterQuery, sorting, setSorting, sortedStories, setSortedStories} =
     useStorySortingAndFiltering(activeStories);
 
+  const handleSetSortOrder = useCallback(
+    (storyIds) => dispatch(setSortOrder(storyIds)),
+    [dispatch]
+  );
+
   const {dndFindStory, dndMoveStory, dndDragEnd, containerDropRef} = useStoryDnD(
     sortedStories,
     setSortedStories,
     setSorting,
-    setSortOrder
+    handleSetSortOrder
   );
+
+  const onTrashAll = () => {
+    dispatch(trashStories(sortedStories.map((story) => story.id)));
+  };
 
   return (
     <StyledBacklogActive ref={containerDropRef}>
@@ -141,26 +153,6 @@ const BacklogActive = ({activeStories, selectedStoryId, trashStories, setSortOrd
       </BacklogFileDropWrapper>
     </StyledBacklogActive>
   );
-
-  /**
-   * do only trash the currently visible stories (after filtering was applied)
-   */
-  function onTrashAll() {
-    trashStories(sortedStories.map((story) => story.id));
-  }
 };
 
-BacklogActive.propTypes = {
-  activeStories: PropTypes.array,
-  selectedStoryId: PropTypes.string,
-  trashStories: PropTypes.func.isRequired,
-  setSortOrder: PropTypes.func.isRequired
-};
-
-export default connect(
-  (state) => ({
-    activeStories: getActiveStories(state),
-    selectedStoryId: getSelectedStoryId(state)
-  }),
-  {trashStories, setSortOrder}
-)(BacklogActive);
+export default BacklogActive;

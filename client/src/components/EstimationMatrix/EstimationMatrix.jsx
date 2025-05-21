@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, useRef} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {
@@ -31,18 +31,22 @@ import {StyledSortDropdownItem} from '../Backlog/_styled';
 /**
  * Displays a table with all estimated stories (all stories with consensus), ordered by estimation value
  */
-const EstimationMatrix = ({
-  unestimatedStories,
-  estimatedStories,
-  cardConfig,
-  pendingSetValueStories,
-  includeTrashedStories,
-  toggleMatrixIncludeTrashed,
-  setStoryValue
-}) => {
-  const columnWidth = getColWidth(cardConfig.length + 1);
+const EstimationMatrix = () => {
+  const dispatch = useDispatch();
   const {t} = useContext(L10nContext);
-  const [groupedStories, setGroupedStories] = useState({}); // grouped by consensus value
+
+  const includeTrashedStories = useSelector(state => state.ui.matrixIncludeTrashedStories);
+  const unestimatedStories = useSelector(state => 
+    includeTrashedStories ? getAllStoriesWithoutConsensus(state) : getActiveStoriesWithoutConsensus(state)
+  );
+  const estimatedStories = useSelector(state =>
+    includeTrashedStories ? getAllStoriesWithConsensus(state) : getActiveStoriesWithConsensus(state)
+  );
+  const cardConfig = useSelector(getCardConfigInOrder);
+  const pendingSetValueStories = useSelector(getStoriesWithPendingSetValueCommand);
+
+  const columnWidth = getColWidth(cardConfig.length + 1);
+  const [groupedStories, setGroupedStories] = useState({});
   const [sortedUnestimatedStories, setSortedUnestimatedStories] = useState(unestimatedStories);
   const [extendedSort, setExtendedSort] = useState(false);
   const [sorting, setSorting] = useState(defaultSorting);
@@ -58,13 +62,21 @@ const EstimationMatrix = ({
   const sortDropdownRef = useRef(null);
   useOutsideClick(sortDropdownRef, () => setExtendedSort(false));
 
+  const handleToggleMatrixIncludeTrashed = () => dispatch(toggleMatrixIncludeTrashed());
+  const handleSetStoryValue = (storyId, value) => dispatch(setStoryValue(storyId, value));
+
+  const onSortingOptionClicked = (sortingItem) => {
+    setExtendedSort(false);
+    setSorting(sortingItem);
+  };
+
   return (
     <StyledEstimationMatrix data-testid="matrix">
       <StyledMatrixHeader>
         <h4>{t('matrix')}</h4>
 
         <StyledMatrixTools>
-          <span onClick={toggleMatrixIncludeTrashed} className="clickable">
+          <span onClick={handleToggleMatrixIncludeTrashed} className="clickable">
             <i className={includeTrashedStories ? 'icon-check' : 'icon-check-empty'}></i>{' '}
             {t('matrixIncludeTrashed')}
           </span>
@@ -103,7 +115,7 @@ const EstimationMatrix = ({
 
         {cardConfig.map((cc) => (
           <EstimationMatrixColumn
-            onStoryDropped={setStoryValue}
+            onStoryDropped={handleSetStoryValue}
             key={'header:' + cc.value}
             columnWidth={columnWidth}
             cc={cc}
@@ -119,11 +131,6 @@ const EstimationMatrix = ({
       )}
     </StyledEstimationMatrix>
   );
-
-  function onSortingOptionClicked(sortingItem) {
-    setExtendedSort(false);
-    setSorting(sortingItem);
-  }
 };
 
 EstimationMatrix.propTypes = {
@@ -136,20 +143,7 @@ EstimationMatrix.propTypes = {
   setStoryValue: PropTypes.func.isRequired
 };
 
-export default connect(
-  (state) => ({
-    unestimatedStories: state.ui.matrixIncludeTrashedStories
-      ? getAllStoriesWithoutConsensus(state)
-      : getActiveStoriesWithoutConsensus(state),
-    estimatedStories: state.ui.matrixIncludeTrashedStories
-      ? getAllStoriesWithConsensus(state)
-      : getActiveStoriesWithConsensus(state),
-    cardConfig: getCardConfigInOrder(state),
-    includeTrashedStories: state.ui.matrixIncludeTrashedStories,
-    pendingSetValueStories: getStoriesWithPendingSetValueCommand(state)
-  }),
-  {toggleMatrixIncludeTrashed, setStoryValue}
-)(EstimationMatrix);
+export default EstimationMatrix;
 
 const getColWidth = (cardConfigCount) => {
   const colWidthPercentage = 99 / cardConfigCount;

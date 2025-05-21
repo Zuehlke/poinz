@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -26,15 +26,17 @@ import {
   StyledTopBarInner
 } from './_styled';
 
-const TopBar = ({
-  leaveRoom,
-  toggleSidebar,
-  toggleBacklogSidebar,
-  sidebar,
-  unseenError,
-  backlogShown
-}) => {
+const TopBar = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+  
+  const backlogShown = useSelector(isBacklogShown);
+  const sidebar = useSelector(getCurrentSidebarIfAny);
+  const unseenError = useSelector(hasUnseenError);
+
+  const handleLeaveRoom = () => dispatch(leaveRoom());
+  const handleToggleBacklogSidebar = () => dispatch(toggleBacklogSidebar());
+  const handleToggleSidebar = (sidebarType) => dispatch(toggleSidebar(sidebarType));
 
   return (
     <StyledTopBar data-testid="topBar">
@@ -43,7 +45,7 @@ const TopBar = ({
           <StyledBacklogToggle
             data-testid="backlogToggle"
             className={`clickable ${backlogShown ? 'pure-button-active' : ''}`}
-            onClick={toggleBacklogSidebar}
+            onClick={handleToggleBacklogSidebar}
           >
             <StyledBacklogToggleIcon>
               <span></span>
@@ -60,7 +62,7 @@ const TopBar = ({
             className={`clickable pure-button pure-button-primary ${
               sidebar === SIDEBAR_SETTINGS ? 'pure-button-active' : ''
             } `}
-            onClick={toggleSidebar.bind(undefined, SIDEBAR_SETTINGS)}
+            onClick={() => handleToggleSidebar(SIDEBAR_SETTINGS)}
             title={t('toggleMenu')}
           >
             <i className="icon-cog"></i>
@@ -71,7 +73,7 @@ const TopBar = ({
               sidebar === SIDEBAR_ACTIONLOG ? 'pure-button-active' : ''
             }`}
             $warning={unseenError}
-            onClick={toggleSidebar.bind(undefined, SIDEBAR_ACTIONLOG)}
+            onClick={() => handleToggleSidebar(SIDEBAR_ACTIONLOG)}
             title={t('toggleLog')}
           >
             <i className="icon-doc-text"></i>
@@ -84,7 +86,7 @@ const TopBar = ({
             className={`clickable pure-button pure-button-primary ${
               sidebar === SIDEBAR_HELP ? 'pure-button-active' : ''
             } `}
-            onClick={toggleSidebar.bind(undefined, SIDEBAR_HELP)}
+            onClick={() => handleToggleSidebar(SIDEBAR_HELP)}
             title={t('help')}
           >
             <i className="icon-help"></i>
@@ -92,7 +94,7 @@ const TopBar = ({
 
           <StyledQuickMenuButton
             className="clickable pure-button pure-button-primary"
-            onClick={leaveRoom}
+            onClick={handleLeaveRoom}
             title={t('leaveRoom')}
           >
             <i className="icon-logout"></i>
@@ -112,11 +114,4 @@ TopBar.propTypes = {
   leaveRoom: PropTypes.func
 };
 
-export default connect(
-  (state) => ({
-    backlogShown: isBacklogShown(state),
-    sidebar: getCurrentSidebarIfAny(state),
-    unseenError: hasUnseenError(state)
-  }),
-  {toggleBacklogSidebar, toggleSidebar, leaveRoom}
-)(TopBar);
+export default TopBar;

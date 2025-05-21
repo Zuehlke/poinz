@@ -1,5 +1,5 @@
 import React, {useCallback, createContext} from 'react';
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDropzone} from 'react-dropzone';
 
@@ -25,12 +25,15 @@ export const OpenFileDialogContext = createContext(() => {});
 /**
  * Handles CSV and JSON file drop & importing
  */
-const BacklogFileDropWrapper = ({importCsvFile, children}) => {
+const BacklogFileDropWrapper = ({children}) => {
+  const dispatch = useDispatch();
+
   const onDrop = useCallback((acceptedFiles) => {
     if (acceptedFiles?.length > 0) {
-      importCsvFile(acceptedFiles[0]);
+      dispatch(importCsvFile(acceptedFiles[0]));
     }
-  }, []);
+  }, [dispatch]);
+
   const {getRootProps, isDragActive, isDragAccept, isDragReject, open} = useDropzone({
     onDrop,
     multiple: false,
@@ -52,8 +55,7 @@ const BacklogFileDropWrapper = ({importCsvFile, children}) => {
 };
 
 BacklogFileDropWrapper.propTypes = {
-  importCsvFile: PropTypes.func.isRequired,
   children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node])
 };
 
-export default connect(() => ({}), {importCsvFile})(BacklogFileDropWrapper);
+export default BacklogFileDropWrapper;

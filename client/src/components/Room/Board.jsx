@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {useDragLayer} from 'react-dnd';
@@ -37,46 +37,44 @@ export const DRAG_ITEM_TYPES = {
  * - the current story
  * - cards
  */
-const Board = ({roomId, isAStorySelected, sidebarShown, matrixShown, toggleMatrix}) => (
-  <StyledBoard id={roomId}>
-    <BacklogWidthDragLayer />
-    <Backlog />
+const Board = ({roomId}) => {
+  const dispatch = useDispatch();
+  const isStorySelected = useSelector(isAStorySelected);
+  const sidebarShown = useSelector(state => !!getCurrentSidebarIfAny(state));
+  const matrixShown = useSelector(state => state.ui.matrixShown);
 
-    <StyledBoardCenter data-testid="board">
-      <MatrixToggle onToggle={toggleMatrix} matrixShown={matrixShown} />
+  const handleToggleMatrix = () => dispatch(toggleMatrix());
 
-      {isAStorySelected && !matrixShown && <Users />}
-      {isAStorySelected && !matrixShown && <EstimationArea />}
+  return (
+    <StyledBoard id={roomId}>
+      <BacklogWidthDragLayer />
+      <Backlog />
 
-      {matrixShown && <EstimationMatrix />}
-    </StyledBoardCenter>
+      <StyledBoardCenter data-testid="board">
+        <MatrixToggle onToggle={handleToggleMatrix} matrixShown={matrixShown} />
 
-    <StyledSidebarRight $shown={sidebarShown}>
-      <Settings />
-      <ActionLog />
-      <Help />
-    </StyledSidebarRight>
+        {isStorySelected && !matrixShown && <Users />}
+        {isStorySelected && !matrixShown && <EstimationArea />}
 
-    <FeedbackHint />
-  </StyledBoard>
-);
+        {matrixShown && <EstimationMatrix />}
+      </StyledBoardCenter>
 
-Board.propTypes = {
-  roomId: PropTypes.string,
-  isAStorySelected: PropTypes.bool,
-  sidebarShown: PropTypes.bool,
-  matrixShown: PropTypes.bool,
-  toggleMatrix: PropTypes.func
+      <StyledSidebarRight $shown={sidebarShown}>
+        <Settings />
+        <ActionLog />
+        <Help />
+      </StyledSidebarRight>
+
+      <FeedbackHint />
+    </StyledBoard>
+  );
 };
 
-export default connect(
-  (state) => ({
-    isAStorySelected: isAStorySelected(state),
-    sidebarShown: !!getCurrentSidebarIfAny(state),
-    matrixShown: state.ui.matrixShown
-  }),
-  {toggleMatrix}
-)(Board);
+Board.propTypes = {
+  roomId: PropTypes.string
+};
+
+export default Board;
 
 /**
  * Layer above the board that is shown during backlog "width" dragging (i.e. resizinging of backlog).

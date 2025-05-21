@@ -1,5 +1,5 @@
 import React, {useRef, useState} from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import Avatar from '../common/Avatar';
@@ -10,7 +10,10 @@ import useOutsideClick from '../common/useOutsideClick';
 import {StyledWhoAmI} from './_styled';
 import {StyledDropdown} from '../common/_styled';
 
-const WhoAmI = ({user, roomId}) => {
+const WhoAmI = () => {
+  const roomId = useSelector(getRoomId);
+  const user = useSelector(getOwnUser);
+  
   const roomUrl = `${window.location.origin}/${roomId}`;
   const whoamIRef = useRef(null);
   const [extended, setExtended] = useState(false);
@@ -41,7 +44,4 @@ WhoAmI.propTypes = {
   roomId: PropTypes.string
 };
 
-export default connect((state) => ({
-  roomId: getRoomId(state),
-  user: getOwnUser(state)
-}))(WhoAmI);
+export default WhoAmI;

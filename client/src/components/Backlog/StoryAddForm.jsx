@@ -1,6 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector, useDispatch} from 'react-redux';
 
 import {L10nContext} from '../../services/l10n';
 import {addStory} from '../../state/actions/commandActions';
@@ -13,10 +12,28 @@ import {StyledAddForm} from './_styled';
 /**
  * Form for adding stories to the backlog
  */
-const StoryAddForm = ({addStory, waiting}) => {
+const StoryAddForm = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+  const waiting = useSelector(state => hasMatchingPendingCommand(state, 'addStory'));
+
   const [storyTitle, setStoryTitle] = useState('');
   const [storyDescr, setStoryDescr] = useState('');
+
+  const onDescriptionChange = (ev) => {
+    const val = ev.target.value;
+    if (val.length <= STORY_DESCRIPTION_MAX_LENGTH) {
+      setStoryDescr(val);
+    }
+  };
+
+  const triggerAddAndClearForm = () => {
+    if (storyTitle) {
+      dispatch(addStory(storyTitle, storyDescr));
+      setStoryTitle('');
+      setStoryDescr('');
+    }
+  };
 
   return (
     <StyledAddForm
@@ -54,31 +71,6 @@ const StoryAddForm = ({addStory, waiting}) => {
       </button>
     </StyledAddForm>
   );
-
-  function onDescriptionChange(ev) {
-    const val = ev.target.value;
-    if (val.length <= STORY_DESCRIPTION_MAX_LENGTH) {
-      setStoryDescr(val);
-    }
-  }
-
-  function triggerAddAndClearForm() {
-    if (storyTitle) {
-      addStory(storyTitle, storyDescr);
-      setStoryTitle('');
-      setStoryDescr('');
-    }
-  }
 };
 
-StoryAddForm.propTypes = {
-  addStory: PropTypes.func,
-  waiting: PropTypes.bool
-};
-
-export default connect(
-  (state) => ({
-    waiting: hasMatchingPendingCommand(state, 'addStory')
-  }),
-  {addStory}
-)(StoryAddForm);
+export default StoryAddForm;

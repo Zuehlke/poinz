@@ -1,5 +1,5 @@
 import React, {useState, useRef, useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {getSelectedStory, isAStorySelected} from '../../state/stories/storiesSelectors';
@@ -20,18 +20,19 @@ import {
   StyledEyeIcon
 } from './_styled';
 
-const User = ({
-  user,
-  selectedStory,
-  userEstimation,
-  userHasEstimation,
-  ownUserId,
-  matchingCardConfig,
-  kick,
-  toggleExcluded
-}) => {
+const User = ({user}) => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
   const quickMenuRef = useRef(null);
+
+  const estimationsForStory = useSelector(getEstimationsForCurrentlySelectedStory);
+  const userEstimation = estimationsForStory && estimationsForStory[user.id];
+  const userHasEstimation = userEstimation !== undefined;
+  const matchingCardConfig = useSelector(state => 
+    userHasEstimation ? getMatchingCardConfig(state, userEstimation.value) : {}
+  );
+  const ownUserId = useSelector(getOwnUserId);
+  const selectedStory = useSelector(state => isAStorySelected(state) ? getSelectedStory(state) : undefined);
 
   const isOwnUser = user.id === ownUserId;
   const isExcluded = user.excluded;
@@ -41,6 +42,14 @@ const User = ({
   useOutsideClick(quickMenuRef, () => setQuickMenuShown(false));
 
   const [quickMenuShown, setQuickMenuShown] = useState(false);
+
+  const handleKick = (userId) => dispatch(kick(userId));
+  const handleToggleExcluded = (userId) => dispatch(toggleExcluded(userId));
+
+  const onEyeIconClick = () => {
+    handleToggleExcluded(user.id);
+    setQuickMenuShown(false);
+  };
 
   return (
     <StyledUser data-testid="user" $isOwn={isOwnUser} $shaded={isDisconnected || quickMenuShown}>
@@ -67,7 +76,7 @@ const User = ({
           ></StyledEyeIcon>
 
           {!isOwnUser && (
-            <i className="icon-logout" onClick={() => kick(user.id)} title={t('kickUser')}></i>
+            <i className="icon-logout" onClick={() => handleKick(user.id)} title={t('kickUser')}></i>
           )}
         </StyledUserQuickMenu>
       )}
@@ -83,41 +92,10 @@ const User = ({
       )}
     </StyledUser>
   );
-
-  function onEyeIconClick() {
-    toggleExcluded(user.id);
-    setQuickMenuShown(false);
-  }
 };
 
 User.propTypes = {
-  user: PropTypes.object,
-  userEstimation: PropTypes.object,
-  userHasEstimation: PropTypes.bool,
-  selectedStory: PropTypes.object,
-  ownUserId: PropTypes.string,
-  matchingCardConfig: PropTypes.object,
-  kick: PropTypes.func.isRequired,
-  toggleExcluded: PropTypes.func.isRequired
+  user: PropTypes.object
 };
 
-export default connect(
-  (state, props) => {
-    const estimationsForStory = getEstimationsForCurrentlySelectedStory(state);
-    const userEstimation = estimationsForStory && estimationsForStory[props.user.id];
-    const userHasEstimation = userEstimation !== undefined;
-
-    const matchingCardConfig = userHasEstimation
-      ? getMatchingCardConfig(state, userEstimation.value)
-      : {};
-
-    return {
-      userEstimation,
-      userHasEstimation,
-      matchingCardConfig,
-      ownUserId: getOwnUserId(state),
-      selectedStory: isAStorySelected(state) ? getSelectedStory(state) : undefined
-    };
-  },
-  {kick, toggleExcluded}
-)(User);
+export default User;

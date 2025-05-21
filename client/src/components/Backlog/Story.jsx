@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 import {useDrag, useDrop} from 'react-dnd';
 
@@ -29,17 +29,17 @@ const Story = ({
   story,
   isHighlighted,
   onStoryClicked,
-  selectedStoryId,
-  selectStory,
-  editStory,
-  trashStory,
-  isWaiting,
-  isStoryEstimated,
   dndDragEnd,
   dndMoveStory,
   dndFindStory
 }) => {
   const {t, format} = useContext(L10nContext);
+  const dispatch = useDispatch();
+  
+  const selectedStoryId = useSelector(getSelectedStoryId);
+  const isWaiting = useSelector(state => isThisStoryWaiting(state, story.id));
+  const isStoryEstimated = useSelector(state => isThisStoryEstimated(state, story.id));
+  
   const isSelected = selectedStoryId === story.id;
   const hasConsensus = hasStoryConsensus(story);
 
@@ -69,6 +69,20 @@ const Story = ({
     }),
     [dndFindStory, dndMoveStory]
   );
+
+  const triggerSelect = () => {
+    dispatch(selectStory(story.id));
+  };
+
+  const triggerEdit = (e) => {
+    e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
+    dispatch(editStory(story.id));
+  };
+
+  const triggerTrash = (e) => {
+    e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
+    dispatch(trashStory(story.id));
+  };
 
   return (
     <StyledStory
@@ -138,42 +152,15 @@ const Story = ({
       }
     </StyledStory>
   );
-
-  function triggerSelect() {
-    selectStory(story.id);
-  }
-
-  function triggerEdit(e) {
-    e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
-    editStory(story.id);
-  }
-
-  function triggerTrash(e) {
-    e.stopPropagation(); // make sure to stop bubbling up. we do not want to trigger story select
-    trashStory(story.id);
-  }
 };
 
 Story.propTypes = {
   story: PropTypes.object,
-  isWaiting: PropTypes.bool,
   isHighlighted: PropTypes.bool,
-  isStoryEstimated: PropTypes.bool,
-  selectedStoryId: PropTypes.string,
   onStoryClicked: PropTypes.func,
-  selectStory: PropTypes.func,
-  editStory: PropTypes.func,
-  trashStory: PropTypes.func,
   dndDragEnd: PropTypes.func,
   dndMoveStory: PropTypes.func,
   dndFindStory: PropTypes.func
 };
 
-export default connect(
-  (state, props) => ({
-    selectedStoryId: getSelectedStoryId(state),
-    isWaiting: isThisStoryWaiting(state, props.story.id),
-    isStoryEstimated: isThisStoryEstimated(state, props.story.id)
-  }),
-  {selectStory, editStory, trashStory}
-)(Story);
+export default Story;

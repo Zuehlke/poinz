@@ -1,5 +1,5 @@
 import React, {useState, useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -16,12 +16,33 @@ import {StyledStory, StyledEditForm} from './_styled';
 /**
  * If a story is in "editMode" this form is displayed (in the backlog)
  */
-const StoryEditForm = ({story, selectedStoryId, changeStory, cancelEditStory, isWaiting}) => {
+const StoryEditForm = ({story}) => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+
+  const selectedStoryId = useSelector(getSelectedStoryId);
+  const isWaiting = useSelector(state => isThisStoryEditFormWaiting(state, story.id));
   const isSelected = selectedStoryId === story.id;
 
   const [storyTitle, setStoryTitle] = useState(story.title);
   const [storyDescr, setStoryDescr] = useState(story.description);
+
+  const onDescriptionChange = (ev) => {
+    const val = ev.target.value;
+    if (val.length <= STORY_DESCRIPTION_MAX_LENGTH) {
+      setStoryDescr(val);
+    }
+  };
+
+  const triggerChange = () => {
+    if (storyTitle) {
+      dispatch(changeStory(story.id, storyTitle, storyDescr ? storyDescr : ''));
+    }
+  };
+
+  const triggerCancel = () => {
+    dispatch(cancelEditStory(story.id));
+  };
 
   return (
     <StyledStory
@@ -52,37 +73,10 @@ const StoryEditForm = ({story, selectedStoryId, changeStory, cancelEditStory, is
       </StyledEditForm>
     </StyledStory>
   );
-
-  function onDescriptionChange(ev) {
-    const val = ev.target.value;
-    if (val.length <= STORY_DESCRIPTION_MAX_LENGTH) {
-      setStoryDescr(val);
-    }
-  }
-
-  function triggerChange() {
-    if (storyTitle) {
-      changeStory(story.id, storyTitle, storyDescr ? storyDescr : '');
-    }
-  }
-
-  function triggerCancel() {
-    cancelEditStory(story.id);
-  }
 };
 
 StoryEditForm.propTypes = {
-  story: PropTypes.object,
-  selectedStoryId: PropTypes.string,
-  changeStory: PropTypes.func,
-  cancelEditStory: PropTypes.func,
-  isWaiting: PropTypes.bool
+  story: PropTypes.object
 };
 
-export default connect(
-  (state, props) => ({
-    selectedStoryId: getSelectedStoryId(state),
-    isWaiting: isThisStoryEditFormWaiting(state, props.story.id)
-  }),
-  {changeStory, cancelEditStory}
-)(StoryEditForm);
+export default StoryEditForm;

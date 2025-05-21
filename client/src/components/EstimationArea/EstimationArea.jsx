@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 import log from 'loglevel';
 
@@ -35,19 +35,29 @@ import {
  * - action buttons ("reveal manually" and "new round")
  *
  */
-const EstimationArea = ({
-  selectedStory,
-  selectNextStory,
-  applause,
-  consensusCardConfig,
-  hasConsensus,
-  userCanCurrentlyEstimate,
-  newEstimationRound,
-  reveal,
-  hasNextStory,
-  activeEasterEgg
-}) => {
+const EstimationArea = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+
+  const isStorySelected = useSelector(isAStorySelected);
+  if (!isStorySelected) {
+    log.error('No Story Selected! must not render EstimationArea');
+    return null;
+  }
+
+  const selectedStory = useSelector(getSelectedStory);
+  const isExcluded = useSelector(state => getOwnUser(state).excluded);
+  const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
+  const hasConsensus = useSelector(hasSelectedStoryConsensus);
+  const consensusCardConfig = useSelector(state => getMatchingCardConfig(state, selectedStory.consensus));
+  const applause = useSelector(hasApplause);
+  const hasNextStory = useSelector(state => !!findNextStoryIdToEstimate(state));
+  const activeEasterEgg = useSelector(state => state.ui.activeEasterEgg);
+
+  const handleReveal = () => dispatch(reveal(selectedStory.id));
+  const handleNewRound = () => dispatch(newEstimationRound(selectedStory.id));
+  const handleSelectNextStory = () => dispatch(selectNextStory());
+
   const revealed = selectedStory.revealed;
 
   return (
@@ -75,7 +85,7 @@ const EstimationArea = ({
           <button
             type="button"
             className="pure-button pure-button-primary"
-            onClick={() => reveal(selectedStory.id)}
+            onClick={handleReveal}
           >
             {t('reveal')}
             <i className="icon-hand-paper-o button-icon-right"></i>
@@ -89,7 +99,7 @@ const EstimationArea = ({
             <button
               type="button"
               className="pure-button pure-button-primary"
-              onClick={() => newEstimationRound(selectedStory.id)}
+              onClick={handleNewRound}
               data-testid="newRoundButton"
             >
               {t('newRound')}
@@ -100,7 +110,7 @@ const EstimationArea = ({
               <button
                 type="button"
                 className="pure-button pure-button-primary"
-                onClick={selectNextStory}
+                onClick={handleSelectNextStory}
                 data-testid="nextStoryButton"
               >
                 {t('nextStory')}
@@ -131,29 +141,4 @@ EstimationArea.propTypes = {
   activeEasterEgg: PropTypes.object
 };
 
-export default connect(
-  (state) => {
-    if (!isAStorySelected(state)) {
-      log.error('No Story Selected! must not render EstimationArea');
-      return {};
-    }
-
-    const selectedStory = getSelectedStory(state);
-    const isExcluded = getOwnUser(state).excluded;
-    const userCanCurrentlyEstimate = !selectedStory.revealed && !isExcluded;
-
-    const hasConsensus = hasSelectedStoryConsensus(state);
-    const consensusCardConfig = getMatchingCardConfig(state, selectedStory.consensus);
-
-    return {
-      selectedStory,
-      consensusCardConfig,
-      hasConsensus,
-      userCanCurrentlyEstimate,
-      applause: hasApplause(state),
-      hasNextStory: !!findNextStoryIdToEstimate(state),
-      activeEasterEgg: state.ui.activeEasterEgg
-    };
-  },
-  {newEstimationRound, reveal, selectNextStory}
-)(EstimationArea);
+export default EstimationArea;

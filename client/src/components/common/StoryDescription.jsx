@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import Linkify from 'react-linkify';
 import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
@@ -13,11 +13,13 @@ const StoryDescription = ({
   text = '',
   storyId,
   textExpandThreshold = 200,
-  markdownEnabled,
-  toggleMarkdownEnabled,
   showMarkdownToggle = true,
   scroll = true
 }) => {
+  const dispatch = useDispatch();
+  const markdownEnabled = useSelector(state => state.ui.markdownEnabled);
+  const handleToggleMarkdownEnabled = () => dispatch(toggleMarkdownEnabled());
+
   const [textExpanded, setTextExpanded] = useState(false);
   useEffect(() => setTextExpanded(false), [storyId]); // reset expanded state to false if story id changes.
 
@@ -68,7 +70,7 @@ const StoryDescription = ({
           data-testid="markdownToggleButton"
           $on={markdownEnabled ? '1' : ''}
           className="icon-markdown"
-          onClick={toggleMarkdownEnabled}
+          onClick={handleToggleMarkdownEnabled}
         ></StyledToggleIcon>
       )}
     </React.Fragment>
@@ -78,19 +80,12 @@ const StoryDescription = ({
 StoryDescription.propTypes = {
   storyId: PropTypes.string,
   text: PropTypes.string,
-  markdownEnabled: PropTypes.bool,
-  toggleMarkdownEnabled: PropTypes.func,
   showMarkdownToggle: PropTypes.bool,
   scroll: PropTypes.bool,
   textExpandThreshold: PropTypes.number
 };
 
-export default connect(
-  (state) => ({
-    markdownEnabled: state.ui.markdownEnabled
-  }),
-  {toggleMarkdownEnabled}
-)(StoryDescription);
+export default StoryDescription;
 
 /**
  * adds target="_blank" and rel="noopener noreferrer nofollow"

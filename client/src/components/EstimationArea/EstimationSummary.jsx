@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {connect} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {L10nContext} from '../../services/l10n';
@@ -19,25 +19,66 @@ import ValueBadge from '../common/ValueBadge';
 
 import {StyledCardsWrapper, StyledEstimationSummary, StyledEstimationSummaryList} from './_styled';
 
-/**
- * Displays an overview on how many users did estimate, which cards how often. (after reveal)
- */
-const EstimationSummary = ({
-  storyId,
-  withConfidence,
-  summaries,
-  usersInRoomCount,
-  cardConfig,
-  consensusInfo,
-  settleEstimation
-}) => {
-  const {t} = useContext(L10nContext);
+const useEstimationSummary = () => {
+  const dispatch = useDispatch();
+  const estimations = useSelector(getEstimationsForCurrentlySelectedStory);
+  const cardConfig = useSelector(getCardConfigInOrder);
+  const storyId = useSelector(getSelectedStoryId);
+  const usersInRoomCount = useSelector(getUserCount);
+  const withConfidence = useSelector(state => state.room.withConfidence);
+  const hasConsensus = useSelector(hasSelectedStoryConsensus);
+  const consensusValue = useSelector(getSelectedStoryConsensusValue);
+  const matchingConsensusCard = useSelector(state => 
+    getMatchingCardConfig(state, getSelectedStoryConsensusValue(state))
+  );
 
+  const summaries = useSelector(state => 
+    getEstimationSummary(estimations, cardConfig).map(summary => ({
+      ...summary,
+      recommendationCard: getMatchingCardConfig(state, summary.recommendation)
+    }))
+  );
+
+  const handleSettleEstimation = (storyId, value) => {
+    dispatch(settleEstimation(storyId, value));
+  };
+
+  return {
+    storyId,
+    usersInRoomCount,
+    cardConfig,
+    summaries,
+    withConfidence,
+    consensusInfo: {
+      hasConsensus,
+      value: consensusValue,
+      label: matchingConsensusCard?.label
+    },
+    handleSettleEstimation
+  };
+};
+
+const EstimationSummary = () => {
+  const {t} = useContext(L10nContext);
   const [includeUnsureEstimations, setIncludeUnsureEstimations] = useState(true);
+  
+  const {
+    storyId,
+    usersInRoomCount,
+    cardConfig,
+    summaries,
+    withConfidence,
+    consensusInfo,
+    handleSettleEstimation
+  } = useEstimationSummary();
 
   const summary = includeUnsureEstimations ? summaries[0] : summaries[1];
-  const allValuesSame = Object.keys(summary.estimatedValues).length === 1; // we cannot use "hasConsensus" property, because it is also set after (manually) "settling" the story.
+  const allValuesSame = Object.keys(summary.estimatedValues).length === 1;
   const settled = consensusInfo.hasConsensus && !allValuesSame;
+
+  const onCardClick = (value) => {
+    handleSettleEstimation(storyId, value);
+  };
 
   return (
     <StyledEstimationSummary data-testid="estimationSummary">
@@ -100,10 +141,6 @@ const EstimationSummary = ({
       </StyledCardsWrapper>
     </StyledEstimationSummary>
   );
-
-  function onCardClick(value) {
-    settleEstimation(storyId, value);
-  }
 };
 
 EstimationSummary.propTypes = {
@@ -120,27 +157,4 @@ EstimationSummary.propTypes = {
   settleEstimation: PropTypes.func
 };
 
-export default connect(
-  (state) => {
-    const estimations = getEstimationsForCurrentlySelectedStory(state);
-    const cardConfig = getCardConfigInOrder(state);
-    const summaries = getEstimationSummary(estimations, cardConfig).map((s) => {
-      s.recommendationCard = getMatchingCardConfig(state, s.recommendation);
-      return s;
-    });
-
-    return {
-      storyId: getSelectedStoryId(state),
-      usersInRoomCount: getUserCount(state),
-      cardConfig,
-      summaries,
-      withConfidence: state.room.withConfidence,
-      consensusInfo: {
-        hasConsensus: hasSelectedStoryConsensus(state),
-        value: getSelectedStoryConsensusValue(state),
-        label: getMatchingCardConfig(state, getSelectedStoryConsensusValue(state)).label
-      }
-    };
-  },
-  {settleEstimation}
-)(EstimationSummary);
+export default EstimationSummary;

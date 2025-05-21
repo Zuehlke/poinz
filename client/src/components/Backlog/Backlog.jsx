@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector, useDispatch} from 'react-redux';
 import {useDrag} from 'react-dnd';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 
@@ -23,15 +22,18 @@ import {StyledBacklog, StyledBacklogWidthDragHandle} from './_styled';
  * if trash is active, only a list of "trashed" stories is displayed
  *
  */
-const Backlog = ({
-  backlogShown,
-  backlogWidth,
-  setBacklogWidth,
-  trashedStoriesCount,
-  activeStoriesCount
-}) => {
+const Backlog = () => {
   const {t} = useContext(L10nContext);
+  const dispatch = useDispatch();
+
+  const backlogShown = useSelector(isBacklogShown);
+  const backlogWidth = useSelector(getBacklogWidth);
+  const trashedStoriesCount = useSelector(state => getTrashedStories(state).length);
+  const activeStoriesCount = useSelector(state => getActiveStories(state).length);
+
   const [showTrash, setShowTrash] = useState(false);
+
+  const handleSetBacklogWidth = (width) => dispatch(setBacklogWidth(width));
 
   // There is no corresponding drop / useDrop.
   // We just need the dragging functionality, and set the new width of the backlog on "end(...)"
@@ -40,10 +42,10 @@ const Backlog = ({
       type: DRAG_ITEM_TYPES.backlogWidthHandle,
       end: (item, monitor) => {
         const {x} = monitor.getSourceClientOffset();
-        setBacklogWidth(Math.max(DEFAULT_BACKLOG_WIDTH, x + 1));
+        handleSetBacklogWidth(Math.max(DEFAULT_BACKLOG_WIDTH, x + 1));
       }
     }),
-    [setBacklogWidth]
+    [handleSetBacklogWidth]
   );
 
   useEffect(() => {
@@ -75,20 +77,4 @@ const Backlog = ({
   );
 };
 
-Backlog.propTypes = {
-  backlogShown: PropTypes.bool,
-  backlogWidth: PropTypes.number,
-  setBacklogWidth: PropTypes.func.isRequired,
-  trashedStoriesCount: PropTypes.number.isRequired,
-  activeStoriesCount: PropTypes.number.isRequired
-};
-
-export default connect(
-  (state) => ({
-    backlogShown: isBacklogShown(state),
-    backlogWidth: getBacklogWidth(state),
-    trashedStoriesCount: getTrashedStories(state).length,
-    activeStoriesCount: getActiveStories(state).length
-  }),
-  {setBacklogWidth}
-)(Backlog);
+export default Backlog;

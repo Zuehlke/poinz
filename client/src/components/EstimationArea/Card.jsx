@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 
 import {isThisCardWaiting} from '../../state/commandTracking/commandTrackingSelectors';
@@ -9,7 +9,9 @@ import {StyledCard, StyledCardInner} from './_styled';
 /**
  * One estimation card on the board.
  */
-const Card = ({isWaiting, isSelected, cardCfg, onClick}) => {
+const Card = ({isSelected, cardCfg, onClick}) => {
+  const isWaiting = useSelector((state) => isThisCardWaiting(state, cardCfg.value));
+
   return (
     <StyledCard onClick={onClick} data-testid={'estimationCard.' + cardCfg.value}>
       <StyledCardInner
@@ -26,10 +28,7 @@ const Card = ({isWaiting, isSelected, cardCfg, onClick}) => {
 Card.propTypes = {
   cardCfg: PropTypes.object,
   isSelected: PropTypes.bool,
-  isWaiting: PropTypes.bool,
   onClick: PropTypes.func
 };
 
-export default connect((state, props) => ({
-  isWaiting: isThisCardWaiting(state, props.cardCfg.value)
-}))(Card);
+export default Card;

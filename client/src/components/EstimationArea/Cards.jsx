@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
+import {useSelector, useDispatch} from 'react-redux';
 
 import Card from './Card';
 
@@ -15,16 +14,30 @@ import ConfidenceButtons from './ConfidenceButtons';
  *
  * (number of available cards and their value is set in cardConfig)
  */
-const Cards = ({
-  cardConfig,
-  ownEstimate,
-  withConfidence,
-  giveStoryEstimate,
-  clearStoryEstimate
-}) => {
+const Cards = () => {
+  const dispatch = useDispatch();
+  const withConfidence = useSelector(state => state.room.withConfidence);
+  const cardConfig = useSelector(getCardConfigInOrder);
+  const ownEstimate = useSelector(getOwnEstimate);
+
   const hasEstimate = ownEstimate !== undefined;
   const ownEstimateValue = hasEstimate && ownEstimate.value;
   const [confidence, setConfidence] = useState(0);
+
+  const onConfidenceChange = (conf) => {
+    setConfidence(conf);
+    if (hasEstimate) {
+      dispatch(giveStoryEstimate(ownEstimateValue, conf));
+    }
+  };
+
+  const onCardClick = (value) => {
+    if (ownEstimate && ownEstimate.value === value) {
+      dispatch(clearStoryEstimate());
+    } else {
+      dispatch(giveStoryEstimate(value, confidence));
+    }
+  };
 
   return (
     <StyledCards>
@@ -47,42 +60,6 @@ const Cards = ({
       </StyledCardsWrapper>
     </StyledCards>
   );
-
-  function onConfidenceChange(conf) {
-    setConfidence(conf);
-    if (hasEstimate) {
-      giveStoryEstimate(ownEstimateValue, conf);
-    }
-  }
-
-  function onCardClick(value) {
-    if (ownEstimate && ownEstimate.value === value) {
-      clearStoryEstimate();
-    } else {
-      giveStoryEstimate(value, confidence);
-    }
-  }
 };
 
-Cards.propTypes = {
-  cardConfig: PropTypes.array,
-  withConfidence: PropTypes.bool,
-  ownEstimate: PropTypes.shape({
-    value: PropTypes.number.isRequired,
-    confidence: PropTypes.number
-  }),
-  giveStoryEstimate: PropTypes.func,
-  clearStoryEstimate: PropTypes.func
-};
-
-export default connect(
-  (state) => ({
-    withConfidence: state.room.withConfidence,
-    cardConfig: getCardConfigInOrder(state),
-    ownEstimate: getOwnEstimate(state)
-  }),
-  {
-    giveStoryEstimate,
-    clearStoryEstimate
-  }
-)(Cards);
+export default Cards;

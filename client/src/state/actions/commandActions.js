@@ -10,7 +10,8 @@ import {
   trackStoryCreated,
   trackStoryEdited,
   trackStoryTrashed,
-  trackStoryRestored
+  trackStoryRestored,
+  trackNewEstimationRound
 } from '../../services/tracking';
 
 /* TYPES */
@@ -221,7 +222,9 @@ export const clearStoryEstimate = () => (dispatch, getState, sendCommand) => {
 };
 
 export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand) => {
-  trackEvent('new_estimation_round');
+  trackNewEstimationRound({
+    roomId: getRoomId(getState())
+  });
 
   sendCommand({
     name: 'newEstimationRound',

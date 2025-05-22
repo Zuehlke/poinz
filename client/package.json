@@ -47,6 +47,7 @@
     "@babel/core": "7.23.2",
     "@babel/preset-env": "7.23.2",
     "@babel/preset-react": "7.22.15",
+    "@babel/preset-typescript": "^7.27.1",
     "@eslint/js": "^9.17.0",
     "@quickbaseoss/babel-plugin-styled-components-css-namespace": "1.0.1",
     "@types/react": "^18.3.18",
@@ -58,6 +59,7 @@
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
     "jest": "29.7.0",
+    "react-test-renderer": "^18.3.1",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"
@@ -82,14 +84,17 @@
       ]
     },
     "testMatch": [
-      "**/test/unit/**/*Test.js",
-      "**/test/integration/**/*Test.js"
+      "**/test/unit/**/*Test.[jt]s?(x)",
+      "**/test/integration/**/*Test.[jt]s?(x)"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/test/unit/setup.js"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!nanoid).+\\.js$"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "<rootDir>/test/styleMock.js"
+    }
   }
 }

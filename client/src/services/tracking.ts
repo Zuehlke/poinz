@@ -5,7 +5,8 @@ import {
   StoryEditedEvent,
   StoryTrashedEvent,
   StoryRestoredEvent,
-  MatrixViewToggledEvent
+  MatrixViewToggledEvent,
+  RoomEvent
 } from './tracking.types';
 
 export const trackRoomSettingsChanged = (data: RoomSettingsChangedEvent) => {
@@ -31,3 +32,7 @@ export const trackStoryRestored = (data: StoryRestoredEvent) => {
 export const trackMatrixViewToggled = (data: MatrixViewToggledEvent) => {
   posthog.capture('matrix_view_toggled', data);
 }; 
+
+export const trackNewEstimationRound = (data: RoomEvent) => {
+  posthog.capture('new_estimation_round', data);
+};

@@ -31,4 +31,4 @@ export interface StoryRestoredEvent extends StoryEvent {
 
 export interface MatrixViewToggledEvent extends RoomEvent {
   totalStories: number;
-} 
+}

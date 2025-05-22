@@ -12,8 +12,6 @@ import {spawnAndPrint} from './buildUtils.mjs';
 
 const execPromised = util.promisify(exec);
 
-const HEROKU_DEPLOYMENT_TAG = 'registry.heroku.com/poinz/web';
-
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 buildImage()
@@ -43,7 +41,7 @@ async function buildImage() {
   const registry = process.env.DOCKER_REGISTRY;
   const user = process.env.DOCKER_USERNAME.toLowerCase();
   const userAndProject = `${registry}/${user}/poinz`;
-  const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
+  const tags = [`${userAndProject}:latest`];
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
   const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} --network=host .`;
 

@@ -1,7 +1,7 @@
 ---
 description: 
-globs: client/**/*.js,client/**/*.jsx
-alwaysApply: false
+globs: 
+alwaysApply: true
 ---
 # Poinz rules
 
@@ -10,3 +10,5 @@ alwaysApply: false
 - if you are creating new files you must use typescript
 
 - NEVER FINISH BEFORE YOU ARE NOT FINISHED, I DO NOT WANT TO HEAR "should I continue?"
+
+- DO NOT EVER SUMMARISE WHAT YOU DID, I SEE IT IN THE CODE CHANGES

@@ -28,4 +28,7 @@ jobs:
         run: npm test
 
       - name: build app & docker image
+        env:
+          DOCKER_REGISTRY: ghcr.io
+          DOCKER_USERNAME: ${{ github.repository_owner }}
         run: npm run build:dockerImage

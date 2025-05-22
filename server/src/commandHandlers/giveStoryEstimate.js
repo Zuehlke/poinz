@@ -7,6 +7,7 @@
  * As soon as all users (that can estimate) estimated the story, a "revealed" event is produced (by default, if room setting is not altered. see "autoReveal")
  */
 import {getMatchingStoryOrThrow, getMatchingUserOrThrow} from './commonPreconditions.js';
+import { trackEvent } from '../analytics.js';
 
 const schema = {
   allOf: [
@@ -74,7 +75,14 @@ const giveStoryEstimateCommandHandler = {
         manually: false
       });
 
-      if (allEstimationsSame(matchingStory, userId, command.payload.value)) {
+      const hasConsensus = allEstimationsSame(matchingStory, userId, command.payload.value);
+
+      // Track the auto-reveal event
+      trackEvent('estimation_reveal', {
+        manually: false
+      });
+
+      if (hasConsensus) {
         pushEvent('consensusAchieved', {
           storyId: command.payload.storyId,
           value: command.payload.value

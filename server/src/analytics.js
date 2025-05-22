@@ -3,8 +3,6 @@ import getLogger from './getLogger.js';
 
 const logger = getLogger('analytics');
 
-console.log(process.env);
-
 // Initialize PostHog with environment variables or default to disabled
 const POSTHOG_API_KEY = process.env.POSTHOG_API_KEY;
 const POSTHOG_HOST = process.env.POSTHOG_HOST || 'https://app.posthog.com';
@@ -23,7 +21,7 @@ if (POSTHOG_API_KEY) {
 }
 
 export function trackEvent(event, properties = {}, userId = null) {
-  if (!posthogClient) return;
+  if (!posthogClient) {return;}
   
   try {
     posthogClient.capture({

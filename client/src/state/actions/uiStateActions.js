@@ -1,3 +1,7 @@
+import {trackMatrixViewToggled} from '../../services/tracking';
+import {getRoomId} from '../room/roomSelectors';
+import {getActiveStories} from '../stories/storiesSelectors';
+
 /* TYPES */
 export const STORY_EDIT_MODE_ENTERED = 'STORY_EDIT_MODE_ENTERED';
 export const STORY_EDIT_MODE_CANCELLED = 'STORY_EDIT_MODE_CANCELLED';
@@ -31,7 +35,19 @@ export const hideNewUserHints = () => ({type: NEW_USER_HINTS_HIDDEN});
 export const toggleSidebar = (sidebarKey) => ({type: SIDEBAR_TOGGLED, sidebarKey});
 export const toggleMarkdownEnabled = () => ({type: MARKDOWN_TOGGLED});
 export const toggleMatrixIncludeTrashed = () => ({type: MATRIX_INCL_TRSH_TOGGLED});
-export const toggleMatrix = () => ({type: MATRIX_TOGGLED});
+export const toggleMatrix = () => (dispatch, getState) => {
+  const state = getState();
+  const activeStories = getActiveStories(state);
+  
+  trackMatrixViewToggled({
+    roomId: getRoomId(state),
+    totalStories: activeStories.length,
+  });
+  
+  dispatch({
+    type: MATRIX_TOGGLED
+  });
+};
 export const SIDEBAR_HELP = 'HELP';
 export const SIDEBAR_SETTINGS = 'SETTINGS';
 export const SIDEBAR_ACTIONLOG = 'ACTIONLOG';

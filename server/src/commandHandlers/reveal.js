@@ -5,6 +5,7 @@
  *
  */
 import {getMatchingStoryOrThrow} from './commonPreconditions.js';
+import { trackEvent } from '../analytics.js';
 
 const schema = {
   allOf: [
@@ -50,6 +51,12 @@ const revealCommandHandler = {
 
     const matchingStory = getMatchingStoryOrThrow(room, command.payload.storyId);
     const estimValues = Object.values(matchingStory.estimations);
+
+    // Track the reveal event
+    trackEvent('estimation_reveal', {
+      manually: true
+    });
+
     if (allEstimationsSame(estimValues)) {
       pushEvent('consensusAchieved', {
         storyId: command.payload.storyId,

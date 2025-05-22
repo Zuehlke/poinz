@@ -5,6 +5,14 @@ import {getOwnUserId, getOwnUserToken} from '../users/usersSelectors';
 import {getSelectedStoryId} from '../stories/storiesSelectors';
 import {getRoomId} from '../room/roomSelectors';
 import {getJoinRoomId, getJoinUserdata} from '../joining/joiningSelectors';
+import {
+  trackRoomSettingsChanged,
+  trackStoryCreated,
+  trackStoryEdited,
+  trackStoryTrashed,
+  trackStoryRestored,
+  trackNewEstimationRound
+} from '../../services/tracking';
 
 /* TYPES */
 export const COMMAND_SENT = 'COMMAND_SENT';
@@ -125,12 +133,20 @@ export const leaveRoom = () => () => {
   history.push('/');
 };
 
-export const addStory = (storyTitle, storyDescription) => (dispatch, getState, sendCommand) => {
+export const addStory = (title, description = '') => (dispatch, getState, sendCommand) => {
+  const hasDescription = description.length > 0;
+  
+  trackStoryCreated({
+    roomId: getRoomId(getState()),
+    hasDescription,
+    descriptionLength: description.length
+  });
+
   sendCommand({
     name: 'addStory',
     payload: {
-      title: storyTitle,
-      description: storyDescription
+      title,
+      description
     }
   });
 };
@@ -206,6 +222,10 @@ export const clearStoryEstimate = () => (dispatch, getState, sendCommand) => {
 };
 
 export const newEstimationRound = (storyId) => (dispatch, getState, sendCommand) => {
+  trackNewEstimationRound({
+    roomId: getRoomId(getState())
+  });
+
   sendCommand({
     name: 'newEstimationRound',
     payload: {
@@ -261,10 +281,18 @@ export const toggleExcluded = (userId) => (dispatch, getState, sendCommand) => {
 
 export const setRoomConfigToggleAutoReveal = () => (dispatch, getState, sendCommand) => {
   const {room} = getState();
+  const newAutoReveal = !room.autoReveal;
+  
+  trackRoomSettingsChanged({
+    roomId: room.roomId,
+    setting: 'autoReveal',
+    newValue: newAutoReveal
+  });
+  
   sendCommand({
     name: 'setRoomConfig',
     payload: {
-      autoReveal: !room.autoReveal,
+      autoReveal: newAutoReveal,
       withConfidence: room.withConfidence,
       issueTrackingUrl: room.issueTrackingUrl
     }
@@ -273,29 +301,42 @@ export const setRoomConfigToggleAutoReveal = () => (dispatch, getState, sendComm
 
 export const setRoomConfigToggleConfidence = () => (dispatch, getState, sendCommand) => {
   const {room} = getState();
+  const newWithConfidence = !room.withConfidence;
+  
+  trackRoomSettingsChanged({
+    roomId: room.roomId,
+    setting: 'confidence',
+    newValue: newWithConfidence
+  });
+  
   sendCommand({
     name: 'setRoomConfig',
     payload: {
       autoReveal: room.autoReveal,
-      withConfidence: !room.withConfidence,
+      withConfidence: newWithConfidence,
       issueTrackingUrl: room.issueTrackingUrl
     }
   });
 };
 
-export const setRoomConfigIssueTrackingUrl =
-  (url = []) =>
-  (dispatch, getState, sendCommand) => {
-    const {room} = getState();
-    sendCommand({
-      name: 'setRoomConfig',
-      payload: {
-        autoReveal: room.autoReveal,
-        withConfidence: room.withConfidence,
-        issueTrackingUrl: url
-      }
-    });
-  };
+export const setRoomConfigIssueTrackingUrl = (url = '') => (dispatch, getState, sendCommand) => {
+  const {room} = getState();
+  
+  trackRoomSettingsChanged({
+    roomId: room.roomId,
+    setting: 'issueTracking',
+    newValue: url
+  });
+  
+  sendCommand({
+    name: 'setRoomConfig',
+    payload: {
+      autoReveal: room.autoReveal,
+      withConfidence: room.withConfidence,
+      issueTrackingUrl: url
+    }
+  });
+};
 
 export const kick = (userId) => (dispatch, getState, sendCommand) => {
   sendCommand({
@@ -306,7 +347,18 @@ export const kick = (userId) => (dispatch, getState, sendCommand) => {
   });
 };
 
-export const changeStory = (storyId, title, description) => (dispatch, getState, sendCommand) => {
+export const changeStory = (storyId, title, description = '') => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  const story = state.stories.storiesById[storyId];
+  const titleChanged = story.title !== title;
+  const descriptionChanged = story.description !== description;
+  
+  trackStoryEdited({
+    roomId: getRoomId(state),
+    storyId,
+    fieldChanged: titleChanged && descriptionChanged ? 'both' : titleChanged ? 'title' : 'description'
+  });
+
   sendCommand({
     name: 'changeStory',
     payload: {
@@ -338,6 +390,16 @@ export const trashStories = (storyIds) => (dispatch, getState, sendCommand) => {
 };
 
 export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  const story = state.stories.storiesById[storyId];
+  
+  trackStoryTrashed({
+    roomId: getRoomId(state),
+    storyId,
+    hadConsensus: !!story.consensus,
+    storyLifetimeMinutes: Math.floor((Date.now() - story.createdAt) / 60000)
+  });
+
   sendCommand({
     name: 'trashStory',
     payload: {
@@ -347,6 +409,15 @@ export const trashStory = (storyId) => (dispatch, getState, sendCommand) => {
 };
 
 export const restoreStory = (storyId) => (dispatch, getState, sendCommand) => {
+  const state = getState();
+  const story = state.stories.storiesById[storyId];
+  
+  trackStoryRestored({
+    roomId: getRoomId(state),
+    storyId,
+    timeInTrashMinutes: Math.floor((Date.now() - story.trashedAt) / 60000)
+  });
+
   sendCommand({
     name: 'restoreStory',
     payload: {

@@ -25,6 +25,7 @@
     "history": "5.3.0",
     "loglevel": "1.8.1",
     "nanoid": "5.0.1",
+    "posthog-js": "^1.245.1",
     "purecss": "3.0.0",
     "react": "^18.3.1",
     "react-dnd": "^16.0.1",
@@ -46,17 +47,19 @@
     "@babel/core": "7.23.2",
     "@babel/preset-env": "7.23.2",
     "@babel/preset-react": "7.22.15",
-    "babel-jest": "29.7.0",
-    "jest": "29.7.0",
+    "@babel/preset-typescript": "^7.27.1",
     "@eslint/js": "^9.17.0",
     "@quickbaseoss/babel-plugin-styled-components-css-namespace": "1.0.1",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "babel-jest": "29.7.0",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.16",
     "globals": "^15.14.0",
+    "jest": "29.7.0",
+    "react-test-renderer": "^18.3.1",
     "typescript": "~5.6.2",
     "typescript-eslint": "^8.18.2",
     "vite": "^6.0.5"
@@ -73,17 +76,25 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.[jt]sx?$": ["babel-jest", { "configFile": "./test/.babelrc" }]
+      "^.+\\.[jt]sx?$": [
+        "babel-jest",
+        {
+          "configFile": "./test/.babelrc"
+        }
+      ]
     },
     "testMatch": [
-      "**/test/unit/**/*Test.js",
-      "**/test/integration/**/*Test.js"
+      "**/test/unit/**/*Test.[jt]s?(x)",
+      "**/test/integration/**/*Test.[jt]s?(x)"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/test/unit/setup.js"
     ],
     "transformIgnorePatterns": [
       "/node_modules/(?!nanoid).+\\.js$"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "<rootDir>/test/styleMock.js"
+    }
   }
 }

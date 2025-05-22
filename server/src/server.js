@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import path from 'path';
 import http from 'http';
 import * as url from 'url';
@@ -9,6 +11,7 @@ import socketServer from './socketServer.js';
 import getLogger from './getLogger.js';
 import restApiFactory from './restApi/rest.js';
 import roomsStoreFactory from './store/roomStoreFactory.js';
+import { shutdownAnalytics } from './analytics.js';
 
 const LOGGER = getLogger('server');
 
@@ -46,9 +49,10 @@ async function startup() {
     LOGGER.info(`-- SERVER STARTED -- (${settings.serverPort})`)
   );
 
-  process.on('SIGINT', () => {
+  process.on('SIGINT', async () => {
     LOGGER.info('-- SERVER RECEIVED SIGINT, shutting down --');
     socketServer.close();
+    await shutdownAnalytics();
     httpServer.close(() => process.exit(0));
   });
 }

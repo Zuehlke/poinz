@@ -1,0 +1,45 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: install dependencies
+        run: npm i
+
+      - name: dependency check
+        run: npm run dependencyCheck
+
+      - name: run all tests
+        run: npm test
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: build app & docker image
+        env:
+          DOCKER_REGISTRY: ghcr.io
+          DOCKER_USERNAME: ${{ github.repository_owner }}
+        run: npm run build:dockerImage
+
+      - name: Push Docker image
+        env:
+          DOCKER_USERNAME: ${{ github.repository_owner }}
+        run: |
+          docker image push --all-tags "ghcr.io/${DOCKER_USERNAME,,}/poinz" 

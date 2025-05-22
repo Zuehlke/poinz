@@ -33,19 +33,23 @@ async function buildImage() {
     } (git-tags: ${gitInfo.tags.join(' ')})`
   );
 
-  const user = process.env.DOCKER_USERNAME || 'xeronimus';
-  const userAndProject = `${user}/poinz`;
+  if (!process.env.DOCKER_REGISTRY) {
+    throw new Error('DOCKER_REGISTRY environment variable must be set');
+  }
+  if (!process.env.DOCKER_USERNAME) {
+    throw new Error('DOCKER_USERNAME environment variable must be set');
+  }
+
+  const registry = process.env.DOCKER_REGISTRY;
+  const user = process.env.DOCKER_USERNAME.toLowerCase();
+  const userAndProject = `${registry}/${user}/poinz`;
   const tags = [`${userAndProject}:latest`, HEROKU_DEPLOYMENT_TAG];
   gitInfo.tags.forEach((gitTag) => tags.push(`${userAndProject}:${gitTag}`));
   const cmdArgs = `build ${tags.map((tg) => '-t ' + tg).join(' ')} --network=host .`;
 
-  console.log(` $ docker ${cmdArgs}`); // will be something like : docker build -t xeronimus/poinz:latest -t registry.heroku.com/poinz/web .
+  console.log(` $ docker ${cmdArgs}`);
 
   return spawnAndPrint('docker', cmdArgs.split(' '), {cwd: path.resolve(dirname, '..')});
-
-  console.log(
-    'Done.\ndocker run  -e NODE_ENV=development -p 3000:3000 --name poinz_local -d xeronimus/poinz'
-  );
 }
 
 function getGitInformation() {

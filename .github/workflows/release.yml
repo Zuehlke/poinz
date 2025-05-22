@@ -1,0 +1,9 @@
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-push:
+    uses: ./.github/workflows/build-and-push.yml 

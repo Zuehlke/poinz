@@ -6,29 +6,13 @@ on:
     branches:
       - '*'
       - '!master'
-  pull_request:
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-
-      - name: install dependencies
-        run: npm i
-
-      - name: dependency check
-        run: npm run dependencyCheck
-
-      - name: run tests
-        run: npm test
-
-      - name: build app & docker image
-        env:
-          DOCKER_REGISTRY: ghcr.io
-          DOCKER_USERNAME: ${{ github.repository_owner }}
-        run: npm run build:dockerImage
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      push_image: false

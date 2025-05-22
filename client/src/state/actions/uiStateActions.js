@@ -38,7 +38,6 @@ export const toggleMatrixIncludeTrashed = () => ({type: MATRIX_INCL_TRSH_TOGGLED
 export const toggleMatrix = () => (dispatch, getState) => {
   const state = getState();
   const activeStories = getActiveStories(state);
-  const storiesWithConsensus = activeStories.filter(s => s.consensus);
   
   trackMatrixViewToggled({
     roomId: getRoomId(state),

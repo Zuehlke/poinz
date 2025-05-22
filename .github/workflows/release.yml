@@ -4,6 +4,12 @@ on:
   release:
     types: [created]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-push:
-    uses: ./.github/workflows/build-and-push.yml 
+    uses: ./.github/workflows/build-and-push.yml
+    with:
+      push_image: true 

@@ -22,14 +22,32 @@ jobs:
         with:
           node-version: '22'
 
-      - name: install dependencies
-        run: npm i
+      - name: Install root dependencies
+        run: npm ci
 
-      - name: dependency check
+      - name: Run dependency check
         run: npm run dependencyCheck
 
-      - name: run all tests
+      - name: Run all tests
         run: npm test
+
+      - name: Run prebuild checks
+        run: |
+          npm run docu
+          node build/checkTranslationKeys.mjs
+
+      - name: Build client
+        working-directory: client
+        env:
+          VITE_PUBLIC_POSTHOG_KEY: ${{ vars.VITE_PUBLIC_POSTHOG_KEY }}
+          VITE_PUBLIC_POSTHOG_HOST: ${{ vars.VITE_PUBLIC_POSTHOG_HOST }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci
 
       - name: Log in to GitHub Container Registry
         if: inputs.push_image
@@ -39,13 +57,31 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: build app & docker image
+      - name: Get git info
+        id: git-info
+        run: |
+          echo "branch=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
+          echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "tags=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build and tag Docker image
         env:
           DOCKER_REGISTRY: ghcr.io
           DOCKER_USERNAME: ${{ github.repository_owner }}
-          VITE_PUBLIC_POSTHOG_KEY: ${{ secrets.VITE_PUBLIC_POSTHOG_KEY }}
-          VITE_PUBLIC_POSTHOG_HOST: ${{ secrets.VITE_PUBLIC_POSTHOG_HOST }}
-        run: npm run build:dockerImage
+        run: |
+          DOCKER_USER="${DOCKER_USERNAME,,}"
+          BASE_TAG="$DOCKER_REGISTRY/$DOCKER_USER/poinz"
+          
+          # Build with all tags
+          TAGS_ARG="-t $BASE_TAG:latest"
+          if [ ! -z "${{ steps.git-info.outputs.tags }}" ]; then
+            for tag in ${{ steps.git-info.outputs.tags }}; do
+              TAGS_ARG="$TAGS_ARG -t $BASE_TAG:$tag"
+            done
+          fi
+          
+          echo "Building docker image for commit ${{ steps.git-info.outputs.hash }} on branch ${{ steps.git-info.outputs.branch }}"
+          docker build $TAGS_ARG --network=host .
 
       - name: Push Docker image
         if: inputs.push_image

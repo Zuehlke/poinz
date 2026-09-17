@@ -9,6 +9,8 @@ import {
   MATRIX_TOGGLED,
   NEW_USER_HINTS_HIDDEN,
   MATRIX_INCL_TRSH_TOGGLED,
+  SOUND_EFFECTS_TOGGLED,
+  SOUND_EFFECTS_VOLUME_SET,
   SIDEBAR_ACTIONLOG,
   SIDEBAR_TOGGLED,
   BACKLOG_WIDTH_SET
@@ -18,6 +20,14 @@ import {getActiveSeasonalEasterEgg} from '../../components/common/EasterEgg';
 const HIDE_NEW_USER_HINTS = 'hideNewUserHints';
 const MARKDOWN_ENABLED = 'markdownEnabled';
 const BACKLOG_WIDTH = 'backlogWidth';
+const SOUND_EFFECTS_ENABLED = 'soundEffectsEnabled';
+const SOUND_EFFECTS_VOLUME = 'soundEffectsVolume';
+const storedSoundEffectsVolume = getItem(SOUND_EFFECTS_VOLUME);
+const persistedSoundEffectsVolume = Number(storedSoundEffectsVolume);
+const initialSoundEffectsVolume =
+  storedSoundEffectsVolume !== null && Number.isFinite(persistedSoundEffectsVolume)
+  ? Math.min(100, Math.max(0, persistedSoundEffectsVolume))
+  : 50;
 
 export const uiInitialState = {
   backlogShown: false, // only relevant in mobile view. in desktop the backlog is always visible and not "toggleable"
@@ -28,6 +38,8 @@ export const uiInitialState = {
   unseenError: false,
   newUserHintHidden: getItem(HIDE_NEW_USER_HINTS) === 'true',
   markdownEnabled: getItem(MARKDOWN_ENABLED) === 'true',
+  soundEffectsEnabled: getItem(SOUND_EFFECTS_ENABLED) === 'true',
+  soundEffectsVolume: initialSoundEffectsVolume,
   activeEasterEgg: getActiveSeasonalEasterEgg(new Date()), // will be either a easterEgg Season Spec or undefined
   matrixIncludeTrashedStories: false
 };
@@ -35,6 +47,8 @@ export const uiInitialState = {
 persistOnStateChange(MARKDOWN_ENABLED, (state) => state.ui.markdownEnabled);
 persistOnStateChange(HIDE_NEW_USER_HINTS, (state) => state.ui.newUserHintHidden);
 persistOnStateChange(BACKLOG_WIDTH, (state) => state.ui.backlogWidth);
+persistOnStateChange(SOUND_EFFECTS_ENABLED, (state) => state.ui.soundEffectsEnabled);
+persistOnStateChange(SOUND_EFFECTS_VOLUME, (state) => state.ui.soundEffectsVolume);
 
 /**
  *
@@ -58,7 +72,11 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
 
     case EVENT_ACTION_TYPES.leftRoom: {
       if (action.event.userId === ownUserId) {
-        return {...uiInitialState};
+        return {
+          ...uiInitialState,
+          soundEffectsEnabled: state.soundEffectsEnabled,
+          soundEffectsVolume: state.soundEffectsVolume
+        };
       } else {
         return state;
       }
@@ -125,6 +143,12 @@ export default function uiReducer(state = uiInitialState, action, ownUserId) {
     }
     case MARKDOWN_TOGGLED: {
       return {...state, markdownEnabled: !state.markdownEnabled};
+    }
+    case SOUND_EFFECTS_TOGGLED: {
+      return {...state, soundEffectsEnabled: !state.soundEffectsEnabled};
+    }
+    case SOUND_EFFECTS_VOLUME_SET: {
+      return {...state, soundEffectsVolume: Math.min(100, Math.max(0, action.volume))};
     }
     case LOCATION_CHANGED: {
       return {...state, pathname: action.pathname};

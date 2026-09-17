@@ -5,6 +5,7 @@ import {getRoom} from '../../services/restApi/roomService';
 import {getRoomId} from '../room/roomSelectors';
 import {getOwnUserToken} from '../users/usersSelectors';
 import {getPendingJoinCommandId} from '../joining/joiningSelectors';
+import {playRevealSound} from '../../services/revealSound';
 
 /* TYPES */
 export const ROOM_STATE_FETCHED = 'ROOM_STATE_FETCHED';
@@ -71,6 +72,10 @@ export const eventReceived = (event) => (dispatch, getState) => {
 
   dispatchSpecificEvent(dispatch, event, state);
 
+  if (shouldPlayRevealSound(event, state)) {
+    playRevealSound(state.ui.soundEffectsVolume);
+  }
+
   if (EVENT_ACTION_TYPES[event.name] === EVENT_ACTION_TYPES.joinedRoom) {
     history.push('/' + event.roomId);
   }
@@ -79,6 +84,12 @@ export const eventReceived = (event) => (dispatch, getState) => {
     tryToRecoverOnRejection(event, dispatch, getState);
   }
 };
+
+export const shouldPlayRevealSound = (event, state) =>
+  event.name === 'revealed' &&
+  event.roomId === getRoomId(state) &&
+  !event.payload.manually &&
+  state.ui.soundEffectsEnabled;
 
 /**
  * Dispatches a generic "EVENT_RECEIVED"  redux action

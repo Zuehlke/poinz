@@ -10,6 +10,8 @@ export const BACKLOG_SIDEBAR_TOGGLED = 'BACKLOG_SIDEBAR_TOGGLED'; // toggles the
 export const BACKLOG_WIDTH_SET = 'BACKLOG_WIDTH_SET'; // sets the width of the backlog sidebar
 export const SIDEBAR_TOGGLED = 'SIDEBAR_TOGGLED'; // toggles the visibility of the righthand sidebar (could be either settings, action log or help)
 export const MARKDOWN_TOGGLED = 'MARKDOWN_TOGGLED'; // toggles the rendering of the story description as markdown
+export const SOUND_EFFECTS_TOGGLED = 'SOUND_EFFECTS_TOGGLED';
+export const SOUND_EFFECTS_VOLUME_SET = 'SOUND_EFFECTS_VOLUME_SET';
 export const MATRIX_TOGGLED = 'MATRIX_TOGGLED';
 export const MATRIX_INCL_TRSH_TOGGLED = 'MATRIX_INCL_TRSH_TOGGLED'; // toggles whether trashed stories should be displayed in matrix view
 
@@ -34,6 +36,8 @@ export const cancelEditStory = (storyId) => ({type: STORY_EDIT_MODE_CANCELLED, s
 export const hideNewUserHints = () => ({type: NEW_USER_HINTS_HIDDEN});
 export const toggleSidebar = (sidebarKey) => ({type: SIDEBAR_TOGGLED, sidebarKey});
 export const toggleMarkdownEnabled = () => ({type: MARKDOWN_TOGGLED});
+export const toggleSoundEffectsEnabled = () => ({type: SOUND_EFFECTS_TOGGLED});
+export const setSoundEffectsVolume = (volume) => ({type: SOUND_EFFECTS_VOLUME_SET, volume});
 export const toggleMatrixIncludeTrashed = () => ({type: MATRIX_INCL_TRSH_TOGGLED});
 export const toggleMatrix = () => (dispatch, getState) => {
   const state = getState();

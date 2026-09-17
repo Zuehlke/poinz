@@ -8,6 +8,11 @@ import avatarIcons from '../../assets/avatars';
 import {getOwnUser} from '../../state/users/usersSelectors';
 import {toggleExcluded, setUsername, setEmail, setAvatar} from '../../state/actions/commandActions';
 import {L10nContext} from '../../services/l10n';
+import {
+  setSoundEffectsVolume,
+  toggleSoundEffectsEnabled
+} from '../../state/actions/uiStateActions';
+import {playRevealSound} from '../../services/revealSound';
 
 import {
   StyledArea,
@@ -23,6 +28,8 @@ const UserSettings = () => {
   const dispatch = useDispatch();
   const user = useSelector(getOwnUser);
   const {username, email, excluded} = user;
+  const soundEffectsEnabled = useSelector((state) => state.ui.soundEffectsEnabled);
+  const soundEffectsVolume = useSelector((state) => state.ui.soundEffectsVolume);
 
   // derive username for input field from prop
   const [myUsername, setMyUsername] = useState(username || '');
@@ -166,6 +173,39 @@ const UserSettings = () => {
         >
           <i className={excluded ? 'icon-check' : 'icon-check-empty'}></i> {t('markSpectator')}
         </p>
+      </StyledSection>
+
+      <StyledSection>
+        <h5>{t('soundEffects')}</h5>
+        {t('soundEffectsInfo')}
+
+        <p>
+          <label className="clickable">
+            <input
+              type="checkbox"
+              checked={soundEffectsEnabled}
+              onChange={() => dispatch(toggleSoundEffectsEnabled())}
+              data-testid="soundEffectsToggle"
+            />{' '}
+            {t('playRevealSound')}
+          </label>
+        </p>
+        <label htmlFor="soundEffectsVolume">
+          {t('soundEffectsVolume')}: {soundEffectsVolume}%
+        </label>
+        <input
+          id="soundEffectsVolume"
+          type="range"
+          min="0"
+          max="100"
+          step="5"
+          value={soundEffectsVolume}
+          disabled={!soundEffectsEnabled}
+          onChange={(event) => dispatch(setSoundEffectsVolume(Number(event.target.value)))}
+          onPointerUp={(event) => playRevealSound(Number(event.currentTarget.value))}
+          onKeyUp={(event) => playRevealSound(Number(event.currentTarget.value))}
+          data-testid="soundEffectsVolume"
+        />
       </StyledSection>
     </StyledArea>
   );

@@ -4,7 +4,9 @@ import {
   SIDEBAR_ACTIONLOG,
   SIDEBAR_HELP,
   toggleBacklogSidebar,
-  toggleSidebar
+  toggleSidebar,
+  toggleSoundEffectsEnabled,
+  setSoundEffectsVolume
 } from '../../src/state/actions/uiStateActions';
 import initialState from '../../src/state/initialState';
 import rootReducer from '../../src/state/rootReducer';
@@ -45,4 +47,20 @@ test('toggle sidebar', () => {
 
   modifiedState = rootReducer(modifiedState, toggleSidebar(SIDEBAR_ACTIONLOG));
   expect(modifiedState.ui.sidebar).toBeUndefined();
+});
+
+test('toggle sound effects', () => {
+  const startingState = initialState();
+  expect(startingState.ui.soundEffectsEnabled).toBe(false);
+
+  const enabledState = rootReducer(startingState, toggleSoundEffectsEnabled());
+  expect(enabledState.ui.soundEffectsEnabled).toBe(true);
+
+  const disabledState = rootReducer(enabledState, toggleSoundEffectsEnabled());
+  expect(disabledState.ui.soundEffectsEnabled).toBe(false);
+});
+
+test('set sound effects volume', () => {
+  const modifiedState = rootReducer(initialState(), setSoundEffectsVolume(75));
+  expect(modifiedState.ui.soundEffectsVolume).toBe(75);
 });
